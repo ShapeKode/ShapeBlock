@@ -7,6 +7,16 @@ add_action( 'wp_enqueue_scripts', 'eelfg_enqueue_block_scripts' );
 function eelfg_enqueue_block_scripts() {
 	wp_enqueue_style( 'eelfg-public-style', EELFG_PL_URL . 'includes/public/assets/css/public.css', array(), EELFG_VERSION );
 
+	// Styling for the "Easy Elements Menu" core-Navigation variation ( .eelfg-nav ). Versioned by
+	// file modified time so CSS tweaks always bust the browser cache.
+	$nav_var_file = EELFG_PL_PATH . 'includes/public/assets/css/eelfg-nav-variation.css';
+	wp_enqueue_style(
+		'eelfg-nav-variation',
+		EELFG_PL_URL . 'includes/public/assets/css/eelfg-nav-variation.css',
+		array(),
+		file_exists( $nav_var_file ) ? filemtime( $nav_var_file ) : EELFG_VERSION
+	);
+
 	$colors  = \EELFG\Admin\Api::get_saved_colors();
 	$css_map = array(
 		'primary'    => '--eelfg-preset-color-primary',

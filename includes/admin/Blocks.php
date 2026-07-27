@@ -255,10 +255,18 @@ class Blocks {
                 'status'      => 'enable',
                 "isPro"       => false,
             ],
+            [
+                'title'       => 'Menu',
+                'id'          => 'menu',
+                'description' => 'Display a WordPress navigation menu with layout, alignment and colors.',
+                'iconClass'    => 'eelfg-icon-navigation',
+                'status'      => 'enable',
+                "isPro"       => false,
+            ],
         ];
 
         // Default-enabled IDs: any block we want available without the user toggling it on first.
-        $default_enabled = [ 'layout-row', 'column', 'post-grid', 'gallery', 'faq', 'pricing-table', 'button', 'icon-box', 'heading', 'team-grid', 'testimonials-grid', 'category-list', 'feature-list', 'counter', 'tab', 'countdown', 'table', 'social-share', 'social-icon', 'progress', 'process-grid', 'process-list', 'clients-logo-grid', 'image-comparison', 'service-list', 'scroll-to-top', 'offcanvas', 'search', 'login-register', 'breadcrumb' ];
+        $default_enabled = [ 'layout-row', 'column', 'post-grid', 'gallery', 'faq', 'pricing-table', 'button', 'icon-box', 'heading', 'team-grid', 'testimonials-grid', 'category-list', 'feature-list', 'counter', 'tab', 'countdown', 'table', 'social-share', 'social-icon', 'progress', 'process-grid', 'process-list', 'clients-logo-grid', 'image-comparison', 'service-list', 'scroll-to-top', 'offcanvas', 'search', 'login-register', 'breadcrumb', 'menu' ];
 
         // Merge status from DB
         foreach ($blocks as &$block) {

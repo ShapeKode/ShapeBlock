@@ -1,0 +1,577 @@
+/* Easy Elements — Menu block (front-end + editor shared styles). */
+.eelfg-menu {
+	position: relative;
+}
+
+.eelfg-menu .eelfg-menu-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 24px;
+	align-items: center;
+}
+
+.eelfg-menu--vertical .eelfg-menu-list {
+	flex-direction: column;
+	align-items: stretch;
+}
+
+.eelfg-menu-align-center .eelfg-menu-list {
+	justify-content: center;
+}
+
+.eelfg-menu-align-right .eelfg-menu-list {
+	justify-content: flex-end;
+}
+
+.eelfg-menu .eelfg-menu-list li {
+	margin: 0;
+	position: relative;
+}
+
+/* Zone that holds any blocks added via "Add block" ( logo, buttons, search, etc. ).
+   It is a list item, so it lines up inline beside the menu items. */
+.eelfg-menu .eelfg-menu-inner {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	list-style: none;
+}
+
+.eelfg-menu .eelfg-menu-inner:empty {
+	display: none;
+}
+
+.eelfg-menu .eelfg-menu-inner > * {
+	margin: 0;
+}
+
+.eelfg-menu .eelfg-menu-list a {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+	text-decoration: none;
+	line-height: 1.35;
+	transition: color 0.2s ease;
+}
+
+/* Label + description stack together; icons sit beside this text block. */
+.eelfg-menu .eelfg-menu-text {
+	display: inline-flex;
+	flex-direction: column;
+}
+
+.eelfg-menu .eelfg-menu-label {
+	display: block;
+}
+
+/* Per-item icon ( left / right of the text ). */
+.eelfg-menu .eelfg-menu-item-icon {
+	display: inline-flex;
+	align-items: center;
+	flex: 0 0 auto;
+	color: inherit;
+}
+
+.eelfg-menu .eelfg-menu-item-icon--dir.eelfg-menu-item-icon--left .eelfg-menu-svg {
+	transform: scaleX( -1 );
+}
+
+.eelfg-menu .eelfg-menu-svg {
+	width: 1em;
+	height: 1em;
+	display: block;
+}
+
+/* User-uploaded item icon image. */
+.eelfg-menu .eelfg-menu-item-img {
+	width: 1.15em;
+	height: 1.15em;
+	object-fit: contain;
+	display: block;
+}
+
+.eelfg-menu .eelfg-menu-desc {
+	display: block;
+	font-size: 0.78em;
+	opacity: 0.7;
+	margin-top: 2px;
+	font-weight: 400;
+}
+
+/* Dropdown indicator ( SVG ) / mobile toggle. */
+.eelfg-menu .eelfg-menu-sub-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: 6px;
+	color: inherit;
+	cursor: pointer;
+	transition: transform 0.25s ease;
+}
+
+.eelfg-menu .menu-item-has-children.is-sub-open > .eelfg-menu-sub-toggle {
+	transform: rotate( 180deg );
+}
+
+/* Editor: the caret is a button that opens the "add sub-menu" popover. */
+.eelfg-menu .eelfg-menu-sub-trigger {
+	background: transparent;
+	border: none;
+	padding: 0;
+	font: inherit;
+}
+
+.eelfg-menu-subadd {
+	display: inline-flex;
+}
+
+/* Plus indicator becomes a "×" when open instead of a meaningless 180° flip. */
+.eelfg-menu .menu-item-has-children.is-sub-open > .eelfg-menu-sub-toggle--plus {
+	transform: rotate( 45deg );
+}
+
+/* ---- Dropdown (sub-menu) — smooth fade + slide ---- */
+.eelfg-menu .eelfg-menu-list .sub-menu {
+	list-style: none;
+	margin: 0;
+	padding: 8px 0;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	min-width: 210px;
+	background: #ffffff;
+	box-shadow: 0 12px 30px rgba( 0, 0, 0, 0.12 );
+	border-radius: 8px;
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	z-index: 99;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY( 12px );
+	pointer-events: none;
+	transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+
+.eelfg-menu .eelfg-menu-list li:hover > .sub-menu,
+.eelfg-menu .eelfg-menu-list li:focus-within > .sub-menu {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY( 0 );
+	pointer-events: auto;
+}
+
+/* Click mode: hover does NOT open; the sub-menu opens only when JS adds .is-sub-open. */
+.eelfg-menu-click .eelfg-menu-list li:hover > .sub-menu,
+.eelfg-menu-click .eelfg-menu-list li:focus-within > .sub-menu {
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY( 12px );
+	pointer-events: none;
+}
+
+.eelfg-menu-click .eelfg-menu-list li.is-sub-open > .sub-menu {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY( 0 );
+	pointer-events: auto;
+}
+
+.eelfg-menu .eelfg-menu-list .sub-menu a {
+	display: block;
+	padding: 9px 18px;
+	white-space: nowrap;
+}
+
+.eelfg-menu--vertical .eelfg-menu-list .sub-menu {
+	position: static;
+	box-shadow: none;
+	border-radius: 0;
+	min-width: 0;
+	padding: 0 0 0 16px;
+	opacity: 1;
+	visibility: visible;
+	transform: none;
+	pointer-events: auto;
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.35s ease;
+}
+
+.eelfg-menu--vertical .eelfg-menu-list li:hover > .sub-menu,
+.eelfg-menu--vertical .eelfg-menu-list li:focus-within > .sub-menu {
+	max-height: 600px;
+}
+
+/* ---- Off-canvas drawer primitives (desktop: transparent; mobile switched on via inline CSS) ---- */
+.eelfg-menu-panel {
+	display: contents; /* On desktop the list flows in place; on mobile it becomes the sliding drawer. */
+}
+
+.eelfg-menu-overlay {
+	display: none;
+}
+
+/* While the window is being resized, kill the drawer transition so it doesn't
+   visibly slide across the screen when crossing the breakpoint. */
+.eelfg-menu-no-anim .eelfg-menu-panel,
+.eelfg-menu-no-anim .eelfg-menu-overlay {
+	transition: none !important;
+}
+
+.eelfg-menu-close {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	background: transparent;
+	border: none;
+	line-height: 0;
+	cursor: pointer;
+	color: inherit;
+}
+
+/* Cross ( X ) icon, centered inside the close button. */
+.eelfg-menu-close .eelfg-menu-svg {
+	width: 20px;
+	height: 20px;
+	display: block;
+}
+
+/* ---- Responsive hamburger toggle (shown below the breakpoint via inline CSS) ---- */
+.eelfg-menu-toggle {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 4px;
+	width: 42px;
+	height: 42px;
+	padding: 9px;
+	background: transparent;
+	border: 1px solid currentColor;
+	border-radius: 6px;
+	cursor: pointer;
+	color: inherit;
+}
+
+.eelfg-menu-toggle-bar {
+	display: block;
+	width: 20px;
+	height: 2px;
+	background: currentColor;
+	transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.eelfg-menu.is-open .eelfg-menu-toggle-bar:nth-child( 1 ) {
+	transform: translateY( 6px ) rotate( 45deg );
+}
+
+.eelfg-menu.is-open .eelfg-menu-toggle-bar:nth-child( 2 ) {
+	opacity: 0;
+}
+
+.eelfg-menu.is-open .eelfg-menu-toggle-bar:nth-child( 3 ) {
+	transform: translateY( -6px ) rotate( -45deg );
+}
+
+/* ---- Editor: inline "add item" (+) button ---- */
+.eelfg-menu-add-item {
+	display: inline-flex;
+	align-items: center;
+	list-style: none;
+}
+
+.eelfg-menu-add-btn.components-button {
+	min-width: 32px;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	justify-content: center;
+	border: 1px dashed #a216ff;
+	color: #a216ff;
+	border-radius: 6px;
+	background: rgba( 162, 22, 255, 0.06 );
+}
+
+.eelfg-menu-add-btn.components-button:hover {
+	background: rgba( 162, 22, 255, 0.14 );
+	color: #a216ff;
+	border-color: #a216ff;
+}
+
+.eelfg-menu-is-empty .eelfg-menu-list {
+	min-height: 32px;
+}
+
+/* ---- Editor: the search popover ( width lives on .components-popover__content ) ---- */
+.eelfg-menu-add-pop .components-popover__content {
+	width: 340px;
+	max-width: 92vw;
+}
+
+/* "Create page" sub-panel ( title + publish toggle ). */
+.eelfg-menu-add-createview {
+	padding: 12px;
+}
+
+.eelfg-menu-add-back.components-button {
+	height: auto;
+	padding: 2px 0;
+	margin-bottom: 10px;
+	color: #1e1e1e;
+	font-weight: 600;
+}
+
+.eelfg-menu-add-actions {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 8px;
+	margin-top: 14px;
+}
+
+.eelfg-menu-add-search {
+	padding: 8px;
+}
+
+.eelfg-menu-add-search,
+.eelfg-menu-add-search .components-base-control,
+.eelfg-menu-add-search .components-text-control__input {
+	width: 100%;
+}
+
+.eelfg-menu-add-results {
+	list-style: none;
+	margin: 6px 0 0;
+	padding: 0;
+	max-height: 260px;
+	overflow-y: auto;
+}
+
+.eelfg-menu-add-row {
+	margin: 0;
+}
+
+.eelfg-menu-add-result.components-button {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	height: auto;
+	min-height: 36px;
+	padding: 6px 8px;
+	justify-content: flex-start;
+	text-align: left;
+	border-radius: 4px;
+	color: #1e1e1e;
+}
+
+.eelfg-menu-add-result.components-button:hover {
+	background: #f0f0f1;
+}
+
+.eelfg-menu-add-result .dashicons {
+	color: #757575;
+	flex: 0 0 auto;
+}
+
+.eelfg-menu-add-loading,
+.eelfg-menu-add-empty {
+	padding: 10px 8px;
+	color: #757575;
+	font-size: 12px;
+}
+
+/* ---- Editor: three Inspector tabs ( Menu Items / Settings / Style ) ---- */
+.eelfg-menu-tabs .components-tab-panel__tabs {
+	display: flex;
+}
+
+.eelfg-menu-tabs .components-tab-panel__tabs-item {
+	flex: 1;
+	justify-content: center;
+}
+
+/* ---- Editor: item editors in the Inspector ( default Gutenberg look — no custom boxes ) ---- */
+/* Top-level items are their own collapsible PanelBody ( titled with the item name ). */
+.eelfg-menu-additem-row {
+	padding: 12px 16px 16px;
+}
+
+/* Sub-item ( dropdown ) editors sit inside their parent's panel, separated by a light rule. */
+.eelfg-menu-item-editor.is-child {
+	margin-bottom: 14px;
+	padding-bottom: 14px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.eelfg-menu-subsection {
+	margin-top: 8px;
+}
+
+.eelfg-menu-section-label {
+	font-size: 11px;
+	text-transform: uppercase;
+	font-weight: 500;
+	color: #757575;
+	margin-bottom: 8px;
+}
+
+/* Icon upload row. */
+.eelfg-menu-icon-picker {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 8px;
+}
+
+.eelfg-menu-icon-thumb img {
+	width: 24px;
+	height: 24px;
+	object-fit: contain;
+	display: block;
+}
+
+.eelfg-menu-icon-preview svg {
+	width: 22px;
+	height: 22px;
+	display: block;
+	color: #1e1e1e;
+}
+
+/* Responsive spacing controls. */
+.eelfg-menu-devices {
+	display: flex;
+	gap: 4px;
+	margin-bottom: 12px;
+}
+
+.eelfg-menu-devices .components-button {
+	flex: 1;
+	justify-content: center;
+}
+
+.eelfg-menu-sides {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 8px;
+}
+
+.eelfg-menu-sides .components-base-control {
+	margin-bottom: 0;
+}
+
+.eelfg-menu-field {
+	margin-bottom: 12px;
+}
+
+.eelfg-menu-linkfield-label {
+	font-size: 11px;
+	text-transform: uppercase;
+	font-weight: 500;
+	margin-bottom: 4px;
+	color: #1e1e1e;
+}
+
+.eelfg-menu-linkpicker-btn.components-button {
+	width: 100%;
+	justify-content: flex-start;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: block;
+}
+
+.eelfg-menu-item-actions {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+	align-items: center;
+	margin-top: 6px;
+}
+
+/* ---- Notices ---- */
+.eelfg-menu-notice,
+.eelfg-menu-placeholder {
+	margin: 0;
+	padding: 14px 16px;
+	background: #f6f7f7;
+	border: 1px dashed #c3c4c7;
+	border-radius: 6px;
+	color: #50575e;
+	font-size: 13px;
+}
+
+.eelfg-menu-placeholder {
+	text-align: center;
+}
+
+/* ---- Editor: search input row + result text (title + slug) ---- */
+.eelfg-menu-add-input {
+	display: flex;
+	align-items: flex-start;
+	gap: 4px;
+}
+.eelfg-menu-add-input .components-base-control {
+	flex: 1 1 auto;
+}
+.eelfg-menu-add-go.components-button {
+	margin-top: 2px;
+	flex: 0 0 auto;
+}
+.eelfg-menu-add-result-text {
+	display: flex;
+	flex-direction: column;
+	line-height: 1.3;
+	overflow: hidden;
+}
+.eelfg-menu-add-result-title {
+	color: #1e1e1e;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.eelfg-menu-add-result-sub {
+	font-size: 11px;
+	color: #757575;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.eelfg-menu-add-create .dashicons {
+	color: #a216ff;
+}
+
+/* ---- Editor: inline-editable menu label (preview) ---- */
+.eelfg-menu-label[contenteditable] {
+	outline: none;
+	cursor: text;
+	border-radius: 2px;
+}
+.eelfg-menu-label[contenteditable]:hover {
+	outline: 1px dashed rgba( 162, 22, 255, 0.45 );
+	outline-offset: 2px;
+}
+.eelfg-menu-label[contenteditable]:focus {
+	outline: 2px solid #a216ff;
+	outline-offset: 2px;
+}
+.eelfg-menu-label[contenteditable]:empty {
+	min-width: 46px;
+	display: inline-block;
+}
+.eelfg-menu-label[contenteditable]:empty::before {
+	content: attr( data-eelfg-placeholder );
+	opacity: 0.5;
+}
