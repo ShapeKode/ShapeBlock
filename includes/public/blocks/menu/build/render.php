@@ -115,6 +115,15 @@ if ( ! function_exists( 'eelfg_menu_render_items' ) ) {
 
 			$label     = isset( $item['label'] ) ? (string) $item['label'] : '';
 			$url       = ! empty( $item['url'] ) ? $item['url'] : '#';
+			// If the item points at a page/post ( stored by ID ), resolve the CURRENT permalink so a
+			// changed slug is always reflected — instead of the stale URL saved when it was picked.
+			$obj_id = isset( $item['objectId'] ) ? absint( $item['objectId'] ) : 0;
+			if ( $obj_id ) {
+				$perma = get_permalink( $obj_id );
+				if ( $perma ) {
+					$url = $perma;
+				}
+			}
 			$desc      = isset( $item['description'] ) ? (string) $item['description'] : '';
 			$new_tab   = ! empty( $item['newTab'] );
 			$icon_url  = isset( $item['iconUrl'] ) ? (string) $item['iconUrl'] : '';
@@ -146,7 +155,17 @@ if ( ! function_exists( 'eelfg_menu_render_items' ) ) {
 				}
 			}
 
-			$text  = '<span class="eelfg-menu-text"><span class="eelfg-menu-label">' . esc_html( $label ) . '</span>';
+			// Labels may carry inline Bold / Italic formatting from the editor; allow only those tags.
+			$label_html = wp_kses(
+				(string) $label,
+				array(
+					'strong' => array(),
+					'b'      => array(),
+					'em'     => array(),
+					'i'      => array(),
+				)
+			);
+			$text  = '<span class="eelfg-menu-text"><span class="eelfg-menu-label">' . $label_html . '</span>';
 			if ( '' !== trim( $desc ) ) {
 				$text .= '<span class="eelfg-menu-desc">' . esc_html( $desc ) . '</span>';
 			}
@@ -155,11 +174,14 @@ if ( ! function_exists( 'eelfg_menu_render_items' ) ) {
 			$html .= '<li class="menu-item' . ( $has_children ? ' menu-item-has-children' : '' ) . '">';
 			$html .= '<a href="' . esc_url( $url ) . '"' . $rel . '>';
 			$html .= ( 'left' === $icon_side ) ? $icon_html . $text : $text . $icon_html;
-			$html .= '</a>';
-
+			// The dropdown arrow lives INSIDE the link so it sits inline with the label.
 			if ( $has_children ) {
 				$svg   = ( '' !== $dd_key ) ? eelfg_menu_icon_svg( $dd_key ) : '';
 				$html .= '<span class="eelfg-menu-sub-toggle eelfg-menu-sub-toggle--' . sanitize_html_class( $dd_mod ) . '" aria-hidden="true">' . $svg . '</span>';
+			}
+			$html .= '</a>';
+
+			if ( $has_children ) {
 				$html .= '<ul class="sub-menu">' . eelfg_menu_render_items( $children, $dropdown_icon ) . '</ul>';
 			}
 
@@ -244,7 +266,16 @@ $font_stacks = array(
 );
 $font_family = isset( $attributes['fontFamily'] ) ? (string) $attributes['fontFamily'] : '';
 if ( isset( $font_stacks[ $font_family ] ) ) {
+	// Web-safe font stack.
 	$font_css .= 'font-family:' . $font_stacks[ $font_family ] . ';';
+} elseif ( '' !== $font_family ) {
+	// Google font: sanitize the family name, enqueue it from Google, then apply it.
+	$safe_family = trim( preg_replace( '/[^A-Za-z0-9 ]/', '', $font_family ) );
+	if ( '' !== $safe_family ) {
+		$font_url = 'https://fonts.googleapis.com/css2?family=' . str_replace( '%20', '+', rawurlencode( $safe_family ) ) . ':wght@300;400;500;600;700&display=swap';
+		wp_enqueue_style( 'eelfg-menu-font-' . sanitize_title( $safe_family ), esc_url_raw( $font_url ), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External Google Fonts URL is versioned by Google.
+		$font_css .= 'font-family:"' . $safe_family . '",sans-serif;';
+	}
 }
 $font_size  = isset( $attributes['fontSize'] ) ? eelfg_menu_len( $attributes['fontSize'] ) : '';
 if ( '' !== $font_size ) {
@@ -274,6 +305,38 @@ if ( ! empty( $attributes['activeColor'] ) ) {
 if ( ! empty( $attributes['descriptionColor'] ) ) {
 	$css .= $selector . ' .eelfg-menu-desc{color:' . esc_attr( $attributes['descriptionColor'] ) . ';}';
 }
+// Backgrounds prefer the gradient when set, otherwise the solid colour.
+$item_bg_n   = ! empty( $attributes['itemBgGradient'] ) ? $attributes['itemBgGradient'] : ( ! empty( $attributes['itemBgColor'] ) ? $attributes['itemBgColor'] : '' );
+$item_bg_h   = ! empty( $attributes['itemBgHoverGradient'] ) ? $attributes['itemBgHoverGradient'] : ( ! empty( $attributes['itemBgHoverColor'] ) ? $attributes['itemBgHoverColor'] : '' );
+$item_bg_a   = ! empty( $attributes['itemBgActiveGradient'] ) ? $attributes['itemBgActiveGradient'] : ( ! empty( $attributes['itemBgActiveColor'] ) ? $attributes['itemBgActiveColor'] : '' );
+$dd_bg       = ! empty( $attributes['dropdownBgGradient'] ) ? $attributes['dropdownBgGradient'] : ( ! empty( $attributes['dropdownBg'] ) ? $attributes['dropdownBg'] : '' );
+$dd_hover_bg = ! empty( $attributes['dropdownHoverBgGradient'] ) ? $attributes['dropdownHoverBgGradient'] : ( ! empty( $attributes['dropdownHoverBg'] ) ? $attributes['dropdownHoverBg'] : '' );
+// Item background ( normal / hover / active ). Any background opts items into padded pills.
+if ( '' !== $item_bg_n || '' !== $item_bg_h || '' !== $item_bg_a ) {
+	$css .= $selector . ' .eelfg-menu-list > li > a{padding:8px 14px;border-radius:6px;}';
+}
+if ( '' !== $item_bg_n ) {
+	$css .= $selector . ' .eelfg-menu-list > li > a{background:' . esc_attr( $item_bg_n ) . ';}';
+}
+if ( '' !== $item_bg_h ) {
+	$css .= $selector . ' .eelfg-menu-list > li > a:hover,' . $selector . ' .eelfg-menu-list > li > a:focus{background:' . esc_attr( $item_bg_h ) . ';}';
+}
+if ( '' !== $item_bg_a ) {
+	$css .= $selector . ' .eelfg-menu-list > li.current-menu-item > a{background:' . esc_attr( $item_bg_a ) . ';}';
+}
+// Dropdown ( sub-menu ) colours.
+if ( '' !== $dd_bg ) {
+	$css .= $selector . ' .sub-menu{background:' . esc_attr( $dd_bg ) . ';}';
+}
+if ( ! empty( $attributes['dropdownTextColor'] ) ) {
+	$css .= $selector . ' .sub-menu a{color:' . esc_attr( $attributes['dropdownTextColor'] ) . ';}';
+}
+if ( ! empty( $attributes['dropdownHoverColor'] ) ) {
+	$css .= $selector . ' .sub-menu a:hover,' . $selector . ' .sub-menu a:focus{color:' . esc_attr( $attributes['dropdownHoverColor'] ) . ';}';
+}
+if ( '' !== $dd_hover_bg ) {
+	$css .= $selector . ' .sub-menu a:hover,' . $selector . ' .sub-menu a:focus{background:' . esc_attr( $dd_hover_bg ) . ';}';
+}
 if ( ! empty( $attributes['toggleColor'] ) ) {
 	$css .= $selector . ' .eelfg-menu-toggle,' . $selector . ' .eelfg-menu-close{color:' . esc_attr( $attributes['toggleColor'] ) . ';}';
 }
@@ -300,11 +363,37 @@ if ( $mobile_on ) {
 	$drawer .= $selector . '.is-open .eelfg-menu-overlay{opacity:1;visibility:visible;}';
 	$drawer .= $selector . ' .eelfg-menu-panel{display:block;position:fixed;top:0;bottom:0;' . $side . ':0;width:' . $w_css . ';max-width:85vw;background:' . $bg_css . ';transform:translateX(' . $off . ');transition:transform 0.3s ease;z-index:9999;overflow-y:auto;padding:56px 22px 28px;}';
 	$drawer .= $selector . '.is-open .eelfg-menu-panel{transform:translateX(0);}';
-	$drawer .= $selector . ' .eelfg-menu-list{flex-direction:column;align-items:stretch;width:100%;gap:0;}';
-	$drawer .= $selector . ' .eelfg-menu-list li{position:relative;}';
-	$drawer .= $selector . ' .eelfg-menu-list a{padding:10px 0;}';
-	$drawer .= $selector . ' .eelfg-menu-list .sub-menu{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border-radius:0;min-width:0;padding-left:16px;max-height:0;overflow:hidden;transition:max-height 0.3s ease;}';
-	$drawer .= $selector . ' .menu-item-has-children.is-sub-open > .sub-menu{max-height:1000px;}';
+	$drawer .= $selector . ' .eelfg-menu-list{flex-direction:column;align-items:stretch;width:100%;gap:6px;}';
+	$drawer .= $selector . ' .eelfg-menu-list li{position:relative;width:100%;}';
+	// Every item ( link + sub-items ) fills the row, so the label sits left and the arrow far right.
+	$drawer .= $selector . ' .eelfg-menu-list a{display:flex;align-items:center;width:100%;padding:12px 14px;}';
+	$drawer .= $selector . ' .eelfg-menu-list .eelfg-menu-sub-toggle{flex:0 0 auto;margin-left:auto;}';
+	// Sub-menus drop down as an indented accordion inside the drawer ( no side fly-out ).
+	$drawer .= $selector . ' .eelfg-menu-list .sub-menu{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border-radius:0;min-width:0;width:100%;padding:0 0 0 14px;max-height:0;overflow:hidden;transition:max-height 0.35s ease;}';
+	$drawer .= $selector . ' .menu-item-has-children.is-sub-open > .sub-menu{max-height:1200px;}';
+
+	// Mobile-only colours ( override the desktop colours while the drawer is active ).
+	$m_bg_n = ! empty( $attributes['mobileBgGradient'] ) ? $attributes['mobileBgGradient'] : ( ! empty( $attributes['mobileBgColor'] ) ? $attributes['mobileBgColor'] : '' );
+	$m_bg_h = ! empty( $attributes['mobileBgHoverGradient'] ) ? $attributes['mobileBgHoverGradient'] : ( ! empty( $attributes['mobileBgHoverColor'] ) ? $attributes['mobileBgHoverColor'] : '' );
+	$m_bg_a = ! empty( $attributes['mobileBgActiveGradient'] ) ? $attributes['mobileBgActiveGradient'] : ( ! empty( $attributes['mobileBgActiveColor'] ) ? $attributes['mobileBgActiveColor'] : '' );
+	if ( ! empty( $attributes['mobileTextColor'] ) ) {
+		$drawer .= $selector . ' .eelfg-menu-list a{color:' . esc_attr( $attributes['mobileTextColor'] ) . ';}';
+	}
+	if ( ! empty( $attributes['mobileHoverColor'] ) ) {
+		$drawer .= $selector . ' .eelfg-menu-list a:hover,' . $selector . ' .eelfg-menu-list a:focus{color:' . esc_attr( $attributes['mobileHoverColor'] ) . ';}';
+	}
+	if ( ! empty( $attributes['mobileActiveColor'] ) ) {
+		$drawer .= $selector . ' .eelfg-menu-list .current-menu-item > a{color:' . esc_attr( $attributes['mobileActiveColor'] ) . ';}';
+	}
+	if ( '' !== $m_bg_n ) {
+		$drawer .= $selector . ' .eelfg-menu-list > li > a{background:' . esc_attr( $m_bg_n ) . ';border-radius:6px;}';
+	}
+	if ( '' !== $m_bg_h ) {
+		$drawer .= $selector . ' .eelfg-menu-list > li > a:hover,' . $selector . ' .eelfg-menu-list > li > a:focus{background:' . esc_attr( $m_bg_h ) . ';}';
+	}
+	if ( '' !== $m_bg_a ) {
+		$drawer .= $selector . ' .eelfg-menu-list > li.current-menu-item > a{background:' . esc_attr( $m_bg_a ) . ';}';
+	}
 
 	if ( 'always' === $mobile_mode ) {
 		// Hamburger drawer on every screen size.

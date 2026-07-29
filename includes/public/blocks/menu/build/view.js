@@ -67,7 +67,8 @@
 		var parents = nav.querySelectorAll( '.menu-item-has-children' );
 		Array.prototype.forEach.call( parents, function ( li ) {
 			var link  = li.querySelector( ':scope > a' );
-			var arrow = li.querySelector( ':scope > .eelfg-menu-sub-toggle' );
+			// The arrow now lives inside the link ( li > a > .eelfg-menu-sub-toggle ).
+			var arrow = li.querySelector( ':scope > a > .eelfg-menu-sub-toggle' );
 			var href  = link ? ( link.getAttribute( 'href' ) || '' ) : '';
 			var hasRealLink = href && '#' !== href && '' !== href.replace( /\s/g, '' );
 

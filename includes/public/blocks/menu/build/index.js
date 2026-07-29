@@ -19,15 +19,23 @@
 	var Fragment          = wp.element.Fragment;
 	var useState          = wp.element.useState;
 	var useEffect         = wp.element.useEffect;
+	var useRef            = wp.element.useRef;
 	var __                = wp.i18n.__;
+	var sprintf           = wp.i18n.sprintf;
 	var registerBlockType = wp.blocks.registerBlockType;
 	var InspectorControls = wp.blockEditor.InspectorControls;
+	var BlockControls     = wp.blockEditor.BlockControls;
+	var ToolbarGroup      = wp.components.ToolbarGroup;
+	var ToolbarButton     = wp.components.ToolbarButton;
+	var Popover           = wp.components.Popover;
 	var useBlockProps      = wp.blockEditor.useBlockProps;
 	var RichText          = wp.blockEditor.RichText;
 	var MediaUpload       = wp.blockEditor.MediaUpload;
 	var MediaUploadCheck  = wp.blockEditor.MediaUploadCheck;
 	var PanelColorSettings = wp.blockEditor.PanelColorSettings;
 	var ColorPalette      = wp.blockEditor.ColorPalette || wp.components.ColorPalette;
+	// Combined solid-colour + gradient picker ( experimental in wp.blockEditor ).
+	var ColorGradientControl = ( wp.blockEditor && ( wp.blockEditor.__experimentalColorGradientControl || wp.blockEditor.ColorGradientControl ) ) || null;
 	var PanelBody         = wp.components.PanelBody;
 	var SelectControl     = wp.components.SelectControl;
 	var TextControl       = wp.components.TextControl;
@@ -159,6 +167,58 @@
 		tahoma:    'Tahoma,Geneva,sans-serif'
 	};
 
+	// Popular Google Fonts ( family names ). Selecting one loads it from Google ( editor + front end ).
+	var GOOGLE_FONTS = [
+		'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Poppins', 'Oswald', 'Raleway', 'Inter',
+		'Nunito', 'Nunito Sans', 'Playfair Display', 'Merriweather', 'Roboto Condensed', 'Roboto Slab',
+		'Ubuntu', 'Rubik', 'Work Sans', 'Noto Sans', 'PT Sans', 'PT Serif', 'Mukta', 'Quicksand',
+		'Fira Sans', 'Barlow', 'Josefin Sans', 'Karla', 'Dosis', 'Cabin', 'Titillium Web', 'Libre Franklin',
+		'Source Sans 3', 'Manrope', 'DM Sans', 'DM Serif Display', 'Heebo', 'Mulish', 'Bitter', 'Arvo',
+		'Bebas Neue', 'Anton', 'Lobster', 'Pacifico', 'Dancing Script', 'Caveat', 'Comfortaa', 'Exo 2',
+		'Teko', 'Kanit', 'Prompt', 'Sarabun', 'IBM Plex Sans', 'IBM Plex Serif', 'Crimson Text',
+		'EB Garamond', 'Cormorant Garamond', 'Space Grotesk', 'Space Mono', 'Fira Code', 'JetBrains Mono',
+		'Zilla Slab', 'Assistant', 'Hind', 'Signika', 'Questrial', 'Abel', 'Archivo', 'Chivo', 'Overpass',
+		'Red Hat Display', 'Sora', 'Outfit', 'Lexend', 'Plus Jakarta Sans', 'Figtree', 'Albert Sans'
+	];
+	// Build the Google Fonts stylesheet URL for a family ( common weights, swap display ).
+	function eelfgGoogleFontUrl( family ) {
+		return 'https://fonts.googleapis.com/css2?family=' + family.replace( / /g, '+' ) + ':wght@300;400;500;600;700&display=swap';
+	}
+
+	// Live Google Fonts list ( fetched server-side from the Google Fonts API and localized ).
+	// Falls back to the bundled popular list when the API list is unavailable.
+	function eelfgGoogleFontList() {
+		if ( window.eelfgMenuFonts && window.eelfgMenuFonts.length ) {
+			return window.eelfgMenuFonts;
+		}
+		return GOOGLE_FONTS;
+	}
+
+	// Is this fontFamily value one of the web-safe keys ( vs. a Google font family name )?
+	function eelfgIsWebSafe( key ) {
+		return !! ( key && EELFG_FONTS[ key ] );
+	}
+
+	// Options for the Font Family select: Default + web-safe stacks + every Google font.
+	function eelfgFontOptions() {
+		var opts = [
+			{ label: __( 'Default', TD ), value: '' },
+			{ label: 'System', value: 'system' },
+			{ label: 'Arial', value: 'arial' },
+			{ label: 'Helvetica', value: 'helvetica' },
+			{ label: 'Georgia', value: 'georgia' },
+			{ label: 'Times New Roman', value: 'times' },
+			{ label: 'Courier', value: 'courier' },
+			{ label: 'Verdana', value: 'verdana' },
+			{ label: 'Tahoma', value: 'tahoma' }
+		];
+		var list = eelfgGoogleFontList();
+		for ( var i = 0; i < list.length; i++ ) {
+			opts.push( { label: list[ i ], value: list[ i ] } );
+		}
+		return opts;
+	}
+
 	var plusIcon = el(
 		'svg',
 		{ width: 18, height: 18, viewBox: '0 0 24 24', xmlns: 'http://www.w3.org/2000/svg', 'aria-hidden': 'true', focusable: 'false' },
@@ -213,7 +273,7 @@
 			var cancelled = false;
 			setLoading( true );
 			var path = query
-				? '/wp/v2/search?search=' + encodeURIComponent( query ) + '&per_page=8&_fields=title,url,subtype'
+				? '/wp/v2/search?search=' + encodeURIComponent( query ) + '&per_page=8&_fields=id,title,url,type,subtype'
 				: '/wp/v2/pages?per_page=8&_fields=id,title,link&orderby=title&order=asc';
 
 			apiFetch( { path: path } )
@@ -221,6 +281,8 @@
 					if ( cancelled ) { return; }
 					setResults( ( res || [] ).map( function ( r ) {
 						return {
+							id: r.id || 0,
+							type: r.subtype || r.type || 'page',
 							title: ( r.title && ( r.title.rendered || r.title ) ) || r.url || r.link || '',
 							url: r.url || r.link || '',
 							subtype: r.subtype || 'page'
@@ -270,7 +332,7 @@
 					if ( page.slug && /[?&](page_id|p)=/.test( url ) ) {
 						try { url = new URL( page.link ).origin + '/' + page.slug + '/'; } catch ( e ) {}
 					}
-					props.onPick( { url: url, title: ( page.title && ( page.title.rendered || page.title ) ) || t } );
+					props.onPick( { url: url, title: ( page.title && ( page.title.rendered || page.title ) ) || t, id: page.id, type: 'page' } );
 				} )
 				.catch( function () { setCreating( false ); } );
 		}
@@ -314,7 +376,7 @@
 		} else {
 			results.forEach( function ( r, idx ) {
 				rows.push( el( 'li', { key: 'r' + idx, className: 'eelfg-menu-add-row' },
-					el( Button, { className: 'eelfg-menu-add-result', onClick: function () { props.onPick( { url: r.url, title: r.title } ); } },
+					el( Button, { className: 'eelfg-menu-add-result', onClick: function () { props.onPick( { url: r.url, title: r.title, id: r.id, type: r.type } ); } },
 						el( 'span', { className: 'dashicons dashicons-admin-page' } ),
 						el( 'span', { className: 'eelfg-menu-add-result-text' },
 							el( 'span', { className: 'eelfg-menu-add-result-title' }, r.title ),
@@ -343,7 +405,7 @@
 					if ( 'Enter' === e.key ) {
 						e.preventDefault();
 						if ( isUrl ) { useTypedUrl(); }
-						else if ( results.length ) { props.onPick( { url: results[0].url, title: results[0].title } ); }
+						else if ( results.length ) { props.onPick( { url: results[0].url, title: results[0].title, id: results[0].id, type: results[0].type } ); }
 					}
 				} } ),
 				isUrl ? el( Button, { className: 'eelfg-menu-add-go', icon: 'arrow-right-alt2', label: __( 'Use URL', TD ), onClick: useTypedUrl } ) : null
@@ -361,6 +423,8 @@
 			className: 'eelfg-menu-linkpicker',
 			popoverProps: { className: 'eelfg-menu-add-pop', placement: 'bottom-start' },
 			renderToggle: function ( t ) {
+				// Show whatever is stored ( "#", a URL, … ); only truly empty shows the placeholder.
+				// The button is full-width ( CSS ), so even "#" stays easy to click and change.
 				return el( Button, {
 					variant: 'secondary',
 					className: 'eelfg-menu-linkpicker-btn',
@@ -403,6 +467,28 @@
 			var colorState      = colorStateState[0];
 			var setColorState   = colorStateState[1];
 
+			// Editor-only: which item-background state ( normal / hover / active ) is being edited.
+			var bgStateState = useState( 'normal' );
+			var bgState      = bgStateState[0];
+			var setBgState   = bgStateState[1];
+
+			// Editor-only: which dropdown text state ( text / hover ) is being edited.
+			var ddStateState = useState( 'text' );
+			var ddState      = ddStateState[0];
+			var setDdState   = ddStateState[1];
+
+			// Editor-only: mobile ( drawer ) text + background states being edited.
+			var mTextStateState = useState( 'text' );
+			var mTextState      = mTextStateState[0];
+			var setMTextState   = mTextStateState[1];
+			var mBgStateState   = useState( 'normal' );
+			var mBgState        = mBgStateState[0];
+			var setMBgState     = mBgStateState[1];
+
+			// Theme colour + gradient palettes for the background pickers ( solid + gradient ).
+			var eelfgUsePalettes = wp.blockEditor.__experimentalUseMultipleOriginColorsAndGradients || wp.blockEditor.useMultipleOriginColorsAndGradients;
+			var colorGradientSettings = eelfgUsePalettes ? eelfgUsePalettes() : { colors: [], gradients: [] };
+
 			// Editor-only: is the mobile-menu preview open ( hamburger toggled )?
 			var openPrevState  = useState( false );
 			var isOpenPreview  = openPrevState[0];
@@ -414,7 +500,12 @@
 			var setOpenSubs   = openSubsState[1];
 			function toggleSubOpen( k ) { var o = Object.assign( {}, openSubs ); o[ k ] = ! o[ k ]; setOpenSubs( o ); }
 
-			// Effective overlay mode + whether the selected device shows the drawer ( used by renderLi ).
+			// The menu item whose label is currently focused — its link is editable from the block toolbar.
+			var activePathState = useState( null );
+			var activePath      = activePathState[0];
+			var setActivePath   = activePathState[1];
+
+			// Effective overlay mode + whether the selected device shows the drawer ( used by renderNode ).
 			var mobileMode = attributes.mobileMode || ( false === attributes.mobileEnable ? 'off' : 'mobile' );
 			var edBreak    = attributes.mobileBreakpoint || 782;
 			var edDevW     = ( 'mobile' === device ) ? 360 : ( ( 'tablet' === device ) ? 780 : 9999 );
@@ -422,10 +513,80 @@
 
 
 			function clone() { return JSON.parse( JSON.stringify( items ) ); }
-			function commit( next ) { setAttributes( { items: next } ); }
+
+			// Remember the most recently edited menu ( debounced ) so a freshly inserted, empty block can
+			// auto-restore it — the way a new menu comes pre-filled by default.
+			var saveTimer = useRef( null );
+			function commit( next ) {
+				setAttributes( { items: next } );
+				if ( saveTimer.current ) { clearTimeout( saveTimer.current ); }
+				saveTimer.current = setTimeout( function () {
+					apiFetch( { path: '/easy-elements/v1/menu-last', method: 'POST', data: { items: next } } ).catch( function () {} );
+				}, 800 );
+			}
+
+			// On a brand-new ( empty ) block, restore the last saved menu once.
+			useEffect( function () {
+				if ( ( attributes.items || [] ).length ) { return; }
+				apiFetch( { path: '/easy-elements/v1/menu-last' } ).then( function ( res ) {
+					if ( res && Array.isArray( res.items ) && res.items.length && ! ( attributes.items || [] ).length ) {
+						setAttributes( { items: res.items } );
+					}
+				} ).catch( function () {} );
+			}, [] );
+
+			// Dashboard menus ( Appearance → Menus ) the user can import into this block.
+			var wpMenusState   = useState( [] );
+			var wpMenus        = wpMenusState[0];
+			var setWpMenus     = wpMenusState[1];
+			var selMenuState   = useState( '' );
+			var selMenu        = selMenuState[0];
+			var setSelMenu     = selMenuState[1];
+			var loadMenuState  = useState( false );
+			var loadingMenu    = loadMenuState[0];
+			var setLoadingMenu = loadMenuState[1];
+
+			useEffect( function () {
+				apiFetch( { path: '/wp/v2/menus?per_page=100&_fields=id,name' } ).then( function ( res ) {
+					if ( Array.isArray( res ) ) { setWpMenus( res ); }
+				} ).catch( function () {} );
+			}, [] );
+
+			// Fetch a Dashboard menu's items and convert them into this block's nested item tree.
+			function eelfgLoadWpMenu( id ) {
+				if ( ! id ) { return; }
+				setLoadingMenu( true );
+				apiFetch( { path: '/wp/v2/menu-items?menus=' + encodeURIComponent( id ) + '&per_page=100&_fields=id,title,url,parent,menu_order,object_id,type,target,description' } )
+					.then( function ( list ) {
+						setLoadingMenu( false );
+						if ( ! Array.isArray( list ) ) { return; }
+						var byId = {}, roots = [];
+						list.forEach( function ( mi ) {
+							byId[ mi.id ] = {
+								label: ( mi.title && mi.title.rendered ) ? mi.title.rendered : '',
+								url: mi.url || '#',
+								description: mi.description || '',
+								newTab: '_blank' === mi.target,
+								objectId: ( 'post_type' === mi.type ) ? ( mi.object_id || 0 ) : 0,
+								objectType: mi.type || '',
+								children: []
+							};
+						} );
+						// Order by menu_order, then nest under each item's parent.
+						list.slice().sort( function ( a, b ) { return ( a.menu_order || 0 ) - ( b.menu_order || 0 ); } ).forEach( function ( mi ) {
+							var node = byId[ mi.id ];
+							if ( mi.parent && byId[ mi.parent ] ) { byId[ mi.parent ].children.push( node ); } else { roots.push( node ); }
+						} );
+						commit( roots );
+					} )
+					.catch( function () { setLoadingMenu( false ); } );
+			}
 
 			function blankItem() { return { label: __( 'New Item', TD ), url: '#', description: '', newTab: false, children: [] }; }
-			function blankChild() { return { label: __( 'Sub Item', TD ), url: '#', description: '', newTab: false }; }
+			function blankChild() { return { label: __( 'Sub Item', TD ), url: '#', description: '', newTab: false, children: [] }; }
+
+			// Strip HTML tags for plain-text contexts ( inspector text fields, panel titles ).
+			function eelfgStripTags( s ) { return String( s == null ? '' : s ).replace( /<[^>]*>/g, '' ); }
 
 			function addItem() { var n = clone(); n.push( blankItem() ); commit( n ); }
 			function addLinkItem( v ) {
@@ -434,6 +595,8 @@
 				var it = blankItem();
 				it.url = v.url || '#';
 				it.label = v.title || __( 'New Item', TD );
+				it.objectId = v.id || 0;
+				it.objectType = v.type || '';
 				n.push( it );
 				commit( n );
 			}
@@ -448,109 +611,160 @@
 				var c = blankChild();
 				if ( v.url ) { c.url = v.url; }
 				if ( v.title ) { c.label = v.title; }
+				c.objectId = v.id || 0;
+				c.objectType = v.type || '';
 				n[ i ].children.push( c );
 				commit( n );
 			}
 			function updateChild( i, ci, patch ) { var n = clone(); n[ i ].children[ ci ] = Object.assign( {}, n[ i ].children[ ci ], patch ); commit( n ); }
 			function removeChild( i, ci ) { var n = clone(); n[ i ].children.splice( ci, 1 ); commit( n ); }
 
-			// ---- Inspector: Menu Items ----
-			var itemEditors = items.map( function ( item, i ) {
-				var childEditors = ( item.children || [] ).map( function ( child, ci ) {
-					return el(
-						'div',
-						{ key: 'c' + ci, className: 'eelfg-menu-item-editor is-child' },
-						el( TextControl, { label: __( 'Sub Label', TD ), value: child.label || '', onChange: function ( v ) { updateChild( i, ci, { label: v } ); } } ),
-						el( 'div', { className: 'eelfg-menu-field' },
-							el( 'div', { className: 'eelfg-menu-linkfield-label' }, __( 'Sub Link', TD ) ),
-							el( LinkPicker, { url: child.url, onPick: function ( v ) {
-								var patch = { url: v.url || '' };
-								if ( ( ! child.label || child.label === __( 'Sub Item', TD ) ) && v.title ) { patch.label = v.title; }
-								updateChild( i, ci, patch );
-							} } )
-						),
-						el( TextControl, { label: __( 'Description', TD ), value: child.description || '', onChange: function ( v ) { updateChild( i, ci, { description: v } ); } } ),
-						el( ToggleControl, { label: __( 'Open in new tab', TD ), checked: !! child.newTab, onChange: function ( v ) { updateChild( i, ci, { newTab: v } ); } } ),
-						el( Button, { isDestructive: true, variant: 'link', onClick: function () { removeChild( i, ci ); } }, __( 'Remove sub-item', TD ) )
-					);
+			// ---- Path-based tree operations ( unlimited nesting: [2] = 3rd item, [2,0] = its 1st child, [2,0,1] = a grandchild ) ----
+			// Return the node object at `path` ( or null if the path no longer resolves ).
+			function nodeByPath( tree, path ) {
+				if ( ! path ) { return null; }
+				var arr = tree, node = null;
+				for ( var k = 0; k < path.length; k++ ) {
+					if ( ! arr || ! arr[ path[ k ] ] ) { return null; }
+					node = arr[ path[ k ] ];
+					arr = node.children;
+				}
+				return node;
+			}
+			// Return the array that directly holds the node at `path` ( i.e. its parent's child list ).
+			function nodeArrAt( tree, path ) {
+				var arr = tree;
+				for ( var k = 0; k < path.length - 1; k++ ) {
+					if ( ! Array.isArray( arr[ path[ k ] ].children ) ) { arr[ path[ k ] ].children = []; }
+					arr = arr[ path[ k ] ].children;
+				}
+				return arr;
+			}
+			function updateAt( path, patch ) { var n = clone(), arr = nodeArrAt( n, path ), i = path[ path.length - 1 ]; arr[ i ] = Object.assign( {}, arr[ i ], patch ); commit( n ); }
+			function removeAt( path ) { var n = clone(), arr = nodeArrAt( n, path ); arr.splice( path[ path.length - 1 ], 1 ); commit( n ); }
+			function moveAt( path, dir ) {
+				var n = clone(), arr = nodeArrAt( n, path );
+				var i = path[ path.length - 1 ], j = i + dir;
+				if ( j < 0 || j >= arr.length ) { return; }
+				var t = arr[ i ]; arr[ i ] = arr[ j ]; arr[ j ] = t; commit( n );
+			}
+			// Add a child into the node at `parentPath` ( [] = top level ).
+			function addChildAt( parentPath, child ) {
+				var n = clone();
+				if ( ! parentPath.length ) { n.push( child ); commit( n ); return; }
+				var arr = n, node = null;
+				for ( var k = 0; k < parentPath.length; k++ ) { node = arr[ parentPath[ k ] ]; if ( ! Array.isArray( node.children ) ) { node.children = []; } arr = node.children; }
+				node.children.push( child );
+				commit( n );
+			}
+			// Build a sub-item from a link pick, then add it under `parentPath`.
+			function addChildLinkAt( parentPath, v ) {
+				v = v || {};
+				var c = blankChild();
+				if ( v.url ) { c.url = v.url; }
+				if ( v.title ) { c.label = v.title; }
+				c.objectId = v.id || 0;
+				c.objectType = v.type || '';
+				addChildAt( parentPath, c );
+			}
+
+			// ---- Inspector: Menu Items ( recursive — every level can hold its own dropdown items ) ----
+			function renderItemEditor( node, path, siblingCount ) {
+				var idx     = path[ path.length - 1 ];
+				var isTop   = 1 === path.length;
+				var level   = path.length;       // 1 = top menu item, 2 = its dropdown, 3 = next level, …
+				var subLvl  = level + 1;          // the level of items added under THIS node
+				var kids    = node.children || [];
+
+				// Nested dropdown-item editors ( recurse to any depth ).
+				var childEditors = kids.map( function ( child, ci ) {
+					return renderItemEditor( child, path.concat( ci ), kids.length );
 				} );
 
-				return el(
-					PanelBody,
-					{
-						key: 'i' + i,
-						className: 'eelfg-menu-item-panel',
-						title: ( item.label && item.label.trim() ) ? item.label.trim() : __( 'Untitled', TD ),
-						initialOpen: false
-					},
-					el( TextControl, { label: __( 'Label', TD ), value: item.label || '', onChange: function ( v ) { updateItem( i, { label: v } ); } } ),
-					el( 'div', { className: 'eelfg-menu-field' },
+				var iconField = el( 'div', { key: 'icon', className: 'eelfg-menu-field' },
+					el( ToggleControl, {
+						label: __( 'Icon', TD ),
+						checked: 'none' !== eelfgItemType( node ),
+						onChange: function ( v ) { updateAt( path, { iconType: v ? ( ( node.iconType && 'none' !== node.iconType ) ? node.iconType : 'icon' ) : 'none' } ); }
+					} ),
+					( 'none' !== eelfgItemType( node ) ) ? el( SelectControl, {
+						label: __( 'Type', TD ),
+						value: 'image' === eelfgItemType( node ) ? 'image' : 'icon',
+						options: [ { label: __( 'Icon', TD ), value: 'icon' }, { label: __( 'Image', TD ), value: 'image' } ],
+						onChange: function ( v ) { updateAt( path, { iconType: v } ); }
+					} ) : null,
+					( 'icon' === eelfgItemType( node ) ) ? el( 'div', { className: 'eelfg-menu-icon-picker' },
+						( node.iconName && EELFG_SVG[ node.iconName ] ) ? el( 'span', { className: 'eelfg-menu-icon-preview', dangerouslySetInnerHTML: { __html: EELFG_SVG[ node.iconName ] } } ) : null,
+						el( SelectControl, {
+							value: node.iconName || 'arrow-right',
+							options: EELFG_ICON_CHOICES,
+							onChange: function ( v ) { updateAt( path, { iconName: v } ); }
+						} )
+					) : null,
+					( 'image' === eelfgItemType( node ) ) ? el( 'div', { className: 'eelfg-menu-icon-picker' },
+						node.iconUrl ? el( 'span', { className: 'eelfg-menu-icon-thumb' }, el( 'img', { src: node.iconUrl, alt: '' } ) ) : null,
+						el( MediaUploadCheck, {},
+							el( MediaUpload, {
+								allowedTypes: [ 'image' ],
+								value: node.iconId,
+								onSelect: function ( m ) { updateAt( path, { iconUrl: m.url, iconId: m.id } ); },
+								render: function ( o ) {
+									return el( Button, { variant: 'secondary', onClick: o.open }, node.iconUrl ? __( 'Replace', TD ) : __( 'Upload image', TD ) );
+								}
+							} )
+						),
+						node.iconUrl ? el( Button, { variant: 'link', isDestructive: true, onClick: function () { updateAt( path, { iconUrl: '', iconId: 0 } ); } }, __( 'Remove', TD ) ) : null
+					) : null,
+					( 'none' !== eelfgItemType( node ) ) ? el( SelectControl, {
+						label: __( 'Icon Side', TD ),
+						value: 'left' === node.iconSide ? 'left' : 'right',
+						options: [ { label: __( 'Right', TD ), value: 'right' }, { label: __( 'Left', TD ), value: 'left' } ],
+						onChange: function ( v ) { updateAt( path, { iconSide: v } ); }
+					} ) : null
+				);
+
+				var fields = [
+					// A small badge on nested editors so it is always clear which level you are editing.
+					isTop ? null : el( 'div', { key: 'badge', className: 'eelfg-menu-level-badge' }, sprintf( __( 'Level %d sub-item', TD ), level ) ),
+					el( TextControl, { key: 'label', label: isTop ? __( 'Label', TD ) : sprintf( __( 'Level %d label', TD ), level ), value: eelfgStripTags( node.label || '' ), onChange: function ( v ) { updateAt( path, { label: v } ); } } ),
+					el( 'div', { key: 'link', className: 'eelfg-menu-field' },
 						el( 'div', { className: 'eelfg-menu-linkfield-label' }, __( 'Link', TD ) ),
-						el( LinkPicker, { url: item.url, onPick: function ( v ) {
-							var patch = { url: v.url || '' };
-							if ( ( ! item.label || item.label === __( 'New Item', TD ) ) && v.title ) { patch.label = v.title; }
-							updateItem( i, patch );
+						el( LinkPicker, { url: node.url, onPick: function ( v ) {
+							// Only the link changes here — the label is edited separately.
+							updateAt( path, { url: v.url || '', objectId: v.id || 0, objectType: v.type || '' } );
 						} } )
 					),
-					el( TextControl, { label: __( 'Description', TD ), value: item.description || '', onChange: function ( v ) { updateItem( i, { description: v } ); } } ),
-					el( ToggleControl, { label: __( 'Open in new tab', TD ), checked: !! item.newTab, onChange: function ( v ) { updateItem( i, { newTab: v } ); } } ),
-					// --- Icon: toggle on, then pick a built-in icon OR upload an image ---
-					el( 'div', { className: 'eelfg-menu-field' },
-						el( ToggleControl, {
-							label: __( 'Icon', TD ),
-							checked: 'none' !== eelfgItemType( item ),
-							onChange: function ( v ) { updateItem( i, { iconType: v ? ( ( item.iconType && 'none' !== item.iconType ) ? item.iconType : 'icon' ) : 'none' } ); }
-						} ),
-						( 'none' !== eelfgItemType( item ) ) ? el( SelectControl, {
-							label: __( 'Type', TD ),
-							value: 'image' === eelfgItemType( item ) ? 'image' : 'icon',
-							options: [ { label: __( 'Icon', TD ), value: 'icon' }, { label: __( 'Image', TD ), value: 'image' } ],
-							onChange: function ( v ) { updateItem( i, { iconType: v } ); }
-						} ) : null,
-						( 'icon' === eelfgItemType( item ) ) ? el( 'div', { className: 'eelfg-menu-icon-picker' },
-							( item.iconName && EELFG_SVG[ item.iconName ] ) ? el( 'span', { className: 'eelfg-menu-icon-preview', dangerouslySetInnerHTML: { __html: EELFG_SVG[ item.iconName ] } } ) : null,
-							el( SelectControl, {
-								value: item.iconName || 'arrow-right',
-								options: EELFG_ICON_CHOICES,
-								onChange: function ( v ) { updateItem( i, { iconName: v } ); }
-							} )
-						) : null,
-						( 'image' === eelfgItemType( item ) ) ? el( 'div', { className: 'eelfg-menu-icon-picker' },
-							item.iconUrl ? el( 'span', { className: 'eelfg-menu-icon-thumb' }, el( 'img', { src: item.iconUrl, alt: '' } ) ) : null,
-							el( MediaUploadCheck, {},
-								el( MediaUpload, {
-									allowedTypes: [ 'image' ],
-									value: item.iconId,
-									onSelect: function ( m ) { updateItem( i, { iconUrl: m.url, iconId: m.id } ); },
-									render: function ( o ) {
-										return el( Button, { variant: 'secondary', onClick: o.open }, item.iconUrl ? __( 'Replace', TD ) : __( 'Upload image', TD ) );
-									}
-								} )
-							),
-							item.iconUrl ? el( Button, { variant: 'link', isDestructive: true, onClick: function () { updateItem( i, { iconUrl: '', iconId: 0 } ); } }, __( 'Remove', TD ) ) : null
-						) : null,
-						( 'none' !== eelfgItemType( item ) ) ? el( SelectControl, {
-							label: __( 'Icon Side', TD ),
-							value: 'left' === item.iconSide ? 'left' : 'right',
-							options: [ { label: __( 'Right', TD ), value: 'right' }, { label: __( 'Left', TD ), value: 'left' } ],
-							onChange: function ( v ) { updateItem( i, { iconSide: v } ); }
-						} ) : null
-					),
-					// --- Dropdown items ---
-					el( 'div', { className: 'eelfg-menu-subsection' },
-						el( 'div', { className: 'eelfg-menu-section-label' }, __( 'Dropdown items', TD ) ),
+					el( TextControl, { key: 'desc', label: __( 'Description', TD ), value: node.description || '', onChange: function ( v ) { updateAt( path, { description: v } ); } } ),
+					el( ToggleControl, { key: 'newtab', label: __( 'Open in new tab', TD ), checked: !! node.newTab, onChange: function ( v ) { updateAt( path, { newTab: v } ); } } ),
+					iconField,
+					// --- Nested dropdown items ( unlimited depth ). The heading names the level being added,
+					//     so the tree is easy to follow: Level 2 = dropdown, Level 3, Level 4, and so on. ---
+					el( 'div', { key: 'subs', className: 'eelfg-menu-subsection' },
+						el( 'div', { className: 'eelfg-menu-section-label' }, sprintf( __( 'Level %d dropdown items', TD ), subLvl ) ),
 						childEditors,
-						el( Button, { variant: 'secondary', className: 'eelfg-menu-add-child', onClick: function () { addChild( i ); } }, __( '+ Add dropdown item', TD ) )
+						el( Button, { variant: 'secondary', className: 'eelfg-menu-add-child', onClick: function () { addChildAt( path, blankChild() ); } }, sprintf( __( '+ Add Level %d item', TD ), subLvl ) )
 					),
 					// --- Actions ---
-					el(
-						'div',
-						{ className: 'eelfg-menu-item-actions' },
-						el( Button, { variant: 'tertiary', onClick: function () { moveItem( i, -1 ); }, disabled: 0 === i }, '↑' ),
-						el( Button, { variant: 'tertiary', onClick: function () { moveItem( i, 1 ); }, disabled: i === items.length - 1 }, '↓' ),
-						el( Button, { isDestructive: true, variant: 'link', onClick: function () { removeItem( i ); } }, __( 'Remove item', TD ) )
+					el( 'div', { key: 'actions', className: 'eelfg-menu-item-actions' },
+						el( Button, { variant: 'tertiary', onClick: function () { moveAt( path, -1 ); }, disabled: 0 === idx }, '↑' ),
+						el( Button, { variant: 'tertiary', onClick: function () { moveAt( path, 1 ); }, disabled: idx === siblingCount - 1 }, '↓' ),
+						el( Button, { isDestructive: true, variant: 'link', onClick: function () { removeAt( path ); } }, isTop ? __( 'Remove item', TD ) : __( 'Remove sub-item', TD ) )
 					)
-				);
+				];
+
+				if ( isTop ) {
+					return el( PanelBody, {
+						key: 'i' + idx,
+						className: 'eelfg-menu-item-panel',
+						title: eelfgStripTags( node.label || '' ).trim() || __( 'Untitled', TD ),
+						initialOpen: false
+					}, fields );
+				}
+				return el( 'div', { key: 'c' + idx, className: 'eelfg-menu-item-editor is-child' }, fields );
+			}
+
+			var itemEditors = items.map( function ( item, i ) {
+				return renderItemEditor( item, [ i ], items.length );
 			} );
 
 			// Each item is its own collapsible panel ( titled with the item's name ); an "Add Item"
@@ -566,6 +780,26 @@
 						return el( AddMenuSearch, { onPick: function ( v ) { addLinkItem( v ); c.onClose(); } } );
 					}
 				} )
+			);
+
+			// Import a menu built in the Dashboard ( Appearance → Menus ) into this block.
+			var wpMenuPicker = el(
+				PanelBody,
+				{ title: __( 'Import from WordPress Menu', TD ), initialOpen: false },
+				wpMenus.length ? el( SelectControl, {
+					label: __( 'Menu', TD ),
+					value: selMenu,
+					options: [ { label: __( '— Select a menu —', TD ), value: '' } ].concat(
+						wpMenus.map( function ( m ) { return { label: eelfgStripTags( ( m.name || '' ) ) || ( '#' + m.id ), value: String( m.id ) }; } )
+					),
+					onChange: setSelMenu
+				} ) : el( 'p', { className: 'eelfg-menu-section-label' }, __( 'No menus found. Create one under Appearance → Menus.', TD ) ),
+				el( Button, {
+					variant: 'secondary',
+					disabled: ! selMenu || loadingMenu,
+					onClick: function () { eelfgLoadWpMenu( selMenu ); }
+				}, loadingMenu ? __( 'Loading…', TD ) : __( 'Load menu items', TD ) ),
+				el( 'p', { className: 'eelfg-menu-section-label', style: { marginTop: '8px' } }, __( 'This replaces the items above with the selected menu.', TD ) )
 			);
 
 			// Dropdown settings ( always available in the Settings tab ).
@@ -672,17 +906,7 @@
 				el( SelectControl, {
 					label: __( 'Font Family', TD ),
 					value: attributes.fontFamily || '',
-					options: [
-						{ label: __( 'Default', TD ), value: '' },
-						{ label: 'System', value: 'system' },
-						{ label: 'Arial', value: 'arial' },
-						{ label: 'Helvetica', value: 'helvetica' },
-						{ label: 'Georgia', value: 'georgia' },
-						{ label: 'Times New Roman', value: 'times' },
-						{ label: 'Courier', value: 'courier' },
-						{ label: 'Verdana', value: 'verdana' },
-						{ label: 'Tahoma', value: 'tahoma' }
-					],
+					options: eelfgFontOptions(),
 					onChange: function ( v ) { setAttributes( { fontFamily: v } ); }
 				} ),
 				eelfgToggleGroup( {
@@ -705,29 +929,106 @@
 				} )
 			);
 
-			// Colours: a Text / Hover / Active toggle drives one colour picker; Description is separate.
+			// A small helper: a solid-colour picker bound to one attribute key.
+			function eelfgColorPicker( attrKey ) {
+				var val = attributes[ attrKey ] || '';
+				var onSet = function ( v ) { var p = {}; p[ attrKey ] = v || ''; setAttributes( p ); };
+				return ColorPalette ? el( ColorPalette, { value: val, onChange: onSet } ) : colorRow( __( 'Color', TD ), val, onSet );
+			}
+			// A background picker offering BOTH a solid colour and a gradient. Solid and gradient are stored
+			// in SEPARATE attributes ( like core ); each handler writes only its own key so neither clears
+			// the other. The CSS then prefers the gradient when set, otherwise the solid colour.
+			function eelfgBgPicker( solidKey, gradKey ) {
+				if ( ColorGradientControl ) {
+					return el( ColorGradientControl, {
+						__nextHasNoMargin: true,
+						colors: colorGradientSettings.colors,
+						gradients: colorGradientSettings.gradients,
+						colorValue: attributes[ solidKey ] || undefined,
+						gradientValue: attributes[ gradKey ] || undefined,
+						onColorChange: function ( c ) { var p = {}; p[ solidKey ] = c || ''; setAttributes( p ); },
+						onGradientChange: function ( g ) { var p = {}; p[ gradKey ] = g || ''; setAttributes( p ); }
+					} );
+				}
+				// Fallback ( older WP ): solid colour only.
+				return eelfgColorPicker( solidKey );
+			}
+			function eelfgColorLabel( text ) {
+				return el( 'div', { className: 'eelfg-menu-linkfield-label', style: { marginTop: '14px' } }, text );
+			}
+
+			// Text colour: Text / Hover / Active toggle drives one picker.
 			var colorAttrKey = ( 'hover' === colorState ) ? 'hoverColor' : ( 'active' === colorState ? 'activeColor' : 'textColor' );
-			var currentColorVal = attributes[ colorAttrKey ] || '';
-			var colorPickerEl = ColorPalette ? el( ColorPalette, {
-				value: currentColorVal,
-				onChange: function ( v ) { var p = {}; p[ colorAttrKey ] = v || ''; setAttributes( p ); }
-			} ) : colorRow( __( 'Color', TD ), currentColorVal, function ( v ) { var p = {}; p[ colorAttrKey ] = v || ''; setAttributes( p ); } );
+			// Item background: Normal / Hover / Active toggle drives one picker ( solid + gradient keys ).
+			var bgAttrKey = ( 'hover' === bgState ) ? 'itemBgHoverColor' : ( 'active' === bgState ? 'itemBgActiveColor' : 'itemBgColor' );
+			var bgGradKey = ( 'hover' === bgState ) ? 'itemBgHoverGradient' : ( 'active' === bgState ? 'itemBgActiveGradient' : 'itemBgGradient' );
+			// Dropdown text: Text / Hover toggle drives one picker.
+			var ddTextKey = ( 'hover' === ddState ) ? 'dropdownHoverColor' : 'dropdownTextColor';
+			// Mobile text + background keys ( Text/Hover/Active and Normal/Hover/Active ).
+			var mTextKey   = ( 'hover' === mTextState ) ? 'mobileHoverColor' : ( 'active' === mTextState ? 'mobileActiveColor' : 'mobileTextColor' );
+			var mBgKey     = ( 'hover' === mBgState ) ? 'mobileBgHoverColor' : ( 'active' === mBgState ? 'mobileBgActiveColor' : 'mobileBgColor' );
+			var mBgGradKey = ( 'hover' === mBgState ) ? 'mobileBgHoverGradient' : ( 'active' === mBgState ? 'mobileBgActiveGradient' : 'mobileBgGradient' );
 
 			var colorsPanel = el(
 				PanelBody,
 				{ title: __( 'Colors', TD ), initialOpen: true },
+				// --- Item text colour ---
 				eelfgToggleGroup( {
-					label: __( 'Item Color', TD ),
+					label: __( 'Item Text', TD ),
 					value: colorState,
 					options: [ { label: __( 'Text', TD ), value: 'text' }, { label: __( 'Hover', TD ), value: 'hover' }, { label: __( 'Active', TD ), value: 'active' } ],
 					onChange: setColorState
 				} ),
-				colorPickerEl,
-				el( 'div', { className: 'eelfg-menu-linkfield-label', style: { marginTop: '14px' } }, __( 'Description Color', TD ) ),
-				ColorPalette ? el( ColorPalette, {
-					value: attributes.descriptionColor || '',
-					onChange: function ( v ) { setAttributes( { descriptionColor: v || '' } ); }
-				} ) : colorRow( __( 'Description Color', TD ), attributes.descriptionColor, function ( v ) { setAttributes( { descriptionColor: v } ); } )
+				eelfgColorPicker( colorAttrKey ),
+				// --- Item background colour ---
+				eelfgColorLabel( __( 'Item Background', TD ) ),
+				eelfgToggleGroup( {
+					value: bgState,
+					options: [ { label: __( 'Normal', TD ), value: 'normal' }, { label: __( 'Hover', TD ), value: 'hover' }, { label: __( 'Active', TD ), value: 'active' } ],
+					onChange: setBgState
+				} ),
+				eelfgBgPicker( bgAttrKey, bgGradKey ),
+				// --- Description colour ---
+				eelfgColorLabel( __( 'Description Color', TD ) ),
+				eelfgColorPicker( 'descriptionColor' )
+			);
+
+			// Dropdown colours: their own collapsible panel under the Style tab.
+			var dropdownColorsPanel = el(
+				PanelBody,
+				{ title: __( 'Dropdown Colors', TD ), initialOpen: false },
+				eelfgColorLabel( __( 'Dropdown Background', TD ) ),
+				eelfgBgPicker( 'dropdownBg', 'dropdownBgGradient' ),
+				eelfgColorLabel( __( 'Dropdown Item Text', TD ) ),
+				eelfgToggleGroup( {
+					value: ddState,
+					options: [ { label: __( 'Text', TD ), value: 'text' }, { label: __( 'Hover', TD ), value: 'hover' } ],
+					onChange: setDdState
+				} ),
+				eelfgColorPicker( ddTextKey ),
+				eelfgColorLabel( __( 'Dropdown Item Hover Background', TD ) ),
+				eelfgBgPicker( 'dropdownHoverBg', 'dropdownHoverBgGradient' )
+			);
+
+			// Mobile ( drawer ) colours: their own collapsible panel. These override the desktop colours
+			// only when the mobile drawer is active, so the mobile menu can be styled separately.
+			var mobilePanel = el(
+				PanelBody,
+				{ title: __( 'Mobile Colors', TD ), initialOpen: false },
+				eelfgColorLabel( __( 'Item Text', TD ) ),
+				eelfgToggleGroup( {
+					value: mTextState,
+					options: [ { label: __( 'Text', TD ), value: 'text' }, { label: __( 'Hover', TD ), value: 'hover' }, { label: __( 'Active', TD ), value: 'active' } ],
+					onChange: setMTextState
+				} ),
+				eelfgColorPicker( mTextKey ),
+				eelfgColorLabel( __( 'Item Background', TD ) ),
+				eelfgToggleGroup( {
+					value: mBgState,
+					options: [ { label: __( 'Normal', TD ), value: 'normal' }, { label: __( 'Hover', TD ), value: 'hover' }, { label: __( 'Active', TD ), value: 'active' } ],
+					onChange: setMBgState
+				} ),
+				eelfgBgPicker( mBgKey, mBgGradKey )
 			);
 
 			// ---- Inspector: Responsive ----
@@ -773,59 +1074,61 @@
 			);
 
 			// ---- Live preview (links do NOT navigate in the editor) ----
-			function renderLi( item, key, isChild, onLabel, onChildLabel, onRemove, onChildRemove, onAddChild ) {
-				var kids   = ( ! isChild && item.children && item.children.length ) ? item.children : [];
-				var itSide = 'left' === item.iconSide ? 'left' : 'right';
-				var itype  = eelfgItemType( item );
+			// Recursive canvas renderer. `path` locates the node in the tree ( [i], [i,ci], [i,ci,gci] … ),
+			// so the label, caret and sub-menu work identically at every nesting level.
+			function renderNode( node, path ) {
+				var key    = 'nd-' + path.join( '-' );
+				var kids   = ( node.children && node.children.length ) ? node.children : [];
+				var itSide = 'left' === node.iconSide ? 'left' : 'right';
+				var itype  = eelfgItemType( node );
 				var iconEl = null;
-				if ( 'image' === itype && item.iconUrl ) {
+				if ( 'image' === itype && node.iconUrl ) {
 					iconEl = el( 'span', { className: 'eelfg-menu-item-icon eelfg-menu-item-icon--' + itSide, 'aria-hidden': 'true' },
-						el( 'img', { className: 'eelfg-menu-item-img', src: item.iconUrl, alt: '' } ) );
-				} else if ( 'icon' === itype && item.iconName && EELFG_SVG[ item.iconName ] ) {
+						el( 'img', { className: 'eelfg-menu-item-img', src: node.iconUrl, alt: '' } ) );
+				} else if ( 'icon' === itype && node.iconName && EELFG_SVG[ node.iconName ] ) {
 					iconEl = el( 'span', {
 						className: 'eelfg-menu-item-icon eelfg-menu-item-icon--' + itSide,
 						'aria-hidden': 'true',
-						dangerouslySetInnerHTML: { __html: EELFG_SVG[ item.iconName ] }
+						dangerouslySetInnerHTML: { __html: EELFG_SVG[ node.iconName ] }
 					} );
 				}
 
 				var textEl = el( 'span', { className: 'eelfg-menu-text' },
-					// The label is editable right in the preview via RichText — plain text, no formatting
-					// toolbar, no line breaks. This integrates cleanly with the editor (caret + typing).
+					// The label is editable right in the preview via RichText; selecting text shows the
+					// Bold / Italic toolbar. Line breaks stay off ( a menu label is a single line ).
 					el( RichText, {
 						identifier: 'eelfg-label-' + key,
 						tagName: 'span',
 						className: 'eelfg-menu-label',
-						value: item.label || '',
-						allowedFormats: [],
-						withoutInteractiveFormatting: true,
+						value: node.label || '',
+						allowedFormats: [ 'core/bold', 'core/italic' ],
 						disableLineBreaks: true,
 						placeholder: __( 'Label', TD ),
-						onChange: function ( v ) { onLabel( v ); },
+						onFocus: function () { setActivePath( path ); },
+						onChange: function ( v ) { updateAt( path, { label: v } ); },
 						// Backspace on an already-empty label removes the whole item.
 						onKeyDown: function ( e ) {
-							if ( 'Backspace' === e.key && onRemove && ! ( item.label || '' ).trim() ) {
+							if ( 'Backspace' === e.key && ! eelfgStripTags( node.label || '' ).trim() ) {
 								e.preventDefault();
-								onRemove();
+								removeAt( path );
 							}
 						}
 					} ),
-					item.description ? el( 'span', { className: 'eelfg-menu-desc' }, item.description ) : null
+					node.description ? el( 'span', { className: 'eelfg-menu-desc' }, node.description ) : null
 				);
 
 				var ddVal = attributes.dropdownIcon || 'caret';
 				var ddKey = eelfgDropdownKey( ddVal );
 
-				// Content for the sub-menu picker popover ( search page / URL / create ).
+				// Content for the sub-menu picker popover ( search page / URL / create ). Adds under THIS node.
 				function subPickerContent( c ) {
-					return el( AddMenuSearch, { onPick: function ( v ) { onAddChild( v ); c.onClose(); } } );
+					return el( AddMenuSearch, { onPick: function ( v ) { addChildLinkAt( path, v ); c.onClose(); } } );
 				}
 
-				// Editor: the caret shows ONLY when the item actually has a dropdown. It doubles as a
-				// button that opens the popover to add more sub-menu items. ( The first sub-menu item
-				// is added from the Inspector's "+ Add dropdown item". )
+				// The caret shows only when this node actually has a dropdown. It doubles as a button that
+				// opens the popover to add more sub-items. ( The first sub-item is added from the Inspector. )
 				var subToggle = null;
-				if ( ! isChild && onAddChild && kids.length ) {
+				if ( kids.length ) {
 					if ( showDrawer ) {
 						// In the mobile-drawer preview the caret toggles the accordion ( like the front end ).
 						var ap = { type: 'button', className: 'eelfg-menu-sub-toggle eelfg-menu-sub-trigger eelfg-menu-sub-toggle--' + ( 'none' === ddVal ? 'none' : ddVal ), 'aria-label': __( 'Toggle sub-menu', TD ), onClick: function () { toggleSubOpen( key ); } };
@@ -843,17 +1146,25 @@
 							renderContent: subPickerContent
 						} );
 					}
+				} else if ( path.length >= 2 && ! showDrawer ) {
+					// A leaf item inside a dropdown gets a small "+" on its right that adds the NEXT level
+					// under it ( Level 3, then Level 4, and so on ) — no need to open the Inspector.
+					subToggle = el( Dropdown, {
+						className: 'eelfg-menu-subadd eelfg-menu-subadd--leaf',
+						popoverProps: { className: 'eelfg-menu-add-pop', placement: 'right-start' },
+						renderToggle: function ( t ) {
+							return el( Button, { icon: plusIcon, className: 'eelfg-menu-sub-plus', label: sprintf( __( 'Add Level %d item', TD ), path.length + 1 ), showTooltip: true, 'aria-expanded': t.isOpen, onClick: t.onToggle } );
+						},
+						renderContent: subPickerContent
+					} );
 				}
 
-				// Children + a trailing "+" to add more sub-menu items.
-				var childLis = kids.map( function ( c, ci ) {
-					return renderLi( c, 'sc' + ci, true,
-						function ( text ) { onChildLabel( ci, text ); },
-						null,
-						function () { if ( onChildRemove ) { onChildRemove( ci ); } }
-					);
-				} );
-				if ( ! isChild && onAddChild ) {
+				var hasLeafAdd = ( ! kids.length && subToggle );
+
+				// Children ( recurse ) + a trailing "+" to add another sub-item at this level.
+				var subMenuEl = null;
+				if ( kids.length ) {
+					var childLis = kids.map( function ( c, ci ) { return renderNode( c, path.concat( ci ) ); } );
 					childLis.push( el( 'li', { key: 'sc-add', className: 'eelfg-menu-add-item eelfg-menu-subadd-item' },
 						el( Dropdown, {
 							popoverProps: { className: 'eelfg-menu-add-pop', placement: 'bottom-start' },
@@ -863,18 +1174,21 @@
 							renderContent: subPickerContent
 						} )
 					) );
+					subMenuEl = el( 'ul', { className: 'sub-menu' }, childLis );
 				}
 
 				return el(
 					'li',
-					{ key: key, className: 'menu-item' + ( kids.length ? ' menu-item-has-children' : '' ) + ( showDrawer && kids.length && openSubs[ key ] ? ' is-sub-open' : '' ) },
-					el( 'a', { href: item.url || '#', onClick: function ( e ) { e.preventDefault(); } },
+					{ key: key, className: 'menu-item' + ( kids.length ? ' menu-item-has-children' : '' ) + ( hasLeafAdd ? ' eelfg-menu-has-add' : '' ) + ( showDrawer && kids.length && openSubs[ key ] ? ' is-sub-open' : '' ) },
+					el( 'a', { href: node.url || '#', onClick: function ( e ) { e.preventDefault(); } },
 						'left' === itSide ? iconEl : null,
 						textEl,
-						'right' === itSide ? iconEl : null
+						'right' === itSide ? iconEl : null,
+						// The caret / "+" lives INSIDE the link ( like the front end ) so it sits within
+						// the item's background pill and picks up the exact same styling.
+						subToggle
 					),
-					subToggle,
-					kids.length ? el( 'ul', { className: 'sub-menu' }, childLis ) : null
+					subMenuEl
 				);
 			}
 
@@ -892,13 +1206,7 @@
 			var previewClass = 'eelfg-menu eelfg-menu--' + ( 'vertical' === attributes.layout ? 'vertical' : 'horizontal' ) + ' eelfg-menu-align-' + ( attributes.alignment || 'left' ) + ( 'click' === attributes.submenuTrigger ? ' eelfg-menu-click' : '' );
 
 			var lis = items.map( function ( item, i ) {
-				return renderLi( item, 'it' + i, false,
-					function ( text ) { updateItem( i, { label: text } ); },
-					function ( ci, text ) { updateChild( i, ci, { label: text } ); },
-					function () { removeItem( i ); },
-					function ( ci ) { removeChild( i, ci ); },
-					function ( v ) { addChildLink( i, v ); }
-				);
+				return renderNode( item, [ i ] );
 			} );
 			lis.push( el( 'li', { key: 'eelfg-add', className: 'eelfg-menu-add-item' }, addControl ) );
 
@@ -908,12 +1216,19 @@
 			var editorId = 'eelfg-menu-ed-' + String( props.clientId || '' ).replace( /[^a-zA-Z0-9_-]/g, '' );
 			var edSel    = '#' + editorId;
 			var edCss    = '';
+			var edImport = ''; // Google Fonts @import — must stay first in the stylesheet.
 			// Show the gap for the CURRENTLY selected device directly ( the editor canvas isn't
 			// actually resized, so media queries wouldn't fire ). Tablet/Mobile inherit desktop.
 			var edGap = ( 'tablet' === device ) ? ( attributes.gapTablet || attributes.itemGap ) : ( 'mobile' === device ? ( attributes.gapMobile || attributes.itemGap ) : attributes.itemGap );
 			if ( edGap ) { edCss += edSel + ' > .eelfg-menu-list{gap:' + edGap + ';}'; }
 			var edFont = '';
-			if ( attributes.fontFamily && EELFG_FONTS[ attributes.fontFamily ] ) { edFont += 'font-family:' + EELFG_FONTS[ attributes.fontFamily ] + ';'; }
+			if ( attributes.fontFamily && eelfgIsWebSafe( attributes.fontFamily ) ) {
+				edFont += 'font-family:' + EELFG_FONTS[ attributes.fontFamily ] + ';';
+			} else if ( attributes.fontFamily ) {
+				// A Google font family name — load it and apply it.
+				edImport += "@import url('" + eelfgGoogleFontUrl( attributes.fontFamily ) + "');";
+				edFont += 'font-family:"' + attributes.fontFamily + '",sans-serif;';
+			}
 			if ( attributes.fontSize ) { edFont += 'font-size:' + attributes.fontSize + ';'; }
 			if ( attributes.fontWeight ) { edFont += 'font-weight:' + attributes.fontWeight + ';'; }
 			if ( attributes.textTransform ) { edFont += 'text-transform:' + attributes.textTransform + ';'; }
@@ -932,6 +1247,38 @@
 			if ( attributes.descriptionColor ) {
 				edCss += edSel + ' .eelfg-menu-desc{color:' + attributes.descriptionColor + ';}';
 			}
+			// Item background ( normal / hover / active ). Any background opts the items into padded pills.
+			// Backgrounds prefer the gradient when set, otherwise the solid colour.
+			var edItemBgN = attributes.itemBgGradient || attributes.itemBgColor;
+			var edItemBgH = attributes.itemBgHoverGradient || attributes.itemBgHoverColor;
+			var edItemBgA = attributes.itemBgActiveGradient || attributes.itemBgActiveColor;
+			var edDdBg    = attributes.dropdownBgGradient || attributes.dropdownBg;
+			var edDdHovBg = attributes.dropdownHoverBgGradient || attributes.dropdownHoverBg;
+			if ( edItemBgN || edItemBgH || edItemBgA ) {
+				edCss += edSel + ' .eelfg-menu-list > li > a{padding:8px 14px;border-radius:6px;}';
+			}
+			if ( edItemBgN ) {
+				edCss += edSel + ' .eelfg-menu-list > li > a{background:' + edItemBgN + ';}';
+			}
+			if ( edItemBgH ) {
+				edCss += edSel + ' .eelfg-menu-list > li > a:hover,' + edSel + ' .eelfg-menu-list > li > a:focus{background:' + edItemBgH + ';}';
+			}
+			if ( edItemBgA ) {
+				edCss += edSel + ' .eelfg-menu-list > li.current-menu-item > a{background:' + edItemBgA + ';}';
+			}
+			// Dropdown ( sub-menu ) colours.
+			if ( edDdBg ) {
+				edCss += edSel + ' .sub-menu{background:' + edDdBg + ';}';
+			}
+			if ( attributes.dropdownTextColor ) {
+				edCss += edSel + ' .sub-menu a{color:' + attributes.dropdownTextColor + ';}';
+			}
+			if ( attributes.dropdownHoverColor ) {
+				edCss += edSel + ' .sub-menu a:hover,' + edSel + ' .sub-menu a:focus{color:' + attributes.dropdownHoverColor + ';}';
+			}
+			if ( edDdHovBg ) {
+				edCss += edSel + ' .sub-menu a:hover,' + edSel + ' .sub-menu a:focus{background:' + edDdHovBg + ';}';
+			}
 
 			// Mobile-menu drawer preview ( showDrawer computed near the top of edit ).
 			if ( showDrawer ) {
@@ -946,10 +1293,23 @@
 				edCss += edSel + '.is-open .eelfg-menu-overlay{opacity:1;visibility:visible;}';
 				edCss += edSel + ' .eelfg-menu-panel{display:block;position:fixed;top:0;bottom:0;' + edSide + ':0;width:' + edW + ';max-width:85vw;background:' + edBg + ';transform:translateX(' + edOff + ');transition:transform 0.3s ease;z-index:9999;overflow-y:auto;padding:56px 22px 28px;}';
 				edCss += edSel + '.is-open .eelfg-menu-panel{transform:translateX(0);}';
-				edCss += edSel + ' .eelfg-menu-list{flex-direction:column;align-items:stretch;width:100%;gap:0;}';
-				edCss += edSel + ' .eelfg-menu-list .menu-item > a{padding:9px 0;}';
-				edCss += edSel + ' .eelfg-menu-list .sub-menu{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border-radius:0;min-width:0;padding:0 0 0 18px;max-height:0;overflow:hidden;transition:max-height 0.3s ease;}';
-				edCss += edSel + ' .menu-item-has-children.is-sub-open > .sub-menu{max-height:1000px;}';
+				edCss += edSel + ' .eelfg-menu-list{flex-direction:column;align-items:stretch;width:100%;gap:6px;}';
+				edCss += edSel + ' .eelfg-menu-list li{width:100%;}';
+				edCss += edSel + ' .eelfg-menu-list a{display:flex;align-items:center;width:100%;padding:12px 14px;}';
+				edCss += edSel + ' .eelfg-menu-list .eelfg-menu-sub-toggle,' + edSel + ' .eelfg-menu-list .eelfg-menu-subadd{flex:0 0 auto;margin-left:auto;}';
+				edCss += edSel + ' .eelfg-menu-list .sub-menu{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border-radius:0;min-width:0;width:100%;padding:0 0 0 14px;max-height:0;overflow:hidden;transition:max-height 0.35s ease;}';
+				edCss += edSel + ' .menu-item-has-children.is-sub-open > .sub-menu{max-height:1200px;}';
+
+				// Mobile-only colours ( override desktop colours while the drawer is active ).
+				var edMBgN = attributes.mobileBgGradient || attributes.mobileBgColor;
+				var edMBgH = attributes.mobileBgHoverGradient || attributes.mobileBgHoverColor;
+				var edMBgA = attributes.mobileBgActiveGradient || attributes.mobileBgActiveColor;
+				if ( attributes.mobileTextColor ) { edCss += edSel + ' .eelfg-menu-list a{color:' + attributes.mobileTextColor + ';}'; }
+				if ( attributes.mobileHoverColor ) { edCss += edSel + ' .eelfg-menu-list a:hover,' + edSel + ' .eelfg-menu-list a:focus{color:' + attributes.mobileHoverColor + ';}'; }
+				if ( attributes.mobileActiveColor ) { edCss += edSel + ' .eelfg-menu-list .current-menu-item > a{color:' + attributes.mobileActiveColor + ';}'; }
+				if ( edMBgN ) { edCss += edSel + ' .eelfg-menu-list > li > a{background:' + edMBgN + ';border-radius:6px;}'; }
+				if ( edMBgH ) { edCss += edSel + ' .eelfg-menu-list > li > a:hover,' + edSel + ' .eelfg-menu-list > li > a:focus{background:' + edMBgH + ';}'; }
+				if ( edMBgA ) { edCss += edSel + ' .eelfg-menu-list > li.current-menu-item > a{background:' + edMBgA + ';}'; }
 			} else {
 				edCss += edSel + ' .eelfg-menu-panel{display:contents;}';
 				edCss += edSel + ' .eelfg-menu-toggle,' + edSel + ' .eelfg-menu-close{display:none;}';
@@ -979,17 +1339,46 @@
 			var preview = el(
 				'div',
 				{ id: editorId, className: previewClass + ( items.length ? '' : ' eelfg-menu-is-empty' ) + ( showDrawer && isOpenPreview ? ' is-open' : '' ) },
-				edCss ? el( 'style', {}, edCss ) : null,
+				( edImport || edCss ) ? el( 'style', {}, edImport + edCss ) : null,
 				previewToggle,
 				previewOverlay,
 				el( 'div', { className: 'eelfg-menu-panel' }, previewClose, el( 'ul', { className: 'eelfg-menu-list' }, lis ) )
 			);
 
 			var blockProps = useBlockProps();
+			var activeNode = nodeByPath( items, activePath );
 
 			return el(
 				Fragment,
 				{},
+				// Block toolbar: edit the link of the menu item whose label is currently focused.
+				el( BlockControls, { group: 'block' },
+					el( ToolbarGroup, {},
+						el( Dropdown, {
+							popoverProps: { placement: 'bottom-start' },
+							renderToggle: function ( t ) {
+								return el( ToolbarButton, {
+									icon: 'admin-links',
+									title: activeNode ? __( 'Edit link', TD ) : __( 'Click a menu item to edit its link', TD ),
+									isActive: t.isOpen,
+									'aria-expanded': t.isOpen,
+									disabled: ! activeNode,
+									onClick: t.onToggle
+								} );
+							},
+							renderContent: function ( c ) {
+								return el( AddMenuSearch, {
+									url: activeNode ? activeNode.url : '',
+									onPick: function ( v ) {
+										v = v || {};
+										updateAt( activePath, { url: v.url || '', objectId: v.id || 0, objectType: v.type || '' } );
+										c.onClose();
+									}
+								} );
+							}
+						} )
+					)
+				),
 				// Three custom tabs: Menu Items / Settings / Style.
 				el( InspectorControls, {},
 					el( TabPanel, {
@@ -1001,13 +1390,13 @@
 						]
 					}, function ( tab ) {
 						if ( 'items' === tab.name ) {
-							return el( Fragment, {}, itemEditors, addItemEl );
+							return el( Fragment, {}, wpMenuPicker, itemEditors, addItemEl );
 						}
 						if ( 'settings' === tab.name ) {
 							return el( Fragment, {}, layoutPanel, dropdownPanel, responsivePanel );
 						}
 						// Style tab: colours + typography.
-						return el( Fragment, {}, colorsPanel, typographyPanel );
+						return el( Fragment, {}, colorsPanel, dropdownColorsPanel, mobilePanel, typographyPanel );
 					} )
 				),
 				el( 'div', blockProps, preview )

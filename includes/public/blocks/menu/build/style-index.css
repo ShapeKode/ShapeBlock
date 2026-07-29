@@ -52,7 +52,7 @@
 	display: inline-flex;
 	flex-direction: row;
 	align-items: center;
-	gap: 8px;
+	gap: 4px;
 	text-decoration: none;
 	line-height: 1.35;
 	transition: color 0.2s ease;
@@ -107,13 +107,13 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	margin-left: 6px;
 	color: inherit;
 	cursor: pointer;
 	transition: transform 0.25s ease;
 }
 
-.eelfg-menu .menu-item-has-children.is-sub-open > .eelfg-menu-sub-toggle {
+.eelfg-menu .menu-item-has-children.is-sub-open > .eelfg-menu-sub-toggle,
+.eelfg-menu .menu-item-has-children.is-sub-open > a > .eelfg-menu-sub-toggle {
 	transform: rotate( 180deg );
 }
 
@@ -129,8 +129,44 @@
 	display: inline-flex;
 }
 
+/* Editor only: a leaf item inside a dropdown lays out as a row so its "+" ( add next level ) sits
+   on the right. These classes are emitted by the editor preview, never on the front end. */
+.eelfg-menu .eelfg-menu-list .sub-menu li.eelfg-menu-has-add {
+	display: flex;
+	align-items: center;
+}
+
+.eelfg-menu .eelfg-menu-list .sub-menu li.eelfg-menu-has-add > a {
+	flex: 1 1 auto;
+}
+
+.eelfg-menu .eelfg-menu-sub-plus.components-button {
+	flex: 0 0 auto;
+	min-width: 16px;
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	border-radius: 4px;
+	color: #7a3fd0;
+	opacity: 0.4;
+	transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+/* Keep the "+" glyph itself compact inside the small button. */
+.eelfg-menu .eelfg-menu-sub-plus.components-button svg {
+	width: 12px;
+	height: 12px;
+}
+
+.eelfg-menu .eelfg-menu-list .sub-menu li.eelfg-menu-has-add:hover .eelfg-menu-sub-plus.components-button,
+.eelfg-menu .eelfg-menu-sub-plus.components-button:focus {
+	opacity: 1;
+	background: #f3ecfc;
+}
+
 /* Plus indicator becomes a "×" when open instead of a meaningless 180° flip. */
-.eelfg-menu .menu-item-has-children.is-sub-open > .eelfg-menu-sub-toggle--plus {
+.eelfg-menu .menu-item-has-children.is-sub-open > .eelfg-menu-sub-toggle--plus,
+.eelfg-menu .menu-item-has-children.is-sub-open > a > .eelfg-menu-sub-toggle--plus {
 	transform: rotate( 45deg );
 }
 
@@ -138,7 +174,7 @@
 .eelfg-menu .eelfg-menu-list .sub-menu {
 	list-style: none;
 	margin: 0;
-	padding: 8px 0;
+	padding: 0;
 	position: absolute;
 	top: 100%;
 	left: 0;
@@ -155,6 +191,24 @@
 	transform: translateY( 12px );
 	pointer-events: none;
 	transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+	overflow: hidden; /* Clip item hover backgrounds to the rounded corners. */
+}
+
+/* A horizontal dropdown that opens a nested ( side ) flyout must NOT clip — that would hide the
+   flyout. Those keep overflow visible and round their first / last items so corners still look clean.
+   ( Vertical menus use a static accordion that relies on overflow:hidden, so they are excluded. ) */
+.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu:has( .sub-menu ) {
+	overflow: visible;
+}
+
+.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu:has( .sub-menu ) > li:first-child > a {
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+}
+
+.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu:has( .sub-menu ) > li:last-child > a {
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
 }
 
 .eelfg-menu .eelfg-menu-list li:hover > .sub-menu,
@@ -181,10 +235,79 @@
 	pointer-events: auto;
 }
 
+/* Nested dropdowns ( 3rd level and deeper ) fly out to the side instead of stacking on top.
+   Scoped away from the vertical layout, which uses a static accordion instead. */
+.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu .sub-menu {
+	top: 0;
+	left: 100%;
+	transform: translateX( 12px );
+}
+
+.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu li:hover > .sub-menu,
+.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu li:focus-within > .sub-menu {
+	transform: translateX( 0 );
+}
+
+/* Invisible hover "bridge" that fills the gap between a parent item and its dropdown, so moving the
+   pointer from the item into the dropdown ( or between levels ) never loses hover and closes it.
+   It is part of the sub-menu, so hovering it keeps the parent's :hover active. Only active while the
+   dropdown is open ( the sub-menu is pointer-events:none while hidden ). */
+.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu::before {
+	content: '';
+	position: absolute;
+	top: -14px;
+	left: 0;
+	right: 0;
+	height: 14px;
+	background: transparent;
+}
+
+/* Nested ( side ) flyouts: the gap is on the left instead of the top. */
+.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu .sub-menu::before {
+	top: 0;
+	left: -14px;
+	right: auto;
+	width: 14px;
+	height: 100%;
+}
+
+.eelfg-menu-click:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu li:hover > .sub-menu,
+.eelfg-menu-click:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu li:focus-within > .sub-menu {
+	transform: translateX( 12px );
+}
+
+.eelfg-menu-click:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu li.is-sub-open > .sub-menu {
+	transform: translateX( 0 );
+}
+
 .eelfg-menu .eelfg-menu-list .sub-menu a {
-	display: block;
+	display: flex;
+	align-items: center;
+	gap: 8px;
 	padding: 9px 18px;
 	white-space: nowrap;
+	/* Stay transparent so the panel's own background ( solid or gradient ) shows through the items;
+	   only the item :hover rule paints a background. */
+	background-color: transparent;
+}
+
+.eelfg-menu .eelfg-menu-list .sub-menu li {
+	background-color: transparent;
+}
+
+/* In a dropdown the arrow ( and the editor's leaf "+" ) is pushed to the far right, while any
+   icon + label stay grouped on the left. On the front end the arrow is a direct child of the link;
+   in the editor the caret / "+" is wrapped in a Dropdown ( .eelfg-menu-subadd ), so target that too. */
+.eelfg-menu .eelfg-menu-list .sub-menu a > .eelfg-menu-sub-toggle,
+.eelfg-menu .eelfg-menu-list .sub-menu a > .eelfg-menu-sub-plus,
+.eelfg-menu .eelfg-menu-list .sub-menu a > .eelfg-menu-subadd {
+	margin-left: auto;
+}
+
+/* Make a dropdown parent's link fill the row so the arrow reaches the dropdown's right edge.
+   ( Front end: arrow is inside the link. Editor: the caret button is a sibling — both land right. ) */
+.eelfg-menu .eelfg-menu-list .sub-menu li.menu-item-has-children > a {
+	flex: 1 1 auto;
 }
 
 .eelfg-menu--vertical .eelfg-menu-list .sub-menu {
@@ -292,15 +415,21 @@
 }
 
 .eelfg-menu-add-btn.components-button {
-	min-width: 32px;
-	width: 32px;
-	height: 32px;
+	min-width: 22px;
+	width: 22px;
+	height: 22px;
 	padding: 0;
 	justify-content: center;
 	border: 1px dashed #a216ff;
 	color: #a216ff;
-	border-radius: 6px;
+	border-radius: 5px;
 	background: rgba( 162, 22, 255, 0.06 );
+}
+
+/* Keep the "+" glyph compact inside the smaller button. */
+.eelfg-menu-add-btn.components-button svg {
+	width: 14px;
+	height: 14px;
 }
 
 .eelfg-menu-add-btn.components-button:hover {
@@ -410,9 +539,25 @@
 
 /* Sub-item ( dropdown ) editors sit inside their parent's panel, separated by a light rule. */
 .eelfg-menu-item-editor.is-child {
-	margin-bottom: 14px;
-	padding-bottom: 14px;
+	margin: 10px 0 14px;
+	padding: 10px 0 14px 12px;
 	border-bottom: 1px solid #e0e0e0;
+	/* Left accent + indent makes the nesting depth easy to read at a glance. */
+	border-left: 2px solid #d5c2ef;
+}
+
+/* Small "Level N sub-item" badge that heads every nested editor. */
+.eelfg-menu-level-badge {
+	display: inline-block;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: #7a3fd0;
+	background: #f3ecfc;
+	border-radius: 3px;
+	padding: 2px 7px;
+	margin-bottom: 8px;
 }
 
 .eelfg-menu-subsection {
@@ -484,6 +629,12 @@
 	color: #1e1e1e;
 }
 
+/* The Dropdown wrapper must be full-width, else its button shrinks to the link text ( e.g. "#" ). */
+.eelfg-menu-linkpicker {
+	display: block;
+	width: 100%;
+}
+
 .eelfg-menu-linkpicker-btn.components-button {
 	width: 100%;
 	justify-content: flex-start;
@@ -491,6 +642,7 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	display: block;
+	text-align: left;
 }
 
 .eelfg-menu-item-actions {
