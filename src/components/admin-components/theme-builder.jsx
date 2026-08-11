@@ -5,7 +5,8 @@ import {
 } from 'antd';
 import {
     PlusOutlined, EditOutlined, DeleteOutlined,
-    SearchOutlined, ReloadOutlined, FilterOutlined, CopyOutlined
+    SearchOutlined, ReloadOutlined, FilterOutlined, CopyOutlined,
+    UndoOutlined
 } from '@ant-design/icons';
 
 const { Search } = Input;
@@ -17,6 +18,9 @@ import BuilderConditionsModal from './builder-conditions-modal';
  *
  * Template types are driven entirely by eelfg.builderTypes (the PHP registry),
  * so adding a future type server-side surfaces it here with no UI changes.
+ *
+ * Deleting a template moves it to Trash first; from the Trash view it can be
+ * restored or deleted permanently.
  */
 export default function ThemeBuilder() {
     const builderTypes = useMemo(
@@ -29,6 +33,8 @@ export default function ThemeBuilder() {
     const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 });
     const [search, setSearch] = useState('');
     const [typeFilter, setTypeFilter] = useState(''); // '' = all
+    const [statusView, setStatusView] = useState('publish'); // 'publish' = active, 'trash' = trashed
+    const [trashCount, setTrashCount] = useState(0);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
     const [addOpen, setAddOpen] = useState(false);
@@ -37,9 +43,11 @@ export default function ThemeBuilder() {
 
     const [conditionsItem, setConditionsItem] = useState(null);
 
-    const fetchItems = useCallback((page = 1, pageSize = 10, searchVal = '', type = '') => {
+    const isTrashView = statusView === 'trash';
+
+    const fetchItems = useCallback((page = 1, pageSize = 10, searchVal = '', type = '', status = 'publish') => {
         setLoading(true);
-        const params = new URLSearchParams({ page, per_page: pageSize, search: searchVal, type });
+        const params = new URLSearchParams({ page, per_page: pageSize, search: searchVal, type, status });
         // rest_url may be the plain-permalink form (index.php?rest_route=/easy-elements-for-gutenberg/v1/),
         // in which case query args must be appended with "&", not "?".
         const sep = eelfg.rest_url.includes('?') ? '&' : '?';
@@ -49,6 +57,7 @@ export default function ThemeBuilder() {
             .then((res) => res.json())
             .then((data) => {
                 setItems(data.items || []);
+                setTrashCount(typeof data.trashTotal === 'number' ? data.trashTotal : 0);
                 setPagination((prev) => ({
                     ...prev,
                     current: data.page || 1,
@@ -61,20 +70,26 @@ export default function ThemeBuilder() {
     }, []);
 
     useEffect(() => {
-        fetchItems(1, pagination.pageSize, search, typeFilter);
+        fetchItems(1, pagination.pageSize, search, typeFilter, statusView);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [typeFilter]);
 
-    const refresh = () => fetchItems(pagination.current, pagination.pageSize, search, typeFilter);
+    const refresh = () => fetchItems(pagination.current, pagination.pageSize, search, typeFilter, statusView);
 
     const handleTableChange = (pag) => {
-        fetchItems(pag.current, pag.pageSize, search, typeFilter);
+        fetchItems(pag.current, pag.pageSize, search, typeFilter, statusView);
     };
 
     const handleSearch = (value) => {
         setSearch(value);
         setSelectedRowKeys([]);
-        fetchItems(1, pagination.pageSize, value, typeFilter);
+        fetchItems(1, pagination.pageSize, value, typeFilter, statusView);
+    };
+
+    const changeStatusView = (value) => {
+        setStatusView(value);
+        setSelectedRowKeys([]);
+        fetchItems(1, pagination.pageSize, search, typeFilter, value);
     };
 
     const openAdd = () => {
@@ -114,7 +129,8 @@ export default function ThemeBuilder() {
         });
     };
 
-    const handleDelete = (id) => {
+    // Move a template to Trash (first delete).
+    const handleTrash = (id) => {
         fetch(`${eelfg.rest_url}builder/${id}`, {
             method: 'DELETE',
             headers: { 'X-WP-Nonce': eelfg.nonce },
@@ -122,7 +138,7 @@ export default function ThemeBuilder() {
             .then((res) => res.json())
             .then((data) => {
                 if (data.status === 'success') {
-                    notification.success({ message: 'Template deleted', duration: 2 });
+                    notification.success({ message: 'Template moved to Trash', duration: 2 });
                     setSelectedRowKeys((prev) => prev.filter((k) => k !== id));
                     refresh();
                 }
@@ -130,15 +146,50 @@ export default function ThemeBuilder() {
             .catch(() => notification.error({ message: 'Delete failed' }));
     };
 
-    const handleBulkDelete = () => {
+    // Permanently delete a trashed template.
+    const handlePermanentDelete = (id) => {
+        const sep = eelfg.rest_url.includes('?') ? '&' : '?';
+        fetch(`${eelfg.rest_url}builder/${id}${sep}force=1`, {
+            method: 'DELETE',
+            headers: { 'X-WP-Nonce': eelfg.nonce },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.status === 'success') {
+                    notification.success({ message: 'Template permanently deleted', duration: 2 });
+                    setSelectedRowKeys((prev) => prev.filter((k) => k !== id));
+                    refresh();
+                }
+            })
+            .catch(() => notification.error({ message: 'Delete failed' }));
+    };
+
+    // Restore a trashed template.
+    const handleRestore = (id) => {
+        fetch(`${eelfg.rest_url}builder/${id}/restore`, {
+            method: 'POST',
+            headers: { 'X-WP-Nonce': eelfg.nonce },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.status === 'success') {
+                    notification.success({ message: 'Template restored', duration: 2 });
+                    setSelectedRowKeys((prev) => prev.filter((k) => k !== id));
+                    refresh();
+                }
+            })
+            .catch(() => notification.error({ message: 'Restore failed' }));
+    };
+
+    const handleBulkTrash = () => {
         if (selectedRowKeys.length === 0) {
             notification.warning({ message: 'No templates selected' });
             return;
         }
         Modal.confirm({
-            title: `Delete ${selectedRowKeys.length} template(s)?`,
-            content: 'This action cannot be undone.',
-            okText: 'Delete',
+            title: `Move ${selectedRowKeys.length} template(s) to Trash?`,
+            content: 'You can restore them from the Trash later.',
+            okText: 'Move to Trash',
             okType: 'danger',
             onOk: () => {
                 fetch(`${eelfg.rest_url}builder/bulk-delete`, {
@@ -150,16 +201,72 @@ export default function ThemeBuilder() {
                     .then((data) => {
                         if (data.status === 'success') {
                             notification.success({
-                                message: `${data.deleted.length} template(s) deleted`,
+                                message: `${data.deleted.length} template(s) moved to Trash`,
                                 duration: 2,
                             });
                             setSelectedRowKeys([]);
-                            fetchItems(1, pagination.pageSize, search, typeFilter);
+                            fetchItems(1, pagination.pageSize, search, typeFilter, statusView);
                         }
                     })
                     .catch(() => notification.error({ message: 'Bulk delete failed' }));
             },
         });
+    };
+
+    const handleBulkPermanentDelete = () => {
+        if (selectedRowKeys.length === 0) {
+            notification.warning({ message: 'No templates selected' });
+            return;
+        }
+        Modal.confirm({
+            title: `Permanently delete ${selectedRowKeys.length} template(s)?`,
+            content: 'This action cannot be undone.',
+            okText: 'Delete Permanently',
+            okType: 'danger',
+            onOk: () => {
+                fetch(`${eelfg.rest_url}builder/bulk-delete`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': eelfg.nonce },
+                    body: JSON.stringify({ ids: selectedRowKeys, force: true }),
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data.status === 'success') {
+                            notification.success({
+                                message: `${data.deleted.length} template(s) permanently deleted`,
+                                duration: 2,
+                            });
+                            setSelectedRowKeys([]);
+                            fetchItems(1, pagination.pageSize, search, typeFilter, statusView);
+                        }
+                    })
+                    .catch(() => notification.error({ message: 'Bulk delete failed' }));
+            },
+        });
+    };
+
+    const handleBulkRestore = () => {
+        if (selectedRowKeys.length === 0) {
+            notification.warning({ message: 'No templates selected' });
+            return;
+        }
+        fetch(`${eelfg.rest_url}builder/bulk-restore`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': eelfg.nonce },
+            body: JSON.stringify({ ids: selectedRowKeys }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.status === 'success') {
+                    notification.success({
+                        message: `${data.restored.length} template(s) restored`,
+                        duration: 2,
+                    });
+                    setSelectedRowKeys([]);
+                    fetchItems(1, pagination.pageSize, search, typeFilter, statusView);
+                }
+            })
+            .catch(() => notification.error({ message: 'Bulk restore failed' }));
     };
 
     const onConditionsSaved = (data) => {
@@ -201,7 +308,9 @@ export default function ThemeBuilder() {
             dataIndex: 'title',
             key: 'title',
             render: (title, record) => (
-                <a href={record.editUrl} style={{ fontWeight: 600 }}>{title || '(no title)'}</a>
+                isTrashView
+                    ? <span style={{ fontWeight: 600 }}>{title || '(no title)'}</span>
+                    : <a href={record.editUrl} style={{ fontWeight: 600 }}>{title || '(no title)'}</a>
             ),
         },
         {
@@ -220,26 +329,30 @@ export default function ThemeBuilder() {
                     // Custom Block: no auto-display — show its shortcode to place anywhere.
                     <Space size={4}>
                         <Tag color="blue" style={{ fontFamily: 'monospace' }}>{shortcodeFor(record)}</Tag>
-                        <Tooltip title="Copy shortcode">
-                            <Button
-                                size="small"
-                                type="text"
-                                icon={<CopyOutlined />}
-                                onClick={() => copyShortcode(record)}
-                            />
-                        </Tooltip>
+                        {!isTrashView && (
+                            <Tooltip title="Copy shortcode">
+                                <Button
+                                    size="small"
+                                    type="text"
+                                    icon={<CopyOutlined />}
+                                    onClick={() => copyShortcode(record)}
+                                />
+                            </Tooltip>
+                        )}
                     </Space>
                 ) : (
                     <Space size={4}>
                         <Tag color="default">{summary || 'Entire Site'}</Tag>
-                        <Tooltip title="Edit conditions">
-                            <Button
-                                size="small"
-                                type="text"
-                                icon={<FilterOutlined />}
-                                onClick={() => setConditionsItem(record)}
-                            />
-                        </Tooltip>
+                        {!isTrashView && (
+                            <Tooltip title="Edit conditions">
+                                <Button
+                                    size="small"
+                                    type="text"
+                                    icon={<FilterOutlined />}
+                                    onClick={() => setConditionsItem(record)}
+                                />
+                            </Tooltip>
+                        )}
                     </Space>
                 )
             ),
@@ -257,30 +370,56 @@ export default function ThemeBuilder() {
         {
             title: 'Actions',
             key: 'actions',
-            width: 160,
+            width: isTrashView ? 210 : 160,
             render: (_, record) => (
-                <Space>
-                    <Button type="primary" size="small" icon={<EditOutlined />} href={record.editUrl}>
-                        Edit
-                    </Button>
-                    {shortcodeTypes.includes(record.type) ? (
-                        <Tooltip title="Copy shortcode">
-                            <Button size="small" icon={<CopyOutlined />} onClick={() => copyShortcode(record)} />
-                        </Tooltip>
-                    ) : (
-                        <Tooltip title="Edit conditions">
-                            <Button size="small" icon={<FilterOutlined />} onClick={() => setConditionsItem(record)} />
-                        </Tooltip>
-                    )}
-                    <Popconfirm
-                        title="Delete this template?"
-                        onConfirm={() => handleDelete(record.id)}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button danger size="small" icon={<DeleteOutlined />} />
-                    </Popconfirm>
-                </Space>
+                isTrashView ? (
+                    <Space>
+                        <Popconfirm
+                            title="Restore this template?"
+                            onConfirm={() => handleRestore(record.id)}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Button type="primary" size="small" icon={<UndoOutlined />}>
+                                Restore
+                            </Button>
+                        </Popconfirm>
+                        <Popconfirm
+                            title="Delete permanently? This cannot be undone."
+                            onConfirm={() => handlePermanentDelete(record.id)}
+                            okText="Delete"
+                            okButtonProps={{ danger: true }}
+                            cancelText="Cancel"
+                        >
+                            <Button danger size="small" icon={<DeleteOutlined />}>
+                                Delete
+                            </Button>
+                        </Popconfirm>
+                    </Space>
+                ) : (
+                    <Space>
+                        <Button type="primary" size="small" icon={<EditOutlined />} href={record.editUrl}>
+                            Edit
+                        </Button>
+                        {shortcodeTypes.includes(record.type) ? (
+                            <Tooltip title="Copy shortcode">
+                                <Button size="small" icon={<CopyOutlined />} onClick={() => copyShortcode(record)} />
+                            </Tooltip>
+                        ) : (
+                            <Tooltip title="Edit conditions">
+                                <Button size="small" icon={<FilterOutlined />} onClick={() => setConditionsItem(record)} />
+                            </Tooltip>
+                        )}
+                        <Popconfirm
+                            title="Move this template to Trash?"
+                            onConfirm={() => handleTrash(record.id)}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Button danger size="small" icon={<DeleteOutlined />} />
+                        </Popconfirm>
+                    </Space>
+                )
             ),
         },
     ];
@@ -300,13 +439,35 @@ export default function ThemeBuilder() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, gap: 12, flexWrap: 'wrap' }}>
                 <Space wrap>
                     <Segmented
+                        options={[
+                            { label: 'Active', value: 'publish' },
+                            {
+                                label: trashCount > 0 ? `Trash (${trashCount})` : 'Trash',
+                                value: 'trash',
+                            },
+                        ]}
+                        value={statusView}
+                        onChange={changeStatusView}
+                    />
+                    <Segmented
                         options={typeFilterOptions}
                         value={typeFilter}
                         onChange={setTypeFilter}
                     />
-                    <Button danger disabled={selectedRowKeys.length === 0} onClick={handleBulkDelete}>
-                        Delete Selected
-                    </Button>
+                    {isTrashView ? (
+                        <>
+                            <Button disabled={selectedRowKeys.length === 0} icon={<UndoOutlined />} onClick={handleBulkRestore}>
+                                Restore Selected
+                            </Button>
+                            <Button danger disabled={selectedRowKeys.length === 0} onClick={handleBulkPermanentDelete}>
+                                Delete Permanently
+                            </Button>
+                        </>
+                    ) : (
+                        <Button danger disabled={selectedRowKeys.length === 0} onClick={handleBulkTrash}>
+                            Delete Selected
+                        </Button>
+                    )}
                     {selectedRowKeys.length > 0 && <Tag>{selectedRowKeys.length} selected</Tag>}
                 </Space>
                 <Space>
@@ -320,12 +481,12 @@ export default function ThemeBuilder() {
                             setSearch(v);
                             setSelectedRowKeys([]);
                             clearTimeout(window.__eelfgTbSearchT);
-                            window.__eelfgTbSearchT = setTimeout(() => fetchItems(1, pagination.pageSize, v, typeFilter), 300);
+                            window.__eelfgTbSearchT = setTimeout(() => fetchItems(1, pagination.pageSize, v, typeFilter, statusView), 300);
                         }}
                         style={{ width: 250 }}
                         prefix={<SearchOutlined />}
                     />
-                    <Button icon={<ReloadOutlined />} onClick={() => { setSearch(''); fetchItems(1, pagination.pageSize, '', typeFilter); }} />
+                    <Button icon={<ReloadOutlined />} onClick={() => { setSearch(''); fetchItems(1, pagination.pageSize, '', typeFilter, statusView); }} />
                 </Space>
             </div>
 

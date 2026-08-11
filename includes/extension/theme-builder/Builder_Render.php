@@ -166,14 +166,27 @@ class Builder_Render {
 		}
 
 		// Render now (before wp_head) so block styles enqueue for the <head>.
-		$this->output['header'] = $this->render_location( 'header' );
+		$builder_header = $this->render_location( 'header' );
+		$this->output['header'] = $builder_header;
 
-		require EELFG_PL_PATH . 'includes/extension/theme-builder/templates/header.php';
-
-		// Swallow the theme's own header.php so core's require_once no-ops it.
+		// Capture the theme's own header.php (require_once, so core's own
+		// require_once no-ops it) and swap only its <header> region for the
+		// builder header. Keeping the rest of header.php preserves the theme's
+		// document opening AND its content wrapper divs (e.g. #page/.main-contain/
+		// .container/#content), which only close back in footer.php — discarding
+		// the whole file would leave the page body without its layout wrapper.
 		ob_start();
 		locate_template( array( 'header.php' ), true, true );
-		ob_get_clean();
+		$theme_header = ob_get_clean();
+
+		if ( '' === $theme_header ) {
+			// Theme has no header.php (unusual for a classic theme) — fall back
+			// to our own complete document opening.
+			require EELFG_PL_PATH . 'includes/extension/theme-builder/templates/header.php';
+			return;
+		}
+
+		echo $this->replace_region( $theme_header, $builder_header, 'header' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Builder header is sanitised/escaped in render_post(); theme header.php is trusted template output.
 	}
 
 	public function maybe_override_footer() {
@@ -181,13 +194,58 @@ class Builder_Render {
 			return;
 		}
 
-		$this->output['footer'] = $this->render_location( 'footer' );
+		$builder_footer = $this->render_location( 'footer' );
+		$this->output['footer'] = $builder_footer;
 
-		require EELFG_PL_PATH . 'includes/extension/theme-builder/templates/footer.php';
-
+		// Mirror the header handling: keep the theme's footer.php (its structural
+		// wrapper closes + the single wp_footer() + closing body/html tags) and
+		// swap only its <footer> region for the builder footer.
 		ob_start();
 		locate_template( array( 'footer.php' ), true, true );
-		ob_get_clean();
+		$theme_footer = ob_get_clean();
+
+		if ( '' === $theme_footer ) {
+			require EELFG_PL_PATH . 'includes/extension/theme-builder/templates/footer.php';
+			return;
+		}
+
+		echo $this->replace_region( $theme_footer, $builder_footer, 'footer' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Builder footer is sanitised/escaped in render_post(); theme footer.php is trusted template output.
+	}
+
+	/**
+	 * Swap the theme template's <header>/<footer> element for the builder markup
+	 * while preserving everything else it emitted (document opening, content
+	 * wrapper divs, the single wp_head()/wp_footer() output and closing tags).
+	 *
+	 * substr splicing (not preg_replace replacement) is used so `$`/`\` byte
+	 * sequences in the builder markup are inserted verbatim.
+	 *
+	 * @param string $theme_html Captured output of the theme's header.php/footer.php.
+	 * @param string $builder    Rendered builder location HTML.
+	 * @param string $tag        Region element to replace: 'header' or 'footer'.
+	 * @return string
+	 */
+	private function replace_region( $theme_html, $builder, $tag ) {
+		$quoted = preg_quote( $tag, '#' );
+		if ( preg_match( '#<' . $quoted . '\b[^>]*>.*?</' . $quoted . '>#is', $theme_html, $m, PREG_OFFSET_CAPTURE ) ) {
+			$start = $m[0][1];
+			$len   = strlen( $m[0][0] );
+			return substr( $theme_html, 0, $start ) . $builder . substr( $theme_html, $start + $len );
+		}
+
+		// No <header>/<footer> element found — inject at a safe balanced point so
+		// the theme structure is preserved.
+		if ( 'footer' === $tag ) {
+			$pos = stripos( $theme_html, '</body>' );
+			if ( false !== $pos ) {
+				return substr( $theme_html, 0, $pos ) . $builder . substr( $theme_html, $pos );
+			}
+		} elseif ( preg_match( '#<body\b[^>]*>#i', $theme_html, $bm, PREG_OFFSET_CAPTURE ) ) {
+			$at = $bm[0][1] + strlen( $bm[0][0] );
+			return substr( $theme_html, 0, $at ) . $builder . substr( $theme_html, $at );
+		}
+
+		return $theme_html . $builder;
 	}
 
 	/**

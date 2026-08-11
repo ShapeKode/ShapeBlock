@@ -94,6 +94,17 @@ class Builder_API {
 			)
 		);
 
+		// Restore a single trashed item.
+		register_rest_route(
+			'easy-elements-for-gutenberg/v1',
+			'/builder/(?P<id>\d+)/restore',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $this, 'restore_item' ),
+				'permission_callback' => $can_edit,
+			)
+		);
+
 		// Conditions for a single item.
 		register_rest_route(
 			'easy-elements-for-gutenberg/v1',
@@ -118,6 +129,17 @@ class Builder_API {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'bulk_delete' ),
+				'permission_callback' => $can_edit,
+			)
+		);
+
+		// Bulk restore trashed items.
+		register_rest_route(
+			'easy-elements-for-gutenberg/v1',
+			'/builder/bulk-restore',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $this, 'bulk_restore' ),
 				'permission_callback' => $can_edit,
 			)
 		);
@@ -174,9 +196,13 @@ class Builder_API {
 		$per_page = $per_page > 0 ? $per_page : 10;
 		$search   = sanitize_text_field( (string) $request->get_param( 'search' ) );
 
+		// 'trash' lists trashed templates; anything else lists active (published) ones.
+		$status      = sanitize_key( (string) $request->get_param( 'status' ) );
+		$post_status = ( 'trash' === $status ) ? 'trash' : 'publish';
+
 		$args = array(
 			'post_type'      => \EELFG\Extension\ThemeBuilder\Theme_Builder::POST_TYPE,
-			'post_status'    => 'publish',
+			'post_status'    => $post_status,
 			'posts_per_page' => $per_page,
 			'paged'          => $page,
 			'orderby'        => 'modified',
@@ -205,13 +231,25 @@ class Builder_API {
 
 		return rest_ensure_response(
 			array(
-				'items'    => $items,
-				'total'    => (int) $query->found_posts,
-				'pages'    => (int) $query->max_num_pages,
-				'page'     => $page,
-				'per_page' => $per_page,
+				'items'      => $items,
+				'total'      => (int) $query->found_posts,
+				'pages'      => (int) $query->max_num_pages,
+				'page'       => $page,
+				'per_page'   => $per_page,
+				'trashTotal' => $this->count_by_status( 'trash' ),
 			)
 		);
+	}
+
+	/**
+	 * Count builder templates in a given post status (used for the Trash badge).
+	 *
+	 * @param string $status Post status to count.
+	 * @return int
+	 */
+	private function count_by_status( $status ) {
+		$counts = wp_count_posts( \EELFG\Extension\ThemeBuilder\Theme_Builder::POST_TYPE );
+		return isset( $counts->$status ) ? (int) $counts->$status : 0;
 	}
 
 	public function get_item( $request ) {
@@ -265,8 +303,34 @@ class Builder_API {
 			return $post;
 		}
 
-		wp_delete_post( $post->ID, true );
-		return rest_ensure_response( array( 'status' => 'success', 'id' => $post->ID ) );
+		// A first delete moves the template to Trash; deleting an already-trashed
+		// item (or an explicit force=1) removes it permanently.
+		$force = rest_sanitize_boolean( $request->get_param( 'force' ) );
+		if ( $force || 'trash' === $post->post_status ) {
+			wp_delete_post( $post->ID, true );
+			return rest_ensure_response( array( 'status' => 'success', 'action' => 'deleted', 'id' => $post->ID ) );
+		}
+
+		wp_trash_post( $post->ID );
+		return rest_ensure_response( array( 'status' => 'success', 'action' => 'trashed', 'id' => $post->ID ) );
+	}
+
+	public function restore_item( $request ) {
+		$post = $this->get_builder_post( $request );
+		if ( is_wp_error( $post ) ) {
+			return $post;
+		}
+
+		wp_untrash_post( $post->ID );
+
+		// Templates are only ever published, so make sure a restore lands back on
+		// 'publish' regardless of what the trashed status meta held.
+		$restored = get_post( $post->ID );
+		if ( $restored && 'publish' !== $restored->post_status ) {
+			wp_update_post( array( 'ID' => $post->ID, 'post_status' => 'publish' ) );
+		}
+
+		return rest_ensure_response( array( 'status' => 'success', 'action' => 'restored', 'id' => $post->ID ) );
 	}
 
 	public function bulk_delete( $request ) {
@@ -275,17 +339,45 @@ class Builder_API {
 			return new \WP_Error( 'missing_ids', __( 'No items provided.', 'easy-elements-for-gutenberg' ), array( 'status' => 400 ) );
 		}
 
+		$force   = rest_sanitize_boolean( $request->get_param( 'force' ) );
 		$deleted = array();
 		foreach ( $ids as $id ) {
 			$id   = (int) $id;
 			$post = get_post( $id );
 			if ( $post && \EELFG\Extension\ThemeBuilder\Theme_Builder::POST_TYPE === $post->post_type ) {
-				wp_delete_post( $id, true );
+				if ( $force || 'trash' === $post->post_status ) {
+					wp_delete_post( $id, true );
+				} else {
+					wp_trash_post( $id );
+				}
 				$deleted[] = $id;
 			}
 		}
 
 		return rest_ensure_response( array( 'status' => 'success', 'deleted' => $deleted ) );
+	}
+
+	public function bulk_restore( $request ) {
+		$ids = $request->get_param( 'ids' );
+		if ( ! is_array( $ids ) || empty( $ids ) ) {
+			return new \WP_Error( 'missing_ids', __( 'No items provided.', 'easy-elements-for-gutenberg' ), array( 'status' => 400 ) );
+		}
+
+		$restored = array();
+		foreach ( $ids as $id ) {
+			$id   = (int) $id;
+			$post = get_post( $id );
+			if ( $post && \EELFG\Extension\ThemeBuilder\Theme_Builder::POST_TYPE === $post->post_type && 'trash' === $post->post_status ) {
+				wp_untrash_post( $id );
+				$after = get_post( $id );
+				if ( $after && 'publish' !== $after->post_status ) {
+					wp_update_post( array( 'ID' => $id, 'post_status' => 'publish' ) );
+				}
+				$restored[] = $id;
+			}
+		}
+
+		return rest_ensure_response( array( 'status' => 'success', 'restored' => $restored ) );
 	}
 
 	public function get_conditions( $request ) {

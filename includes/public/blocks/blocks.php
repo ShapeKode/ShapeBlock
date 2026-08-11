@@ -58,13 +58,43 @@ add_action( 'wp_enqueue_scripts', function () use ( $eelfg_blocks ) {
 	if ( is_admin() || ! function_exists( 'has_block' ) ) {
 		return;
 	}
+
+	// Theme Builder header/footer templates are separate posts, so has_block()
+	// against the main query never sees their blocks and the header/footer would
+	// render unstyled. Collect any active builder template posts for this request
+	// and check their content too.
+	$eelfg_extra_posts = array();
+	if ( class_exists( '\EELFG\Extension\ThemeBuilder\Builder_Render' ) ) {
+		$eelfg_builder = \EELFG\Extension\ThemeBuilder\Builder_Render::instance();
+		foreach ( array( 'header', 'footer' ) as $eelfg_location ) {
+			$eelfg_tpl_id = $eelfg_builder->get_location_post( $eelfg_location );
+			if ( $eelfg_tpl_id ) {
+				$eelfg_extra_posts[] = $eelfg_tpl_id;
+			}
+		}
+	}
+
 	foreach ( $eelfg_blocks as $eelfg_block ) {
 		if ( 'disable' === $eelfg_block['status'] || true === $eelfg_block['isPro'] ) {
 			continue;
 		}
 		$block_name = 'easy-elements-for-gutenberg/' . $eelfg_block['id'];
 		$handle     = 'eelfg-' . $eelfg_block['id'] . '-style';
-		if ( has_block( $block_name ) && wp_style_is( $handle, 'registered' ) ) {
+		if ( ! wp_style_is( $handle, 'registered' ) ) {
+			continue;
+		}
+
+		$eelfg_present = has_block( $block_name );
+		if ( ! $eelfg_present ) {
+			foreach ( $eelfg_extra_posts as $eelfg_tpl_id ) {
+				if ( has_block( $block_name, $eelfg_tpl_id ) ) {
+					$eelfg_present = true;
+					break;
+				}
+			}
+		}
+
+		if ( $eelfg_present ) {
 			wp_enqueue_style( $handle );
 		}
 	}
