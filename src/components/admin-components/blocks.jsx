@@ -162,18 +162,6 @@ export default function Blocks() {
                         >
                             All
                         </Button>
-                        <Button
-                            type={filter === 'free' ? 'primary' : 'default'}
-                            onClick={() => setFilter('free')}
-                        >
-                            Free
-                        </Button>
-                        <Button
-                            type={filter === 'pro' ? 'primary' : 'default'}
-                            onClick={() => setFilter('pro')}
-                        >
-                            Pro
-                        </Button>
                     </Space>
                     {/* activate / deactivate all — right side */}
                     <Space className="eelfg-blocks-actions">

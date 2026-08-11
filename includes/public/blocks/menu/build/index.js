@@ -900,6 +900,41 @@
 				el( ToggleControl, { label: __( 'Allow to wrap to multiple lines', TD ), checked: false !== attributes.menuWrap, onChange: function ( v ) { setAttributes( { menuWrap: v } ); } } )
 			);
 
+			// Font Size — responsive ( per-device: fontSize=desktop, fontSizeTablet, fontSizeMobile ).
+			var fontAttrKey = ( 'tablet' === device ) ? 'fontSizeTablet' : ( 'mobile' === device ? 'fontSizeMobile' : 'fontSize' );
+			var fontDevVal  = attributes[ fontAttrKey ] || '';
+			var fontPreset  = ( [ '', '14px', '16px', '18px', '22px' ].indexOf( fontDevVal ) !== -1 ) ? fontDevVal : 'custom';
+			function setFontDevice( val ) {
+				var patch = {};
+				patch[ fontAttrKey ] = val || '';
+				setAttributes( patch );
+			}
+			var fontDevices = el( 'div', { className: 'eelfg-menu-devices' },
+				[ [ 'desktop', 'dashicons-desktop', __( 'Desktop', TD ) ], [ 'tablet', 'dashicons-tablet', __( 'Tablet', TD ) ], [ 'mobile', 'dashicons-smartphone', __( 'Mobile', TD ) ] ].map( function ( d ) {
+					return el( Button, {
+						key: d[0],
+						label: d[2],
+						showTooltip: true,
+						isPressed: device === d[0],
+						onClick: function () { setDevice( d[0] ); eelfgSetPreview( d[0] ); }
+					}, el( 'span', { className: 'dashicons ' + d[1] } ) );
+				} )
+			);
+			var fontToggle = eelfgToggleGroup( {
+				label: __( 'Font Size', TD ),
+				value: fontPreset,
+				options: [ { label: __( 'Def', TD ), value: '' }, { label: 'S', value: '14px' }, { label: 'M', value: '16px' }, { label: 'L', value: '18px' }, { label: 'XL', value: '22px' }, { label: __( 'Custom', TD ), value: 'custom' } ],
+				onChange: function ( v ) { setFontDevice( 'custom' === v ? ( 'custom' === fontPreset ? fontDevVal : '20px' ) : v ); }
+			} );
+			var fontCustom = ( 'custom' === fontPreset ) ? el( RangeControl, {
+				label: __( 'Custom Size (px)', TD ),
+				value: parseInt( fontDevVal, 10 ) || 16,
+				min: 8,
+				max: 72,
+				step: 1,
+				onChange: function ( v ) { setFontDevice( ( v || 0 ) + 'px' ); }
+			} ) : null;
+
 			var typographyPanel = el(
 				PanelBody,
 				{ title: __( 'Typography', TD ), initialOpen: false },
@@ -909,12 +944,10 @@
 					options: eelfgFontOptions(),
 					onChange: function ( v ) { setAttributes( { fontFamily: v } ); }
 				} ),
-				eelfgToggleGroup( {
-					label: __( 'Font Size', TD ),
-					value: attributes.fontSize || '',
-					options: [ { label: __( 'Def', TD ), value: '' }, { label: 'S', value: '14px' }, { label: 'M', value: '16px' }, { label: 'L', value: '18px' }, { label: 'XL', value: '22px' } ],
-					onChange: function ( v ) { setAttributes( { fontSize: v } ); }
-				} ),
+				el( 'div', { className: 'eelfg-menu-linkfield-label', style: { marginTop: '4px' } }, __( 'Font Size', TD ) ),
+				fontDevices,
+				fontToggle,
+				fontCustom,
 				eelfgToggleGroup( {
 					label: __( 'Font Weight', TD ),
 					value: attributes.fontWeight || '',
@@ -1220,7 +1253,7 @@
 			// Show the gap for the CURRENTLY selected device directly ( the editor canvas isn't
 			// actually resized, so media queries wouldn't fire ). Tablet/Mobile inherit desktop.
 			var edGap = ( 'tablet' === device ) ? ( attributes.gapTablet || attributes.itemGap ) : ( 'mobile' === device ? ( attributes.gapMobile || attributes.itemGap ) : attributes.itemGap );
-			if ( edGap ) { edCss += edSel + ' > .eelfg-menu-list{gap:' + edGap + ';}'; }
+			if ( edGap ) { edCss += edSel + ' .eelfg-menu-list{gap:' + edGap + ';}'; }
 			var edFont = '';
 			if ( attributes.fontFamily && eelfgIsWebSafe( attributes.fontFamily ) ) {
 				edFont += 'font-family:' + EELFG_FONTS[ attributes.fontFamily ] + ';';
@@ -1229,7 +1262,9 @@
 				edImport += "@import url('" + eelfgGoogleFontUrl( attributes.fontFamily ) + "');";
 				edFont += 'font-family:"' + attributes.fontFamily + '",sans-serif;';
 			}
-			if ( attributes.fontSize ) { edFont += 'font-size:' + attributes.fontSize + ';'; }
+			// Show the font size for the CURRENTLY selected device ( tablet/mobile fall back to desktop ).
+			var edFontSize = ( 'tablet' === device ) ? ( attributes.fontSizeTablet || attributes.fontSize ) : ( 'mobile' === device ? ( attributes.fontSizeMobile || attributes.fontSize ) : attributes.fontSize );
+			if ( edFontSize ) { edFont += 'font-size:' + edFontSize + ';'; }
 			if ( attributes.fontWeight ) { edFont += 'font-weight:' + attributes.fontWeight + ';'; }
 			if ( attributes.textTransform ) { edFont += 'text-transform:' + attributes.textTransform + ';'; }
 			if ( edFont ) {

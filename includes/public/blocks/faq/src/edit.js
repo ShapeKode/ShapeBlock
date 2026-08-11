@@ -478,7 +478,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								/>
 							</div>
 
-							<div className="eelfg-faq-question">
+							<div
+								className="eelfg-faq-question"
+								onClick={() => { if (!openAll) toggleOpen(index); }}
+								style={!openAll ? { cursor: 'pointer' } : undefined}
+							>
 								<RichText
 									tagName={TitleTag}
 									className="eelfg-faq-title"
@@ -486,6 +490,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									onChange={(v) => updateItem(index, 'title', v)}
 									placeholder={__('Add question…', 'easy-elements-for-gutenberg')}
 									allowedFormats={['core/bold', 'core/italic', 'core/link']}
+									onClick={(e) => e.stopPropagation()}
 								/>
 								{!openAll && (
 									<button
@@ -494,7 +499,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 										aria-label={__('Toggle answer', 'easy-elements-for-gutenberg')}
 										aria-expanded={isOpen}
 										contentEditable={false}
-										onClick={() => toggleOpen(index)}
+										onClick={(e) => { e.stopPropagation(); toggleOpen(index); }}
 									>
 										<span className="eelfg-faq-icon eelfg-faq-icon-open">
 											{renderIcon(iconOpen, ICON_MINUS)}

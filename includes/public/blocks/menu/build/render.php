@@ -241,16 +241,17 @@ $selector = '#' . $block_id;
 // Item gap — responsive ( per-device string attributes; itemGap is the desktop value ).
 $gap_desk = ( '' !== $item_gap ) ? eelfg_menu_len( $item_gap ) : '';
 if ( '' !== $gap_desk ) {
-	$css .= $selector . ' > .eelfg-menu-list{gap:' . $gap_desk . ';}';
+	$css .= $selector . ' .eelfg-menu-list{gap:' . $gap_desk . ';}';
 }
 $gap_tab = isset( $attributes['gapTablet'] ) ? eelfg_menu_len( $attributes['gapTablet'] ) : '';
 if ( '' !== $gap_tab ) {
-	$css .= '@media (max-width:1024px){' . $selector . ' > .eelfg-menu-list{gap:' . $gap_tab . ';}}';
+	$css .= '@media (max-width:1024px){' . $selector . ' .eelfg-menu-list{gap:' . $gap_tab . ';}}';
 }
 $gap_mob = isset( $attributes['gapMobile'] ) ? eelfg_menu_len( $attributes['gapMobile'] ) : '';
 if ( '' !== $gap_mob ) {
-	$css .= '@media (max-width:767px){' . $selector . ' > .eelfg-menu-list{gap:' . $gap_mob . ';}}';
+	$css .= '@media (max-width:767px){' . $selector . ' .eelfg-menu-list{gap:' . $gap_mob . ';}}';
 }
+$has_any_gap = ( '' !== $gap_desk || '' !== $gap_tab || '' !== $gap_mob );
 
 // Typography ( font family / size / weight / transform ), validated to safe values.
 $font_css   = '';
@@ -291,6 +292,16 @@ if ( in_array( $text_transform, array( 'none', 'uppercase', 'lowercase', 'capita
 }
 if ( '' !== $font_css ) {
 	$css .= $selector . ' .eelfg-menu-list a{' . $font_css . '}';
+}
+
+// Responsive font size ( per-device ). fontSize above is the desktop value; these override it below.
+$fs_tab = isset( $attributes['fontSizeTablet'] ) ? eelfg_menu_len( $attributes['fontSizeTablet'] ) : '';
+if ( '' !== $fs_tab ) {
+	$css .= '@media (max-width:1024px){' . $selector . ' .eelfg-menu-list a{font-size:' . $fs_tab . ';}}';
+}
+$fs_mob = isset( $attributes['fontSizeMobile'] ) ? eelfg_menu_len( $attributes['fontSizeMobile'] ) : '';
+if ( '' !== $fs_mob ) {
+	$css .= '@media (max-width:767px){' . $selector . ' .eelfg-menu-list a{font-size:' . $fs_mob . ';}}';
 }
 
 if ( ! empty( $attributes['textColor'] ) ) {
@@ -344,7 +355,7 @@ if ( ! empty( $attributes['toggleColor'] ) ) {
 
 // Wrapping: allow menu items to wrap to multiple lines ( default ) or stay on one line.
 if ( ! $menu_wrap ) {
-	$css .= $selector . ' > .eelfg-menu-list{flex-wrap:nowrap;}';
+	$css .= $selector . ' .eelfg-menu-list{flex-wrap:nowrap;}';
 }
 
 // Overlay: turn the menu into an off-canvas drawer with a hamburger + backdrop.
@@ -363,7 +374,7 @@ if ( $mobile_on ) {
 	$drawer .= $selector . '.is-open .eelfg-menu-overlay{opacity:1;visibility:visible;}';
 	$drawer .= $selector . ' .eelfg-menu-panel{display:block;position:fixed;top:0;bottom:0;' . $side . ':0;width:' . $w_css . ';max-width:85vw;background:' . $bg_css . ';transform:translateX(' . $off . ');transition:transform 0.3s ease;z-index:9999;overflow-y:auto;padding:56px 22px 28px;}';
 	$drawer .= $selector . '.is-open .eelfg-menu-panel{transform:translateX(0);}';
-	$drawer .= $selector . ' .eelfg-menu-list{flex-direction:column;align-items:stretch;width:100%;gap:6px;}';
+	$drawer .= $selector . ' .eelfg-menu-list{flex-direction:column;align-items:stretch;width:100%;' . ( $has_any_gap ? '' : 'gap:6px;' ) . '}';
 	$drawer .= $selector . ' .eelfg-menu-list li{position:relative;width:100%;}';
 	// Every item ( link + sub-items ) fills the row, so the label sits left and the arrow far right.
 	$drawer .= $selector . ' .eelfg-menu-list a{display:flex;align-items:center;width:100%;padding:12px 14px;}';

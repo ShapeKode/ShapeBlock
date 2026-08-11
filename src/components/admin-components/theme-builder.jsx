@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import {
     PlusOutlined, EditOutlined, DeleteOutlined,
-    SearchOutlined, ReloadOutlined, FilterOutlined
+    SearchOutlined, ReloadOutlined, FilterOutlined, CopyOutlined
 } from '@ant-design/icons';
 
 const { Search } = Input;
@@ -176,6 +176,25 @@ export default function ThemeBuilder() {
         ...builderTypes.map((t) => ({ label: t.plural || t.label, value: t.slug })),
     ]), [builderTypes]);
 
+    // Types flagged as shortcode-only ( e.g. Custom Block ): rendered via [eelfg_builder id="…"],
+    // so we show that copyable shortcode instead of Display Conditions.
+    const shortcodeTypes = useMemo(
+        () => builderTypes.filter((t) => t.shortcode).map((t) => t.slug),
+        [builderTypes]
+    );
+    const shortcodeFor = (record) => `[eelfg_builder id="${record.id}"]`;
+    const copyShortcode = (record) => {
+        const sc = shortcodeFor(record);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(sc).then(
+                () => notification.success({ message: 'Shortcode copied', duration: 2 }),
+                () => notification.info({ message: sc })
+            );
+        } else {
+            notification.info({ message: sc });
+        }
+    };
+
     const columns = [
         {
             title: 'Title',
@@ -197,17 +216,32 @@ export default function ThemeBuilder() {
             dataIndex: 'conditionsSummary',
             key: 'conditions',
             render: (summary, record) => (
-                <Space size={4}>
-                    <Tag color="default">{summary || 'Entire Site'}</Tag>
-                    <Tooltip title="Edit conditions">
-                        <Button
-                            size="small"
-                            type="text"
-                            icon={<FilterOutlined />}
-                            onClick={() => setConditionsItem(record)}
-                        />
-                    </Tooltip>
-                </Space>
+                shortcodeTypes.includes(record.type) ? (
+                    // Custom Block: no auto-display — show its shortcode to place anywhere.
+                    <Space size={4}>
+                        <Tag color="blue" style={{ fontFamily: 'monospace' }}>{shortcodeFor(record)}</Tag>
+                        <Tooltip title="Copy shortcode">
+                            <Button
+                                size="small"
+                                type="text"
+                                icon={<CopyOutlined />}
+                                onClick={() => copyShortcode(record)}
+                            />
+                        </Tooltip>
+                    </Space>
+                ) : (
+                    <Space size={4}>
+                        <Tag color="default">{summary || 'Entire Site'}</Tag>
+                        <Tooltip title="Edit conditions">
+                            <Button
+                                size="small"
+                                type="text"
+                                icon={<FilterOutlined />}
+                                onClick={() => setConditionsItem(record)}
+                            />
+                        </Tooltip>
+                    </Space>
+                )
             ),
         },
         {
@@ -229,7 +263,15 @@ export default function ThemeBuilder() {
                     <Button type="primary" size="small" icon={<EditOutlined />} href={record.editUrl}>
                         Edit
                     </Button>
-                    <Button size="small" icon={<FilterOutlined />} onClick={() => setConditionsItem(record)} />
+                    {shortcodeTypes.includes(record.type) ? (
+                        <Tooltip title="Copy shortcode">
+                            <Button size="small" icon={<CopyOutlined />} onClick={() => copyShortcode(record)} />
+                        </Tooltip>
+                    ) : (
+                        <Tooltip title="Edit conditions">
+                            <Button size="small" icon={<FilterOutlined />} onClick={() => setConditionsItem(record)} />
+                        </Tooltip>
+                    )}
                     <Popconfirm
                         title="Delete this template?"
                         onConfirm={() => handleDelete(record.id)}
@@ -271,7 +313,15 @@ export default function ThemeBuilder() {
                     <Search
                         placeholder="Search templates..."
                         allowClear
+                        className='bolpo-template-search-box'
                         onSearch={handleSearch}
+                        onChange={(e) => {
+                            const v = e.target.value;
+                            setSearch(v);
+                            setSelectedRowKeys([]);
+                            clearTimeout(window.__eelfgTbSearchT);
+                            window.__eelfgTbSearchT = setTimeout(() => fetchItems(1, pagination.pageSize, v, typeFilter), 300);
+                        }}
                         style={{ width: 250 }}
                         prefix={<SearchOutlined />}
                     />

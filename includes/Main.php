@@ -36,11 +36,7 @@ class Main {
         Admin\Admin::instance();
         Admin\Api::instance();
         Editor\Block_Editor::instance();
-        Extension\Category::instance();
-        Extension\Elementor\Elementor::instance();
         Extension\ThemeBuilder\Theme_Builder::instance();
-        new Extension\Featured_Post();
-        new Extension\Video_Post();
 
         // Procedural files (define functions / run bootstrap code — not autoloadable).
         require_once EELFG_PL_PATH . 'includes/admin/post-types.php';
@@ -54,8 +50,7 @@ class Main {
      */
     public static function get_admin_pages() {
         return array(
-            'easy-elements-for-gutenberg' => array( 'tab' => 'blocks',        'label' => 'Blocks' ),
-            'eelfg-templates'              => array( 'tab' => 'templates',     'label' => 'Templates' ),
+            'easy-elements-for-gutenberg' => array( 'tab' => 'blocks',        'label' => 'Blocks Settings' ),
             'eelfg-theme-builder'          => array( 'tab' => 'theme-builder', 'label' => 'Theme Builder' ),
             'eelfg-settings'               => array( 'tab' => 'settings',      'label' => 'Settings' ),
         );

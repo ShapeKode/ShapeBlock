@@ -24,7 +24,6 @@ spl_autoload_register(
 		// Longest prefixes first so the more specific mapping wins.
 		static $prefixes = array(
 			'EELFG\\Extension\\ThemeBuilder\\' => 'includes/extension/theme-builder/',
-			'EELFG\\Extension\\Elementor\\'    => 'includes/extension/elementor/',
 			'EELFG\\Extension\\'               => 'includes/extension/',
 			'EELFG\\Admin\\'                   => 'includes/admin/',
 			'EELFG\\Editor\\'                  => 'includes/editor/',

@@ -17,7 +17,6 @@ export default function BlockItem(
             <div className="eelfg-block-item">
                 <div className="meta">
                     <div className='icon'>
-                        {isPro && <div className="eelfg-block-badge pro-badge">Pro</div>}
                         <i className={icon} ></i>
                     </div>
                     <div className='content'>

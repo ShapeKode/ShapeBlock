@@ -52,6 +52,8 @@
 		"dropdownIcon": { "type": "string", "default": "caret" },
 		"fontFamily": { "type": "string", "default": "" },
 		"fontSize": { "type": "string", "default": "" },
+		"fontSizeTablet": { "type": "string", "default": "" },
+		"fontSizeMobile": { "type": "string", "default": "" },
 		"fontWeight": { "type": "string", "default": "" },
 		"textTransform": { "type": "string", "default": "" },
 		"mobileEnable": { "type": "boolean", "default": true },

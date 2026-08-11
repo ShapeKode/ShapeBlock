@@ -186,9 +186,12 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
                         const needsObject = def && def.needsObject;
                         const objectType = def && def.objectType;
                         return (
-                            <Space key={row.key} align="start" style={{ width: '100%' }} wrap>
+                            <div
+                                key={row.key}
+                                style={{ display: 'flex', gap: 8, alignItems: 'center', width: '100%', flexWrap: 'nowrap' }}
+                            >
                                 <Select
-                                    style={{ width: 110 }}
+                                    style={{ flex: '0 0 120px' }}
                                     value={row.type}
                                     onChange={(val) => updateRow(row.key, { type: val })}
                                     options={[
@@ -197,16 +200,16 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
                                     ]}
                                 />
                                 <Select
-                                    style={{ width: 180 }}
+                                    style={{ flex: '0 0 190px' }}
                                     value={row.rule || undefined}
                                     placeholder="Select rule"
                                     onChange={(val) => onRuleChange(row.key, val)}
                                     options={groupedOptions}
                                 />
-                                {needsObject && (
+                                {needsObject ? (
                                     <Select
                                         mode="multiple"
-                                        style={{ minWidth: 220, maxWidth: 320 }}
+                                        style={{ flex: '1 1 auto', minWidth: 0 }}
                                         value={row.ids}
                                         placeholder="Select items"
                                         onChange={(val) => updateRow(row.key, { ids: val })}
@@ -216,14 +219,17 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
                                         optionFilterProp="label"
                                         maxTagCount="responsive"
                                     />
+                                ) : (
+                                    <span style={{ flex: '1 1 auto' }} />
                                 )}
                                 <Button
                                     danger
                                     type="text"
                                     icon={<DeleteOutlined />}
                                     onClick={() => removeRow(row.key)}
+                                    style={{ flex: '0 0 auto' }}
                                 />
-                            </Space>
+                            </div>
                         );
                     })}
 

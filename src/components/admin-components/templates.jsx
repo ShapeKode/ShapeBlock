@@ -340,6 +340,16 @@ export default function Templates() {
                         placeholder="Search templates..."
                         allowClear
                         onSearch={handleSearch}
+                        onChange={(e) => {
+                            const v = e.target.value;
+                            setSearch(v);
+                            setSelectedRowKeys([]);
+                            clearTimeout(window.__eelfgTplSearchT);
+                            window.__eelfgTplSearchT = setTimeout(
+                                () => fetchTemplates(1, pagination.pageSize, v, sorter.field, sorter.order === 'ascend' ? 'ASC' : 'DESC'),
+                                300
+                            );
+                        }}
                         style={{ width: 250 }}
                         prefix={<SearchOutlined />}
                         className='bolpo-template-search-box'

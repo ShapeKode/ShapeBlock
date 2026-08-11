@@ -7,7 +7,6 @@ import Blocks from './components/admin-components/blocks';
 import Templates from './components/admin-components/templates';
 import ThemeBuilder from './components/admin-components/theme-builder';
 import Settings from './components/admin-components/settings';
-import License from './components/admin-components/license';
 import { DashboardOutlined, SettingOutlined, BlockOutlined, PicRightOutlined, KeyOutlined, LayoutOutlined } from '@ant-design/icons';
 import { icons } from 'antd/es/image/PreviewGroup';
 import './editor';
@@ -20,13 +19,8 @@ const isProInstalled = typeof eelfg !== 'undefined' && !!eelfg.isProInstalled;
 const items = [
     {
         key: 'blocks',
-        label: 'Blocks',
+        label: 'Blocks Settings',
         icon: <BlockOutlined />
-    },
-    {
-        key: 'templates',
-        label: 'Templates',
-        icon: <PicRightOutlined />
     },
     {
         key: 'theme-builder',
@@ -37,12 +31,7 @@ const items = [
         key: 'settings',
         label: 'Settings',
         icon: <SettingOutlined />
-    },
-    ...(isProInstalled ? [{
-        key: 'license',
-        label: 'License',
-        icon: <KeyOutlined />
-    }] : [])
+    }
 ]
 
 const ThemeData = {
@@ -63,7 +52,7 @@ export default function EasyElementsForGutenbergApp({ initialTab } = {}) {
 
     // Tab resolution priority: the submenu page's data-initial-tab, then the URL
     // hash (e.g. #theme-builder used when returning from the block editor), then Blocks.
-    const validKeys = ['blocks', 'templates', 'theme-builder', 'settings', 'license'];
+    const validKeys = ['blocks', 'theme-builder', 'settings'];
     const hashKey = window.location.hash.replace('#', '');
     const initialKey = validKeys.includes(initialTab)
         ? initialTab
@@ -110,10 +99,8 @@ export default function EasyElementsForGutenbergApp({ initialTab } = {}) {
                             >
 
                                 {current === 'blocks' && <Blocks />}
-                                {current === 'templates' && <Templates />}
                                 {current === 'theme-builder' && <ThemeBuilder />}
                                 {current === 'settings' && <Settings />}
-                                {current === 'license' && isProInstalled && <License />}
 
                             </div>
                         </Content>

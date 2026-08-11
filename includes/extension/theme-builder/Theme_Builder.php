@@ -84,6 +84,17 @@ class Theme_Builder {
 				'isPro'       => false,
 			),
 
+			'custom_block' => array(
+				'slug'        => 'custom_block',
+				'label'       => __( 'Custom Block', 'easy-elements-for-gutenberg' ),
+				'plural'      => __( 'Custom Blocks', 'easy-elements-for-gutenberg' ),
+				'description' => __( 'A reusable block you place anywhere with its shortcode — it is not injected automatically.', 'easy-elements-for-gutenberg' ),
+				'enabled'     => true,
+				'isPro'       => false,
+				// Rendered only via [eelfg_builder id="…"]; the admin shows the shortcode for this type.
+				'shortcode'   => true,
+			),
+
 			/*
 			 * Future template types — register them here (or via the
 			 * `eelfg_builder_template_types` filter) when their rendering is

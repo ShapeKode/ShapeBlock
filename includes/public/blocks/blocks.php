@@ -42,3 +42,48 @@ foreach ($eelfg_blocks as $eelfg_block) {
 		require_once $file;
 	}
 }
+
+/**
+ * Reliably load each block's front-end stylesheet in the <head> whenever the current page
+ * actually contains that block.
+ *
+ * Every block registers its own "eelfg-<id>-style" handle and enqueues it from render.php. On the
+ * front end that render-time enqueue can print too late ( footer ) or be skipped by block-asset
+ * optimisation, so the front end came out unstyled while the editor — which loads the styles via the
+ * editor-style dependency chain — looked correct. Enqueuing here, on wp_enqueue_scripts, guarantees
+ * the style is in the <head>. wp_style_is() keeps it safe for any block that does not follow the
+ * handle pattern, and has_block() means nothing loads on pages without the block.
+ */
+add_action( 'wp_enqueue_scripts', function () use ( $eelfg_blocks ) {
+	if ( is_admin() || ! function_exists( 'has_block' ) ) {
+		return;
+	}
+	foreach ( $eelfg_blocks as $eelfg_block ) {
+		if ( 'disable' === $eelfg_block['status'] || true === $eelfg_block['isPro'] ) {
+			continue;
+		}
+		$block_name = 'easy-elements-for-gutenberg/' . $eelfg_block['id'];
+		$handle     = 'eelfg-' . $eelfg_block['id'] . '-style';
+		if ( has_block( $block_name ) && wp_style_is( $handle, 'registered' ) ) {
+			wp_enqueue_style( $handle );
+		}
+	}
+} );
+
+/**
+ * In the block editor, load every block's front-end stylesheet up-front. The blocks' editor previews
+ * ( tabs, accordion, etc. ) rely on the front-end CSS to show/hide state via the ".active" class, so
+ * the styles must be present in the editor for those interactions to be visible. Loading them all here
+ * guarantees that regardless of the per-block editor-style dependency chain.
+ */
+add_action( 'enqueue_block_editor_assets', function () use ( $eelfg_blocks ) {
+	foreach ( $eelfg_blocks as $eelfg_block ) {
+		if ( 'disable' === $eelfg_block['status'] || true === $eelfg_block['isPro'] ) {
+			continue;
+		}
+		$handle = 'eelfg-' . $eelfg_block['id'] . '-style';
+		if ( wp_style_is( $handle, 'registered' ) ) {
+			wp_enqueue_style( $handle );
+		}
+	}
+} );

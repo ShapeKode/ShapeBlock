@@ -15,8 +15,7 @@ const IconPicker = ({ label, value, onChange }) => {
 
     useEffect(() => {
         const pluginUrl = window.eelfgEditor ? window.eelfgEditor.plugin_url : '/wp-content/plugins/easy-elements-for-gutenberg/';
-        console.log('pluginUrl', pluginUrl);
-        
+
         fetch(`${pluginUrl}includes/public/assets/icon/config.json`)
             .then(res => res.json())
             .then(data => {

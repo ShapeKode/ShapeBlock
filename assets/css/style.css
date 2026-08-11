@@ -122,4 +122,6 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
 .ant-select input:focus {
   outline: none;
   box-shadow: none;
-}/*# sourceMappingURL=style.css.map */
+}/*# sourceMappingURL=style.css.map *//* Remove the focus ring / outline "jump" on the template search fields ( AntD injects it at runtime, so !important is needed ). */
+.bolpo-template-search-box .ant-input-affix-wrapper,.bolpo-template-search-box .ant-input,.bolpo-template-search-box .ant-input-search-button{outline:none !important;}
+.bolpo-template-search-box .ant-input-affix-wrapper:focus,.bolpo-template-search-box .ant-input-affix-wrapper-focused,.bolpo-template-search-box .ant-input-affix-wrapper:focus-within,.bolpo-template-search-box .ant-input-affix-wrapper:hover,.bolpo-template-search-box .ant-input:focus,.bolpo-template-search-box .ant-input-focused{box-shadow:none !important;border-color:#d9d9d9 !important;}

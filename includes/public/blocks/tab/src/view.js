@@ -1,39 +1,26 @@
 /**
  * Tabs — front-end behaviour.
  *
- * Behaviour ported from the Elementor widget script
- * (easy-elements/widgets/tab/js/tab.js). Rewritten as scoped, dependency-free
- * JS so it runs on any front-end page (the Elementor version hooked into
- * `elementor/frontend/init` and used jQuery).
+ * Switching is done by toggling the `.active` class only; the stylesheet is the single source of
+ * truth for show/hide + the opacity fade ( .eelfg-tab-content / .eelfg-tab-content.active ). The
+ * previous setTimeout-based slide left multiple panels visible when tabs were clicked quickly
+ * ( each click queued its own 300ms "hide" timer ), so switching is intentionally instant here.
  */
 (function () {
 	'use strict';
 
-	var DURATION = 300;
-
-	function slideOut(el) {
-		return new Promise(function (resolve) {
-			el.style.transition = 'opacity ' + DURATION + 'ms, transform ' + DURATION + 'ms';
-			el.style.opacity = 0;
-			el.style.transform = 'translateY(20px)';
-			window.setTimeout(function () {
-				el.style.display = 'none';
-				resolve();
-			}, DURATION);
+	function activate(tabs, contents, tab) {
+		var targetId = tab.getAttribute('data-tab');
+		tabs.forEach(function (t) {
+			t.classList.toggle('active', t === tab);
 		});
-	}
-
-	function slideIn(el) {
-		return new Promise(function (resolve) {
-			el.style.display = 'block';
-			el.style.opacity = 0;
-			el.style.transform = 'translateY(20px)';
-			el.style.transition = 'opacity ' + DURATION + 'ms, transform ' + DURATION + 'ms';
-			window.setTimeout(function () {
-				el.style.opacity = 1;
-				el.style.transform = 'translateY(0)';
-			}, 10);
-			window.setTimeout(resolve, DURATION);
+		contents.forEach(function (c) {
+			c.classList.toggle('active', c.id === targetId);
+			// Clear any stale inline styles so the stylesheet controls display / opacity.
+			c.style.removeProperty('display');
+			c.style.removeProperty('opacity');
+			c.style.removeProperty('transform');
+			c.style.removeProperty('transition');
 		});
 	}
 
@@ -57,38 +44,11 @@
 
 		tabs.forEach(function (tab) {
 			tab.addEventListener('click', function () {
-				var targetContent = wrapper.querySelector('#' + this.dataset.tab);
-				if (!targetContent) {
+				var targetId = this.getAttribute('data-tab');
+				if (!wrapper.querySelector('#' + targetId)) {
 					return;
 				}
-
-				var currentContent = contents.find(function (c) {
-					return c.style.display !== 'none' && c.classList.contains('active');
-				});
-
-				if (currentContent === targetContent) {
-					return;
-				}
-
-				tabs.forEach(function (t) {
-					t.classList.remove('active');
-				});
-				this.classList.add('active');
-
-				var swap = function () {
-					contents.forEach(function (c) {
-						c.classList.remove('active');
-					});
-					slideIn(targetContent).then(function () {
-						targetContent.classList.add('active');
-					});
-				};
-
-				if (currentContent) {
-					slideOut(currentContent).then(swap);
-				} else {
-					swap();
-				}
+				activate(tabs, contents, this);
 			});
 		});
 
@@ -99,24 +59,7 @@
 		if (activeIndex < 0) {
 			activeIndex = 0;
 		}
-
-		tabs.forEach(function (t) {
-			t.classList.remove('active');
-		});
-		contents.forEach(function (c) {
-			c.style.display = 'none';
-			c.style.opacity = 0;
-			c.style.transform = 'translateY(20px)';
-			c.classList.remove('active');
-		});
-
-		tabs[activeIndex].classList.add('active');
-		if (contents[activeIndex]) {
-			contents[activeIndex].style.display = 'block';
-			contents[activeIndex].style.opacity = 1;
-			contents[activeIndex].style.transform = 'translateY(0)';
-			contents[activeIndex].classList.add('active');
-		}
+		activate(tabs, contents, tabs[activeIndex]);
 	}
 
 	function initAll() {
