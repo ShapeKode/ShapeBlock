@@ -15,9 +15,12 @@
 		}
 
 		function check(currentScroll) {
-			var visible = currentScroll > 150;
 			Array.prototype.forEach.call(buttons, function (btn) {
-				btn.classList.toggle('eelfg-scroll-visible', visible);
+				var threshold = parseInt(btn.getAttribute('data-show-after'), 10);
+				if (isNaN(threshold)) {
+					threshold = 150;
+				}
+				btn.classList.toggle('eelfg-scroll-visible', currentScroll > threshold);
 			});
 		}
 

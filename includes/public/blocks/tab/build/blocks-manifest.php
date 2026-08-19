@@ -60,7 +60,7 @@ return array(
 							
 						),
 						'contentTitle' => '',
-						'contentDescription' => 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English.',
+						'contentDescription' => 'We are a passionate team crafting reliable products and services that help businesses grow. Since day one we have focused on quality, transparency, and building lasting relationships with every client we serve.',
 						'readMoreText' => '',
 						'readMoreUrl' => '#',
 						'readMoreNewTab' => false
@@ -73,7 +73,7 @@ return array(
 							
 						),
 						'contentTitle' => '',
-						'contentDescription' => 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English.',
+						'contentDescription' => 'Our mission is to deliver simple, effective solutions to real problems. We make powerful tools accessible to everyone, backed by friendly support and a habit of continuous improvement.',
 						'readMoreText' => '',
 						'readMoreUrl' => '#',
 						'readMoreNewTab' => false
@@ -86,7 +86,7 @@ return array(
 							
 						),
 						'contentTitle' => '',
-						'contentDescription' => 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English.',
+						'contentDescription' => 'We envision a future where great design and technology are within reach of every business. We lead with innovation, integrity, and a genuine commitment to our customers\' success.',
 						'readMoreText' => '',
 						'readMoreUrl' => '#',
 						'readMoreNewTab' => false

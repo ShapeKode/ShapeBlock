@@ -6,7 +6,7 @@ return array(
 		'apiVersion' => 3,
 		'name' => 'easy-elements-for-gutenberg/testimonials-grid',
 		'version' => '0.1.0',
-		'title' => 'Testimonials Grid',
+		'title' => 'Testimonial',
 		'category' => 'easy-elements-for-gutenberg',
 		'description' => 'A grid of testimonials with 6 skins, ratings, quote icons, logos and a view-all reveal.',
 		'keywords' => array(

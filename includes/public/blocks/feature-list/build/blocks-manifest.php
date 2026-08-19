@@ -6,13 +6,13 @@ return array(
 		'apiVersion' => 3,
 		'name' => 'easy-elements-for-gutenberg/feature-list',
 		'version' => '0.1.0',
-		'title' => 'Feature List',
+		'title' => 'Features List',
 		'category' => 'easy-elements-for-gutenberg',
-		'description' => 'A vertical list of features with icon, number or image, title, description and optional connector.',
+		'description' => 'A vertical list of items with icon, number or image, title, description and optional connector.',
 		'keywords' => array(
-			'feature',
-			'list',
 			'icon',
+			'list',
+			'feature',
 			'steps',
 			'service'
 		),
@@ -24,20 +24,6 @@ return array(
 			'align' => array(
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
 		'textdomain' => 'easy-elements-for-gutenberg',
@@ -87,6 +73,10 @@ return array(
 				'type' => 'string',
 				'default' => 'left'
 			),
+			'showIcon' => array(
+				'type' => 'boolean',
+				'default' => true
+			),
 			'feaVerticalAlign' => array(
 				'type' => 'string',
 				'default' => 'center'
@@ -115,9 +105,25 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'feaItemGapTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'feaItemGapMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'feaMiddleGap' => array(
 				'type' => 'string',
 				'default' => '20'
+			),
+			'feaMiddleGapTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'feaMiddleGapMobile' => array(
+				'type' => 'string',
+				'default' => ''
 			),
 			'feaConnector' => array(
 				'type' => 'boolean',
@@ -135,11 +141,35 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'feaConnectorWidthTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'feaConnectorWidthMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'feaConnectorPositionX' => array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'feaConnectorPositionXTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'feaConnectorPositionXMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'feaConnectorRightPositionX' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'feaConnectorRightPositionXTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'feaConnectorRightPositionXMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -167,6 +197,21 @@ return array(
 			'feaListPadding' => array(
 				'type' => 'object'
 			),
+			'feaListPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'feaListPaddingMobile' => array(
+				'type' => 'object'
+			),
+			'feaBlockMargin' => array(
+				'type' => 'object'
+			),
+			'feaBlockMarginTablet' => array(
+				'type' => 'object'
+			),
+			'feaBlockMarginMobile' => array(
+				'type' => 'object'
+			),
 			'iconColor' => array(
 				'type' => 'string',
 				'default' => ''
@@ -183,7 +228,23 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'iconSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconSizeMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'iconBoxSize' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconBoxSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconBoxSizeMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -234,7 +295,25 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'titleTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'titleTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'titlePadding' => array(
+				'type' => 'object'
+			),
+			'titlePaddingTablet' => array(
+				'type' => 'object'
+			),
+			'titlePaddingMobile' => array(
 				'type' => 'object'
 			),
 			'descColor' => array(
@@ -251,6 +330,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'descTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'descTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			)
 		)

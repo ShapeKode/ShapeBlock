@@ -37,6 +37,30 @@
       "type": "string",
       "default": "eelfg-icon-arrow-up"
     },
+    "position": {
+      "type": "string",
+      "default": "right"
+    },
+    "offsetX": {
+      "type": "string",
+      "default": ""
+    },
+    "offsetY": {
+      "type": "string",
+      "default": ""
+    },
+    "showAfter": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonSize": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSize": {
+      "type": "string",
+      "default": ""
+    },
     "color": {
       "type": "string",
       "default": ""
@@ -44,6 +68,30 @@
     "bgColor": {
       "type": "string",
       "default": ""
+    },
+    "colorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "bgColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "sttBorder": {
+      "type": "object",
+      "default": {}
+    },
+    "sttRadius": {
+      "type": "object",
+      "default": {}
+    },
+    "sttBoxShadow": {
+      "type": "object",
+      "default": {}
+    },
+    "sttPadding": {
+      "type": "object",
+      "default": {}
     }
   }
 }

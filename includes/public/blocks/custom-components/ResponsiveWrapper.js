@@ -4,22 +4,33 @@ import { Button, Tooltip } from '@wordpress/components';
 
 const ResponsiveWrapper = ({ children, label }) => {
 
-    // Get current device from global store
+    // Get the current preview device. Prefer the modern core/editor API
+    // (getDeviceType, WP 6.5+); fall back to the deprecated core/edit-post
+    // experimental API on older WordPress.
     const deviceType = useSelect((select) => {
-        const store = select('core/edit-post');
-        return store ? store.__experimentalGetPreviewDeviceType() : 'Desktop';
+        const editor = select('core/editor');
+        if (editor && typeof editor.getDeviceType === 'function') {
+            return editor.getDeviceType();
+        }
+        const editPost = select('core/edit-post');
+        if (editPost && typeof editPost.__experimentalGetPreviewDeviceType === 'function') {
+            return editPost.__experimentalGetPreviewDeviceType();
+        }
+        return 'Desktop';
     }, []);
 
     const device = deviceType ? deviceType.toLowerCase() : 'desktop';
 
-    // Get dispatcher safely
-    const dispatch = useDispatch('core/edit-post');
-    const setPreviewDeviceType = dispatch ? dispatch.__experimentalSetPreviewDeviceType : null;
+    // Get dispatchers for both APIs; prefer the modern one when available.
+    const editorDispatch = useDispatch('core/editor');
+    const editPostDispatch = useDispatch('core/edit-post');
 
     const setDeviceAndPreview = (deviceName) => {
-        if (setPreviewDeviceType) {
-            const wpDevice = deviceName.charAt(0).toUpperCase() + deviceName.slice(1);
-            setPreviewDeviceType(wpDevice);
+        const wpDevice = deviceName.charAt(0).toUpperCase() + deviceName.slice(1);
+        if (editorDispatch && typeof editorDispatch.setDeviceType === 'function') {
+            editorDispatch.setDeviceType(wpDevice);
+        } else if (editPostDispatch && typeof editPostDispatch.__experimentalSetPreviewDeviceType === 'function') {
+            editPostDispatch.__experimentalSetPreviewDeviceType(wpDevice);
         }
     };
 

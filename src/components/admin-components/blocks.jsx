@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import BlockItem from './blockItem';
-import { Row, Space, Button, notification } from 'antd';
+import { Row, Space, Button, notification, Input, Select } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 
 export default function Blocks() {
     const [blocks, setBlocks] = useState(eelfg.blocks);
     const [bulkLoading, setBulkLoading] = useState(false);
     const [filter, setFilter] = useState('all'); // 'all' | 'free' | 'pro'
+    const [search, setSearch] = useState('');
+    const [sort, setSort] = useState('default'); // 'default' | 'az' | 'za' | 'active' | 'inactive'
 
     // update by ajax
     const updateBlockStatus = (blockId, currentStatus) => { // Accept currentStatus to calculate new one locally
@@ -132,12 +135,29 @@ export default function Blocks() {
             });
     }
 
-    // Apply the active Pro/Free filter
+    // Apply the active Pro/Free filter and the search term (title + description).
+    const term = search.trim().toLowerCase();
     const filteredBlocks = blocks.filter(block => {
-        if (filter === 'free') return !block.isPro;
-        if (filter === 'pro') return block.isPro;
+        if (filter === 'free' && block.isPro) return false;
+        if (filter === 'pro' && !block.isPro) return false;
+        if (term) {
+            const haystack = `${block.title || ''} ${block.description || ''}`.toLowerCase();
+            if (!haystack.includes(term)) return false;
+        }
         return true;
     });
+
+    // Apply the active sort option (non-mutating copy).
+    const sortedBlocks = [...filteredBlocks];
+    if (sort === 'az') {
+        sortedBlocks.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+    } else if (sort === 'za') {
+        sortedBlocks.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
+    } else if (sort === 'active') {
+        sortedBlocks.sort((a, b) => (b.status === 'enable') - (a.status === 'enable'));
+    } else if (sort === 'inactive') {
+        sortedBlocks.sort((a, b) => (a.status === 'enable') - (b.status === 'enable'));
+    }
 
     return (
         <div className='eelfg-options-content'>
@@ -154,7 +174,7 @@ export default function Blocks() {
                         marginTop: 16,
                     }}
                 >
-                    {/* pro / free filters — left side */}
+                    {/* pro / free filters + search — left side */}
                     <Space className="eelfg-blocks-filters">
                         <Button
                             type={filter === 'all' ? 'primary' : 'default'}
@@ -162,6 +182,26 @@ export default function Blocks() {
                         >
                             All
                         </Button>
+                        <Input
+                            placeholder="Search blocks..."
+                            allowClear
+                            prefix={<SearchOutlined />}
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            style={{ width: 240 }}
+                        />
+                        <Select
+                            value={sort}
+                            onChange={(v) => setSort(v)}
+                            style={{ width: 170 }}
+                            options={[
+                                { value: 'default', label: 'Sort: Default' },
+                                { value: 'az', label: 'Name (A–Z)' },
+                                { value: 'za', label: 'Name (Z–A)' },
+                                { value: 'active', label: 'Active first' },
+                                { value: 'inactive', label: 'Inactive first' },
+                            ]}
+                        />
                     </Space>
                     {/* activate / deactivate all — right side */}
                     <Space className="eelfg-blocks-actions">
@@ -184,11 +224,16 @@ export default function Blocks() {
                     </Space>
                 </div>
             </div>
+            {sortedBlocks.length === 0 && (
+                <p style={{ padding: '24px 4px', color: '#888' }}>
+                    No blocks found{term ? ` for “${search.trim()}”` : ''}.
+                </p>
+            )}
             <Row gutter={[16, 16]} justify="flex-start">
-                {filteredBlocks.map((block, index) => (
+                {sortedBlocks.map((block) => (
 
                     <BlockItem
-                        key={index}
+                        key={block.id}
                         title={block.title}
                         id={block.id}
                         description={block.description}

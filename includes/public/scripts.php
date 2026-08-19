@@ -2,8 +2,11 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-add_action( 'enqueue_block_editor_assets', 'eelfg_enqueue_block_scripts' );
-add_action( 'wp_enqueue_scripts', 'eelfg_enqueue_block_scripts' );
+// enqueue_block_assets fires for BOTH the front end and the block editor iframe,
+// so these block styles load correctly inside the editor canvas. Using
+// enqueue_block_editor_assets added them to the outer editor page, not the
+// iframe, which the editor flags as "added to the iframe incorrectly".
+add_action( 'enqueue_block_assets', 'eelfg_enqueue_block_scripts' );
 function eelfg_enqueue_block_scripts() {
 	wp_enqueue_style( 'eelfg-public-style', EELFG_PL_URL . 'includes/public/assets/css/public.css', array(), EELFG_VERSION );
 

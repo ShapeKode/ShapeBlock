@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useRef, useState, useCallback, createPortal } from '@wordpress/element';
 import { ServerSideRender } from '@wordpress/server-side-render';
 import {
 	useBlockProps,
@@ -73,6 +73,77 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			setAttributes({ blockId: 'eelfg-gallery-' + clientId.slice(0, 6) });
 		}
 	}, [blockId, clientId, setAttributes]);
+
+	// Editor preview: the lightbox/popup lives in view.js (viewScript), which
+	// does not load inside the editor. Recreate it here with a React-controlled
+	// lightbox (rendered below) so it survives ServerSideRender re-renders — the
+	// click just reads the popup links from the SSR grid and opens our lightbox.
+	const previewNodeRef = useRef(null);
+	const [lightbox, setLightbox] = useState({ open: false, images: [], index: 0 });
+	// The editor canvas is an iframe; render the lightbox into its document body
+	// so position:fixed is not clipped by a transformed/contained ancestor.
+	const [portalDoc, setPortalDoc] = useState(null);
+
+	// Stable click handler: from a clicked popup link, collect all links in the
+	// grid and open the lightbox at that index.
+	// Store the preview node and its document (the editor canvas iframe).
+	const setPreviewRef = useCallback((node) => {
+		previewNodeRef.current = node;
+		if (node) {
+			setPortalDoc(node.ownerDocument);
+		}
+	}, []);
+
+	// Open the lightbox when a popup link is clicked. Listen on the iframe
+	// document in the capture phase so the click is caught reliably over the
+	// ServerSideRender preview, scoped to this block's own images.
+	useEffect(() => {
+		if (!portalDoc) {
+			return undefined;
+		}
+		const onDocClick = (e) => {
+			const link = (e.target && e.target.closest) ? e.target.closest('.eelfg-popup-link') : null;
+			if (!link || !previewNodeRef.current || !previewNodeRef.current.contains(link)) {
+				return;
+			}
+			e.preventDefault();
+			const grid = link.closest('.eelfg-gallery-grid');
+			if (!grid) {
+				return;
+			}
+			const allLinks = Array.prototype.slice.call(grid.querySelectorAll('.eelfg-popup-link'));
+			const images = allLinks.map((a) => a.getAttribute('href')).filter(Boolean);
+			const index = Math.max(0, allLinks.indexOf(link));
+			if (images.length) {
+				setLightbox({ open: true, images, index });
+			}
+		};
+		portalDoc.addEventListener('click', onDocClick, true);
+		return () => portalDoc.removeEventListener('click', onDocClick, true);
+	}, [portalDoc]);
+
+	// Keyboard controls while the editor lightbox is open.
+	useEffect(() => {
+		if (!lightbox.open) {
+			return undefined;
+		}
+		const onKey = (e) => {
+			if (e.key === 'Escape') {
+				setLightbox((s) => ({ ...s, open: false }));
+			} else if (e.key === 'ArrowRight') {
+				setLightbox((s) => ({ ...s, index: (s.index + 1) % s.images.length }));
+			} else if (e.key === 'ArrowLeft') {
+				setLightbox((s) => ({ ...s, index: (s.index - 1 + s.images.length) % s.images.length }));
+			}
+		};
+		const doc = (previewNodeRef.current && previewNodeRef.current.ownerDocument) || document;
+		doc.addEventListener('keydown', onKey);
+		return () => doc.removeEventListener('keydown', onKey);
+	}, [lightbox.open]);
+
+	const closeLightbox = () => setLightbox((s) => ({ ...s, open: false }));
+	const lightboxNext = () => setLightbox((s) => ({ ...s, index: (s.index + 1) % s.images.length }));
+	const lightboxPrev = () => setLightbox((s) => ({ ...s, index: (s.index - 1 + s.images.length) % s.images.length }));
 
 	const blockProps = useBlockProps();
 
@@ -363,11 +434,36 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			)}
 
 			{hasImages ? (
-				<ServerSideRender
-					block="easy-elements-for-gutenberg/gallery"
-					attributes={attributes}
-					httpMethod="POST"
-				/>
+				<>
+					<div ref={setPreviewRef}>
+						<ServerSideRender
+							block="easy-elements-for-gutenberg/gallery"
+							attributes={attributes}
+							httpMethod="POST"
+						/>
+					</div>
+					{lightbox.open && portalDoc && createPortal(
+						<div
+							className="eelfg-lightbox-gallery is-open"
+							onClick={(e) => {
+								if (e.target === e.currentTarget) {
+									closeLightbox();
+								}
+							}}
+							style={{ position: 'fixed', inset: 0, zIndex: 100000, background: 'rgba(0,0,0,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+						>
+							<span className="eelfg-close" role="button" tabIndex={0} onClick={closeLightbox} style={{ position: 'absolute', top: 15, right: 25, fontSize: 35, lineHeight: 1, color: '#fff', cursor: 'pointer' }}>&times;</span>
+							<img className="eelfg-lightbox-image" src={lightbox.images[lightbox.index]} alt="" style={{ maxWidth: '90%', maxHeight: '80%', borderRadius: 10 }} />
+							{lightbox.images.length > 1 && (
+								<>
+									<button type="button" className="eelfg-prev" onClick={lightboxPrev} style={{ position: 'absolute', left: 20, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#fff', fontSize: 30, cursor: 'pointer' }}>&#10094;</button>
+									<button type="button" className="eelfg-next" onClick={lightboxNext} style={{ position: 'absolute', right: 20, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#fff', fontSize: 30, cursor: 'pointer' }}>&#10095;</button>
+								</>
+							)}
+						</div>,
+						portalDoc.body
+					)}
+				</>
 			) : (
 				<MediaPlaceholder
 					className="eelfg-gallery-empty-placeholder"

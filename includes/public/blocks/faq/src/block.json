@@ -5,7 +5,7 @@
 	"version": "0.1.0",
 	"title": "Accordion",
 	"category": "easy-elements-for-gutenberg",
-	"description": "An FAQ accordion with collapsible questions, custom icons and optional FAQ schema.",
+	"description": "An FAQ accordion with collapsible questions and custom icons.",
 	"keywords": [ "faq", "accordion", "question", "answer", "toggle" ],
 	"example": {},
 	"supports": {
@@ -41,7 +41,6 @@
 		"iconPosition": { "type": "string", "default": "row" },
 		"openAll": { "type": "boolean", "default": false },
 		"enableSticky": { "type": "boolean", "default": false },
-		"enableSchema": { "type": "boolean", "default": false },
 
 		"itemBackgroundColor": { "type": "string", "default": "" },
 		"itemBackgroundColorHover": { "type": "string", "default": "" },

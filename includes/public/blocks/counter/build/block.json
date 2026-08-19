@@ -82,7 +82,7 @@
     },
     "title": {
       "type": "string",
-      "default": "Easy Elements"
+      "default": "Easy Block"
     },
     "titleTag": {
       "type": "string",

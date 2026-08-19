@@ -24,7 +24,6 @@ $title_tag    = isset( $attributes['titleTag'] ) && in_array( $attributes['title
 
 $open_all      = ! empty( $attributes['openAll'] );
 $enable_sticky = $open_all && ! empty( $attributes['enableSticky'] );
-$enable_schema = ! empty( $attributes['enableSchema'] );
 
 $icon_open     = isset( $attributes['iconOpen'] ) ? $attributes['iconOpen'] : '';
 $icon_close    = isset( $attributes['iconClose'] ) ? $attributes['iconClose'] : '';
@@ -311,35 +310,6 @@ $H::add_custom_style( $style_handle, $selector, $full_responsive_css, [
 $default_icon_close = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"/></svg>'; // plus
 $default_icon_open  = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M5 11h14v2H5z"/></svg>'; // minus
 
-// ---------------------------------------------------------------------------
-// FAQ Schema (JSON-LD).
-// ---------------------------------------------------------------------------
-if ( $enable_schema ) {
-	$schema_entities = [];
-	foreach ( $faq_items as $item ) {
-		$q = isset( $item['title'] ) ? wp_strip_all_tags( $item['title'] ) : '';
-		$a = isset( $item['description'] ) ? wp_strip_all_tags( $item['description'] ) : '';
-		if ( '' === $q ) {
-			continue;
-		}
-		$schema_entities[] = [
-			'@type'          => 'Question',
-			'name'           => $q,
-			'acceptedAnswer' => [
-				'@type' => 'Answer',
-				'text'  => $a,
-			],
-		];
-	}
-	if ( ! empty( $schema_entities ) ) {
-		$schema = [
-			'@context'   => 'https://schema.org',
-			'@type'      => 'FAQPage',
-			'mainEntity' => $schema_entities,
-		];
-		echo '<script type="application/ld+json">' . wp_json_encode( $schema ) . '</script>';
-	}
-}
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="eelfg-faq-accordion <?php echo esc_attr( $open_all_class ); ?> <?php echo esc_attr( $sticky_class ); ?>">

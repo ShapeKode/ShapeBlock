@@ -6,15 +6,15 @@ return array(
 		'apiVersion' => 3,
 		'name' => 'easy-elements-for-gutenberg/icon-box',
 		'version' => '0.1.0',
-		'title' => 'Info Box',
+		'title' => 'Icon Box',
 		'category' => 'easy-elements-for-gutenberg',
-		'description' => 'An icon/info box with title, description, features, number and read-more button.',
+		'description' => 'Icon boxes with the icon on top, then title and description — icon, number or image supported.',
 		'keywords' => array(
-			'box',
-			'service',
+			'icon box',
 			'icon',
-			'icon-box',
-			'info'
+			'feature',
+			'service',
+			'box'
 		),
 		'example' => array(
 			
@@ -24,20 +24,6 @@ return array(
 			'align' => array(
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
 		'textdomain' => 'easy-elements-for-gutenberg',
@@ -48,9 +34,9 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'infoSkin' => array(
-				'type' => 'string',
-				'default' => 'default'
+			'showIcon' => array(
+				'type' => 'boolean',
+				'default' => true
 			),
 			'iconType' => array(
 				'type' => 'string',
@@ -58,116 +44,79 @@ return array(
 			),
 			'icon' => array(
 				'type' => 'string',
-				'default' => ''
+				'default' => 'eelfg-icon-favorite'
 			),
-			'iconImage' => array(
+			'number' => array(
+				'type' => 'string',
+				'default' => '01'
+			),
+			'image' => array(
 				'type' => 'object',
 				'default' => array(
 					
 				)
 			),
-			'numberTitle' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'numberGradient' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
 			'title' => array(
 				'type' => 'string',
-				'default' => 'Manufacturing Industrial'
+				'default' => 'Lightning Fast'
+			),
+			'desc' => array(
+				'type' => 'string',
+				'default' => 'Your site loads in seconds with our highly optimized structure.'
+			),
+			'boxAlign' => array(
+				'type' => 'string',
+				'default' => 'center'
+			),
+			'boxVAlign' => array(
+				'type' => 'string',
+				'default' => 'center'
+			),
+			'iconView' => array(
+				'type' => 'string',
+				'default' => 'stracked'
+			),
+			'iconShape' => array(
+				'type' => 'string',
+				'default' => 'rounded'
 			),
 			'titleTag' => array(
 				'type' => 'string',
 				'default' => 'h3'
 			),
-			'description' => array(
-				'type' => 'string',
-				'default' => 'Optimizing production and supply chain operations and generational transitions'
-			),
-			'features' => array(
-				'type' => 'array',
-				'default' => array(
-					array(
-						'icon' => '',
-						'text' => 'Manufacturing Industrial'
-					),
-					array(
-						'icon' => '',
-						'text' => 'Supply Chain'
-					)
-				)
-			),
-			'linkUrl' => array(
+			'listBgColor' => array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'linkTarget' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
-			'linkNofollow' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
-			'enableBoxLink' => array(
-				'type' => 'boolean',
-				'default' => true
-			),
-			'showReadMore' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
-			'readMoreType' => array(
-				'type' => 'string',
-				'default' => 'read_text'
-			),
-			'readMoreText' => array(
-				'type' => 'string',
-				'default' => 'Read More'
-			),
-			'readMoreIcon' => array(
+			'listBgGradient' => array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'readMoreTextIcon' => array(
+			'feaItemGap' => array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'readMoreTextIconShow' => array(
-				'type' => 'boolean',
-				'default' => true
-			),
-			'readMoreAlignment' => array(
+			'feaItemGapTablet' => array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'buttonTextAlign' => array(
+			'feaItemGapMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'iconDirection' => array(
+			'feaMiddleGap' => array(
 				'type' => 'string',
-				'default' => 'top'
+				'default' => '20'
 			),
-			'iconVerticalAlignment' => array(
-				'type' => 'string',
-				'default' => 'center'
-			),
-			'textAlign' => array(
-				'type' => 'string',
-				'default' => 'center'
-			),
-			'itemSpacing' => array(
+			'feaMiddleGapTablet' => array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'itemBgColor' => array(
+			'feaMiddleGapMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'itemBorder' => array(
+			'feaListBorder' => array(
 				'type' => 'object',
 				'default' => array(
 					'width' => 0,
@@ -175,17 +124,7 @@ return array(
 					'style' => 'solid'
 				)
 			),
-			'itemBoxShadow' => array(
-				'type' => 'object',
-				'default' => array(
-					'x' => 0,
-					'y' => 0,
-					'b' => 0,
-					's' => 0,
-					'c' => 'rgba(0, 0, 0, 0)'
-				)
-			),
-			'itemBorderRadius' => array(
+			'feaListBorderRadius' => array(
 				'type' => 'object',
 				'default' => array(
 					'top' => '',
@@ -194,81 +133,23 @@ return array(
 					'left' => ''
 				)
 			),
-			'itemPadding' => array(
+			'feaListPadding' => array(
 				'type' => 'object'
 			),
-			'itemMargin' => array(
+			'feaListPaddingTablet' => array(
 				'type' => 'object'
 			),
-			'itemHoverBgDirection' => array(
-				'type' => 'string',
-				'default' => 'default'
-			),
-			'itemHoverBgColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'itemHoverBorderColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'itemHoverBoxShadow' => array(
-				'type' => 'object',
-				'default' => array(
-					'x' => 0,
-					'y' => 0,
-					'b' => 0,
-					's' => 0,
-					'c' => 'rgba(0, 0, 0, 0)'
-				)
-			),
-			'imageSize' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'imageBoxSize' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'imageBgColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'imageBorder' => array(
-				'type' => 'object',
-				'default' => array(
-					'width' => 0,
-					'color' => '',
-					'style' => 'solid'
-				)
-			),
-			'imageBoxBorderRadius' => array(
-				'type' => 'object',
-				'default' => array(
-					'top' => '',
-					'right' => '',
-					'bottom' => '',
-					'left' => ''
-				)
-			),
-			'imageBorderRadius' => array(
-				'type' => 'object',
-				'default' => array(
-					'top' => '',
-					'right' => '',
-					'bottom' => '',
-					'left' => ''
-				)
-			),
-			'imagePadding' => array(
+			'feaListPaddingMobile' => array(
 				'type' => 'object'
 			),
-			'imageMargin' => array(
+			'feaBlockMargin' => array(
 				'type' => 'object'
 			),
-			'imageHoverBgColor' => array(
-				'type' => 'string',
-				'default' => ''
+			'feaBlockMarginTablet' => array(
+				'type' => 'object'
+			),
+			'feaBlockMarginMobile' => array(
+				'type' => 'object'
 			),
 			'iconColor' => array(
 				'type' => 'string',
@@ -278,7 +159,19 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'iconBgGradient' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'iconSize' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconSizeMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -286,27 +179,19 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'iconBorder' => array(
-				'type' => 'object',
-				'default' => array(
-					'width' => 0,
-					'color' => '',
-					'style' => 'solid'
-				)
+			'iconBoxSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
 			),
-			'iconBorderRadius' => array(
-				'type' => 'object',
-				'default' => array(
-					'top' => '',
-					'right' => '',
-					'bottom' => '',
-					'left' => ''
-				)
+			'iconBoxSizeMobile' => array(
+				'type' => 'string',
+				'default' => ''
 			),
-			'iconMargin' => array(
-				'type' => 'object'
+			'iconAlignment' => array(
+				'type' => 'string',
+				'default' => 'center'
 			),
-			'iconBoxShadow' => array(
+			'iconShadow' => array(
 				'type' => 'object',
 				'default' => array(
 					'x' => 0,
@@ -316,51 +201,22 @@ return array(
 					'c' => 'rgba(0, 0, 0, 0)'
 				)
 			),
-			'iconRotate' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'gradientBorder' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
-			'iconHoverColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'iconHoverBgColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'numberColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'numberBgColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'numberTypography' => array(
+			'iconBorder' => array(
 				'type' => 'object',
 				'default' => array(
-					'fontFamily' => '',
-					'fontSize' => '',
-					'fontWeight' => '',
-					'fontStyle' => '',
-					'textTransform' => '',
-					'lineHeight' => '',
-					'letterSpacing' => ''
+					'width' => 0,
+					'color' => '',
+					'style' => 'solid'
 				)
 			),
-			'numberAlignment' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'numberPadding' => array(
-				'type' => 'object'
-			),
-			'numberMargin' => array(
-				'type' => 'object'
+			'iconRadius' => array(
+				'type' => 'object',
+				'default' => array(
+					'top' => '',
+					'right' => '',
+					'bottom' => '',
+					'left' => ''
+				)
 			),
 			'titleColor' => array(
 				'type' => 'string',
@@ -378,12 +234,26 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
-			'titleMargin' => array(
+			'titleTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'titleTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'titlePadding' => array(
 				'type' => 'object'
 			),
-			'titleHoverColor' => array(
-				'type' => 'string',
-				'default' => ''
+			'titlePaddingTablet' => array(
+				'type' => 'object'
+			),
+			'titlePaddingMobile' => array(
+				'type' => 'object'
 			),
 			'descColor' => array(
 				'type' => 'string',
@@ -401,130 +271,17 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
-			'descMargin' => array(
-				'type' => 'object'
-			),
-			'descHoverColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'featureTextColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'featureIconColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'featureTextColorHover' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'featureIconColorHover' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'featureTypography' => array(
+			'descTypographyTablet' => array(
 				'type' => 'object',
 				'default' => array(
-					'fontFamily' => '',
-					'fontSize' => '',
-					'fontWeight' => '',
-					'fontStyle' => '',
-					'textTransform' => '',
-					'lineHeight' => '',
-					'letterSpacing' => ''
+					
 				)
 			),
-			'featureMargin' => array(
-				'type' => 'object'
-			),
-			'featureIconGap' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'featureIconSize' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'readMoreIconColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'readMoreIconBgColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'readMoreIconPadding' => array(
-				'type' => 'object'
-			),
-			'readMoreIconBorderRadius' => array(
+			'descTypographyMobile' => array(
 				'type' => 'object',
 				'default' => array(
-					'top' => '',
-					'right' => '',
-					'bottom' => '',
-					'left' => ''
+					
 				)
-			),
-			'readMoreIconSize' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'readMoreTextColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'readMoreTextBgColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'readMoreTextBorder' => array(
-				'type' => 'object',
-				'default' => array(
-					'width' => 0,
-					'color' => '',
-					'style' => 'solid'
-				)
-			),
-			'readMoreTextBorderRadius' => array(
-				'type' => 'object',
-				'default' => array(
-					'top' => '',
-					'right' => '',
-					'bottom' => '',
-					'left' => ''
-				)
-			),
-			'readMoreTextPadding' => array(
-				'type' => 'object'
-			),
-			'readMoreTypography' => array(
-				'type' => 'object',
-				'default' => array(
-					'fontFamily' => '',
-					'fontSize' => '',
-					'fontWeight' => '',
-					'fontStyle' => '',
-					'textTransform' => '',
-					'lineHeight' => '',
-					'letterSpacing' => ''
-				)
-			),
-			'readMoreMargin' => array(
-				'type' => 'object'
-			),
-			'readMoreTextColorHover' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'readMoreBgHover' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'readMoreHoverBorderColor' => array(
-				'type' => 'string',
-				'default' => ''
 			)
 		)
 	)

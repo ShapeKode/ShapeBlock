@@ -33,6 +33,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// so wire up the open/close toggle here. Delegated on a persistent wrapper so
 	// it survives the SSR markup being replaced.
 	const previewRef = useRef(null);
+	const isOpenRef = useRef(false);
 	useEffect(() => {
 		const root = previewRef.current;
 		if (!root) return undefined;
@@ -49,11 +50,26 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			const target = toggle.getAttribute('data-target');
 			const panel = target ? root.querySelector(target) : null;
 			if (!panel) return;
-			panel.classList.toggle('eelfg-active');
+			const nowOpen = !panel.classList.contains('eelfg-active');
+			panel.classList.toggle('eelfg-active', nowOpen);
+			isOpenRef.current = nowOpen;
+			syncBody();
+		};
+		// After the SSR markup is swapped (e.g. when the selected template or any
+		// other attribute changes), re-apply the remembered open state so the panel
+		// does not snap shut on every edit.
+		const applyOpenState = () => {
+			const p = root.querySelector('.eelfg-offcanvas');
+			if (p) p.classList.toggle('eelfg-active', isOpenRef.current);
 			syncBody();
 		};
 		root.addEventListener('click', onClick);
-		return () => root.removeEventListener('click', onClick);
+		const previewObserver = new MutationObserver(applyOpenState);
+		previewObserver.observe(root, { childList: true, subtree: true });
+		return () => {
+			root.removeEventListener('click', onClick);
+			previewObserver.disconnect();
+		};
 	}, []);
 
 	const [templates, setTemplates] = useState([]);
@@ -71,6 +87,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	}, []);
 
 	const templateOptions = [{ label: __('— Select Template —', 'easy-elements-for-gutenberg'), value: '' }, ...templates];
+
+	const editorData = typeof eelfgEditor !== 'undefined' ? eelfgEditor : {};
+	const adminUrl = editorData.admin_url || '/wp-admin/';
+	const newTemplateUrl = editorData.new_tpl_url || (adminUrl + 'post-new.php?post_type=eelfg-template');
+	const editTemplateUrl = attributes.contentTemplate
+		? adminUrl + 'post.php?post=' + attributes.contentTemplate + '&action=edit'
+		: '';
 
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const num = (label, key) => <TextControl label={label} type="number" value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
@@ -118,9 +141,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						__next40pxDefaultSize
 						__nextHasNoMarginBottom
 					/>
-					{!templates.length && (
+					<div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
+							{editTemplateUrl && (
+								<Button variant="link" href={editTemplateUrl} target="_blank" rel="noopener noreferrer">
+									{__('Edit Template', 'easy-elements-for-gutenberg')}
+								</Button>
+							)}
+							<Button variant="link" href={newTemplateUrl} target="_blank" rel="noopener noreferrer">
+								{__('Create New Template', 'easy-elements-for-gutenberg')}
+							</Button>
+						</div>
+						{!templates.length && (
 						<Notice status="warning" isDismissible={false}>
-							{__('No templates found. Create one under the Templates post type first.', 'easy-elements-for-gutenberg')}
+							{__('No templates yet. Click “Create New Template” to add one, then select it here.', 'easy-elements-for-gutenberg')}
 						</Notice>
 					)}
 					<IconPicker label={__('Close Icon', 'easy-elements-for-gutenberg')} value={attributes.closeIcon || ''} onChange={(v) => setAttributes({ closeIcon: v })} />

@@ -18,7 +18,9 @@ $H = '\EELFG\Frontend\Helper';
 
 $unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-stt-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
-$icon = isset( $attributes['scrollIcon'] ) ? $attributes['scrollIcon'] : '';
+$icon       = isset( $attributes['scrollIcon'] ) ? $attributes['scrollIcon'] : '';
+$position   = ( isset( $attributes['position'] ) && 'left' === $attributes['position'] ) ? 'left' : 'right';
+$show_after = ( isset( $attributes['showAfter'] ) && '' !== $attributes['showAfter'] ) ? (int) $attributes['showAfter'] : 150;
 
 // In the editor, render the button inline + visible so it can be seen and styled
 // (on the front end it is a fixed button that appears after scrolling).
@@ -35,17 +37,96 @@ if ( empty( $block_wrap_attr ) ) {
 $selector     = '.eelfg-scroll-top-block-wrap.' . $unique_id;
 $style_handle = 'eelfg-scroll-to-top-style';
 
+// Shared mappers (same conventions as the Button block).
+$dims = function ( $obj, $type ) use ( $H ) {
+	$out = [];
+	if ( empty( $obj ) || ! is_array( $obj ) ) {
+		return $out;
+	}
+	if ( 'padding' === $type ) {
+		$map = [ 'top' => 'padding-top', 'right' => 'padding-right', 'bottom' => 'padding-bottom', 'left' => 'padding-left' ];
+	} else {
+		$map = [ 'top' => 'border-top-left-radius', 'right' => 'border-top-right-radius', 'bottom' => 'border-bottom-right-radius', 'left' => 'border-bottom-left-radius' ];
+	}
+	foreach ( $map as $side => $css_prop ) {
+		if ( isset( $obj[ $side ] ) && '' !== $obj[ $side ] ) {
+			$out[ $css_prop ] = $H::ensure_unit( $obj[ $side ] );
+		}
+	}
+	return $out;
+};
+$shadow = function ( $obj ) use ( $H ) {
+	if ( empty( $obj ) || ! is_array( $obj ) ) {
+		return [];
+	}
+	$x = (int) ( $obj['x'] ?? 0 );
+	$y = (int) ( $obj['y'] ?? 0 );
+	$b = (int) ( $obj['b'] ?? 0 );
+	$s = (int) ( $obj['s'] ?? 0 );
+	$c = $obj['c'] ?? '';
+	$transparent = in_array( str_replace( ' ', '', (string) $c ), [ '', 'rgba(0,0,0,0)' ], true );
+	if ( 0 === $x && 0 === $y && 0 === $b && 0 === $s && $transparent ) {
+		return [];
+	}
+	return [ 'box-shadow' => $H::box_shadow_to_css( $obj ) ];
+};
+
+// Button (normal).
 $btn = [];
 if ( ! empty( $attributes['bgColor'] ) ) $btn['background-color'] = $attributes['bgColor'];
 if ( ! empty( $attributes['color'] ) ) $btn['color'] = $attributes['color'];
+if ( ! empty( $attributes['buttonSize'] ) ) {
+	$size = $H::ensure_unit( $attributes['buttonSize'] );
+	$btn['width']       = $size;
+	$btn['height']      = $size;
+	$btn['line-height'] = $size;
+}
+$btn = array_merge( $btn, $dims( $attributes['sttRadius'] ?? [], 'radius' ), $dims( $attributes['sttPadding'] ?? [], 'padding' ), $shadow( $attributes['sttBoxShadow'] ?? [] ) );
+if ( ! empty( $attributes['sttBorder'] ) ) $btn = array_merge( $btn, $H::border_to_css_props( $attributes['sttBorder'] ) );
 
-$btn_svg = ! empty( $attributes['color'] ) ? [ 'fill' => $attributes['color'] ] : [];
+// Position / offset apply only on the front end (in the editor the button is inline).
+if ( ! $is_editor ) {
+	if ( isset( $attributes['offsetY'] ) && '' !== $attributes['offsetY'] ) {
+		$btn['bottom'] = $H::ensure_unit( $attributes['offsetY'] );
+	}
+	if ( isset( $attributes['offsetX'] ) && '' !== $attributes['offsetX'] ) {
+		$off = $H::ensure_unit( $attributes['offsetX'] );
+		if ( 'left' === $position ) {
+			$btn['left']  = $off;
+			$btn['right'] = 'auto';
+		} else {
+			$btn['right'] = $off;
+		}
+	} elseif ( 'left' === $position ) {
+		$btn['left']  = '28px';
+		$btn['right'] = 'auto';
+	}
+}
+
+// Button (hover).
+$btn_hover = [];
+if ( ! empty( $attributes['bgColorHover'] ) ) $btn_hover['background-color'] = $attributes['bgColorHover'];
+if ( ! empty( $attributes['colorHover'] ) ) $btn_hover['color'] = $attributes['colorHover'];
+
+// Icon size.
+$icon_i   = [];
+$icon_svg = [];
+if ( ! empty( $attributes['color'] ) ) $icon_svg['fill'] = $attributes['color'];
+if ( ! empty( $attributes['iconSize'] ) ) {
+	$is = $H::ensure_unit( $attributes['iconSize'] );
+	$icon_i['font-size'] = $is;
+	$icon_svg['width']   = $is;
+	$icon_svg['height']  = $is;
+}
+$icon_svg_hover = ! empty( $attributes['colorHover'] ) ? [ 'fill' => $attributes['colorHover'] ] : [];
 
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, '', [
-	'.eelfg-scroll-top'          => $H::get_inline_styles( $btn ),
-	'.eelfg-scroll-top i'        => ! empty( $attributes['color'] ) ? 'color:' . $attributes['color'] : '',
-	'.eelfg-scroll-top svg, ' . $selector . ' .eelfg-scroll-top svg path' => $H::get_inline_styles( $btn_svg ),
+	'.eelfg-scroll-top'       => $H::get_inline_styles( $btn ),
+	'.eelfg-scroll-top:hover' => $H::get_inline_styles( $btn_hover ),
+	'.eelfg-scroll-top i'     => $H::get_inline_styles( $icon_i ),
+	'.eelfg-scroll-top svg, ' . $selector . ' .eelfg-scroll-top svg path' => $H::get_inline_styles( $icon_svg ),
+	'.eelfg-scroll-top:hover svg, ' . $selector . ' .eelfg-scroll-top:hover svg path' => $H::get_inline_styles( $icon_svg_hover ),
 ] );
 
 $icon_html = ( ! empty( $icon ) && 'none' !== $icon )
@@ -56,9 +137,16 @@ $btn_classes = 'eelfg-scroll-top';
 if ( $is_editor ) {
 	$btn_classes .= ' eelfg-scroll-visible eelfg-scroll-editor';
 }
+
+// Allowed markup for the icon output (icon font <i> or inline SVG fallback).
+$eelfg_icon_allowed = array(
+	'i'    => array( 'class' => array(), 'aria-hidden' => array() ),
+	'svg'  => array( 'viewbox' => array(), 'aria-hidden' => array(), 'xmlns' => array() ),
+	'path' => array( 'fill' => array(), 'd' => array() ),
+);
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="<?php echo esc_attr( $btn_classes ); ?>" role="button" tabindex="0" aria-label="<?php echo esc_attr__( 'Scroll to top', 'easy-elements-for-gutenberg' ); ?>">
-		<?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	<div class="<?php echo esc_attr( $btn_classes ); ?>" role="button" tabindex="0" aria-label="<?php echo esc_attr__( 'Scroll to top', 'easy-elements-for-gutenberg' ); ?>" data-show-after="<?php echo esc_attr( $show_after ); ?>">
+		<?php echo wp_kses( $icon_html, $eelfg_icon_allowed ); ?>
 	</div>
 </div>

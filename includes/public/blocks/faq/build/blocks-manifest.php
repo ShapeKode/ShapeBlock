@@ -8,7 +8,7 @@ return array(
 		'version' => '0.1.0',
 		'title' => 'Accordion',
 		'category' => 'easy-elements-for-gutenberg',
-		'description' => 'An FAQ accordion with collapsible questions, custom icons and optional FAQ schema.',
+		'description' => 'An FAQ accordion with collapsible questions and custom icons.',
 		'keywords' => array(
 			'faq',
 			'accordion',
@@ -95,10 +95,6 @@ return array(
 				'default' => false
 			),
 			'enableSticky' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
-			'enableSchema' => array(
 				'type' => 'boolean',
 				'default' => false
 			),

@@ -3,13 +3,13 @@
   "apiVersion": 3,
   "name": "easy-elements-for-gutenberg/feature-list",
   "version": "0.1.0",
-  "title": "Feature List",
+  "title": "Features List",
   "category": "easy-elements-for-gutenberg",
-  "description": "A vertical list of features with icon, number or image, title, description and optional connector.",
+  "description": "A vertical list of items with icon, number or image, title, description and optional connector.",
   "keywords": [
-    "feature",
-    "list",
     "icon",
+    "list",
+    "feature",
     "steps",
     "service"
   ],
@@ -19,21 +19,7 @@
     "align": [
       "wide",
       "full"
-    ],
-    "spacing": {
-      "padding": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ],
-      "margin": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ]
-    }
+    ]
   },
   "textdomain": "easy-elements-for-gutenberg",
   "editorScript": "file:./index.js",
@@ -76,6 +62,10 @@
       "type": "string",
       "default": "left"
     },
+    "showIcon": {
+      "type": "boolean",
+      "default": true
+    },
     "feaVerticalAlign": {
       "type": "string",
       "default": "center"
@@ -104,9 +94,25 @@
       "type": "string",
       "default": ""
     },
+    "feaItemGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "feaItemGapMobile": {
+      "type": "string",
+      "default": ""
+    },
     "feaMiddleGap": {
       "type": "string",
       "default": "20"
+    },
+    "feaMiddleGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "feaMiddleGapMobile": {
+      "type": "string",
+      "default": ""
     },
     "feaConnector": {
       "type": "boolean",
@@ -124,11 +130,35 @@
       "type": "string",
       "default": ""
     },
+    "feaConnectorWidthTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnectorWidthMobile": {
+      "type": "string",
+      "default": ""
+    },
     "feaConnectorPositionX": {
       "type": "string",
       "default": ""
     },
+    "feaConnectorPositionXTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnectorPositionXMobile": {
+      "type": "string",
+      "default": ""
+    },
     "feaConnectorRightPositionX": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnectorRightPositionXTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnectorRightPositionXMobile": {
       "type": "string",
       "default": ""
     },
@@ -156,6 +186,21 @@
     "feaListPadding": {
       "type": "object"
     },
+    "feaListPaddingTablet": {
+      "type": "object"
+    },
+    "feaListPaddingMobile": {
+      "type": "object"
+    },
+    "feaBlockMargin": {
+      "type": "object"
+    },
+    "feaBlockMarginTablet": {
+      "type": "object"
+    },
+    "feaBlockMarginMobile": {
+      "type": "object"
+    },
     "iconColor": {
       "type": "string",
       "default": ""
@@ -172,7 +217,23 @@
       "type": "string",
       "default": ""
     },
+    "iconSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSizeMobile": {
+      "type": "string",
+      "default": ""
+    },
     "iconBoxSize": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxSizeMobile": {
       "type": "string",
       "default": ""
     },
@@ -223,7 +284,21 @@
         "letterSpacing": ""
       }
     },
+    "titleTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "titleTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "titlePadding": {
+      "type": "object"
+    },
+    "titlePaddingTablet": {
+      "type": "object"
+    },
+    "titlePaddingMobile": {
       "type": "object"
     },
     "descColor": {
@@ -241,6 +316,14 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "descTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "descTypographyMobile": {
+      "type": "object",
+      "default": {}
     }
   }
 }

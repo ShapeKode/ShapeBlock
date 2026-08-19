@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useRef } from '@wordpress/element';
 import { ServerSideRender } from '@wordpress/server-side-render';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import {
@@ -34,6 +34,175 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		}
 	}, [blockId, clientId, setAttributes]);
 
+	// Editor preview: mirror the front-end counter. The animation lives in
+	// view.js (viewScript), which does not load inside the editor, so we replay
+	// it here — and, like the front end, only when the number scrolls into view
+	// (via IntersectionObserver) rather than immediately on render.
+	const blockRef = useRef(null);
+	const lastSigRef = useRef('');
+
+	useEffect(() => {
+		const root = blockRef.current;
+		if (!root) {
+			return undefined;
+		}
+
+		const SEPARATORS = { comma: ',', dot: '.', space: ' ', underline: '_' };
+		const formatNum = (num, sep) => {
+			const str = num.toString();
+			if (!sep) {
+				return str;
+			}
+			const negative = str.charAt(0) === '-';
+			const body = negative ? str.slice(1) : str;
+			if (body.length < 4) {
+				return str;
+			}
+			return (negative ? '-' : '') + body.replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+		};
+
+		let io = null;
+
+		const setup = () => {
+			const el = root.querySelector('.eelfg-counter');
+			if (!el) {
+				return;
+			}
+			const target = parseInt(el.dataset.count, 10) || 0;
+			const start = parseInt(el.dataset.start, 10) || 0;
+			const duration = parseInt(el.dataset.duration, 10) || 1000;
+			const sep = SEPARATORS[el.dataset.format] || '';
+			const sig = [el.dataset.count, el.dataset.start, el.dataset.duration, el.dataset.format, el.dataset.animation].join('|');
+
+			// Already wired this exact element/config (avoids reacting to our own text updates).
+			if (el.dataset.eelfgSig === sig) {
+				return;
+			}
+			el.dataset.eelfgSig = sig;
+
+			// Non-count re-renders (e.g. colour tweaks) just show the final value.
+			if (sig === lastSigRef.current) {
+				el.textContent = formatNum(target, sep);
+				return;
+			}
+			lastSigRef.current = sig;
+
+			const animationType = el.dataset.animation || 'counter';
+
+			// Normal count-up animation.
+			const runCounter = () => {
+				const startTime = performance.now();
+				const tick = (time) => {
+					const progress = Math.min((time - startTime) / duration, 1);
+					el.textContent = formatNum(Math.floor(start + (target - start) * progress), sep);
+					if (progress < 1) {
+						requestAnimationFrame(tick);
+					}
+				};
+				requestAnimationFrame(tick);
+			};
+
+			// Odometer (rolling digits) animation — mirrors view.js.
+			const runOdometer = () => {
+				const doc = el.ownerDocument;
+				const targetStr = Math.floor(Math.abs(target)).toString();
+				el.innerHTML = '';
+				el.classList.add('eelfg-cnt-odometer-wrap');
+				if (target < 0) {
+					const s = doc.createElement('span');
+					s.className = 'eelfg-cnt-odometer-sep';
+					s.textContent = '-';
+					el.appendChild(s);
+				}
+				const rolls = [];
+				let digitIndex = 0;
+				for (let i = 0; i < targetStr.length; i++) {
+					const posFromRight = targetStr.length - i;
+					if (i > 0 && sep && posFromRight % 3 === 0) {
+						const sepEl = doc.createElement('span');
+						sepEl.className = 'eelfg-cnt-odometer-sep';
+						sepEl.textContent = sep;
+						el.appendChild(sepEl);
+					}
+					const col = doc.createElement('span');
+					col.className = 'eelfg-cnt-odometer-digit';
+					const roll = doc.createElement('span');
+					roll.className = 'eelfg-cnt-odometer-roll';
+					const spins = 2 + digitIndex;
+					let html = '';
+					for (let sp = 0; sp < spins; sp++) {
+						for (let n = 0; n <= 9; n++) {
+							html += '<span class="eelfg-cnt-odometer-num">' + n + '</span>';
+						}
+					}
+					html += '<span class="eelfg-cnt-odometer-num">' + targetStr.charAt(i) + '</span>';
+					roll.innerHTML = html;
+					roll.style.transform = 'translateY(0)';
+					col.appendChild(roll);
+					el.appendChild(col);
+					rolls.push({ roll, spins });
+					digitIndex++;
+				}
+				requestAnimationFrame(() => {
+					requestAnimationFrame(() => {
+						rolls.forEach((item) => {
+							item.roll.style.transition = 'transform ' + duration + 'ms cubic-bezier(.22,.85,.34,1)';
+							item.roll.style.transform = 'translateY(-' + item.spins * 10 + 'em)';
+						});
+					});
+				});
+			};
+
+			const animate = () => {
+				if (animationType === 'odometer') {
+					runOdometer();
+				} else {
+					runCounter();
+				}
+			};
+
+			// Start from the initial value (count mode), then animate when scrolled into view.
+			if (animationType !== 'odometer') {
+				el.textContent = formatNum(start, sep);
+			}
+
+			if (io) {
+				io.disconnect();
+			}
+			// Use the counter's own window so the observer tracks the editor
+			// canvas iframe's scroll, not the outer document.
+			const view = el.ownerDocument.defaultView || window;
+			const IO = view.IntersectionObserver || window.IntersectionObserver;
+			if (IO) {
+				io = new IO(
+					(entries) => {
+						entries.forEach((entry) => {
+							if (entry.isIntersecting) {
+								io.unobserve(entry.target);
+								animate();
+							}
+						});
+					},
+					{ threshold: 0.2 }
+				);
+				io.observe(el);
+			} else {
+				animate();
+			}
+		};
+
+		const mo = new MutationObserver(setup);
+		mo.observe(root, { childList: true, subtree: true });
+		setup();
+
+		return () => {
+			mo.disconnect();
+			if (io) {
+				io.disconnect();
+			}
+		};
+	}, []);
+
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const typo = (label, key) => <TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />;
 	const border = (label, key) => <BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
@@ -55,7 +224,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	};
 
 	return (
-		<div {...useBlockProps()}>
+		<div {...useBlockProps({ ref: blockRef })}>
 			<InspectorControls>
 				<PanelBody title={__('Counter', 'easy-elements-for-gutenberg')} initialOpen={true}>
 					{num(__('Ending Number', 'easy-elements-for-gutenberg'), 'number')}
@@ -81,7 +250,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						label={__('Animation Style', 'easy-elements-for-gutenberg')}
 						value={attributes.animationType}
 						options={[
-							{ label: __('Counter', 'easy-elements-for-gutenberg'), value: 'counter' },
+							{ label: __('Normal', 'easy-elements-for-gutenberg'), value: 'counter' },
 							{ label: __('Odometer', 'easy-elements-for-gutenberg'), value: 'odometer' },
 						]}
 						onChange={(v) => setAttributes({ animationType: v })}

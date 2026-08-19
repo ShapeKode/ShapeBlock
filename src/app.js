@@ -28,6 +28,11 @@ const items = [
         icon: <LayoutOutlined />
     },
     {
+        key: 'templates',
+        label: 'Custom Templates',
+        icon: <PicRightOutlined />
+    },
+    {
         key: 'settings',
         label: 'Settings',
         icon: <SettingOutlined />
@@ -52,7 +57,7 @@ export default function EasyElementsForGutenbergApp({ initialTab } = {}) {
 
     // Tab resolution priority: the submenu page's data-initial-tab, then the URL
     // hash (e.g. #theme-builder used when returning from the block editor), then Blocks.
-    const validKeys = ['blocks', 'theme-builder', 'settings'];
+    const validKeys = ['blocks', 'templates', 'theme-builder', 'settings'];
     const hashKey = window.location.hash.replace('#', '');
     const initialKey = validKeys.includes(initialTab)
         ? initialTab
@@ -99,6 +104,7 @@ export default function EasyElementsForGutenbergApp({ initialTab } = {}) {
                             >
 
                                 {current === 'blocks' && <Blocks />}
+                                {current === 'templates' && <Templates />}
                                 {current === 'theme-builder' && <ThemeBuilder />}
                                 {current === 'settings' && <Settings />}
 

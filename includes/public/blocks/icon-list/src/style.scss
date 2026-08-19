@@ -1,0 +1,243 @@
+/**
+ * Icon List â€” front-end + editor styles.
+ *
+ * Structure ported from the Elementor widget
+ * (easy-elements/widgets/icon-list/css/icon-list.scss). Element classes
+ * use this plugin's own "eelfg-" prefix.
+ */
+
+.eelfg-icon-list-wrapper {
+	--eelfg-list-gap: 10px;
+	--eelfg-divider-color: #e6e6e6;
+	position: relative;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: var(--eelfg-list-gap);
+}
+
+.eelfg-icon-list-wrapper .eelfg-icon-list {
+	list-style: none;
+}
+
+/* Inline layout - all items sit side by side on a single line. */
+.eelfg-icon-list-layout-inline {
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+}
+.eelfg-icon-list-layout-inline .eelfg-icon-list {
+	flex: 0 0 auto;
+}
+
+/* Alignment - default (stacked): each item spans full width and aligns its content. */
+.eelfg-icon-list-layout-default.eelfg-icon-list-align-left .eelfg-icon-list { justify-content: flex-start; }
+.eelfg-icon-list-layout-default.eelfg-icon-list-align-center .eelfg-icon-list { justify-content: center; }
+.eelfg-icon-list-layout-default.eelfg-icon-list-align-right .eelfg-icon-list { justify-content: flex-end; }
+
+/* Alignment - inline: the whole row is positioned. */
+.eelfg-icon-list-layout-inline.eelfg-icon-list-align-left { justify-content: flex-start; }
+.eelfg-icon-list-layout-inline.eelfg-icon-list-align-center { justify-content: center; }
+.eelfg-icon-list-layout-inline.eelfg-icon-list-align-right { justify-content: flex-end; }
+
+/* Icon horizontal alignment - aligns the icon inside its own slot. */
+.eelfg-icon-list-ihalign-center .eelfg-icon-list-icon { justify-content: center; margin-left: auto; margin-right: auto; }
+.eelfg-icon-list-ihalign-right .eelfg-icon-list-icon { justify-content: flex-end; margin-left: auto; }
+
+/* Divider between items - a line centred in the gap (::after sits in the middle of the gap).
+   Stacked -> horizontal line; inline -> vertical line. */
+.eelfg-icon-list-has-divider.eelfg-icon-list-layout-default .eelfg-icon-list:not(:last-child)::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: calc(100% + var(--eelfg-list-gap) / 2);
+	height: 1px;
+	background: var(--eelfg-divider-color, #e6e6e6);
+	transform: translateY(-50%);
+}
+.eelfg-icon-list-has-divider.eelfg-icon-list-layout-inline .eelfg-icon-list:not(:last-child)::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: calc(100% + var(--eelfg-list-gap) / 2);
+	width: 1px;
+	background: var(--eelfg-divider-color, #e6e6e6);
+	transform: translateX(-50%);
+}
+
+.eelfg-icon-list-wrapper.eelfg-icon-list-connector::before {
+	content: "";
+	width: 0px;
+	height: calc(100% - 15%);
+	border-style: solid;
+	border-width: 1px;
+	border-color: #f4f4f4;
+	position: absolute;
+	border-inline-end-style: none;
+	left: 26px;
+	bottom: 50%;
+	transform: translateY(50%);
+	z-index: -1;
+	display: block;
+}
+
+.eelfg-icon-list-wrapper.eelfg-icon-list-connector.eelfg-icon-list-dir-right::before {
+	left: inherit;
+	right: 26px;
+}
+
+.eelfg-icon-list {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.eelfg-icon-list-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	line-height: 1;
+}
+
+.eelfg-icon-list-icon-view-frame .eelfg-icon-list-icon,
+.eelfg-icon-list-icon-view-stracked .eelfg-icon-list-icon {
+	background: #f4f4f4;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.eelfg-icon-list-icon-view-frame .eelfg-icon-list-icon {
+	border: 1px solid #f4f4f4;
+	background: #fff;
+}
+
+.eelfg-icon-list-icon-shape-rounded .eelfg-icon-list-icon {
+	border-radius: 4px;
+}
+.eelfg-icon-list-icon-shape-square .eelfg-icon-list-icon {
+	border-radius: 0;
+}
+.eelfg-icon-list-icon-shape-circle .eelfg-icon-list-icon {
+	border-radius: 100px;
+}
+.eelfg-icon-list-icon-shape-sq_rotate .eelfg-icon-list-icon {
+	transform: rotate(45deg);
+}
+.eelfg-icon-list-icon-shape-sq_rotate .eelfg-icon-list-icon svg,
+.eelfg-icon-list-icon-shape-sq_rotate .eelfg-icon-list-icon i,
+.eelfg-icon-list-icon-shape-sq_rotate .eelfg-icon-list-icon .eelfg-icon-list-number {
+	transform: rotate(-45deg);
+}
+
+.eelfg-icon-list-icon svg {
+	width: 20px;
+	height: 20px;
+}
+.eelfg-icon-list-icon i {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 22px;
+	line-height: 1;
+}
+.eelfg-icon-list-icon i::before {
+	line-height: 1;
+}
+
+.eelfg-icon-list-number {
+	font-size: 20px;
+	font-weight: 500;
+	color: #000000;
+}
+
+.eelfg-icon-list-title {
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 1.4;
+	margin: 0;
+	color: #000000;
+}
+
+.eelfg-icon-list-desc {
+	color: #777777;
+	margin: 0;
+}
+
+.eelfg-icon-list.eelfg-icon-list-dir-left {
+	flex-direction: row;
+	text-align: left;
+}
+.eelfg-icon-list.eelfg-icon-list-dir-right {
+	flex-direction: row-reverse;
+	text-align: right;
+}
+
+/* connector left */
+.eelfg-icon-list-connector-left .eelfg-icon-list {
+	padding-left: 30px;
+}
+.eelfg-icon-list-connector-left.eelfg-icon-list-dir-right .eelfg-icon-list {
+	padding-right: 30px;
+}
+.eelfg-icon-list-wrapper.eelfg-icon-list-connector.eelfg-icon-list-connector-left::before {
+	height: calc(100% - 55px);
+	bottom: inherit;
+	top: 50%;
+	transform: translateY(-50%);
+	left: 0;
+}
+.eelfg-icon-list-wrapper.eelfg-icon-list-connector.eelfg-icon-list-connector-left.eelfg-icon-list-dir-right::before {
+	left: inherit;
+	right: 0;
+}
+.eelfg-icon-list-connector-left .eelfg-icon-list-icon {
+	overflow: inherit;
+}
+.eelfg-icon-list-connector-left .eelfg-icon-list-icon::after {
+	content: "";
+	width: 30px;
+	height: 0px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #f4f4f4;
+	position: absolute;
+	border-inline-end-style: none;
+	left: -30px;
+	z-index: -1;
+	display: block;
+}
+.eelfg-icon-list-connector-left.eelfg-icon-list-dir-right .eelfg-icon-list-icon::after {
+	left: inherit;
+	right: -30px;
+}
+.eelfg-icon-list-icon-shape-sq_rotate .eelfg-icon-list-icon::after {
+	width: 20px;
+	left: -15px;
+	top: 110%;
+	transform: rotate(-45deg);
+}
+.eelfg-icon-list-icon-shape-sq_rotate .eelfg-icon-list-connector-left.eelfg-icon-list-dir-right .eelfg-icon-list-icon::after {
+	left: inherit;
+	right: -15px;
+	top: calc(-14%);
+}
+
+.eelfg-icon-list-icon.eelfg-icon-list-type-image {
+	position: relative;
+}
+.eelfg-icon-list-icon.eelfg-icon-list-type-image img {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	height: 100%;
+	width: 100%;
+	transform: translate(-50%, -50%);
+	object-fit: cover;
+}

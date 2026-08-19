@@ -52,6 +52,7 @@ class Main {
         return array(
             'easy-elements-for-gutenberg' => array( 'tab' => 'blocks',        'label' => 'Blocks Settings' ),
             'eelfg-theme-builder'          => array( 'tab' => 'theme-builder', 'label' => 'Theme Builder' ),
+            'eelfg-templates'              => array( 'tab' => 'templates',     'label' => 'Custom Templates' ),
             'eelfg-settings'               => array( 'tab' => 'settings',      'label' => 'Settings' ),
         );
     }

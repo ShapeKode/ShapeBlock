@@ -162,8 +162,8 @@ if ( $template && $template !== get_queried_object_id() ) {
 			</span>
 		</div>
 
+		<div class="eelfg-offcanvas-overlay eelfg-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>"></div>
 		<div id="<?php echo esc_attr( $panel_id ); ?>" class="eelfg-offcanvas <?php echo esc_attr( trim( $blur . ' ' . ( 'classic' === $layout ? $position : '' ) . ' ' . $layout ) ); ?>">
-			<div class="eelfg-offcanvas-overlay"></div>
 			<div class="eelfg-offcanvas-panel">
 				<?php if ( 'classic' === $layout ) : ?>
 					<span class="eelfg-offcanvas-close eelfg-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0">

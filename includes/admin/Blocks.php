@@ -72,9 +72,9 @@ class Blocks {
                 "isPro"       => false,
             ],
             [
-                'title'       => 'Info Box',
-                'id'          => 'icon-box',
-                'description' => 'Icon/info box with title, description, features, number and read-more.',
+                'title'       => 'Icon',
+                'id'          => 'icon',
+                'description' => 'A single icon with color, size, background, border, rotation and link.',
                 'iconClass'    => 'eelfg-icon-iconbox',
                 'status'      => 'enable',
                 "isPro"       => false,
@@ -96,7 +96,7 @@ class Blocks {
                 "isPro"       => false,
             ],
             [
-                'title'       => 'Testimonials Grid',
+                'title'       => 'Testimonial',
                 'id'          => 'testimonials-grid',
                 'description' => 'Grid of testimonials with 6 skins, ratings, quote icons and logos.',
                 'iconClass'    => 'eelfg-icon-testimonials-grid',
@@ -104,17 +104,25 @@ class Blocks {
                 "isPro"       => false,
             ],
             [
-                'title'       => 'Category List',
-                'id'          => 'category-list',
-                'description' => 'A list or grid of taxonomy terms with icons and post counts.',
-                'iconClass'    => 'eelfg-icon-post-grid',
+                'title'       => 'Features List',
+                'id'          => 'feature-list',
+                'description' => 'A vertical list of features with icon/number/image, title.',
+                'iconClass'    => 'eelfg-icon-service-list',
                 'status'      => 'enable',
                 "isPro"       => false,
             ],
             [
-                'title'       => 'Feature List',
-                'id'          => 'feature-list',
-                'description' => 'A vertical list of features with icon/number/image, title.',
+                'title'       => 'Icon Box',
+                'id'          => 'icon-box',
+                'description' => 'Icon boxes with the icon on top, then title and description.',
+                'iconClass'    => 'eelfg-icon-iconbox',
+                'status'      => 'enable',
+                "isPro"       => false,
+            ],
+            [
+                'title'       => 'Icon List',
+                'id'          => 'icon-list',
+                'description' => 'A list of icon + text rows with icon position and full styling.',
                 'iconClass'    => 'eelfg-icon-service-list',
                 'status'      => 'enable',
                 "isPro"       => false,
@@ -176,23 +184,7 @@ class Blocks {
                 "isPro"       => false,
             ],
             [
-                'title'       => 'Process Grid',
-                'id'          => 'process-grid',
-                'description' => 'A grid of process / service boxes with icon, title, description.',
-                'iconClass'    => 'eelfg-icon-process-grid',
-                'status'      => 'enable',
-                "isPro"       => false,
-            ],
-            [
-                'title'       => 'Process List',
-                'id'          => 'process-list',
-                'description' => 'A single process / step row with number, icon, title and description.',
-                'iconClass'    => 'eelfg-icon-social-icons',
-                'status'      => 'enable',
-                "isPro"       => false,
-            ],
-            [
-                'title'       => 'Client Logo Grid',
+                'title'       => 'Client Logo',
                 'id'          => 'clients-logo-grid',
                 'description' => 'A responsive grid of client / partner logos with links and effects.',
                 'iconClass'    => 'eelfg-icon-clients-logo-grid',
@@ -204,14 +196,6 @@ class Blocks {
                 'id'          => 'image-comparison',
                 'description' => 'A before / after image comparison slider with a draggable handle.',
                 'iconClass'    => 'eelfg-icon-image-carousel',
-                'status'      => 'enable',
-                "isPro"       => false,
-            ],
-            [
-                'title'       => 'Service List',
-                'id'          => 'service-list',
-                'description' => 'A service item with icon/image/number, title, description.',
-                'iconClass'    => 'eelfg-icon-service-list',
                 'status'      => 'enable',
                 "isPro"       => false,
             ],
@@ -240,14 +224,6 @@ class Blocks {
                 "isPro"       => false,
             ],
             [
-                'title'       => 'Login | Register',
-                'id'          => 'login-register',
-                'description' => 'AJAX login and registration forms with custom fields, captcha and styling.',
-                'iconClass'    => 'eelfg-icon-login',
-                'status'      => 'enable',
-                "isPro"       => false,
-            ],
-            [
                 'title'       => 'Breadcrumb',
                 'id'          => 'breadcrumb',
                 'description' => 'A dynamic breadcrumb trail for the current page.',
@@ -266,7 +242,7 @@ class Blocks {
         ];
 
         // Default-enabled IDs: any block we want available without the user toggling it on first.
-        $default_enabled = [ 'layout-row', 'column', 'post-grid', 'gallery', 'faq', 'pricing-table', 'button', 'icon-box', 'heading', 'team-grid', 'testimonials-grid', 'category-list', 'feature-list', 'counter', 'tab', 'countdown', 'table', 'social-share', 'social-icon', 'progress', 'process-grid', 'process-list', 'clients-logo-grid', 'image-comparison', 'service-list', 'scroll-to-top', 'offcanvas', 'search', 'login-register', 'breadcrumb', 'menu' ];
+        $default_enabled = [ 'layout-row', 'column', 'post-grid', 'gallery', 'faq', 'pricing-table', 'button', 'icon', 'heading', 'team-grid', 'testimonials-grid', 'feature-list', 'icon-box', 'icon-list', 'counter', 'tab', 'countdown', 'table', 'social-share', 'social-icon', 'progress', 'clients-logo-grid', 'image-comparison', 'scroll-to-top', 'offcanvas', 'search', 'breadcrumb', 'menu' ];
 
         // Merge status from DB
         foreach ($blocks as &$block) {

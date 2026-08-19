@@ -69,7 +69,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		iconPosition,
 		openAll,
 		enableSticky,
-		enableSchema,
 	} = attributes;
 
 	useEffect(() => {
@@ -199,13 +198,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							__nextHasNoMarginBottom
 						/>
 					)}
-					<ToggleControl
-						label={__('Enable FAQ Schema', 'easy-elements-for-gutenberg')}
-						help={__('Outputs FAQPage JSON-LD structured data.', 'easy-elements-for-gutenberg')}
-						checked={enableSchema}
-						onChange={(v) => setAttributes({ enableSchema: v })}
-						__nextHasNoMarginBottom
-					/>
 				</PanelBody>
 			</InspectorControls>
 
@@ -488,7 +480,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									className="eelfg-faq-title"
 									value={item.title}
 									onChange={(v) => updateItem(index, 'title', v)}
-									placeholder={__('Add question…', 'easy-elements-for-gutenberg')}
+									placeholder={__('Add questionâ€¦', 'easy-elements-for-gutenberg')}
 									allowedFormats={['core/bold', 'core/italic', 'core/link']}
 									onClick={(e) => e.stopPropagation()}
 								/>
@@ -516,7 +508,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								className="eelfg-faq-answer"
 								value={item.description}
 								onChange={(v) => updateItem(index, 'description', v)}
-								placeholder={__('Add answer…', 'easy-elements-for-gutenberg')}
+								placeholder={__('Add answerâ€¦', 'easy-elements-for-gutenberg')}
 							/>
 						</div>
 					);

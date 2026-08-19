@@ -42,6 +42,30 @@ return array(
 				'type' => 'string',
 				'default' => 'eelfg-icon-arrow-up'
 			),
+			'position' => array(
+				'type' => 'string',
+				'default' => 'right'
+			),
+			'offsetX' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'offsetY' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'showAfter' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'buttonSize' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconSize' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'color' => array(
 				'type' => 'string',
 				'default' => ''
@@ -49,6 +73,38 @@ return array(
 			'bgColor' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'colorHover' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'bgColorHover' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'sttBorder' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'sttRadius' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'sttBoxShadow' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'sttPadding' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
 			)
 		)
 	)

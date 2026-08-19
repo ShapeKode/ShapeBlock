@@ -145,13 +145,24 @@
 	}
 }
 
-/* Overlay behind an open panel */
-body.eelfg-offcanvas-active::before {
-	content: '';
+/* Overlay behind an open panel. It is a real element rendered as a sibling of
+   the panel (not a body::before) so it shares the panel's stacking context — a
+   body-level pseudo-element could otherwise sit ABOVE the panel when an ancestor
+   (e.g. the editor canvas) creates a transformed stacking context. z-index sits
+   just below the panel (999999) so the panel always stays on top. */
+.eelfg-offcanvas-overlay {
 	position: fixed;
 	inset: 0;
 	background: rgba(0, 0, 0, 0.4);
-	z-index: 99999;
+	z-index: 999998;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.3s ease;
+	cursor: pointer;
+}
+body.eelfg-offcanvas-active .eelfg-offcanvas-overlay {
+	opacity: 1;
+	visibility: visible;
 }
 
 .eelfg-offcanvas.eelfg-blur-effect {

@@ -46,9 +46,11 @@ class Block_Editor {
             'eelfg-block-editor-js',
             'eelfgEditor',
             [
-                'plugin_url' => EELFG_PL_URL,
-                'api_url'    => $this->api_site_url,
-                'nonce'      => wp_create_nonce( 'wp_rest' ),
+                'plugin_url'    => EELFG_PL_URL,
+                'api_url'       => $this->api_site_url,
+                'nonce'         => wp_create_nonce( 'wp_rest' ),
+                'admin_url'     => admin_url(),
+                'new_tpl_url'   => admin_url( 'post-new.php?post_type=eelfg-template' ),
             ]
         );
     }

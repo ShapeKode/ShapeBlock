@@ -10,7 +10,7 @@
 
 	.eelfg-scroll-top {
 		position: fixed;
-		bottom: 0;
+		bottom: 20px;
 		right: 28px;
 		z-index: 9999;
 		cursor: pointer;
@@ -36,7 +36,7 @@
 	}
 
 	.eelfg-scroll-top.eelfg-scroll-visible {
-		transform: translateY(-20px);
+		transform: translateY(0);
 		opacity: 1;
 		visibility: visible;
 	}

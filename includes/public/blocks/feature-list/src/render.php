@@ -24,10 +24,11 @@ $allowed    = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span' ];
 $title_tag  = isset( $attributes['titleTag'] ) && in_array( $attributes['titleTag'], $allowed, true ) ? $attributes['titleTag'] : 'h3';
 $connector  = ! empty( $attributes['feaConnector'] );
 $conn_left  = $connector && ! empty( $attributes['feaConnectorLeft'] );
+$show_icon  = ! ( isset( $attributes['showIcon'] ) && false === $attributes['showIcon'] );
 
 if ( empty( $features ) ) {
 	$w = get_block_wrapper_attributes( array( 'class' => 'eelfg-block eelfg-fea-list-block-wrap ' . $unique_id ) );
-	echo '<div ' . wp_kses_post( $w ) . '><p>' . esc_html__( 'Please add feature items.', 'easy-elements-for-gutenberg' ) . '</p></div>';
+	echo '<div ' . wp_kses_post( $w ) . '><p>' . esc_html__( 'Please add list items.', 'easy-elements-for-gutenberg' ) . '</p></div>';
 	return;
 }
 
@@ -66,9 +67,13 @@ $typo = function ( $obj ) use ( $H ) {
 $dims = function ( $obj, $type ) use ( $H ) {
 	$out = [];
 	if ( empty( $obj ) || ! is_array( $obj ) ) return $out;
-	$map = 'padding' === $type
-		? [ 'top' => 'padding-top', 'right' => 'padding-right', 'bottom' => 'padding-bottom', 'left' => 'padding-left' ]
-		: [ 'top' => 'border-top-left-radius', 'right' => 'border-top-right-radius', 'bottom' => 'border-bottom-right-radius', 'left' => 'border-bottom-left-radius' ];
+	if ( 'padding' === $type ) {
+		$map = [ 'top' => 'padding-top', 'right' => 'padding-right', 'bottom' => 'padding-bottom', 'left' => 'padding-left' ];
+	} elseif ( 'margin' === $type ) {
+		$map = [ 'top' => 'margin-top', 'right' => 'margin-right', 'bottom' => 'margin-bottom', 'left' => 'margin-left' ];
+	} else {
+		$map = [ 'top' => 'border-top-left-radius', 'right' => 'border-top-right-radius', 'bottom' => 'border-bottom-right-radius', 'left' => 'border-bottom-left-radius' ];
+	}
 	foreach ( $map as $side => $css_prop ) {
 		if ( isset( $obj[ $side ] ) && '' !== $obj[ $side ] ) $out[ $css_prop ] = $H::ensure_unit( $obj[ $side ] );
 	}
@@ -136,6 +141,72 @@ $title_styles = array_merge( $title_styles, $dims( $attributes['titlePadding'] ?
 $desc_styles = $typo( $attributes['descTypography'] ?? [] );
 if ( ! empty( $attributes['descColor'] ) ) $desc_styles['color'] = $attributes['descColor'];
 
+// Block wrapper margin (desktop).
+$block_margin = $dims( $attributes['feaBlockMargin'] ?? [], 'margin' );
+$block_margin_decls = $H::get_inline_styles( $block_margin );
+if ( $block_margin_decls ) {
+	$extra_css .= $selector . '{' . $block_margin_decls . '}';
+}
+
+// ---------------------------------------------------------------------------
+// Responsive (tablet / mobile) — padding, margin and typography only.
+// ---------------------------------------------------------------------------
+$resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $dir, $connector ) {
+	// ensure_unit helper for a per-device (suffixed) attribute.
+	$uu = function ( $key ) use ( $attributes, $H, $suffix ) {
+		$k = $key . $suffix;
+		return ( isset( $attributes[ $k ] ) && '' !== $attributes[ $k ] ) ? $H::ensure_unit( $attributes[ $k ] ) : '';
+	};
+
+	// List item — padding + gaps.
+	$list = $dims( $attributes[ 'feaListPadding' . $suffix ] ?? [], 'padding' );
+	if ( '' !== $uu( 'feaItemGap' ) )   $list['margin-bottom'] = $uu( 'feaItemGap' );
+	if ( '' !== $uu( 'feaMiddleGap' ) ) $list['gap']           = $uu( 'feaMiddleGap' );
+
+	$wrap_m   = $dims( $attributes[ 'feaBlockMargin' . $suffix ] ?? [], 'margin' );
+	$icon_box = ( '' !== $uu( 'iconBoxSize' ) ) ? [ 'min-width' => $uu( 'iconBoxSize' ), 'min-height' => $uu( 'iconBoxSize' ), 'line-height' => $uu( 'iconBoxSize' ) ] : [];
+	$icon_svg = ( '' !== $uu( 'iconSize' ) ) ? [ 'width' => $uu( 'iconSize' ), 'height' => $uu( 'iconSize' ) ] : [];
+	$icon_num = ( '' !== $uu( 'iconSize' ) ) ? [ 'font-size' => $uu( 'iconSize' ) ] : [];
+	$title_r  = array_merge( $typo( $attributes[ 'titleTypography' . $suffix ] ?? [] ), $dims( $attributes[ 'titlePadding' . $suffix ] ?? [], 'padding' ) );
+	$desc_r   = $typo( $attributes[ 'descTypography' . $suffix ] ?? [] );
+
+	$css   = '';
+	$rules = [
+		''                          => $H::get_inline_styles( $wrap_m ),
+		' .eelfg-fea-list'          => $H::get_inline_styles( $list ),
+		' .eelfg-fea-list-icon'     => $H::get_inline_styles( $icon_box ),
+		' .eelfg-fea-list-icon svg' => $H::get_inline_styles( $icon_svg ),
+		' .eelfg-fea-list-number'   => $H::get_inline_styles( $icon_num ),
+		' .eelfg-fea-list-title'    => $H::get_inline_styles( $title_r ),
+		' .eelfg-fea-list-desc'     => $H::get_inline_styles( $desc_r ),
+	];
+	foreach ( $rules as $sub => $decls ) {
+		if ( $decls ) {
+			$css .= $selector . $sub . '{' . $decls . '}';
+		}
+	}
+
+	// Connector width + horizontal position.
+	if ( $connector ) {
+		$conn = ( '' !== $uu( 'feaConnectorWidth' ) ) ? [ 'border-width' => $uu( 'feaConnectorWidth' ) ] : [];
+		$after = $H::get_inline_styles( $conn );
+		if ( $after ) {
+			$css .= $selector . ' .eelfg-fea-list-icon::after{' . $after . '}';
+		}
+		$before = $conn;
+		if ( 'left' === $dir && '' !== $uu( 'feaConnectorPositionX' ) )       $before['left']  = $uu( 'feaConnectorPositionX' );
+		if ( 'right' === $dir && '' !== $uu( 'feaConnectorRightPositionX' ) )  $before['right'] = $uu( 'feaConnectorRightPositionX' );
+		$before_decls = $H::get_inline_styles( $before );
+		if ( $before_decls ) {
+			$css .= $selector . '.eelfg-fea-list-connector::before{' . $before_decls . '}';
+		}
+	}
+
+	return $css;
+};
+$tablet_css = $resp( 'Tablet' );
+$mobile_css = $resp( 'Mobile' );
+
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $extra_css, [
 	'.eelfg-fea-list'                            => $H::get_inline_styles( $list ),
@@ -147,6 +218,15 @@ $H::add_custom_style( $style_handle, $selector, $extra_css, [
 	'.eelfg-fea-list-title'                      => $H::get_inline_styles( $title_styles ),
 	'.eelfg-fea-list-desc'                       => $H::get_inline_styles( $desc_styles ),
 ] );
+
+// Responsive media queries are printed AFTER the desktop rules so they win at
+// their breakpoints (media queries add no specificity — source order decides).
+$responsive_media = '';
+if ( '' !== $tablet_css ) $responsive_media .= '@media (max-width:1024px){' . $tablet_css . '}';
+if ( '' !== $mobile_css ) $responsive_media .= '@media (max-width:767px){' . $mobile_css . '}';
+if ( '' !== $responsive_media ) {
+	$H::add_custom_style( $style_handle, $selector, $responsive_media, [] );
+}
 
 // ---------------------------------------------------------------------------
 // Markup.
@@ -163,9 +243,10 @@ $svg_star = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.or
 		$ttl  = isset( $item['title'] ) ? $item['title'] : '';
 		$desc = isset( $item['desc'] ) ? $item['desc'] : '';
 
-		$has_icon = ( 'image' === $type && ! empty( $img['url'] ) )
+		$has_icon = $show_icon && (
+			( 'image' === $type && ! empty( $img['url'] ) )
 			|| ( 'icon' === $type )
-			|| ( 'number' === $type && '' !== $num );
+			|| ( 'number' === $type && '' !== $num ) );
 		?>
 		<div class="eelfg-fea-list eelfg-fea-list-dir-<?php echo esc_attr( $dir ); ?>">
 			<?php if ( $has_icon ) : ?>

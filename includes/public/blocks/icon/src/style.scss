@@ -1,0 +1,70 @@
+/**
+ * Icon block — front-end + shared styles.
+ */
+.eelfg-icon-block-wrap {
+	.eelfg-icon-wrap {
+		display: flex;
+		align-items: center;
+	}
+
+	.eelfg-icon-el {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		line-height: 1;
+		font-size: 48px;
+		color: inherit;
+		text-decoration: none;
+		transition: all 0.3s ease;
+
+		i,
+		svg {
+			transition: all 0.3s ease;
+			line-height: 1;
+		}
+
+		i {
+			font-size: 1em;
+		}
+
+		svg {
+			width: 1em;
+			height: 1em;
+			fill: currentColor;
+		}
+	}
+
+	/* Stacked & Framed share a square box ( width == height ) so the Circle shape
+	   is a true circle and the Square is even on all sides, regardless of the
+	   glyph's own aspect ratio. The box scales with the icon font-size ( em ). */
+	.eelfg-icon-el.eelfg-icon-view-stacked,
+	.eelfg-icon-el.eelfg-icon-view-framed {
+		width: 2em;
+		height: 2em;
+		padding: 0;
+	}
+
+	/* View: Stacked — filled background, contrasting icon. */
+	.eelfg-icon-el.eelfg-icon-view-stacked {
+		background-color: #6d3ff0;
+		color: #ffffff;
+	}
+
+	/* View: Framed — bordered box, transparent background. */
+	.eelfg-icon-el.eelfg-icon-view-framed {
+		border: 3px solid #6d3ff0;
+		color: #6d3ff0;
+	}
+
+	/* Shape (only meaningful for stacked / framed). */
+	.eelfg-icon-el.eelfg-icon-shape-circle {
+		border-radius: 50%;
+	}
+	.eelfg-icon-el.eelfg-icon-shape-rounded {
+		border-radius: 8px;
+	}
+	.eelfg-icon-el.eelfg-icon-shape-square {
+		border-radius: 0;
+	}
+}

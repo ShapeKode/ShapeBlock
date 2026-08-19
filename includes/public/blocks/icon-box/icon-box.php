@@ -11,7 +11,6 @@ function eelfg_create_block_icon_box_block_init() {
 		EELFG_VERSION
 	);
 
-	// Editor-only styles (compiled from src/editor.scss).
 	wp_register_style(
 		'eelfg-icon-box-editor-style',
 		plugins_url( 'build/index.css', __FILE__ ),

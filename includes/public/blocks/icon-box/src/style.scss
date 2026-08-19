@@ -1,310 +1,192 @@
 /**
- * Info Box — front-end + editor styles.
+ * Icon Box â€” front-end + editor styles.
  *
  * Structure ported from the Elementor widget
- * (easy-elements/widgets/icon-box/css/icon-box.scss). Element classes use this
- * plugin's own "eelfg-" prefix and preset CSS variables.
+ * (easy-elements/widgets/icon-box/css/icon-box.scss). Element classes
+ * use this plugin's own "eelfg-" prefix.
  */
 
-.eelfg-icon-box {
-	width: 100%;
-	overflow: hidden;
-	transition: all 0.4s ease-in-out;
+.eelfg-icon-box-wrapper {
 	position: relative;
-	z-index: 1;
-
-	&::before {
-		content: '';
-		width: 100%;
-		height: 100%;
-		display: block;
-		position: absolute;
-		left: 0;
-		top: 0;
-		transition: all 0.4s ease-in-out;
-		z-index: -1;
-	}
-
-	&.eelfg-bf-left::before,
-	&.eelfg-bf-right::before {
-		width: 0%;
-	}
-	&.eelfg-bf-right::before {
-		left: inherit;
-		right: 0;
-	}
-
-	&.eelfg-bf-top::before,
-	&.eelfg-bf-bottom::before {
-		height: 0%;
-	}
-	&.eelfg-bf-bottom::before {
-		top: inherit;
-		bottom: 0;
-	}
-
-	&.eelfg-bf-middle::before {
-		transform: scale(0);
-	}
-
-	&:hover {
-		&.eelfg-bf-left::before,
-		&.eelfg-bf-right::before {
-			width: 100%;
-		}
-		&.eelfg-bf-top::before,
-		&.eelfg-bf-bottom::before {
-			height: 100%;
-		}
-		&.eelfg-bf-middle::before {
-			transform: scale(1);
-		}
-	}
-
-	svg {
-		height: 1em;
-		width: 1em;
-		transition: all 0.4s ease-in-out;
-	}
-
-	.eelfg-icon-box-title {
-		color: var(--eelfg-preset-color-secondary, #0b3665);
-		margin-top: 0;
-		margin-bottom: 14px;
-		transition: all 0.4s ease-in-out;
-
-		a {
-			color: currentColor;
-		}
-	}
-
-	.eelfg-icon {
-		min-width: 60px;
-		height: 60px;
-		background: var(--eelfg-preset-color-primary, #eaa638);
-		display: inline-grid;
-		margin-bottom: 36px;
-		border-radius: 16px;
-		font-size: 20px;
-		place-content: center;
-		transition: all 0.4s;
-
-		&.eelfg-icon-image {
-			display: inline-block;
-			min-width: auto;
-			height: auto;
-			background: transparent;
-			border-radius: 0;
-			&::before {
-				display: none !important;
-			}
-		}
-	}
-
-	.eelfg-icon-box-description {
-		font-size: 18px;
-		color: var(--eelfg-preset-color-text, #7a8986);
-		transition: all 0.4s ease-in-out;
-
-		a {
-			color: currentColor;
-			transition: all 0.4s ease-in-out;
-		}
-	}
-
-	.eelfg-read-more {
-		.eelfg-icon-to-text {
-			font-size: 15px;
-			font-weight: bold;
-			display: inline-block;
-			position: relative;
-			text-align: center;
-			max-width: 36px;
-			height: 36px;
-			border-radius: 36px;
-			overflow: hidden;
-			border: solid 1px var(--eelfg-preset-color-text, #7a8986);
-			color: var(--eelfg-preset-color-text, #7a8986);
-			transition: all 0.4s ease-in-out;
-
-			.eelfg-text {
-				opacity: 0;
-				display: inline-block;
-				overflow: hidden;
-				margin-left: 36px;
-				line-height: 2.2em;
-				padding-right: 15px;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-				transition: all 0.4s ease-in-out;
-			}
-
-			.eelfg-read-more-text-icon {
-				position: absolute;
-				top: 50%;
-				transform: translateY(-50%);
-				left: 7px;
-				font-size: 22px;
-				display: inline-flex;
-			}
-
-			&:hover {
-				max-width: 100%;
-				.eelfg-text {
-					opacity: 1;
-				}
-			}
-		}
-	}
-
-	.eelfg-pro-number {
-		display: inline-block;
-	}
-
-	&.right,
-	&.left {
-		display: flex;
-		gap: 20px;
-
-		@media screen and (max-width: 575px) {
-			flex-wrap: wrap;
-		}
-
-		.eelfg-icon {
-			margin-bottom: 0;
-			margin-top: 4px;
-			margin: 0;
-		}
-	}
-
-	&.right {
-		.eelfg-pro-number,
-		.eelfg-icon {
-			order: 2;
-		}
-		.eelfg-info-heading {
-			justify-content: flex-end;
-		}
-	}
-
-	&.top {
-		.eelfg-info-heading {
-			display: block;
-		}
-	}
 }
 
-.eelfg-read-more-text svg path,
-.eelfg-read-more-text svg,
-.eelfg-read-more-text {
-	transition: all 0.4s;
-	display: inline-block;
-}
-
-.eelfg-gradient-yes {
-	background: linear-gradient(180deg, #ffd000 0%, rgba(255, 255, 255, 0.24) 100%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	background-clip: text;
-}
-
-.eelfg-icon {
-	&.eelfg-gradient-border {
-		position: relative;
-
-		&::after {
-			position: absolute;
-			left: -0.5px;
-			content: '';
-			height: 56px;
-			width: 1px;
-			background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 25%, rgba(255, 255, 255, 0) 100%);
-			top: 50%;
-			transform: translate(-50%, -50%);
-			opacity: 0.4;
-		}
-		&::before {
-			position: absolute;
-			right: -0.5px;
-			content: '';
-			height: 56px;
-			width: 1px;
-			background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 25%, rgba(255, 255, 255, 0) 100%);
-			top: 50%;
-			transform: translate(50%, -50%);
-			opacity: 0.4;
-		}
-	}
-}
-
-/* skin-2 */
-.eelfg-info-skin-2 {
-	flex-direction: column;
-
-	.eelfg-info-heading {
-		display: flex;
-		gap: 20px;
-		align-items: center;
-	}
-
-	.eelfg-read-more {
-		display: flex;
-	}
-	.eelfg-read-more.stretch {
-		display: block;
-		.eelfg-read-more-text {
-			width: 100%;
-			text-align: center;
-		}
-	}
-}
-
-.eelfg-icon-box .eelfg-feature-item span,
-.eelfg-icon-box .eelfg-feature-item svg {
-	transition: all 0.4s ease-in-out;
-}
-
-/* Full box link overlay */
-.eelfg-box-link {
+.eelfg-icon-box-wrapper.eelfg-icon-box-connector::before {
+	content: "";
+	width: 0px;
+	height: calc(100% - 15%);
+	border-style: solid;
+	border-width: 1px;
+	border-color: #f4f4f4;
 	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 1;
+	border-inline-end-style: none;
+	left: 26px;
+	bottom: 50%;
+	transform: translateY(50%);
+	z-index: -1;
+	display: block;
 }
 
-.eelfg-icon-box .eelfg-read-more {
-	position: relative;
-	z-index: 2;
+.eelfg-icon-box-wrapper.eelfg-icon-box-connector.eelfg-icon-box-dir-right::before {
+	left: inherit;
+	right: 26px;
 }
 
-.eelfg-icon-box .eelfg-read-more .eelfg-read-more-link {
-	color: inherit;
-	text-decoration: none;
-	display: inline-flex;
-	align-items: center;
-}
-
-/* Button alignment */
-[class*="eelfg-btn-align-"] .eelfg-read-more {
+.eelfg-icon-box {
 	display: flex;
+	margin-bottom: 25px;
+	gap: 14px;
 }
-.eelfg-btn-align-left .eelfg-read-more {
-	justify-content: flex-start;
+
+/* Alignment — center = icon on top, left = icon left, right = icon right. */
+.eelfg-icon-box-align-center {
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
 }
-.eelfg-btn-align-center .eelfg-read-more {
+.eelfg-icon-box-align-left {
+	flex-direction: row;
+	align-items: flex-start;
+	text-align: left;
+}
+.eelfg-icon-box-align-right {
+	flex-direction: row-reverse;
+	align-items: flex-start;
+	text-align: right;
+}
+
+.eelfg-icon-box:last-child {
+	margin-bottom: 0 !important;
+}
+
+.eelfg-icon-box-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	position: relative;
+	background-size: cover !important;
+	background-position: center center !important;
+	background-repeat: no-repeat !important;
+	min-width: 55px;
+	min-height: 55px;
+}
+
+.eelfg-icon-box-icon-view-frame .eelfg-icon-box-icon,
+.eelfg-icon-box-icon-view-stracked .eelfg-icon-box-icon {
+	background: #f4f4f4;
+	display: flex;
+	align-items: center;
 	justify-content: center;
 }
-.eelfg-btn-align-right .eelfg-read-more {
-	justify-content: flex-end;
+
+.eelfg-icon-box-icon-view-frame .eelfg-icon-box-icon {
+	border: 1px solid #f4f4f4;
+	background: #fff;
 }
-.eelfg-btn-align-stretch .eelfg-read-more {
-	a,
-	span {
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		text-align: center;
-	}
+
+.eelfg-icon-box-icon-shape-rounded .eelfg-icon-box-icon {
+	border-radius: 4px;
+}
+.eelfg-icon-box-icon-shape-square .eelfg-icon-box-icon {
+	border-radius: 0;
+}
+.eelfg-icon-box-icon-shape-circle .eelfg-icon-box-icon {
+	border-radius: 100px;
+}
+.eelfg-icon-box-icon-shape-sq_rotate .eelfg-icon-box-icon {
+	transform: rotate(45deg);
+}
+.eelfg-icon-box-icon-shape-sq_rotate .eelfg-icon-box-icon svg,
+.eelfg-icon-box-icon-shape-sq_rotate .eelfg-icon-box-icon i,
+.eelfg-icon-box-icon-shape-sq_rotate .eelfg-icon-box-icon .eelfg-icon-box-number {
+	transform: rotate(-45deg);
+}
+
+.eelfg-icon-box-icon svg {
+	width: 20px;
+	height: 20px;
+}
+.eelfg-icon-box-icon i {
+	font-size: 30px;
+}
+
+.eelfg-icon-box-number {
+	font-size: 20px;
+	font-weight: 500;
+	color: #000000;
+}
+
+.eelfg-icon-box-title {
+	line-height: 1.2;
+	margin: 0;
+	color: #000000;
+}
+
+.eelfg-icon-box-desc {
+	color: #777777;
+	margin: 0;
+}
+
+
+/* connector left */
+.eelfg-icon-box-connector-left .eelfg-icon-box {
+	padding-left: 30px;
+}
+.eelfg-icon-box-connector-left.eelfg-icon-box-dir-right .eelfg-icon-box {
+	padding-right: 30px;
+}
+.eelfg-icon-box-wrapper.eelfg-icon-box-connector.eelfg-icon-box-connector-left::before {
+	height: calc(100% - 55px);
+	bottom: inherit;
+	top: 50%;
+	transform: translateY(-50%);
+	left: 0;
+}
+.eelfg-icon-box-wrapper.eelfg-icon-box-connector.eelfg-icon-box-connector-left.eelfg-icon-box-dir-right::before {
+	left: inherit;
+	right: 0;
+}
+.eelfg-icon-box-connector-left .eelfg-icon-box-icon {
+	overflow: inherit;
+}
+.eelfg-icon-box-connector-left .eelfg-icon-box-icon::after {
+	content: "";
+	width: 30px;
+	height: 0px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #f4f4f4;
+	position: absolute;
+	border-inline-end-style: none;
+	left: -30px;
+	z-index: -1;
+	display: block;
+}
+.eelfg-icon-box-connector-left.eelfg-icon-box-dir-right .eelfg-icon-box-icon::after {
+	left: inherit;
+	right: -30px;
+}
+.eelfg-icon-box-icon-shape-sq_rotate .eelfg-icon-box-icon::after {
+	width: 20px;
+	left: -15px;
+	top: 110%;
+	transform: rotate(-45deg);
+}
+.eelfg-icon-box-icon-shape-sq_rotate .eelfg-icon-box-connector-left.eelfg-icon-box-dir-right .eelfg-icon-box-icon::after {
+	left: inherit;
+	right: -15px;
+	top: calc(-14%);
+}
+
+.eelfg-icon-box-icon.eelfg-icon-box-type-image {
+	position: relative;
+}
+.eelfg-icon-box-icon.eelfg-icon-box-type-image img {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	height: 100%;
+	width: 100%;
+	transform: translate(-50%, -50%);
+	object-fit: cover;
 }

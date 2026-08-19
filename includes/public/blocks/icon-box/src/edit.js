@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+﻿import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import { ServerSideRender } from '@wordpress/server-side-render';
 import {
@@ -13,8 +13,11 @@ import {
 	ToggleControl,
 	TextControl,
 	TextareaControl,
+	RangeControl,
 	BoxControl,
 	Button,
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	__experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon,
 	__experimentalDivider as Divider,
 } from '@wordpress/components';
 
@@ -22,54 +25,31 @@ import ColorPopover from '../../custom-components/ColorPopover';
 import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
 import BorderControl from '../../custom-components/BorderControl';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
+import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
+import SpacingControl from '../../custom-components/SpacingControl';
 
 import './editor.scss';
 
-const SVG = (path) => (
-	<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-		<path d={path} fill="currentColor" />
-	</svg>
-);
-const ICON_ARROW_UP = SVG('M12 6.6l-6 6 1.4 1.4 4.6-4.6 4.6 4.6 1.4-1.4z');
-const ICON_ARROW_DOWN = SVG('M12 15.4l6-6-1.4-1.4-4.6 4.6-4.6-4.6-1.4 1.4z');
-const ICON_TRASH = SVG('M9 3v1H4v2h16V4h-5V3H9zM6 7l1 13h10l1-13H6zm4 2h1v9h-1V9zm3 0h1v9h-1V9z');
-const ICON_ADD = SVG('M11 5v6H5v2h6v6h2v-6h6v-2h-6V5z');
+// Desktop keeps the base key; tablet / mobile append a suffix (e.g. titlePaddingTablet).
+const getKey = (base, device) =>
+	device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
 
-const ALIGN = [
-	{ label: __('Left', 'easy-elements-for-gutenberg'), value: 'left' },
-	{ label: __('Center', 'easy-elements-for-gutenberg'), value: 'center' },
-	{ label: __('Right', 'easy-elements-for-gutenberg'), value: 'right' },
-];
+// Alignment icons: left = icon left of text, center = icon on top, right = icon right.
+const ASVG = ({ children }) => (
+	<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">{children}</svg>
+);
+const ICON_ALIGN_LEFT = <ASVG><rect x="3" y="7" width="8" height="8" rx="1.5" /><rect x="13" y="8" width="8" height="2" /><rect x="13" y="12" width="6" height="2" /></ASVG>;
+const ICON_ALIGN_CENTER = <ASVG><rect x="8" y="3" width="8" height="8" rx="1.5" /><rect x="5" y="14" width="14" height="2" /><rect x="7" y="18" width="10" height="2" /></ASVG>;
+const ICON_ALIGN_RIGHT = <ASVG><rect x="13" y="7" width="8" height="8" rx="1.5" /><rect x="3" y="8" width="8" height="2" /><rect x="5" y="12" width="6" height="2" /></ASVG>;
+// Vertical alignment (used when icon is on the left / right of the text).
+const ICON_VTOP = <ASVG><rect x="3" y="4" width="18" height="2" /><rect x="8" y="8" width="8" height="11" rx="1.5" /></ASVG>;
+const ICON_VMID = <ASVG><rect x="3" y="11" width="18" height="2" /><rect x="8" y="5" width="8" height="14" rx="1.5" /></ASVG>;
+const ICON_VBOT = <ASVG><rect x="3" y="18" width="18" height="2" /><rect x="8" y="5" width="8" height="11" rx="1.5" /></ASVG>;
 
 export default function Edit({ attributes, setAttributes, clientId }) {
-	const {
-		infoSkin,
-		iconType,
-		icon,
-		iconImage,
-		numberTitle,
-		numberGradient,
-		title,
-		titleTag,
-		description,
-		features,
-		linkUrl,
-		linkTarget,
-		linkNofollow,
-		enableBoxLink,
-		showReadMore,
-		readMoreType,
-		readMoreText,
-		readMoreIcon,
-		readMoreTextIcon,
-		readMoreTextIconShow,
-		readMoreAlignment,
-		buttonTextAlign,
-		iconDirection,
-		gradientBorder,
-		blockId,
-	} = attributes;
+	const { blockId, iconType, icon, number, image, title, desc, iconView, showIcon } = attributes;
 
 	useEffect(() => {
 		if (!blockId) {
@@ -77,344 +57,147 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		}
 	}, [blockId, clientId, setAttributes]);
 
-	const items = Array.isArray(features) ? features : [];
-	const updateFeature = (i, key, val) => setAttributes({ features: items.map((it, idx) => (idx === i ? { ...it, [key]: val } : it)) });
-	const addFeature = () => setAttributes({ features: [...items, { icon: '', text: __('New feature', 'easy-elements-for-gutenberg') }] });
-	const removeFeature = (i) => setAttributes({ features: items.filter((_, idx) => idx !== i) });
-	const moveFeature = (i, dir) => {
-		const t = i + dir;
-		if (t < 0 || t >= items.length) return;
-		const next = items.slice();
-		const [m] = next.splice(i, 1);
-		next.splice(t, 0, m);
-		setAttributes({ features: next });
-	};
+	const type = iconType || 'icon';
 
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const typo = (label, key) => <TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />;
 	const border = (label, key) => <BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const shadow = (label, key) => <BoxShadowControls label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const box = (label, key) => <BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const num = (label, key) => (
-		<TextControl label={label} type="number" value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+	// Responsive spacing (padding / margin) â€” clean 4-side control per device.
+	const respBox = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => (
+				<SpacingControl
+					values={attributes[getKey(base, device)]}
+					onChange={(v) => setAttributes({ [getKey(base, device)]: v })}
+				/>
+			)}
+		</ResponsiveWrapper>
 	);
-	const isLR = iconDirection === 'left' || iconDirection === 'right';
+	// Responsive typography â€” one typography object per device.
+	const respTypo = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => (
+				<TypographyControls attributes={attributes} setAttributes={setAttributes} attributeKey={getKey(base, device)} />
+			)}
+		</ResponsiveWrapper>
+	);
+	// Responsive slider. Stored as a string per device so render.php's ensure_unit() keeps working.
+	const num = (label, key, max = 100, min = 0) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => {
+				const k = getKey(key, device);
+				return (
+					<RangeControl
+						value={attributes[k] !== '' && attributes[k] != null ? Number(attributes[k]) : undefined}
+						onChange={(v) => setAttributes({ [k]: v == null ? '' : String(v) })}
+						min={min}
+						max={max}
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+				);
+			}}
+		</ResponsiveWrapper>
+	);
+	const bg = (label, c, g) => (
+		<BackgroundControl label={label} colorValue={attributes[c]} gradientValue={attributes[g]} onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })} onGradientChange={(v) => setAttributes({ [g]: v || '' })} />
+	);
 
 	return (
 		<div {...useBlockProps()}>
 			<InspectorControls>
-				<PanelBody title={__('Settings', 'easy-elements-for-gutenberg')} initialOpen={true}>
-					<SelectControl
-						label={__('Skin', 'easy-elements-for-gutenberg')}
-						value={infoSkin}
-						options={[
-							{ label: __('Skin 01', 'easy-elements-for-gutenberg'), value: 'default' },
-							{ label: __('Skin 02', 'easy-elements-for-gutenberg'), value: 'skin-2' },
-						]}
-						onChange={(v) => setAttributes({ infoSkin: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
+				<PanelBody title={__('Content', 'easy-elements-for-gutenberg')} initialOpen={true}>
+					<ToggleControl label={__('Icon', 'easy-elements-for-gutenberg')} checked={showIcon !== false} onChange={(v) => setAttributes({ showIcon: v })} __nextHasNoMarginBottom />
+					{showIcon !== false && (
 					<SelectControl
 						label={__('Type', 'easy-elements-for-gutenberg')}
-						value={iconType}
+						value={type}
 						options={[
 							{ label: __('Icon', 'easy-elements-for-gutenberg'), value: 'icon' },
+							{ label: __('Number', 'easy-elements-for-gutenberg'), value: 'number' },
 							{ label: __('Image', 'easy-elements-for-gutenberg'), value: 'image' },
 						]}
 						onChange={(v) => setAttributes({ iconType: v })}
 						__next40pxDefaultSize
 						__nextHasNoMarginBottom
 					/>
-					{iconType === 'icon' ? (
-						<IconPicker label={__('Icon', 'easy-elements-for-gutenberg')} value={icon} onChange={(v) => setAttributes({ icon: v })} />
-					) : (
+					)}
+					{showIcon !== false && type === 'icon' && <IconPicker label={__('Icon', 'easy-elements-for-gutenberg')} value={icon || ''} onChange={(v) => setAttributes({ icon: v })} />}
+					{showIcon !== false && type === 'number' && <TextControl label={__('Number', 'easy-elements-for-gutenberg')} value={number || ''} onChange={(v) => setAttributes({ number: v })} __next40pxDefaultSize __nextHasNoMarginBottom />}
+					{showIcon !== false && type === 'image' && (
 						<MediaUploadCheck>
 							<MediaUpload
-								onSelect={(media) => setAttributes({ iconImage: { id: media.id, url: media.url, alt: media.alt } })}
+								onSelect={(media) => setAttributes({ image: { id: media.id, url: media.url, alt: media.alt } })}
 								allowedTypes={['image']}
-								value={iconImage?.id}
+								value={image?.id}
 								render={({ open }) => (
-									<div style={{ marginBottom: '12px' }}>
-										{iconImage?.url && <img src={iconImage.url} alt="" style={{ maxWidth: '100%', marginBottom: '8px' }} />}
-										<Button variant="secondary" onClick={open} style={{ width: '100%', justifyContent: 'center' }}>
-											{iconImage?.url ? __('Replace Image', 'easy-elements-for-gutenberg') : __('Upload Image', 'easy-elements-for-gutenberg')}
-										</Button>
+									<div style={{ marginBottom: '8px' }}>
+										{image?.url && <img src={image.url} alt="" style={{ maxWidth: '100%', marginBottom: '6px' }} />}
+										<Button variant="secondary" size="small" onClick={open}>{image?.url ? __('Replace', 'easy-elements-for-gutenberg') : __('Select Image', 'easy-elements-for-gutenberg')}</Button>
 									</div>
 								)}
 							/>
 						</MediaUploadCheck>
 					)}
+					<TextControl label={__('Title', 'easy-elements-for-gutenberg')} value={title || ''} onChange={(v) => setAttributes({ title: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+					<TextareaControl label={__('Description', 'easy-elements-for-gutenberg')} value={desc || ''} onChange={(v) => setAttributes({ desc: v })} __nextHasNoMarginBottom />
 					<Divider />
-					<TextControl label={__('Number', 'easy-elements-for-gutenberg')} value={numberTitle} onChange={(v) => setAttributes({ numberTitle: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					{numberTitle !== '' && (
-						<ToggleControl label={__('Number Gradient', 'easy-elements-for-gutenberg')} checked={numberGradient} onChange={(v) => setAttributes({ numberGradient: v })} __nextHasNoMarginBottom />
+					{showIcon !== false && (
+					<ToggleGroupControl label={__('Alignment', 'easy-elements-for-gutenberg')} value={attributes.boxAlign} onChange={(v) => setAttributes({ boxAlign: v })} isBlock __next40pxDefaultSize __nextHasNoMarginBottom>
+						<ToggleGroupControlOptionIcon value="left" icon={ICON_ALIGN_LEFT} label={__('Icon Left', 'easy-elements-for-gutenberg')} />
+						<ToggleGroupControlOptionIcon value="center" icon={ICON_ALIGN_CENTER} label={__('Icon Top', 'easy-elements-for-gutenberg')} />
+						<ToggleGroupControlOptionIcon value="right" icon={ICON_ALIGN_RIGHT} label={__('Icon Right', 'easy-elements-for-gutenberg')} />
+					</ToggleGroupControl>
+					)}
+					{showIcon !== false && (attributes.boxAlign === 'left' || attributes.boxAlign === 'right') && (
+						<ToggleGroupControl label={__('Vertical Alignment', 'easy-elements-for-gutenberg')} value={attributes.boxVAlign} onChange={(v) => setAttributes({ boxVAlign: v })} isBlock __next40pxDefaultSize __nextHasNoMarginBottom>
+							<ToggleGroupControlOptionIcon value="flex-start" icon={ICON_VTOP} label={__('Top', 'easy-elements-for-gutenberg')} />
+							<ToggleGroupControlOptionIcon value="center" icon={ICON_VMID} label={__('Middle', 'easy-elements-for-gutenberg')} />
+							<ToggleGroupControlOptionIcon value="flex-end" icon={ICON_VBOT} label={__('Bottom', 'easy-elements-for-gutenberg')} />
+						</ToggleGroupControl>
 					)}
 					<Divider />
-					<TextControl label={__('Title', 'easy-elements-for-gutenberg')} value={title} onChange={(v) => setAttributes({ title: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					<SelectControl
-						label={__('Title HTML Tag', 'easy-elements-for-gutenberg')}
-						value={titleTag}
-						options={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p'].map((t) => ({ label: t.toUpperCase(), value: t }))}
-						onChange={(v) => setAttributes({ titleTag: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					<TextareaControl label={__('Description', 'easy-elements-for-gutenberg')} value={description} onChange={(v) => setAttributes({ description: v })} __nextHasNoMarginBottom />
-				</PanelBody>
-
-				{infoSkin === 'skin-2' && (
-					<PanelBody title={__('Features', 'easy-elements-for-gutenberg')} initialOpen={false}>
-						{items.map((item, index) => (
-							<div className="eelfg-icon-box-repeater-item" key={index}>
-								<div className="eelfg-icon-box-repeater-head">
-									<strong>#{index + 1}</strong>
-									<div>
-										<Button icon={ICON_ARROW_UP} label={__('Move up', 'easy-elements-for-gutenberg')} onClick={() => moveFeature(index, -1)} disabled={index === 0} size="small" />
-										<Button icon={ICON_ARROW_DOWN} label={__('Move down', 'easy-elements-for-gutenberg')} onClick={() => moveFeature(index, 1)} disabled={index === items.length - 1} size="small" />
-										<Button icon={ICON_TRASH} label={__('Remove', 'easy-elements-for-gutenberg')} onClick={() => removeFeature(index)} isDestructive size="small" />
-									</div>
-								</div>
-								<TextControl label={__('Text', 'easy-elements-for-gutenberg')} value={item.text || ''} onChange={(v) => updateFeature(index, 'text', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
-								<IconPicker label={__('Icon', 'easy-elements-for-gutenberg')} value={item.icon || ''} onChange={(v) => updateFeature(index, 'icon', v)} />
-							</div>
-						))}
-						<Button variant="primary" onClick={addFeature} icon={ICON_ADD}>{__('Add Feature', 'easy-elements-for-gutenberg')}</Button>
-					</PanelBody>
-				)}
-
-				<PanelBody title={__('Link', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					<TextControl label={__('Link URL', 'easy-elements-for-gutenberg')} type="url" value={linkUrl} onChange={(v) => setAttributes({ linkUrl: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					<ToggleControl label={__('Open in new tab', 'easy-elements-for-gutenberg')} checked={linkTarget} onChange={(v) => setAttributes({ linkTarget: v })} __nextHasNoMarginBottom />
-					<ToggleControl label={__('Add nofollow', 'easy-elements-for-gutenberg')} checked={linkNofollow} onChange={(v) => setAttributes({ linkNofollow: v })} __nextHasNoMarginBottom />
-					{linkUrl !== '' && (
-						<ToggleControl label={__('Enable Full Box Link', 'easy-elements-for-gutenberg')} checked={enableBoxLink} onChange={(v) => setAttributes({ enableBoxLink: v })} __nextHasNoMarginBottom />
+					{showIcon !== false && <SelectControl label={__('Icon View', 'easy-elements-for-gutenberg')} value={iconView} options={[{ label: __('Default', 'easy-elements-for-gutenberg'), value: 'default' }, { label: __('Frame', 'easy-elements-for-gutenberg'), value: 'frame' }, { label: __('Stacked', 'easy-elements-for-gutenberg'), value: 'stracked' }]} onChange={(v) => setAttributes({ iconView: v })} __next40pxDefaultSize __nextHasNoMarginBottom />}
+					{showIcon !== false && (iconView === 'frame' || iconView === 'stracked') && (
+						<SelectControl label={__('Shape', 'easy-elements-for-gutenberg')} value={attributes.iconShape} options={[{ label: __('Rounded', 'easy-elements-for-gutenberg'), value: 'rounded' }, { label: __('Square', 'easy-elements-for-gutenberg'), value: 'square' }, { label: __('Circle', 'easy-elements-for-gutenberg'), value: 'circle' }, { label: __('Square Rotate', 'easy-elements-for-gutenberg'), value: 'sq_rotate' }]} onChange={(v) => setAttributes({ iconShape: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 					)}
-				</PanelBody>
-
-				<PanelBody title={__('Read More', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					<ToggleControl label={__('Show Read More', 'easy-elements-for-gutenberg')} checked={showReadMore} onChange={(v) => setAttributes({ showReadMore: v })} __nextHasNoMarginBottom />
-					{showReadMore && (
-						<>
-							<SelectControl
-								label={__('Read More Type', 'easy-elements-for-gutenberg')}
-								value={readMoreType}
-								options={[
-									{ label: __('Text', 'easy-elements-for-gutenberg'), value: 'read_text' },
-									{ label: __('Icon', 'easy-elements-for-gutenberg'), value: 'read_icon' },
-									{ label: __('Icon Hover to Text', 'easy-elements-for-gutenberg'), value: 'read_icon_to_text' },
-								]}
-								onChange={(v) => setAttributes({ readMoreType: v })}
-								__next40pxDefaultSize
-								__nextHasNoMarginBottom
-							/>
-							{(readMoreType === 'read_text' || readMoreType === 'read_icon_to_text') && (
-								<>
-									<TextControl label={__('Read More Text', 'easy-elements-for-gutenberg')} value={readMoreText} onChange={(v) => setAttributes({ readMoreText: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-									<ToggleControl label={__('Show Icon Next to Text', 'easy-elements-for-gutenberg')} checked={readMoreTextIconShow} onChange={(v) => setAttributes({ readMoreTextIconShow: v })} __nextHasNoMarginBottom />
-									{readMoreTextIconShow && (
-										<IconPicker label={__('Text Button Icon', 'easy-elements-for-gutenberg')} value={readMoreTextIcon} onChange={(v) => setAttributes({ readMoreTextIcon: v })} />
-									)}
-								</>
-							)}
-							{readMoreType === 'read_icon' && (
-								<IconPicker label={__('Read More Icon', 'easy-elements-for-gutenberg')} value={readMoreIcon} onChange={(v) => setAttributes({ readMoreIcon: v })} />
-							)}
-							<SelectControl
-								label={__('Button Alignment', 'easy-elements-for-gutenberg')}
-								value={readMoreAlignment}
-								options={[
-									{ label: __('Default', 'easy-elements-for-gutenberg'), value: '' },
-									{ label: __('Left', 'easy-elements-for-gutenberg'), value: 'left' },
-									{ label: __('Center', 'easy-elements-for-gutenberg'), value: 'center' },
-									{ label: __('Right', 'easy-elements-for-gutenberg'), value: 'right' },
-									{ label: __('Stretch', 'easy-elements-for-gutenberg'), value: 'stretch' },
-								]}
-								onChange={(v) => setAttributes({ readMoreAlignment: v })}
-								__next40pxDefaultSize
-								__nextHasNoMarginBottom
-							/>
-							{infoSkin === 'skin-2' && (
-								<SelectControl
-									label={__('Skin-2 Button Align', 'easy-elements-for-gutenberg')}
-									value={buttonTextAlign}
-									options={[
-										{ label: __('Default', 'easy-elements-for-gutenberg'), value: '' },
-										{ label: __('Left', 'easy-elements-for-gutenberg'), value: 'flex-start' },
-										{ label: __('Center', 'easy-elements-for-gutenberg'), value: 'center' },
-										{ label: __('Right', 'easy-elements-for-gutenberg'), value: 'end' },
-										{ label: __('Stretch', 'easy-elements-for-gutenberg'), value: 'stretch' },
-									]}
-									onChange={(v) => setAttributes({ buttonTextAlign: v })}
-									__next40pxDefaultSize
-									__nextHasNoMarginBottom
-								/>
-							)}
-						</>
-					)}
+					<SelectControl label={__('Title HTML Tag', 'easy-elements-for-gutenberg')} value={attributes.titleTag} options={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span'].map((t) => ({ label: t.toUpperCase(), value: t }))} onChange={(v) => setAttributes({ titleTag: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 				</PanelBody>
 			</InspectorControls>
 
 			<InspectorControls group="styles">
-				<PanelBody title={__('Item', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					<SelectControl
-						label={__('Direction', 'easy-elements-for-gutenberg')}
-						value={iconDirection}
-						options={[
-							{ label: __('Left', 'easy-elements-for-gutenberg'), value: 'left' },
-							{ label: __('Top', 'easy-elements-for-gutenberg'), value: 'top' },
-							{ label: __('Right', 'easy-elements-for-gutenberg'), value: 'right' },
-						]}
-						onChange={(v) => setAttributes({ iconDirection: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					{isLR && (
-						<>
-							<SelectControl
-								label={__('Vertical Alignment', 'easy-elements-for-gutenberg')}
-								value={attributes.iconVerticalAlignment}
-								options={[
-									{ label: __('Top', 'easy-elements-for-gutenberg'), value: 'flex-start' },
-									{ label: __('Middle', 'easy-elements-for-gutenberg'), value: 'center' },
-									{ label: __('Bottom', 'easy-elements-for-gutenberg'), value: 'flex-end' },
-								]}
-								onChange={(v) => setAttributes({ iconVerticalAlignment: v })}
-								__next40pxDefaultSize
-								__nextHasNoMarginBottom
-							/>
-							{num(__('Item Spacing (px)', 'easy-elements-for-gutenberg'), 'itemSpacing')}
-						</>
-					)}
-					<SelectControl label={__('Text Alignment', 'easy-elements-for-gutenberg')} value={attributes.textAlign} options={ALIGN} onChange={(v) => setAttributes({ textAlign: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					<Divider />
-					{color(__('Background', 'easy-elements-for-gutenberg'), 'itemBgColor')}
-					{border(__('Border', 'easy-elements-for-gutenberg'), 'itemBorder')}
-					{shadow(__('Box Shadow', 'easy-elements-for-gutenberg'), 'itemBoxShadow')}
-					{box(__('Border Radius', 'easy-elements-for-gutenberg'), 'itemBorderRadius')}
-					{box(__('Padding', 'easy-elements-for-gutenberg'), 'itemPadding')}
-					{box(__('Margin', 'easy-elements-for-gutenberg'), 'itemMargin')}
-					<Divider />
-					<SelectControl
-						label={__('Hover Background Direction', 'easy-elements-for-gutenberg')}
-						value={attributes.itemHoverBgDirection}
-						options={[
-							{ label: __('Default', 'easy-elements-for-gutenberg'), value: 'default' },
-							{ label: __('Left', 'easy-elements-for-gutenberg'), value: 'left' },
-							{ label: __('Right', 'easy-elements-for-gutenberg'), value: 'right' },
-							{ label: __('Top', 'easy-elements-for-gutenberg'), value: 'top' },
-							{ label: __('Bottom', 'easy-elements-for-gutenberg'), value: 'bottom' },
-							{ label: __('Middle', 'easy-elements-for-gutenberg'), value: 'middle' },
-						]}
-						onChange={(v) => setAttributes({ itemHoverBgDirection: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					{color(__('Hover Background', 'easy-elements-for-gutenberg'), 'itemHoverBgColor')}
-					{color(__('Hover Border Color', 'easy-elements-for-gutenberg'), 'itemHoverBorderColor')}
-					{shadow(__('Hover Box Shadow', 'easy-elements-for-gutenberg'), 'itemHoverBoxShadow')}
+				<PanelBody title={__('Icon Box', 'easy-elements-for-gutenberg')} initialOpen={true}>
+					{bg(__('Background', 'easy-elements-for-gutenberg'), 'listBgColor', 'listBgGradient')}
+					{num(__('Gap (px)', 'easy-elements-for-gutenberg'), 'feaMiddleGap')}
+					{border(__('Border', 'easy-elements-for-gutenberg'), 'feaListBorder')}
+					{box(__('Border Radius', 'easy-elements-for-gutenberg'), 'feaListBorderRadius')}
+					{respBox(__('Padding', 'easy-elements-for-gutenberg'), 'feaListPadding')}
+					{respBox(__('Margin', 'easy-elements-for-gutenberg'), 'feaBlockMargin')}
 				</PanelBody>
 
-				{iconType === 'icon' && (
-					<PanelBody title={__('Icon', 'easy-elements-for-gutenberg')} initialOpen={false}>
-						{color(__('Color', 'easy-elements-for-gutenberg'), 'iconColor')}
-						{color(__('Background', 'easy-elements-for-gutenberg'), 'iconBgColor')}
-						{num(__('Icon Size (px)', 'easy-elements-for-gutenberg'), 'iconSize')}
-						{num(__('Box Size (px)', 'easy-elements-for-gutenberg'), 'iconBoxSize')}
-						{border(__('Border', 'easy-elements-for-gutenberg'), 'iconBorder')}
-						{box(__('Border Radius', 'easy-elements-for-gutenberg'), 'iconBorderRadius')}
-						{box(__('Margin', 'easy-elements-for-gutenberg'), 'iconMargin')}
-						{shadow(__('Box Shadow', 'easy-elements-for-gutenberg'), 'iconBoxShadow')}
-						{num(__('Rotate (deg)', 'easy-elements-for-gutenberg'), 'iconRotate')}
-						<ToggleControl label={__('Gradient Border', 'easy-elements-for-gutenberg')} checked={gradientBorder} onChange={(v) => setAttributes({ gradientBorder: v })} __nextHasNoMarginBottom />
-						<Divider />
-						{color(__('Hover Color', 'easy-elements-for-gutenberg'), 'iconHoverColor')}
-						{color(__('Hover Background', 'easy-elements-for-gutenberg'), 'iconHoverBgColor')}
-					</PanelBody>
-				)}
-
-				{iconType === 'image' && (
-					<PanelBody title={__('Image', 'easy-elements-for-gutenberg')} initialOpen={false}>
-						{num(__('Image Size (px)', 'easy-elements-for-gutenberg'), 'imageSize')}
-						{num(__('Box Size (px)', 'easy-elements-for-gutenberg'), 'imageBoxSize')}
-						{color(__('Background', 'easy-elements-for-gutenberg'), 'imageBgColor')}
-						{border(__('Border', 'easy-elements-for-gutenberg'), 'imageBorder')}
-						{box(__('Box Border Radius', 'easy-elements-for-gutenberg'), 'imageBoxBorderRadius')}
-						{box(__('Image Border Radius', 'easy-elements-for-gutenberg'), 'imageBorderRadius')}
-						{box(__('Padding', 'easy-elements-for-gutenberg'), 'imagePadding')}
-						{box(__('Margin', 'easy-elements-for-gutenberg'), 'imageMargin')}
-						{color(__('Hover Background', 'easy-elements-for-gutenberg'), 'imageHoverBgColor')}
-					</PanelBody>
-				)}
-
-				{numberTitle !== '' && (
-					<PanelBody title={__('Number', 'easy-elements-for-gutenberg')} initialOpen={false}>
-						{!numberGradient && color(__('Color', 'easy-elements-for-gutenberg'), 'numberColor')}
-						{color(__('Background', 'easy-elements-for-gutenberg'), 'numberBgColor')}
-						<SelectControl label={__('Alignment', 'easy-elements-for-gutenberg')} value={attributes.numberAlignment} options={[{ label: __('Default', 'easy-elements-for-gutenberg'), value: '' }, ...ALIGN]} onChange={(v) => setAttributes({ numberAlignment: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-						{typo(__('Typography', 'easy-elements-for-gutenberg'), 'numberTypography')}
-						{box(__('Padding', 'easy-elements-for-gutenberg'), 'numberPadding')}
-						{box(__('Margin', 'easy-elements-for-gutenberg'), 'numberMargin')}
-					</PanelBody>
+{showIcon !== false && (
+				<PanelBody title={__('Icon', 'easy-elements-for-gutenberg')} initialOpen={false}>
+					{color(__('Color', 'easy-elements-for-gutenberg'), 'iconColor')}
+					{bg(__('Background', 'easy-elements-for-gutenberg'), 'iconBgColor', 'iconBgGradient')}
+					{num(__('Size (px)', 'easy-elements-for-gutenberg'), 'iconSize', 200)}
+					{num(__('Box Size (px)', 'easy-elements-for-gutenberg'), 'iconBoxSize', 200)}
+					{shadow(__('Box Shadow', 'easy-elements-for-gutenberg'), 'iconShadow')}
+					{border(__('Border', 'easy-elements-for-gutenberg'), 'iconBorder')}
+					{box(__('Border Radius', 'easy-elements-for-gutenberg'), 'iconRadius')}
+				</PanelBody>
 				)}
 
 				<PanelBody title={__('Title', 'easy-elements-for-gutenberg')} initialOpen={false}>
 					{color(__('Color', 'easy-elements-for-gutenberg'), 'titleColor')}
-					{color(__('Hover Color', 'easy-elements-for-gutenberg'), 'titleHoverColor')}
-					{typo(__('Typography', 'easy-elements-for-gutenberg'), 'titleTypography')}
-					{box(__('Margin', 'easy-elements-for-gutenberg'), 'titleMargin')}
+					{respTypo(__('Typography', 'easy-elements-for-gutenberg'), 'titleTypography')}
+					{respBox(__('Padding', 'easy-elements-for-gutenberg'), 'titlePadding')}
 				</PanelBody>
 
 				<PanelBody title={__('Description', 'easy-elements-for-gutenberg')} initialOpen={false}>
 					{color(__('Color', 'easy-elements-for-gutenberg'), 'descColor')}
-					{color(__('Hover Color', 'easy-elements-for-gutenberg'), 'descHoverColor')}
-					{typo(__('Typography', 'easy-elements-for-gutenberg'), 'descTypography')}
-					{box(__('Margin', 'easy-elements-for-gutenberg'), 'descMargin')}
+					{respTypo(__('Typography', 'easy-elements-for-gutenberg'), 'descTypography')}
 				</PanelBody>
-
-				{infoSkin === 'skin-2' && (
-					<PanelBody title={__('Features', 'easy-elements-for-gutenberg')} initialOpen={false}>
-						{color(__('Text Color', 'easy-elements-for-gutenberg'), 'featureTextColor')}
-						{color(__('Icon Color', 'easy-elements-for-gutenberg'), 'featureIconColor')}
-						{color(__('Text Color (Hover)', 'easy-elements-for-gutenberg'), 'featureTextColorHover')}
-						{color(__('Icon Color (Hover)', 'easy-elements-for-gutenberg'), 'featureIconColorHover')}
-						{typo(__('Typography', 'easy-elements-for-gutenberg'), 'featureTypography')}
-						{box(__('Item Margin', 'easy-elements-for-gutenberg'), 'featureMargin')}
-						{num(__('Icon Gap (px)', 'easy-elements-for-gutenberg'), 'featureIconGap')}
-						{num(__('Icon Size (px)', 'easy-elements-for-gutenberg'), 'featureIconSize')}
-					</PanelBody>
-				)}
-
-				{showReadMore && (
-					<PanelBody title={__('Button', 'easy-elements-for-gutenberg')} initialOpen={false}>
-						{(readMoreType === 'read_icon') && (
-							<>
-								{color(__('Icon Color', 'easy-elements-for-gutenberg'), 'readMoreIconColor')}
-								{color(__('Icon Background', 'easy-elements-for-gutenberg'), 'readMoreIconBgColor')}
-								{num(__('Icon Size (px)', 'easy-elements-for-gutenberg'), 'readMoreIconSize')}
-								{box(__('Icon Padding', 'easy-elements-for-gutenberg'), 'readMoreIconPadding')}
-								{box(__('Icon Border Radius', 'easy-elements-for-gutenberg'), 'readMoreIconBorderRadius')}
-								<Divider />
-							</>
-						)}
-						{(readMoreType === 'read_text' || readMoreType === 'read_icon_to_text') && (
-							<>
-								{color(__('Text Color', 'easy-elements-for-gutenberg'), 'readMoreTextColor')}
-								{color(__('Text Background', 'easy-elements-for-gutenberg'), 'readMoreTextBgColor')}
-								{typo(__('Typography', 'easy-elements-for-gutenberg'), 'readMoreTypography')}
-								{border(__('Border', 'easy-elements-for-gutenberg'), 'readMoreTextBorder')}
-								{box(__('Border Radius', 'easy-elements-for-gutenberg'), 'readMoreTextBorderRadius')}
-								{box(__('Padding', 'easy-elements-for-gutenberg'), 'readMoreTextPadding')}
-								<Divider />
-								{color(__('Text Color (Hover)', 'easy-elements-for-gutenberg'), 'readMoreTextColorHover')}
-								{color(__('Background (Hover)', 'easy-elements-for-gutenberg'), 'readMoreBgHover')}
-								{color(__('Border Color (Hover)', 'easy-elements-for-gutenberg'), 'readMoreHoverBorderColor')}
-								<Divider />
-							</>
-						)}
-						{box(__('Button Margin', 'easy-elements-for-gutenberg'), 'readMoreMargin')}
-					</PanelBody>
-				)}
 			</InspectorControls>
 
 			<ServerSideRender block="easy-elements-for-gutenberg/icon-box" attributes={attributes} httpMethod="POST" />

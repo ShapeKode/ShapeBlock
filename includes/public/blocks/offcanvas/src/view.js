@@ -56,11 +56,12 @@
 			if (e.target.closest('.eelfg-offcanvas-toggle')) {
 				return;
 			}
-			var insidePanel = e.target.closest('.eelfg-offcanvas-panel');
 			var open = document.querySelectorAll('.eelfg-offcanvas.' + ACTIVE);
 			Array.prototype.forEach.call(open, function (panel) {
-				// If the click is inside this panel's content, keep it open.
-				if (insidePanel && panel.contains(insidePanel)) {
+				// Any click inside the open panel (including its empty area, not just
+				// the inner content wrapper) should keep it open. Only clicks on the
+				// overlay (handled above) or truly outside the panel close it.
+				if (panel.contains(e.target)) {
 					return;
 				}
 				closePanel(panel);

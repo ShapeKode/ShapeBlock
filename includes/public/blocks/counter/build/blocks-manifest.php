@@ -87,7 +87,7 @@ return array(
 			),
 			'title' => array(
 				'type' => 'string',
-				'default' => 'Easy Elements'
+				'default' => 'Easy Block'
 			),
 			'titleTag' => array(
 				'type' => 'string',

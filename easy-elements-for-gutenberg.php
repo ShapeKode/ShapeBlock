@@ -10,7 +10,8 @@
  * Domain Path: /languages
  * License:     GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- */
+*/
+
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -24,8 +25,6 @@ define( 'EELFG_PL_URL', plugins_url( '/', EELFG_PL_ROOT ) );
 define( 'EELFG_PL_PATH', plugin_dir_path( EELFG_PL_ROOT ) );
 define( 'EELFG_DIR_URL', plugin_dir_url( EELFG_PL_ROOT ) );
 define( 'EELFG_PLUGIN_BASE', plugin_basename( EELFG_PL_ROOT ) );
-
-
 
 if ( ! defined( 'EELFG_EXTENSION_BADGE' ) ) {
 	define( 'EELFG_EXTENSION_BADGE', '<span class="easy-extension-badge"></span>' );

@@ -6,7 +6,7 @@ return array(
 		'apiVersion' => 3,
 		'name' => 'easy-elements-for-gutenberg/clients-logo-grid',
 		'version' => '0.1.0',
-		'title' => 'Client Logo Grid',
+		'title' => 'Client Logo',
 		'category' => 'easy-elements-for-gutenberg',
 		'description' => 'A responsive grid of client / partner logos with links, grayscale and hover-swap effects.',
 		'keywords' => array(

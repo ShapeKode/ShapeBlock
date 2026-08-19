@@ -76,6 +76,14 @@ class Api {
             ),
         ) );
 
+        register_rest_route( 'easy-elements-for-gutenberg/v1', '/templates/(?P<id>\d+)/restore', array(
+            'methods'  => 'POST',
+            'callback' => array( $this, 'restore_template' ),
+            'permission_callback' => function () {
+                return current_user_can('edit_posts');
+            },
+        ) );
+
         register_rest_route( 'easy-elements-for-gutenberg/v1', '/templates/bulk-delete', array(
             'methods'  => 'POST',
             'callback' => array( $this, 'bulk_delete_templates' ),
@@ -300,6 +308,10 @@ class Api {
         $search   = sanitize_text_field( $request->get_param('search') ?: '' );
         $orderby  = sanitize_text_field( $request->get_param('orderby') ?: 'date' );
         $order    = sanitize_text_field( $request->get_param('order') ?: 'DESC' );
+        $status   = sanitize_text_field( $request->get_param('status') ?: 'publish' );
+        if ( ! in_array( $status, array( 'publish', 'trash' ), true ) ) {
+            $status = 'publish';
+        }
 
         $args = array(
             'post_type'      => 'eelfg-template',
@@ -307,7 +319,7 @@ class Api {
             'paged'          => $page,
             'orderby'        => $orderby,
             'order'          => strtoupper($order) === 'ASC' ? 'ASC' : 'DESC',
-            'post_status'    => 'publish',
+            'post_status'    => $status,
         );
 
         if ( ! empty( $search ) ) {
@@ -321,12 +333,29 @@ class Api {
             $templates[] = $this->format_template( $post );
         }
 
+        // Counts per status so the UI can show the free-limit badge and the
+        // Trash tab count regardless of which view is currently loaded.
+        $active_q = new \WP_Query( array(
+            'post_type'      => 'eelfg-template',
+            'post_status'    => 'publish',
+            'posts_per_page' => 1,
+            'fields'         => 'ids',
+        ) );
+        $trash_q = new \WP_Query( array(
+            'post_type'      => 'eelfg-template',
+            'post_status'    => 'trash',
+            'posts_per_page' => 1,
+            'fields'         => 'ids',
+        ) );
+
         return rest_ensure_response( array(
-            'templates' => $templates,
-            'total'     => (int) $query->found_posts,
-            'pages'     => (int) $query->max_num_pages,
-            'page'      => $page,
-            'per_page'  => $per_page,
+            'templates'    => $templates,
+            'total'        => (int) $query->found_posts,
+            'pages'        => (int) $query->max_num_pages,
+            'page'         => $page,
+            'per_page'     => $per_page,
+            'active_count' => (int) $active_q->found_posts,
+            'trash_count'  => (int) $trash_q->found_posts,
         ) );
     }
 
@@ -349,8 +378,13 @@ class Api {
         }
 
         if ( ! $is_pro ) {
-            $count = wp_count_posts( 'eelfg-template' );
-            $total = isset( $count->publish ) ? (int) $count->publish : 0;
+            $user_templates = new \WP_Query( array(
+                'post_type'      => 'eelfg-template',
+                'post_status'    => 'publish',
+                'posts_per_page' => 1,
+                'fields'         => 'ids',
+            ) );
+            $total = (int) $user_templates->found_posts;
             if ( $total >= 3 ) {
                 return new \WP_Error( 'template_limit', 'Free version allows up to 3 templates. Upgrade to Pro for unlimited templates.', array( 'status' => 403 ) );
             }
@@ -415,13 +449,41 @@ class Api {
             return new \WP_Error( 'not_found', 'Template not found', array( 'status' => 404 ) );
         }
 
-        wp_delete_post( $id, true );
+        // Permanently delete only when explicitly forced (from the Trash view);
+        // otherwise move the template to Trash so it can be restored.
+        $force = filter_var( $request->get_param('force'), FILTER_VALIDATE_BOOLEAN );
+        if ( $force ) {
+            wp_delete_post( $id, true );
+        } else {
+            wp_trash_post( $id );
+        }
+
+        return rest_ensure_response( array( 'status' => 'success', 'id' => $id, 'force' => $force ) );
+    }
+
+    public function restore_template( $request ) {
+        $id   = (int) $request->get_param('id');
+        $post = get_post( $id );
+
+        if ( ! $post || $post->post_type !== 'eelfg-template' ) {
+            return new \WP_Error( 'not_found', 'Template not found', array( 'status' => 404 ) );
+        }
+
+        wp_untrash_post( $id );
+        // wp_untrash_post can restore to 'draft' on some setups; force back to publish.
+        if ( 'publish' !== get_post_status( $id ) ) {
+            wp_update_post( array( 'ID' => $id, 'post_status' => 'publish' ) );
+        }
 
         return rest_ensure_response( array( 'status' => 'success', 'id' => $id ) );
     }
 
     public function bulk_delete_templates( $request ) {
-        $ids = $request->get_param('ids');
+        $ids    = $request->get_param('ids');
+        $action = sanitize_text_field( $request->get_param('action') ?: 'trash' );
+        if ( ! in_array( $action, array( 'trash', 'restore', 'delete' ), true ) ) {
+            $action = 'trash';
+        }
 
         if ( ! is_array( $ids ) || empty( $ids ) ) {
             return new \WP_Error( 'missing_ids', 'Template IDs are required', array( 'status' => 400 ) );
@@ -432,12 +494,21 @@ class Api {
             $id   = (int) $id;
             $post = get_post( $id );
             if ( $post && $post->post_type === 'eelfg-template' ) {
-                wp_delete_post( $id, true );
+                if ( 'delete' === $action ) {
+                    wp_delete_post( $id, true );
+                } elseif ( 'restore' === $action ) {
+                    wp_untrash_post( $id );
+                    if ( 'publish' !== get_post_status( $id ) ) {
+                        wp_update_post( array( 'ID' => $id, 'post_status' => 'publish' ) );
+                    }
+                } else {
+                    wp_trash_post( $id );
+                }
                 $deleted[] = $id;
             }
         }
 
-        return rest_ensure_response( array( 'status' => 'success', 'deleted' => $deleted ) );
+        return rest_ensure_response( array( 'status' => 'success', 'deleted' => $deleted, 'action' => $action ) );
     }
 
     private function format_template( $post ) {
