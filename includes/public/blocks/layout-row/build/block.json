@@ -21,6 +21,9 @@
     "html": false,
     "anchor": true,
     "align": [
+      "left",
+      "center",
+      "right",
       "wide",
       "full"
     ],

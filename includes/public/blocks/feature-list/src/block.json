@@ -10,7 +10,7 @@
 	"example": {},
 	"supports": {
 		"html": false,
-		"align": [ "wide", "full" ]
+		"align": [ "left", "center", "right", "wide", "full" ]
 	},
 	"textdomain": "easy-elements-for-gutenberg",
 	"editorScript": "file:./index.js",

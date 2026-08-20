@@ -112,6 +112,11 @@ if ( 'custom' === $color_mode ) {
 	}
 }
 
+// Alignment — align the icon row (left / center / right) within the block.
+$align       = isset( $attributes['alignment'] ) ? $attributes['alignment'] : 'left';
+$justify_map = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end' ];
+$extra_css  .= $selector . ' .eelfg-si-buttons{justify-content:' . ( $justify_map[ $align ] ?? 'flex-start' ) . ';}';
+
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $extra_css, $sub );
 ?>

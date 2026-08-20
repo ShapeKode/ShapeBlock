@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import { ServerSideRender } from '@wordpress/server-side-render';
-import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import { useBlockProps, InspectorControls, BlockControls, AlignmentControl } from '@wordpress/block-editor';
 import {
 	PanelBody,
 	SelectControl,
@@ -62,6 +62,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	return (
 		<div {...useBlockProps()}>
+			<BlockControls>
+				<AlignmentControl
+					value={attributes.alignment}
+					onChange={(value) => setAttributes({ alignment: value || 'left' })}
+				/>
+			</BlockControls>
 			<InspectorControls>
 				<PanelBody title={__('Social Settings', 'easy-elements-for-gutenberg')} initialOpen={true}>
 					{items.map((item, index) => (

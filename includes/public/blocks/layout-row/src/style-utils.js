@@ -210,5 +210,30 @@ export const buildColumnEditorCss = (attrs) => {
     const m = renderDecls(mobile);
     if (m) css += `${BREAKPOINTS.mobile}{${sel}{${m}}}`;
 
+    // Content flexbox — the inner wrapper is a flex container (matches render.php).
+    const innerSel = `${sel} > .eelfg-column__inner`;
+    const innerOf = (suffix) => {
+        const k = (base) => attrs[suffix === '' ? base : `${base}${suffix}`];
+        const dcl = {};
+        if (k('flexDirection')) dcl['flex-direction'] = k('flexDirection');
+        if (k('justifyContent')) dcl['justify-content'] = k('justifyContent');
+        if (k('alignItems')) dcl['align-items'] = k('alignItems');
+        if (k('alignContent')) dcl['align-content'] = k('alignContent');
+        if (k('flexWrap')) dcl['flex-wrap'] = k('flexWrap');
+        if (k('contentGap')) dcl['gap'] = k('contentGap');
+        return dcl;
+    };
+    const iD = innerOf(''), iT = innerOf('Tablet'), iM = innerOf('Mobile');
+    // Flex only when the user set at least one flex option (keeps empty/default columns as normal block flow).
+    if (Object.keys(iD).length || Object.keys(iT).length || Object.keys(iM).length) {
+        iD['display'] = 'flex';
+    }
+    const idd = renderDecls(iD);
+    if (idd) css += `${innerSel}{${idd}}`;
+    const itt = renderDecls(iT);
+    if (itt) css += `${BREAKPOINTS.tablet}{${innerSel}{${itt}}}`;
+    const imm = renderDecls(iM);
+    if (imm) css += `${BREAKPOINTS.mobile}{${innerSel}{${imm}}}`;
+
     return css;
 };

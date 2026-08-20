@@ -17,6 +17,9 @@
   "supports": {
     "html": false,
     "align": [
+      "left",
+      "center",
+      "right",
       "wide",
       "full"
     ],
@@ -90,6 +93,10 @@
     "colorMode": {
       "type": "string",
       "default": "custom"
+    },
+    "alignment": {
+      "type": "string",
+      "default": "left"
     },
     "buttonSize": {
       "type": "string",

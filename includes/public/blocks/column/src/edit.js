@@ -18,6 +18,9 @@ import {
     BoxControl,
     ToolbarGroup,
     ToolbarButton,
+    ToolbarDropdownMenu,
+    __experimentalToggleGroupControl as ToggleGroupControl,
+    __experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon,
     __experimentalUnitControl as UnitControl,
     __experimentalNumberControl as NumberControl,
 } from '@wordpress/components';
@@ -28,6 +31,13 @@ import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 
 import { buildColumnEditorCss } from '../../layout-row/src/style-utils';
+import {
+    iconDirRow, iconDirRowRev, iconDirCol, iconDirColRev,
+    iconJustifyStart, iconJustifyCenter, iconJustifyEnd,
+    iconJustifyBetween, iconJustifyAround, iconJustifyEvenly,
+    iconAlignStretch, iconAlignTop, iconAlignMiddle, iconAlignBottom, iconAlignBaseline,
+    iconWrapNo, iconWrap, iconWrapRev,
+} from '../../layout-row/src/flexbox-icons';
 
 import './editor.scss';
 
@@ -151,6 +161,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     <ToolbarButton icon="plus-alt2" label={__('Add Column', 'eelfg')} onClick={addSiblingColumn} />
                     <ToolbarButton icon="trash" label={__('Remove', 'eelfg')} onClick={removeSelf} disabled={siblings.length <= 1} />
                 </ToolbarGroup>
+                <ToolbarGroup>
+                    <ToolbarDropdownMenu
+                        icon="align-pull-left"
+                        label={__('Content Align', 'eelfg')}
+                        controls={[
+                            { title: __('Align Left', 'eelfg'), icon: 'editor-alignleft', isActive: attributes.alignItems === 'flex-start', onClick: () => setAttributes({ alignItems: attributes.alignItems === 'flex-start' ? '' : 'flex-start' }) },
+                            { title: __('Align Center', 'eelfg'), icon: 'editor-aligncenter', isActive: attributes.alignItems === 'center', onClick: () => setAttributes({ alignItems: attributes.alignItems === 'center' ? '' : 'center' }) },
+                            { title: __('Align Right', 'eelfg'), icon: 'editor-alignright', isActive: attributes.alignItems === 'flex-end', onClick: () => setAttributes({ alignItems: attributes.alignItems === 'flex-end' ? '' : 'flex-end' }) },
+                            { title: __('Stretch', 'eelfg'), icon: 'align-full-width', isActive: attributes.alignItems === 'stretch', onClick: () => setAttributes({ alignItems: attributes.alignItems === 'stretch' ? '' : 'stretch' }) },
+                        ]}
+                    />
+                </ToolbarGroup>
             </BlockControls>
 
             <InspectorControls>
@@ -259,6 +281,72 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom
                     />
+                </PanelBody>
+
+                <PanelBody title={__('Flexbox', 'eelfg')} initialOpen={false}>
+                    <ResponsiveWrapper label={__('Direction', 'eelfg')}>
+                        {(device) => (
+                            <ToggleGroupControl isBlock isDeselectable value={attributes[getKey('flexDirection', device)]} onChange={(v) => setAttributes({ [getKey('flexDirection', device)]: v ?? '' })} __next40pxDefaultSize __nextHasNoMarginBottom>
+                                <ToggleGroupControlOptionIcon value="row"            icon={iconDirRow}    label={__('Row', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="row-reverse"    icon={iconDirRowRev} label={__('Row reverse', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="column"         icon={iconDirCol}    label={__('Column', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="column-reverse" icon={iconDirColRev} label={__('Column reverse', 'eelfg')} />
+                            </ToggleGroupControl>
+                        )}
+                    </ResponsiveWrapper>
+                    <ResponsiveWrapper label={__('Justify Content', 'eelfg')}>
+                        {(device) => (
+                            <ToggleGroupControl isBlock isDeselectable value={attributes[getKey('justifyContent', device)]} onChange={(v) => setAttributes({ [getKey('justifyContent', device)]: v ?? '' })} __next40pxDefaultSize __nextHasNoMarginBottom>
+                                <ToggleGroupControlOptionIcon value="flex-start"    icon={iconJustifyStart}   label={__('Start', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="center"        icon={iconJustifyCenter}  label={__('Center', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="flex-end"      icon={iconJustifyEnd}     label={__('End', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="space-between" icon={iconJustifyBetween} label={__('Space between', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="space-around"  icon={iconJustifyAround}  label={__('Space around', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="space-evenly"  icon={iconJustifyEvenly}  label={__('Space evenly', 'eelfg')} />
+                            </ToggleGroupControl>
+                        )}
+                    </ResponsiveWrapper>
+                    <ResponsiveWrapper label={__('Align Items', 'eelfg')}>
+                        {(device) => (
+                            <ToggleGroupControl isBlock isDeselectable value={attributes[getKey('alignItems', device)]} onChange={(v) => setAttributes({ [getKey('alignItems', device)]: v ?? '' })} __next40pxDefaultSize __nextHasNoMarginBottom>
+                                <ToggleGroupControlOptionIcon value="stretch"    icon={iconAlignStretch}  label={__('Stretch', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="flex-start" icon={iconAlignTop}      label={__('Top', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="center"     icon={iconAlignMiddle}   label={__('Middle', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="flex-end"   icon={iconAlignBottom}   label={__('Bottom', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="baseline"   icon={iconAlignBaseline} label={__('Baseline', 'eelfg')} />
+                            </ToggleGroupControl>
+                        )}
+                    </ResponsiveWrapper>
+                    <ResponsiveWrapper label={__('Align Content', 'eelfg')}>
+                        {(device) => (
+                            <ToggleGroupControl isBlock isDeselectable value={attributes[getKey('alignContent', device)]} onChange={(v) => setAttributes({ [getKey('alignContent', device)]: v ?? '' })} __next40pxDefaultSize __nextHasNoMarginBottom>
+                                <ToggleGroupControlOptionIcon value="stretch"       icon={iconAlignStretch}   label={__('Stretch', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="flex-start"    icon={iconAlignTop}       label={__('Top', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="center"        icon={iconAlignMiddle}    label={__('Middle', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="flex-end"      icon={iconAlignBottom}    label={__('Bottom', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="space-between" icon={iconJustifyBetween} label={__('Space between', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="space-around"  icon={iconJustifyAround}  label={__('Space around', 'eelfg')} />
+                            </ToggleGroupControl>
+                        )}
+                    </ResponsiveWrapper>
+                    <ResponsiveWrapper label={__('Wrap', 'eelfg')}>
+                        {(device) => (
+                            <ToggleGroupControl isBlock isDeselectable value={attributes[getKey('flexWrap', device)]} onChange={(v) => setAttributes({ [getKey('flexWrap', device)]: v ?? '' })} __next40pxDefaultSize __nextHasNoMarginBottom>
+                                <ToggleGroupControlOptionIcon value="nowrap"       icon={iconWrapNo}  label={__('No wrap', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="wrap"         icon={iconWrap}    label={__('Wrap', 'eelfg')} />
+                                <ToggleGroupControlOptionIcon value="wrap-reverse" icon={iconWrapRev} label={__('Wrap reverse', 'eelfg')} />
+                            </ToggleGroupControl>
+                        )}
+                    </ResponsiveWrapper>
+                    <ResponsiveWrapper label={__('Gap', 'eelfg')}>
+                        {(device) => (
+                            <UnitControl
+                                value={attributes[getKey('contentGap', device)]}
+                                onChange={(v) => setAttributes({ [getKey('contentGap', device)]: v })}
+                                __next40pxDefaultSize
+                            />
+                        )}
+                    </ResponsiveWrapper>
                 </PanelBody>
             </InspectorControls>
 

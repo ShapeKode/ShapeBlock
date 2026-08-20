@@ -100,9 +100,25 @@ if ( $vertical ) {
     $col_responsive['desktop']['align-self'] = $vertical;
 }
 
+// Content flexbox — the inner wrapper becomes a flex container ONLY when the user
+// sets at least one flex option (otherwise it stays normal block flow, so the empty
+// appender / stacked content is not disturbed).
+$inner_selector   = $selector . ' > .eelfg-column__inner';
+$inner_responsive = [ 'desktop' => [], 'tablet' => [], 'mobile' => [] ];
+\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $inner_responsive, 'flexDirection',  'flex-direction' );
+\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $inner_responsive, 'justifyContent', 'justify-content' );
+\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $inner_responsive, 'alignItems',     'align-items' );
+\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $inner_responsive, 'alignContent',   'align-content' );
+\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $inner_responsive, 'flexWrap',       'flex-wrap' );
+\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $inner_responsive, 'contentGap',     'gap' );
+if ( ! empty( $inner_responsive['desktop'] ) || ! empty( $inner_responsive['tablet'] ) || ! empty( $inner_responsive['mobile'] ) ) {
+    $inner_responsive['desktop'] = array_merge( [ 'display' => 'flex' ], $inner_responsive['desktop'] );
+}
+
 // Compile CSS.
 $style_handle = 'eelfg-column-style';
-$css = \EELFG\Frontend\Helper::generate_responsive_css( $selector, $col_responsive );
+$css  = \EELFG\Frontend\Helper::generate_responsive_css( $selector, $col_responsive );
+$css .= \EELFG\Frontend\Helper::generate_responsive_css( $inner_selector, $inner_responsive );
 
 wp_enqueue_style( $style_handle );
 \EELFG\Frontend\Helper::add_custom_style( $style_handle, $selector, $css, [] );

@@ -14,6 +14,13 @@ return array(
 		),
 		'supports' => array(
 			'html' => false,
+			'align' => array(
+				'left',
+				'center',
+				'right',
+				'wide',
+				'full'
+			),
 			'spacing' => array(
 				'padding' => array(
 					'top',

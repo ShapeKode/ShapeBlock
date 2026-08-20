@@ -26,6 +26,9 @@ return array(
 			'html' => false,
 			'anchor' => true,
 			'align' => array(
+				'left',
+				'center',
+				'right',
 				'wide',
 				'full'
 			),

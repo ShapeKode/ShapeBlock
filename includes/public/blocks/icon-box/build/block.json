@@ -17,6 +17,9 @@
   "supports": {
     "html": false,
     "align": [
+      "left",
+      "center",
+      "right",
       "wide",
       "full"
     ]

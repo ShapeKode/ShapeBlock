@@ -21,6 +21,9 @@ return array(
 		'supports' => array(
 			'html' => false,
 			'align' => array(
+				'left',
+				'center',
+				'right',
 				'wide',
 				'full'
 			),

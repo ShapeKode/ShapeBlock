@@ -22,6 +22,9 @@ return array(
 		'supports' => array(
 			'html' => false,
 			'align' => array(
+				'left',
+				'center',
+				'right',
 				'wide',
 				'full'
 			),
@@ -95,6 +98,10 @@ return array(
 			'colorMode' => array(
 				'type' => 'string',
 				'default' => 'custom'
+			),
+			'alignment' => array(
+				'type' => 'string',
+				'default' => 'left'
 			),
 			'buttonSize' => array(
 				'type' => 'string',

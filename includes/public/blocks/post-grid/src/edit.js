@@ -65,10 +65,7 @@ export default function Edit({ attributes, setAttributes }) {
 	const paginationOptions = applyFilters(
 		'easylementsforgutenberg.post-grid.pagination_options',
 		[
-			{ label: __('Numeric', 'easy-elements-for-gutenberg'), value: 'numeric' },
-			{ label: __('Numeric Ajax (Pro)', 'easy-elements-for-gutenberg'), value: 'numeric_ajax' },
-			{ label: __('Load More (Pro)', 'easy-elements-for-gutenberg'), value: 'load_more' },
-			{ label: __('Infinite Scroll (Pro)', 'easy-elements-for-gutenberg'), value: 'infinite_scroll' }
+			{ label: __('Numeric', 'easy-elements-for-gutenberg'), value: 'numeric' }
 		],
 		{ attributes, setAttributes }
 	);
@@ -246,7 +243,9 @@ export default function Edit({ attributes, setAttributes }) {
 						options={[
 							{ label: __('Default', 'easy-elements-for-gutenberg'), value: 'default' },
 							{ label: __('Style 1', 'easy-elements-for-gutenberg'), value: '1' },
-							{ label: __('Style 2 (Pro)', 'easy-elements-for-gutenberg'), value: '2' },
+							...(isLicenseActive ? [
+								{ label: __('Style 2', 'easy-elements-for-gutenberg'), value: '2' },
+							] : []),
 						]}
 						onChange={(value) => setAttributes({ gridStyle: value })}
 						__next40pxDefaultSize
@@ -526,13 +525,7 @@ export default function Edit({ attributes, setAttributes }) {
 					<SelectControl
 						label={__('Pagination Type', 'easy-elements-for-gutenberg')}
 						value={attributes.paginationType}
-						onChange={(value) => {
-							if (!isLicenseActive && !FREE_PAGINATION_VALUES.includes(value)) {
-								window.open(PRO_UPGRADE_URL, '_blank', 'noopener,noreferrer');
-								return;
-							}
-							setAttributes({ paginationType: value });
-						}}
+						onChange={(value) => setAttributes({ paginationType: value })}
 						options={paginationOptions}
 						__next40pxDefaultSize={true}
 						__nextHasNoMarginBottom={true}

@@ -10,7 +10,7 @@
 	"example": {},
 	"supports": {
 		"html": false,
-		"align": [ "wide", "full" ],
+		"align": [ "left", "center", "right", "wide", "full" ],
 		"spacing": {
 			"margin": [ "top", "bottom", "left", "right" ],
 			"padding": [ "top", "bottom", "left", "right" ]

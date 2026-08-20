@@ -10,7 +10,7 @@
 	"example": {},
 	"supports": {
 		"html": false,
-		"spacing": {
+		"align": [ "left", "center", "right", "wide", "full" ],		"spacing": {
 			"margin": [ "top", "bottom", "left", "right" ]
 		}
 	},

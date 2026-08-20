@@ -101,6 +101,78 @@
       "type": "string",
       "default": ""
     },
+    "flexDirection": {
+      "type": "string",
+      "default": ""
+    },
+    "flexDirectionTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "flexDirectionMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "justifyContent": {
+      "type": "string",
+      "default": ""
+    },
+    "justifyContentTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "justifyContentMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "alignItems": {
+      "type": "string",
+      "default": ""
+    },
+    "alignItemsTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "alignItemsMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "alignContent": {
+      "type": "string",
+      "default": ""
+    },
+    "alignContentTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "alignContentMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "flexWrap": {
+      "type": "string",
+      "default": ""
+    },
+    "flexWrapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "flexWrapMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "contentGap": {
+      "type": "string",
+      "default": ""
+    },
+    "contentGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "contentGapMobile": {
+      "type": "string",
+      "default": ""
+    },
     "padding": {
       "type": "object",
       "default": {

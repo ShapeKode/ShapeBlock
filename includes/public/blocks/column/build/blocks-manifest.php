@@ -106,6 +106,78 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'flexDirection' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'flexDirectionTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'flexDirectionMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'justifyContent' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'justifyContentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'justifyContentMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'alignItems' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'alignItemsTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'alignItemsMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'alignContent' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'alignContentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'alignContentMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'flexWrap' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'flexWrapTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'flexWrapMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'contentGap' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'contentGapTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'contentGapMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'padding' => array(
 				'type' => 'object',
 				'default' => array(
