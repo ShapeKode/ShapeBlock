@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $images = isset( $attributes['galleryImages'] ) && is_array( $attributes['galleryImages'] ) ? $attributes['galleryImages'] : [];
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-gallery-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-gallery-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $show_caption     = ! empty( $attributes['showCaption'] );
 $caption_source   = isset( $attributes['captionSource'] ) ? $attributes['captionSource'] : 'media';
@@ -30,28 +30,28 @@ $hover_text       = isset( $attributes['hoverText'] ) ? $attributes['hoverText']
 $hover_icon       = isset( $attributes['hoverIcon'] ) ? $attributes['hoverIcon'] : '';
 
 $block_wrap_attr = get_block_wrapper_attributes( array(
-	'class' => 'eelfg-block eelfg-gallery-block-wrap ' . $unique_id,
+	'class' => 'shapeblock-block shapeblock-gallery-block-wrap ' . $unique_id,
 ) );
 
 if ( empty( $block_wrap_attr ) ) {
-	$block_wrap_attr = 'class="eelfg-block eelfg-gallery-block-wrap ' . esc_attr( $unique_id ) . '"';
+	$block_wrap_attr = 'class="shapeblock-block shapeblock-gallery-block-wrap ' . esc_attr( $unique_id ) . '"';
 }
 
 // ---------------------------------------------------------------------------
 // Dynamic / inline styles (scoped to this block instance via $unique_id).
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-gallery-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-gallery-style';
-// NOTE: gallery element classes use the plugin's own "eelfg-" prefix below.
+$selector     = '.shapeblock-gallery-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-gallery-style';
+// NOTE: gallery element classes use the plugin's own "shapeblock-" prefix below.
 
 // Grid columns + gap (responsive).
 $c_desktop = isset( $attributes['columns'] ) && $attributes['columns'] !== '' ? (int) $attributes['columns'] : 4;
 $c_tablet  = isset( $attributes['columnsTablet'] ) && $attributes['columnsTablet'] !== '' ? (int) $attributes['columnsTablet'] : $c_desktop;
 $c_mobile  = isset( $attributes['columnsMobile'] ) && $attributes['columnsMobile'] !== '' ? (int) $attributes['columnsMobile'] : 1;
 
-$g_desktop = isset( $attributes['imageGap'] ) && $attributes['imageGap'] !== '' ? \EELFG\Frontend\Helper::ensure_unit( $attributes['imageGap'] ) : '10px';
-$g_tablet  = isset( $attributes['imageGapTablet'] ) && $attributes['imageGapTablet'] !== '' ? \EELFG\Frontend\Helper::ensure_unit( $attributes['imageGapTablet'] ) : '';
-$g_mobile  = isset( $attributes['imageGapMobile'] ) && $attributes['imageGapMobile'] !== '' ? \EELFG\Frontend\Helper::ensure_unit( $attributes['imageGapMobile'] ) : '';
+$g_desktop = isset( $attributes['imageGap'] ) && $attributes['imageGap'] !== '' ? \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['imageGap'] ) : '10px';
+$g_tablet  = isset( $attributes['imageGapTablet'] ) && $attributes['imageGapTablet'] !== '' ? \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['imageGapTablet'] ) : '';
+$g_mobile  = isset( $attributes['imageGapMobile'] ) && $attributes['imageGapMobile'] !== '' ? \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['imageGapMobile'] ) : '';
 
 $grid_responsive = [
 	'desktop' => [ 'grid-template-columns' => 'repeat(' . $c_desktop . ', 1fr)', 'gap' => $g_desktop ],
@@ -65,12 +65,12 @@ if ( $g_mobile !== '' ) {
 	$grid_responsive['mobile']['gap'] = $g_mobile;
 }
 
-$full_responsive_css = \EELFG\Frontend\Helper::generate_responsive_css( $selector . ' .eelfg-gallery-grid', $grid_responsive );
+$full_responsive_css = \ShapeBlock\Frontend\Helper::generate_responsive_css( $selector . ' .shapeblock-gallery-grid', $grid_responsive );
 
 // Image: height + border radius.
 $image_styles = [];
 if ( ! empty( $attributes['imageHeight'] ) ) {
-	$image_styles['height']     = \EELFG\Frontend\Helper::ensure_unit( $attributes['imageHeight'] );
+	$image_styles['height']     = \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['imageHeight'] );
 	$image_styles['object-fit'] = 'cover';
 	$image_styles['width']      = '100%';
 }
@@ -78,16 +78,16 @@ if ( ! empty( $attributes['imageHeight'] ) ) {
 $image_radius_styles = [];
 $i_radius            = isset( $attributes['imageBorderRadius'] ) ? $attributes['imageBorderRadius'] : [];
 if ( ! empty( $i_radius['top'] ) ) {
-	$image_radius_styles['border-top-left-radius'] = \EELFG\Frontend\Helper::ensure_unit( $i_radius['top'] );
+	$image_radius_styles['border-top-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $i_radius['top'] );
 }
 if ( ! empty( $i_radius['right'] ) ) {
-	$image_radius_styles['border-top-right-radius'] = \EELFG\Frontend\Helper::ensure_unit( $i_radius['right'] );
+	$image_radius_styles['border-top-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $i_radius['right'] );
 }
 if ( ! empty( $i_radius['bottom'] ) ) {
-	$image_radius_styles['border-bottom-right-radius'] = \EELFG\Frontend\Helper::ensure_unit( $i_radius['bottom'] );
+	$image_radius_styles['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $i_radius['bottom'] );
 }
 if ( ! empty( $i_radius['left'] ) ) {
-	$image_radius_styles['border-bottom-left-radius'] = \EELFG\Frontend\Helper::ensure_unit( $i_radius['left'] );
+	$image_radius_styles['border-bottom-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $i_radius['left'] );
 }
 
 // Caption container.
@@ -118,7 +118,7 @@ if ( ! empty( $attributes['hoverIconColor'] ) ) {
 	$hover_icon_styles['color'] = $attributes['hoverIconColor'];
 }
 if ( ! empty( $attributes['hoverIconSize'] ) ) {
-	$hover_icon_styles['font-size'] = \EELFG\Frontend\Helper::ensure_unit( $attributes['hoverIconSize'] );
+	$hover_icon_styles['font-size'] = \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['hoverIconSize'] );
 }
 
 $hover_icon_svg_styles = [];
@@ -126,8 +126,8 @@ if ( ! empty( $attributes['hoverIconColor'] ) ) {
 	$hover_icon_svg_styles['fill'] = $attributes['hoverIconColor'];
 }
 if ( ! empty( $attributes['hoverIconSize'] ) ) {
-	$hover_icon_svg_styles['width']  = \EELFG\Frontend\Helper::ensure_unit( $attributes['hoverIconSize'] );
-	$hover_icon_svg_styles['height'] = \EELFG\Frontend\Helper::ensure_unit( $attributes['hoverIconSize'] );
+	$hover_icon_svg_styles['width']  = \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['hoverIconSize'] );
+	$hover_icon_svg_styles['height'] = \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['hoverIconSize'] );
 }
 
 $hover_text_styles = [];
@@ -136,15 +136,15 @@ if ( ! empty( $attributes['hoverTextColor'] ) ) {
 }
 
 wp_enqueue_style( $style_handle );
-\EELFG\Frontend\Helper::add_custom_style( $style_handle, $selector, $full_responsive_css, [
-	'.eelfg-gallery-item img'        => \EELFG\Frontend\Helper::get_inline_styles( $image_styles ),
-	'.eelfg-gallery-item img, .eelfg-gallery-item' => \EELFG\Frontend\Helper::get_inline_styles( $image_radius_styles ),
-	'.eelfg-gallery-caption'         => \EELFG\Frontend\Helper::get_inline_styles( $caption_styles ),
-	'.eelfg-gallery-description'     => \EELFG\Frontend\Helper::get_inline_styles( $description_styles ),
-	'.eelfg-hover-content'           => \EELFG\Frontend\Helper::get_inline_styles( $overlay_styles ),
-	'.eelfg-hover-icon i'            => \EELFG\Frontend\Helper::get_inline_styles( $hover_icon_styles ),
-	'.eelfg-hover-icon svg'          => \EELFG\Frontend\Helper::get_inline_styles( $hover_icon_svg_styles ),
-	'.eelfg-hover-text span'         => \EELFG\Frontend\Helper::get_inline_styles( $hover_text_styles ),
+\ShapeBlock\Frontend\Helper::add_custom_style( $style_handle, $selector, $full_responsive_css, [
+	'.shapeblock-gallery-item img'        => \ShapeBlock\Frontend\Helper::get_inline_styles( $image_styles ),
+	'.shapeblock-gallery-item img, .shapeblock-gallery-item' => \ShapeBlock\Frontend\Helper::get_inline_styles( $image_radius_styles ),
+	'.shapeblock-gallery-caption'         => \ShapeBlock\Frontend\Helper::get_inline_styles( $caption_styles ),
+	'.shapeblock-gallery-description'     => \ShapeBlock\Frontend\Helper::get_inline_styles( $description_styles ),
+	'.shapeblock-hover-content'           => \ShapeBlock\Frontend\Helper::get_inline_styles( $overlay_styles ),
+	'.shapeblock-hover-icon i'            => \ShapeBlock\Frontend\Helper::get_inline_styles( $hover_icon_styles ),
+	'.shapeblock-hover-icon svg'          => \ShapeBlock\Frontend\Helper::get_inline_styles( $hover_icon_svg_styles ),
+	'.shapeblock-hover-text span'         => \ShapeBlock\Frontend\Helper::get_inline_styles( $hover_text_styles ),
 ] );
 
 // ---------------------------------------------------------------------------
@@ -153,7 +153,7 @@ wp_enqueue_style( $style_handle );
 if ( empty( $images ) ) {
 	?>
 	<div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-		<p><?php esc_html_e( 'Please select images to display the gallery.', 'easy-elements-for-gutenberg' ); ?></p>
+		<p><?php esc_html_e( 'Please select images to display the gallery.', 'shapeblock' ); ?></p>
 	</div>
 	<?php
 	return;
@@ -184,10 +184,10 @@ if ( 'rand' === $order_by ) {
 	} );
 }
 
-$popup_class = $popup_enabled ? 'eelfg-popup-enabled' : '';
+$popup_class = $popup_enabled ? 'shapeblock-popup-enabled' : '';
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="eelfg-gallery-grid <?php echo esc_attr( $popup_class ); ?>">
+	<div class="shapeblock-gallery-grid <?php echo esc_attr( $popup_class ); ?>">
 		<?php
 		foreach ( $images as $index => $image ) :
 			$image_id  = isset( $image['id'] ) ? (int) $image['id'] : 0;
@@ -213,36 +213,36 @@ $popup_class = $popup_enabled ? 'eelfg-popup-enabled' : '';
 				$description = get_post_field( 'post_content', $image_id );
 			}
 			?>
-			<div class="eelfg-gallery-item">
+			<div class="shapeblock-gallery-item">
 				<?php if ( $popup_enabled ) : ?>
-					<a href="<?php echo esc_url( $full_image ); ?>" class="eelfg-popup-link" data-index="<?php echo esc_attr( $index ); ?>">
+					<a href="<?php echo esc_url( $full_image ); ?>" class="shapeblock-popup-link" data-index="<?php echo esc_attr( $index ); ?>">
 				<?php else : ?>
 					<a href="<?php echo esc_url( $fallback ); ?>" target="_blank" rel="noopener">
 				<?php endif; ?>
 
-					<div class="eelfg-gallery-image-wrap">
+					<div class="shapeblock-gallery-image-wrap">
 						<img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $alt ); ?>">
 
 						<?php if ( 'text' === $hover_style && ! empty( $hover_text ) ) : ?>
-							<div class="eelfg-hover-content eelfg-hover-text">
+							<div class="shapeblock-hover-content shapeblock-hover-text">
 								<span><?php echo esc_html( $hover_text ); ?></span>
 							</div>
 						<?php elseif ( 'icon' === $hover_style && ! empty( $hover_icon ) && 'none' !== $hover_icon ) : ?>
-							<div class="eelfg-hover-content eelfg-hover-icon">
-								<i class="eelfg-icon <?php echo esc_attr( $hover_icon ); ?>" aria-hidden="true"></i>
+							<div class="shapeblock-hover-content shapeblock-hover-icon">
+								<i class="shapeblock-icon <?php echo esc_attr( $hover_icon ); ?>" aria-hidden="true"></i>
 							</div>
 						<?php endif; ?>
 					</div>
 				</a>
 
 				<?php if ( ! empty( $caption ) || ! empty( $description ) ) : ?>
-					<div class="eelfg-gallery-caption">
+					<div class="shapeblock-gallery-caption">
 						<?php
 						if ( ! empty( $caption ) ) {
 							echo esc_html( $caption );
 						}
 						if ( ! empty( $description ) ) {
-							echo '<div class="eelfg-gallery-description">' . wp_kses_post( $description ) . '</div>';
+							echo '<div class="shapeblock-gallery-description">' . wp_kses_post( $description ) . '</div>';
 						}
 						?>
 					</div>
@@ -252,11 +252,11 @@ $popup_class = $popup_enabled ? 'eelfg-popup-enabled' : '';
 	</div>
 
 	<?php if ( $popup_enabled ) : ?>
-		<div class="eelfg-lightbox-gallery">
-			<span class="eelfg-close">&times;</span>
-			<img class="eelfg-lightbox-image" src="" alt="">
-			<button class="eelfg-prev">&#10094;</button>
-			<button class="eelfg-next">&#10095;</button>
+		<div class="shapeblock-lightbox-gallery">
+			<span class="shapeblock-close">&times;</span>
+			<img class="shapeblock-lightbox-image" src="" alt="">
+			<button class="shapeblock-prev">&#10094;</button>
+			<button class="shapeblock-next">&#10095;</button>
 		</div>
 	<?php endif; ?>
 </div>

@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/social-icon',
+		'name' => 'shapeblock/social-icon',
 		'version' => '0.1.0',
 		'title' => 'Social Icon',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'A row of linked social icons with per-icon or global colors, hover states and full button styling.',
 		'keywords' => array(
 			'social',
@@ -27,23 +27,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'render' => 'file:./render.php',
 		'attributes' => array(
@@ -59,7 +45,7 @@ return array(
 						'linkUrl' => '#',
 						'isExternal' => false,
 						'nofollow' => false,
-						'icon' => 'eelfg-icon-logo-facebook',
+						'icon' => 'shapeblock-icon-logo-facebook',
 						'bgColor' => '#1877F2',
 						'bgGradient' => '',
 						'iconColor' => '#ffffff',
@@ -72,7 +58,7 @@ return array(
 						'linkUrl' => '#',
 						'isExternal' => false,
 						'nofollow' => false,
-						'icon' => 'eelfg-icon-logo-twitter',
+						'icon' => 'shapeblock-icon-logo-twitter',
 						'bgColor' => '#1DA1F2',
 						'bgGradient' => '',
 						'iconColor' => '#ffffff',
@@ -85,7 +71,7 @@ return array(
 						'linkUrl' => '#',
 						'isExternal' => false,
 						'nofollow' => false,
-						'icon' => 'eelfg-icon-logo-instagram',
+						'icon' => 'shapeblock-icon-logo-instagram',
 						'bgColor' => '#E4405F',
 						'bgGradient' => '',
 						'iconColor' => '#ffffff',
@@ -97,19 +83,43 @@ return array(
 			),
 			'colorMode' => array(
 				'type' => 'string',
-				'default' => 'custom'
+				'default' => 'global'
 			),
 			'alignment' => array(
 				'type' => 'string',
 				'default' => 'left'
 			),
+			'alignmentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'alignmentMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'buttonSize' => array(
 				'type' => 'string',
 				'default' => '45'
 			),
+			'buttonSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'buttonSizeMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'buttonSpacing' => array(
 				'type' => 'string',
 				'default' => '10'
+			),
+			'buttonSpacingTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'buttonSpacingMobile' => array(
+				'type' => 'string',
+				'default' => ''
 			),
 			'buttonRadius' => array(
 				'type' => 'object',
@@ -150,9 +160,17 @@ return array(
 				'type' => 'string',
 				'default' => '18'
 			),
-			'gBgColor' => array(
+			'iconSizeTablet' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'iconSizeMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'gBgColor' => array(
+				'type' => 'string',
+				'default' => '#121212'
 			),
 			'gBgGradient' => array(
 				'type' => 'string',
@@ -160,7 +178,7 @@ return array(
 			),
 			'gHoverBgColor' => array(
 				'type' => 'string',
-				'default' => ''
+				'default' => '#1f2937'
 			),
 			'gHoverBgGradient' => array(
 				'type' => 'string',
@@ -168,11 +186,23 @@ return array(
 			),
 			'gIconColor' => array(
 				'type' => 'string',
-				'default' => ''
+				'default' => '#ffffff'
 			),
 			'gHoverIconColor' => array(
 				'type' => 'string',
-				'default' => ''
+				'default' => '#ffffff'
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

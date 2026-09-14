@@ -6,7 +6,7 @@ import Edit from './edit';
 import save from './save';
 import metadata from './block.json';
 
-const eelfgIcon = (
+const shapeblockIcon = (
 	<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
 		<circle cx="24" cy="28" r="10" fill="#a216ff" />
 		<rect x="42" y="22" width="44" height="6" rx="3" fill="#a216ff" />
@@ -18,7 +18,7 @@ const eelfgIcon = (
 );
 
 registerBlockType(metadata.name, {
-	icon: eelfgIcon,
+	icon: shapeblockIcon,
 	edit: Edit,
 	save,
 });

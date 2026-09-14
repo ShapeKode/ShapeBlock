@@ -1,10 +1,10 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "easy-elements-for-gutenberg/icon-list",
+	"name": "shapeblock/icon-list",
 	"version": "0.1.0",
 	"title": "Icon List",
-	"category": "easy-elements-for-gutenberg",
+	"category": "shapeblock",
 	"description": "A vertical list of items with icon, number or image, title, description and optional connector.",
 	"keywords": [ "icon", "list", "feature", "steps", "service" ],
 	"example": {},
@@ -12,7 +12,7 @@
 		"html": false,
 		"align": [ "left", "center", "right", "wide", "full" ]
 	},
-	"textdomain": "easy-elements-for-gutenberg",
+	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php",
 	"attributes": {
@@ -20,9 +20,9 @@
 		"features": {
 			"type": "array",
 			"default": [
-				{ "icon": "eelfg-icon-favorite", "title": "Unlimited bandwidth" },
-				{ "icon": "eelfg-icon-favorite", "title": "Free SSL certificate" },
-				{ "icon": "eelfg-icon-favorite", "title": "24/7 expert support" }
+				{ "icon": "shapeblock-icon-favorite", "title": "Unlimited bandwidth" },
+				{ "icon": "shapeblock-icon-favorite", "title": "Free SSL certificate" },
+				{ "icon": "shapeblock-icon-favorite", "title": "24/7 expert support" }
 			]
 		},
 		"feaDir": { "type": "string", "default": "left" },
@@ -80,7 +80,6 @@
 		"iconBoxSize": { "type": "string", "default": "" },
 		"iconBoxSizeTablet": { "type": "string", "default": "" },
 		"iconBoxSizeMobile": { "type": "string", "default": "" },
-		"iconAlignment": { "type": "string", "default": "center" },
 		"iconShadow": { "type": "object", "default": { "x": 0, "y": 0, "b": 0, "s": 0, "c": "rgba(0, 0, 0, 0)" } },
 		"iconBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"iconRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
@@ -96,6 +95,9 @@
 		"descColor": { "type": "string", "default": "" },
 		"descTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
 		"descTypographyTablet": { "type": "object", "default": {} },
-		"descTypographyMobile": { "type": "object", "default": {} }
-	}
+		"descTypographyMobile": { "type": "object", "default": {} },
+	"hideDesktop": { "type": "boolean", "default": false },
+	"hideTablet": { "type": "boolean", "default": false },
+	"hideMobile": { "type": "boolean", "default": false }
+}
 }

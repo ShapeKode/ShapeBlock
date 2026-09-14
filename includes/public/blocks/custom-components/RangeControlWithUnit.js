@@ -8,7 +8,7 @@ const RangeControlWithUnit = ({
     attributes,
     setAttributes,
     attributeKey,
-    label = __('Size', 'easy-elements-for-gutenberg'),
+    label = __('Size', 'shapeblock'),
     units = ['px', '%', 'em', 'rem', 'vw', 'vh'],
     min,
     max,
@@ -53,7 +53,7 @@ const RangeControlWithUnit = ({
     const currentSettings = getSettings(unit);
 
     return (
-        <div className="easy-elements-for-gutenberg-range-control-with-unit" style={{ marginBottom: '24px' }}>
+        <div className="shapeblock-range-control-with-unit" style={{ marginBottom: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                 <span className="components-base-control__label" style={{ marginBottom: 0, marginRight: '10px' }}>{label}</span>
                 <div style={{ width: '80px' }}>

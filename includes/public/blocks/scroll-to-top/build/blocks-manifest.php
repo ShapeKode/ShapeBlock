@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/scroll-to-top',
+		'name' => 'shapeblock/scroll-to-top',
 		'version' => '0.1.0',
 		'title' => 'Scroll Top',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'A floating scroll-to-top button that appears after scrolling and smoothly returns to the top.',
 		'keywords' => array(
 			'scroll',
@@ -26,17 +26,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
@@ -47,7 +39,7 @@ return array(
 			),
 			'scrollIcon' => array(
 				'type' => 'string',
-				'default' => 'eelfg-icon-arrow-up'
+				'default' => 'shapeblock-icon-arrow-up'
 			),
 			'position' => array(
 				'type' => 'string',
@@ -69,7 +61,23 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'buttonSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'buttonSizeMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'iconSize' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconSizeMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -112,6 +120,24 @@ return array(
 				'default' => array(
 					
 				)
+			),
+			'sttPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'sttPaddingMobile' => array(
+				'type' => 'object'
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

@@ -10,14 +10,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Mirrors the markup produced by the Elementor "Button" widget
  * (easy-elements/widgets/button/button.php) so the shared CSS applies
- * identically on the front end. Element classes use this plugin's "eelfg-" prefix.
+ * identically on the front end. Element classes use this plugin's "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-button-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-button-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $text          = isset( $attributes['buttonText'] ) ? $attributes['buttonText'] : '';
 $url           = ! empty( $attributes['buttonUrl'] ) ? $attributes['buttonUrl'] : '#';
@@ -39,29 +39,29 @@ if ( $nofollow ) {
 }
 $rel_attr = ! empty( $rel ) ? implode( ' ', $rel ) : '';
 
-$button_classes = [ 'eelfg-button' ];
+$button_classes = [ 'shapeblock-button' ];
 if ( ! empty( $button_type ) ) {
-	$button_classes[] = 'eelfg-button-' . $button_type;
+	$button_classes[] = 'shapeblock-button-' . $button_type;
 }
 if ( $show_gradient ) {
-	$button_classes[] = 'eelfg-button-gradient';
+	$button_classes[] = 'shapeblock-button-gradient';
 }
 if ( $border_grad ) {
-	$button_classes[] = 'eelfg-button-border-gradient';
+	$button_classes[] = 'shapeblock-button-border-gradient';
 }
 
 $block_wrap_attr = get_block_wrapper_attributes( array(
-	'class' => 'eelfg-block eelfg-button-block-wrap ' . $unique_id,
+	'class' => 'shapeblock-block shapeblock-button-block-wrap ' . $unique_id,
 ) );
 if ( empty( $block_wrap_attr ) ) {
-	$block_wrap_attr = 'class="eelfg-block eelfg-button-block-wrap ' . esc_attr( $unique_id ) . '"';
+	$block_wrap_attr = 'class="shapeblock-block shapeblock-button-block-wrap ' . esc_attr( $unique_id ) . '"';
 }
 
 // ---------------------------------------------------------------------------
 // Inline styles (scoped to this block instance via $unique_id).
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-button-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-button-style';
+$selector     = '.shapeblock-button-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-button-style';
 
 $typo = function ( $obj ) use ( $H ) {
 	$out = [];
@@ -75,6 +75,7 @@ $typo = function ( $obj ) use ( $H ) {
 	if ( ! empty( $obj['textTransform'] ) ) $out['text-transform'] = $obj['textTransform'];
 	if ( ! empty( $obj['lineHeight'] ) ) $out['line-height'] = $obj['lineHeight'];
 	if ( ! empty( $obj['letterSpacing'] ) ) $out['letter-spacing'] = $H::ensure_unit( $obj['letterSpacing'] );
+	if ( ! empty( $obj['textDecoration'] ) ) $out['text-decoration'] = $obj['textDecoration'];
 	return $out;
 };
 
@@ -132,14 +133,14 @@ if ( ! empty( $attributes['buttonBorderHover'] ) ) $button_hover = array_merge( 
 // Gradient CSS variables.
 $gradient_vars = [];
 if ( $show_gradient ) {
-	if ( ! empty( $attributes['gradient1'] ) ) $gradient_vars['--eelfg-gradient-1'] = $attributes['gradient1'];
-	if ( ! empty( $attributes['gradient2'] ) ) $gradient_vars['--eelfg-gradient-2'] = $attributes['gradient2'];
-	if ( ! empty( $attributes['gradient3'] ) ) $gradient_vars['--eelfg-gradient-3'] = $attributes['gradient3'];
+	if ( ! empty( $attributes['gradient1'] ) ) $gradient_vars['--shapeblock-gradient-1'] = $attributes['gradient1'];
+	if ( ! empty( $attributes['gradient2'] ) ) $gradient_vars['--shapeblock-gradient-2'] = $attributes['gradient2'];
+	if ( ! empty( $attributes['gradient3'] ) ) $gradient_vars['--shapeblock-gradient-3'] = $attributes['gradient3'];
 }
 $border_gradient_vars = [];
 if ( $border_grad ) {
-	if ( ! empty( $attributes['borderGradientColor1'] ) ) $border_gradient_vars['--eelfg-border-gradient-1'] = $attributes['borderGradientColor1'];
-	if ( ! empty( $attributes['borderGradientColor2'] ) ) $border_gradient_vars['--eelfg-border-gradient-2'] = $attributes['borderGradientColor2'];
+	if ( ! empty( $attributes['borderGradientColor1'] ) ) $border_gradient_vars['--shapeblock-border-gradient-1'] = $attributes['borderGradientColor1'];
+	if ( ! empty( $attributes['borderGradientColor2'] ) ) $border_gradient_vars['--shapeblock-border-gradient-2'] = $attributes['borderGradientColor2'];
 }
 
 // Icon spacing.
@@ -189,31 +190,86 @@ if ( isset( $attributes['iconRotationHover'] ) && '' !== $attributes['iconRotati
 	$icon_hover_rot['transform'] = 'rotate(' . $attributes['iconRotationHover'] . 'deg)';
 }
 
+// ---------------------------------------------------------------------------
+// Responsive (Tablet / Mobile) overrides. The desktop CSS above is unchanged;
+// these rules are emitted only when the matching per-device attribute is set,
+// so existing content renders identically.
+// ---------------------------------------------------------------------------
+$build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H ) {
+	$btn = $typo( $attributes[ 'buttonTypography' . $suffix ] ?? [] );
+	if ( ! empty( $attributes[ 'buttonAlignment' . $suffix ] ) ) $btn['justify-content'] = $attributes[ 'buttonAlignment' . $suffix ];
+	if ( isset( $attributes[ 'minWidth' . $suffix ] ) && '' !== $attributes[ 'minWidth' . $suffix ] ) $btn['min-width'] = $H::ensure_unit( $attributes[ 'minWidth' . $suffix ] );
+	$btn = array_merge( $btn, $dims( $attributes[ 'buttonPadding' . $suffix ] ?? [], 'padding' ), $dims( $attributes[ 'buttonMargin' . $suffix ] ?? [], 'margin' ) );
+
+	$icon_i   = [];
+	$icon_svg = [];
+	if ( isset( $attributes[ 'iconSize' . $suffix ] ) && '' !== $attributes[ 'iconSize' . $suffix ] ) {
+		$is = $H::ensure_unit( $attributes[ 'iconSize' . $suffix ] );
+		$icon_i['font-size'] = $is;
+		$icon_svg['width']   = $is;
+		$icon_svg['height']  = $is;
+	}
+
+	$box = [];
+	if ( isset( $attributes[ 'iconBoxWidth' . $suffix ] ) && '' !== $attributes[ 'iconBoxWidth' . $suffix ] ) $box['width'] = $H::ensure_unit( $attributes[ 'iconBoxWidth' . $suffix ] );
+	if ( isset( $attributes[ 'iconBoxHeight' . $suffix ] ) && '' !== $attributes[ 'iconBoxHeight' . $suffix ] ) $box['height'] = $H::ensure_unit( $attributes[ 'iconBoxHeight' . $suffix ] );
+
+	$before = $box;
+	$after  = $box;
+	if ( isset( $attributes[ 'iconSpacing' . $suffix ] ) && '' !== $attributes[ 'iconSpacing' . $suffix ] ) {
+		$sp = $H::ensure_unit( $attributes[ 'iconSpacing' . $suffix ] );
+		$before['margin-right'] = $sp;
+		$after['margin-left']   = $sp;
+		$after['margin-right']  = '0';
+	}
+
+	return [
+		'.shapeblock-button'                           => $btn,
+		'.shapeblock-button i'                         => $icon_i,
+		'.shapeblock-button svg'                       => $icon_svg,
+		'.shapeblock-button .shapeblock-button-icon-before' => $before,
+		'.shapeblock-button .shapeblock-button-icon-after'  => $after,
+	];
+};
+$dev_data     = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
+$resp_css     = '';
+foreach ( [ '.shapeblock-button', '.shapeblock-button i', '.shapeblock-button svg', '.shapeblock-button .shapeblock-button-icon-before', '.shapeblock-button .shapeblock-button-icon-after' ] as $sub_sel ) {
+	$rdata = [];
+	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
+			$rdata[ $device_key ] = $dev_data[ $suffix ][ $sub_sel ];
+		}
+	}
+	if ( ! empty( $rdata ) ) {
+		$resp_css .= $H::generate_responsive_css( $selector . ' ' . $sub_sel, $rdata );
+	}
+}
+
 wp_enqueue_style( $style_handle );
-$H::add_custom_style( $style_handle, $selector, '', [
-	'.eelfg-button'                                    => $H::get_inline_styles( $button_styles ),
-	'.eelfg-button:hover'                              => $H::get_inline_styles( $button_hover ),
-	'.eelfg-button-gradient'                           => $H::get_inline_styles( $gradient_vars ),
-	'.eelfg-button-border-gradient'                    => $H::get_inline_styles( $border_gradient_vars ),
-	'.eelfg-button .eelfg-button-icon-before'          => $H::get_inline_styles( array_merge( $icon_before, $icon_box_styles ) ),
-	'.eelfg-button .eelfg-button-icon-after'           => $H::get_inline_styles( array_merge( $icon_after, $icon_box_styles ) ),
-	'.eelfg-button i'                                  => $H::get_inline_styles( array_merge( $icon_color_styles, $icon_i_styles ) ),
-	'.eelfg-button svg'                                => $H::get_inline_styles( array_merge( $icon_fill_styles, $icon_svg_styles ) ),
-	'.eelfg-button:hover i'                            => $H::get_inline_styles( array_merge( $icon_hover_color, $icon_hover_rot ) ),
-	'.eelfg-button:hover svg'                          => $H::get_inline_styles( array_merge( $icon_hover_fill, $icon_hover_rot ) ),
-	'.eelfg-button:hover .eelfg-button-icon-before, ' . $selector . ' .eelfg-button:hover .eelfg-button-icon-after' => $H::get_inline_styles( $icon_hover_bg ),
+$H::add_custom_style( $style_handle, $selector, $resp_css, [
+	'.shapeblock-button'                                    => $H::get_inline_styles( $button_styles ),
+	'.shapeblock-button:hover'                              => $H::get_inline_styles( $button_hover ),
+	'.shapeblock-button-gradient'                           => $H::get_inline_styles( $gradient_vars ),
+	'.shapeblock-button-border-gradient'                    => $H::get_inline_styles( $border_gradient_vars ),
+	'.shapeblock-button .shapeblock-button-icon-before'          => $H::get_inline_styles( array_merge( $icon_before, $icon_box_styles ) ),
+	'.shapeblock-button .shapeblock-button-icon-after'           => $H::get_inline_styles( array_merge( $icon_after, $icon_box_styles ) ),
+	'.shapeblock-button i'                                  => $H::get_inline_styles( array_merge( $icon_color_styles, $icon_i_styles ) ),
+	'.shapeblock-button svg'                                => $H::get_inline_styles( array_merge( $icon_fill_styles, $icon_svg_styles ) ),
+	'.shapeblock-button:hover i'                            => $H::get_inline_styles( array_merge( $icon_hover_color, $icon_hover_rot ) ),
+	'.shapeblock-button:hover svg'                          => $H::get_inline_styles( array_merge( $icon_hover_fill, $icon_hover_rot ) ),
+	'.shapeblock-button:hover .shapeblock-button-icon-before, ' . $selector . ' .shapeblock-button:hover .shapeblock-button-icon-after' => $H::get_inline_styles( $icon_hover_bg ),
 ] );
 
-$icon_html = ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="eelfg-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';
+$icon_html = ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<a href="<?php echo esc_url( $url ); ?>" class="<?php echo esc_attr( implode( ' ', $button_classes ) ); ?>" target="<?php echo esc_attr( $target ); ?>"<?php echo $rel_attr ? ' rel="' . esc_attr( $rel_attr ) . '"' : ''; ?>>
 		<?php if ( $icon_html && 'before' === $icon_position ) : ?>
-			<span class="eelfg-button-icon-before"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?></span>
+			<span class="shapeblock-button-icon-before"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?></span>
 		<?php endif; ?>
-		<span class="eelfg-button-text"><?php echo esc_html( $text ); ?></span>
+		<span class="shapeblock-button-text"><?php echo esc_html( $text ); ?></span>
 		<?php if ( $icon_html && 'after' === $icon_position ) : ?>
-			<span class="eelfg-button-icon-after"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?></span>
+			<span class="shapeblock-button-icon-after"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?></span>
 		<?php endif; ?>
 	</a>
 </div>

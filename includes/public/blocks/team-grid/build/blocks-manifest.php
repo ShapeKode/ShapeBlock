@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/team-grid',
+		'name' => 'shapeblock/team-grid',
 		'version' => '0.1.0',
 		'title' => 'Team Member',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'A team member card with 5 skins, social icons, contact info and an optional popup.',
 		'keywords' => array(
 			'team',
@@ -27,23 +27,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
@@ -65,10 +51,6 @@ return array(
 				'default' => array(
 					
 				)
-			),
-			'imageSize' => array(
-				'type' => 'string',
-				'default' => 'full'
 			),
 			'name' => array(
 				'type' => 'string',
@@ -126,10 +108,6 @@ return array(
 				'type' => 'string',
 				'default' => 'inside'
 			),
-			'fetchpriority' => array(
-				'type' => 'string',
-				'default' => 'low'
-			),
 			'imageOverlayColor' => array(
 				'type' => 'string',
 				'default' => ''
@@ -137,14 +115,6 @@ return array(
 			'imageOverlayGradient' => array(
 				'type' => 'string',
 				'default' => ''
-			),
-			'disableImageScale' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
-			'disableSocialLift' => array(
-				'type' => 'boolean',
-				'default' => false
 			),
 			'showSocialIcon' => array(
 				'type' => 'boolean',
@@ -183,7 +153,7 @@ return array(
 				'default' => array(
 					array(
 						'url' => '#',
-						'icon' => 'eelfg-icon-facebook-f'
+						'icon' => 'shapeblock-icon-facebook-f'
 					)
 				)
 			),
@@ -196,6 +166,12 @@ return array(
 				'default' => ''
 			),
 			'itemPadding' => array(
+				'type' => 'object'
+			),
+			'itemPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'itemPaddingMobile' => array(
 				'type' => 'object'
 			),
 			'itemBorderRadius' => array(
@@ -233,7 +209,23 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'teamContentAlignmentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'teamContentAlignmentMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'imageWidth' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'imageWidthTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'imageWidthMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -241,7 +233,21 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'imageHeightStyleTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'imageHeightStyleMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'imagePadding' => array(
+				'type' => 'object'
+			),
+			'imagePaddingTablet' => array(
+				'type' => 'object'
+			),
+			'imagePaddingMobile' => array(
 				'type' => 'object'
 			),
 			'imageStyleRadius' => array(
@@ -258,6 +264,14 @@ return array(
 				'default' => ''
 			),
 			'imageBelowHeight' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'imageBelowHeightTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'imageBelowHeightMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -281,7 +295,19 @@ return array(
 			'wrapPadding' => array(
 				'type' => 'object'
 			),
+			'wrapPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'wrapPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'wrapMargin' => array(
+				'type' => 'object'
+			),
+			'wrapMarginTablet' => array(
+				'type' => 'object'
+			),
+			'wrapMarginMobile' => array(
 				'type' => 'object'
 			),
 			'areaBorderRadius' => array(
@@ -345,6 +371,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'nameTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'nameTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'namePadding' => array(
 				'type' => 'object'
 			),
@@ -364,7 +402,27 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'designationTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'designationTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'contactGap' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'contactGapTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'contactGapMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -404,6 +462,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'contactTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'contactTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'contactItemRadius' => array(
 				'type' => 'object',
 				'default' => array(
@@ -432,7 +502,23 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'contactIconSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'contactIconSizeMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'contactIconBoxSize' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'contactIconBoxSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'contactIconBoxSizeMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -459,6 +545,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'teamDescriptionTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'teamDescriptionTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'teamDescriptionMargin' => array(
@@ -507,6 +605,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'descTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'descTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'descPadding' => array(
 				'type' => 'object'
 			),
@@ -538,11 +648,39 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'sIconTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'sIconTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'sIconGap' => array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'sIconGapTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'sIconGapMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'sIconButtonSize' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'sIconButtonSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'sIconButtonSizeMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -558,6 +696,12 @@ return array(
 			'sIconAreaPadding' => array(
 				'type' => 'object'
 			),
+			'sIconAreaPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'sIconAreaPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'socialItemBorder' => array(
 				'type' => 'object',
 				'default' => array(
@@ -567,6 +711,14 @@ return array(
 				)
 			),
 			'teamSocialIconAlignment' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'teamSocialIconAlignmentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'teamSocialIconAlignmentMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -600,6 +752,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'popupNameTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'popupNameTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'popupDesignationColor' => array(
 				'type' => 'string',
 				'default' => ''
@@ -614,6 +778,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'popupDesignationTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'popupDesignationTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'popupDetailsColor' => array(
@@ -632,9 +808,33 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'popupDetailsTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'popupDetailsTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'popupCloseColor' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/social-share',
+		'name' => 'shapeblock/social-share',
 		'version' => '0.1.0',
 		'title' => 'Social Share',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'Social share buttons for the current page — Facebook, X, LinkedIn, WhatsApp, copy link and more.',
 		'keywords' => array(
 			'social',
@@ -26,23 +26,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
@@ -100,6 +86,14 @@ return array(
 				'type' => 'string',
 				'default' => '18'
 			),
+			'iconSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconSizeMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'iconBgColor' => array(
 				'type' => 'string',
 				'default' => ''
@@ -116,7 +110,23 @@ return array(
 				'type' => 'string',
 				'default' => '45'
 			),
+			'buttonSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'buttonSizeMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'buttonSpacing' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'buttonSpacingTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'buttonSpacingMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -146,6 +156,18 @@ return array(
 					's' => 0,
 					'c' => 'rgba(0, 0, 0, 0)'
 				)
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

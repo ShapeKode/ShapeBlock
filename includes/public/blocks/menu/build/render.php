@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * with any theme. $attributes, $content and $block come from register_block_type().
  */
 
-if ( ! function_exists( 'eelfg_menu_icon_svg' ) ) {
+if ( ! function_exists( 'shapeblock_menu_icon_svg' ) ) {
 	/**
 	 * Return fixed inline SVG markup for a named menu icon ( '' if unknown ).
 	 * The markup is a hard-coded constant ( no user input ), so it is safe to echo.
@@ -20,8 +20,8 @@ if ( ! function_exists( 'eelfg_menu_icon_svg' ) ) {
 	 * @param string $key Icon key.
 	 * @return string SVG markup.
 	 */
-	function eelfg_menu_icon_svg( $key ) {
-		$open = '<svg class="eelfg-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"';
+	function shapeblock_menu_icon_svg( $key ) {
+		$open = '<svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"';
 		$line = ' fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
 		switch ( $key ) {
 			case 'caret':
@@ -63,14 +63,14 @@ if ( ! function_exists( 'eelfg_menu_icon_svg' ) ) {
 	}
 }
 
-if ( ! function_exists( 'eelfg_menu_len' ) ) {
+if ( ! function_exists( 'shapeblock_menu_len' ) ) {
 	/**
 	 * Allow only a simple CSS length ( keeps the generated inline CSS safe ). Empty if invalid.
 	 *
 	 * @param mixed $v Raw value.
 	 * @return string Safe length or ''.
 	 */
-	function eelfg_menu_len( $v ) {
+	function shapeblock_menu_len( $v ) {
 		$v = trim( (string) $v );
 		if ( '' === $v ) {
 			return '';
@@ -83,7 +83,7 @@ if ( ! function_exists( 'eelfg_menu_len' ) ) {
 	}
 }
 
-if ( ! function_exists( 'eelfg_menu_render_items' ) ) {
+if ( ! function_exists( 'shapeblock_menu_render_items' ) ) {
 	/**
 	 * Recursively render menu items to <li> markup.
 	 *
@@ -91,7 +91,7 @@ if ( ! function_exists( 'eelfg_menu_render_items' ) ) {
 	 * @param string $dropdown_icon Dropdown-indicator choice ( caret|chevron|arrow|plus|none ).
 	 * @return string Escaped HTML.
 	 */
-	function eelfg_menu_render_items( $items, $dropdown_icon = 'caret' ) {
+	function shapeblock_menu_render_items( $items, $dropdown_icon = 'caret' ) {
 		if ( empty( $items ) || ! is_array( $items ) ) {
 			return '';
 		}
@@ -147,11 +147,11 @@ if ( ! function_exists( 'eelfg_menu_render_items' ) ) {
 			// Per-item icon markup: a built-in SVG icon or the user's uploaded image.
 			$icon_html = '';
 			if ( 'image' === $icon_type && '' !== $icon_url ) {
-				$icon_html = '<span class="eelfg-menu-item-icon eelfg-menu-item-icon--' . $icon_side . '" aria-hidden="true"><img class="eelfg-menu-item-img" src="' . esc_url( $icon_url ) . '" alt="" /></span>';
+				$icon_html = '<span class="shapeblock-menu-item-icon shapeblock-menu-item-icon--' . $icon_side . '" aria-hidden="true"><img class="shapeblock-menu-item-img" src="' . esc_url( $icon_url ) . '" alt="" /></span>';
 			} elseif ( 'icon' === $icon_type && '' !== $icon_name ) {
-				$svg = eelfg_menu_icon_svg( $icon_name );
+				$svg = shapeblock_menu_icon_svg( $icon_name );
 				if ( '' !== $svg ) {
-					$icon_html = '<span class="eelfg-menu-item-icon eelfg-menu-item-icon--' . $icon_side . '" aria-hidden="true">' . $svg . '</span>';
+					$icon_html = '<span class="shapeblock-menu-item-icon shapeblock-menu-item-icon--' . $icon_side . '" aria-hidden="true">' . $svg . '</span>';
 				}
 			}
 
@@ -165,9 +165,9 @@ if ( ! function_exists( 'eelfg_menu_render_items' ) ) {
 					'i'      => array(),
 				)
 			);
-			$text  = '<span class="eelfg-menu-text"><span class="eelfg-menu-label">' . $label_html . '</span>';
+			$text  = '<span class="shapeblock-menu-text"><span class="shapeblock-menu-label">' . $label_html . '</span>';
 			if ( '' !== trim( $desc ) ) {
-				$text .= '<span class="eelfg-menu-desc">' . esc_html( $desc ) . '</span>';
+				$text .= '<span class="shapeblock-menu-desc">' . esc_html( $desc ) . '</span>';
 			}
 			$text .= '</span>';
 
@@ -176,13 +176,13 @@ if ( ! function_exists( 'eelfg_menu_render_items' ) ) {
 			$html .= ( 'left' === $icon_side ) ? $icon_html . $text : $text . $icon_html;
 			// The dropdown arrow lives INSIDE the link so it sits inline with the label.
 			if ( $has_children ) {
-				$svg   = ( '' !== $dd_key ) ? eelfg_menu_icon_svg( $dd_key ) : '';
-				$html .= '<span class="eelfg-menu-sub-toggle eelfg-menu-sub-toggle--' . sanitize_html_class( $dd_mod ) . '" aria-hidden="true">' . $svg . '</span>';
+				$svg   = ( '' !== $dd_key ) ? shapeblock_menu_icon_svg( $dd_key ) : '';
+				$html .= '<span class="shapeblock-menu-sub-toggle shapeblock-menu-sub-toggle--' . sanitize_html_class( $dd_mod ) . '" aria-hidden="true">' . $svg . '</span>';
 			}
 			$html .= '</a>';
 
 			if ( $has_children ) {
-				$html .= '<ul class="sub-menu">' . eelfg_menu_render_items( $children, $dropdown_icon ) . '</ul>';
+				$html .= '<ul class="sub-menu">' . shapeblock_menu_render_items( $children, $dropdown_icon ) . '</ul>';
 			}
 
 			$html .= '</li>';
@@ -223,33 +223,33 @@ $drawer_bg = ! empty( $attributes['drawerBg'] ) ? $attributes['drawerBg'] : '#ff
 
 $is_editor = ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || is_admin();
 
-$list = eelfg_menu_render_items( $items, $dropdown_icon );
+$list = shapeblock_menu_render_items( $items, $dropdown_icon );
 
 if ( '' === $list ) {
 	if ( $is_editor ) {
-		echo '<p class="eelfg-menu-notice">' . esc_html__( 'Add menu items in the block settings.', 'easy-elements-for-gutenberg' ) . '</p>';
+		echo '<p class="shapeblock-menu-notice">' . esc_html__( 'Add menu items in the block settings.', 'shapeblock' ) . '</p>';
 	}
 	return;
 }
 
-$block_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : uniqid( 'eelfg-menu-' );
+$block_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( $attributes['blockId'] ) : uniqid( 'shapeblock-menu-' );
 
 // Per-instance styles ( gap + colours + responsive ). Every value is escaped before printing.
 $css      = '';
 $selector = '#' . $block_id;
 
 // Item gap — responsive ( per-device string attributes; itemGap is the desktop value ).
-$gap_desk = ( '' !== $item_gap ) ? eelfg_menu_len( $item_gap ) : '';
+$gap_desk = ( '' !== $item_gap ) ? shapeblock_menu_len( $item_gap ) : '';
 if ( '' !== $gap_desk ) {
-	$css .= $selector . ' .eelfg-menu-list{gap:' . $gap_desk . ';}';
+	$css .= $selector . ' .shapeblock-menu-list{gap:' . $gap_desk . ';}';
 }
-$gap_tab = isset( $attributes['gapTablet'] ) ? eelfg_menu_len( $attributes['gapTablet'] ) : '';
+$gap_tab = isset( $attributes['gapTablet'] ) ? shapeblock_menu_len( $attributes['gapTablet'] ) : '';
 if ( '' !== $gap_tab ) {
-	$css .= '@media (max-width:1024px){' . $selector . ' .eelfg-menu-list{gap:' . $gap_tab . ';}}';
+	$css .= '@media (max-width:1024px){' . $selector . ' .shapeblock-menu-list{gap:' . $gap_tab . ';}}';
 }
-$gap_mob = isset( $attributes['gapMobile'] ) ? eelfg_menu_len( $attributes['gapMobile'] ) : '';
+$gap_mob = isset( $attributes['gapMobile'] ) ? shapeblock_menu_len( $attributes['gapMobile'] ) : '';
 if ( '' !== $gap_mob ) {
-	$css .= '@media (max-width:767px){' . $selector . ' .eelfg-menu-list{gap:' . $gap_mob . ';}}';
+	$css .= '@media (max-width:767px){' . $selector . ' .shapeblock-menu-list{gap:' . $gap_mob . ';}}';
 }
 $has_any_gap = ( '' !== $gap_desk || '' !== $gap_tab || '' !== $gap_mob );
 
@@ -274,11 +274,11 @@ if ( isset( $font_stacks[ $font_family ] ) ) {
 	$safe_family = trim( preg_replace( '/[^A-Za-z0-9 ]/', '', $font_family ) );
 	if ( '' !== $safe_family ) {
 		$font_url = 'https://fonts.googleapis.com/css2?family=' . str_replace( '%20', '+', rawurlencode( $safe_family ) ) . ':wght@300;400;500;600;700&display=swap';
-		wp_enqueue_style( 'eelfg-menu-font-' . sanitize_title( $safe_family ), esc_url_raw( $font_url ), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External Google Fonts URL is versioned by Google.
+		wp_enqueue_style( 'shapeblock-menu-font-' . sanitize_title( $safe_family ), esc_url_raw( $font_url ), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External Google Fonts URL is versioned by Google.
 		$font_css .= 'font-family:"' . $safe_family . '",sans-serif;';
 	}
 }
-$font_size  = isset( $attributes['fontSize'] ) ? eelfg_menu_len( $attributes['fontSize'] ) : '';
+$font_size  = isset( $attributes['fontSize'] ) ? shapeblock_menu_len( $attributes['fontSize'] ) : '';
 if ( '' !== $font_size ) {
 	$font_css .= 'font-size:' . $font_size . ';';
 }
@@ -291,30 +291,30 @@ if ( in_array( $text_transform, array( 'none', 'uppercase', 'lowercase', 'capita
 	$font_css .= 'text-transform:' . $text_transform . ';';
 }
 if ( '' !== $font_css ) {
-	$css .= $selector . ' .eelfg-menu-list a{' . $font_css . '}';
+	$css .= $selector . ' .shapeblock-menu-list a{' . $font_css . '}';
 }
 
 // Responsive font size ( per-device ). fontSize above is the desktop value; these override it below.
-$fs_tab = isset( $attributes['fontSizeTablet'] ) ? eelfg_menu_len( $attributes['fontSizeTablet'] ) : '';
+$fs_tab = isset( $attributes['fontSizeTablet'] ) ? shapeblock_menu_len( $attributes['fontSizeTablet'] ) : '';
 if ( '' !== $fs_tab ) {
-	$css .= '@media (max-width:1024px){' . $selector . ' .eelfg-menu-list a{font-size:' . $fs_tab . ';}}';
+	$css .= '@media (max-width:1024px){' . $selector . ' .shapeblock-menu-list a{font-size:' . $fs_tab . ';}}';
 }
-$fs_mob = isset( $attributes['fontSizeMobile'] ) ? eelfg_menu_len( $attributes['fontSizeMobile'] ) : '';
+$fs_mob = isset( $attributes['fontSizeMobile'] ) ? shapeblock_menu_len( $attributes['fontSizeMobile'] ) : '';
 if ( '' !== $fs_mob ) {
-	$css .= '@media (max-width:767px){' . $selector . ' .eelfg-menu-list a{font-size:' . $fs_mob . ';}}';
+	$css .= '@media (max-width:767px){' . $selector . ' .shapeblock-menu-list a{font-size:' . $fs_mob . ';}}';
 }
 
 if ( ! empty( $attributes['textColor'] ) ) {
-	$css .= $selector . ' .eelfg-menu-list a{color:' . esc_attr( $attributes['textColor'] ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list a{color:' . esc_attr( $attributes['textColor'] ) . ';}';
 }
 if ( ! empty( $attributes['hoverColor'] ) ) {
-	$css .= $selector . ' .eelfg-menu-list a:hover,' . $selector . ' .eelfg-menu-list a:focus{color:' . esc_attr( $attributes['hoverColor'] ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list a:hover,' . $selector . ' .shapeblock-menu-list a:focus{color:' . esc_attr( $attributes['hoverColor'] ) . ';}';
 }
 if ( ! empty( $attributes['activeColor'] ) ) {
-	$css .= $selector . ' .eelfg-menu-list .current-menu-item > a{color:' . esc_attr( $attributes['activeColor'] ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list .current-menu-item > a{color:' . esc_attr( $attributes['activeColor'] ) . ';}';
 }
 if ( ! empty( $attributes['descriptionColor'] ) ) {
-	$css .= $selector . ' .eelfg-menu-desc{color:' . esc_attr( $attributes['descriptionColor'] ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-desc{color:' . esc_attr( $attributes['descriptionColor'] ) . ';}';
 }
 // Backgrounds prefer the gradient when set, otherwise the solid colour.
 $item_bg_n   = ! empty( $attributes['itemBgGradient'] ) ? $attributes['itemBgGradient'] : ( ! empty( $attributes['itemBgColor'] ) ? $attributes['itemBgColor'] : '' );
@@ -324,16 +324,16 @@ $dd_bg       = ! empty( $attributes['dropdownBgGradient'] ) ? $attributes['dropd
 $dd_hover_bg = ! empty( $attributes['dropdownHoverBgGradient'] ) ? $attributes['dropdownHoverBgGradient'] : ( ! empty( $attributes['dropdownHoverBg'] ) ? $attributes['dropdownHoverBg'] : '' );
 // Item background ( normal / hover / active ). Any background opts items into padded pills.
 if ( '' !== $item_bg_n || '' !== $item_bg_h || '' !== $item_bg_a ) {
-	$css .= $selector . ' .eelfg-menu-list > li > a{padding:8px 14px;border-radius:6px;}';
+	$css .= $selector . ' .shapeblock-menu-list > li > a{padding:8px 14px;border-radius:6px;}';
 }
 if ( '' !== $item_bg_n ) {
-	$css .= $selector . ' .eelfg-menu-list > li > a{background:' . esc_attr( $item_bg_n ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list > li > a{background:' . esc_attr( $item_bg_n ) . ';}';
 }
 if ( '' !== $item_bg_h ) {
-	$css .= $selector . ' .eelfg-menu-list > li > a:hover,' . $selector . ' .eelfg-menu-list > li > a:focus{background:' . esc_attr( $item_bg_h ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list > li > a:hover,' . $selector . ' .shapeblock-menu-list > li > a:focus{background:' . esc_attr( $item_bg_h ) . ';}';
 }
 if ( '' !== $item_bg_a ) {
-	$css .= $selector . ' .eelfg-menu-list > li.current-menu-item > a{background:' . esc_attr( $item_bg_a ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list > li.current-menu-item > a{background:' . esc_attr( $item_bg_a ) . ';}';
 }
 // Dropdown ( sub-menu ) colours.
 if ( '' !== $dd_bg ) {
@@ -349,13 +349,62 @@ if ( '' !== $dd_hover_bg ) {
 	$css .= $selector . ' .sub-menu a:hover,' . $selector . ' .sub-menu a:focus{background:' . esc_attr( $dd_hover_bg ) . ';}';
 }
 if ( ! empty( $attributes['toggleColor'] ) ) {
-	$css .= $selector . ' .eelfg-menu-toggle,' . $selector . ' .eelfg-menu-close{color:' . esc_attr( $attributes['toggleColor'] ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-toggle{color:' . esc_attr( $attributes['toggleColor'] ) . ';}';
+}
+
+// Hamburger button skin. The base stylesheet ships a transparent background and
+// `border:1px solid currentColor`, so each option below only overrides what the
+// user actually sets — leave them empty and the button looks exactly as before.
+$toggle_sel   = $selector . ' .shapeblock-menu-toggle';
+$toggle_hover = $toggle_sel . ':hover,' . $toggle_sel . ':focus';
+
+if ( ! empty( $attributes['toggleBg'] ) ) {
+	$css .= $toggle_sel . '{background:' . esc_attr( $attributes['toggleBg'] ) . ';}';
+}
+if ( ! empty( $attributes['toggleBorderColor'] ) ) {
+	$css .= $toggle_sel . '{border-color:' . esc_attr( $attributes['toggleBorderColor'] ) . ';}';
+}
+// Hover: colour drives the bars too, since they are painted with currentColor.
+if ( ! empty( $attributes['toggleColorHover'] ) ) {
+	$css .= $toggle_hover . '{color:' . esc_attr( $attributes['toggleColorHover'] ) . ';}';
+}
+if ( ! empty( $attributes['toggleBgHover'] ) ) {
+	$css .= $toggle_hover . '{background:' . esc_attr( $attributes['toggleBgHover'] ) . ';}';
+}
+if ( ! empty( $attributes['toggleBorderColorHover'] ) ) {
+	$css .= $toggle_hover . '{border-color:' . esc_attr( $attributes['toggleBorderColorHover'] ) . ';}';
+}
+
+// Drawer close button skin. Its icon colour used to be painted by toggleColor, so
+// when closeColor is left empty it still follows the hamburger — existing menus
+// keep the exact look they had. Every other close option stands on its own.
+$close_sel   = $selector . ' .shapeblock-menu-close';
+$close_hover = $close_sel . ':hover,' . $close_sel . ':focus';
+$close_color = '' !== $attributes['closeColor'] ? $attributes['closeColor'] : $attributes['toggleColor'];
+
+if ( ! empty( $close_color ) ) {
+	$css .= $close_sel . '{color:' . esc_attr( $close_color ) . ';}';
+}
+if ( ! empty( $attributes['closeBg'] ) ) {
+	$css .= $close_sel . '{background:' . esc_attr( $attributes['closeBg'] ) . ';}';
+}
+if ( ! empty( $attributes['closeBorderColor'] ) ) {
+	$css .= $close_sel . '{border-color:' . esc_attr( $attributes['closeBorderColor'] ) . ';}';
+}
+if ( ! empty( $attributes['closeColorHover'] ) ) {
+	$css .= $close_hover . '{color:' . esc_attr( $attributes['closeColorHover'] ) . ';}';
+}
+if ( ! empty( $attributes['closeBgHover'] ) ) {
+	$css .= $close_hover . '{background:' . esc_attr( $attributes['closeBgHover'] ) . ';}';
+}
+if ( ! empty( $attributes['closeBorderColorHover'] ) ) {
+	$css .= $close_hover . '{border-color:' . esc_attr( $attributes['closeBorderColorHover'] ) . ';}';
 }
 
 
 // Wrapping: allow menu items to wrap to multiple lines ( default ) or stay on one line.
 if ( ! $menu_wrap ) {
-	$css .= $selector . ' .eelfg-menu-list{flex-wrap:nowrap;}';
+	$css .= $selector . ' .shapeblock-menu-list{flex-wrap:nowrap;}';
 }
 
 // Overlay: turn the menu into an off-canvas drawer with a hamburger + backdrop.
@@ -366,21 +415,34 @@ if ( $mobile_on ) {
 	$bg_css = esc_attr( $drawer_bg );
 	$side   = $drawer_side; // 'left' or 'right', both safe literals.
 
+	// Where the hamburger button sits on the row. `display:flex` makes it a block
+	// box so the auto margins can push it; it stays inside $drawer so the rule is
+	// scoped exactly like the rest of the overlay CSS ( "always" = every screen,
+	// "mobile" = only below the breakpoint ).
+	$toggle_align = isset( $attributes['toggleAlign'] ) ? $attributes['toggleAlign'] : 'left';
+	if ( 'center' === $toggle_align ) {
+		$toggle_margin = 'margin-left:auto;margin-right:auto;';
+	} elseif ( 'right' === $toggle_align ) {
+		$toggle_margin = 'margin-left:auto;margin-right:0;';
+	} else {
+		$toggle_margin = 'margin-left:0;margin-right:auto;';
+	}
+
 	// The rules that make the menu an off-canvas drawer.
 	$drawer  = '';
-	$drawer .= $selector . ' .eelfg-menu-toggle{display:inline-flex;}';
-	$drawer .= $selector . ' .eelfg-menu-close{display:flex;}';
-	$drawer .= $selector . ' .eelfg-menu-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,0.5);opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0.3s ease;z-index:9998;}';
-	$drawer .= $selector . '.is-open .eelfg-menu-overlay{opacity:1;visibility:visible;}';
-	$drawer .= $selector . ' .eelfg-menu-panel{display:block;position:fixed;top:0;bottom:0;' . $side . ':0;width:' . $w_css . ';max-width:85vw;background:' . $bg_css . ';transform:translateX(' . $off . ');transition:transform 0.3s ease;z-index:9999;overflow-y:auto;padding:56px 22px 28px;}';
-	$drawer .= $selector . '.is-open .eelfg-menu-panel{transform:translateX(0);}';
-	$drawer .= $selector . ' .eelfg-menu-list{flex-direction:column;align-items:stretch;width:100%;' . ( $has_any_gap ? '' : 'gap:6px;' ) . '}';
-	$drawer .= $selector . ' .eelfg-menu-list li{position:relative;width:100%;}';
+	$drawer .= $selector . ' .shapeblock-menu-toggle{display:flex;' . $toggle_margin . '}';
+	$drawer .= $selector . ' .shapeblock-menu-close{display:flex;}';
+	$drawer .= $selector . ' .shapeblock-menu-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,0.5);opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0.3s ease;z-index:9998;}';
+	$drawer .= $selector . '.is-open .shapeblock-menu-overlay{opacity:1;visibility:visible;}';
+	$drawer .= $selector . ' .shapeblock-menu-panel{display:block;position:fixed;top:0;bottom:0;' . $side . ':0;width:' . $w_css . ';max-width:85vw;background:' . $bg_css . ';transform:translateX(' . $off . ');transition:transform 0.3s ease;z-index:9999;overflow-y:auto;padding:56px 22px 28px;}';
+	$drawer .= $selector . '.is-open .shapeblock-menu-panel{transform:translateX(0);}';
+	$drawer .= $selector . ' .shapeblock-menu-list{flex-direction:column;align-items:stretch;width:100%;' . ( $has_any_gap ? '' : 'gap:6px;' ) . '}';
+	$drawer .= $selector . ' .shapeblock-menu-list li{position:relative;width:100%;}';
 	// Every item ( link + sub-items ) fills the row, so the label sits left and the arrow far right.
-	$drawer .= $selector . ' .eelfg-menu-list a{display:flex;align-items:center;width:100%;padding:12px 14px;}';
-	$drawer .= $selector . ' .eelfg-menu-list .eelfg-menu-sub-toggle{flex:0 0 auto;margin-left:auto;}';
+	$drawer .= $selector . ' .shapeblock-menu-list a{display:flex;align-items:center;width:100%;padding:12px 14px;}';
+	$drawer .= $selector . ' .shapeblock-menu-list .shapeblock-menu-sub-toggle{flex:0 0 auto;margin-left:auto;}';
 	// Sub-menus drop down as an indented accordion inside the drawer ( no side fly-out ).
-	$drawer .= $selector . ' .eelfg-menu-list .sub-menu{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border-radius:0;min-width:0;width:100%;padding:0 0 0 14px;max-height:0;overflow:hidden;transition:max-height 0.35s ease;}';
+	$drawer .= $selector . ' .shapeblock-menu-list .sub-menu{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border-radius:0;min-width:0;width:100%;padding:0 0 0 14px;max-height:0;overflow:hidden;transition:max-height 0.35s ease;}';
 	$drawer .= $selector . ' .menu-item-has-children.is-sub-open > .sub-menu{max-height:1200px;}';
 
 	// Mobile-only colours ( override the desktop colours while the drawer is active ).
@@ -388,22 +450,22 @@ if ( $mobile_on ) {
 	$m_bg_h = ! empty( $attributes['mobileBgHoverGradient'] ) ? $attributes['mobileBgHoverGradient'] : ( ! empty( $attributes['mobileBgHoverColor'] ) ? $attributes['mobileBgHoverColor'] : '' );
 	$m_bg_a = ! empty( $attributes['mobileBgActiveGradient'] ) ? $attributes['mobileBgActiveGradient'] : ( ! empty( $attributes['mobileBgActiveColor'] ) ? $attributes['mobileBgActiveColor'] : '' );
 	if ( ! empty( $attributes['mobileTextColor'] ) ) {
-		$drawer .= $selector . ' .eelfg-menu-list a{color:' . esc_attr( $attributes['mobileTextColor'] ) . ';}';
+		$drawer .= $selector . ' .shapeblock-menu-list a{color:' . esc_attr( $attributes['mobileTextColor'] ) . ';}';
 	}
 	if ( ! empty( $attributes['mobileHoverColor'] ) ) {
-		$drawer .= $selector . ' .eelfg-menu-list a:hover,' . $selector . ' .eelfg-menu-list a:focus{color:' . esc_attr( $attributes['mobileHoverColor'] ) . ';}';
+		$drawer .= $selector . ' .shapeblock-menu-list a:hover,' . $selector . ' .shapeblock-menu-list a:focus{color:' . esc_attr( $attributes['mobileHoverColor'] ) . ';}';
 	}
 	if ( ! empty( $attributes['mobileActiveColor'] ) ) {
-		$drawer .= $selector . ' .eelfg-menu-list .current-menu-item > a{color:' . esc_attr( $attributes['mobileActiveColor'] ) . ';}';
+		$drawer .= $selector . ' .shapeblock-menu-list .current-menu-item > a{color:' . esc_attr( $attributes['mobileActiveColor'] ) . ';}';
 	}
 	if ( '' !== $m_bg_n ) {
-		$drawer .= $selector . ' .eelfg-menu-list > li > a{background:' . esc_attr( $m_bg_n ) . ';border-radius:6px;}';
+		$drawer .= $selector . ' .shapeblock-menu-list > li > a{background:' . esc_attr( $m_bg_n ) . ';border-radius:6px;}';
 	}
 	if ( '' !== $m_bg_h ) {
-		$drawer .= $selector . ' .eelfg-menu-list > li > a:hover,' . $selector . ' .eelfg-menu-list > li > a:focus{background:' . esc_attr( $m_bg_h ) . ';}';
+		$drawer .= $selector . ' .shapeblock-menu-list > li > a:hover,' . $selector . ' .shapeblock-menu-list > li > a:focus{background:' . esc_attr( $m_bg_h ) . ';}';
 	}
 	if ( '' !== $m_bg_a ) {
-		$drawer .= $selector . ' .eelfg-menu-list > li.current-menu-item > a{background:' . esc_attr( $m_bg_a ) . ';}';
+		$drawer .= $selector . ' .shapeblock-menu-list > li.current-menu-item > a{background:' . esc_attr( $m_bg_a ) . ';}';
 	}
 
 	if ( 'always' === $mobile_mode ) {
@@ -411,9 +473,9 @@ if ( $mobile_on ) {
 		$css .= $drawer;
 	} else {
 		// Desktop stays a normal menu; the drawer kicks in below the breakpoint.
-		$css .= $selector . ' .eelfg-menu-panel{display:contents;}';
-		$css .= $selector . ' .eelfg-menu-toggle,' . $selector . ' .eelfg-menu-close{display:none;}';
-		$css .= $selector . ' .eelfg-menu-overlay{display:none;}';
+		$css .= $selector . ' .shapeblock-menu-panel{display:contents;}';
+		$css .= $selector . ' .shapeblock-menu-toggle,' . $selector . ' .shapeblock-menu-close{display:none;}';
+		$css .= $selector . ' .shapeblock-menu-overlay{display:none;}';
 		$css .= '@media (max-width:' . (int) $breakpoint . 'px){' . $drawer . '}';
 	}
 }
@@ -421,28 +483,28 @@ if ( $mobile_on ) {
 $wrapper_attributes = get_block_wrapper_attributes(
 	array(
 		'id'              => $block_id,
-		'class'           => 'eelfg-menu eelfg-menu--' . $layout . ' eelfg-menu-align-' . $alignment
-			. ( $mobile_on ? ' eelfg-menu-has-mobile' : '' )
-			. ( 'always' === $mobile_mode ? ' eelfg-menu-overlay-always' : '' )
-			. ( $submenu_click ? ' eelfg-menu-click' : '' ),
+		'class'           => 'shapeblock-menu shapeblock-menu--' . $layout . ' shapeblock-menu-align-' . $alignment
+			. ( $mobile_on ? ' shapeblock-menu-has-mobile' : '' )
+			. ( 'always' === $mobile_mode ? ' shapeblock-menu-overlay-always' : '' )
+			. ( $submenu_click ? ' shapeblock-menu-click' : '' ),
 		'data-breakpoint' => (string) $breakpoint,
 	)
 );
 
 $toggle = $mobile_on
-	? '<button type="button" class="eelfg-menu-toggle" aria-expanded="false" aria-label="' . esc_attr__( 'Toggle menu', 'easy-elements-for-gutenberg' ) . '"><span class="eelfg-menu-toggle-bar"></span><span class="eelfg-menu-toggle-bar"></span><span class="eelfg-menu-toggle-bar"></span></button>'
+	? '<button type="button" class="shapeblock-menu-toggle" aria-expanded="false" aria-label="' . esc_attr__( 'Toggle menu', 'shapeblock' ) . '"><span class="shapeblock-menu-toggle-bar"></span><span class="shapeblock-menu-toggle-bar"></span><span class="shapeblock-menu-toggle-bar"></span></button>'
 	: '';
 
 // Overlay backdrop + in-panel close button ( only used on mobile / off-canvas ).
-$overlay = $mobile_on ? '<div class="eelfg-menu-overlay" aria-hidden="true"></div>' : '';
+$overlay = $mobile_on ? '<div class="shapeblock-menu-overlay" aria-hidden="true"></div>' : '';
 $close   = $mobile_on
-	? '<button type="button" class="eelfg-menu-close" aria-label="' . esc_attr__( 'Close menu', 'easy-elements-for-gutenberg' ) . '">' . eelfg_menu_icon_svg( 'close' ) . '</button>'
+	? '<button type="button" class="shapeblock-menu-close" aria-label="' . esc_attr__( 'Close menu', 'shapeblock' ) . '">' . shapeblock_menu_icon_svg( 'close' ) . '</button>'
 	: '';
 
 // $wrapper_attributes escaped by core; $toggle/$overlay/$close are fixed strings; $list is escaped
 // per item; $css only from esc_attr()'d values above.
 printf(
-	'%5$s<nav %1$s>%3$s%4$s<div class="eelfg-menu-panel">%6$s<ul class="eelfg-menu-list">%2$s</ul></div></nav>',
+	'%5$s<nav %1$s>%3$s%4$s<div class="shapeblock-menu-panel">%6$s<ul class="shapeblock-menu-list">%2$s</ul></div></nav>',
 	$wrapper_attributes, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by core.
 	$list,               // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped per item above.
 	$toggle,             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Fixed markup, escaped label.

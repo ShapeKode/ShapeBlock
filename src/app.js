@@ -7,14 +7,12 @@ import Blocks from './components/admin-components/blocks';
 import Templates from './components/admin-components/templates';
 import ThemeBuilder from './components/admin-components/theme-builder';
 import Settings from './components/admin-components/settings';
-import { DashboardOutlined, SettingOutlined, BlockOutlined, PicRightOutlined, KeyOutlined, LayoutOutlined } from '@ant-design/icons';
+import { DashboardOutlined, SettingOutlined, BlockOutlined, PicRightOutlined, LayoutOutlined } from '@ant-design/icons';
 import { icons } from 'antd/es/image/PreviewGroup';
 import './editor';
 
 
 const { Header, Content, Footer, Sider } = Layout;
-
-const isProInstalled = typeof eelfg !== 'undefined' && !!eelfg.isProInstalled;
 
 const items = [
     {
@@ -49,7 +47,7 @@ const ThemeData = {
 };
 
 
-export default function EasyElementsForGutenbergApp({ initialTab } = {}) {
+export default function ShapeBlockApp({ initialTab } = {}) {
 
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -79,8 +77,8 @@ export default function EasyElementsForGutenbergApp({ initialTab } = {}) {
             <App>
                 <Layout style={{ minHeight: '100vh' }}>
                     <Sider theme="light" collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>
-                        <div className="eelfg-logo">
-                            <img src={eelfg.eelfgUrl + 'assets/images/icons/plugin-icon-200_200.png'} alt="eelfg-logo" />
+                        <div className="shapeblock-logo">
+                            <img src={shapeblock.shapeblockUrl + 'assets/images/icons/plugin-icon-200_200.png'} alt="shapeblock-logo" />
                         </div>
                         <Menu
                             theme="light"
@@ -111,7 +109,7 @@ export default function EasyElementsForGutenbergApp({ initialTab } = {}) {
                             </div>
                         </Content>
                         <Footer style={{ textAlign: 'center' }}>
-                            Easy Element for Gutenberg ©{new Date().getFullYear()} Created by Themewant
+                            ShapeBlock ©{new Date().getFullYear()}
                         </Footer>
                     </Layout>
                 </Layout>

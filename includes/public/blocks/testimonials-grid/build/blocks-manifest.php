@@ -4,11 +4,11 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/testimonials-grid',
+		'name' => 'shapeblock/testimonials-grid',
 		'version' => '0.1.0',
 		'title' => 'Testimonial',
-		'category' => 'easy-elements-for-gutenberg',
-		'description' => 'A grid of testimonials with 6 skins, ratings, quote icons, logos and a view-all reveal.',
+		'category' => 'shapeblock',
+		'description' => 'A grid of testimonials with three styles, ratings, quote icons and logos.',
 		'keywords' => array(
 			'testimonial',
 			'review',
@@ -27,25 +27,10 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
-		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
 		'attributes' => array(
 			'blockId' => array(
@@ -56,18 +41,6 @@ return array(
 				'type' => 'string',
 				'default' => 'default'
 			),
-			'avatarImageTop' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
-			'showLoadmore' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
-			'loadMoreText' => array(
-				'type' => 'string',
-				'default' => 'View all reviews'
-			),
 			'testimonials' => array(
 				'type' => 'array',
 				'default' => array(
@@ -76,7 +49,7 @@ return array(
 							
 						),
 						'name' => 'Stefan Sears',
-						'designation' => 'Developer, Easy Elements Inc',
+						'designation' => 'Developer, ShapeBlock Inc',
 						'description' => 'This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.',
 						'quoteIcon' => '',
 						'showQuoteIconSkin1' => false,
@@ -90,7 +63,7 @@ return array(
 							
 						),
 						'name' => 'Stefan Sears',
-						'designation' => 'Developer, Easy Elements Inc',
+						'designation' => 'Developer, ShapeBlock Inc',
 						'description' => 'This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.',
 						'quoteIcon' => '',
 						'showQuoteIconSkin1' => false,
@@ -104,7 +77,7 @@ return array(
 							
 						),
 						'name' => 'Stefan Sears',
-						'designation' => 'Developer, Easy Elements Inc',
+						'designation' => 'Developer, ShapeBlock Inc',
 						'description' => 'This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.',
 						'quoteIcon' => '',
 						'showQuoteIconSkin1' => false,
@@ -118,7 +91,7 @@ return array(
 							
 						),
 						'name' => 'Stefan Sears',
-						'designation' => 'Developer, Easy Elements Inc',
+						'designation' => 'Developer, ShapeBlock Inc',
 						'description' => 'This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.',
 						'quoteIcon' => '',
 						'showQuoteIconSkin1' => false,
@@ -139,20 +112,42 @@ return array(
 			),
 			'columnsTablet' => array(
 				'type' => 'string',
-				'default' => '3'
+				'default' => '2'
 			),
 			'columnsMobile' => array(
 				'type' => 'string',
-				'default' => '2'
+				'default' => '1'
 			),
 			'itemPadding' => array(
+				'type' => 'object'
+			),
+			'itemPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'itemPaddingMobile' => array(
 				'type' => 'object'
 			),
 			'logoHeight' => array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'logoHeightTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'logoHeightMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'testimonialsAlignment' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'testimonialsAlignmentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'testimonialsAlignmentMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -165,10 +160,6 @@ return array(
 				'default' => ''
 			),
 			'ratingSize' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'titleIcon' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -210,7 +201,21 @@ return array(
 			'itemInnerPadding' => array(
 				'type' => 'object'
 			),
+			'itemInnerPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'itemInnerPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'wrapperGap' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'wrapperGapTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'wrapperGapMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -230,7 +235,25 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'nameTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'nameTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'nameMargin' => array(
+				'type' => 'object'
+			),
+			'nameMarginTablet' => array(
+				'type' => 'object'
+			),
+			'nameMarginMobile' => array(
 				'type' => 'object'
 			),
 			'designationColor' => array(
@@ -249,6 +272,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'designationTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'designationTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'descriptionColor' => array(
 				'type' => 'string',
 				'default' => ''
@@ -265,10 +300,36 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'descriptionTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'descriptionTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'descriptionMargin' => array(
 				'type' => 'object'
 			),
+			'descriptionMarginTablet' => array(
+				'type' => 'object'
+			),
+			'descriptionMarginMobile' => array(
+				'type' => 'object'
+			),
 			'minHeight' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'minHeightTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'minHeightMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -276,15 +337,45 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'maxWidthTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'maxWidthMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'authorMetaAlignment' => array(
 				'type' => 'string',
 				'default' => 'flex-start'
+			),
+			'authorMetaAlignmentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'authorMetaAlignmentMobile' => array(
+				'type' => 'string',
+				'default' => ''
 			),
 			'authorMetaAlignmentStyle4' => array(
 				'type' => 'string',
 				'default' => 'left'
 			),
+			'authorMetaAlignmentStyle4Tablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'authorMetaAlignmentStyle4Mobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'authorMetaGap' => array(
+				'type' => 'object'
+			),
+			'authorMetaGapTablet' => array(
+				'type' => 'object'
+			),
+			'authorMetaGapMobile' => array(
 				'type' => 'object'
 			),
 			'authorImageSize' => array(
@@ -308,65 +399,17 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'loadMoreTypography' => array(
-				'type' => 'object',
-				'default' => array(
-					'fontFamily' => '',
-					'fontSize' => '',
-					'fontWeight' => '',
-					'fontStyle' => '',
-					'textTransform' => '',
-					'lineHeight' => '',
-					'letterSpacing' => ''
-				)
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
 			),
-			'loadMoreColor' => array(
-				'type' => 'string',
-				'default' => ''
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
 			),
-			'loadMoreBgColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'loadMoreBgGradient' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'loadmorePadding' => array(
-				'type' => 'object'
-			),
-			'loadmoreBorderRadius' => array(
-				'type' => 'object',
-				'default' => array(
-					'top' => '',
-					'right' => '',
-					'bottom' => '',
-					'left' => ''
-				)
-			),
-			'loadMoreBorder' => array(
-				'type' => 'object',
-				'default' => array(
-					'width' => 0,
-					'color' => '',
-					'style' => 'solid'
-				)
-			),
-			'loadMoreHoverColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'loadMoreHoverBgColor' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'loadMoreHoverBgGradient' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'loadMoreHoverBorderColor' => array(
-				'type' => 'string',
-				'default' => ''
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

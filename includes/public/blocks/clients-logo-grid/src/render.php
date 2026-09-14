@@ -9,42 +9,41 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Server-side render for the Client Logo Grid block.
  *
  * Mirrors the markup of the Elementor "Client Logo Grid" widget
- * (easy-elements/widgets/clients-logo-grid). Element classes use the "eelfg-" prefix.
+ * (easy-elements/widgets/clients-logo-grid). Element classes use the "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-clg-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-clg-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $logos = isset( $attributes['logos'] ) && is_array( $attributes['logos'] ) ? $attributes['logos'] : [];
 $swap  = ! empty( $attributes['hoverSwap'] );
-$fetch = isset( $attributes['fetchpriority'] ) ? $attributes['fetchpriority'] : '';
 $gray  = ! empty( $attributes['grayscale'] ) ? ( $attributes['grayscaleOption'] ?? 'normal_grayscale' ) : '';
 
 $gray_class_map = [
-	'normal_grayscale' => 'eelfg-normal-grayscale',
-	'hover_grayscale'  => 'eelfg-hover-grayscale',
-	'hover_to_default' => 'eelfg-hover-to-default',
+	'normal_grayscale' => 'shapeblock-normal-grayscale',
+	'hover_grayscale'  => 'shapeblock-hover-grayscale',
+	'hover_to_default' => 'shapeblock-hover-to-default',
 ];
 $gray_class = ( '' !== $gray && isset( $gray_class_map[ $gray ] ) ) ? $gray_class_map[ $gray ] : '';
 
-$block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'eelfg-block eelfg-clients-logo-wrap ' . $unique_id ) );
+$block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'shapeblock-block shapeblock-clients-logo-wrap ' . $unique_id ) );
 if ( empty( $block_wrap_attr ) ) {
-	$block_wrap_attr = 'class="eelfg-block eelfg-clients-logo-wrap ' . esc_attr( $unique_id ) . '"';
+	$block_wrap_attr = 'class="shapeblock-block shapeblock-clients-logo-wrap ' . esc_attr( $unique_id ) . '"';
 }
 
 if ( empty( $logos ) ) {
-	echo '<div ' . wp_kses_post( $block_wrap_attr ) . '><p>' . esc_html__( 'Please add client logos.', 'easy-elements-for-gutenberg' ) . '</p></div>';
+	echo '<div ' . wp_kses_post( $block_wrap_attr ) . '><p>' . esc_html__( 'Please add client logos.', 'shapeblock' ) . '</p></div>';
 	return;
 }
 
 // ---------------------------------------------------------------------------
 // Inline styles (scoped to this instance).
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-clients-logo-wrap.' . $unique_id;
-$style_handle = 'eelfg-clients-logo-grid-style';
+$selector     = '.shapeblock-clients-logo-wrap.' . $unique_id;
+$style_handle = 'shapeblock-clients-logo-grid-style';
 
 $dims = function ( $obj, $type ) use ( $H ) {
 	$out = [];
@@ -107,21 +106,59 @@ $img_inner_hover = [];
 if ( '' !== ( $attributes['itemHoverOpacity'] ?? '' ) ) $img_inner_hover['opacity'] = (float) $attributes['itemHoverOpacity'];
 if ( ! $swap && '' !== ( $attributes['itemHoverScale'] ?? '' ) ) $img_inner_hover['transform'] = 'scale(' . (float) $attributes['itemHoverScale'] . ')';
 
-$responsive_css = $H::generate_responsive_css( $selector . ' .eelfg-grid-item', $cols_resp );
+$responsive_css = $H::generate_responsive_css( $selector . ' .shapeblock-grid-item', $cols_resp );
+
+// ---------------------------------------------------------------------------
+// Responsive (Tablet / Mobile) overrides for the layout controls. The desktop
+// CSS above is unchanged; these rules are emitted only when the matching
+// per-device attribute is set, so existing content renders identically.
+// ---------------------------------------------------------------------------
+$build_dev = function ( $suffix ) use ( $attributes, $dims, $H ) {
+	$dev_u = function ( $key ) use ( $attributes, $suffix, $H ) {
+		$k = $key . $suffix;
+		return ( isset( $attributes[ $k ] ) && '' !== $attributes[ $k ] ) ? $H::ensure_unit( $attributes[ $k ] ) : '';
+	};
+
+	$box = [];
+	if ( '' !== $dev_u( 'itemWidth' ) ) $box['max-width'] = $dev_u( 'itemWidth' );
+	if ( '' !== $dev_u( 'itemHeight' ) ) $box['height'] = $dev_u( 'itemHeight' );
+	$box = array_merge( $box, $dims( $attributes[ 'itemPadding' . $suffix ] ?? [], 'padding' ) );
+
+	$img = [];
+	if ( '' !== $dev_u( 'imageWidth' ) ) $img['width'] = $dev_u( 'imageWidth' );
+	if ( '' !== $dev_u( 'itemHeight' ) ) $img['height'] = '100%';
+
+	return [
+		'.shapeblock-logo-img' => $box,
+		'.shapeblock-grid-img' => $img,
+	];
+};
+$dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
+foreach ( [ '.shapeblock-logo-img', '.shapeblock-grid-img' ] as $sub_sel ) {
+	$rdata = [];
+	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
+			$rdata[ $device_key ] = $dev_data[ $suffix ][ $sub_sel ];
+		}
+	}
+	if ( ! empty( $rdata ) ) {
+		$responsive_css .= $H::generate_responsive_css( $selector . ' ' . $sub_sel, $rdata );
+	}
+}
 
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $responsive_css, [
-	'.eelfg-grid-item'            => $H::get_inline_styles( $grid_item ),
-	'.eelfg-logo-img'             => $H::get_inline_styles( $logo_box ),
-	'.eelfg-logo-img:hover'       => $H::get_inline_styles( $logo_hover ),
-	'.eelfg-grid-img'             => $H::get_inline_styles( $img ),
-	'.eelfg-logo-img img'         => $H::get_inline_styles( $img_inner ),
-	'.eelfg-logo-img:hover img'   => $H::get_inline_styles( $img_inner_hover ),
+	'.shapeblock-grid-item'            => $H::get_inline_styles( $grid_item ),
+	'.shapeblock-logo-img'             => $H::get_inline_styles( $logo_box ),
+	'.shapeblock-logo-img:hover'       => $H::get_inline_styles( $logo_hover ),
+	'.shapeblock-grid-img'             => $H::get_inline_styles( $img ),
+	'.shapeblock-logo-img img'         => $H::get_inline_styles( $img_inner ),
+	'.shapeblock-logo-img:hover img'   => $H::get_inline_styles( $img_inner_hover ),
 ] );
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="eelfg-clients-logo eelfg-grid-layout">
-		<div class="eelfg-grid-wrap">
+	<div class="shapeblock-clients-logo shapeblock-grid-layout">
+		<div class="shapeblock-grid-wrap">
 			<?php
 			foreach ( $logos as $item ) :
 				$image = isset( $item['image'] ) && is_array( $item['image'] ) ? $item['image'] : [];
@@ -132,9 +169,9 @@ $H::add_custom_style( $style_handle, $selector, $responsive_css, [
 				$target   = ! empty( $item['linkNewTab'] ) ? ' target="_blank"' : '';
 				$rel      = ! empty( $item['linkNofollow'] ) ? ' rel="nofollow"' : '';
 
-				$box_class = trim( 'eelfg-logo-img ' . $gray_class );
+				$box_class = trim( 'shapeblock-logo-img ' . $gray_class );
 				?>
-				<div class="eelfg-grid-item">
+				<div class="shapeblock-grid-item">
 					<div class="<?php echo esc_attr( $box_class ); ?>">
 						<?php if ( '' !== $link ) : ?>
 							<a href="<?php echo esc_url( $link ); ?>"<?php echo $target . $rel; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -142,13 +179,13 @@ $H::add_custom_style( $style_handle, $selector, $responsive_css, [
 
 						<?php if ( '' !== $url ) : ?>
 							<?php if ( $swap ) : ?>
-								<img class="eelfg-grid-img eelfg-logo-img-hover" src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async" fetchpriority="<?php echo esc_attr( $fetch ); ?>">
-								<img class="eelfg-grid-img eelfg-logo-img-normal" src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async" fetchpriority="<?php echo esc_attr( $fetch ); ?>">
+								<img class="shapeblock-grid-img shapeblock-logo-img-hover" src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async">
+								<img class="shapeblock-grid-img shapeblock-logo-img-normal" src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async">
 							<?php else : ?>
-								<img class="eelfg-grid-img" src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async" fetchpriority="<?php echo esc_attr( $fetch ); ?>">
+								<img class="shapeblock-grid-img" src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async">
 							<?php endif; ?>
 						<?php else : ?>
-							<span class="eelfg-logo-placeholder"><?php esc_html_e( 'Logo', 'easy-elements-for-gutenberg' ); ?></span>
+							<span class="shapeblock-logo-placeholder"><?php esc_html_e( 'Logo', 'shapeblock' ); ?></span>
 						<?php endif; ?>
 
 						<?php if ( '' !== $link ) : ?>

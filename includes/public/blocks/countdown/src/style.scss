@@ -3,13 +3,13 @@
  *
  * Ported from the Elementor "Countdown" widget stylesheet
  * (easy-elements/widgets/countdown/css/countdown.scss). Classes use the
- * "eelfg-" prefix and everything is scoped under `.eelfg-countdown-block-wrap`.
+ * "shapeblock-" prefix and everything is scoped under `.shapeblock-countdown-block-wrap`.
  */
-.eelfg-countdown-block-wrap {
-	--eelfg-cntdwn-primary: #ffd012;
-	--eelfg-cntdwn-secondary: #0b3665;
+.shapeblock-countdown-block-wrap {
+	--shapeblock-cntdwn-primary: #ffd012;
+	--shapeblock-cntdwn-secondary: #0b3665;
 
-	.eelfg-cntdwn {
+	.shapeblock-cntdwn {
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
@@ -17,81 +17,81 @@
 		justify-content: center;
 	}
 
-	.eelfg-cntdwn-days-label,
-	.eelfg-cntdwn-hours-label,
-	.eelfg-cntdwn-minutes-label,
-	.eelfg-cntdwn-seconds-label {
-		color: var(--eelfg-cntdwn-secondary);
+	.shapeblock-cntdwn-days-label,
+	.shapeblock-cntdwn-hours-label,
+	.shapeblock-cntdwn-minutes-label,
+	.shapeblock-cntdwn-seconds-label {
+		color: var(--shapeblock-cntdwn-secondary);
 		justify-content: center;
 		font-size: 14px;
 		line-height: 1.4;
 		font-weight: 300;
 	}
 
-	.eelfg-cntdwn-days,
-	.eelfg-cntdwn-hours,
-	.eelfg-cntdwn-minutes,
-	.eelfg-cntdwn-seconds {
+	.shapeblock-cntdwn-days,
+	.shapeblock-cntdwn-hours,
+	.shapeblock-cntdwn-minutes,
+	.shapeblock-cntdwn-seconds {
 		text-align: center;
 		display: inline-block;
 		font-size: 44px;
 		font-weight: 400;
 		line-height: 1;
-		color: var(--eelfg-cntdwn-primary);
+		color: var(--shapeblock-cntdwn-primary);
 	}
 
-	.eelfg-cntdwn-item {
+	.shapeblock-cntdwn-item {
 		position: relative;
 	}
 
 	/* divider bullets style */
-	.eelfg-cntdwn-bullets::before,
-	.eelfg-cntdwn-bullets::after {
+	.shapeblock-cntdwn-bullets::before,
+	.shapeblock-cntdwn-bullets::after {
 		content: '';
 		display: block;
 		width: 6px;
 		height: 6px;
-		background: var(--eelfg-cntdwn-secondary);
+		background: var(--shapeblock-cntdwn-secondary);
 		position: absolute;
 		left: 112%;
 		bottom: 30%;
 	}
-	.eelfg-cntdwn-bullets::after {
+	.shapeblock-cntdwn-bullets::after {
 		bottom: inherit;
 		top: 35%;
 	}
-	.eelfg-cntdwn-bullets:last-child::after,
-	.eelfg-cntdwn-bullets:last-child::before {
+	.shapeblock-cntdwn-bullets:last-child::after,
+	.shapeblock-cntdwn-bullets:last-child::before {
 		display: none;
 	}
 
 	/* divider dash style */
-	.eelfg-cntdwn-dash::before {
+	.shapeblock-cntdwn-dash::before {
 		content: '';
 		display: block;
 		width: 10px;
 		height: 5px;
-		background: var(--eelfg-cntdwn-secondary);
+		background: var(--shapeblock-cntdwn-secondary);
 		position: absolute;
 		left: 110%;
 		top: 50%;
 		transform: translateY(-50%);
 	}
-	.eelfg-cntdwn-dash:last-child::before {
+	.shapeblock-cntdwn-dash:last-child::before {
 		display: none;
 	}
 
 	@media screen and (max-width: 767px) {
-		.eelfg-cntdwn-days-label,
-		.eelfg-cntdwn-hours-label,
-		.eelfg-cntdwn-minutes-label,
-		.eelfg-cntdwn-seconds-label {
+		.shapeblock-cntdwn-days-label,
+		.shapeblock-cntdwn-hours-label,
+		.shapeblock-cntdwn-minutes-label,
+		.shapeblock-cntdwn-seconds-label {
 			font-size: 12px;
 		}
-		.eelfg-cntdwn-days,
-		.eelfg-cntdwn-hours,
-		.eelfg-cntdwn-minutes,
-		.eelfg-cntdwn-seconds {
+		.shapeblock-cntdwn-days,
+		.shapeblock-cntdwn-hours,
+		.shapeblock-cntdwn-minutes,
+		.shapeblock-cntdwn-seconds {
 			font-size: 22px;
 		}
 	}

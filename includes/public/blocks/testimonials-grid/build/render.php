@@ -10,44 +10,39 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Mirrors the markup of the Elementor "Testimonials Grid" widget
  * (easy-elements/widgets/testimonials-grid) — 6 skins, ratings, quote icons,
- * logos and a view-all reveal. Element classes use this plugin's "eelfg-" prefix.
+ * logos and a view-all reveal. Element classes use this plugin's "shapeblock-" prefix.
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-tstml-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-tstml-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $skin        = isset( $attributes['testimonialsSkin'] ) ? preg_replace( '/[^a-z0-9_-]/i', '', (string) $attributes['testimonialsSkin'] ) : 'default';
 if ( '' === $skin ) { $skin = 'default'; }
+// Only three styles are supported; any legacy/removed skin falls back to default.
+if ( ! in_array( $skin, [ 'default', 'skin3', 'skin6' ], true ) ) { $skin = 'default'; }
 $items       = isset( $attributes['testimonials'] ) && is_array( $attributes['testimonials'] ) ? $attributes['testimonials'] : [];
 $show_image  = ! empty( $attributes['showImage'] );
 $show_rating = ! empty( $attributes['showRating'] );
-$title_icon  = isset( $attributes['titleIcon'] ) ? $attributes['titleIcon'] : '';
-$avatar_top  = ! empty( $attributes['avatarImageTop'] );
-$show_more   = ! empty( $attributes['showLoadmore'] );
-$more_text   = isset( $attributes['loadMoreText'] ) ? $attributes['loadMoreText'] : '';
 
 if ( empty( $items ) ) {
-	$wrap = get_block_wrapper_attributes( array( 'class' => 'eelfg-block eelfg-testimonial-block-wrap ' . $unique_id ) );
-	echo '<div ' . wp_kses_post( $wrap ) . '><p>' . esc_html__( 'Please add testimonials.', 'easy-elements-for-gutenberg' ) . '</p></div>';
+	$wrap = get_block_wrapper_attributes( array( 'class' => 'shapeblock-block shapeblock-testimonial-block-wrap ' . $unique_id ) );
+	echo '<div ' . wp_kses_post( $wrap ) . '><p>' . esc_html__( 'Please add testimonials.', 'shapeblock' ) . '</p></div>';
 	return;
 }
 
-$has_more     = count( $items ) > 6 && 'skin3' === $skin && $show_more;
-$overlay_cls  = $has_more ? ' eelfg-testifull-overlay' : '';
-
 $block_wrap_attr = get_block_wrapper_attributes( array(
-	'class' => 'eelfg-block eelfg-testimonial-block-wrap ' . $unique_id . ' eelfg-testimonial eelfg-grid-layout' . $overlay_cls,
+	'class' => 'shapeblock-block shapeblock-testimonial-block-wrap ' . $unique_id . ' shapeblock-testimonial shapeblock-grid-layout',
 ) );
 if ( empty( $block_wrap_attr ) ) {
-	$block_wrap_attr = 'class="eelfg-block eelfg-testimonial-block-wrap ' . esc_attr( $unique_id ) . ' eelfg-testimonial eelfg-grid-layout' . esc_attr( $overlay_cls ) . '"';
+	$block_wrap_attr = 'class="shapeblock-block shapeblock-testimonial-block-wrap ' . esc_attr( $unique_id ) . ' shapeblock-testimonial shapeblock-grid-layout"';
 }
 
 // ---------------------------------------------------------------------------
 // Inline styles.
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-testimonial-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-testimonials-grid-style';
+$selector     = '.shapeblock-testimonial-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-testimonials-grid-style';
 
 $typo = function ( $obj ) use ( $H ) {
 	$out = [];
@@ -59,6 +54,7 @@ $typo = function ( $obj ) use ( $H ) {
 	if ( ! empty( $obj['textTransform'] ) ) $out['text-transform'] = $obj['textTransform'];
 	if ( ! empty( $obj['lineHeight'] ) ) $out['line-height'] = $obj['lineHeight'];
 	if ( ! empty( $obj['letterSpacing'] ) ) $out['letter-spacing'] = $H::ensure_unit( $obj['letterSpacing'] );
+	if ( ! empty( $obj['textDecoration'] ) ) $out['text-decoration'] = $obj['textDecoration'];
 	return $out;
 };
 $dims = function ( $obj, $type ) use ( $H ) {
@@ -104,7 +100,11 @@ if ( ! in_array( $skin, [ 'default', 'skin4' ], true ) ) {
 		'tablet'  => [ 'width' => 'calc(100% / ' . max( 1, $c_t ) . ')' ],
 		'mobile'  => [ 'width' => 'calc(100% / ' . max( 1, $c_m ) . ')' ],
 	];
-	$col_css = $H::generate_responsive_css( $selector . ' .eelfg-grid-item', $grid_resp );
+	// Pin the width to this skin's own items. Blocks duplicated before the editor
+	// started re-issuing blockId still share a selector, and without this the column
+	// width of a Style 2/3 copy would also land on a Style 1 copy, whose rows are
+	// meant to stay full width.
+	$col_css = $H::generate_responsive_css( $selector . ' .shapeblock-grid-item.shapeblock-testimonials--' . $skin, $grid_resp );
 }
 
 $align       = ! empty( $attributes['testimonialsAlignment'] ) ? $attributes['testimonialsAlignment'] : '';
@@ -134,7 +134,6 @@ if ( ! empty( $attributes['ratingColor'] ) ) $rating_styles['color'] = $attribut
 if ( '' !== $u( 'ratingSize' ) ) $rating_styles['font-size'] = $u( 'ratingSize' );
 
 $author_wrap = ! empty( $attributes['authorMetaAlignment'] ) ? [ 'align-items' => $attributes['authorMetaAlignment'] ] : [];
-$author_style4 = ! empty( $attributes['authorMetaAlignmentStyle4'] ) ? [ 'text-align' => $attributes['authorMetaAlignmentStyle4'] ] : [];
 $picture_margin = $dims( $attributes['authorMetaGap'] ?? [], 'margin' );
 $img_styles = [];
 if ( '' !== $u( 'authorImageSize' ) ) { $img_styles['width'] = $u( 'authorImageSize' ) . ' !important'; $img_styles['height'] = $u( 'authorImageSize' ) . ' !important'; $img_styles['object-fit'] = 'cover'; }
@@ -145,145 +144,168 @@ $quote_styles = [];
 if ( ! empty( $attributes['quoteIconColor'] ) ) $quote_styles['fill'] = $attributes['quoteIconColor'];
 $quote_size = ( '' !== $u( 'quoteIconSize' ) ) ? [ 'width' => $u( 'quoteIconSize' ), 'height' => $u( 'quoteIconSize' ) ] : [];
 
-// View-all button.
-$more = $typo( $attributes['loadMoreTypography'] ?? [] );
-if ( ! empty( $attributes['loadMoreColor'] ) ) $more['color'] = $attributes['loadMoreColor'];
-$more = array_merge( $more, $bg( 'loadMoreBgColor', 'loadMoreBgGradient' ), $dims( $attributes['loadmorePadding'] ?? [], 'padding' ), $dims( $attributes['loadmoreBorderRadius'] ?? [], 'radius' ) );
-if ( ! empty( $attributes['loadMoreBorder'] ) ) $more = array_merge( $more, $H::border_to_css_props( $attributes['loadMoreBorder'] ) );
-$more_hover = [];
-if ( ! empty( $attributes['loadMoreHoverColor'] ) ) $more_hover['color'] = $attributes['loadMoreHoverColor'];
-$more_hover = array_merge( $more_hover, $bg( 'loadMoreHoverBgColor', 'loadMoreHoverBgGradient' ) );
-if ( ! empty( $attributes['loadMoreHoverBorderColor'] ) ) $more_hover['border-color'] = $attributes['loadMoreHoverBorderColor'];
+// ---------------------------------------------------------------------------
+// Responsive (Tablet / Mobile) overrides. The desktop CSS above is unchanged;
+// these rules are emitted only when the matching per-device attribute is set,
+// so existing content renders identically.
+// ---------------------------------------------------------------------------
+$build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $selector ) {
+	$out = [];
+
+	// Item padding.
+	$out[ $selector . ' .shapeblock-grid-item' ] = $dims( $attributes[ 'itemPadding' . $suffix ] ?? [], 'padding' );
+
+	// Inner padding + wrapper gap.
+	$inner = $dims( $attributes[ 'itemInnerPadding' . $suffix ] ?? [], 'padding' );
+	if ( isset( $attributes[ 'wrapperGap' . $suffix ] ) && '' !== $attributes[ 'wrapperGap' . $suffix ] ) $inner['gap'] = $H::ensure_unit( $attributes[ 'wrapperGap' . $suffix ] );
+	$out[ $selector . ' .shapeblock-tstml-inner' ] = $inner;
+
+	// Content alignment (mirrors the desktop compound selector).
+	$align = [];
+	if ( ! empty( $attributes[ 'testimonialsAlignment' . $suffix ] ) ) $align['text-align'] = $attributes[ 'testimonialsAlignment' . $suffix ];
+	$out[ $selector . ' .shapeblock-tstml-inner, ' . $selector . ' .shapeblock-tstml-inner .eel-description' ] = $align;
+
+	// Name typography.
+	$out[ $selector . ' .shapeblock-tstml-inner .shapeblock-name' ] = $typo( $attributes[ 'nameTypography' . $suffix ] ?? [] );
+
+	// Name margin + author-meta alignment.
+	$awrap = $dims( $attributes[ 'nameMargin' . $suffix ] ?? [], 'margin' );
+	if ( ! empty( $attributes[ 'authorMetaAlignment' . $suffix ] ) ) $awrap['align-items'] = $attributes[ 'authorMetaAlignment' . $suffix ];
+	$out[ $selector . ' .shapeblock-tstml-inner .shapeblock-author-wrap' ] = $awrap;
+
+	// Designation typography.
+	$out[ $selector . ' .shapeblock-tstml-inner .shapeblock-designation' ] = $typo( $attributes[ 'designationTypography' . $suffix ] ?? [] );
+
+	// Description typography + margin + min-height + max-width.
+	$desc = $typo( $attributes[ 'descriptionTypography' . $suffix ] ?? [] );
+	$desc = array_merge( $desc, $dims( $attributes[ 'descriptionMargin' . $suffix ] ?? [], 'margin' ) );
+	if ( isset( $attributes[ 'minHeight' . $suffix ] ) && '' !== $attributes[ 'minHeight' . $suffix ] ) $desc['min-height'] = $H::ensure_unit( $attributes[ 'minHeight' . $suffix ] );
+	if ( isset( $attributes[ 'maxWidth' . $suffix ] ) && '' !== $attributes[ 'maxWidth' . $suffix ] ) $desc['max-width'] = $H::ensure_unit( $attributes[ 'maxWidth' . $suffix ] );
+	$out[ $selector . ' .shapeblock-tstml-inner .shapeblock-description' ] = $desc;
+
+	// Skin 4 author alignment.
+	$s4 = [];
+	if ( ! empty( $attributes[ 'authorMetaAlignmentStyle4' . $suffix ] ) ) $s4['text-align'] = $attributes[ 'authorMetaAlignmentStyle4' . $suffix ];
+	$out[ $selector . ' .shapeblock-tstml-inner.skin4 .shapeblock-author' ] = $s4;
+
+	// Author info gap.
+	$out[ $selector . ' .shapeblock-author-wrap .shapeblock-picture' ] = $dims( $attributes[ 'authorMetaGap' . $suffix ] ?? [], 'margin' );
+
+	// Logo height.
+	$logo = [];
+	if ( isset( $attributes[ 'logoHeight' . $suffix ] ) && '' !== $attributes[ 'logoHeight' . $suffix ] ) { $logo['height'] = $H::ensure_unit( $attributes[ 'logoHeight' . $suffix ] ); $logo['width'] = 'auto'; }
+	$out[ $selector . ' .shapeblock-company-logo img' ] = $logo;
+
+	return $out;
+};
+$dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
+$resp_css = '';
+foreach ( array_keys( $dev_data['Tablet'] ) as $full_sel ) {
+	$rdata = [];
+	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+		if ( ! empty( $dev_data[ $suffix ][ $full_sel ] ) ) {
+			$rdata[ $device_key ] = $dev_data[ $suffix ][ $full_sel ];
+		}
+	}
+	if ( ! empty( $rdata ) ) {
+		$resp_css .= $H::generate_responsive_css( $full_sel, $rdata );
+	}
+}
 
 wp_enqueue_style( $style_handle );
-$H::add_custom_style( $style_handle, $selector, $col_css, [
-	'.eelfg-grid-item'                          => $H::get_inline_styles( $item_pad ),
-	'.eelfg-tstml-inner'                        => $H::get_inline_styles( $inner ),
-	'.eelfg-tstml-inner'                        => $H::get_inline_styles( $inner ),
-	'.eelfg-tstml-inner, ' . $selector . ' .eelfg-tstml-inner .eel-description' => $H::get_inline_styles( $align_styles ),
-	'.eelfg-tstml-inner .eelfg-name'            => $H::get_inline_styles( $name_styles ),
-	'.eelfg-tstml-inner .eelfg-author-wrap'     => $H::get_inline_styles( array_merge( $name_margin, $author_wrap ) ),
-	'.eelfg-tstml-inner .eelfg-designation'     => $H::get_inline_styles( $deg_styles ),
-	'.eelfg-tstml-inner .eelfg-description'     => $H::get_inline_styles( $desc_styles ),
-	'.eelfg-rating span.star'                   => $H::get_inline_styles( $rating_styles ),
-	'.eelfg-tstml-inner.skin4 .eelfg-author'    => $H::get_inline_styles( $author_style4 ),
-	'.eelfg-author-wrap .eelfg-picture'         => $H::get_inline_styles( $picture_margin ),
-	'.eelfg-author-wrap .eelfg-picture img, ' . $selector . ' .eelfg-picture img' => $H::get_inline_styles( $img_styles ),
-	'.eelfg-company-logo img'                   => $H::get_inline_styles( $logo_styles ),
-	'.eelfg-quote svg, ' . $selector . ' .eelfg-quote svg path' => $H::get_inline_styles( $quote_styles ),
-	'.eelfg-quote svg'                          => $H::get_inline_styles( $quote_size ),
-	'.eelfg-testimonial-more-btn'               => $H::get_inline_styles( $more ),
-	'.eelfg-testimonial-more-btn:hover'         => $H::get_inline_styles( $more_hover ),
+$H::add_custom_style( $style_handle, $selector, $col_css . $resp_css, [
+	'.shapeblock-grid-item'                          => $H::get_inline_styles( $item_pad ),
+	'.shapeblock-tstml-inner'                        => $H::get_inline_styles( $inner ),
+	'.shapeblock-tstml-inner, ' . $selector . ' .shapeblock-tstml-inner .eel-description' => $H::get_inline_styles( $align_styles ),
+	'.shapeblock-tstml-inner .shapeblock-name'            => $H::get_inline_styles( $name_styles ),
+	'.shapeblock-tstml-inner .shapeblock-author-wrap'     => $H::get_inline_styles( array_merge( $name_margin, $author_wrap ) ),
+	'.shapeblock-tstml-inner .shapeblock-designation'     => $H::get_inline_styles( $deg_styles ),
+	'.shapeblock-tstml-inner .shapeblock-description'     => $H::get_inline_styles( $desc_styles ),
+	'.shapeblock-rating span.star'                   => $H::get_inline_styles( $rating_styles ),
+	'.shapeblock-author-wrap .shapeblock-picture'         => $H::get_inline_styles( $picture_margin ),
+	'.shapeblock-author-wrap .shapeblock-picture img, ' . $selector . ' .shapeblock-picture img' => $H::get_inline_styles( $img_styles ),
+	'.shapeblock-company-logo img'                   => $H::get_inline_styles( $logo_styles ),
+	'.shapeblock-quote svg, ' . $selector . ' .shapeblock-quote svg path' => $H::get_inline_styles( $quote_styles ),
+	'.shapeblock-quote svg'                          => $H::get_inline_styles( $quote_size ),
 ] );
 
 // ---------------------------------------------------------------------------
 // Markup helpers.
 // ---------------------------------------------------------------------------
-$placeholder = EELFG_PL_URL . 'includes/public/assets/img/placeholder.png';
+$placeholder = SHAPEBLOCK_PL_URL . 'includes/public/assets/img/placeholder.png';
 $svg_quote = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M9 7H5a2 2 0 00-2 2v4a2 2 0 002 2h2v-2H5V9h4V7zm10 0h-4a2 2 0 00-2 2v4a2 2 0 002 2h2v-2h-2V9h4V7z"/></svg>';
 $icon_i = function ( $val, $fallback ) {
-	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="eelfg-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : $fallback;
+	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : $fallback;
 };
 
 $render_picture = function ( $item ) use ( $show_image, $placeholder ) {
 	if ( ! $show_image ) return '';
 	$src = ! empty( $item['image']['url'] ) ? $item['image']['url'] : $placeholder;
 	$alt = ! empty( $item['image']['alt'] ) ? $item['image']['alt'] : '';
-	return '<div class="eelfg-picture"><img src="' . esc_url( $src ) . '" alt="' . esc_attr( $alt ) . '" loading="lazy" decoding="async"></div>';
+	return '<div class="shapeblock-picture"><img src="' . esc_url( $src ) . '" alt="' . esc_attr( $alt ) . '" loading="lazy" decoding="async"></div>';
 };
 $render_logo = function ( $item ) {
 	if ( empty( $item['logo']['url'] ) ) return '';
-	return '<div class="eelfg-company-logo"><img src="' . esc_url( $item['logo']['url'] ) . '" alt="' . esc_attr( $item['logo']['alt'] ?? '' ) . '" loading="lazy" decoding="async"></div>';
+	return '<div class="shapeblock-company-logo"><img src="' . esc_url( $item['logo']['url'] ) . '" alt="' . esc_attr( $item['logo']['alt'] ?? '' ) . '" loading="lazy" decoding="async"></div>';
 };
 $render_rating = function ( $item ) use ( $show_rating ) {
 	if ( ! $show_rating || empty( $item['rating'] ) ) return '';
 	$r = (int) $item['rating'];
-	$out = '<div class="eelfg-rating" aria-label="Rating: ' . esc_attr( $r ) . ' out of 5">';
+	$out = '<div class="shapeblock-rating" aria-label="Rating: ' . esc_attr( $r ) . ' out of 5">';
 	for ( $i = 1; $i <= 5; $i++ ) {
 		$out .= '<span class="star' . ( $i <= $r ? ' filled' : '' ) . '">' . ( $i <= $r ? '★' : '☆' ) . '</span>';
 	}
 	return $out . '</div>';
 };
-$render_name = function ( $item, $with_title_icon = false ) use ( $title_icon, $icon_i ) {
+$render_name = function ( $item ) {
 	if ( empty( $item['name'] ) ) return '';
-	$tail = ( $with_title_icon && ! empty( $title_icon ) && 'none' !== $title_icon ) ? '<span class="eelfg-title-icon">' . $icon_i( $title_icon, '' ) . '</span>' : '';
-	return '<div class="eelfg-name">' . esc_html( $item['name'] ) . $tail . '</div>';
+	return '<div class="shapeblock-name">' . esc_html( $item['name'] ) . '</div>';
 };
 $render_desig = function ( $item ) {
-	return ! empty( $item['designation'] ) ? '<em class="eelfg-designation">' . esc_html( $item['designation'] ) . '</em>' : '';
+	return ! empty( $item['designation'] ) ? '<em class="shapeblock-designation">' . esc_html( $item['designation'] ) . '</em>' : '';
 };
 $render_desc = function ( $item ) {
-	return ! empty( $item['description'] ) ? '<div class="eelfg-description">' . esc_html( $item['description'] ) . '</div>' : '';
+	return ! empty( $item['description'] ) ? '<div class="shapeblock-description">' . esc_html( $item['description'] ) . '</div>' : '';
 };
 $render_quote = function ( $item ) use ( $icon_i, $svg_quote ) {
 	if ( empty( $item['quoteIcon'] ) || 'none' === $item['quoteIcon'] ) return '';
-	return '<div class="eelfg-quote" aria-hidden="true">' . $icon_i( $item['quoteIcon'], $svg_quote ) . '</div>';
+	return '<div class="shapeblock-quote" aria-hidden="true">' . $icon_i( $item['quoteIcon'], $svg_quote ) . '</div>';
 };
 
 /** Render one testimonial's inner-wrap for the active skin. */
-$render_inner = function ( $item ) use ( $skin, $avatar_top, $render_picture, $render_logo, $render_rating, $render_name, $render_desig, $render_desc, $render_quote ) {
+$render_inner = function ( $item ) use ( $skin, $render_picture, $render_logo, $render_rating, $render_name, $render_desig, $render_desc, $render_quote ) {
 	$picture = $render_picture( $item );
 	$logo = $render_logo( $item );
 	$rating = $render_rating( $item );
 	$desc = $render_desc( $item );
 	$quote = $render_quote( $item );
-	$name = $render_name( $item, 'skin1' === $skin );
+	$name = $render_name( $item );
 	$desig = $render_desig( $item );
 
-	if ( 'skin1' === $skin ) {
-		$q = ( ! empty( $item['showQuoteIconSkin1'] ) ) ? $quote : '';
-		return '<div class="eelfg-tstml-inner skin1">' . $logo . $q . $desc
-			. '<div class="eelfg-author-wrap">' . $picture . '<div class="eelfg-author">' . $name . $desig . '</div></div></div>';
-	}
-	if ( 'skin2' === $skin ) {
-		$top = $avatar_top ? ' eelfg-avatar-image-top' : '';
-		return '<div class="eelfg-tstml-inner skin2' . $top . '">' . $logo
-			. '<div class="eelfg-picture-des-wrap">' . $picture
-			. '<div class="eelfg-description-wrap">' . $desc . '<div class="eelfg-author-wrap"><div class="eelfg-author">' . $name . $desig . '</div></div></div></div></div>';
-	}
 	if ( 'skin3' === $skin ) {
-		return '<div class="eelfg-tstml-inner skin3">' . $logo . $desc
-			. '<div class="eelfg-author-wrap">' . $picture . '<div class="eelfg-author">' . $name . $desig . '</div>' . $rating . '</div></div>';
-	}
-	if ( 'skin4' === $skin ) {
-		return '<div class="eelfg-tstml-inner skin4">' . $logo
-			. '<div class="eelfg-picture-des-wrap">' . $picture
-			. '<div class="eelfg-description-wrap">' . $desc . '<div class="eelfg-author-wrap"><div class="eelfg-author">' . $name . $desig . '</div></div></div></div></div>';
-	}
-	if ( 'skin5' === $skin ) {
-		return '<div class="eelfg-tstml-inner skin5">' . $logo . $desc
-			. '<div class="eelfg-author-wrap">' . $picture . '<div class="eelfg-author">' . $name . '</div>' . $rating
-			. '<div class="eelfg-rating">' . $desig . '</div></div></div>';
+		return '<div class="shapeblock-tstml-inner skin3">' . $logo . $desc
+			. '<div class="shapeblock-author-wrap">' . $picture . '<div class="shapeblock-author">' . $name . $desig . '</div>' . $rating . '</div></div>';
 	}
 	if ( 'skin6' === $skin ) {
-		return '<div class="eelfg-tstml-inner skin6">' . $logo . $rating . $desc
-			. '<div class="eelfg-author-wrap">' . $picture . '<div class="eelfg-author">' . $name . $desig . '</div></div></div>';
+		return '<div class="shapeblock-tstml-inner skin6">' . $logo . $rating . $desc
+			. '<div class="shapeblock-author-wrap">' . $picture . '<div class="shapeblock-author">' . $name . $desig . '</div></div></div>';
 	}
 	// default
-	return '<div class="eelfg-tstml-inner">'
-		. '<div class="eelfg-author-wrap">' . $picture . '<div class="eelfg-author">' . $name . $desig . $rating . '</div></div>'
+	return '<div class="shapeblock-tstml-inner">'
+		. '<div class="shapeblock-author-wrap">' . $picture . '<div class="shapeblock-author">' . $name . $desig . $rating . '</div></div>'
 		. $desc . $quote . '</div>';
 };
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="eelfg-grid-wrap">
+	<div class="shapeblock-grid-wrap">
 		<?php
-		$count = 0;
 		foreach ( $items as $item ) :
-			$count++;
-			$classes = 'not-hidden';
-			if ( $count > 6 && $has_more ) {
-				$classes .= ' eelfg-hidden-testimonial';
-			}
 			?>
-			<div class="eelfg-grid-item <?php echo esc_attr( $classes ); ?> eelfg-testimonials--<?php echo esc_attr( $skin ); ?>">
-				<div class="eelfg-testimonial-item">
+			<div class="shapeblock-grid-item shapeblock-testimonials--<?php echo esc_attr( $skin ); ?>">
+				<div class="shapeblock-testimonial-item">
 					<?php echo $render_inner( $item ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Assembled from escaped parts. ?>
 				</div>
 			</div>
 		<?php endforeach; ?>
 	</div>
-	<?php if ( $has_more ) : ?>
-		<div class="eelfg-testimonial-more-btn"><?php echo esc_html( $more_text ); ?></div>
-	<?php endif; ?>
 </div>

@@ -1,7 +1,7 @@
 @charset "UTF-8";
 /* Row — frontend + editor shared structural styles. Visual styles come from
  * generated per-block CSS in render.php. Keep this file lightweight. */
-.wp-block-easy-elements-for-gutenberg-layout-row {
+.wp-block-shapeblock-layout-row {
   display: flex;
   flex-direction: row;
   flex-wrap: inherit;
@@ -15,7 +15,7 @@
   width: 100%;
   box-sizing: border-box;
 }
-.wp-block-easy-elements-for-gutenberg-layout-row .eelfg-layout-row__inner {
+.wp-block-shapeblock-layout-row .shapeblock-layout-row__inner {
   display: flex;
   flex-wrap: inherit;
   flex-direction: inherit;
@@ -26,33 +26,33 @@
   width: 100%;
   box-sizing: border-box;
 }
-.wp-block-easy-elements-for-gutenberg-layout-row.is-content-boxed > .eelfg-layout-row__inner {
-  max-width: var(--eelfg-layout-row-max-width, 1200px);
+.wp-block-shapeblock-layout-row.is-content-boxed > .shapeblock-layout-row__inner {
+  max-width: var(--shapeblock-layout-row-max-width, 1200px);
   margin-left: auto;
   margin-right: auto;
 }
-.wp-block-easy-elements-for-gutenberg-layout-row.is-content-full > .eelfg-layout-row__inner {
+.wp-block-shapeblock-layout-row.is-content-full > .shapeblock-layout-row__inner {
   max-width: none;
 }
-.wp-block-easy-elements-for-gutenberg-layout-row.is-equal-height > .eelfg-layout-row__inner > .eelfg-column {
+.wp-block-shapeblock-layout-row.is-equal-height > .shapeblock-layout-row__inner > .shapeblock-column {
   display: flex;
   flex-direction: column;
 }
-.wp-block-easy-elements-for-gutenberg-layout-row.is-stretch > .eelfg-layout-row__inner > .eelfg-column {
+.wp-block-shapeblock-layout-row.is-stretch > .shapeblock-layout-row__inner > .shapeblock-column {
   align-self: stretch;
 }
-.wp-block-easy-elements-for-gutenberg-layout-row.is-valign-top > .eelfg-layout-row__inner {
+.wp-block-shapeblock-layout-row.is-valign-top > .shapeblock-layout-row__inner {
   align-items: flex-start;
 }
-.wp-block-easy-elements-for-gutenberg-layout-row.is-valign-middle > .eelfg-layout-row__inner {
+.wp-block-shapeblock-layout-row.is-valign-middle > .shapeblock-layout-row__inner {
   align-items: center;
 }
-.wp-block-easy-elements-for-gutenberg-layout-row.is-valign-bottom > .eelfg-layout-row__inner {
+.wp-block-shapeblock-layout-row.is-valign-bottom > .shapeblock-layout-row__inner {
   align-items: flex-end;
 }
 
 @media (max-width: 767px) {
-  .eelfg-layout-row > .eelfg-layout-row__inner > .eelfg-column {
+  .shapeblock-layout-row > .shapeblock-layout-row__inner > .shapeblock-column {
     flex: 1 1 100% !important;
     max-width: 100% !important;
   }

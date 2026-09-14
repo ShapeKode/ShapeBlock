@@ -105,7 +105,7 @@ const toRule = (selector, styleObj) => {
 
 export function buildFaqEditorCss(attributes) {
 	const a = attributes || {};
-	const root = `.${a.blockId || 'eelfg-faq-preview'}`;
+	const root = `.${a.blockId || 'shapeblock-faq-preview'}`;
 
 	// Accordion + question layout
 	const accordion = {};
@@ -220,23 +220,63 @@ export function buildFaqEditorCss(attributes) {
 	}
 
 	return [
-		toRule(`${root} .eelfg-faq-accordion`, accordion),
-		toRule(`${root} .eelfg-faq-item`, item),
-		toRule(`${root} .eelfg-faq-item:hover`, itemHover),
-		toRule(`${root} .eelfg-faq-item.active`, itemActive),
-		toRule(`${root} .eelfg-faq-question`, questionFull),
-		toRule(`${root} .eelfg-faq-item:hover .eelfg-faq-question`, questionHover),
-		toRule(`${root} .eelfg-faq-item.active .eelfg-faq-question`, questionActive),
-		toRule(`${root} .eelfg-faq-title`, title),
-		toRule(`${root} .eelfg-faq-item:hover .eelfg-faq-title`, titleHover),
-		toRule(`${root} .eelfg-faq-item.active .eelfg-faq-title`, titleActive),
-		toRule(`${root} .eelfg-faq-answer`, answer),
-		toRule(`${root} .eelfg-faq-item:hover .eelfg-faq-answer`, answerHover),
-		toRule(`${root} .eelfg-faq-item.active .eelfg-faq-answer`, answerActive),
-		toRule(`${root} .eelfg-faq-icon`, icon),
-		toRule(`${root} .eelfg-faq-item:hover .eelfg-faq-icon`, iconHover),
-		toRule(`${root} .eelfg-faq-item.active .eelfg-faq-icon`, iconActive),
+		toRule(`${root} .shapeblock-faq-accordion`, accordion),
+		toRule(`${root} .shapeblock-faq-item`, item),
+		toRule(`${root} .shapeblock-faq-item:hover`, itemHover),
+		toRule(`${root} .shapeblock-faq-item.active`, itemActive),
+		toRule(`${root} .shapeblock-faq-question`, questionFull),
+		toRule(`${root} .shapeblock-faq-item:hover .shapeblock-faq-question`, questionHover),
+		toRule(`${root} .shapeblock-faq-item.active .shapeblock-faq-question`, questionActive),
+		toRule(`${root} .shapeblock-faq-title`, title),
+		toRule(`${root} .shapeblock-faq-item:hover .shapeblock-faq-title`, titleHover),
+		toRule(`${root} .shapeblock-faq-item.active .shapeblock-faq-title`, titleActive),
+		toRule(`${root} .shapeblock-faq-answer`, answer),
+		toRule(`${root} .shapeblock-faq-item:hover .shapeblock-faq-answer`, answerHover),
+		toRule(`${root} .shapeblock-faq-item.active .shapeblock-faq-answer`, answerActive),
+		toRule(`${root} .shapeblock-faq-icon`, icon),
+		toRule(`${root} .shapeblock-faq-item:hover .shapeblock-faq-icon`, iconHover),
+		toRule(`${root} .shapeblock-faq-item.active .shapeblock-faq-icon`, iconActive),
+		buildFaqResponsiveCss(a, root),
 	]
+		.filter(Boolean)
+		.join('\n');
+}
+
+/**
+ * Tablet / Mobile overrides, mirroring the media queries in render.php so the
+ * editor's device preview matches the front end. Emitted after the desktop
+ * rules above, so equal-specificity selectors resolve the same way they do on
+ * the front end.
+ *
+ * @param {Object} a    Block attributes.
+ * @param {string} root Selector for this block instance.
+ * @return {string} CSS.
+ */
+function buildFaqResponsiveCss(a, root) {
+	const devices = [
+		['Tablet', '@media (max-width: 1024px)'],
+		['Mobile', '@media (max-width: 767px)'],
+	];
+
+	return devices
+		.map(([suffix, query]) => {
+			const gap = a[`itemsGap${suffix}`];
+
+			const rules = [
+				toRule(`${root} .shapeblock-faq-accordion`, gap ? { gap: ensureUnit(gap) } : {}),
+				toRule(`${root} .shapeblock-faq-title`, typographyToCss(a[`titleTypography${suffix}`])),
+				toRule(`${root} .shapeblock-faq-answer`, {
+					...typographyToCss(a[`descriptionTypography${suffix}`]),
+					...dims(a[`answerPadding${suffix}`], 'padding'),
+				}),
+				toRule(`${root} .shapeblock-faq-item`, dims(a[`itemPadding${suffix}`], 'padding')),
+				toRule(`${root} .shapeblock-faq-question`, dims(a[`questionPadding${suffix}`], 'padding')),
+			]
+				.filter(Boolean)
+				.join('');
+
+			return rules ? `${query}{${rules}}` : '';
+		})
 		.filter(Boolean)
 		.join('\n');
 }

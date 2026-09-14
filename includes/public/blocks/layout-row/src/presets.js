@@ -23,7 +23,7 @@ export const getPresetById = (id) =>
 export const presetTemplate = (id) => {
     const preset = getPresetById(id);
     return preset.columns.map((w) => [
-        'easy-elements-for-gutenberg/column',
+        'shapeblock/column',
         { width: `${parseFloat(w).toFixed(2)}%` },
     ]);
 };

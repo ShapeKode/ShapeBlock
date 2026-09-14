@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 ?>
-<div class="easy-elements-for-gutenberg-pagination-container">
+<div class="shapeblock-pagination-container">
     <?php
     // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- $pagination_html is local to this included template, not a true global.
     if($pagination == true && $query->max_num_pages > 1) {
@@ -13,16 +13,16 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
                 'format'    => is_archive() ? '?paged=%#%' : '',
                 'current'   => $paged,
                 'total'     => $query->max_num_pages,
-                'prev_text' => '<i class="eelfg-icon-chevron-left"></i>',
-                'next_text' => '<i class="eelfg-icon-chevron-right"></i>',
+                'prev_text' => '<i class="shapeblock-icon-chevron-left"></i>',
+                'next_text' => '<i class="shapeblock-icon-chevron-right"></i>',
             ) );
 
             if ($pagination_html) {
-                $pagination_html = '<div class="eelfg-pagination">' . $pagination_html . '</div>';
+                $pagination_html = '<div class="shapeblock-pagination">' . $pagination_html . '</div>';
             }
         }
 
-        echo wp_kses_post( apply_filters( 'eelfg_pagination_html', $pagination_html, $query, $attributes, $paged, $page_key ) );
+        echo wp_kses_post( apply_filters( 'shapeblock_pagination_html', $pagination_html, $query, $attributes, $paged, $page_key ) );
     }
     // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
     ?>

@@ -4,12 +4,12 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/column',
+		'name' => 'shapeblock/column',
 		'version' => '0.1.0',
 		'title' => 'Column',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'icon' => 'align-center',
-		'description' => 'A column inside a eelfg Row. Holds any block — including nested Rows.',
+		'description' => 'A column inside a shapeblock Row. Holds any block — including nested Rows.',
 		'keywords' => array(
 			'column',
 			'container',
@@ -22,18 +22,9 @@ return array(
 			'html' => false,
 			'anchor' => true,
 			'reusable' => false,
-			'inserter' => true,
-			'spacing' => array(
-				'padding' => false,
-				'margin' => false
-			),
-			'color' => array(
-				'background' => false,
-				'text' => false,
-				'gradients' => false
-			)
+			'inserter' => true
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
 		'render' => 'file:./render.php',
@@ -266,6 +257,18 @@ return array(
 					's' => 0,
 					'c' => ''
 				)
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

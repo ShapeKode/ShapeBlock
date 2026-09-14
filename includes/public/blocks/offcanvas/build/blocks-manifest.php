@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/offcanvas',
+		'name' => 'shapeblock/offcanvas',
 		'version' => '0.1.0',
 		'title' => 'Offcanvas',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'A toggle button that opens an off-canvas panel rendering a selected Template — classic side or modern fullscreen.',
 		'keywords' => array(
 			'offcanvas',
@@ -27,17 +27,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
@@ -60,11 +52,19 @@ return array(
 			),
 			'positionOffcanvas' => array(
 				'type' => 'string',
-				'default' => 'eelfg-offcanvas-right'
+				'default' => 'shapeblock-offcanvas-right'
 			),
 			'offcanvasWidth' => array(
 				'type' => 'string',
 				'default' => '380'
+			),
+			'offcanvasWidthTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'offcanvasWidthMobile' => array(
+				'type' => 'string',
+				'default' => ''
 			),
 			'contentTemplate' => array(
 				'type' => 'string',
@@ -92,6 +92,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'openerTextTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'openerTextTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'openerIconColor' => array(
@@ -128,6 +140,24 @@ return array(
 			),
 			'offcanvasPadding' => array(
 				'type' => 'object'
+			),
+			'offcanvasPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'offcanvasPaddingMobile' => array(
+				'type' => 'object'
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

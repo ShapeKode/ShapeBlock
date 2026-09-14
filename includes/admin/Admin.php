@@ -1,5 +1,5 @@
 <?php
-namespace EELFG\Admin;
+namespace ShapeBlock\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -21,7 +21,7 @@ class Admin {
     public function enqueue_scripts($hook) {
        
 
-        $asset_file = include EELFG_PL_PATH . 'build/index.asset.php';
+        $asset_file = include SHAPEBLOCK_PL_PATH . 'build/index.asset.php';
 
         $deps = array_map(function($dep) {
             return match($dep) {
@@ -32,74 +32,62 @@ class Admin {
         }, $asset_file['dependencies']);
 
         wp_enqueue_style(
-            'eelfg-admin-css',
-            EELFG_PL_URL . 'build/style-index.css',
+            'shapeblock-admin-css',
+            SHAPEBLOCK_PL_URL . 'build/style-index.css',
             [],
             $asset_file['version']
         );
 
-        // Load the app on the main page and every Easy Elements submenu page.
-        $our_pages = array_keys( \EELFG\Main::get_admin_pages() );
+        // Load the app on the main page and every ShapeBlock submenu page.
+        $our_pages = array_keys( \ShapeBlock\Main::get_admin_pages() );
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only admin page detection, no data is processed.
         $current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
         if ( ! in_array( $current_page, $our_pages, true ) ) {
             return;
         }
 
-        wp_enqueue_style( 'eelfg-admin-icons', EELFG_PL_URL . 'includes/admin/assets/icons/css/eelfg-icon.css', array(), EELFG_VERSION );
+        wp_enqueue_style( 'shapeblock-admin-icons', SHAPEBLOCK_PL_URL . 'includes/admin/assets/icons/css/shapeblock-icon.css', array(), SHAPEBLOCK_VERSION );
 
         wp_enqueue_script(
-            'eelfg-admin-js',
-            EELFG_PL_URL . 'build/index.js',
+            'shapeblock-admin-js',
+            SHAPEBLOCK_PL_URL . 'build/index.js',
             $deps,
             $asset_file['version'],
             true
         );
 
         
-        $blocks = \EELFG\Admin\Blocks::instance()->get_blocks();
-        $is_pro_installed = class_exists( '\EELFG_LICENSE' );
-        $is_pro_active = $is_pro_installed
-            ? (bool) \EELFG_LICENSE::instance()->is_license_active()
-            : false;
+        $blocks = \ShapeBlock\Admin\Blocks::instance()->get_blocks();
 
-        $template_count = wp_count_posts( 'eelfg-template' );
+        $template_count = wp_count_posts( 'shapeblock-template' );
         $total_templates = isset( $template_count->publish ) ? (int) $template_count->publish : 0;
 
-        wp_localize_script( 'eelfg-admin-js', 'eelfg', array(
+        wp_localize_script( 'shapeblock-admin-js', 'shapeblock', array(
             'ajaxurl' => admin_url( 'admin-ajax.php' ),
             'siteUrl' => site_url(),
-            'rest_url' => esc_url_raw(rest_url('easy-elements-for-gutenberg/v1/')),
+            'rest_url' => esc_url_raw(rest_url('shapeblock/v1/')),
             'nonce' => wp_create_nonce('wp_rest'),
             'blocks' => $blocks,
-            'eelfgUrl' => EELFG_PL_URL,
-            'eelfgPath' => EELFG_PL_PATH,
-            'isProActive' => $is_pro_active,
-            'isProInstalled' => $is_pro_installed,
+            'shapeblockUrl' => SHAPEBLOCK_PL_URL,
+            'shapeblockPath' => SHAPEBLOCK_PL_PATH,
             'templateCount' => $total_templates,
-            'templateLimit' => $is_pro_active ? -1 : 3,
-            'proUrl' => 'https://themewant.com/plugins/easy-elements-for-gutenberg/pricing',
-            'colors' => \EELFG\Admin\Api::get_saved_colors(),
-            'colorDefaults' => \EELFG\Admin\Api::get_color_defaults(),
-            'layout' => \EELFG\Admin\Api::get_saved_layout(),
-            'layoutDefaults' => \EELFG\Admin\Api::get_layout_defaults(),
-            'builderTypes' => array_values( \EELFG\Extension\ThemeBuilder\Theme_Builder::get_template_types() ),
-            'builderRules' => \EELFG\Extension\ThemeBuilder\Builder_Conditions::get_rules(),
-            'license' => array(
-                'key'    => (string) get_option( 'eelfg_license_key', '' ),
-                'status' => (string) get_option( 'eelfg_license_status', '' ),
-            ),
+            'colors' => \ShapeBlock\Admin\Api::get_saved_colors(),
+            'colorDefaults' => \ShapeBlock\Admin\Api::get_color_defaults(),
+            'layout' => \ShapeBlock\Admin\Api::get_saved_layout(),
+            'layoutDefaults' => \ShapeBlock\Admin\Api::get_layout_defaults(),
+            'builderTypes' => array_values( \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_template_types() ),
+            'builderRules' => \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::get_rules(),
         ) );
     }
 
     public function editor_overrides() {
         $screen = get_current_screen();
-        if ( ! $screen || ! in_array( $screen->post_type, array( 'eelfg-template', 'eelfg-builder' ), true ) ) {
+        if ( ! $screen || ! in_array( $screen->post_type, array( 'shapeblock-template', 'shapeblock-builder' ), true ) ) {
             return;
         }
 
         // Send the editor "close" button back to the relevant dashboard submenu.
-        $page = $screen->post_type === 'eelfg-builder' ? 'eelfg-theme-builder' : 'eelfg-templates';
+        $page = $screen->post_type === 'shapeblock-builder' ? 'shapeblock-theme-builder' : 'shapeblock-templates';
         $template_page_url = admin_url( 'admin.php?page=' . $page );
 
         wp_add_inline_script( 'wp-edit-post', "

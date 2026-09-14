@@ -1,13 +1,13 @@
 /**
  * Editor-only styles for the FAQ Accordion block (inline editing).
  */
-.eelfg-faq-block-wrap .eelfg-faq-item {
+.shapeblock-faq-block-wrap .shapeblock-faq-item {
   position: relative;
 }
-.eelfg-faq-block-wrap .eelfg-faq-item.active.is-open .eelfg-faq-answer {
+.shapeblock-faq-block-wrap .shapeblock-faq-item.active.is-open .shapeblock-faq-answer {
   display: block;
 }
-.eelfg-faq-block-wrap .eelfg-faq-icon-toggle {
+.shapeblock-faq-block-wrap .shapeblock-faq-icon-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -19,7 +19,7 @@
   color: inherit;
   line-height: 0;
 }
-.eelfg-faq-block-wrap .eelfg-faq-editor-controls {
+.shapeblock-faq-block-wrap .shapeblock-faq-editor-controls {
   position: absolute;
   top: 6px;
   right: 6px;
@@ -34,14 +34,14 @@
   opacity: 0;
   transition: opacity 0.15s ease;
 }
-.eelfg-faq-block-wrap .eelfg-faq-item:hover .eelfg-faq-editor-controls,
-.eelfg-faq-block-wrap .eelfg-faq-item:focus-within .eelfg-faq-editor-controls {
+.shapeblock-faq-block-wrap .shapeblock-faq-item:hover .shapeblock-faq-editor-controls,
+.shapeblock-faq-block-wrap .shapeblock-faq-item:focus-within .shapeblock-faq-editor-controls {
   opacity: 1;
 }
-.eelfg-faq-block-wrap .eelfg-faq-title {
+.shapeblock-faq-block-wrap .shapeblock-faq-title {
   outline: none;
 }
 
-.eelfg-faq-add-row {
+.shapeblock-faq-add-row {
   margin-top: 12px;
 }/*# sourceMappingURL=editor.css.map */

@@ -9,28 +9,28 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Server-side render for the Social Share block.
  *
  * Mirrors the markup of the Elementor "Social Share" widget
- * (easy-elements/widgets/social-share). Element classes use the "eelfg-" prefix.
+ * (easy-elements/widgets/social-share). Element classes use the "shapeblock-" prefix.
  * Brand icons are inline SVG so they render identically in the editor and on the
  * front end without depending on an icon font.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-soc-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-soc-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $platforms = isset( $attributes['platforms'] ) && is_array( $attributes['platforms'] ) ? $attributes['platforms'] : [];
 $layout    = isset( $attributes['layout'] ) ? $attributes['layout'] : 'horizontal';
 $target    = ! empty( $attributes['openNewTab'] ) ? '_blank' : '_self';
 
-$block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'eelfg-block eelfg-social-share-block-wrap ' . $unique_id ) );
+$block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'shapeblock-block shapeblock-social-share-block-wrap ' . $unique_id ) );
 if ( empty( $block_wrap_attr ) ) {
-	$block_wrap_attr = 'class="eelfg-block eelfg-social-share-block-wrap ' . esc_attr( $unique_id ) . '"';
+	$block_wrap_attr = 'class="shapeblock-block shapeblock-social-share-block-wrap ' . esc_attr( $unique_id ) . '"';
 }
 
 if ( empty( $platforms ) ) {
-	echo '<div ' . wp_kses_post( $block_wrap_attr ) . '><p>' . esc_html__( 'Please add social platforms.', 'easy-elements-for-gutenberg' ) . '</p></div>';
+	echo '<div ' . wp_kses_post( $block_wrap_attr ) . '><p>' . esc_html__( 'Please add social platforms.', 'shapeblock' ) . '</p></div>';
 	return;
 }
 
@@ -54,8 +54,8 @@ $featured = has_post_thumbnail() ? get_the_post_thumbnail_url( get_the_ID(), 'fu
 // ---------------------------------------------------------------------------
 // Inline styles (scoped to this instance).
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-social-share-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-social-share-style';
+$selector     = '.shapeblock-social-share-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-social-share-style';
 
 $dims = function ( $obj ) use ( $H ) {
 	$out = [];
@@ -95,12 +95,50 @@ $icon_svg = [];
 if ( ! empty( $attributes['iconColor'] ) ) { $icon_i['color'] = $attributes['iconColor']; $icon_svg['fill'] = $attributes['iconColor']; }
 if ( '' !== $u( 'iconSize' ) ) { $icon_i['font-size'] = $u( 'iconSize' ); $icon_svg['width'] = $u( 'iconSize' ); $icon_svg['height'] = $u( 'iconSize' ); }
 
+// ---------------------------------------------------------------------------
+// Responsive (Tablet / Mobile) overrides. The desktop CSS above is unchanged;
+// these rules are emitted only when the matching per-device attribute is set,
+// so existing content renders identically.
+// ---------------------------------------------------------------------------
+$build_dev = function ( $suffix ) use ( $attributes, $H ) {
+	$dev_u = function ( $key ) use ( $attributes, $suffix, $H ) {
+		return ( isset( $attributes[ $key . $suffix ] ) && '' !== $attributes[ $key . $suffix ] ) ? $H::ensure_unit( $attributes[ $key . $suffix ] ) : '';
+	};
+
+	$btn = [];
+	if ( '' !== $dev_u( 'buttonSize' ) ) { $btn['width'] = $dev_u( 'buttonSize' ); $btn['height'] = $dev_u( 'buttonSize' ); }
+	if ( '' !== $dev_u( 'buttonSpacing' ) ) { $btn['margin'] = '0 ' . $dev_u( 'buttonSpacing' ); }
+
+	$i   = [];
+	$svg = [];
+	if ( '' !== $dev_u( 'iconSize' ) ) { $i['font-size'] = $dev_u( 'iconSize' ); $svg['width'] = $dev_u( 'iconSize' ); $svg['height'] = $dev_u( 'iconSize' ); }
+
+	return [
+		'.shapeblock-social-button'     => $btn,
+		'.shapeblock-social-button i'   => $i,
+		'.shapeblock-social-button svg' => $svg,
+	];
+};
+$dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
+$resp_css = '';
+foreach ( [ '.shapeblock-social-button', '.shapeblock-social-button i', '.shapeblock-social-button svg' ] as $sub_sel ) {
+	$rdata = [];
+	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
+			$rdata[ $device_key ] = $dev_data[ $suffix ][ $sub_sel ];
+		}
+	}
+	if ( ! empty( $rdata ) ) {
+		$resp_css .= $H::generate_responsive_css( $selector . ' ' . $sub_sel, $rdata );
+	}
+}
+
 wp_enqueue_style( $style_handle );
-$H::add_custom_style( $style_handle, $selector, '', [
-	'.eelfg-social-button'           => $H::get_inline_styles( array_merge( $button, $button_spacing ) ),
-	'.eelfg-social-button i'         => $H::get_inline_styles( $icon_i ),
-	'.eelfg-social-button svg'       => $H::get_inline_styles( $icon_svg ),
-	'.eelfg-social-button svg path'  => ! empty( $attributes['iconColor'] ) ? 'fill:' . $attributes['iconColor'] : '',
+$H::add_custom_style( $style_handle, $selector, $resp_css, [
+	'.shapeblock-social-button'           => $H::get_inline_styles( array_merge( $button, $button_spacing ) ),
+	'.shapeblock-social-button i'         => $H::get_inline_styles( $icon_i ),
+	'.shapeblock-social-button svg'       => $H::get_inline_styles( $icon_svg ),
+	'.shapeblock-social-button svg path'  => ! empty( $attributes['iconColor'] ) ? 'fill:' . $attributes['iconColor'] : '',
 ] );
 
 // ---------------------------------------------------------------------------
@@ -153,11 +191,11 @@ $share_url = function ( $platform ) use ( $current_url, $current_title, $current
 	}
 };
 
-$layout_class = 'eelfg-social-layout-' . ( in_array( $layout, [ 'horizontal', 'vertical', 'grid' ], true ) ? $layout : 'horizontal' );
+$layout_class = 'shapeblock-social-layout-' . ( in_array( $layout, [ 'horizontal', 'vertical', 'grid' ], true ) ? $layout : 'horizontal' );
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="eelfg-social-share <?php echo esc_attr( $layout_class ); ?>">
-		<div class="eelfg-social-buttons">
+	<div class="shapeblock-social-share <?php echo esc_attr( $layout_class ); ?>">
+		<div class="shapeblock-social-buttons">
 			<?php
 			foreach ( $platforms as $item ) {
 				$platform = isset( $item['platform'] ) ? $item['platform'] : '';
@@ -166,13 +204,13 @@ $layout_class = 'eelfg-social-layout-' . ( in_array( $layout, [ 'horizontal', 'v
 				}
 				$custom    = isset( $item['customIcon'] ) ? $item['customIcon'] : '';
 				$icon_html = ( ! empty( $custom ) && 'none' !== $custom )
-					? '<i class="eelfg-icon ' . esc_attr( $custom ) . '" aria-hidden="true"></i>'
+					? '<i class="shapeblock-icon ' . esc_attr( $custom ) . '" aria-hidden="true"></i>'
 					: ( isset( $icons[ $platform ] ) ? $icons[ $platform ] : $default_icon );
 
-				$btn_class = 'eelfg-social-button eelfg-' . sanitize_html_class( $platform );
+				$btn_class = 'shapeblock-social-button shapeblock-' . sanitize_html_class( $platform );
 
 				if ( 'copy' === $platform ) {
-					echo '<a href="#" class="' . esc_attr( $btn_class ) . ' eelfg-social-copy" data-url="' . esc_attr( $current_url ) . '" title="' . esc_attr__( 'Copy Link', 'easy-elements-for-gutenberg' ) . '">';
+					echo '<a href="#" class="' . esc_attr( $btn_class ) . ' shapeblock-social-copy" data-url="' . esc_attr( $current_url ) . '" title="' . esc_attr__( 'Copy Link', 'shapeblock' ) . '">';
 					echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo '</a>';
 				} else {

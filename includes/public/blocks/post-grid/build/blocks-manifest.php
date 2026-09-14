@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/post-grid',
+		'name' => 'shapeblock/post-grid',
 		'version' => '0.1.0',
 		'title' => 'Post Grid',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'Post Grid Block',
 		'example' => array(
 			
@@ -20,28 +20,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
-			),
-			'color' => array(
-				'background' => true,
-				'text' => false,
-				'gradients' => true
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
@@ -239,21 +220,13 @@ return array(
 			),
 			'itemOverlayBackgroundColorHover' => array(
 				'type' => 'string',
-				'default' => 'var(--eshb-primary-color)'
+				'default' => 'var(--shapeblock-preset-color-primary)'
 			),
 			'itemOverlayBackgroundGradient' => array(
 				'type' => 'string',
 				'default' => ''
 			),
 			'itemOverlayBackgroundGradientHover' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'itemOverlayBackgroundGradientTwo' => array(
-				'type' => 'string',
-				'default' => ''
-			),
-			'itemOverlayBackgroundGradientTwoHover' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -314,10 +287,6 @@ return array(
 			'readMoreColorHover' => array(
 				'type' => 'string',
 				'default' => ''
-			),
-			'showThumbnail' => array(
-				'type' => 'boolean',
-				'default' => true
 			),
 			'showMeta' => array(
 				'type' => 'boolean',
@@ -395,10 +364,6 @@ return array(
 				'type' => 'string',
 				'default' => 'after'
 			),
-			'onlyIconShow' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
 			'showDateOnTop' => array(
 				'type' => 'boolean',
 				'default' => false
@@ -426,6 +391,10 @@ return array(
 			'thumbAnim' => array(
 				'type' => 'boolean',
 				'default' => true
+			),
+			'paginationType' => array(
+				'type' => 'string',
+				'default' => 'numeric'
 			),
 			'paginationBtnWidth' => array(
 				'type' => 'string',
@@ -459,19 +428,31 @@ return array(
 			),
 			'paginationColor' => array(
 				'type' => 'string',
-				'default' => 'var(--eelfg-preset-color-contrast-2)'
+				'default' => 'var(--shapeblock-preset-color-contrast-2)'
 			),
 			'paginationColorHover' => array(
 				'type' => 'string',
-				'default' => 'var(--eelfg-preset-color-white)'
+				'default' => 'var(--shapeblock-preset-color-white)'
 			),
 			'paginationBackgroundColor' => array(
 				'type' => 'string',
-				'default' => 'var(--eelfg-preset-color-tertiary)'
+				'default' => 'var(--shapeblock-preset-color-tertiary)'
 			),
 			'paginationBackgroundColorHover' => array(
 				'type' => 'string',
-				'default' => 'var(--eelfg-preset-color-primary)'
+				'default' => 'var(--shapeblock-preset-color-primary)'
+			),
+			'paginationTypography' => array(
+				'type' => 'object',
+				'default' => array(
+					'fontFamily' => '',
+					'fontSize' => '',
+					'fontWeight' => '',
+					'fontStyle' => '',
+					'textTransform' => '',
+					'lineHeight' => '',
+					'letterSpacing' => ''
+				)
 			),
 			'columnsTablet' => array(
 				'type' => 'string',
@@ -657,6 +638,18 @@ return array(
 			),
 			'categoryMargin' => array(
 				'type' => 'object'
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

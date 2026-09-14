@@ -1,22 +1,18 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "easy-elements-for-gutenberg/image-comparison",
+	"name": "shapeblock/image-comparison",
 	"version": "0.1.0",
 	"title": "Image Comparison",
-	"category": "easy-elements-for-gutenberg",
+	"category": "shapeblock",
 	"description": "A before / after image comparison slider with a draggable handle — horizontal or vertical.",
 	"keywords": [ "before", "after", "compare", "comparison", "slider" ],
 	"example": {},
 	"supports": {
 		"html": false,
-		"align": [ "left", "center", "right", "wide", "full" ],
-		"spacing": {
-			"padding": [ "top", "bottom", "left", "right" ],
-			"margin": [ "top", "bottom", "left", "right" ]
-		}
+		"align": [ "left", "center", "right", "wide", "full" ]
 	},
-	"textdomain": "easy-elements-for-gutenberg",
+	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
 	"viewScript": "file:./view.js",
 	"render": "file:./render.php",
@@ -27,6 +23,11 @@
 		"orientation": { "type": "string", "default": "horizontal" },
 		"offset": { "type": "number", "default": 50 },
 		"height": { "type": "string", "default": "540" },
-		"containerRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } }
-	}
+		"heightTablet": { "type": "string", "default": "" },
+		"heightMobile": { "type": "string", "default": "" },
+		"containerRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+	"hideDesktop": { "type": "boolean", "default": false },
+	"hideTablet": { "type": "boolean", "default": false },
+	"hideMobile": { "type": "boolean", "default": false }
+}
 }

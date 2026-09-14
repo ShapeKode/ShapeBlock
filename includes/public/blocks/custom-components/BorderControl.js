@@ -72,7 +72,7 @@ const BorderControl = ({ label, value, onChange }) => {
     };
 
     return (
-        <div className="eshb-border-control" style={{ position: 'relative' }}>
+        <div className="shapeblock-border-control" style={{ position: 'relative' }}>
             <Button
                 variant="secondary"
                 onClick={toggleVisible}
@@ -89,7 +89,7 @@ const BorderControl = ({ label, value, onChange }) => {
                     }}>
                         <div style={previewStyle} />
                     </div>
-                    {label || __('Border', 'easy-elements-for-gutenberg')}
+                    {label || __('Border', 'shapeblock')}
                 </div>
                 <Icon icon="plus" />
             </Button>
@@ -97,14 +97,14 @@ const BorderControl = ({ label, value, onChange }) => {
                 <Popover position="bottom center" onFocusOutside={() => setIsVisible(false)}>
                     <div style={{ padding: '16px', width: '280px' }}>
                         <BoxControl
-                            label={__('Width', 'easy-elements-for-gutenberg')}
+                            label={__('Width', 'shapeblock')}
                             values={width}
                             onChange={(val) => updateBorder({ width: val })}
                             units={[{ value: 'px', label: 'px', default: 0 }]}
                             __nextHasNoMarginBottom={true}
                         />
                         <SelectControl
-                            label={__('Style', 'easy-elements-for-gutenberg')}
+                            label={__('Style', 'shapeblock')}
                             value={style}
                             options={[
                                 { label: 'Solid',  value: 'solid' },
@@ -121,7 +121,7 @@ const BorderControl = ({ label, value, onChange }) => {
                             __next40pxDefaultSize={true}
                             __nextHasNoMarginBottom={true}
                         />
-                        <BaseControl label={__('Color', 'easy-elements-for-gutenberg')} style={{ marginTop: '15px' }} __nextHasNoMarginBottom={true}>
+                        <BaseControl label={__('Color', 'shapeblock')} style={{ marginTop: '15px' }} __nextHasNoMarginBottom={true}>
                             <ColorPicker
                                 color={color}
                                 onChange={handleColorChange}
@@ -141,7 +141,7 @@ const BorderControl = ({ label, value, onChange }) => {
                             }}
                             style={{ marginTop: '15px', width: '100%', justifyContent: 'center' }}
                         >
-                            {__('Reset', 'easy-elements-for-gutenberg')}
+                            {__('Reset', 'shapeblock')}
                         </Button>
                     </div>
                 </Popover>

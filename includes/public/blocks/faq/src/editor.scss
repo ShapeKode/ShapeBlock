@@ -1,20 +1,20 @@
 /**
  * Editor-only styles for the FAQ Accordion block (inline editing).
  */
-.eelfg-faq-block-wrap {
-	.eelfg-faq-item {
+.shapeblock-faq-block-wrap {
+	.shapeblock-faq-item {
 		position: relative;
 	}
 
 	// Accordion preview: only the open item's answer is visible (open-all mode
 	// keeps the front-end rule that shows them all). The doubled class raises
-	// specificity above the front-end `.eelfg-faq-answer { display:none }` rule.
-	.eelfg-faq-item.active.is-open .eelfg-faq-answer {
+	// specificity above the front-end `.shapeblock-faq-answer { display:none }` rule.
+	.shapeblock-faq-item.active.is-open .shapeblock-faq-answer {
 		display: block;
 	}
 
 	// Toggle button wrapping the +/- icons — reset native button chrome.
-	.eelfg-faq-icon-toggle {
+	.shapeblock-faq-icon-toggle {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -28,7 +28,7 @@
 	}
 
 	// Per-item controls float at the top-right; revealed on hover/focus.
-	.eelfg-faq-editor-controls {
+	.shapeblock-faq-editor-controls {
 		position: absolute;
 		top: 6px;
 		right: 6px;
@@ -44,17 +44,17 @@
 		transition: opacity 0.15s ease;
 	}
 
-	.eelfg-faq-item:hover .eelfg-faq-editor-controls,
-	.eelfg-faq-item:focus-within .eelfg-faq-editor-controls {
+	.shapeblock-faq-item:hover .shapeblock-faq-editor-controls,
+	.shapeblock-faq-item:focus-within .shapeblock-faq-editor-controls {
 		opacity: 1;
 	}
 
 	// The editable title should stay clickable/typed even with the icon beside it.
-	.eelfg-faq-title {
+	.shapeblock-faq-title {
 		outline: none;
 	}
 }
 
-.eelfg-faq-add-row {
+.shapeblock-faq-add-row {
 	margin-top: 12px;
 }

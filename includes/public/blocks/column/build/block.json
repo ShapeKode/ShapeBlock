@@ -1,12 +1,12 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/column",
+  "name": "shapeblock/column",
   "version": "0.1.0",
   "title": "Column",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "icon": "align-center",
-  "description": "A column inside a eelfg Row. Holds any block — including nested Rows.",
+  "description": "A column inside a shapeblock Row. Holds any block — including nested Rows.",
   "keywords": [
     "column",
     "container",
@@ -17,18 +17,9 @@
     "html": false,
     "anchor": true,
     "reusable": false,
-    "inserter": true,
-    "spacing": {
-      "padding": false,
-      "margin": false
-    },
-    "color": {
-      "background": false,
-      "text": false,
-      "gradients": false
-    }
+    "inserter": true
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "render": "file:./render.php",
@@ -261,6 +252,18 @@
         "s": 0,
         "c": ""
       }
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

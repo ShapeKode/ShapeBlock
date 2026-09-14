@@ -1,13 +1,15 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
 import { ServerSideRender } from '@wordpress/server-side-render';
-import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import { useBlockProps, InspectorControls, BlockControls, AlignmentControl } from '@wordpress/block-editor';
 import {
 	PanelBody,
 	SelectControl,
 	ToggleControl,
 	TextControl,
 	BoxControl,
+	TabPanel,
 	__experimentalDivider as Divider,
 } from '@wordpress/components';
 
@@ -15,8 +17,13 @@ import ColorPopover from '../../custom-components/ColorPopover';
 import TypographyControls from '../../custom-components/TypographyControls';
 import BorderControl from '../../custom-components/BorderControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
+import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 
 import './editor.scss';
+
+// Map a base attribute name to its per-device key (desktop uses the base name).
+const getKey = (base, device) =>
+	device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
 
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const {
@@ -28,14 +35,25 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		targetDate,
 		separator,
 		labelUnderNumber,
-		contentAlign,
 	} = attributes;
 
 	useEffect(() => {
 		if (!blockId) {
-			setAttributes({ blockId: 'eelfg-cntdwn-' + clientId.slice(0, 6) });
+			setAttributes({ blockId: 'shapeblock-cntdwn-' + clientId.slice(0, 6) });
 		}
 	}, [blockId, clientId, setAttributes]);
+
+	// Current preview device, so the toolbar alignment edits the matching
+	// per-device attribute (contentAlign / contentAlignTablet / contentAlignMobile).
+	const device = useSelect((select) => {
+		const editor = select('core/editor');
+		if (editor && typeof editor.getDeviceType === 'function') return editor.getDeviceType();
+		const editPost = select('core/edit-post');
+		if (editPost && typeof editPost.__experimentalGetPreviewDeviceType === 'function') return editPost.__experimentalGetPreviewDeviceType();
+		return 'Desktop';
+	}, []);
+	const dev = device ? device.toLowerCase() : 'desktop';
+	const alignKey = dev === 'desktop' ? 'contentAlign' : `contentAlign${dev.charAt(0).toUpperCase() + dev.slice(1)}`;
 
 	// Editor preview ticking: the front-end view.js doesn't run inside the
 	// ServerSideRender output, so drive the countdown here. The interval reads
@@ -46,7 +64,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		const tick = () => {
 			const root = previewRef.current;
 			if (!root) return;
-			const cd = root.querySelector('.eelfg-cntdwn[data-target]');
+			const cd = root.querySelector('.shapeblock-cntdwn[data-target]');
 			if (!cd) return;
 			const target = new Date(cd.dataset.target).getTime();
 			if (isNaN(target)) return;
@@ -56,10 +74,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				const el = cd.querySelector(sel);
 				if (el) el.textContent = val;
 			};
-			set('.eelfg-cntdwn-days', Math.floor(distance / day));
-			set('.eelfg-cntdwn-hours', Math.floor((distance % day) / hr));
-			set('.eelfg-cntdwn-minutes', Math.floor((distance % hr) / min));
-			set('.eelfg-cntdwn-seconds', Math.floor((distance % min) / sec));
+			set('.shapeblock-cntdwn-days', Math.floor(distance / day));
+			set('.shapeblock-cntdwn-hours', Math.floor((distance % day) / hr));
+			set('.shapeblock-cntdwn-minutes', Math.floor((distance % hr) / min));
+			set('.shapeblock-cntdwn-seconds', Math.floor((distance % min) / sec));
 		};
 		tick();
 		const id = setInterval(tick, 1000);
@@ -85,94 +103,150 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			__nextHasNoMarginBottom
 		/>
 	);
+	// Responsive variants — a device switcher above the control, editing the
+	// matching per-device attribute (base / baseTablet / baseMobile).
+	const respTypo = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => <TypographyControls attributes={attributes} setAttributes={setAttributes} attributeKey={getKey(base, device)} />}
+		</ResponsiveWrapper>
+	);
+	const respBox = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => <BoxControl values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
+		</ResponsiveWrapper>
+	);
+	const respNum = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => {
+				const k = getKey(base, device);
+				return <TextControl type="number" value={attributes[k]} onChange={(v) => setAttributes({ [k]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
+			}}
+		</ResponsiveWrapper>
+	);
+	const respAlign = (label, base, options) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => {
+				const k = getKey(base, device);
+				return <SelectControl value={attributes[k]} options={options} onChange={(v) => setAttributes({ [k]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
+			}}
+		</ResponsiveWrapper>
+	);
 
-	const isSeparator = separator === 'eelfg-cntdwn-bullets' || separator === 'eelfg-cntdwn-dash';
+	const isSeparator = separator === 'shapeblock-cntdwn-bullets' || separator === 'shapeblock-cntdwn-dash';
 
 	const unitSection = (titleLabel, typoKey, colorKey, labelColorKey, labelTypoKey) => (
 		<PanelBody title={titleLabel} initialOpen={false}>
-			{typo(__('Number Typography', 'easy-elements-for-gutenberg'), typoKey)}
-			{color(__('Number Color', 'easy-elements-for-gutenberg'), colorKey)}
+			{respTypo(__('Number Typography', 'shapeblock'), typoKey)}
+			{color(__('Number Color', 'shapeblock'), colorKey)}
 			<Divider />
-			{color(__('Label Color', 'easy-elements-for-gutenberg'), labelColorKey)}
-			{typo(__('Label Typography', 'easy-elements-for-gutenberg'), labelTypoKey)}
+			{color(__('Label Color', 'shapeblock'), labelColorKey)}
+			{respTypo(__('Label Typography', 'shapeblock'), labelTypoKey)}
 		</PanelBody>
+	);
+
+	// --- Tab 1: Settings (content/behavior) -----------------------------------
+	const settingsTab = (
+		<PanelBody title={__('Countdown', 'shapeblock')} initialOpen={true}>
+			<TextControl
+				label={__('Target Date', 'shapeblock')}
+				type="datetime-local"
+				value={targetDate}
+				onChange={(v) => setAttributes({ targetDate: v })}
+				help={__('Leave empty to default to 24 hours from now.', 'shapeblock')}
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			/>
+			<Divider />
+			<TextControl label={__('Days Label', 'shapeblock')} value={dayLabel} onChange={(v) => setAttributes({ dayLabel: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+			<TextControl label={__('Hours Label', 'shapeblock')} value={hoursLabel} onChange={(v) => setAttributes({ hoursLabel: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+			<TextControl label={__('Minutes Label', 'shapeblock')} value={minuteLabel} onChange={(v) => setAttributes({ minuteLabel: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+			<TextControl label={__('Seconds Label', 'shapeblock')} value={secondsLabel} onChange={(v) => setAttributes({ secondsLabel: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+			<Divider />
+			<SelectControl
+				label={__('Separator', 'shapeblock')}
+				value={separator}
+				options={[
+					{ label: __('Space', 'shapeblock'), value: 'shapeblock-cntdwn-space' },
+					{ label: __('Bullets', 'shapeblock'), value: 'shapeblock-cntdwn-bullets' },
+					{ label: __('Dash', 'shapeblock'), value: 'shapeblock-cntdwn-dash' },
+				]}
+				onChange={(v) => setAttributes({ separator: v })}
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			/>
+			<ToggleControl
+				label={__('Display Label Under Number', 'shapeblock')}
+				checked={labelUnderNumber}
+				onChange={(v) => setAttributes({ labelUnderNumber: v })}
+				__nextHasNoMarginBottom
+			/>
+		</PanelBody>
+	);
+
+	// --- Tab 2: Layout (size & spacing) ---------------------------------------
+	const layoutTab = (
+		<PanelBody title={__('Countdown', 'shapeblock')} initialOpen={true}>
+			{labelUnderNumber && respAlign(
+				__('Content Alignment', 'shapeblock'),
+				'contentAlign',
+				[
+					{ label: __('Left', 'shapeblock'), value: 'left' },
+					{ label: __('Center', 'shapeblock'), value: 'center' },
+					{ label: __('Right', 'shapeblock'), value: 'right' },
+				]
+			)}
+			{respNum(__('Mid Gap (px)', 'shapeblock'), 'midGap')}
+			{isSeparator && num(__('Separator Position X (px)', 'shapeblock'), 'separatorPositionX')}
+			{respBox(__('Item Padding', 'shapeblock'), 'itemPadding')}
+		</PanelBody>
+	);
+
+	// --- Tab 3: Style (appearance) --------------------------------------------
+	const styleTab = (
+		<>
+			<PanelBody title={__('Countdown', 'shapeblock')} initialOpen={true}>
+				{isSeparator && color(__('Separator Color', 'shapeblock'), 'separatorColor')}
+				{color(__('Item Background', 'shapeblock'), 'itemBgColor')}
+				<BorderControl label={__('Item Border', 'shapeblock')} value={attributes.itemBorder} onChange={(v) => setAttributes({ itemBorder: v })} />
+				<BoxShadowControls label={__('Item Box Shadow', 'shapeblock')} value={attributes.itemBoxShadow} onChange={(v) => setAttributes({ itemBoxShadow: v })} />
+				{box(__('Item Border Radius', 'shapeblock'), 'itemBorderRadius')}
+			</PanelBody>
+
+			{unitSection(__('Days', 'shapeblock'), 'daysTypography', 'daysColor', 'daysLabelColor', 'daysLabelTypography')}
+			{unitSection(__('Hours', 'shapeblock'), 'hoursTypography', 'hoursColor', 'hoursLabelColor', 'hoursLabelTypography')}
+			{unitSection(__('Minutes', 'shapeblock'), 'minutesTypography', 'minutesColor', 'minutesLabelColor', 'minutesLabelTypography')}
+			{unitSection(__('Seconds', 'shapeblock'), 'secondsTypography', 'secondsColor', 'secondsLabelColor', 'secondsLabelTypography')}
+		</>
 	);
 
 	return (
 		<div {...useBlockProps()}>
+			<BlockControls>
+				<AlignmentControl
+					value={attributes[alignKey]}
+					onChange={(value) => setAttributes({ [alignKey]: value || (dev === 'desktop' ? 'center' : '') })}
+				/>
+			</BlockControls>
 			<InspectorControls>
-				<PanelBody title={__('Countdown', 'easy-elements-for-gutenberg')} initialOpen={true}>
-					<TextControl
-						label={__('Target Date', 'easy-elements-for-gutenberg')}
-						type="datetime-local"
-						value={targetDate}
-						onChange={(v) => setAttributes({ targetDate: v })}
-						help={__('Leave empty to default to 24 hours from now.', 'easy-elements-for-gutenberg')}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					<Divider />
-					<TextControl label={__('Days Label', 'easy-elements-for-gutenberg')} value={dayLabel} onChange={(v) => setAttributes({ dayLabel: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					<TextControl label={__('Hours Label', 'easy-elements-for-gutenberg')} value={hoursLabel} onChange={(v) => setAttributes({ hoursLabel: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					<TextControl label={__('Minutes Label', 'easy-elements-for-gutenberg')} value={minuteLabel} onChange={(v) => setAttributes({ minuteLabel: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					<TextControl label={__('Seconds Label', 'easy-elements-for-gutenberg')} value={secondsLabel} onChange={(v) => setAttributes({ secondsLabel: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					<Divider />
-					<SelectControl
-						label={__('Separator', 'easy-elements-for-gutenberg')}
-						value={separator}
-						options={[
-							{ label: __('Space', 'easy-elements-for-gutenberg'), value: 'eelfg-cntdwn-space' },
-							{ label: __('Bullets', 'easy-elements-for-gutenberg'), value: 'eelfg-cntdwn-bullets' },
-							{ label: __('Dash', 'easy-elements-for-gutenberg'), value: 'eelfg-cntdwn-dash' },
-						]}
-						onChange={(v) => setAttributes({ separator: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					<ToggleControl
-						label={__('Display Label Under Number', 'easy-elements-for-gutenberg')}
-						checked={labelUnderNumber}
-						onChange={(v) => setAttributes({ labelUnderNumber: v })}
-						__nextHasNoMarginBottom
-					/>
-					{labelUnderNumber && (
-						<SelectControl
-							label={__('Content Alignment', 'easy-elements-for-gutenberg')}
-							value={contentAlign}
-							options={[
-								{ label: __('Left', 'easy-elements-for-gutenberg'), value: 'left' },
-								{ label: __('Center', 'easy-elements-for-gutenberg'), value: 'center' },
-								{ label: __('Right', 'easy-elements-for-gutenberg'), value: 'right' },
-							]}
-							onChange={(v) => setAttributes({ contentAlign: v })}
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-						/>
+				<TabPanel
+					className="shapeblock-inspector-tabs"
+					activeClass="is-active"
+					tabs={[
+						{ name: 'settings', title: __('Settings', 'shapeblock') },
+						{ name: 'layout', title: __('Layout', 'shapeblock') },
+						{ name: 'style', title: __('Style', 'shapeblock') },
+					]}
+				>
+					{(tab) => (
+						tab.name === 'settings' ? settingsTab :
+						tab.name === 'layout' ? layoutTab :
+						styleTab
 					)}
-				</PanelBody>
-			</InspectorControls>
-
-			<InspectorControls group="styles">
-				<PanelBody title={__('Countdown', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					{num(__('Mid Gap (px)', 'easy-elements-for-gutenberg'), 'midGap')}
-					{isSeparator && num(__('Separator Position X (px)', 'easy-elements-for-gutenberg'), 'separatorPositionX')}
-					{isSeparator && color(__('Separator Color', 'easy-elements-for-gutenberg'), 'separatorColor')}
-					<Divider />
-					{color(__('Item Background', 'easy-elements-for-gutenberg'), 'itemBgColor')}
-					<BorderControl label={__('Item Border', 'easy-elements-for-gutenberg')} value={attributes.itemBorder} onChange={(v) => setAttributes({ itemBorder: v })} />
-					<BoxShadowControls label={__('Item Box Shadow', 'easy-elements-for-gutenberg')} value={attributes.itemBoxShadow} onChange={(v) => setAttributes({ itemBoxShadow: v })} />
-					{box(__('Item Border Radius', 'easy-elements-for-gutenberg'), 'itemBorderRadius')}
-					{box(__('Item Padding', 'easy-elements-for-gutenberg'), 'itemPadding')}
-				</PanelBody>
-
-				{unitSection(__('Days', 'easy-elements-for-gutenberg'), 'daysTypography', 'daysColor', 'daysLabelColor', 'daysLabelTypography')}
-				{unitSection(__('Hours', 'easy-elements-for-gutenberg'), 'hoursTypography', 'hoursColor', 'hoursLabelColor', 'hoursLabelTypography')}
-				{unitSection(__('Minutes', 'easy-elements-for-gutenberg'), 'minutesTypography', 'minutesColor', 'minutesLabelColor', 'minutesLabelTypography')}
-				{unitSection(__('Seconds', 'easy-elements-for-gutenberg'), 'secondsTypography', 'secondsColor', 'secondsLabelColor', 'secondsLabelTypography')}
+				</TabPanel>
 			</InspectorControls>
 
 			<div ref={previewRef}>
-				<ServerSideRender block="easy-elements-for-gutenberg/countdown" attributes={attributes} httpMethod="POST" />
+				<ServerSideRender block="shapeblock/countdown" attributes={attributes} httpMethod="POST" />
 			</div>
 		</div>
 	);

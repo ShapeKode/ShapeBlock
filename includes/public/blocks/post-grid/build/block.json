@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/post-grid",
+  "name": "shapeblock/post-grid",
   "version": "0.1.0",
   "title": "Post Grid",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "description": "Post Grid Block",
   "example": {},
   "supports": {
@@ -15,28 +15,9 @@
       "right",
       "wide",
       "full"
-    ],
-    "spacing": {
-      "padding": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ],
-      "margin": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ]
-    },
-    "color": {
-      "background": true,
-      "text": false,
-      "gradients": true
-    }
+    ]
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "viewScript": "file:./view.js",
   "render": "file:./render.php",
@@ -234,21 +215,13 @@
     },
     "itemOverlayBackgroundColorHover": {
       "type": "string",
-      "default": "var(--eshb-primary-color)"
+      "default": "var(--shapeblock-preset-color-primary)"
     },
     "itemOverlayBackgroundGradient": {
       "type": "string",
       "default": ""
     },
     "itemOverlayBackgroundGradientHover": {
-      "type": "string",
-      "default": ""
-    },
-    "itemOverlayBackgroundGradientTwo": {
-      "type": "string",
-      "default": ""
-    },
-    "itemOverlayBackgroundGradientTwoHover": {
       "type": "string",
       "default": ""
     },
@@ -309,10 +282,6 @@
     "readMoreColorHover": {
       "type": "string",
       "default": ""
-    },
-    "showThumbnail": {
-      "type": "boolean",
-      "default": true
     },
     "showMeta": {
       "type": "boolean",
@@ -390,10 +359,6 @@
       "type": "string",
       "default": "after"
     },
-    "onlyIconShow": {
-      "type": "boolean",
-      "default": false
-    },
     "showDateOnTop": {
       "type": "boolean",
       "default": false
@@ -421,6 +386,10 @@
     "thumbAnim": {
       "type": "boolean",
       "default": true
+    },
+    "paginationType": {
+      "type": "string",
+      "default": "numeric"
     },
     "paginationBtnWidth": {
       "type": "string",
@@ -452,19 +421,31 @@
     },
     "paginationColor": {
       "type": "string",
-      "default": "var(--eelfg-preset-color-contrast-2)"
+      "default": "var(--shapeblock-preset-color-contrast-2)"
     },
     "paginationColorHover": {
       "type": "string",
-      "default": "var(--eelfg-preset-color-white)"
+      "default": "var(--shapeblock-preset-color-white)"
     },
     "paginationBackgroundColor": {
       "type": "string",
-      "default": "var(--eelfg-preset-color-tertiary)"
+      "default": "var(--shapeblock-preset-color-tertiary)"
     },
     "paginationBackgroundColorHover": {
       "type": "string",
-      "default": "var(--eelfg-preset-color-primary)"
+      "default": "var(--shapeblock-preset-color-primary)"
+    },
+    "paginationTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
     },
     "columnsTablet": {
       "type": "string",
@@ -650,6 +631,18 @@
     },
     "categoryMargin": {
       "type": "object"
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

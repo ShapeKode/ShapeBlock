@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/clients-logo-grid',
+		'name' => 'shapeblock/clients-logo-grid',
 		'version' => '0.1.0',
 		'title' => 'Client Logo',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'A responsive grid of client / partner logos with links, grayscale and hover-swap effects.',
 		'keywords' => array(
 			'logo',
@@ -27,23 +27,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'render' => 'file:./render.php',
 		'attributes' => array(
@@ -92,9 +78,13 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'fetchpriority' => array(
+			'imageWidthTablet' => array(
 				'type' => 'string',
-				'default' => 'low'
+				'default' => ''
+			),
+			'imageWidthMobile' => array(
+				'type' => 'string',
+				'default' => ''
 			),
 			'columns' => array(
 				'type' => 'string',
@@ -116,7 +106,23 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'itemWidthTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'itemWidthMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'itemHeight' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'itemHeightTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'itemHeightMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -124,6 +130,12 @@ return array(
 				'type' => 'object'
 			),
 			'itemPadding' => array(
+				'type' => 'object'
+			),
+			'itemPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'itemPaddingMobile' => array(
 				'type' => 'object'
 			),
 			'itemRadius' => array(
@@ -206,6 +218,18 @@ return array(
 			'transition' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

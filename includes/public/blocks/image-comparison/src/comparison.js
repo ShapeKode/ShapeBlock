@@ -7,18 +7,18 @@
  * jQuery / jquery.event.move.
  */
 export function initComparison(container) {
-	if (!container || container.dataset.eelfgCmpInit === '1') {
+	if (!container || container.dataset.shapeblockCmpInit === '1') {
 		return;
 	}
 
-	const before = container.querySelector('.eelfg-comparison-before');
-	const after = container.querySelector('.eelfg-comparison-after');
-	const handle = container.querySelector('.eelfg-comparison-handle');
+	const before = container.querySelector('.shapeblock-comparison-before');
+	const after = container.querySelector('.shapeblock-comparison-after');
+	const handle = container.querySelector('.shapeblock-comparison-handle');
 	if (!before || !after || !handle) {
 		return;
 	}
 
-	container.dataset.eelfgCmpInit = '1';
+	container.dataset.shapeblockCmpInit = '1';
 
 	const orientation = container.dataset.orientation === 'vertical' ? 'vertical' : 'horizontal';
 	let pct = parseFloat(container.dataset.offset);

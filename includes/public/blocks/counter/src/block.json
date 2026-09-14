@@ -1,22 +1,18 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "easy-elements-for-gutenberg/counter",
+	"name": "shapeblock/counter",
 	"version": "0.1.0",
 	"title": "Counter",
-	"category": "easy-elements-for-gutenberg",
+	"category": "shapeblock",
 	"description": "An animated number counter with prefix/suffix, icon, title, and counter or odometer animation.",
 	"keywords": [ "counter", "number", "odometer", "stats", "animated" ],
 	"example": {},
 	"supports": {
 		"html": false,
-		"align": [ "left", "center", "right", "wide", "full" ],
-		"spacing": {
-			"padding": [ "top", "bottom", "left", "right" ],
-			"margin": [ "top", "bottom", "left", "right" ]
-		}
+		"align": [ "left", "center", "right", "wide", "full" ]
 	},
-	"textdomain": "easy-elements-for-gutenberg",
+	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
 	"viewScript": "file:./view.js",
 	"render": "file:./render.php",
@@ -36,30 +32,52 @@
 
 		"titlePosition": { "type": "string", "default": "bottom" },
 		"contentGap": { "type": "string", "default": "" },
+		"contentGapTablet": { "type": "string", "default": "" },
+		"contentGapMobile": { "type": "string", "default": "" },
 		"contentVerticalAlign": { "type": "string", "default": "" },
+		"contentVerticalAlignTablet": { "type": "string", "default": "" },
+		"contentVerticalAlignMobile": { "type": "string", "default": "" },
 		"subPreGap": { "type": "string", "default": "" },
+		"subPreGapTablet": { "type": "string", "default": "" },
+		"subPreGapMobile": { "type": "string", "default": "" },
 		"wrapAlign": { "type": "string", "default": "" },
+		"wrapAlignTablet": { "type": "string", "default": "" },
+		"wrapAlignMobile": { "type": "string", "default": "" },
 		"wrapJustify": { "type": "string", "default": "" },
 		"iconPosition": { "type": "string", "default": "top" },
 		"iconGap": { "type": "string", "default": "" },
+		"iconGapTablet": { "type": "string", "default": "" },
+		"iconGapMobile": { "type": "string", "default": "" },
 
 		"numberColor": { "type": "string", "default": "" },
 		"numberTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
+		"numberTypographyTablet": { "type": "object", "default": {} },
+		"numberTypographyMobile": { "type": "object", "default": {} },
 		"numberStrokeWidth": { "type": "string", "default": "" },
+		"numberStrokeWidthTablet": { "type": "string", "default": "" },
+		"numberStrokeWidthMobile": { "type": "string", "default": "" },
 		"numberStrokeColor": { "type": "string", "default": "" },
 		"numberTextShadow": { "type": "object", "default": { "x": "", "y": "", "blur": "", "color": "" } },
 
 		"prefixColor": { "type": "string", "default": "" },
 		"prefixTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
+		"prefixTypographyTablet": { "type": "object", "default": {} },
+		"prefixTypographyMobile": { "type": "object", "default": {} },
 		"prefixTextShadow": { "type": "object", "default": { "x": "", "y": "", "blur": "", "color": "" } },
 
 		"suffixColor": { "type": "string", "default": "" },
 		"suffixTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
+		"suffixTypographyTablet": { "type": "object", "default": {} },
+		"suffixTypographyMobile": { "type": "object", "default": {} },
 		"suffixTextShadow": { "type": "object", "default": { "x": "", "y": "", "blur": "", "color": "" } },
 
 		"titleColor": { "type": "string", "default": "" },
 		"titleTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
+		"titleTypographyTablet": { "type": "object", "default": {} },
+		"titleTypographyMobile": { "type": "object", "default": {} },
 		"titleAlign": { "type": "string", "default": "" },
+		"titleAlignTablet": { "type": "string", "default": "" },
+		"titleAlignMobile": { "type": "string", "default": "" },
 		"titleTextShadow": { "type": "object", "default": { "x": "", "y": "", "blur": "", "color": "" } },
 
 		"iconColor": { "type": "string", "default": "" },
@@ -68,7 +86,12 @@
 		"iconSize": { "type": "string", "default": "" },
 		"iconBorderRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"iconPadding": { "type": "object" },
+		"iconPaddingTablet": { "type": "object" },
+		"iconPaddingMobile": { "type": "object" },
 		"iconBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
-		"iconBoxShadow": { "type": "object", "default": { "x": 0, "y": 0, "b": 0, "s": 0, "c": "rgba(0, 0, 0, 0)" } }
-	}
+		"iconBoxShadow": { "type": "object", "default": { "x": 0, "y": 0, "b": 0, "s": 0, "c": "rgba(0, 0, 0, 0)" } },
+	"hideDesktop": { "type": "boolean", "default": false },
+	"hideTablet": { "type": "boolean", "default": false },
+	"hideMobile": { "type": "boolean", "default": false }
+}
 }

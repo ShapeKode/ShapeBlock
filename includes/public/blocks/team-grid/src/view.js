@@ -9,21 +9,21 @@
 	'use strict';
 
 	function closeAll() {
-		document.querySelectorAll('.eelfg-popup-modal.active').forEach(function (modal) {
+		document.querySelectorAll('.shapeblock-popup-modal.active').forEach(function (modal) {
 			modal.style.display = 'none';
 			modal.classList.remove('active');
 		});
-		document.body.classList.remove('eelfg-popup-open');
+		document.body.classList.remove('shapeblock-popup-open');
 	}
 
 	function init() {
-		if (document.body.dataset.eelfgTeamPopup === '1') {
+		if (document.body.dataset.shapeblockTeamPopup === '1') {
 			return;
 		}
-		document.body.dataset.eelfgTeamPopup = '1';
+		document.body.dataset.shapeblockTeamPopup = '1';
 
 		document.addEventListener('click', function (e) {
-			var trigger = e.target.closest('.eelfg-popup-trigger');
+			var trigger = e.target.closest('.shapeblock-popup-trigger');
 			if (trigger) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -32,12 +32,12 @@
 				if (modal) {
 					modal.style.display = 'block';
 					modal.classList.add('active');
-					document.body.classList.add('eelfg-popup-open');
+					document.body.classList.add('shapeblock-popup-open');
 				}
 				return;
 			}
 
-			if (e.target.closest('.eelfg-popup-close') || e.target.classList.contains('eelfg-popup-modal')) {
+			if (e.target.closest('.shapeblock-popup-close') || e.target.classList.contains('shapeblock-popup-modal')) {
 				closeAll();
 			}
 		});

@@ -1,10 +1,10 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "easy-elements-for-gutenberg/menu",
+	"name": "shapeblock/menu",
 	"version": "0.1.0",
 	"title": "Menu",
-	"category": "easy-elements-for-gutenberg",
+	"category": "shapeblock",
 	"description": "Build a navigation menu inside the block — add links and dropdowns, pick pages, descriptions, new-tab links, plus a responsive mobile menu.",
 	"keywords": [ "menu", "nav", "navigation", "links", "dropdown" ],
 	"example": {},
@@ -12,7 +12,7 @@
 		"html": false,
 		"align": [ "left", "center", "right", "wide", "full" ]
 	},
-	"textdomain": "easy-elements-for-gutenberg",
+	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
 	"viewScript": "file:./view.js",
 	"render": "file:./render.php",
@@ -62,8 +62,23 @@
 		"menuWrap": { "type": "boolean", "default": true },
 		"mobileBreakpoint": { "type": "number", "default": 782 },
 		"toggleColor": { "type": "string", "default": "" },
+		"toggleColorHover": { "type": "string", "default": "" },
+		"toggleBg": { "type": "string", "default": "" },
+		"toggleBgHover": { "type": "string", "default": "" },
+		"toggleBorderColor": { "type": "string", "default": "" },
+		"toggleBorderColorHover": { "type": "string", "default": "" },
+		"toggleAlign": { "type": "string", "default": "left" },
+		"closeColor": { "type": "string", "default": "" },
+		"closeColorHover": { "type": "string", "default": "" },
+		"closeBg": { "type": "string", "default": "" },
+		"closeBgHover": { "type": "string", "default": "" },
+		"closeBorderColor": { "type": "string", "default": "" },
+		"closeBorderColorHover": { "type": "string", "default": "" },
 		"drawerSide": { "type": "string", "default": "right" },
 		"drawerWidth": { "type": "number", "default": 320 },
-		"drawerBg": { "type": "string", "default": "" }
-	}
+		"drawerBg": { "type": "string", "default": "" },
+	"hideDesktop": { "type": "boolean", "default": false },
+	"hideTablet": { "type": "boolean", "default": false },
+	"hideMobile": { "type": "boolean", "default": false }
+}
 }

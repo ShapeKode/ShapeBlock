@@ -3,25 +3,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-function eelfg_create_block_testimonials_grid_block_init() {
+function shapeblock_create_block_testimonials_grid_block_init() {
 	wp_register_style(
-		'eelfg-testimonials-grid-style',
+		'shapeblock-testimonials-grid-style',
 		plugins_url( 'build/style-index.css', __FILE__ ),
-		array( 'eelfg-public-style' ),
-		EELFG_VERSION
+		array( 'shapeblock-public-style' ),
+		shapeblock_asset_version( __DIR__ . '/build/style-index.css' )
 	);
 
 	// Editor-only styles (compiled from src/editor.scss).
 	wp_register_style(
-		'eelfg-testimonials-grid-editor-style',
+		'shapeblock-testimonials-grid-editor-style',
 		plugins_url( 'build/index.css', __FILE__ ),
-		array( 'eelfg-testimonials-grid-style' ),
-		EELFG_VERSION
+		array( 'shapeblock-testimonials-grid-style' ),
+		shapeblock_asset_version( __DIR__ . '/build/index.css' )
 	);
 
 	register_block_type( __DIR__ . '/build', array(
-		'style'        => 'eelfg-testimonials-grid-style',
-		'editor_style' => 'eelfg-testimonials-grid-editor-style',
+		'style'        => 'shapeblock-testimonials-grid-style',
+		'editor_style' => 'shapeblock-testimonials-grid-editor-style',
 	) );
 }
-add_action( 'init', 'eelfg_create_block_testimonials_grid_block_init' );
+add_action( 'init', 'shapeblock_create_block_testimonials_grid_block_init' );

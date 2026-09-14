@@ -7,21 +7,27 @@ import {
 	SelectControl,
 	TextControl,
 	RangeControl,
+	TabPanel,
 	__experimentalDivider as Divider,
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
 import TypographyControls from '../../custom-components/TypographyControls';
 import BackgroundControl from '../../custom-components/BackgroundControl';
+import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 
 import './editor.scss';
+
+// Map a base attribute name to its per-device key (desktop uses the base name).
+const getKey = (base, device) =>
+	device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
 
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const { blockId, selectStyle, title, percent } = attributes;
 
 	useEffect(() => {
 		if (!blockId) {
-			setAttributes({ blockId: 'eelfg-pb-' + clientId.slice(0, 6) });
+			setAttributes({ blockId: 'shapeblock-pb-' + clientId.slice(0, 6) });
 		}
 	}, [blockId, clientId, setAttributes]);
 
@@ -35,7 +41,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		let timer;
 		let raf;
 		const animate = () => {
-			const fill = root.querySelector('.eelfg-progress-fill');
+			const fill = root.querySelector('.shapeblock-progress-fill');
 			if (!fill) return;
 			const target = (fill.getAttribute('data-width') || '0') + '%';
 			fill.style.transition = 'none';
@@ -63,76 +69,119 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const typo = (label, key) => <TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />;
 	const num = (label, key) => <TextControl label={label} type="number" value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
+	// Responsive variants — a device switcher above the control, editing the
+	// matching per-device attribute (base / baseTablet / baseMobile).
+	const respTypo = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => <TypographyControls attributes={attributes} setAttributes={setAttributes} attributeKey={getKey(base, device)} />}
+		</ResponsiveWrapper>
+	);
+	const respNum = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => {
+				const k = getKey(base, device);
+				return <TextControl type="number" value={attributes[k]} onChange={(v) => setAttributes({ [k]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
+			}}
+		</ResponsiveWrapper>
+	);
+
+	// --- Tab 1: Settings (content) --------------------------------------------
+	const settingsTab = (
+		<PanelBody title={__('Progress Bar', 'shapeblock')} initialOpen={true}>
+			<SelectControl
+				label={__('Select Style', 'shapeblock')}
+				value={selectStyle}
+				options={[
+					{ label: __('Style 1', 'shapeblock'), value: 'style1' },
+					{ label: __('Style 2', 'shapeblock'), value: 'style2' },
+				]}
+				onChange={(v) => setAttributes({ selectStyle: v })}
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			/>
+			<TextControl
+				label={__('Title', 'shapeblock')}
+				value={title}
+				onChange={(v) => setAttributes({ title: v })}
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			/>
+			<RangeControl
+				label={__('Percent', 'shapeblock')}
+				value={percent}
+				onChange={(v) => setAttributes({ percent: v })}
+				min={0}
+				max={100}
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			/>
+		</PanelBody>
+	);
+
+	// --- Tab 2: Layout (size & spacing) ---------------------------------------
+	const layoutTab = (
+		<PanelBody title={__('Progress', 'shapeblock')} initialOpen={true}>
+			{respNum(__('Height (px)', 'shapeblock'), 'progressHeight')}
+		</PanelBody>
+	);
+
+	// --- Tab 3: Style (appearance) --------------------------------------------
+	const styleTab = (
+		<>
+			<PanelBody title={__('Progress', 'shapeblock')} initialOpen={true}>
+				{selectStyle === 'style1' && (
+					<>
+						{color(__('Progress Color (track)', 'shapeblock'), 'progressColor')}
+						{color(__('Progress Bar Color (fill)', 'shapeblock'), 'progressBarColor')}
+					</>
+				)}
+				{selectStyle === 'style2' && (
+					<BackgroundControl
+						label={__('Background', 'shapeblock')}
+						colorValue={attributes.style2BgColor}
+						gradientValue={attributes.style2BgGradient}
+						onColorChange={(v) => setAttributes({ style2BgColor: v && typeof v === 'object' ? v.hex : v || '' })}
+						onGradientChange={(v) => setAttributes({ style2BgGradient: v || '' })}
+					/>
+				)}
+				<Divider />
+				{num(__('Border Radius (px)', 'shapeblock'), 'progressRadius')}
+			</PanelBody>
+
+			<PanelBody title={__('Title', 'shapeblock')} initialOpen={false}>
+				{color(__('Color', 'shapeblock'), 'titleColor')}
+				{respTypo(__('Typography', 'shapeblock'), 'titleTypography')}
+			</PanelBody>
+
+			<PanelBody title={__('Percent', 'shapeblock')} initialOpen={false}>
+				{color(__('Color', 'shapeblock'), 'percentColor')}
+				{respTypo(__('Typography', 'shapeblock'), 'percentTypography')}
+			</PanelBody>
+		</>
+	);
 
 	return (
 		<div {...useBlockProps()}>
 			<InspectorControls>
-				<PanelBody title={__('Progress Bar', 'easy-elements-for-gutenberg')} initialOpen={true}>
-					<SelectControl
-						label={__('Select Style', 'easy-elements-for-gutenberg')}
-						value={selectStyle}
-						options={[
-							{ label: __('Style 1', 'easy-elements-for-gutenberg'), value: 'style1' },
-							{ label: __('Style 2', 'easy-elements-for-gutenberg'), value: 'style2' },
-						]}
-						onChange={(v) => setAttributes({ selectStyle: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					<TextControl
-						label={__('Title', 'easy-elements-for-gutenberg')}
-						value={title}
-						onChange={(v) => setAttributes({ title: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					<RangeControl
-						label={__('Percent', 'easy-elements-for-gutenberg')}
-						value={percent}
-						onChange={(v) => setAttributes({ percent: v })}
-						min={0}
-						max={100}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-				</PanelBody>
-			</InspectorControls>
-
-			<InspectorControls group="styles">
-				<PanelBody title={__('Progress', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					{selectStyle === 'style1' && (
-						<>
-							{color(__('Progress Color (track)', 'easy-elements-for-gutenberg'), 'progressColor')}
-							{color(__('Progress Bar Color (fill)', 'easy-elements-for-gutenberg'), 'progressBarColor')}
-						</>
+				<TabPanel
+					className="shapeblock-inspector-tabs"
+					activeClass="is-active"
+					tabs={[
+						{ name: 'settings', title: __('Settings', 'shapeblock') },
+						{ name: 'layout', title: __('Layout', 'shapeblock') },
+						{ name: 'style', title: __('Style', 'shapeblock') },
+					]}
+				>
+					{(tab) => (
+						tab.name === 'settings' ? settingsTab :
+						tab.name === 'layout' ? layoutTab :
+						styleTab
 					)}
-					{selectStyle === 'style2' && (
-						<BackgroundControl
-							label={__('Background', 'easy-elements-for-gutenberg')}
-							colorValue={attributes.style2BgColor}
-							gradientValue={attributes.style2BgGradient}
-							onColorChange={(v) => setAttributes({ style2BgColor: v && typeof v === 'object' ? v.hex : v || '' })}
-							onGradientChange={(v) => setAttributes({ style2BgGradient: v || '' })}
-						/>
-					)}
-					<Divider />
-					{num(__('Height (px)', 'easy-elements-for-gutenberg'), 'progressHeight')}
-					{num(__('Border Radius (px)', 'easy-elements-for-gutenberg'), 'progressRadius')}
-				</PanelBody>
-
-				<PanelBody title={__('Title', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					{color(__('Color', 'easy-elements-for-gutenberg'), 'titleColor')}
-					{typo(__('Typography', 'easy-elements-for-gutenberg'), 'titleTypography')}
-				</PanelBody>
-
-				<PanelBody title={__('Percent', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					{color(__('Color', 'easy-elements-for-gutenberg'), 'percentColor')}
-					{typo(__('Typography', 'easy-elements-for-gutenberg'), 'percentTypography')}
-				</PanelBody>
+				</TabPanel>
 			</InspectorControls>
 
 			<div ref={previewRef}>
-				<ServerSideRender block="easy-elements-for-gutenberg/progress" attributes={attributes} httpMethod="POST" />
+				<ServerSideRender block="shapeblock/progress" attributes={attributes} httpMethod="POST" />
 			</div>
 		</div>
 	);

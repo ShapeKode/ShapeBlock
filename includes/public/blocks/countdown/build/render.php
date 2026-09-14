@@ -9,14 +9,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Server-side render for the Countdown block.
  *
  * Mirrors the markup of the Elementor "Countdown" widget
- * (easy-elements/widgets/countdown). Element classes use the "eelfg-" prefix.
+ * (easy-elements/widgets/countdown). Element classes use the "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-cntdwn-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-cntdwn-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 // Target date (default: +1 day). Stored as "Y-m-d\TH:i" by the datetime-local control.
 $target_raw = ! empty( $attributes['targetDate'] ) ? $attributes['targetDate'] : '';
@@ -34,24 +34,24 @@ $i_hours   = (int) floor( ( $distance % 86400 ) / 3600 );
 $i_minutes = (int) floor( ( $distance % 3600 ) / 60 );
 $i_seconds = (int) ( $distance % 60 );
 
-$allowed_sep = [ 'eelfg-cntdwn-space', 'eelfg-cntdwn-bullets', 'eelfg-cntdwn-dash' ];
-$separator   = isset( $attributes['separator'] ) && in_array( $attributes['separator'], $allowed_sep, true ) ? $attributes['separator'] : 'eelfg-cntdwn-space';
+$allowed_sep = [ 'shapeblock-cntdwn-space', 'shapeblock-cntdwn-bullets', 'shapeblock-cntdwn-dash' ];
+$separator   = isset( $attributes['separator'] ) && in_array( $attributes['separator'], $allowed_sep, true ) ? $attributes['separator'] : 'shapeblock-cntdwn-space';
 
 $day_label     = isset( $attributes['dayLabel'] ) && '' !== $attributes['dayLabel'] ? $attributes['dayLabel'] : 'Days';
 $hours_label   = isset( $attributes['hoursLabel'] ) && '' !== $attributes['hoursLabel'] ? $attributes['hoursLabel'] : 'Hours';
 $minute_label  = isset( $attributes['minuteLabel'] ) && '' !== $attributes['minuteLabel'] ? $attributes['minuteLabel'] : 'Minutes';
 $seconds_label = isset( $attributes['secondsLabel'] ) && '' !== $attributes['secondsLabel'] ? $attributes['secondsLabel'] : 'Seconds';
 
-$block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'eelfg-block eelfg-countdown-block-wrap ' . $unique_id ) );
+$block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'shapeblock-block shapeblock-countdown-block-wrap ' . $unique_id ) );
 if ( empty( $block_wrap_attr ) ) {
-	$block_wrap_attr = 'class="eelfg-block eelfg-countdown-block-wrap ' . esc_attr( $unique_id ) . '"';
+	$block_wrap_attr = 'class="shapeblock-block shapeblock-countdown-block-wrap ' . esc_attr( $unique_id ) . '"';
 }
 
 // ---------------------------------------------------------------------------
 // Inline styles (scoped to this instance via $unique_id).
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-countdown-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-countdown-style';
+$selector     = '.shapeblock-countdown-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-countdown-style';
 
 $typo = function ( $obj ) use ( $H ) {
 	$out = [];
@@ -63,6 +63,7 @@ $typo = function ( $obj ) use ( $H ) {
 	if ( ! empty( $obj['textTransform'] ) ) $out['text-transform'] = $obj['textTransform'];
 	if ( ! empty( $obj['lineHeight'] ) ) $out['line-height'] = $obj['lineHeight'];
 	if ( ! empty( $obj['letterSpacing'] ) ) $out['letter-spacing'] = $H::ensure_unit( $obj['letterSpacing'] );
+	if ( ! empty( $obj['textDecoration'] ) ) $out['text-decoration'] = $obj['textDecoration'];
 	return $out;
 };
 $dims = function ( $obj, $type ) use ( $H ) {
@@ -118,16 +119,16 @@ $unit_attr_map = [
 ];
 
 $sub_styles = [
-	'.eelfg-cntdwn'        => $H::get_inline_styles( $cntdwn ),
-	'.eelfg-cntdwn-item'   => $H::get_inline_styles( $item ),
-	'.eelfg-cntdwn-item span' => $H::get_inline_styles( $span ),
+	'.shapeblock-cntdwn'        => $H::get_inline_styles( $cntdwn ),
+	'.shapeblock-cntdwn-item'   => $H::get_inline_styles( $item ),
+	'.shapeblock-cntdwn-item span' => $H::get_inline_styles( $span ),
 ];
 
 if ( $sep_pos ) {
-	$sub_styles['.eelfg-cntdwn-bullets::before, ' . $selector . ' .eelfg-cntdwn-bullets::after, ' . $selector . ' .eelfg-cntdwn-dash::before'] = $H::get_inline_styles( $sep_pos );
+	$sub_styles['.shapeblock-cntdwn-bullets::before, ' . $selector . ' .shapeblock-cntdwn-bullets::after, ' . $selector . ' .shapeblock-cntdwn-dash::before'] = $H::get_inline_styles( $sep_pos );
 }
 if ( $sep_col ) {
-	$sub_styles['.eelfg-cntdwn-bullets::before, ' . $selector . ' .eelfg-cntdwn-bullets::after, ' . $selector . ' .eelfg-cntdwn-dash::before '] = $H::get_inline_styles( $sep_col );
+	$sub_styles['.shapeblock-cntdwn-bullets::before, ' . $selector . ' .shapeblock-cntdwn-bullets::after, ' . $selector . ' .shapeblock-cntdwn-dash::before '] = $H::get_inline_styles( $sep_col );
 }
 
 foreach ( $units as $unit ) {
@@ -136,18 +137,73 @@ foreach ( $units as $unit ) {
 	if ( ! empty( $attributes[ $m['color'] ] ) ) $num_styles['color'] = $attributes[ $m['color'] ];
 	$label_styles = $typo( $attributes[ $m['ltypo'] ] ?? [] );
 	if ( ! empty( $attributes[ $m['lcolor'] ] ) ) $label_styles['color'] = $attributes[ $m['lcolor'] ];
-	$sub_styles[ '.eelfg-cntdwn-' . $unit ]            = $H::get_inline_styles( $num_styles );
-	$sub_styles[ '.eelfg-cntdwn-' . $unit . '-label' ] = $H::get_inline_styles( $label_styles );
+	$sub_styles[ '.shapeblock-cntdwn-' . $unit ]            = $H::get_inline_styles( $num_styles );
+	$sub_styles[ '.shapeblock-cntdwn-' . $unit . '-label' ] = $H::get_inline_styles( $label_styles );
+}
+
+// ---------------------------------------------------------------------------
+// Responsive (Tablet / Mobile) overrides for layout controls. The desktop CSS
+// above is unchanged; these rules are emitted only when the matching per-device
+// attribute is set, so existing content renders identically.
+// ---------------------------------------------------------------------------
+$label_under = ! empty( $attributes['labelUnderNumber'] );
+$build_dev   = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $units, $unit_attr_map, $label_under ) {
+	$out = [];
+
+	// Wrapper gap.
+	$gap = [];
+	if ( isset( $attributes[ 'midGap' . $suffix ] ) && '' !== $attributes[ 'midGap' . $suffix ] ) {
+		$gap['gap'] = $H::ensure_unit( $attributes[ 'midGap' . $suffix ] );
+	}
+	$out['.shapeblock-cntdwn'] = $gap;
+
+	// Item padding.
+	$out['.shapeblock-cntdwn-item'] = $dims( $attributes[ 'itemPadding' . $suffix ] ?? [], 'padding' );
+
+	// Label alignment (only meaningful when the label sits under the number, matching desktop).
+	$span = [];
+	if ( $label_under && ! empty( $attributes[ 'contentAlign' . $suffix ] ) ) {
+		$span['text-align'] = $attributes[ 'contentAlign' . $suffix ];
+	}
+	$out['.shapeblock-cntdwn-item span'] = $span;
+
+	// Per-unit number + label typography.
+	foreach ( $units as $unit ) {
+		$m = $unit_attr_map[ $unit ];
+		$out[ '.shapeblock-cntdwn-' . $unit ]            = $typo( $attributes[ $m['typo'] . $suffix ] ?? [] );
+		$out[ '.shapeblock-cntdwn-' . $unit . '-label' ] = $typo( $attributes[ $m['ltypo'] . $suffix ] ?? [] );
+	}
+
+	return $out;
+};
+
+$dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
+$resp_sel = [ '.shapeblock-cntdwn', '.shapeblock-cntdwn-item', '.shapeblock-cntdwn-item span' ];
+foreach ( $units as $unit ) {
+	$resp_sel[] = '.shapeblock-cntdwn-' . $unit;
+	$resp_sel[] = '.shapeblock-cntdwn-' . $unit . '-label';
+}
+$resp_css = '';
+foreach ( $resp_sel as $sub_sel ) {
+	$rdata = [];
+	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
+			$rdata[ $device_key ] = $dev_data[ $suffix ][ $sub_sel ];
+		}
+	}
+	if ( ! empty( $rdata ) ) {
+		$resp_css .= $H::generate_responsive_css( $selector . ' ' . $sub_sel, $rdata );
+	}
 }
 
 wp_enqueue_style( $style_handle );
-$H::add_custom_style( $style_handle, $selector, '', $sub_styles );
+$H::add_custom_style( $style_handle, $selector, $resp_css, $sub_styles );
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="eelfg-cntdwn" data-target="<?php echo esc_attr( $target_date ); ?>">
-		<div class="eelfg-cntdwn-item <?php echo esc_attr( $separator ); ?>"><span class="eelfg-cntdwn-days"><?php echo esc_html( $i_days ); ?></span> <span class="eelfg-cntdwn-days-label"><?php echo wp_kses_post( $day_label ); ?></span></div>
-		<div class="eelfg-cntdwn-item <?php echo esc_attr( $separator ); ?>"><span class="eelfg-cntdwn-hours"><?php echo esc_html( $i_hours ); ?></span> <span class="eelfg-cntdwn-hours-label"><?php echo wp_kses_post( $hours_label ); ?></span></div>
-		<div class="eelfg-cntdwn-item <?php echo esc_attr( $separator ); ?>"><span class="eelfg-cntdwn-minutes"><?php echo esc_html( $i_minutes ); ?></span> <span class="eelfg-cntdwn-minutes-label"><?php echo wp_kses_post( $minute_label ); ?></span></div>
-		<div class="eelfg-cntdwn-item <?php echo esc_attr( $separator ); ?>"><span class="eelfg-cntdwn-seconds"><?php echo esc_html( $i_seconds ); ?></span> <span class="eelfg-cntdwn-seconds-label"><?php echo wp_kses_post( $seconds_label ); ?></span></div>
+	<div class="shapeblock-cntdwn" data-target="<?php echo esc_attr( $target_date ); ?>">
+		<div class="shapeblock-cntdwn-item <?php echo esc_attr( $separator ); ?>"><span class="shapeblock-cntdwn-days"><?php echo esc_html( $i_days ); ?></span> <span class="shapeblock-cntdwn-days-label"><?php echo wp_kses_post( $day_label ); ?></span></div>
+		<div class="shapeblock-cntdwn-item <?php echo esc_attr( $separator ); ?>"><span class="shapeblock-cntdwn-hours"><?php echo esc_html( $i_hours ); ?></span> <span class="shapeblock-cntdwn-hours-label"><?php echo wp_kses_post( $hours_label ); ?></span></div>
+		<div class="shapeblock-cntdwn-item <?php echo esc_attr( $separator ); ?>"><span class="shapeblock-cntdwn-minutes"><?php echo esc_html( $i_minutes ); ?></span> <span class="shapeblock-cntdwn-minutes-label"><?php echo wp_kses_post( $minute_label ); ?></span></div>
+		<div class="shapeblock-cntdwn-item <?php echo esc_attr( $separator ); ?>"><span class="shapeblock-cntdwn-seconds"><?php echo esc_html( $i_seconds ); ?></span> <span class="shapeblock-cntdwn-seconds-label"><?php echo wp_kses_post( $seconds_label ); ?></span></div>
 	</div>
 </div>

@@ -1,13 +1,13 @@
 /**
  * Editor-only styles for the Team Member block.
  */
-.eelfg-team-grid-repeater-item {
+.shapeblock-team-grid-repeater-item {
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   padding: 12px;
   margin-bottom: 12px;
 }
-.eelfg-team-grid-repeater-item .eelfg-team-grid-repeater-head {
+.shapeblock-team-grid-repeater-item .shapeblock-team-grid-repeater-head {
   display: flex;
   justify-content: space-between;
   align-items: center;

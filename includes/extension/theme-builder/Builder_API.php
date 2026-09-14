@@ -1,14 +1,14 @@
 <?php
-namespace EELFG\Extension\ThemeBuilder;
+namespace ShapeBlock\Extension\ThemeBuilder;
 
 /**
  * Theme Builder — REST API.
  *
  * CRUD for builder templates plus condition load/save and the metadata the
  * dashboard needs (registered types, condition rules, selectable objects).
- * Mirrors the conventions of \EELFG\Admin\Api (easy-elements-for-gutenberg/v1 namespace, edit_posts cap).
+ * Mirrors the conventions of \ShapeBlock\Admin\Api (shapeblock/v1 namespace, edit_posts cap).
  *
- * @package EasyElementsForGutenberg
+ * @package ShapeBlock
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -38,7 +38,7 @@ class Builder_API {
 
 		// Metadata: registered template types + condition rules.
 		register_rest_route(
-			'easy-elements-for-gutenberg/v1',
+			'shapeblock/v1',
 			'/builder/meta',
 			array(
 				'methods'             => 'GET',
@@ -49,7 +49,7 @@ class Builder_API {
 
 		// Selectable objects for object-bound condition rules (pages, posts).
 		register_rest_route(
-			'easy-elements-for-gutenberg/v1',
+			'shapeblock/v1',
 			'/builder/objects',
 			array(
 				'methods'             => 'GET',
@@ -60,7 +60,7 @@ class Builder_API {
 
 		// Collection: list + create.
 		register_rest_route(
-			'easy-elements-for-gutenberg/v1',
+			'shapeblock/v1',
 			'/builder',
 			array(
 				array(
@@ -78,7 +78,7 @@ class Builder_API {
 
 		// Single item: get + delete.
 		register_rest_route(
-			'easy-elements-for-gutenberg/v1',
+			'shapeblock/v1',
 			'/builder/(?P<id>\d+)',
 			array(
 				array(
@@ -96,7 +96,7 @@ class Builder_API {
 
 		// Restore a single trashed item.
 		register_rest_route(
-			'easy-elements-for-gutenberg/v1',
+			'shapeblock/v1',
 			'/builder/(?P<id>\d+)/restore',
 			array(
 				'methods'             => 'POST',
@@ -107,7 +107,7 @@ class Builder_API {
 
 		// Conditions for a single item.
 		register_rest_route(
-			'easy-elements-for-gutenberg/v1',
+			'shapeblock/v1',
 			'/builder/(?P<id>\d+)/conditions',
 			array(
 				array(
@@ -124,7 +124,7 @@ class Builder_API {
 		);
 
 		register_rest_route(
-			'easy-elements-for-gutenberg/v1',
+			'shapeblock/v1',
 			'/builder/bulk-delete',
 			array(
 				'methods'             => 'POST',
@@ -135,7 +135,7 @@ class Builder_API {
 
 		// Bulk restore trashed items.
 		register_rest_route(
-			'easy-elements-for-gutenberg/v1',
+			'shapeblock/v1',
 			'/builder/bulk-restore',
 			array(
 				'methods'             => 'POST',
@@ -148,8 +148,8 @@ class Builder_API {
 	public function get_meta() {
 		return rest_ensure_response(
 			array(
-				'types' => array_values( \EELFG\Extension\ThemeBuilder\Theme_Builder::get_template_types() ),
-				'rules' => \EELFG\Extension\ThemeBuilder\Builder_Conditions::get_rules(),
+				'types' => array_values( \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_template_types() ),
+				'rules' => \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::get_rules(),
 			)
 		);
 	}
@@ -201,7 +201,7 @@ class Builder_API {
 		$post_status = ( 'trash' === $status ) ? 'trash' : 'publish';
 
 		$args = array(
-			'post_type'      => \EELFG\Extension\ThemeBuilder\Theme_Builder::POST_TYPE,
+			'post_type'      => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE,
 			'post_status'    => $post_status,
 			'posts_per_page' => $per_page,
 			'paged'          => $page,
@@ -209,11 +209,11 @@ class Builder_API {
 			'order'          => 'DESC',
 		);
 
-		if ( $type && \EELFG\Extension\ThemeBuilder\Theme_Builder::is_valid_type( $type ) ) {
+		if ( $type && \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::is_valid_type( $type ) ) {
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Filtering a small admin-only template post type by its type meta.
 			$args['meta_query'] = array(
 				array(
-					'key'   => \EELFG\Extension\ThemeBuilder\Theme_Builder::META_TYPE,
+					'key'   => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE,
 					'value' => $type,
 				),
 			);
@@ -248,7 +248,7 @@ class Builder_API {
 	 * @return int
 	 */
 	private function count_by_status( $status ) {
-		$counts = wp_count_posts( \EELFG\Extension\ThemeBuilder\Theme_Builder::POST_TYPE );
+		$counts = wp_count_posts( \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE );
 		return isset( $counts->$status ) ? (int) $counts->$status : 0;
 	}
 
@@ -265,17 +265,17 @@ class Builder_API {
 		$type  = sanitize_key( (string) $request->get_param( 'type' ) );
 
 		if ( '' === $title ) {
-			return new \WP_Error( 'missing_title', __( 'A title is required.', 'easy-elements-for-gutenberg' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'missing_title', __( 'A title is required.', 'shapeblock' ), array( 'status' => 400 ) );
 		}
 
-		if ( ! \EELFG\Extension\ThemeBuilder\Theme_Builder::is_valid_type( $type ) ) {
-			return new \WP_Error( 'invalid_type', __( 'Please choose a valid template type.', 'easy-elements-for-gutenberg' ), array( 'status' => 400 ) );
+		if ( ! \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::is_valid_type( $type ) ) {
+			return new \WP_Error( 'invalid_type', __( 'Please choose a valid template type.', 'shapeblock' ), array( 'status' => 400 ) );
 		}
 
 		$post_id = wp_insert_post(
 			array(
 				'post_title'   => $title,
-				'post_type'    => \EELFG\Extension\ThemeBuilder\Theme_Builder::POST_TYPE,
+				'post_type'    => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE,
 				'post_status'  => 'publish',
 				'post_content' => '',
 			),
@@ -286,11 +286,11 @@ class Builder_API {
 			return $post_id;
 		}
 
-		update_post_meta( $post_id, \EELFG\Extension\ThemeBuilder\Theme_Builder::META_TYPE, $type );
+		update_post_meta( $post_id, \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE, $type );
 		// New templates default to "entire site".
 		update_post_meta(
 			$post_id,
-			\EELFG\Extension\ThemeBuilder\Theme_Builder::META_CONDITIONS,
+			\ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_CONDITIONS,
 			array( array( 'type' => 'include', 'rule' => 'entire_site', 'ids' => array() ) )
 		);
 
@@ -336,7 +336,7 @@ class Builder_API {
 	public function bulk_delete( $request ) {
 		$ids = $request->get_param( 'ids' );
 		if ( ! is_array( $ids ) || empty( $ids ) ) {
-			return new \WP_Error( 'missing_ids', __( 'No items provided.', 'easy-elements-for-gutenberg' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'missing_ids', __( 'No items provided.', 'shapeblock' ), array( 'status' => 400 ) );
 		}
 
 		$force   = rest_sanitize_boolean( $request->get_param( 'force' ) );
@@ -344,7 +344,7 @@ class Builder_API {
 		foreach ( $ids as $id ) {
 			$id   = (int) $id;
 			$post = get_post( $id );
-			if ( $post && \EELFG\Extension\ThemeBuilder\Theme_Builder::POST_TYPE === $post->post_type ) {
+			if ( $post && \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE === $post->post_type ) {
 				if ( $force || 'trash' === $post->post_status ) {
 					wp_delete_post( $id, true );
 				} else {
@@ -360,14 +360,14 @@ class Builder_API {
 	public function bulk_restore( $request ) {
 		$ids = $request->get_param( 'ids' );
 		if ( ! is_array( $ids ) || empty( $ids ) ) {
-			return new \WP_Error( 'missing_ids', __( 'No items provided.', 'easy-elements-for-gutenberg' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'missing_ids', __( 'No items provided.', 'shapeblock' ), array( 'status' => 400 ) );
 		}
 
 		$restored = array();
 		foreach ( $ids as $id ) {
 			$id   = (int) $id;
 			$post = get_post( $id );
-			if ( $post && \EELFG\Extension\ThemeBuilder\Theme_Builder::POST_TYPE === $post->post_type && 'trash' === $post->post_status ) {
+			if ( $post && \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE === $post->post_type && 'trash' === $post->post_status ) {
 				wp_untrash_post( $id );
 				$after = get_post( $id );
 				if ( $after && 'publish' !== $after->post_status ) {
@@ -388,8 +388,8 @@ class Builder_API {
 
 		return rest_ensure_response(
 			array(
-				'conditions' => \EELFG\Extension\ThemeBuilder\Theme_Builder::get_post_conditions( $post->ID ),
-				'rules'      => \EELFG\Extension\ThemeBuilder\Builder_Conditions::get_rules(),
+				'conditions' => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_post_conditions( $post->ID ),
+				'rules'      => \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::get_rules(),
 			)
 		);
 	}
@@ -400,14 +400,14 @@ class Builder_API {
 			return $post;
 		}
 
-		$clean = \EELFG\Extension\ThemeBuilder\Builder_Conditions::sanitize( $request->get_param( 'conditions' ) );
-		update_post_meta( $post->ID, \EELFG\Extension\ThemeBuilder\Theme_Builder::META_CONDITIONS, $clean );
+		$clean = \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::sanitize( $request->get_param( 'conditions' ) );
+		update_post_meta( $post->ID, \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_CONDITIONS, $clean );
 
 		return rest_ensure_response(
 			array(
 				'status'     => 'success',
 				'conditions' => $clean,
-				'summary'    => \EELFG\Extension\ThemeBuilder\Builder_Conditions::summarize( $clean ),
+				'summary'    => \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::summarize( $clean ),
 			)
 		);
 	}
@@ -421,25 +421,25 @@ class Builder_API {
 		$id   = (int) $request->get_param( 'id' );
 		$post = get_post( $id );
 
-		if ( ! $post || \EELFG\Extension\ThemeBuilder\Theme_Builder::POST_TYPE !== $post->post_type ) {
-			return new \WP_Error( 'not_found', __( 'Builder template not found.', 'easy-elements-for-gutenberg' ), array( 'status' => 404 ) );
+		if ( ! $post || \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE !== $post->post_type ) {
+			return new \WP_Error( 'not_found', __( 'Builder template not found.', 'shapeblock' ), array( 'status' => 404 ) );
 		}
 
 		return $post;
 	}
 
 	private function format_item( $post ) {
-		$type       = \EELFG\Extension\ThemeBuilder\Theme_Builder::get_post_type_slug( $post->ID );
-		$conditions = \EELFG\Extension\ThemeBuilder\Theme_Builder::get_post_conditions( $post->ID );
+		$type       = \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_post_type_slug( $post->ID );
+		$conditions = \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_post_conditions( $post->ID );
 		$author     = get_userdata( $post->post_author );
 
 		return array(
 			'id'                => $post->ID,
 			'title'             => $post->post_title,
 			'type'              => $type,
-			'typeLabel'         => \EELFG\Extension\ThemeBuilder\Theme_Builder::get_type_label( $type ),
+			'typeLabel'         => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_type_label( $type ),
 			'conditions'        => $conditions,
-			'conditionsSummary' => \EELFG\Extension\ThemeBuilder\Builder_Conditions::summarize( $conditions ),
+			'conditionsSummary' => \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::summarize( $conditions ),
 			'date'              => $post->post_date,
 			'modified'          => $post->post_modified,
 			'author'            => $author ? $author->display_name : '',

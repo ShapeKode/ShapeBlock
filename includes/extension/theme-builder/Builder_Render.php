@@ -1,5 +1,5 @@
 <?php
-namespace EELFG\Extension\ThemeBuilder;
+namespace ShapeBlock\Extension\ThemeBuilder;
 
 /**
  * Theme Builder — frontend rendering.
@@ -15,7 +15,7 @@ namespace EELFG\Extension\ThemeBuilder;
  * Resolution is location-agnostic and reads from the template-type registry,
  * so wiring a future type into get_header-like output is a small addition.
  *
- * @package EasyElementsForGutenberg
+ * @package ShapeBlock
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -57,7 +57,7 @@ class Builder_Render {
 		// Block (FSE) themes: replace the header/footer template-part blocks.
 		add_filter( 'pre_render_block', array( $this, 'maybe_replace_template_part' ), 10, 2 );
 
-		add_shortcode( 'eelfg_builder', array( $this, 'shortcode' ) );
+		add_shortcode( 'shapeblock_builder', array( $this, 'shortcode' ) );
 	}
 
 	/**
@@ -93,7 +93,7 @@ class Builder_Render {
 			$type = 'footer';
 		}
 
-		if ( ! $type || ! \EELFG\Extension\ThemeBuilder\Theme_Builder::is_valid_type( $type ) ) {
+		if ( ! $type || ! \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::is_valid_type( $type ) ) {
 			return $pre;
 		}
 
@@ -127,13 +127,13 @@ class Builder_Render {
 	 * @return int|false
 	 */
 	private function find_matching_post( $type ) {
-		if ( ! \EELFG\Extension\ThemeBuilder\Theme_Builder::is_valid_type( $type ) ) {
+		if ( ! \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::is_valid_type( $type ) ) {
 			return false;
 		}
 
 		$query = new \WP_Query(
 			array(
-				'post_type'      => \EELFG\Extension\ThemeBuilder\Theme_Builder::POST_TYPE,
+				'post_type'      => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE,
 				'post_status'    => 'publish',
 				'posts_per_page' => 100,
 				'orderby'        => 'modified',
@@ -143,7 +143,7 @@ class Builder_Render {
 				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Filtering a small template post type by its type meta to resolve the active template.
 				'meta_query'     => array(
 					array(
-						'key'   => \EELFG\Extension\ThemeBuilder\Theme_Builder::META_TYPE,
+						'key'   => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE,
 						'value' => $type,
 					),
 				),
@@ -151,8 +151,8 @@ class Builder_Render {
 		);
 
 		foreach ( $query->posts as $post_id ) {
-			$conditions = \EELFG\Extension\ThemeBuilder\Theme_Builder::get_post_conditions( $post_id );
-			if ( \EELFG\Extension\ThemeBuilder\Builder_Conditions::matches_current_request( $conditions ) ) {
+			$conditions = \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_post_conditions( $post_id );
+			if ( \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::matches_current_request( $conditions ) ) {
 				return (int) $post_id;
 			}
 		}
@@ -182,7 +182,7 @@ class Builder_Render {
 		if ( '' === $theme_header ) {
 			// Theme has no header.php (unusual for a classic theme) — fall back
 			// to our own complete document opening.
-			require EELFG_PL_PATH . 'includes/extension/theme-builder/templates/header.php';
+			require SHAPEBLOCK_PL_PATH . 'includes/extension/theme-builder/templates/header.php';
 			return;
 		}
 
@@ -205,7 +205,7 @@ class Builder_Render {
 		$theme_footer = ob_get_clean();
 
 		if ( '' === $theme_footer ) {
-			require EELFG_PL_PATH . 'includes/extension/theme-builder/templates/footer.php';
+			require SHAPEBLOCK_PL_PATH . 'includes/extension/theme-builder/templates/footer.php';
 			return;
 		}
 
@@ -277,20 +277,26 @@ class Builder_Render {
 	 */
 	public function render_post( $post_id, $type = '' ) {
 		$post = get_post( $post_id );
-		if ( ! $post || \EELFG\Extension\ThemeBuilder\Theme_Builder::POST_TYPE !== $post->post_type ) {
+		if ( ! $post || \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE !== $post->post_type ) {
 			return '';
 		}
 
 		$content = $post->post_content;
 		$content = do_blocks( $content );
+		// Core's Shortcode block runs its content through wpautop(), which leaves a
+		// shortcode wrapped in <p>. On the_content, shortcode_unautop() strips that
+		// wrapper before do_shortcode() runs; mirror that order here, otherwise a
+		// shortcode returning a block-level element produces <p><div>…</div></p>
+		// and the browser repairs it into stray empty paragraphs.
+		$content = shortcode_unautop( $content );
 		$content = do_shortcode( $content );
 
-		$type = $type ? $type : \EELFG\Extension\ThemeBuilder\Theme_Builder::get_post_type_slug( $post_id );
+		$type = $type ? $type : \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_post_type_slug( $post_id );
 
-		$wrapper_class = 'eelfg-builder-location eelfg-builder-' . sanitize_html_class( $type );
+		$wrapper_class = 'shapeblock-builder-location shapeblock-builder-' . sanitize_html_class( $type );
 
 		return sprintf(
-			'<div class="%1$s" data-eelfg-builder-type="%2$s" data-eelfg-builder-id="%3$d">%4$s</div>',
+			'<div class="%1$s" data-shapeblock-builder-type="%2$s" data-shapeblock-builder-id="%3$d">%4$s</div>',
 			esc_attr( $wrapper_class ),
 			esc_attr( $type ),
 			(int) $post_id,
@@ -299,10 +305,10 @@ class Builder_Render {
 	}
 
 	/**
-	 * [eelfg_builder id="123"] — render a builder template anywhere.
+	 * [shapeblock_builder id="123"] — render a builder template anywhere.
 	 */
 	public function shortcode( $atts ) {
-		$atts = shortcode_atts( array( 'id' => 0 ), $atts, 'eelfg_builder' );
+		$atts = shortcode_atts( array( 'id' => 0 ), $atts, 'shapeblock_builder' );
 		$id   = (int) $atts['id'];
 		if ( ! $id ) {
 			return '';

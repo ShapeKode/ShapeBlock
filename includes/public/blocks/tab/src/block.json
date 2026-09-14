@@ -1,22 +1,18 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "easy-elements-for-gutenberg/tab",
+	"name": "shapeblock/tab",
 	"version": "0.1.0",
 	"title": "Tabs",
-	"category": "easy-elements-for-gutenberg",
+	"category": "shapeblock",
 	"description": "Tabbed content with icon/image titles, content title, description and a button — horizontal or vertical layouts.",
 	"keywords": [ "tab", "tabs", "link", "click", "content" ],
 	"example": {},
 	"supports": {
 		"html": false,
-		"align": [ "left", "center", "right", "wide", "full" ],
-		"spacing": {
-			"padding": [ "top", "bottom", "left", "right" ],
-			"margin": [ "top", "bottom", "left", "right" ]
-		}
+		"align": [ "left", "center", "right", "wide", "full" ]
 	},
-	"textdomain": "easy-elements-for-gutenberg",
+	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
 	"viewScript": "file:./view.js",
 	"render": "file:./render.php",
@@ -37,12 +33,18 @@
 			"type": "object",
 			"default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" }
 		},
+		"titleTypographyTablet": { "type": "object", "default": {} },
+		"titleTypographyMobile": { "type": "object", "default": {} },
 		"titleColor": { "type": "string", "default": "" },
 		"titleBgColor": { "type": "string", "default": "" },
 		"titleBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"titleBorderRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"titlePadding": { "type": "object" },
+		"titlePaddingTablet": { "type": "object" },
+		"titlePaddingMobile": { "type": "object" },
 		"titleMargin": { "type": "object" },
+		"titleMarginTablet": { "type": "object" },
+		"titleMarginMobile": { "type": "object" },
 		"tabIconColor": { "type": "string", "default": "" },
 		"tabIconBgColor": { "type": "string", "default": "" },
 		"titleActiveColor": { "type": "string", "default": "#ffffff" },
@@ -50,33 +52,51 @@
 		"titleActiveBorderColor": { "type": "string", "default": "#5933FF" },
 
 		"titleBottomSpacing": { "type": "string", "default": "" },
+		"titleBottomSpacingTablet": { "type": "string", "default": "" },
+		"titleBottomSpacingMobile": { "type": "string", "default": "" },
 		"navBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 
 		"contentBgColor": { "type": "string", "default": "" },
 		"contentBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"contentBorderRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"contentPadding": { "type": "object" },
+		"contentPaddingTablet": { "type": "object" },
+		"contentPaddingMobile": { "type": "object" },
 		"contentMargin": { "type": "object" },
+		"contentMarginTablet": { "type": "object" },
+		"contentMarginMobile": { "type": "object" },
 		"descriptionAlignment": { "type": "string", "default": "center" },
+		"descriptionAlignmentTablet": { "type": "string", "default": "" },
+		"descriptionAlignmentMobile": { "type": "string", "default": "" },
 
 		"contentTitleTypography": {
 			"type": "object",
 			"default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" }
 		},
+		"contentTitleTypographyTablet": { "type": "object", "default": {} },
+		"contentTitleTypographyMobile": { "type": "object", "default": {} },
 		"contentTitleColor": { "type": "string", "default": "" },
 		"contentTitleMargin": { "type": "object" },
+		"contentTitleMarginTablet": { "type": "object" },
+		"contentTitleMarginMobile": { "type": "object" },
 
 		"descTypography": {
 			"type": "object",
 			"default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" }
 		},
+		"descTypographyTablet": { "type": "object", "default": {} },
+		"descTypographyMobile": { "type": "object", "default": {} },
 		"descColor": { "type": "string", "default": "" },
 		"descMargin": { "type": "object" },
+		"descMarginTablet": { "type": "object" },
+		"descMarginMobile": { "type": "object" },
 
 		"btnTypography": {
 			"type": "object",
 			"default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" }
 		},
+		"btnTypographyTablet": { "type": "object", "default": {} },
+		"btnTypographyMobile": { "type": "object", "default": {} },
 		"btnColor": { "type": "string", "default": "" },
 		"btnBgColor": { "type": "string", "default": "" },
 		"btnHoverColor": { "type": "string", "default": "" },
@@ -85,6 +105,13 @@
 		"btnBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"btnBorderRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"btnPadding": { "type": "object" },
-		"btnMargin": { "type": "object" }
-	}
+		"btnPaddingTablet": { "type": "object" },
+		"btnPaddingMobile": { "type": "object" },
+		"btnMargin": { "type": "object" },
+		"btnMarginTablet": { "type": "object" },
+		"btnMarginMobile": { "type": "object" },
+	"hideDesktop": { "type": "boolean", "default": false },
+	"hideTablet": { "type": "boolean", "default": false },
+	"hideMobile": { "type": "boolean", "default": false }
+}
 }

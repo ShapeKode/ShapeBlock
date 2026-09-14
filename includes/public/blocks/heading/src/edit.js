@@ -1,40 +1,101 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
-import { ServerSideRender } from '@wordpress/server-side-render';
 import {
 	useBlockProps,
 	InspectorControls,
-	MediaUpload,
-	MediaUploadCheck,
+	BlockControls,
+	RichText,
+	RichTextToolbarButton,
 } from '@wordpress/block-editor';
+import { registerFormatType, toggleFormat } from '@wordpress/rich-text';
+
+// "Highlight" inline format: select a word in the title and click Highlight
+// (in the B/I/link toolbar) instead of typing {{ }}. It wraps the selection in
+// <span class="shapeblock-highlight"> — matched by the block's highlight styling
+// (.shapeblock-title span) on the front end. No {{ }} brackets show in the editor.
+if ( typeof window !== 'undefined' && ! window.__shapeblockHighlightFormat ) {
+	window.__shapeblockHighlightFormat = true;
+	registerFormatType( 'shapeblock/highlight', {
+		title: __( 'Highlight', 'shapeblock' ),
+		tagName: 'span',
+		className: 'shapeblock-highlight',
+		edit: ( { isActive, value, onChange } ) => (
+			<RichTextToolbarButton
+				icon="admin-customizer"
+				title={ __( 'Highlight', 'shapeblock' ) }
+				onClick={ () => onChange( toggleFormat( value, { type: 'shapeblock/highlight' } ) ) }
+				isActive={ isActive }
+			/>
+		),
+	} );
+}
 import {
 	PanelBody,
 	SelectControl,
 	ToggleControl,
 	TextControl,
-	TextareaControl,
 	BoxControl,
-	Button,
+	TabPanel,
+	ToolbarDropdownMenu,
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	__experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon,
 	__experimentalDivider as Divider,
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
-import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
-import BorderControl from '../../custom-components/BorderControl';
 import BackgroundControl from '../../custom-components/BackgroundControl';
-import BoxShadowControls from '../../custom-components/BoxShadowControls';
+import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 
 import './editor.scss';
 
-const ALIGN = [
-	{ label: __('Left', 'easy-elements-for-gutenberg'), value: 'left' },
-	{ label: __('Center', 'easy-elements-for-gutenberg'), value: 'center' },
-	{ label: __('Right', 'easy-elements-for-gutenberg'), value: 'right' },
-	{ label: __('Justify', 'easy-elements-for-gutenberg'), value: 'justify' },
-];
+// Map a base attribute name to its per-device key (desktop uses the base name).
+const getKey = (base, device) =>
+	device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
 
-const BLEND_MODES = ['', 'normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity'].map((v) => ({ label: v === '' ? __('Default', 'easy-elements-for-gutenberg') : v, value: v }));
+// ---------------------------------------------------------------------------
+// Editor-preview style helpers. These mirror the inline styles that render.php
+// generates on the front end (see includes/public/Helper.php) so the client
+// preview visually matches the saved output. Desktop values only — the
+// per-device (Tablet/Mobile) overrides are emitted server-side and are not
+// replicated here since the editor canvas is a desktop view.
+// ---------------------------------------------------------------------------
+const ensureUnit = (v) => {
+	if (v === '' || v === null || v === undefined) return undefined;
+	const n = Number(v);
+	if (!isNaN(n) && String(v).trim() !== '' && n !== 0) return `${v}px`;
+	return v;
+};
+const has = (v) => v !== '' && v !== null && v !== undefined;
+
+const typoStyles = (obj) => {
+	const o = {};
+	if (!obj || typeof obj !== 'object') return o;
+	if (obj.fontFamily) o.fontFamily = obj.fontFamily;
+	if (obj.fontSize) o.fontSize = ensureUnit(obj.fontSize);
+	if (obj.fontWeight) o.fontWeight = obj.fontWeight;
+	if (obj.fontStyle) o.fontStyle = obj.fontStyle;
+	if (obj.textTransform) o.textTransform = obj.textTransform;
+	if (obj.lineHeight) o.lineHeight = obj.lineHeight;
+	if (obj.letterSpacing) o.letterSpacing = ensureUnit(obj.letterSpacing);
+	return o;
+};
+const dimStyles = (obj, type) => {
+	const o = {};
+	if (!obj || typeof obj !== 'object') return o;
+	let map;
+	if (type === 'padding') {
+		map = { top: 'paddingTop', right: 'paddingRight', bottom: 'paddingBottom', left: 'paddingLeft' };
+	} else if (type === 'margin') {
+		map = { top: 'marginTop', right: 'marginRight', bottom: 'marginBottom', left: 'marginLeft' };
+	} else {
+		map = { top: 'borderTopLeftRadius', right: 'borderTopRightRadius', bottom: 'borderBottomRightRadius', left: 'borderBottomLeftRadius' };
+	}
+	Object.keys(map).forEach((side) => {
+		if (has(obj[side])) o[map[side]] = ensureUnit(obj[side]);
+	});
+	return o;
+};
 
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const {
@@ -42,35 +103,37 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		linkUrl,
 		linkTarget,
 		linkNofollow,
-		showBorderTitle,
-		borderPosition,
-		showGradientTitle,
-		subHeadingType,
-		subHeadingIcon,
-		subHeadingImage,
-		iconDirection,
-		showGradientBorder,
-		separatorType,
-		separatorPosition,
-		selectIcon,
-		sepImage,
 		blockId,
 	} = attributes;
 
 	useEffect(() => {
 		if (!blockId) {
-			setAttributes({ blockId: 'eelfg-heading-' + clientId.slice(0, 6) });
+			setAttributes({ blockId: 'shapeblock-heading-' + clientId.slice(0, 6) });
 		}
 	}, [blockId, clientId, setAttributes]);
 
+	// Load the block's Google fonts into the editor canvas. This edit component
+	// renders INSIDE the canvas iframe, so `document` here is the iframe's
+	// document — appending the font <link> here makes the preview show the font
+	// whether or not the block is selected (the sidebar control isn't required).
+	useEffect(() => {
+		if (typeof document === 'undefined') return;
+		const fams = [attributes.titleTypography, attributes.highlightTypography]
+			.map((t) => (t && t.fontFamily) || '')
+			.filter((f) => f && f.indexOf(',') === -1);
+		fams.forEach((fam) => {
+			const id = 'shapeblock-font-' + fam.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+			if (document.getElementById(id)) return;
+			const link = document.createElement('link');
+			link.id = id;
+			link.rel = 'stylesheet';
+			link.href = 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(fam).replace(/%20/g, '+') + ':wght@100;200;300;400;500;600;700;800;900&display=swap';
+			document.head.appendChild(link);
+		});
+	}, [attributes.titleTypography, attributes.highlightTypography]);
+
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const typo = (label, key) => <TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />;
-	const border = (label, key) => <BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const box = (label, key) => <BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const num = (label, key) => (
-		<TextControl label={label} type="number" value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-	);
-	const shadow = (label, key) => <BoxShadowControls label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const bg = (label, colorKey, gradKey) => (
 		<BackgroundControl
 			label={label}
@@ -80,300 +143,176 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			onGradientChange={(v) => setAttributes({ [gradKey]: v || '' })}
 		/>
 	);
-	const tshadow = (label, key) => {
-		const v = attributes[key] || {};
-		const set = (patch) => setAttributes({ [key]: { ...v, ...patch } });
-		return (
-			<div style={{ marginBottom: '12px' }}>
-				<strong style={{ display: 'block', marginBottom: '6px' }}>{label}</strong>
-				<TextControl label={__('Offset X', 'easy-elements-for-gutenberg')} type="number" value={v.x ?? ''} onChange={(x) => set({ x })} __next40pxDefaultSize __nextHasNoMarginBottom />
-				<TextControl label={__('Offset Y', 'easy-elements-for-gutenberg')} type="number" value={v.y ?? ''} onChange={(y) => set({ y })} __next40pxDefaultSize __nextHasNoMarginBottom />
-				<TextControl label={__('Blur', 'easy-elements-for-gutenberg')} type="number" value={v.blur ?? ''} onChange={(blur) => set({ blur })} __next40pxDefaultSize __nextHasNoMarginBottom />
-				<ColorPopover label={__('Shadow Color', 'easy-elements-for-gutenberg')} color={v.color} onChange={(color) => set({ color })} />
-			</div>
-		);
-	};
+	// Responsive variants — a device switcher above the control, editing the
+	// matching per-device attribute (base / baseTablet / baseMobile).
+	const respTypo = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => <TypographyControls attributes={attributes} setAttributes={setAttributes} attributeKey={getKey(base, device)} />}
+		</ResponsiveWrapper>
+	);
+	const respBox = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => <BoxControl values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
+		</ResponsiveWrapper>
+	);
+	// -----------------------------------------------------------------------
+	// Preview: state + inline styles mirroring render.php.
+	// -----------------------------------------------------------------------
+	const tag = titleTag || 'h2';
+
+	// Heading wrapper alignment.
+	const headingStyle = {};
+	if (attributes.align) headingStyle.textAlign = attributes.align;
+
+	// Title.
+	const titleStyle = { ...typoStyles(attributes.titleTypography) };
+	if (attributes.titleColor) titleStyle.color = attributes.titleColor;
+	Object.assign(titleStyle, dimStyles(attributes.titleMargin, 'margin'), dimStyles(attributes.titlePadding, 'padding'));
+
+	// Highlight: mirror the front-end highlight styling in the editor so the
+	// highlighted word (the "Highlight" inline format span) shows styled.
+	const hlStyle = { ...typoStyles(attributes.highlightTypography) };
+	if (attributes.highlightColor) hlStyle.color = attributes.highlightColor;
+	const hlBg = attributes.highlightBgGradient || attributes.highlightBgColor;
+	if (hlBg) hlStyle.background = hlBg;
+	Object.assign(hlStyle, dimStyles(attributes.highlightPadding, 'padding'), dimStyles(attributes.highlightMargin, 'margin'));
+	// Tablet / Mobile preview, mirroring the media queries render.php prints.
+	// The desktop values are applied as inline styles on the elements below, and
+	// an inline style beats a stylesheet — hence !important here. This only ever
+	// runs in the editor; the front-end CSS needs no such thing.
+	const responsiveCss = ['Tablet', 'Mobile']
+		.map((suffix) => {
+			const query = 'Tablet' === suffix ? '@media (max-width: 1024px)' : '@media (max-width: 767px)';
+			const rules = [
+				[
+					`.${blockId} .shapeblock-heading .shapeblock-title`,
+					{
+						...typoStyles(attributes[`titleTypography${suffix}`]),
+						...dimStyles(attributes[`titleMargin${suffix}`], 'margin'),
+						...dimStyles(attributes[`titlePadding${suffix}`], 'padding'),
+					},
+				],
+				[
+					`.${blockId} .shapeblock-heading .shapeblock-title span`,
+					{
+						...typoStyles(attributes[`highlightTypography${suffix}`]),
+						...dimStyles(attributes[`highlightPadding${suffix}`], 'padding'),
+						...dimStyles(attributes[`highlightMargin${suffix}`], 'margin'),
+					},
+				],
+			]
+				.map(([selector, styleObj]) => {
+					const decls = Object.entries(styleObj)
+						.filter(([, v]) => v !== '' && v != null)
+						.map(([k, v]) => `${k.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())}:${v} !important;`)
+						.join('');
+					return decls ? `${selector}{${decls}}` : '';
+				})
+				.filter(Boolean)
+				.join('');
+
+			return rules ? `${query}{${rules}}` : '';
+		})
+		.filter(Boolean)
+		.join('');
+
+	const hlCss = Object.entries(hlStyle)
+		.map(([k, v]) => `${k.replace(/([A-Z])/g, '-$1').toLowerCase()}:${v}`)
+		.join(';');
 
 	return (
-		<div {...useBlockProps()}>
+		<div {...useBlockProps({ className: `shapeblock-block shapeblock-heading-block-wrap ${blockId || ''}`.trim() })}>
+			<BlockControls>
+				<ToolbarDropdownMenu
+					icon="heading"
+					label={__('Title HTML Tag', 'shapeblock')}
+					text={(titleTag || 'h2').toUpperCase()}
+					controls={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span'].map((t) => ({
+						title: t.toUpperCase(),
+						isActive: titleTag === t,
+						onClick: () => setAttributes({ titleTag: t }),
+					}))}
+				/>
+			</BlockControls>
 			<InspectorControls>
-				<PanelBody title={__('Heading', 'easy-elements-for-gutenberg')} initialOpen={true}>
-					<TextareaControl
-						label={__('Heading Text', 'easy-elements-for-gutenberg')}
-						help={__('Wrap part of the text in {{ }} to highlight it. Example: Heading {{Here}}.', 'easy-elements-for-gutenberg')}
-						value={attributes.title}
-						onChange={(v) => setAttributes({ title: v })}
-						__nextHasNoMarginBottom
-					/>
-					<SelectControl
-						label={__('HTML Tag', 'easy-elements-for-gutenberg')}
-						value={titleTag}
-						options={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span'].map((t) => ({ label: t.toUpperCase(), value: t }))}
-						onChange={(v) => setAttributes({ titleTag: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					<SelectControl label={__('Alignment', 'easy-elements-for-gutenberg')} value={attributes.align} options={[{ label: __('Default', 'easy-elements-for-gutenberg'), value: '' }, ...ALIGN]} onChange={(v) => setAttributes({ align: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					<Divider />
-					<ToggleControl label={__('Enable Gradient Text', 'easy-elements-for-gutenberg')} checked={showGradientTitle} onChange={(v) => setAttributes({ showGradientTitle: v })} __nextHasNoMarginBottom />
-					<ToggleControl label={__('Show Title Side Border', 'easy-elements-for-gutenberg')} checked={showBorderTitle} onChange={(v) => setAttributes({ showBorderTitle: v })} __nextHasNoMarginBottom />
-					{showBorderTitle && (
-						<>
-							<SelectControl
-								label={__('Border Position', 'easy-elements-for-gutenberg')}
-								value={borderPosition}
-								options={[
-									{ label: __('Left of Title (text width)', 'easy-elements-for-gutenberg'), value: 'eelfg-title-start' },
-									{ label: __('Right of Title (text width)', 'easy-elements-for-gutenberg'), value: 'eelfg-title-end' },
-									{ label: __('Left of Title (full width)', 'easy-elements-for-gutenberg'), value: 'eelfg-full-title-start' },
-									{ label: __('Right of Title (full width)', 'easy-elements-for-gutenberg'), value: 'eelfg-full-title-end' },
-								]}
-								onChange={(v) => setAttributes({ borderPosition: v })}
-								__next40pxDefaultSize
-								__nextHasNoMarginBottom
-							/>
-							{color(__('Border Color', 'easy-elements-for-gutenberg'), 'borderColor')}
-							{box(__('Border Padding', 'easy-elements-for-gutenberg'), 'borderPadding')}
-						</>
-					)}
-					<Divider />
-					<TextControl label={__('Link URL', 'easy-elements-for-gutenberg')} type="url" value={linkUrl} onChange={(v) => setAttributes({ linkUrl: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					{linkUrl !== '' && (
-						<>
-							<ToggleControl label={__('Open in new tab', 'easy-elements-for-gutenberg')} checked={linkTarget} onChange={(v) => setAttributes({ linkTarget: v })} __nextHasNoMarginBottom />
-							<ToggleControl label={__('Add nofollow', 'easy-elements-for-gutenberg')} checked={linkNofollow} onChange={(v) => setAttributes({ linkNofollow: v })} __nextHasNoMarginBottom />
-						</>
-					)}
-					<Divider />
-					<TextareaControl label={__('Description', 'easy-elements-for-gutenberg')} value={attributes.description} onChange={(v) => setAttributes({ description: v })} __nextHasNoMarginBottom />
-				</PanelBody>
-
-				<PanelBody title={__('Sub Heading', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					<TextareaControl label={__('Sub Heading', 'easy-elements-for-gutenberg')} value={attributes.subTitle} onChange={(v) => setAttributes({ subTitle: v })} __nextHasNoMarginBottom />
-					<SelectControl
-						label={__('Sub Heading Type', 'easy-elements-for-gutenberg')}
-						value={subHeadingType}
-						options={[
-							{ label: __('None', 'easy-elements-for-gutenberg'), value: 'none' },
-							{ label: __('Icon', 'easy-elements-for-gutenberg'), value: 'icon' },
-							{ label: __('Image', 'easy-elements-for-gutenberg'), value: 'image' },
-						]}
-						onChange={(v) => setAttributes({ subHeadingType: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					{subHeadingType === 'icon' && <IconPicker label={__('Icon', 'easy-elements-for-gutenberg')} value={subHeadingIcon} onChange={(v) => setAttributes({ subHeadingIcon: v })} />}
-					{subHeadingType === 'image' && (
-						<MediaUploadCheck>
-							<MediaUpload
-								onSelect={(media) => setAttributes({ subHeadingImage: { id: media.id, url: media.url, alt: media.alt } })}
-								allowedTypes={['image']}
-								value={subHeadingImage?.id}
-								render={({ open }) => (
-									<div style={{ marginBottom: '12px' }}>
-										{subHeadingImage?.url && <img src={subHeadingImage.url} alt="" style={{ maxWidth: '100%', marginBottom: '8px' }} />}
-										<Button variant="secondary" onClick={open} style={{ width: '100%', justifyContent: 'center' }}>{subHeadingImage?.url ? __('Replace Image', 'easy-elements-for-gutenberg') : __('Upload Image', 'easy-elements-for-gutenberg')}</Button>
-									</div>
-								)}
-							/>
-						</MediaUploadCheck>
-					)}
-					{subHeadingType !== 'none' && (
-						<SelectControl
-							label={__('Icon / Image Position', 'easy-elements-for-gutenberg')}
-							value={iconDirection}
-							options={[
-								{ label: __('Left of Text', 'easy-elements-for-gutenberg'), value: 'left' },
-								{ label: __('Above Text', 'easy-elements-for-gutenberg'), value: 'top' },
-								{ label: __('Right of Text', 'easy-elements-for-gutenberg'), value: 'right' },
-							]}
-							onChange={(v) => setAttributes({ iconDirection: v })}
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-						/>
-					)}
-					<Divider />
-					<ToggleControl label={__('Show Gradient Border', 'easy-elements-for-gutenberg')} checked={showGradientBorder} onChange={(v) => setAttributes({ showGradientBorder: v })} __nextHasNoMarginBottom />
-					{showGradientBorder && (
-						<>
-							{color(__('Gradient Color 1', 'easy-elements-for-gutenberg'), 'gradientColor1')}
-							{color(__('Gradient Color 2', 'easy-elements-for-gutenberg'), 'gradientColor2')}
-							{color(__('Gradient Color 3', 'easy-elements-for-gutenberg'), 'gradientColor3')}
-							{num(__('Border Radius (px)', 'easy-elements-for-gutenberg'), 'gradientBorderRadius')}
-							{box(__('Gradient Border Padding', 'easy-elements-for-gutenberg'), 'subGradientBorderPadding')}
-						</>
-					)}
-				</PanelBody>
-
-				<PanelBody title={__('Separator', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					<SelectControl
-						label={__('Separator Type', 'easy-elements-for-gutenberg')}
-						value={separatorType}
-						options={[
-							{ label: __('None', 'easy-elements-for-gutenberg'), value: 'none' },
-							{ label: __('Dotted', 'easy-elements-for-gutenberg'), value: 'dotted' },
-							{ label: __('Solid', 'easy-elements-for-gutenberg'), value: 'solid' },
-							{ label: __('Icon', 'easy-elements-for-gutenberg'), value: 'icon' },
-							{ label: __('Image', 'easy-elements-for-gutenberg'), value: 'image' },
-						]}
-						onChange={(v) => setAttributes({ separatorType: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					{separatorType !== 'none' && (
-						<SelectControl
-							label={__('Position', 'easy-elements-for-gutenberg')}
-							value={separatorPosition}
-							options={[
-								{ label: __('Top of Widget', 'easy-elements-for-gutenberg'), value: 'top' },
-								{ label: __('Above Title', 'easy-elements-for-gutenberg'), value: 'above' },
-								{ label: __('Below Title', 'easy-elements-for-gutenberg'), value: 'below' },
-								{ label: __('Bottom of Widget', 'easy-elements-for-gutenberg'), value: 'bottom' },
-							]}
-							onChange={(v) => setAttributes({ separatorPosition: v })}
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-						/>
-					)}
-					{(separatorType === 'solid' || separatorType === 'dotted') && (
-						<>
-							{color(__('Separator Color', 'easy-elements-for-gutenberg'), 'solidColor')}
-							{num(__('Width (px)', 'easy-elements-for-gutenberg'), 'separatorBarWidth')}
-							{separatorType === 'solid' && num(__('Height (px)', 'easy-elements-for-gutenberg'), 'separatorBarHeight')}
-						</>
-					)}
-					{separatorType === 'icon' && (
-						<>
-							<IconPicker label={__('Select Icon', 'easy-elements-for-gutenberg')} value={selectIcon} onChange={(v) => setAttributes({ selectIcon: v })} />
-							{color(__('Icon Color', 'easy-elements-for-gutenberg'), 'separatorIconColor')}
-							{num(__('Icon Size (px)', 'easy-elements-for-gutenberg'), 'separatorIconSize')}
-						</>
-					)}
-					{separatorType === 'image' && (
-						<>
-							<MediaUploadCheck>
-								<MediaUpload
-									onSelect={(media) => setAttributes({ sepImage: { id: media.id, url: media.url, alt: media.alt } })}
-									allowedTypes={['image']}
-									value={sepImage?.id}
-									render={({ open }) => (
-										<div style={{ marginBottom: '12px' }}>
-											{sepImage?.url && <img src={sepImage.url} alt="" style={{ maxWidth: '100%', marginBottom: '8px' }} />}
-											<Button variant="secondary" onClick={open} style={{ width: '100%', justifyContent: 'center' }}>{sepImage?.url ? __('Replace Image', 'easy-elements-for-gutenberg') : __('Upload Image', 'easy-elements-for-gutenberg')}</Button>
-										</div>
-									)}
+				<TabPanel
+					className="shapeblock-inspector-tabs"
+					activeClass="is-active"
+					tabs={[
+						{ name: 'settings', title: __('Settings', 'shapeblock') },
+						{ name: 'layout', title: __('Layout', 'shapeblock') },
+						{ name: 'style', title: __('Style', 'shapeblock') },
+					]}
+				>
+					{(tab) => (
+						tab.name === 'settings' ? (
+							<PanelBody title={__('Heading', 'shapeblock')} initialOpen={true}>
+								<SelectControl
+									label={__('HTML Tag', 'shapeblock')}
+									value={titleTag}
+									options={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span'].map((t) => ({ label: t.toUpperCase(), value: t }))}
+									onChange={(v) => setAttributes({ titleTag: v })}
+									__next40pxDefaultSize
+									__nextHasNoMarginBottom
 								/>
-							</MediaUploadCheck>
-							{num(__('Image Width (px)', 'easy-elements-for-gutenberg'), 'separatorImageWidth')}
-						</>
-					)}
-					{separatorType !== 'none' && box(__('Margin', 'easy-elements-for-gutenberg'), 'separatorMargin')}
-				</PanelBody>
-
-				<PanelBody title={__('Watermark', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					<TextareaControl label={__('Watermark Text', 'easy-elements-for-gutenberg')} value={attributes.waterMark} onChange={(v) => setAttributes({ waterMark: v })} __nextHasNoMarginBottom />
-				</PanelBody>
-			</InspectorControls>
-
-			<InspectorControls group="styles">
-				<PanelBody title={__('Heading', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					{!showGradientTitle && color(__('Color', 'easy-elements-for-gutenberg'), 'titleColor')}
-					{showGradientTitle && bg(__('Text Gradient / Color', 'easy-elements-for-gutenberg'), 'titleFillColor', 'titleFillGradient')}
-					{typo(__('Typography', 'easy-elements-for-gutenberg'), 'titleTypography')}
-					<TextControl label={__('Opacity (0-1)', 'easy-elements-for-gutenberg')} type="number" step="0.01" value={attributes.titleOpacity} onChange={(v) => setAttributes({ titleOpacity: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					{num(__('Stroke Width (px)', 'easy-elements-for-gutenberg'), 'titleStrokeWidth')}
-					{color(__('Stroke Color', 'easy-elements-for-gutenberg'), 'titleStrokeColor')}
-					{tshadow(__('Text Shadow', 'easy-elements-for-gutenberg'), 'titleTextShadow')}
-					<SelectControl label={__('Blend Mode', 'easy-elements-for-gutenberg')} value={attributes.titleBlendMode} options={BLEND_MODES} onChange={(v) => setAttributes({ titleBlendMode: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					{box(__('Margin', 'easy-elements-for-gutenberg'), 'titleMargin')}
-					{box(__('Padding', 'easy-elements-for-gutenberg'), 'titlePadding')}
-					<Divider />
-					<ToggleControl label={__('Enable Image Fill (Text Mask)', 'easy-elements-for-gutenberg')} checked={attributes.enableTitleImageFill} onChange={(v) => setAttributes({ enableTitleImageFill: v })} __nextHasNoMarginBottom />
-					{attributes.enableTitleImageFill && (
-						<MediaUploadCheck>
-							<MediaUpload
-								onSelect={(media) => setAttributes({ titleImageFill: { id: media.id, url: media.url, alt: media.alt } })}
-								allowedTypes={['image']}
-								value={attributes.titleImageFill?.id}
-								render={({ open }) => (
-									<div style={{ marginTop: '8px' }}>
-										{attributes.titleImageFill?.url && <img src={attributes.titleImageFill.url} alt="" style={{ maxWidth: '100%', marginBottom: '8px' }} />}
-										<Button variant="secondary" onClick={open} style={{ width: '100%', justifyContent: 'center' }}>{attributes.titleImageFill?.url ? __('Replace Image', 'easy-elements-for-gutenberg') : __('Select Image', 'easy-elements-for-gutenberg')}</Button>
-									</div>
+								<Divider />
+								<TextControl label={__('Link URL', 'shapeblock')} type="url" value={linkUrl} onChange={(v) => setAttributes({ linkUrl: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+								{linkUrl !== '' && (
+									<>
+										<ToggleControl label={__('Open in new tab', 'shapeblock')} checked={linkTarget} onChange={(v) => setAttributes({ linkTarget: v })} __nextHasNoMarginBottom />
+										<ToggleControl label={__('Add nofollow', 'shapeblock')} checked={linkNofollow} onChange={(v) => setAttributes({ linkNofollow: v })} __nextHasNoMarginBottom />
+									</>
 								)}
-							/>
-						</MediaUploadCheck>
+							</PanelBody>
+						) : tab.name === 'layout' ? (
+							<PanelBody title={__('Heading', 'shapeblock')} initialOpen={true}>
+								<ToggleGroupControl label={__('Alignment', 'shapeblock')} value={attributes.align || ''} onChange={(v) => setAttributes({ align: v ?? '' })} isBlock isDeselectable __next40pxDefaultSize __nextHasNoMarginBottom>
+									<ToggleGroupControlOptionIcon value="left" icon="editor-alignleft" label={__('Left', 'shapeblock')} />
+									<ToggleGroupControlOptionIcon value="center" icon="editor-aligncenter" label={__('Center', 'shapeblock')} />
+									<ToggleGroupControlOptionIcon value="right" icon="editor-alignright" label={__('Right', 'shapeblock')} />
+									<ToggleGroupControlOptionIcon value="justify" icon="editor-justify" label={__('Justify', 'shapeblock')} />
+								</ToggleGroupControl>
+								{respBox(__('Title Margin', 'shapeblock'), 'titleMargin')}
+								{respBox(__('Title Padding', 'shapeblock'), 'titlePadding')}
+								{respBox(__('Highlight Margin', 'shapeblock'), 'highlightMargin')}
+								{respBox(__('Highlight Padding', 'shapeblock'), 'highlightPadding')}
+							</PanelBody>
+						) : (
+							<>
+								<PanelBody title={__('Heading', 'shapeblock')} initialOpen={true}>
+									{color(__('Color', 'shapeblock'), 'titleColor')}
+									{respTypo(__('Typography', 'shapeblock'), 'titleTypography')}
+								</PanelBody>
+
+								<PanelBody title={__('Highlight', 'shapeblock')} initialOpen={false}>
+									<p style={{ margin: '0 0 12px', padding: '8px 10px', background: '#f0f6fc', border: '1px solid #c5d9ed', borderRadius: '4px', fontSize: '12px', lineHeight: '1.5' }}>
+										{__('How to highlight: in the title, select the word(s) you want, then click the Highlight (marker) button in the toolbar — or wrap them in double braces, e.g. {{word}}. The styles below apply to the highlighted text.', 'shapeblock')}
+									</p>
+									{color(__('Color', 'shapeblock'), 'highlightColor')}
+									{bg(__('Background', 'shapeblock'), 'highlightBgColor', 'highlightBgGradient')}
+									{respTypo(__('Typography', 'shapeblock'), 'highlightTypography')}
+								</PanelBody>
+							</>
+						)
 					)}
-				</PanelBody>
-
-				<PanelBody title={__('Sub Heading', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					{color(__('Color', 'easy-elements-for-gutenberg'), 'subColor')}
-					{bg(__('Background', 'easy-elements-for-gutenberg'), 'subBgColor', 'subBgGradient')}
-					{typo(__('Typography', 'easy-elements-for-gutenberg'), 'subTypography')}
-					{box(__('Text Spacing (margin)', 'easy-elements-for-gutenberg'), 'subIconMargin')}
-					{subHeadingType !== 'none' && (
-						<>
-							{color(__('Icon Color', 'easy-elements-for-gutenberg'), 'iconColor')}
-							{num(__('Icon/Image to Text Gap (px)', 'easy-elements-for-gutenberg'), 'subIconGap')}
-							{subHeadingType === 'icon' && num(__('Icon Size (px)', 'easy-elements-for-gutenberg'), 'subIconSize')}
-							{subHeadingType === 'image' && (
-								<>
-									{num(__('Image Width (px)', 'easy-elements-for-gutenberg'), 'subImageWidth')}
-									{num(__('Image Height (px)', 'easy-elements-for-gutenberg'), 'subImageHeight')}
-									{box(__('Image Border Radius', 'easy-elements-for-gutenberg'), 'subImageRadius')}
-								</>
-							)}
-						</>
-					)}
-					<Divider />
-					{border(__('Border', 'easy-elements-for-gutenberg'), 'subBorder')}
-					{box(__('Border Radius', 'easy-elements-for-gutenberg'), 'subBorderRadius')}
-					{box(__('Padding', 'easy-elements-for-gutenberg'), 'subPadding')}
-					{box(__('Margin', 'easy-elements-for-gutenberg'), 'subMargin')}
-				</PanelBody>
-
-				<PanelBody title={__('Highlight', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					{color(__('Color', 'easy-elements-for-gutenberg'), 'highlightColor')}
-					{bg(__('Background', 'easy-elements-for-gutenberg'), 'highlightBgColor', 'highlightBgGradient')}
-					{typo(__('Typography', 'easy-elements-for-gutenberg'), 'highlightTypography')}
-					{box(__('Padding', 'easy-elements-for-gutenberg'), 'highlightPadding')}
-					{box(__('Margin', 'easy-elements-for-gutenberg'), 'highlightMargin')}
-					{box(__('Border Radius', 'easy-elements-for-gutenberg'), 'highlightBorderRadius')}
-				</PanelBody>
-
-				<PanelBody title={__('Description', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					{color(__('Color', 'easy-elements-for-gutenberg'), 'descColor')}
-					{typo(__('Typography', 'easy-elements-for-gutenberg'), 'descTypography')}
-					{box(__('Margin', 'easy-elements-for-gutenberg'), 'descMargin')}
-					{box(__('Padding', 'easy-elements-for-gutenberg'), 'descPadding')}
-				</PanelBody>
-
-				{attributes.waterMark !== '' && (
-					<PanelBody title={__('Watermark', 'easy-elements-for-gutenberg')} initialOpen={false}>
-						{color(__('Text Color', 'easy-elements-for-gutenberg'), 'wmColor')}
-						{color(__('Stroke Color', 'easy-elements-for-gutenberg'), 'wmStrokeColor')}
-						{num(__('Stroke Width (px)', 'easy-elements-for-gutenberg'), 'wmStrokeWidth')}
-						{num(__('Font Size (px)', 'easy-elements-for-gutenberg'), 'wmFontSize')}
-						{typo(__('Typography', 'easy-elements-for-gutenberg'), 'wmTypography')}
-						{tshadow(__('Text Shadow', 'easy-elements-for-gutenberg'), 'wmTextShadow')}
-						<Divider />
-						{bg(__('Background', 'easy-elements-for-gutenberg'), 'wmBgColor', 'wmBgGradient')}
-						{border(__('Border', 'easy-elements-for-gutenberg'), 'wmBorder')}
-						{box(__('Border Radius', 'easy-elements-for-gutenberg'), 'wmBorderRadius')}
-						{box(__('Padding', 'easy-elements-for-gutenberg'), 'wmPadding')}
-						{shadow(__('Box Shadow', 'easy-elements-for-gutenberg'), 'wmBoxShadow')}
-						<Divider />
-						{num(__('Top / Bottom (px)', 'easy-elements-for-gutenberg'), 'wmTop')}
-						{num(__('Left / Right (px)', 'easy-elements-for-gutenberg'), 'wmLeft')}
-						{num(__('Rotation (deg)', 'easy-elements-for-gutenberg'), 'wmRotation')}
-						<TextControl label={__('Opacity (0-1)', 'easy-elements-for-gutenberg')} type="number" step="0.01" value={attributes.wmOpacity} onChange={(v) => setAttributes({ wmOpacity: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-						{num(__('Z-Index', 'easy-elements-for-gutenberg'), 'wmZIndex')}
-						<SelectControl label={__('Blend Mode', 'easy-elements-for-gutenberg')} value={attributes.wmBlendMode} options={BLEND_MODES} onChange={(v) => setAttributes({ wmBlendMode: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					</PanelBody>
-				)}
+				</TabPanel>
 			</InspectorControls>
 
-			<ServerSideRender block="easy-elements-for-gutenberg/heading" attributes={attributes} httpMethod="POST" />
+			{hlCss && blockId && (
+				<style>{`.${blockId} .shapeblock-title .shapeblock-highlight, .${blockId} .shapeblock-title span { ${hlCss} }`}</style>
+			)}
+			{responsiveCss && blockId && <style>{responsiveCss}</style>}
+			<div className="shapeblock-heading" style={headingStyle}>
+				<RichText
+					tagName={tag}
+					className="shapeblock-title"
+					value={(attributes.title || '').replace(/\{\{(.*?)\}\}/g, '<span class="shapeblock-highlight">$1</span>')}
+					onChange={(v) => setAttributes({ title: v.replace(/\{\{(.*?)\}\}/g, '<span class="shapeblock-highlight">$1</span>') })}
+					allowedFormats={['core/bold', 'core/italic', 'core/link', 'shapeblock/highlight']}
+					placeholder={__('Add heading…', 'shapeblock')}
+					style={titleStyle}
+				/>
+			</div>
 		</div>
 	);
 }

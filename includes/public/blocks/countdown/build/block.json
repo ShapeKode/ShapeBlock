@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/countdown",
+  "name": "shapeblock/countdown",
   "version": "0.1.0",
   "title": "Countdown",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "description": "A countdown timer to a target date with days/hours/minutes/seconds, custom labels, separators and full styling.",
   "keywords": [
     "countdown",
@@ -22,23 +22,9 @@
       "right",
       "wide",
       "full"
-    ],
-    "spacing": {
-      "padding": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ],
-      "margin": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ]
-    }
+    ]
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "viewScript": "file:./view.js",
   "render": "file:./render.php",
@@ -69,7 +55,7 @@
     },
     "separator": {
       "type": "string",
-      "default": "eelfg-cntdwn-space"
+      "default": "shapeblock-cntdwn-space"
     },
     "labelUnderNumber": {
       "type": "boolean",
@@ -79,7 +65,23 @@
       "type": "string",
       "default": "center"
     },
+    "contentAlignTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "contentAlignMobile": {
+      "type": "string",
+      "default": ""
+    },
     "midGap": {
+      "type": "string",
+      "default": ""
+    },
+    "midGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "midGapMobile": {
       "type": "string",
       "default": ""
     },
@@ -125,6 +127,12 @@
     "itemPadding": {
       "type": "object"
     },
+    "itemPaddingTablet": {
+      "type": "object"
+    },
+    "itemPaddingMobile": {
+      "type": "object"
+    },
     "daysTypography": {
       "type": "object",
       "default": {
@@ -136,6 +144,14 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "daysTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "daysTypographyMobile": {
+      "type": "object",
+      "default": {}
     },
     "daysColor": {
       "type": "string",
@@ -157,6 +173,14 @@
         "letterSpacing": ""
       }
     },
+    "daysLabelTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "daysLabelTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "hoursTypography": {
       "type": "object",
       "default": {
@@ -168,6 +192,14 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "hoursTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "hoursTypographyMobile": {
+      "type": "object",
+      "default": {}
     },
     "hoursColor": {
       "type": "string",
@@ -189,6 +221,14 @@
         "letterSpacing": ""
       }
     },
+    "hoursLabelTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "hoursLabelTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "minutesTypography": {
       "type": "object",
       "default": {
@@ -200,6 +240,14 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "minutesTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "minutesTypographyMobile": {
+      "type": "object",
+      "default": {}
     },
     "minutesColor": {
       "type": "string",
@@ -221,6 +269,14 @@
         "letterSpacing": ""
       }
     },
+    "minutesLabelTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "minutesLabelTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "secondsTypography": {
       "type": "object",
       "default": {
@@ -232,6 +288,14 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "secondsTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "secondsTypographyMobile": {
+      "type": "object",
+      "default": {}
     },
     "secondsColor": {
       "type": "string",
@@ -252,6 +316,26 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "secondsLabelTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "secondsLabelTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

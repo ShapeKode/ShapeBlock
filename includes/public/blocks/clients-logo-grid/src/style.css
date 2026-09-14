@@ -4,19 +4,19 @@
  *
  * Ported from the Elementor "Client Logo Grid" widget stylesheet
  * (easy-elements/widgets/clients-logo-grid/css/clients-logo.scss). Classes use
- * the "eelfg-" prefix and everything is scoped under `.eelfg-clients-logo-wrap`.
+ * the "shapeblock-" prefix and everything is scoped under `.shapeblock-clients-logo-wrap`.
  */
-.eelfg-clients-logo-wrap .eelfg-grid-wrap {
+.shapeblock-clients-logo-wrap .shapeblock-grid-wrap {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
 }
-.eelfg-clients-logo-wrap .eelfg-grid-item {
+.shapeblock-clients-logo-wrap .shapeblock-grid-item {
   box-sizing: border-box;
   padding: 15px;
   width: 25%;
 }
-.eelfg-clients-logo-wrap .eelfg-logo-img {
+.shapeblock-clients-logo-wrap .shapeblock-logo-img {
   position: relative;
   box-sizing: border-box;
   display: inline-block;
@@ -25,55 +25,55 @@
   overflow: hidden;
   transition: all 0.5s ease;
 }
-.eelfg-clients-logo-wrap .eelfg-grid-img {
+.shapeblock-clients-logo-wrap .shapeblock-grid-img {
   display: block;
   margin: 0 auto;
   height: auto;
   transition: all 0.5s ease;
 }
-.eelfg-clients-logo-wrap {
+.shapeblock-clients-logo-wrap {
   /* Grayscale options */
 }
-.eelfg-clients-logo-wrap .eelfg-logo-img.eelfg-normal-grayscale img {
+.shapeblock-clients-logo-wrap .shapeblock-logo-img.shapeblock-normal-grayscale img {
   filter: grayscale(1);
 }
-.eelfg-clients-logo-wrap .eelfg-logo-img.eelfg-hover-grayscale:hover img {
+.shapeblock-clients-logo-wrap .shapeblock-logo-img.shapeblock-hover-grayscale:hover img {
   filter: grayscale(1);
 }
-.eelfg-clients-logo-wrap .eelfg-logo-img.eelfg-hover-to-default img {
+.shapeblock-clients-logo-wrap .shapeblock-logo-img.shapeblock-hover-to-default img {
   filter: grayscale(100%);
 }
-.eelfg-clients-logo-wrap .eelfg-logo-img.eelfg-hover-to-default:hover img {
+.shapeblock-clients-logo-wrap .shapeblock-logo-img.shapeblock-hover-to-default:hover img {
   filter: grayscale(0%);
 }
-.eelfg-clients-logo-wrap {
+.shapeblock-clients-logo-wrap {
   /* Hover swap effect */
 }
-.eelfg-clients-logo-wrap .eelfg-logo-img-normal,
-.eelfg-clients-logo-wrap .eelfg-logo-img-hover {
+.shapeblock-clients-logo-wrap .shapeblock-logo-img-normal,
+.shapeblock-clients-logo-wrap .shapeblock-logo-img-hover {
   display: block;
   transition: transform 0.5s ease !important;
 }
-.eelfg-clients-logo-wrap .eelfg-logo-img-normal {
+.shapeblock-clients-logo-wrap .shapeblock-logo-img-normal {
   transform: translateY(0);
 }
-.eelfg-clients-logo-wrap .eelfg-logo-img-hover {
+.shapeblock-clients-logo-wrap .shapeblock-logo-img-hover {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   transform: translateY(100%);
 }
-.eelfg-clients-logo-wrap .eelfg-logo-img:hover .eelfg-logo-img-normal {
+.shapeblock-clients-logo-wrap .shapeblock-logo-img:hover .shapeblock-logo-img-normal {
   transform: translateY(-100%);
 }
-.eelfg-clients-logo-wrap .eelfg-logo-img:hover .eelfg-logo-img-hover {
+.shapeblock-clients-logo-wrap .shapeblock-logo-img:hover .shapeblock-logo-img-hover {
   transform: translateY(0);
 }
-.eelfg-clients-logo-wrap {
+.shapeblock-clients-logo-wrap {
   /* Empty placeholder (editor / no image set) */
 }
-.eelfg-clients-logo-wrap .eelfg-logo-placeholder {
+.shapeblock-clients-logo-wrap .shapeblock-logo-placeholder {
   display: grid;
   place-content: center;
   min-height: 80px;

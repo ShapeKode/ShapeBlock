@@ -16,7 +16,7 @@ import BuilderConditionsModal from './builder-conditions-modal';
 /**
  * Theme Builder — manage header/footer (and future) templates.
  *
- * Template types are driven entirely by eelfg.builderTypes (the PHP registry),
+ * Template types are driven entirely by shapeblock.builderTypes (the PHP registry),
  * so adding a future type server-side surfaces it here with no UI changes.
  *
  * Deleting a template moves it to Trash first; from the Trash view it can be
@@ -24,7 +24,7 @@ import BuilderConditionsModal from './builder-conditions-modal';
  */
 export default function ThemeBuilder() {
     const builderTypes = useMemo(
-        () => (typeof eelfg !== 'undefined' && eelfg.builderTypes) || [],
+        () => (typeof shapeblock !== 'undefined' && shapeblock.builderTypes) || [],
         []
     );
 
@@ -48,11 +48,11 @@ export default function ThemeBuilder() {
     const fetchItems = useCallback((page = 1, pageSize = 10, searchVal = '', type = '', status = 'publish') => {
         setLoading(true);
         const params = new URLSearchParams({ page, per_page: pageSize, search: searchVal, type, status });
-        // rest_url may be the plain-permalink form (index.php?rest_route=/easy-elements-for-gutenberg/v1/),
+        // rest_url may be the plain-permalink form (index.php?rest_route=/shapeblock/v1/),
         // in which case query args must be appended with "&", not "?".
-        const sep = eelfg.rest_url.includes('?') ? '&' : '?';
-        fetch(`${eelfg.rest_url}builder${sep}${params}`, {
-            headers: { 'X-WP-Nonce': eelfg.nonce },
+        const sep = shapeblock.rest_url.includes('?') ? '&' : '?';
+        fetch(`${shapeblock.rest_url}builder${sep}${params}`, {
+            headers: { 'X-WP-Nonce': shapeblock.nonce },
         })
             .then((res) => res.json())
             .then((data) => {
@@ -103,9 +103,9 @@ export default function ThemeBuilder() {
     const handleCreate = () => {
         form.validateFields().then((values) => {
             setSubmitting(true);
-            fetch(`${eelfg.rest_url}builder`, {
+            fetch(`${shapeblock.rest_url}builder`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': eelfg.nonce },
+                headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': shapeblock.nonce },
                 body: JSON.stringify(values),
             })
                 .then((res) => res.json())
@@ -131,9 +131,9 @@ export default function ThemeBuilder() {
 
     // Move a template to Trash (first delete).
     const handleTrash = (id) => {
-        fetch(`${eelfg.rest_url}builder/${id}`, {
+        fetch(`${shapeblock.rest_url}builder/${id}`, {
             method: 'DELETE',
-            headers: { 'X-WP-Nonce': eelfg.nonce },
+            headers: { 'X-WP-Nonce': shapeblock.nonce },
         })
             .then((res) => res.json())
             .then((data) => {
@@ -148,10 +148,10 @@ export default function ThemeBuilder() {
 
     // Permanently delete a trashed template.
     const handlePermanentDelete = (id) => {
-        const sep = eelfg.rest_url.includes('?') ? '&' : '?';
-        fetch(`${eelfg.rest_url}builder/${id}${sep}force=1`, {
+        const sep = shapeblock.rest_url.includes('?') ? '&' : '?';
+        fetch(`${shapeblock.rest_url}builder/${id}${sep}force=1`, {
             method: 'DELETE',
-            headers: { 'X-WP-Nonce': eelfg.nonce },
+            headers: { 'X-WP-Nonce': shapeblock.nonce },
         })
             .then((res) => res.json())
             .then((data) => {
@@ -166,9 +166,9 @@ export default function ThemeBuilder() {
 
     // Restore a trashed template.
     const handleRestore = (id) => {
-        fetch(`${eelfg.rest_url}builder/${id}/restore`, {
+        fetch(`${shapeblock.rest_url}builder/${id}/restore`, {
             method: 'POST',
-            headers: { 'X-WP-Nonce': eelfg.nonce },
+            headers: { 'X-WP-Nonce': shapeblock.nonce },
         })
             .then((res) => res.json())
             .then((data) => {
@@ -192,9 +192,9 @@ export default function ThemeBuilder() {
             okText: 'Move to Trash',
             okType: 'danger',
             onOk: () => {
-                fetch(`${eelfg.rest_url}builder/bulk-delete`, {
+                fetch(`${shapeblock.rest_url}builder/bulk-delete`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': eelfg.nonce },
+                    headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': shapeblock.nonce },
                     body: JSON.stringify({ ids: selectedRowKeys }),
                 })
                     .then((res) => res.json())
@@ -224,9 +224,9 @@ export default function ThemeBuilder() {
             okText: 'Delete Permanently',
             okType: 'danger',
             onOk: () => {
-                fetch(`${eelfg.rest_url}builder/bulk-delete`, {
+                fetch(`${shapeblock.rest_url}builder/bulk-delete`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': eelfg.nonce },
+                    headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': shapeblock.nonce },
                     body: JSON.stringify({ ids: selectedRowKeys, force: true }),
                 })
                     .then((res) => res.json())
@@ -250,9 +250,9 @@ export default function ThemeBuilder() {
             notification.warning({ message: 'No templates selected' });
             return;
         }
-        fetch(`${eelfg.rest_url}builder/bulk-restore`, {
+        fetch(`${shapeblock.rest_url}builder/bulk-restore`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': eelfg.nonce },
+            headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': shapeblock.nonce },
             body: JSON.stringify({ ids: selectedRowKeys }),
         })
             .then((res) => res.json())
@@ -283,13 +283,13 @@ export default function ThemeBuilder() {
         ...builderTypes.map((t) => ({ label: t.plural || t.label, value: t.slug })),
     ]), [builderTypes]);
 
-    // Types flagged as shortcode-only ( e.g. Custom Block ): rendered via [eelfg_builder id="…"],
+    // Types flagged as shortcode-only ( e.g. Custom Block ): rendered via [shapeblock_builder id="…"],
     // so we show that copyable shortcode instead of Display Conditions.
     const shortcodeTypes = useMemo(
         () => builderTypes.filter((t) => t.shortcode).map((t) => t.slug),
         [builderTypes]
     );
-    const shortcodeFor = (record) => `[eelfg_builder id="${record.id}"]`;
+    const shortcodeFor = (record) => `[shapeblock_builder id="${record.id}"]`;
     const copyShortcode = (record) => {
         const sc = shortcodeFor(record);
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -425,9 +425,9 @@ export default function ThemeBuilder() {
     ];
 
     return (
-        <div className="eelfg-options-content">
+        <div className="shapeblock-options-content">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <h1 className="eelfg-options-title" style={{ margin: 0 }}>Theme Builder</h1>
+                <h1 className="shapeblock-options-title" style={{ margin: 0 }}>Theme Builder</h1>
                 <Button type="primary" icon={<PlusOutlined />} onClick={openAdd}>Add New</Button>
             </div>
 
@@ -474,14 +474,14 @@ export default function ThemeBuilder() {
                     <Search
                         placeholder="Search templates..."
                         allowClear
-                        className='bolpo-template-search-box'
+                        className='shapeblock-template-search-box'
                         onSearch={handleSearch}
                         onChange={(e) => {
                             const v = e.target.value;
                             setSearch(v);
                             setSelectedRowKeys([]);
-                            clearTimeout(window.__eelfgTbSearchT);
-                            window.__eelfgTbSearchT = setTimeout(() => fetchItems(1, pagination.pageSize, v, typeFilter, statusView), 300);
+                            clearTimeout(window.__shapeblockTbSearchT);
+                            window.__shapeblockTbSearchT = setTimeout(() => fetchItems(1, pagination.pageSize, v, typeFilter, statusView), 300);
                         }}
                         style={{ width: 250 }}
                         prefix={<SearchOutlined />}

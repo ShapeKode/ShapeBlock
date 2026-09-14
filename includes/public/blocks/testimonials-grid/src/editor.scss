@@ -1,23 +1,30 @@
+@use 'style';
+
 /**
  * Editor-only styles for the Testimonials Grid block.
  */
-.eelfg-testimonial-block-wrap {
-	// Reveal all items in the editor preview (the front-end reveal needs a click).
-	.eelfg-hidden-testimonial {
-		display: block;
-	}
-}
-
-.eelfg-tstml-repeater-item {
+.shapeblock-tstml-repeater-item {
 	border: 1px solid #e0e0e0;
 	border-radius: 4px;
 	padding: 12px;
 	margin-bottom: 12px;
 
-	.eelfg-tstml-repeater-head {
+	.shapeblock-tstml-repeater-head {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		margin-bottom: 8px;
+	}
+}
+
+// Settings / Layout / Style tabs — evenly spaced across the inspector.
+.shapeblock-inspector-tabs {
+	.components-tab-panel__tabs {
+		display: flex;
+	}
+
+	.components-tab-panel__tabs-item {
+		flex: 1;
+		justify-content: center;
 	}
 }

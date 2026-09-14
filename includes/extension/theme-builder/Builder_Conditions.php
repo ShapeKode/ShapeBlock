@@ -1,5 +1,5 @@
 <?php
-namespace EELFG\Extension\ThemeBuilder;
+namespace ShapeBlock\Extension\ThemeBuilder;
 
 /**
  * Theme Builder — display conditions.
@@ -18,7 +18,7 @@ namespace EELFG\Extension\ThemeBuilder;
  * request and no EXCLUDE row matches (exclude always wins). An empty set is
  * treated as "entire site" so a freshly created template is visible.
  *
- * @package EasyElementsForGutenberg
+ * @package ShapeBlock
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -48,17 +48,17 @@ class Builder_Conditions {
 	public static function get_rules() {
 		$rules = array(
 			'general'  => array(
-				'entire_site'  => array( 'label' => __( 'Entire Site', 'easy-elements-for-gutenberg' ), 'needsObject' => false ),
-				'front_page'   => array( 'label' => __( 'Front Page', 'easy-elements-for-gutenberg' ), 'needsObject' => false ),
-				'all_pages'    => array( 'label' => __( 'All Pages', 'easy-elements-for-gutenberg' ), 'needsObject' => false ),
-				'all_posts'    => array( 'label' => __( 'All Posts', 'easy-elements-for-gutenberg' ), 'needsObject' => false ),
-				'all_archives' => array( 'label' => __( 'All Archives', 'easy-elements-for-gutenberg' ), 'needsObject' => false ),
-				'search'       => array( 'label' => __( 'Search Results', 'easy-elements-for-gutenberg' ), 'needsObject' => false ),
-				'not_found'    => array( 'label' => __( '404 Page', 'easy-elements-for-gutenberg' ), 'needsObject' => false ),
+				'entire_site'  => array( 'label' => __( 'Entire Site', 'shapeblock' ), 'needsObject' => false ),
+				'front_page'   => array( 'label' => __( 'Front Page', 'shapeblock' ), 'needsObject' => false ),
+				'all_pages'    => array( 'label' => __( 'All Pages', 'shapeblock' ), 'needsObject' => false ),
+				'all_posts'    => array( 'label' => __( 'All Posts', 'shapeblock' ), 'needsObject' => false ),
+				'all_archives' => array( 'label' => __( 'All Archives', 'shapeblock' ), 'needsObject' => false ),
+				'search'       => array( 'label' => __( 'Search Results', 'shapeblock' ), 'needsObject' => false ),
+				'not_found'    => array( 'label' => __( '404 Page', 'shapeblock' ), 'needsObject' => false ),
 			),
 			'specific' => array(
-				'page' => array( 'label' => __( 'Specific Pages', 'easy-elements-for-gutenberg' ), 'needsObject' => true, 'objectType' => 'page' ),
-				'post' => array( 'label' => __( 'Specific Posts', 'easy-elements-for-gutenberg' ), 'needsObject' => true, 'objectType' => 'post' ),
+				'page' => array( 'label' => __( 'Specific Pages', 'shapeblock' ), 'needsObject' => true, 'objectType' => 'page' ),
+				'post' => array( 'label' => __( 'Specific Posts', 'shapeblock' ), 'needsObject' => true, 'objectType' => 'post' ),
 			),
 		);
 
@@ -67,7 +67,7 @@ class Builder_Conditions {
 		 *
 		 * @param array $rules Grouped rule definitions.
 		 */
-		return apply_filters( 'eelfg_builder_condition_rules', $rules );
+		return apply_filters( 'shapeblock_builder_condition_rules', $rules );
 	}
 
 	/**
@@ -222,7 +222,7 @@ class Builder_Conditions {
 		 * @param string $rule    Rule slug.
 		 * @param array  $ids     Object ids.
 		 */
-		return apply_filters( 'eelfg_builder_rule_matches_request', false, $rule, $ids );
+		return apply_filters( 'shapeblock_builder_rule_matches_request', false, $rule, $ids );
 	}
 
 	/**
@@ -230,7 +230,7 @@ class Builder_Conditions {
 	 */
 	public static function summarize( $conditions ) {
 		if ( ! is_array( $conditions ) || empty( $conditions ) ) {
-			return __( 'Entire Site', 'easy-elements-for-gutenberg' );
+			return __( 'Entire Site', 'shapeblock' );
 		}
 
 		$flat  = self::get_rules_flat();

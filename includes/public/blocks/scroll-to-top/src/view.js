@@ -9,7 +9,7 @@
 	'use strict';
 
 	function init() {
-		var buttons = document.querySelectorAll('.eelfg-scroll-top-block-wrap .eelfg-scroll-top');
+		var buttons = document.querySelectorAll('.shapeblock-scroll-top-block-wrap .shapeblock-scroll-top');
 		if (!buttons.length) {
 			return;
 		}
@@ -20,7 +20,7 @@
 				if (isNaN(threshold)) {
 					threshold = 150;
 				}
-				btn.classList.toggle('eelfg-scroll-visible', currentScroll > threshold);
+				btn.classList.toggle('shapeblock-scroll-visible', currentScroll > threshold);
 			});
 		}
 

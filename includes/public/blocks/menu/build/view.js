@@ -1,5 +1,5 @@
 /**
- * Front-end script for the Easy Elements "Menu" block.
+ * Front-end script for the ShapeBlock "Menu" block.
  *
  * Handles the responsive (mobile) menu: the hamburger toggle slides the menu in as an
  * off-canvas drawer (with an overlay backdrop + close button), and below the breakpoint
@@ -10,7 +10,7 @@
 
 	function isMobile( nav ) {
 		// "Always" overlay behaves like mobile on every screen size.
-		if ( nav.classList.contains( 'eelfg-menu-overlay-always' ) ) {
+		if ( nav.classList.contains( 'shapeblock-menu-overlay-always' ) ) {
 			return true;
 		}
 		var bp = parseInt( nav.getAttribute( 'data-breakpoint' ), 10 ) || 782;
@@ -18,15 +18,15 @@
 	}
 
 	function initMenu( nav ) {
-		if ( ! nav || nav.eelfgMenuInit ) {
+		if ( ! nav || nav.shapeblockMenuInit ) {
 			return;
 		}
-		nav.eelfgMenuInit = true;
+		nav.shapeblockMenuInit = true;
 
-		var toggle    = nav.querySelector( '.eelfg-menu-toggle' );
-		var overlay   = nav.querySelector( '.eelfg-menu-overlay' );
-		var closeEl   = nav.querySelector( '.eelfg-menu-close' );
-		var clickMode = nav.classList.contains( 'eelfg-menu-click' );
+		var toggle    = nav.querySelector( '.shapeblock-menu-toggle' );
+		var overlay   = nav.querySelector( '.shapeblock-menu-overlay' );
+		var closeEl   = nav.querySelector( '.shapeblock-menu-close' );
+		var clickMode = nav.classList.contains( 'shapeblock-menu-click' );
 
 		function setOpen( open ) {
 			nav.classList.toggle( 'is-open', open );
@@ -67,8 +67,8 @@
 		var parents = nav.querySelectorAll( '.menu-item-has-children' );
 		Array.prototype.forEach.call( parents, function ( li ) {
 			var link  = li.querySelector( ':scope > a' );
-			// The arrow now lives inside the link ( li > a > .eelfg-menu-sub-toggle ).
-			var arrow = li.querySelector( ':scope > a > .eelfg-menu-sub-toggle' );
+			// The arrow now lives inside the link ( li > a > .shapeblock-menu-sub-toggle ).
+			var arrow = li.querySelector( ':scope > a > .shapeblock-menu-sub-toggle' );
 			var href  = link ? ( link.getAttribute( 'href' ) || '' ) : '';
 			var hasRealLink = href && '#' !== href && '' !== href.replace( /\s/g, '' );
 
@@ -118,12 +118,12 @@
 		// drawer transition so it doesn't visibly slide across the screen at the breakpoint.
 		var resizeTimer = null;
 		window.addEventListener( 'resize', function () {
-			nav.classList.add( 'eelfg-menu-no-anim' );
+			nav.classList.add( 'shapeblock-menu-no-anim' );
 			if ( resizeTimer ) {
 				window.clearTimeout( resizeTimer );
 			}
 			resizeTimer = window.setTimeout( function () {
-				nav.classList.remove( 'eelfg-menu-no-anim' );
+				nav.classList.remove( 'shapeblock-menu-no-anim' );
 			}, 200 );
 
 			if ( ! isMobile( nav ) ) {
@@ -136,7 +136,7 @@
 	}
 
 	function initAll() {
-		Array.prototype.forEach.call( document.querySelectorAll( '.eelfg-menu' ), initMenu );
+		Array.prototype.forEach.call( document.querySelectorAll( '.shapeblock-menu' ), initMenu );
 	}
 
 	if ( 'loading' !== document.readyState ) {

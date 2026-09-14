@@ -1,5 +1,5 @@
 <?php
-namespace EELFG\Frontend;
+namespace ShapeBlock\Frontend;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,13 +26,36 @@ class Helper {
 				}
 			} elseif ( ! $is_object && ! empty( $val ) ) {
 				$v = $val;
-				if ( in_array($attr_base, ['itemGap', 'itemColGap', 'itemRowGap']) ) {
-                     // handled per block usually, but let's store it
-					 $v = self::ensure_unit($v);
-                }
+				// A bare number is only valid CSS for a handful of properties.
+				// Everywhere else it has to carry a unit or the browser throws the
+				// whole declaration away — which is what silently dropped gaps,
+				// min-heights and max-widths that were stored without one.
+				if ( is_numeric( $v ) && ! in_array( $prop_name, self::unitless_props(), true ) ) {
+					$v = self::ensure_unit( $v );
+				}
 				$target_array[$device][$prop_name] = $v;
 			}
 		}
+	}
+
+	/**
+	 * CSS properties that take a plain number, so ensure_unit() must leave them
+	 * alone.
+	 *
+	 * @return string[]
+	 */
+	public static function unitless_props() {
+		return [
+			'z-index',
+			'opacity',
+			'line-height',
+			'flex-grow',
+			'flex-shrink',
+			'order',
+			'font-weight',
+			'zoom',
+			'--bp-cols',
+		];
 	}
 
 	public static function ensure_unit ($value) {
@@ -107,7 +130,9 @@ class Helper {
 		$b = self::ensure_unit($shadow['b'] ?? 0);
 		$s = self::ensure_unit($shadow['s'] ?? 0);
 		$c = $shadow['c'] ?? 'rgba(0,0,0,0)';
-		return "$x $y $b $s $c";
+		// Absent or false keeps the outer shadow every saved block already has.
+		$inset = empty($shadow['inset']) ? '' : 'inset ';
+		return "$inset$x $y $b $s $c";
 	}
 
 	public static function border_to_css_props($border) {
@@ -153,11 +178,11 @@ class Helper {
 		return "$w $style $color";
 	}
 
-	public static function eelfg_time_ago() {
+	public static function shapeblock_time_ago() {
 		return human_time_diff( get_the_time('U'), current_time('timestamp') );
 	}
 
-	public static function eelfg_get_video_embed($video_url, $autoplay = 0, $mute = 0, $controls = 1, $height = '400px', $width = '100%') {
+	public static function shapeblock_get_video_embed($video_url, $autoplay = 0, $mute = 0, $controls = 1, $height = '400px', $width = '100%') {
 
 		$embed_video = '';
 
@@ -242,17 +267,5 @@ class Helper {
 		}
 
 		return $embed_video;
-	}
-
-	public static function eelfg_reading_time($content = null, $wpm = 200, $suffix = '') {
-		if ( $content === null ) {
-			$content = get_the_content();
-		}
-		$word_count    = str_word_count( wp_strip_all_tags( $content ) );
-		$total_seconds = (int) round( ( $word_count / $wpm ) * 60 );
-		$minutes       = (int) floor( $total_seconds / 60 );
-		$seconds       = $total_seconds % 60;
-		$time          = sprintf( '%02d:%02d', $minutes, $seconds );
-		return trim( $time . ' ' . $suffix );
 	}
 }

@@ -4,9 +4,8 @@ import { Row, Space, Button, notification, Input, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 export default function Blocks() {
-    const [blocks, setBlocks] = useState(eelfg.blocks);
+    const [blocks, setBlocks] = useState(shapeblock.blocks);
     const [bulkLoading, setBulkLoading] = useState(false);
-    const [filter, setFilter] = useState('all'); // 'all' | 'free' | 'pro'
     const [search, setSearch] = useState('');
     const [sort, setSort] = useState('default'); // 'default' | 'az' | 'za' | 'active' | 'inactive'
 
@@ -20,17 +19,17 @@ export default function Blocks() {
         ));
 
         const data = {
-            action: 'eelfg_update_block_status',
+            action: 'shapeblock_update_block_status',
             blockId: blockId,
             status: newStatus,
-            nonce: eelfg.nonce
+            nonce: shapeblock.nonce
         };
 
-        fetch(eelfg.rest_url + 'update-block-status', {
+        fetch(shapeblock.rest_url + 'update-block-status', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-WP-Nonce': eelfg.nonce
+                'X-WP-Nonce': shapeblock.nonce
             },
             body: JSON.stringify(data)
         })
@@ -39,7 +38,7 @@ export default function Blocks() {
                 // API returns { status: 'success', saved_status: '...' }
                 if (data.status === 'success') {
                     // Update global variable to keep in sync if needed (optional but good for consistency if mixed usage)
-                    // eelfg.blocks reference doesn't automatically update, but we can update if we strongly need to.
+                    // shapeblock.blocks reference doesn't automatically update, but we can update if we strongly need to.
                     // For now, rely on local state.
 
                     // Verify server state matches optimistic state (optional double check)
@@ -87,17 +86,17 @@ export default function Blocks() {
         setBulkLoading(true);
 
         const data = {
-            action: 'eelfg_update_all_block_status',
+            action: 'shapeblock_update_all_block_status',
             blockIds: blockIds,
             status: newStatus,
-            nonce: eelfg.nonce
+            nonce: shapeblock.nonce
         };
 
-        fetch(eelfg.rest_url + 'update-all-block-status', {
+        fetch(shapeblock.rest_url + 'update-all-block-status', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-WP-Nonce': eelfg.nonce
+                'X-WP-Nonce': shapeblock.nonce
             },
             body: JSON.stringify(data)
         })
@@ -135,11 +134,9 @@ export default function Blocks() {
             });
     }
 
-    // Apply the active Pro/Free filter and the search term (title + description).
+    // Apply the search term (title + description).
     const term = search.trim().toLowerCase();
     const filteredBlocks = blocks.filter(block => {
-        if (filter === 'free' && block.isPro) return false;
-        if (filter === 'pro' && !block.isPro) return false;
         if (term) {
             const haystack = `${block.title || ''} ${block.description || ''}`.toLowerCase();
             if (!haystack.includes(term)) return false;
@@ -160,11 +157,11 @@ export default function Blocks() {
     }
 
     return (
-        <div className='eelfg-options-content'>
-            <div className="eelfg-options-content-header">
-                <h1 className='eelfg-options-title'>Blocks</h1>
+        <div className='shapeblock-options-content'>
+            <div className="shapeblock-options-content-header">
+                <h1 className='shapeblock-options-title'>Blocks</h1>
                 <div
-                    className="eelfg-blocks-toolbar"
+                    className="shapeblock-blocks-toolbar"
                     style={{
                         display: 'flex',
                         justifyContent: 'space-between',
@@ -174,14 +171,8 @@ export default function Blocks() {
                         marginTop: 16,
                     }}
                 >
-                    {/* pro / free filters + search — left side */}
-                    <Space className="eelfg-blocks-filters">
-                        <Button
-                            type={filter === 'all' ? 'primary' : 'default'}
-                            onClick={() => setFilter('all')}
-                        >
-                            All
-                        </Button>
+                    {/* search + sort — left side */}
+                    <Space className="shapeblock-blocks-filters">
                         <Input
                             placeholder="Search blocks..."
                             allowClear
@@ -204,7 +195,7 @@ export default function Blocks() {
                         />
                     </Space>
                     {/* activate / deactivate all — right side */}
-                    <Space className="eelfg-blocks-actions">
+                    <Space className="shapeblock-blocks-actions">
                         <Button
                             type="primary"
                             loading={bulkLoading}
@@ -240,7 +231,6 @@ export default function Blocks() {
                         icon={block.iconClass}
                         onChangeHandler={() => updateBlockStatus(block.id, block.status)}
                         status={block.status}
-                        isPro={block.isPro}
                     />
 
                 ))

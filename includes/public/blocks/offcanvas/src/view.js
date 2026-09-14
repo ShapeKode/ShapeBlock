@@ -8,19 +8,19 @@
 (function () {
 	'use strict';
 
-	var ACTIVE = 'eelfg-active';
-	var BODY_ACTIVE = 'eelfg-offcanvas-active';
+	var ACTIVE = 'shapeblock-active';
+	var BODY_ACTIVE = 'shapeblock-offcanvas-active';
 
 	function closePanel(panel) {
 		panel.classList.remove(ACTIVE);
-		if (!document.querySelector('.eelfg-offcanvas.' + ACTIVE)) {
+		if (!document.querySelector('.shapeblock-offcanvas.' + ACTIVE)) {
 			document.body.classList.remove(BODY_ACTIVE);
 		}
 	}
 
 	function openPanel(panel) {
 		// Close any other open panels first.
-		Array.prototype.forEach.call(document.querySelectorAll('.eelfg-offcanvas.' + ACTIVE), function (other) {
+		Array.prototype.forEach.call(document.querySelectorAll('.shapeblock-offcanvas.' + ACTIVE), function (other) {
 			if (other !== panel) {
 				other.classList.remove(ACTIVE);
 			}
@@ -30,7 +30,7 @@
 	}
 
 	function onToggleClick(e) {
-		var toggle = e.target.closest('.eelfg-offcanvas-toggle');
+		var toggle = e.target.closest('.shapeblock-offcanvas-toggle');
 		if (!toggle) {
 			return;
 		}
@@ -53,10 +53,10 @@
 
 		// Click inside the panel shouldn't close it; click on the overlay / outside should.
 		document.addEventListener('click', function (e) {
-			if (e.target.closest('.eelfg-offcanvas-toggle')) {
+			if (e.target.closest('.shapeblock-offcanvas-toggle')) {
 				return;
 			}
-			var open = document.querySelectorAll('.eelfg-offcanvas.' + ACTIVE);
+			var open = document.querySelectorAll('.shapeblock-offcanvas.' + ACTIVE);
 			Array.prototype.forEach.call(open, function (panel) {
 				// Any click inside the open panel (including its empty area, not just
 				// the inner content wrapper) should keep it open. Only clicks on the
@@ -70,7 +70,7 @@
 
 		document.addEventListener('keydown', function (e) {
 			if (e.key === 'Escape') {
-				Array.prototype.forEach.call(document.querySelectorAll('.eelfg-offcanvas.' + ACTIVE), closePanel);
+				Array.prototype.forEach.call(document.querySelectorAll('.shapeblock-offcanvas.' + ACTIVE), closePanel);
 			}
 		});
 	}

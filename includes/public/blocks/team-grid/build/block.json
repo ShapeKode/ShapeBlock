@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/team-grid",
+  "name": "shapeblock/team-grid",
   "version": "0.1.0",
   "title": "Team Member",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "description": "A team member card with 5 skins, social icons, contact info and an optional popup.",
   "keywords": [
     "team",
@@ -22,23 +22,9 @@
       "right",
       "wide",
       "full"
-    ],
-    "spacing": {
-      "padding": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ],
-      "margin": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ]
-    }
+    ]
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "viewScript": "file:./view.js",
   "render": "file:./render.php",
@@ -58,10 +44,6 @@
     "image": {
       "type": "object",
       "default": {}
-    },
-    "imageSize": {
-      "type": "string",
-      "default": "full"
     },
     "name": {
       "type": "string",
@@ -119,10 +101,6 @@
       "type": "string",
       "default": "inside"
     },
-    "fetchpriority": {
-      "type": "string",
-      "default": "low"
-    },
     "imageOverlayColor": {
       "type": "string",
       "default": ""
@@ -130,14 +108,6 @@
     "imageOverlayGradient": {
       "type": "string",
       "default": ""
-    },
-    "disableImageScale": {
-      "type": "boolean",
-      "default": false
-    },
-    "disableSocialLift": {
-      "type": "boolean",
-      "default": false
     },
     "showSocialIcon": {
       "type": "boolean",
@@ -176,7 +146,7 @@
       "default": [
         {
           "url": "#",
-          "icon": "eelfg-icon-facebook-f"
+          "icon": "shapeblock-icon-facebook-f"
         }
       ]
     },
@@ -189,6 +159,12 @@
       "default": ""
     },
     "itemPadding": {
+      "type": "object"
+    },
+    "itemPaddingTablet": {
+      "type": "object"
+    },
+    "itemPaddingMobile": {
       "type": "object"
     },
     "itemBorderRadius": {
@@ -226,7 +202,23 @@
       "type": "string",
       "default": ""
     },
+    "teamContentAlignmentTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "teamContentAlignmentMobile": {
+      "type": "string",
+      "default": ""
+    },
     "imageWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "imageWidthTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "imageWidthMobile": {
       "type": "string",
       "default": ""
     },
@@ -234,7 +226,21 @@
       "type": "string",
       "default": ""
     },
+    "imageHeightStyleTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "imageHeightStyleMobile": {
+      "type": "string",
+      "default": ""
+    },
     "imagePadding": {
+      "type": "object"
+    },
+    "imagePaddingTablet": {
+      "type": "object"
+    },
+    "imagePaddingMobile": {
       "type": "object"
     },
     "imageStyleRadius": {
@@ -251,6 +257,14 @@
       "default": ""
     },
     "imageBelowHeight": {
+      "type": "string",
+      "default": ""
+    },
+    "imageBelowHeightTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "imageBelowHeightMobile": {
       "type": "string",
       "default": ""
     },
@@ -274,7 +288,19 @@
     "wrapPadding": {
       "type": "object"
     },
+    "wrapPaddingTablet": {
+      "type": "object"
+    },
+    "wrapPaddingMobile": {
+      "type": "object"
+    },
     "wrapMargin": {
+      "type": "object"
+    },
+    "wrapMarginTablet": {
+      "type": "object"
+    },
+    "wrapMarginMobile": {
       "type": "object"
     },
     "areaBorderRadius": {
@@ -338,6 +364,14 @@
         "letterSpacing": ""
       }
     },
+    "nameTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "nameTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "namePadding": {
       "type": "object"
     },
@@ -357,7 +391,23 @@
         "letterSpacing": ""
       }
     },
+    "designationTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "designationTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "contactGap": {
+      "type": "string",
+      "default": ""
+    },
+    "contactGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "contactGapMobile": {
       "type": "string",
       "default": ""
     },
@@ -397,6 +447,14 @@
         "letterSpacing": ""
       }
     },
+    "contactTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "contactTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "contactItemRadius": {
       "type": "object",
       "default": {
@@ -425,7 +483,23 @@
       "type": "string",
       "default": ""
     },
+    "contactIconSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "contactIconSizeMobile": {
+      "type": "string",
+      "default": ""
+    },
     "contactIconBoxSize": {
+      "type": "string",
+      "default": ""
+    },
+    "contactIconBoxSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "contactIconBoxSizeMobile": {
       "type": "string",
       "default": ""
     },
@@ -453,6 +527,14 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "teamDescriptionTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "teamDescriptionTypographyMobile": {
+      "type": "object",
+      "default": {}
     },
     "teamDescriptionMargin": {
       "type": "object"
@@ -500,6 +582,14 @@
         "letterSpacing": ""
       }
     },
+    "descTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "descTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "descPadding": {
       "type": "object"
     },
@@ -531,11 +621,35 @@
         "letterSpacing": ""
       }
     },
+    "sIconTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "sIconTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "sIconGap": {
       "type": "string",
       "default": ""
     },
+    "sIconGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "sIconGapMobile": {
+      "type": "string",
+      "default": ""
+    },
     "sIconButtonSize": {
+      "type": "string",
+      "default": ""
+    },
+    "sIconButtonSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "sIconButtonSizeMobile": {
       "type": "string",
       "default": ""
     },
@@ -551,6 +665,12 @@
     "sIconAreaPadding": {
       "type": "object"
     },
+    "sIconAreaPaddingTablet": {
+      "type": "object"
+    },
+    "sIconAreaPaddingMobile": {
+      "type": "object"
+    },
     "socialItemBorder": {
       "type": "object",
       "default": {
@@ -560,6 +680,14 @@
       }
     },
     "teamSocialIconAlignment": {
+      "type": "string",
+      "default": ""
+    },
+    "teamSocialIconAlignmentTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "teamSocialIconAlignmentMobile": {
       "type": "string",
       "default": ""
     },
@@ -593,6 +721,14 @@
         "letterSpacing": ""
       }
     },
+    "popupNameTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "popupNameTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "popupDesignationColor": {
       "type": "string",
       "default": ""
@@ -608,6 +744,14 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "popupDesignationTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "popupDesignationTypographyMobile": {
+      "type": "object",
+      "default": {}
     },
     "popupDetailsColor": {
       "type": "string",
@@ -625,9 +769,29 @@
         "letterSpacing": ""
       }
     },
+    "popupDetailsTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "popupDetailsTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "popupCloseColor": {
       "type": "string",
       "default": ""
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

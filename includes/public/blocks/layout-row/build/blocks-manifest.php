@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/layout-row',
+		'name' => 'shapeblock/layout-row',
 		'version' => '0.1.0',
 		'title' => 'Row',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'icon' => 'grid-view',
 		'description' => 'A flexible row container that holds columns. Build any layout with responsive presets, flexbox controls and per-device styling.',
 		'keywords' => array(
@@ -31,18 +31,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => false,
-				'margin' => false
-			),
-			'color' => array(
-				'background' => false,
-				'text' => false,
-				'gradients' => false
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
 		'render' => 'file:./render.php',
@@ -334,6 +325,18 @@ return array(
 			'position' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

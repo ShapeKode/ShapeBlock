@@ -1,8 +1,8 @@
 <?php
 /**
- * PSR-4 autoloader for the Easy Elements For Gutenberg plugin.
+ * PSR-4 autoloader for the ShapeBlock plugin.
  *
- * Maps the `EELFG\` namespace to the `includes/` directory. Directories whose
+ * Maps the `ShapeBlock\` namespace to the `includes/` directory. Directories whose
  * names are not valid namespace segments (`public` is a reserved word,
  * `theme-builder` contains a hyphen) are mapped explicitly; everything else
  * follows the namespace -> sub-directory convention.
@@ -11,7 +11,7 @@
  * functions or run procedural bootstrap code (e.g. scripts.php, blocks.php,
  * block render templates) are still required explicitly from Main::includes().
  *
- * @package EasyElementsForGutenberg
+ * @package ShapeBlock
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,12 +23,12 @@ spl_autoload_register(
 		// Namespace prefix => base directory (relative to this plugin).
 		// Longest prefixes first so the more specific mapping wins.
 		static $prefixes = array(
-			'EELFG\\Extension\\ThemeBuilder\\' => 'includes/extension/theme-builder/',
-			'EELFG\\Extension\\'               => 'includes/extension/',
-			'EELFG\\Admin\\'                   => 'includes/admin/',
-			'EELFG\\Editor\\'                  => 'includes/editor/',
-			'EELFG\\Frontend\\'                => 'includes/public/',
-			'EELFG\\'                          => 'includes/',
+			'ShapeBlock\\Extension\\ThemeBuilder\\' => 'includes/extension/theme-builder/',
+			'ShapeBlock\\Extension\\'               => 'includes/extension/',
+			'ShapeBlock\\Admin\\'                   => 'includes/admin/',
+			'ShapeBlock\\Editor\\'                  => 'includes/editor/',
+			'ShapeBlock\\Frontend\\'                => 'includes/public/',
+			'ShapeBlock\\'                          => 'includes/',
 		);
 
 		foreach ( $prefixes as $prefix => $base_dir ) {
@@ -38,7 +38,7 @@ spl_autoload_register(
 			}
 
 			$relative = substr( $class, $len );
-			$file     = EELFG_PL_PATH . $base_dir . str_replace( '\\', '/', $relative ) . '.php';
+			$file     = SHAPEBLOCK_PL_PATH . $base_dir . str_replace( '\\', '/', $relative ) . '.php';
 
 			if ( is_readable( $file ) ) {
 				require_once $file;

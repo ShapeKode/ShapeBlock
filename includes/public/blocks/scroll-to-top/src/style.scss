@@ -3,12 +3,12 @@
  *
  * Ported from the Elementor "Scroll Top" widget stylesheet
  * (easy-elements/widgets/scroll-to-top/css/scroll.scss). Classes use the
- * "eelfg-" prefix and everything is scoped under `.eelfg-scroll-top-block-wrap`.
+ * "shapeblock-" prefix and everything is scoped under `.shapeblock-scroll-top-block-wrap`.
  */
-.eelfg-scroll-top-block-wrap {
-	--eelfg-stt-primary: #eaa638;
+.shapeblock-scroll-top-block-wrap {
+	--shapeblock-stt-primary: #eaa638;
 
-	.eelfg-scroll-top {
+	.shapeblock-scroll-top {
 		position: fixed;
 		bottom: 20px;
 		right: 28px;
@@ -17,7 +17,7 @@
 		width: 40px;
 		height: 40px;
 		line-height: 40px;
-		background: var(--eelfg-stt-primary);
+		background: var(--shapeblock-stt-primary);
 		border-radius: 100px;
 		color: #0b3665;
 		display: grid;
@@ -35,14 +35,14 @@
 		}
 	}
 
-	.eelfg-scroll-top.eelfg-scroll-visible {
+	.shapeblock-scroll-top.shapeblock-scroll-visible {
 		transform: translateY(0);
 		opacity: 1;
 		visibility: visible;
 	}
 
 	/* Editor preview: show the button inline (not fixed) so it can be styled. */
-	.eelfg-scroll-top.eelfg-scroll-editor {
+	.shapeblock-scroll-top.shapeblock-scroll-editor {
 		position: relative;
 		bottom: auto;
 		right: auto;
@@ -50,5 +50,18 @@
 		opacity: 1;
 		visibility: visible;
 		margin: 10px 0;
+	}
+}
+
+/* --- Responsive defaults ------------------------------------------------
+ * Breakpoints match Helper::generate_responsive_css() and the visibility
+ * classes: tablet <= 1024px, mobile <= 767px. These are defaults only — the
+ * per-device values a user sets are printed as per-block CSS with a higher
+ * specificity, so they always win over what follows.
+ */
+@media (max-width: 767px) {
+	.shapeblock-scroll-to-top {
+		right: 16px;
+		bottom: 16px;
 	}
 }

@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/button',
+		'name' => 'shapeblock/button',
 		'version' => '0.1.0',
 		'title' => 'Button',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'A flexible button with icon, gradient and full style controls.',
 		'keywords' => array(
 			'button',
@@ -26,23 +26,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'render' => 'file:./render.php',
 		'attributes' => array(
@@ -82,13 +68,37 @@ return array(
 				'type' => 'string',
 				'default' => '8'
 			),
+			'iconSpacingTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconSpacingMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'minWidth' => array(
 				'type' => 'string',
 				'default' => '150'
 			),
+			'minWidthTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'minWidthMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'buttonAlignment' => array(
 				'type' => 'string',
 				'default' => 'center'
+			),
+			'buttonAlignmentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'buttonAlignmentMobile' => array(
+				'type' => 'string',
+				'default' => ''
 			),
 			'showGradient' => array(
 				'type' => 'boolean',
@@ -130,6 +140,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'buttonTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'buttonTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'textColor' => array(
 				'type' => 'string',
 				'default' => ''
@@ -168,7 +190,19 @@ return array(
 			'buttonPadding' => array(
 				'type' => 'object'
 			),
+			'buttonPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'buttonPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'buttonMargin' => array(
+				'type' => 'object'
+			),
+			'buttonMarginTablet' => array(
+				'type' => 'object'
+			),
+			'buttonMarginMobile' => array(
 				'type' => 'object'
 			),
 			'textColorHover' => array(
@@ -199,11 +233,35 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'iconSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconSizeMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'iconBoxWidth' => array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'iconBoxWidthTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconBoxWidthMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'iconBoxHeight' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconBoxHeightTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconBoxHeightMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -231,6 +289,18 @@ return array(
 			'iconRotationHover' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

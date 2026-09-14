@@ -35,16 +35,16 @@ const ResponsiveWrapper = ({ children, label }) => {
     };
 
     const devices = [
-        { name: 'desktop', icon: 'desktop', label: __('Desktop', 'easy-elements-for-gutenberg') },
-        { name: 'tablet', icon: 'tablet', label: __('Tablet', 'easy-elements-for-gutenberg') },
-        { name: 'mobile', icon: 'smartphone', label: __('Mobile', 'easy-elements-for-gutenberg') },
+        { name: 'desktop', icon: 'desktop', label: __('Desktop', 'shapeblock') },
+        { name: 'tablet', icon: 'tablet', label: __('Tablet', 'shapeblock') },
+        { name: 'mobile', icon: 'smartphone', label: __('Mobile', 'shapeblock') },
     ];
 
     return (
-        <div className="eshb-responsive-wrapper" style={{ marginBottom: '20px' }}>
-            <div className="eshb-responsive-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+        <div className="shapeblock-responsive-wrapper" style={{ marginBottom: '20px' }}>
+            <div className="shapeblock-responsive-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                 {label && <label className="components-base-control__label">{label}</label>}
-                <div className="eshb-responsive-icons">
+                <div className="shapeblock-responsive-icons">
                     {devices.map((d) => (
                         <Tooltip key={d.name} text={d.label}>
                             <Button
@@ -58,7 +58,7 @@ const ResponsiveWrapper = ({ children, label }) => {
                     ))}
                 </div>
             </div>
-            <div className="eshb-responsive-content">
+            <div className="shapeblock-responsive-content">
                 {children(device)}
             </div>
         </div>

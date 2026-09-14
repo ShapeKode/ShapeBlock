@@ -9,13 +9,13 @@
 	'use strict';
 
 	function initAll() {
-		var tooltips = document.querySelectorAll('.eelfg-table-block-wrap .eelfg-tbl-tooltip');
+		var tooltips = document.querySelectorAll('.shapeblock-table-block-wrap .shapeblock-tbl-tooltip');
 
 		Array.prototype.forEach.call(tooltips, function (tip) {
-			if (tip.dataset.eelfgTipInit === '1') {
+			if (tip.dataset.shapeblockTipInit === '1') {
 				return;
 			}
-			tip.dataset.eelfgTipInit = '1';
+			tip.dataset.shapeblockTipInit = '1';
 
 			tip.addEventListener('mouseenter', function () {
 				tip.classList.add('show');
@@ -30,10 +30,10 @@
 		});
 
 		// Close any open tooltip when clicking elsewhere.
-		if (!document.body.dataset.eelfgTipDocInit) {
-			document.body.dataset.eelfgTipDocInit = '1';
+		if (!document.body.dataset.shapeblockTipDocInit) {
+			document.body.dataset.shapeblockTipDocInit = '1';
 			document.addEventListener('click', function () {
-				var open = document.querySelectorAll('.eelfg-tbl-tooltip.show');
+				var open = document.querySelectorAll('.shapeblock-tbl-tooltip.show');
 				Array.prototype.forEach.call(open, function (t) {
 					t.classList.remove('show');
 				});

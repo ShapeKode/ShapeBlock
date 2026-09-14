@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/faq",
+  "name": "shapeblock/faq",
   "version": "0.1.0",
   "title": "Accordion",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "description": "An FAQ accordion with collapsible questions and custom icons.",
   "keywords": [
     "faq",
@@ -22,28 +22,9 @@
       "right",
       "wide",
       "full"
-    ],
-    "spacing": {
-      "padding": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ],
-      "margin": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ]
-    },
-    "color": {
-      "background": true,
-      "text": false,
-      "gradients": true
-    }
+    ]
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "viewScript": "file:./view.js",
   "render": "file:./render.php",
@@ -56,8 +37,8 @@
       "type": "array",
       "default": [
         {
-          "title": "What is Easy Elements?",
-          "description": "Easy Elements is a custom addon plugin that offers useful blocks.",
+          "title": "What is ShapeBlock?",
+          "description": "ShapeBlock is a custom addon plugin that offers useful blocks.",
           "active": false
         },
         {
@@ -66,7 +47,7 @@
           "active": false
         },
         {
-          "title": "How to install Easy Elements?",
+          "title": "How to install ShapeBlock?",
           "description": "Upload the plugin via WordPress Dashboard or FTP and activate it.",
           "active": false
         }
@@ -174,7 +155,21 @@
     "itemPadding": {
       "type": "object"
     },
+    "itemPaddingTablet": {
+      "type": "object"
+    },
+    "itemPaddingMobile": {
+      "type": "object"
+    },
     "itemsGap": {
+      "type": "string",
+      "default": ""
+    },
+    "itemsGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "itemsGapMobile": {
       "type": "string",
       "default": ""
     },
@@ -189,6 +184,14 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "titleTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "titleTypographyMobile": {
+      "type": "object",
+      "default": {}
     },
     "titleColor": {
       "type": "string",
@@ -263,6 +266,12 @@
     "questionPadding": {
       "type": "object"
     },
+    "questionPaddingTablet": {
+      "type": "object"
+    },
+    "questionPaddingMobile": {
+      "type": "object"
+    },
     "questionBorderRadius": {
       "type": "object",
       "default": {
@@ -283,6 +292,14 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "descriptionTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "descriptionTypographyMobile": {
+      "type": "object",
+      "default": {}
     },
     "descriptionColor": {
       "type": "string",
@@ -334,6 +351,12 @@
       }
     },
     "answerPadding": {
+      "type": "object"
+    },
+    "answerPaddingTablet": {
+      "type": "object"
+    },
+    "answerPaddingMobile": {
       "type": "object"
     },
     "iconColor": {
@@ -400,6 +423,18 @@
     "iconPositionYActive": {
       "type": "string",
       "default": ""
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

@@ -9,10 +9,10 @@
 	'use strict';
 
 	function animate(fill) {
-		if (fill.dataset.eelfgPbInit === '1') {
+		if (fill.dataset.shapeblockPbInit === '1') {
 			return;
 		}
-		fill.dataset.eelfgPbInit = '1';
+		fill.dataset.shapeblockPbInit = '1';
 
 		var target = (fill.getAttribute('data-width') || '0') + '%';
 
@@ -46,7 +46,7 @@
 	}
 
 	function initAll() {
-		var fills = document.querySelectorAll('.eelfg-progress-bar-block-wrap .eelfg-progress-fill');
+		var fills = document.querySelectorAll('.shapeblock-progress-bar-block-wrap .shapeblock-progress-fill');
 		Array.prototype.forEach.call(fills, animate);
 	}
 

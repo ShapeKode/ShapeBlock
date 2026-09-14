@@ -9,15 +9,20 @@ import {
 
 const ColorPopover = ({ label, color, onChange, defaultColor = '' }) => {
     const [isVisible, setIsVisible] = useState(false);
+    // Popover needs a stable anchor element. Without one it falls back to a
+    // placeholder node and floating-ui keeps re-measuring against a moving
+    // reference, which makes the panel visibly jitter while it is open.
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const toggleVisible = () => {
         setIsVisible((state) => !state);
     };
 
     return (
-        <div className="eshb-color-popover-control" style={{ position: 'relative' }}>
+        <div className="shapeblock-color-popover-control" style={{ position: 'relative' }}>
             <Button
                 variant="secondary"
+                ref={setAnchorEl}
                 onClick={toggleVisible}
                 style={{ width: '100%', justifyContent: 'space-between', marginBottom: '15px', boxShadow: 'none' }}
             >
@@ -35,7 +40,12 @@ const ColorPopover = ({ label, color, onChange, defaultColor = '' }) => {
             </Button>
             {isVisible && (
                 <Popover
-                    position="bottom center"
+                    anchor={anchorEl}
+                    placement="left-start"
+                    offset={20}
+                    shift
+                    flip={false}
+                    resize={false}
                     onFocusOutside={() => setIsVisible(false)}
                 >
                     <div style={{ padding: '20px' }}>
@@ -53,7 +63,7 @@ const ColorPopover = ({ label, color, onChange, defaultColor = '' }) => {
                             }}
                             style={{ marginTop: '10px', width: '100%', justifyContent: 'center' }}
                         >
-                            {__('Reset', 'easy-elements-for-gutenberg')}
+                            {__('Reset', 'shapeblock')}
                         </Button>
                     </div>
                 </Popover>

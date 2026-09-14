@@ -4,10 +4,10 @@
  *
  * Structure ported from the Elementor widget
  * (easy-elements/widgets/pricing-table/css/pricing.scss). Element classes use
- * this plugin's own "eelfg-" prefix. The box styling that Elementor applied to
- * the widget container is applied here to `.eelfg-pricing-table`.
+ * this plugin's own "shapeblock-" prefix. The box styling that Elementor applied to
+ * the widget container is applied here to `.shapeblock-pricing-table`.
  */
-.eelfg-pricing-table {
+.shapeblock-pricing-table {
   position: relative;
   border: 1px solid rgba(238, 238, 238, 0.7215686275);
   padding: 30px;
@@ -17,59 +17,59 @@
   background: #fff;
 }
 
-.eelfg-price-title {
+.shapeblock-price-title {
   display: inline-block;
   margin-bottom: 15px;
 }
 
-.eelfg-price {
+.shapeblock-price {
   font-size: 36px;
   margin-bottom: 20px;
 }
 
-.eelfg-price .eelfg-period {
+.shapeblock-price .shapeblock-period {
   font-size: 14px;
   margin-left: 5px;
 }
 
-.eelfg-features {
+.shapeblock-features {
   list-style: none;
   padding: 0;
   margin: 0 0 20px 0;
 }
 
-.eelfg-features li {
+.shapeblock-features li {
   padding: 10px 0;
   display: flex;
   align-items: center;
 }
 
-.eelfg-features li + li {
+.shapeblock-features li + li {
   border-top: 1px solid rgba(238, 238, 238, 0.8509803922);
 }
 
-.eelfg-btn-part .eelfg-button {
+.shapeblock-btn-part .shapeblock-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
   padding: 10px 26px;
-  background-color: var(--eelfg-preset-color-primary, #ffd012);
+  background-color: var(--shapeblock-preset-color-primary, #ffd012);
   color: #fff;
   border-radius: 6px;
   transition: all 0.3s ease;
 }
-.eelfg-btn-part .eelfg-button.eelfg--full-btn {
+.shapeblock-btn-part .shapeblock-button.shapeblock--full-btn {
   display: block;
 }
 
-.eelfg-button svg {
+.shapeblock-button svg {
   width: 16px;
   height: 16px;
 }
 
 /* Ribbon styles */
-.eelfg-ribbon {
+.shapeblock-ribbon {
   position: absolute;
   top: 0;
   padding: 3px 15px;
@@ -81,22 +81,22 @@
   text-align: center;
 }
 
-.eelfg-old-price {
+.shapeblock-old-price {
   text-decoration: line-through;
   margin-right: 8px;
   font-size: 22px;
   font-weight: 400;
 }
 
-.eelfg-sale-price {
-  color: var(--eelfg-preset-color-primary, #ffd012);
+.shapeblock-sale-price {
+  color: var(--shapeblock-preset-color-primary, #ffd012);
   font-size: 36px;
 }
 
-.eelfg-features li svg.feature-icon,
-.eelfg-features li .feature-icon i {
+.shapeblock-features li svg.feature-icon,
+.shapeblock-features li .feature-icon i {
   margin-right: 10px;
-  color: var(--eelfg-preset-color-primary, #ffd012);
+  color: var(--shapeblock-preset-color-primary, #ffd012);
   font-size: 18px;
   width: 22px;
   height: 22px;
@@ -104,18 +104,18 @@
   vertical-align: middle;
 }
 
-.eelfg-features svg.feature-icon.icon-bg,
-.eelfg-features svg.feature-icon.icon-border {
+.shapeblock-features svg.feature-icon.icon-bg,
+.shapeblock-features svg.feature-icon.icon-border {
   width: 36px;
   height: 36px;
 }
 
-.eelfg-button-subtext {
+.shapeblock-button-subtext {
   margin-top: 8px;
   font-size: 14px;
 }
 
-.eelfg-features .feature-icon {
+.shapeblock-features .feature-icon {
   font-size: 16px;
   display: inline-flex;
   align-items: center;
@@ -143,7 +143,7 @@ li.icon-bg svg {
   border-radius: 50%;
 }
 
-.featured.style2 .eelfg-ribbon {
+.featured.style2 .shapeblock-ribbon {
   position: absolute;
   background: var(--e-global-color-secondary, #0b3665);
   color: #fff;
@@ -156,7 +156,7 @@ li.icon-bg svg {
   white-space: nowrap;
   left: auto;
 }
-.featured.style2 .eelfg-ribbon.eelfg-left {
+.featured.style2 .shapeblock-ribbon.shapeblock-left {
   left: -60px;
   transform: rotate(-45deg);
   right: auto;

@@ -4,13 +4,13 @@
  *
  * Structure ported from the Elementor widget
  * (easy-elements/widgets/feature-list/css/feature-list.scss). Element classes
- * use this plugin's own "eelfg-" prefix.
+ * use this plugin's own "shapeblock-" prefix.
  */
-.eelfg-fea-list-wrapper {
+.shapeblock-fea-list-wrapper {
   position: relative;
 }
 
-.eelfg-fea-list-wrapper.eelfg-fea-list-connector::before {
+.shapeblock-fea-list-wrapper.shapeblock-fea-list-connector::before {
   content: "";
   width: 0px;
   height: 85%;
@@ -26,22 +26,22 @@
   display: block;
 }
 
-.eelfg-fea-list-wrapper.eelfg-fea-list-connector.eelfg-fea-list-dir-right::before {
+.shapeblock-fea-list-wrapper.shapeblock-fea-list-connector.shapeblock-fea-list-dir-right::before {
   left: inherit;
   right: 26px;
 }
 
-.eelfg-fea-list {
+.shapeblock-fea-list {
   display: flex;
   margin-bottom: 25px;
   gap: 20px;
 }
 
-.eelfg-fea-list:last-child {
+.shapeblock-fea-list:last-child {
   margin-bottom: 0 !important;
 }
 
-.eelfg-fea-list-icon {
+.shapeblock-fea-list-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,88 +54,88 @@
   min-height: 55px;
 }
 
-.eelfg-fea-list-icon-view-frame .eelfg-fea-list-icon,
-.eelfg-fea-list-icon-view-stracked .eelfg-fea-list-icon {
+.shapeblock-fea-list-icon-view-frame .shapeblock-fea-list-icon,
+.shapeblock-fea-list-icon-view-stracked .shapeblock-fea-list-icon {
   background: #f4f4f4;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.eelfg-fea-list-icon-view-frame .eelfg-fea-list-icon {
+.shapeblock-fea-list-icon-view-frame .shapeblock-fea-list-icon {
   border: 1px solid #f4f4f4;
   background: #fff;
 }
 
-.eelfg-fea-list-icon-shape-rounded .eelfg-fea-list-icon {
+.shapeblock-fea-list-icon-shape-rounded .shapeblock-fea-list-icon {
   border-radius: 4px;
 }
 
-.eelfg-fea-list-icon-shape-square .eelfg-fea-list-icon {
+.shapeblock-fea-list-icon-shape-square .shapeblock-fea-list-icon {
   border-radius: 0;
 }
 
-.eelfg-fea-list-icon-shape-circle .eelfg-fea-list-icon {
+.shapeblock-fea-list-icon-shape-circle .shapeblock-fea-list-icon {
   border-radius: 100px;
 }
 
-.eelfg-fea-list-icon-shape-sq_rotate .eelfg-fea-list-icon {
+.shapeblock-fea-list-icon-shape-sq_rotate .shapeblock-fea-list-icon {
   transform: rotate(45deg);
 }
 
-.eelfg-fea-list-icon-shape-sq_rotate .eelfg-fea-list-icon svg,
-.eelfg-fea-list-icon-shape-sq_rotate .eelfg-fea-list-icon i,
-.eelfg-fea-list-icon-shape-sq_rotate .eelfg-fea-list-icon .eelfg-fea-list-number {
+.shapeblock-fea-list-icon-shape-sq_rotate .shapeblock-fea-list-icon svg,
+.shapeblock-fea-list-icon-shape-sq_rotate .shapeblock-fea-list-icon i,
+.shapeblock-fea-list-icon-shape-sq_rotate .shapeblock-fea-list-icon .shapeblock-fea-list-number {
   transform: rotate(-45deg);
 }
 
-.eelfg-fea-list-icon svg {
+.shapeblock-fea-list-icon svg {
   width: 20px;
   height: 20px;
 }
 
-.eelfg-fea-list-icon i {
+.shapeblock-fea-list-icon i {
   font-size: 30px;
 }
 
-.eelfg-fea-list-number {
+.shapeblock-fea-list-number {
   font-size: 20px;
   font-weight: 500;
   color: #000000;
 }
 
-.eelfg-fea-list-title {
+.shapeblock-fea-list-title {
   font-size: 22px;
   line-height: 1.2;
   margin: 0;
   color: #000000;
 }
 
-.eelfg-fea-list-desc {
+.shapeblock-fea-list-desc {
   color: #777777;
   margin: 0;
 }
 
-.eelfg-fea-list-dir-left {
+.shapeblock-fea-list-dir-left {
   flex-direction: row;
   text-align: left;
 }
 
-.eelfg-fea-list-dir-right {
+.shapeblock-fea-list-dir-right {
   flex-direction: row-reverse;
   text-align: right;
 }
 
 /* connector left */
-.eelfg-fea-list-connector-left .eelfg-fea-list {
+.shapeblock-fea-list-connector-left .shapeblock-fea-list {
   padding-left: 30px;
 }
 
-.eelfg-fea-list-connector-left.eelfg-fea-list-dir-right .eelfg-fea-list {
+.shapeblock-fea-list-connector-left.shapeblock-fea-list-dir-right .shapeblock-fea-list {
   padding-right: 30px;
 }
 
-.eelfg-fea-list-wrapper.eelfg-fea-list-connector.eelfg-fea-list-connector-left::before {
+.shapeblock-fea-list-wrapper.shapeblock-fea-list-connector.shapeblock-fea-list-connector-left::before {
   height: calc(100% - 55px);
   bottom: inherit;
   top: 50%;
@@ -143,16 +143,16 @@
   left: 0;
 }
 
-.eelfg-fea-list-wrapper.eelfg-fea-list-connector.eelfg-fea-list-connector-left.eelfg-fea-list-dir-right::before {
+.shapeblock-fea-list-wrapper.shapeblock-fea-list-connector.shapeblock-fea-list-connector-left.shapeblock-fea-list-dir-right::before {
   left: inherit;
   right: 0;
 }
 
-.eelfg-fea-list-connector-left .eelfg-fea-list-icon {
+.shapeblock-fea-list-connector-left .shapeblock-fea-list-icon {
   overflow: inherit;
 }
 
-.eelfg-fea-list-connector-left .eelfg-fea-list-icon::after {
+.shapeblock-fea-list-connector-left .shapeblock-fea-list-icon::after {
   content: "";
   width: 30px;
   height: 0px;
@@ -166,29 +166,29 @@
   display: block;
 }
 
-.eelfg-fea-list-connector-left.eelfg-fea-list-dir-right .eelfg-fea-list-icon::after {
+.shapeblock-fea-list-connector-left.shapeblock-fea-list-dir-right .shapeblock-fea-list-icon::after {
   left: inherit;
   right: -30px;
 }
 
-.eelfg-fea-list-icon-shape-sq_rotate .eelfg-fea-list-icon::after {
+.shapeblock-fea-list-icon-shape-sq_rotate .shapeblock-fea-list-icon::after {
   width: 20px;
   left: -15px;
   top: 110%;
   transform: rotate(-45deg);
 }
 
-.eelfg-fea-list-icon-shape-sq_rotate .eelfg-fea-list-connector-left.eelfg-fea-list-dir-right .eelfg-fea-list-icon::after {
+.shapeblock-fea-list-icon-shape-sq_rotate .shapeblock-fea-list-connector-left.shapeblock-fea-list-dir-right .shapeblock-fea-list-icon::after {
   left: inherit;
   right: -15px;
   top: -14%;
 }
 
-.eelfg-fea-list-icon.eelfg-fea-list-type-image {
+.shapeblock-fea-list-icon.shapeblock-fea-list-type-image {
   position: relative;
 }
 
-.eelfg-fea-list-icon.eelfg-fea-list-type-image img {
+.shapeblock-fea-list-icon.shapeblock-fea-list-type-image img {
   position: absolute;
   left: 50%;
   top: 50%;

@@ -1,9 +1,9 @@
-/* Easy Elements — Menu block (front-end + editor shared styles). */
-.eelfg-menu {
+/* ShapeBlock — Menu block (front-end + editor shared styles). */
+.shapeblock-menu {
 	position: relative;
 }
 
-.eelfg-menu .eelfg-menu-list {
+.shapeblock-menu .shapeblock-menu-list {
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -13,42 +13,42 @@
 	align-items: center;
 }
 
-.eelfg-menu--vertical .eelfg-menu-list {
+.shapeblock-menu--vertical .shapeblock-menu-list {
 	flex-direction: column;
 	align-items: stretch;
 }
 
-.eelfg-menu-align-center .eelfg-menu-list {
+.shapeblock-menu-align-center .shapeblock-menu-list {
 	justify-content: center;
 }
 
-.eelfg-menu-align-right .eelfg-menu-list {
+.shapeblock-menu-align-right .shapeblock-menu-list {
 	justify-content: flex-end;
 }
 
-.eelfg-menu .eelfg-menu-list li {
+.shapeblock-menu .shapeblock-menu-list li {
 	margin: 0;
 	position: relative;
 }
 
 /* Zone that holds any blocks added via "Add block" ( logo, buttons, search, etc. ).
    It is a list item, so it lines up inline beside the menu items. */
-.eelfg-menu .eelfg-menu-inner {
+.shapeblock-menu .shapeblock-menu-inner {
 	display: inline-flex;
 	align-items: center;
 	gap: 12px;
 	list-style: none;
 }
 
-.eelfg-menu .eelfg-menu-inner:empty {
+.shapeblock-menu .shapeblock-menu-inner:empty {
 	display: none;
 }
 
-.eelfg-menu .eelfg-menu-inner > * {
+.shapeblock-menu .shapeblock-menu-inner > * {
 	margin: 0;
 }
 
-.eelfg-menu .eelfg-menu-list a {
+.shapeblock-menu .shapeblock-menu-list a {
 	display: inline-flex;
 	flex-direction: row;
 	align-items: center;
@@ -59,42 +59,42 @@
 }
 
 /* Label + description stack together; icons sit beside this text block. */
-.eelfg-menu .eelfg-menu-text {
+.shapeblock-menu .shapeblock-menu-text {
 	display: inline-flex;
 	flex-direction: column;
 }
 
-.eelfg-menu .eelfg-menu-label {
+.shapeblock-menu .shapeblock-menu-label {
 	display: block;
 }
 
 /* Per-item icon ( left / right of the text ). */
-.eelfg-menu .eelfg-menu-item-icon {
+.shapeblock-menu .shapeblock-menu-item-icon {
 	display: inline-flex;
 	align-items: center;
 	flex: 0 0 auto;
 	color: inherit;
 }
 
-.eelfg-menu .eelfg-menu-item-icon--dir.eelfg-menu-item-icon--left .eelfg-menu-svg {
+.shapeblock-menu .shapeblock-menu-item-icon--dir.shapeblock-menu-item-icon--left .shapeblock-menu-svg {
 	transform: scaleX( -1 );
 }
 
-.eelfg-menu .eelfg-menu-svg {
+.shapeblock-menu .shapeblock-menu-svg {
 	width: 1em;
 	height: 1em;
 	display: block;
 }
 
 /* User-uploaded item icon image. */
-.eelfg-menu .eelfg-menu-item-img {
+.shapeblock-menu .shapeblock-menu-item-img {
 	width: 1.15em;
 	height: 1.15em;
 	object-fit: contain;
 	display: block;
 }
 
-.eelfg-menu .eelfg-menu-desc {
+.shapeblock-menu .shapeblock-menu-desc {
 	display: block;
 	font-size: 0.78em;
 	opacity: 0.7;
@@ -103,7 +103,7 @@
 }
 
 /* Dropdown indicator ( SVG ) / mobile toggle. */
-.eelfg-menu .eelfg-menu-sub-toggle {
+.shapeblock-menu .shapeblock-menu-sub-toggle {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -112,35 +112,35 @@
 	transition: transform 0.25s ease;
 }
 
-.eelfg-menu .menu-item-has-children.is-sub-open > .eelfg-menu-sub-toggle,
-.eelfg-menu .menu-item-has-children.is-sub-open > a > .eelfg-menu-sub-toggle {
+.shapeblock-menu .menu-item-has-children.is-sub-open > .shapeblock-menu-sub-toggle,
+.shapeblock-menu .menu-item-has-children.is-sub-open > a > .shapeblock-menu-sub-toggle {
 	transform: rotate( 180deg );
 }
 
 /* Editor: the caret is a button that opens the "add sub-menu" popover. */
-.eelfg-menu .eelfg-menu-sub-trigger {
+.shapeblock-menu .shapeblock-menu-sub-trigger {
 	background: transparent;
 	border: none;
 	padding: 0;
 	font: inherit;
 }
 
-.eelfg-menu-subadd {
+.shapeblock-menu-subadd {
 	display: inline-flex;
 }
 
 /* Editor only: a leaf item inside a dropdown lays out as a row so its "+" ( add next level ) sits
    on the right. These classes are emitted by the editor preview, never on the front end. */
-.eelfg-menu .eelfg-menu-list .sub-menu li.eelfg-menu-has-add {
+.shapeblock-menu .shapeblock-menu-list .sub-menu li.shapeblock-menu-has-add {
 	display: flex;
 	align-items: center;
 }
 
-.eelfg-menu .eelfg-menu-list .sub-menu li.eelfg-menu-has-add > a {
+.shapeblock-menu .shapeblock-menu-list .sub-menu li.shapeblock-menu-has-add > a {
 	flex: 1 1 auto;
 }
 
-.eelfg-menu .eelfg-menu-sub-plus.components-button {
+.shapeblock-menu .shapeblock-menu-sub-plus.components-button {
 	flex: 0 0 auto;
 	min-width: 16px;
 	width: 16px;
@@ -153,25 +153,25 @@
 }
 
 /* Keep the "+" glyph itself compact inside the small button. */
-.eelfg-menu .eelfg-menu-sub-plus.components-button svg {
+.shapeblock-menu .shapeblock-menu-sub-plus.components-button svg {
 	width: 12px;
 	height: 12px;
 }
 
-.eelfg-menu .eelfg-menu-list .sub-menu li.eelfg-menu-has-add:hover .eelfg-menu-sub-plus.components-button,
-.eelfg-menu .eelfg-menu-sub-plus.components-button:focus {
+.shapeblock-menu .shapeblock-menu-list .sub-menu li.shapeblock-menu-has-add:hover .shapeblock-menu-sub-plus.components-button,
+.shapeblock-menu .shapeblock-menu-sub-plus.components-button:focus {
 	opacity: 1;
 	background: #f3ecfc;
 }
 
 /* Plus indicator becomes a "×" when open instead of a meaningless 180° flip. */
-.eelfg-menu .menu-item-has-children.is-sub-open > .eelfg-menu-sub-toggle--plus,
-.eelfg-menu .menu-item-has-children.is-sub-open > a > .eelfg-menu-sub-toggle--plus {
+.shapeblock-menu .menu-item-has-children.is-sub-open > .shapeblock-menu-sub-toggle--plus,
+.shapeblock-menu .menu-item-has-children.is-sub-open > a > .shapeblock-menu-sub-toggle--plus {
 	transform: rotate( 45deg );
 }
 
 /* ---- Dropdown (sub-menu) — smooth fade + slide ---- */
-.eelfg-menu .eelfg-menu-list .sub-menu {
+.shapeblock-menu .shapeblock-menu-list .sub-menu {
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -197,22 +197,22 @@
 /* A horizontal dropdown that opens a nested ( side ) flyout must NOT clip — that would hide the
    flyout. Those keep overflow visible and round their first / last items so corners still look clean.
    ( Vertical menus use a static accordion that relies on overflow:hidden, so they are excluded. ) */
-.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu:has( .sub-menu ) {
+.shapeblock-menu:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu:has( .sub-menu ) {
 	overflow: visible;
 }
 
-.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu:has( .sub-menu ) > li:first-child > a {
+.shapeblock-menu:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu:has( .sub-menu ) > li:first-child > a {
 	border-top-left-radius: 8px;
 	border-top-right-radius: 8px;
 }
 
-.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu:has( .sub-menu ) > li:last-child > a {
+.shapeblock-menu:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu:has( .sub-menu ) > li:last-child > a {
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
 }
 
-.eelfg-menu .eelfg-menu-list li:hover > .sub-menu,
-.eelfg-menu .eelfg-menu-list li:focus-within > .sub-menu {
+.shapeblock-menu .shapeblock-menu-list li:hover > .sub-menu,
+.shapeblock-menu .shapeblock-menu-list li:focus-within > .sub-menu {
 	opacity: 1;
 	visibility: visible;
 	transform: translateY( 0 );
@@ -220,15 +220,15 @@
 }
 
 /* Click mode: hover does NOT open; the sub-menu opens only when JS adds .is-sub-open. */
-.eelfg-menu-click .eelfg-menu-list li:hover > .sub-menu,
-.eelfg-menu-click .eelfg-menu-list li:focus-within > .sub-menu {
+.shapeblock-menu-click .shapeblock-menu-list li:hover > .sub-menu,
+.shapeblock-menu-click .shapeblock-menu-list li:focus-within > .sub-menu {
 	opacity: 0;
 	visibility: hidden;
 	transform: translateY( 12px );
 	pointer-events: none;
 }
 
-.eelfg-menu-click .eelfg-menu-list li.is-sub-open > .sub-menu {
+.shapeblock-menu-click .shapeblock-menu-list li.is-sub-open > .sub-menu {
 	opacity: 1;
 	visibility: visible;
 	transform: translateY( 0 );
@@ -237,14 +237,14 @@
 
 /* Nested dropdowns ( 3rd level and deeper ) fly out to the side instead of stacking on top.
    Scoped away from the vertical layout, which uses a static accordion instead. */
-.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu .sub-menu {
+.shapeblock-menu:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu .sub-menu {
 	top: 0;
 	left: 100%;
 	transform: translateX( 12px );
 }
 
-.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu li:hover > .sub-menu,
-.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu li:focus-within > .sub-menu {
+.shapeblock-menu:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu li:hover > .sub-menu,
+.shapeblock-menu:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu li:focus-within > .sub-menu {
 	transform: translateX( 0 );
 }
 
@@ -252,7 +252,7 @@
    pointer from the item into the dropdown ( or between levels ) never loses hover and closes it.
    It is part of the sub-menu, so hovering it keeps the parent's :hover active. Only active while the
    dropdown is open ( the sub-menu is pointer-events:none while hidden ). */
-.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu::before {
+.shapeblock-menu:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu::before {
 	content: '';
 	position: absolute;
 	top: -14px;
@@ -263,7 +263,7 @@
 }
 
 /* Nested ( side ) flyouts: the gap is on the left instead of the top. */
-.eelfg-menu:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu .sub-menu::before {
+.shapeblock-menu:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu .sub-menu::before {
 	top: 0;
 	left: -14px;
 	right: auto;
@@ -271,16 +271,16 @@
 	height: 100%;
 }
 
-.eelfg-menu-click:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu li:hover > .sub-menu,
-.eelfg-menu-click:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu li:focus-within > .sub-menu {
+.shapeblock-menu-click:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu li:hover > .sub-menu,
+.shapeblock-menu-click:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu li:focus-within > .sub-menu {
 	transform: translateX( 12px );
 }
 
-.eelfg-menu-click:not( .eelfg-menu--vertical ) .eelfg-menu-list .sub-menu li.is-sub-open > .sub-menu {
+.shapeblock-menu-click:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu li.is-sub-open > .sub-menu {
 	transform: translateX( 0 );
 }
 
-.eelfg-menu .eelfg-menu-list .sub-menu a {
+.shapeblock-menu .shapeblock-menu-list .sub-menu a {
 	display: flex;
 	align-items: center;
 	gap: 8px;
@@ -291,26 +291,26 @@
 	background-color: transparent;
 }
 
-.eelfg-menu .eelfg-menu-list .sub-menu li {
+.shapeblock-menu .shapeblock-menu-list .sub-menu li {
 	background-color: transparent;
 }
 
 /* In a dropdown the arrow ( and the editor's leaf "+" ) is pushed to the far right, while any
    icon + label stay grouped on the left. On the front end the arrow is a direct child of the link;
-   in the editor the caret / "+" is wrapped in a Dropdown ( .eelfg-menu-subadd ), so target that too. */
-.eelfg-menu .eelfg-menu-list .sub-menu a > .eelfg-menu-sub-toggle,
-.eelfg-menu .eelfg-menu-list .sub-menu a > .eelfg-menu-sub-plus,
-.eelfg-menu .eelfg-menu-list .sub-menu a > .eelfg-menu-subadd {
+   in the editor the caret / "+" is wrapped in a Dropdown ( .shapeblock-menu-subadd ), so target that too. */
+.shapeblock-menu .shapeblock-menu-list .sub-menu a > .shapeblock-menu-sub-toggle,
+.shapeblock-menu .shapeblock-menu-list .sub-menu a > .shapeblock-menu-sub-plus,
+.shapeblock-menu .shapeblock-menu-list .sub-menu a > .shapeblock-menu-subadd {
 	margin-left: auto;
 }
 
 /* Make a dropdown parent's link fill the row so the arrow reaches the dropdown's right edge.
    ( Front end: arrow is inside the link. Editor: the caret button is a sibling — both land right. ) */
-.eelfg-menu .eelfg-menu-list .sub-menu li.menu-item-has-children > a {
+.shapeblock-menu .shapeblock-menu-list .sub-menu li.menu-item-has-children > a {
 	flex: 1 1 auto;
 }
 
-.eelfg-menu--vertical .eelfg-menu-list .sub-menu {
+.shapeblock-menu--vertical .shapeblock-menu-list .sub-menu {
 	position: static;
 	box-shadow: none;
 	border-radius: 0;
@@ -325,28 +325,28 @@
 	transition: max-height 0.35s ease;
 }
 
-.eelfg-menu--vertical .eelfg-menu-list li:hover > .sub-menu,
-.eelfg-menu--vertical .eelfg-menu-list li:focus-within > .sub-menu {
+.shapeblock-menu--vertical .shapeblock-menu-list li:hover > .sub-menu,
+.shapeblock-menu--vertical .shapeblock-menu-list li:focus-within > .sub-menu {
 	max-height: 600px;
 }
 
 /* ---- Off-canvas drawer primitives (desktop: transparent; mobile switched on via inline CSS) ---- */
-.eelfg-menu-panel {
+.shapeblock-menu-panel {
 	display: contents; /* On desktop the list flows in place; on mobile it becomes the sliding drawer. */
 }
 
-.eelfg-menu-overlay {
+.shapeblock-menu-overlay {
 	display: none;
 }
 
 /* While the window is being resized, kill the drawer transition so it doesn't
    visibly slide across the screen when crossing the breakpoint. */
-.eelfg-menu-no-anim .eelfg-menu-panel,
-.eelfg-menu-no-anim .eelfg-menu-overlay {
+.shapeblock-menu-no-anim .shapeblock-menu-panel,
+.shapeblock-menu-no-anim .shapeblock-menu-overlay {
 	transition: none !important;
 }
 
-.eelfg-menu-close {
+.shapeblock-menu-close {
 	display: none;
 	align-items: center;
 	justify-content: center;
@@ -364,14 +364,14 @@
 }
 
 /* Cross ( X ) icon, centered inside the close button. */
-.eelfg-menu-close .eelfg-menu-svg {
+.shapeblock-menu-close .shapeblock-menu-svg {
 	width: 20px;
 	height: 20px;
 	display: block;
 }
 
 /* ---- Responsive hamburger toggle (shown below the breakpoint via inline CSS) ---- */
-.eelfg-menu-toggle {
+.shapeblock-menu-toggle {
 	display: none;
 	align-items: center;
 	justify-content: center;
@@ -387,7 +387,7 @@
 	color: inherit;
 }
 
-.eelfg-menu-toggle-bar {
+.shapeblock-menu-toggle-bar {
 	display: block;
 	width: 20px;
 	height: 2px;
@@ -395,26 +395,26 @@
 	transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
-.eelfg-menu.is-open .eelfg-menu-toggle-bar:nth-child( 1 ) {
+.shapeblock-menu.is-open .shapeblock-menu-toggle-bar:nth-child( 1 ) {
 	transform: translateY( 6px ) rotate( 45deg );
 }
 
-.eelfg-menu.is-open .eelfg-menu-toggle-bar:nth-child( 2 ) {
+.shapeblock-menu.is-open .shapeblock-menu-toggle-bar:nth-child( 2 ) {
 	opacity: 0;
 }
 
-.eelfg-menu.is-open .eelfg-menu-toggle-bar:nth-child( 3 ) {
+.shapeblock-menu.is-open .shapeblock-menu-toggle-bar:nth-child( 3 ) {
 	transform: translateY( -6px ) rotate( -45deg );
 }
 
 /* ---- Editor: inline "add item" (+) button ---- */
-.eelfg-menu-add-item {
+.shapeblock-menu-add-item {
 	display: inline-flex;
 	align-items: center;
 	list-style: none;
 }
 
-.eelfg-menu-add-btn.components-button {
+.shapeblock-menu-add-btn.components-button {
 	min-width: 22px;
 	width: 22px;
 	height: 22px;
@@ -427,33 +427,33 @@
 }
 
 /* Keep the "+" glyph compact inside the smaller button. */
-.eelfg-menu-add-btn.components-button svg {
+.shapeblock-menu-add-btn.components-button svg {
 	width: 14px;
 	height: 14px;
 }
 
-.eelfg-menu-add-btn.components-button:hover {
+.shapeblock-menu-add-btn.components-button:hover {
 	background: rgba( 162, 22, 255, 0.14 );
 	color: #a216ff;
 	border-color: #a216ff;
 }
 
-.eelfg-menu-is-empty .eelfg-menu-list {
+.shapeblock-menu-is-empty .shapeblock-menu-list {
 	min-height: 32px;
 }
 
 /* ---- Editor: the search popover ( width lives on .components-popover__content ) ---- */
-.eelfg-menu-add-pop .components-popover__content {
+.shapeblock-menu-add-pop .components-popover__content {
 	width: 340px;
 	max-width: 92vw;
 }
 
 /* "Create page" sub-panel ( title + publish toggle ). */
-.eelfg-menu-add-createview {
+.shapeblock-menu-add-createview {
 	padding: 12px;
 }
 
-.eelfg-menu-add-back.components-button {
+.shapeblock-menu-add-back.components-button {
 	height: auto;
 	padding: 2px 0;
 	margin-bottom: 10px;
@@ -461,7 +461,7 @@
 	font-weight: 600;
 }
 
-.eelfg-menu-add-actions {
+.shapeblock-menu-add-actions {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
@@ -469,17 +469,17 @@
 	margin-top: 14px;
 }
 
-.eelfg-menu-add-search {
+.shapeblock-menu-add-search {
 	padding: 8px;
 }
 
-.eelfg-menu-add-search,
-.eelfg-menu-add-search .components-base-control,
-.eelfg-menu-add-search .components-text-control__input {
+.shapeblock-menu-add-search,
+.shapeblock-menu-add-search .components-base-control,
+.shapeblock-menu-add-search .components-text-control__input {
 	width: 100%;
 }
 
-.eelfg-menu-add-results {
+.shapeblock-menu-add-results {
 	list-style: none;
 	margin: 6px 0 0;
 	padding: 0;
@@ -487,11 +487,11 @@
 	overflow-y: auto;
 }
 
-.eelfg-menu-add-row {
+.shapeblock-menu-add-row {
 	margin: 0;
 }
 
-.eelfg-menu-add-result.components-button {
+.shapeblock-menu-add-result.components-button {
 	display: flex;
 	align-items: center;
 	gap: 8px;
@@ -505,40 +505,40 @@
 	color: #1e1e1e;
 }
 
-.eelfg-menu-add-result.components-button:hover {
+.shapeblock-menu-add-result.components-button:hover {
 	background: #f0f0f1;
 }
 
-.eelfg-menu-add-result .dashicons {
+.shapeblock-menu-add-result .dashicons {
 	color: #757575;
 	flex: 0 0 auto;
 }
 
-.eelfg-menu-add-loading,
-.eelfg-menu-add-empty {
+.shapeblock-menu-add-loading,
+.shapeblock-menu-add-empty {
 	padding: 10px 8px;
 	color: #757575;
 	font-size: 12px;
 }
 
 /* ---- Editor: three Inspector tabs ( Menu Items / Settings / Style ) ---- */
-.eelfg-menu-tabs .components-tab-panel__tabs {
+.shapeblock-menu-tabs .components-tab-panel__tabs {
 	display: flex;
 }
 
-.eelfg-menu-tabs .components-tab-panel__tabs-item {
+.shapeblock-menu-tabs .components-tab-panel__tabs-item {
 	flex: 1;
 	justify-content: center;
 }
 
 /* ---- Editor: item editors in the Inspector ( default Gutenberg look — no custom boxes ) ---- */
 /* Top-level items are their own collapsible PanelBody ( titled with the item name ). */
-.eelfg-menu-additem-row {
+.shapeblock-menu-additem-row {
 	padding: 12px 16px 16px;
 }
 
 /* Sub-item ( dropdown ) editors sit inside their parent's panel, separated by a light rule. */
-.eelfg-menu-item-editor.is-child {
+.shapeblock-menu-item-editor.is-child {
 	margin: 10px 0 14px;
 	padding: 10px 0 14px 12px;
 	border-bottom: 1px solid #e0e0e0;
@@ -547,7 +547,7 @@
 }
 
 /* Small "Level N sub-item" badge that heads every nested editor. */
-.eelfg-menu-level-badge {
+.shapeblock-menu-level-badge {
 	display: inline-block;
 	font-size: 10px;
 	font-weight: 600;
@@ -560,11 +560,11 @@
 	margin-bottom: 8px;
 }
 
-.eelfg-menu-subsection {
+.shapeblock-menu-subsection {
 	margin-top: 8px;
 }
 
-.eelfg-menu-section-label {
+.shapeblock-menu-section-label {
 	font-size: 11px;
 	text-transform: uppercase;
 	font-weight: 500;
@@ -573,7 +573,7 @@
 }
 
 /* Icon upload row. */
-.eelfg-menu-icon-picker {
+.shapeblock-menu-icon-picker {
 	display: flex;
 	align-items: center;
 	gap: 8px;
@@ -581,14 +581,14 @@
 	margin-bottom: 8px;
 }
 
-.eelfg-menu-icon-thumb img {
+.shapeblock-menu-icon-thumb img {
 	width: 24px;
 	height: 24px;
 	object-fit: contain;
 	display: block;
 }
 
-.eelfg-menu-icon-preview svg {
+.shapeblock-menu-icon-preview svg {
 	width: 22px;
 	height: 22px;
 	display: block;
@@ -596,32 +596,32 @@
 }
 
 /* Responsive spacing controls. */
-.eelfg-menu-devices {
+.shapeblock-menu-devices {
 	display: flex;
 	gap: 4px;
 	margin-bottom: 12px;
 }
 
-.eelfg-menu-devices .components-button {
+.shapeblock-menu-devices .components-button {
 	flex: 1;
 	justify-content: center;
 }
 
-.eelfg-menu-sides {
+.shapeblock-menu-sides {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 8px;
 }
 
-.eelfg-menu-sides .components-base-control {
+.shapeblock-menu-sides .components-base-control {
 	margin-bottom: 0;
 }
 
-.eelfg-menu-field {
+.shapeblock-menu-field {
 	margin-bottom: 12px;
 }
 
-.eelfg-menu-linkfield-label {
+.shapeblock-menu-linkfield-label {
 	font-size: 11px;
 	text-transform: uppercase;
 	font-weight: 500;
@@ -630,12 +630,12 @@
 }
 
 /* The Dropdown wrapper must be full-width, else its button shrinks to the link text ( e.g. "#" ). */
-.eelfg-menu-linkpicker {
+.shapeblock-menu-linkpicker {
 	display: block;
 	width: 100%;
 }
 
-.eelfg-menu-linkpicker-btn.components-button {
+.shapeblock-menu-linkpicker-btn.components-button {
 	width: 100%;
 	justify-content: flex-start;
 	overflow: hidden;
@@ -645,7 +645,7 @@
 	text-align: left;
 }
 
-.eelfg-menu-item-actions {
+.shapeblock-menu-item-actions {
 	display: flex;
 	gap: 6px;
 	flex-wrap: wrap;
@@ -654,8 +654,8 @@
 }
 
 /* ---- Notices ---- */
-.eelfg-menu-notice,
-.eelfg-menu-placeholder {
+.shapeblock-menu-notice,
+.shapeblock-menu-placeholder {
 	margin: 0;
 	padding: 14px 16px;
 	background: #f6f7f7;
@@ -665,65 +665,65 @@
 	font-size: 13px;
 }
 
-.eelfg-menu-placeholder {
+.shapeblock-menu-placeholder {
 	text-align: center;
 }
 
 /* ---- Editor: search input row + result text (title + slug) ---- */
-.eelfg-menu-add-input {
+.shapeblock-menu-add-input {
 	display: flex;
 	align-items: flex-start;
 	gap: 4px;
 }
-.eelfg-menu-add-input .components-base-control {
+.shapeblock-menu-add-input .components-base-control {
 	flex: 1 1 auto;
 }
-.eelfg-menu-add-go.components-button {
+.shapeblock-menu-add-go.components-button {
 	margin-top: 2px;
 	flex: 0 0 auto;
 }
-.eelfg-menu-add-result-text {
+.shapeblock-menu-add-result-text {
 	display: flex;
 	flex-direction: column;
 	line-height: 1.3;
 	overflow: hidden;
 }
-.eelfg-menu-add-result-title {
+.shapeblock-menu-add-result-title {
 	color: #1e1e1e;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.eelfg-menu-add-result-sub {
+.shapeblock-menu-add-result-sub {
 	font-size: 11px;
 	color: #757575;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.eelfg-menu-add-create .dashicons {
+.shapeblock-menu-add-create .dashicons {
 	color: #a216ff;
 }
 
 /* ---- Editor: inline-editable menu label (preview) ---- */
-.eelfg-menu-label[contenteditable] {
+.shapeblock-menu-label[contenteditable] {
 	outline: none;
 	cursor: text;
 	border-radius: 2px;
 }
-.eelfg-menu-label[contenteditable]:hover {
+.shapeblock-menu-label[contenteditable]:hover {
 	outline: 1px dashed rgba( 162, 22, 255, 0.45 );
 	outline-offset: 2px;
 }
-.eelfg-menu-label[contenteditable]:focus {
+.shapeblock-menu-label[contenteditable]:focus {
 	outline: 2px solid #a216ff;
 	outline-offset: 2px;
 }
-.eelfg-menu-label[contenteditable]:empty {
+.shapeblock-menu-label[contenteditable]:empty {
 	min-width: 46px;
 	display: inline-block;
 }
-.eelfg-menu-label[contenteditable]:empty::before {
-	content: attr( data-eelfg-placeholder );
+.shapeblock-menu-label[contenteditable]:empty::before {
+	content: attr( data-shapeblock-placeholder );
 	opacity: 0.5;
 }

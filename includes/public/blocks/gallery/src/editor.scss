@@ -1,14 +1,16 @@
+@use 'style';
+
 /**
  * Editor-only styles for the Simple Gallery block.
  */
-.eelfg-gallery-block-wrap {
+.shapeblock-gallery-block-wrap {
 	// Lightbox is non-interactive inside the editor preview.
-	.eelfg-lightbox-gallery {
+	.shapeblock-lightbox-gallery {
 		display: none !important;
 	}
 }
 
-.eelfg-gallery-empty-placeholder {
+.shapeblock-gallery-empty-placeholder {
 	.components-placeholder__fieldset {
 		justify-content: center;
 	}

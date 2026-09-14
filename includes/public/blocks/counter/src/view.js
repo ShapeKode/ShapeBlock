@@ -36,11 +36,11 @@
 		var negative = target < 0;
 
 		counter.innerHTML = '';
-		counter.classList.add('eelfg-cnt-odometer-wrap');
+		counter.classList.add('shapeblock-cnt-odometer-wrap');
 
 		if (negative) {
 			var s = document.createElement('span');
-			s.className = 'eelfg-cnt-odometer-sep';
+			s.className = 'shapeblock-cnt-odometer-sep';
 			s.textContent = '-';
 			counter.appendChild(s);
 		}
@@ -52,25 +52,25 @@
 			var posFromRight = targetStr.length - i;
 			if (i > 0 && separator && posFromRight % 3 === 0) {
 				var sep = document.createElement('span');
-				sep.className = 'eelfg-cnt-odometer-sep';
+				sep.className = 'shapeblock-cnt-odometer-sep';
 				sep.textContent = separator;
 				counter.appendChild(sep);
 			}
 
 			var col = document.createElement('span');
-			col.className = 'eelfg-cnt-odometer-digit';
+			col.className = 'shapeblock-cnt-odometer-digit';
 
 			var roll = document.createElement('span');
-			roll.className = 'eelfg-cnt-odometer-roll';
+			roll.className = 'shapeblock-cnt-odometer-roll';
 
 			var spins = 2 + digitIndex;
 			var html = '';
 			for (var sp = 0; sp < spins; sp++) {
 				for (var n = 0; n <= 9; n++) {
-					html += '<span class="eelfg-cnt-odometer-num">' + n + '</span>';
+					html += '<span class="shapeblock-cnt-odometer-num">' + n + '</span>';
 				}
 			}
-			html += '<span class="eelfg-cnt-odometer-num">' + targetStr.charAt(i) + '</span>';
+			html += '<span class="shapeblock-cnt-odometer-num">' + targetStr.charAt(i) + '</span>';
 			roll.innerHTML = html;
 			roll.style.transform = 'translateY(0)';
 
@@ -91,7 +91,7 @@
 	}
 
 	function init() {
-		var counters = document.querySelectorAll('.eelfg-counter');
+		var counters = document.querySelectorAll('.shapeblock-counter');
 		if (!counters.length) return;
 
 		var observer = new IntersectionObserver(function (entries) {

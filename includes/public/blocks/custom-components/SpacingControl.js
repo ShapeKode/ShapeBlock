@@ -37,10 +37,10 @@ const ALL_SIDES = ['top', 'right', 'bottom', 'left'];
 
 const sideShortLabel = (s) => ({ top: 'T', right: 'R', bottom: 'B', left: 'L' }[s]);
 const sideFullLabel = (s) => ({
-    top:    __('Top', 'easy-elements-for-gutenberg'),
-    right:  __('Right', 'easy-elements-for-gutenberg'),
-    bottom: __('Bottom', 'easy-elements-for-gutenberg'),
-    left:   __('Left', 'easy-elements-for-gutenberg'),
+    top:    __('Top', 'shapeblock'),
+    right:  __('Right', 'shapeblock'),
+    bottom: __('Bottom', 'shapeblock'),
+    left:   __('Left', 'shapeblock'),
 }[s]);
 
 // Split "10px" / "-2.5em" / "" into { num, unit }.
@@ -119,16 +119,16 @@ const SpacingControl = ({
                             onChange={updateUnit}
                             size="compact"
                             hideLabelFromVision
-                            label={__('Unit', 'easy-elements-for-gutenberg')}
+                            label={__('Unit', 'shapeblock')}
                             __nextHasNoMarginBottom
                         />
-                        <Tooltip text={linked ? __('Unlink sides', 'easy-elements-for-gutenberg') : __('Link sides', 'easy-elements-for-gutenberg')}>
+                        <Tooltip text={linked ? __('Unlink sides', 'shapeblock') : __('Link sides', 'shapeblock')}>
                             <Button
                                 size="small"
                                 variant="tertiary"
                                 icon={linked ? 'admin-links' : 'editor-unlink'}
                                 onClick={() => setLinked((v) => !v)}
-                                aria-label={linked ? __('Unlink sides', 'easy-elements-for-gutenberg') : __('Link sides', 'easy-elements-for-gutenberg')}
+                                aria-label={linked ? __('Unlink sides', 'shapeblock') : __('Link sides', 'shapeblock')}
                             />
                         </Tooltip>
                     </div>
@@ -136,7 +136,7 @@ const SpacingControl = ({
             }
         >
             <div
-                className="eelfg-spacing-control"
+                className="shapeblock-spacing-control"
                 style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(4, 1fr)',
@@ -168,7 +168,7 @@ const SpacingControl = ({
                                     placeholder={sideShortLabel(side)}
                                     size="compact"
                                     __next40pxDefaultSize={false}
-                                    className="eelfg-spacing-control__input"
+                                    className="shapeblock-spacing-control__input"
                                 />
                             </div>
                         </Tooltip>

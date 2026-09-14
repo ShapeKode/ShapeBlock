@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/breadcrumb",
+  "name": "shapeblock/breadcrumb",
   "version": "0.1.0",
   "title": "Breadcrumb",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "description": "A dynamic breadcrumb trail for the current page, with home icon, separator and full styling.",
   "keywords": [
     "breadcrumb",
@@ -21,23 +21,9 @@
       "right",
       "wide",
       "full"
-    ],
-    "spacing": {
-      "margin": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ],
-      "padding": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ]
-    }
+    ]
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "render": "file:./render.php",
   "attributes": {
@@ -89,10 +75,30 @@
         "letterSpacing": ""
       }
     },
+    "textTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "textTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "textPadding": {
       "type": "object"
     },
+    "textPaddingTablet": {
+      "type": "object"
+    },
+    "textPaddingMobile": {
+      "type": "object"
+    },
     "textPaddingActive": {
+      "type": "object"
+    },
+    "textPaddingActiveTablet": {
+      "type": "object"
+    },
+    "textPaddingActiveMobile": {
       "type": "object"
     },
     "textBgColor": {
@@ -145,6 +151,12 @@
     "homeIconPadding": {
       "type": "object"
     },
+    "homeIconPaddingTablet": {
+      "type": "object"
+    },
+    "homeIconPaddingMobile": {
+      "type": "object"
+    },
     "homeIconPosY": {
       "type": "string",
       "default": ""
@@ -173,11 +185,23 @@
     "separatorPadding": {
       "type": "object"
     },
+    "separatorPaddingTablet": {
+      "type": "object"
+    },
+    "separatorPaddingMobile": {
+      "type": "object"
+    },
     "separatorSize": {
       "type": "string",
       "default": ""
     },
     "separatorGap": {
+      "type": "object"
+    },
+    "separatorGapTablet": {
+      "type": "object"
+    },
+    "separatorGapMobile": {
       "type": "object"
     },
     "separatorPosY": {
@@ -187,6 +211,18 @@
     "separatorPosX": {
       "type": "string",
       "default": ""
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

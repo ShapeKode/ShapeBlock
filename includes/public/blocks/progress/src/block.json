@@ -1,22 +1,18 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "easy-elements-for-gutenberg/progress",
+	"name": "shapeblock/progress",
 	"version": "0.1.0",
 	"title": "Progress Bar",
-	"category": "easy-elements-for-gutenberg",
+	"category": "shapeblock",
 	"description": "A progress / skill bar with title and percent — two layout styles and full styling.",
 	"keywords": [ "progress", "bar", "skill", "percent", "meter" ],
 	"example": {},
 	"supports": {
 		"html": false,
-		"align": [ "left", "center", "right", "wide", "full" ],
-		"spacing": {
-			"padding": [ "top", "bottom", "left", "right" ],
-			"margin": [ "top", "bottom", "left", "right" ]
-		}
+		"align": [ "left", "center", "right", "wide", "full" ]
 	},
-	"textdomain": "easy-elements-for-gutenberg",
+	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
 	"viewScript": "file:./view.js",
 	"render": "file:./render.php",
@@ -31,6 +27,8 @@
 		"style2BgColor": { "type": "string", "default": "" },
 		"style2BgGradient": { "type": "string", "default": "" },
 		"progressHeight": { "type": "string", "default": "" },
+		"progressHeightTablet": { "type": "string", "default": "" },
+		"progressHeightMobile": { "type": "string", "default": "" },
 		"progressRadius": { "type": "string", "default": "" },
 
 		"titleColor": { "type": "string", "default": "" },
@@ -38,11 +36,18 @@
 			"type": "object",
 			"default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" }
 		},
+		"titleTypographyTablet": { "type": "object", "default": {} },
+		"titleTypographyMobile": { "type": "object", "default": {} },
 
 		"percentColor": { "type": "string", "default": "" },
 		"percentTypography": {
 			"type": "object",
 			"default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" }
-		}
-	}
+		},
+		"percentTypographyTablet": { "type": "object", "default": {} },
+		"percentTypographyMobile": { "type": "object", "default": {} },
+	"hideDesktop": { "type": "boolean", "default": false },
+	"hideTablet": { "type": "boolean", "default": false },
+	"hideMobile": { "type": "boolean", "default": false }
+}
 }

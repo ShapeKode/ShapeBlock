@@ -4,61 +4,61 @@
  *
  * Structure ported from the Elementor widget
  * (easy-elements/widgets/heading/css/heading.scss). Element classes use this
- * plugin's own "eelfg-" prefix and preset CSS variables. JS-driven animations
+ * plugin's own "shapeblock-" prefix and preset CSS variables. JS-driven animations
  * from the original widget are intentionally omitted.
  */
-.eelfg-title {
-  color: var(--eelfg-preset-color-secondary, #0b3665);
+.shapeblock-title {
+  color: var(--shapeblock-preset-color-secondary, #0b3665);
   margin: 0;
 }
-.eelfg-title a {
+.shapeblock-title a {
   color: currentColor;
 }
-.eelfg-title span {
-  color: var(--eelfg-preset-color-primary, #ffd012);
+.shapeblock-title span {
+  color: var(--shapeblock-preset-color-primary, #ffd012);
   display: inline-block;
 }
 
-.eelfg-description {
-  color: var(--eelfg-preset-color-text, rgba(18, 18, 18, 0.7490196078));
+.shapeblock-description {
+  color: var(--shapeblock-preset-color-text, rgba(18, 18, 18, 0.7490196078));
   font-size: 20px;
   line-height: 150%;
 }
 
-.eelfg-sub-heading img,
-.eelfg-sub-heading svg {
+.shapeblock-sub-heading img,
+.shapeblock-sub-heading svg {
   height: 1em;
   width: auto;
 }
-.eelfg-sub-heading.top {
+.shapeblock-sub-heading.top {
   display: inline-block;
 }
-.eelfg-sub-heading.top span {
+.shapeblock-sub-heading.top span {
   display: block;
 }
-.eelfg-sub-heading.left, .eelfg-sub-heading.right {
+.shapeblock-sub-heading.left, .shapeblock-sub-heading.right {
   display: inline-flex !important;
   align-items: center;
   gap: 8px;
 }
-.eelfg-sub-heading.right {
+.shapeblock-sub-heading.right {
   flex-direction: row-reverse;
 }
 
-.eelfg-separator-icon-wrap svg {
+.shapeblock-separator-icon-wrap svg {
   height: 1em;
 }
 
-.eelfg-separator-icon {
+.shapeblock-separator-icon {
   height: 4px;
   width: 50px;
-  background: var(--eelfg-preset-color-primary, #ffd012);
+  background: var(--shapeblock-preset-color-primary, #ffd012);
   border-radius: 2px;
   position: relative;
   margin: 0 auto;
   display: inline-block;
 }
-.eelfg-separator-icon.dotted::before {
+.shapeblock-separator-icon.dotted::before {
   content: "";
   position: absolute;
   top: 0;
@@ -67,33 +67,33 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background-color: var(--eelfg-preset-color-primary, #ffd012);
-  color: var(--eelfg-preset-color-primary, #ffd012);
+  background-color: var(--shapeblock-preset-color-primary, #ffd012);
+  color: var(--shapeblock-preset-color-primary, #ffd012);
   box-shadow: 9px 0 0 currentColor, 18px 0 0 currentColor;
 }
 
-.eelfg-full-title-start,
-.eelfg-title-start .eelfg-title {
-  border-left: 6px solid var(--eelfg-preset-color-primary, #ffd012);
+.shapeblock-full-title-start,
+.shapeblock-title-start .shapeblock-title {
+  border-left: 6px solid var(--shapeblock-preset-color-primary, #ffd012);
   display: inline-table;
   padding-left: 10px;
   width: 100%;
 }
 
-.eelfg-full-title-end,
-.eelfg-title-end .eelfg-title {
-  border-right: 6px solid var(--eelfg-preset-color-primary, #ffd012);
+.shapeblock-full-title-end,
+.shapeblock-title-end .shapeblock-title {
+  border-right: 6px solid var(--shapeblock-preset-color-primary, #ffd012);
   display: inline-table;
   padding-right: 10px;
   width: 100%;
 }
 
-.eelfg-heading.has-watermark {
+.shapeblock-heading.has-watermark {
   position: relative;
   z-index: 1;
 }
 
-.eelfg-watermark {
+.shapeblock-watermark {
   position: absolute;
   bottom: 10px;
   left: 10px;
@@ -111,30 +111,30 @@
   line-height: 60%;
 }
 
-.eelfg-sub-heading.eelfg-sub-gradient-border {
+.shapeblock-sub-heading.shapeblock-sub-gradient-border {
   display: inline-block;
 }
 
-.eelfg-sub-gradient-border {
+.shapeblock-sub-gradient-border {
   position: relative;
   padding: 4px 18px;
 }
-.eelfg-sub-gradient-border::before {
+.shapeblock-sub-gradient-border::before {
   content: "";
   position: absolute;
   inset: 0;
   padding: 1px;
-  background: linear-gradient(to right, var(--eelfg-grad-color-1, rgba(0, 0, 0, 0.15)) 15%, var(--eelfg-grad-color-2, rgba(0, 0, 0, 0.3)) 30%, var(--eelfg-grad-color-3, rgba(0, 0, 0, 0.5)) 50%, var(--eelfg-grad-color-2, rgba(0, 0, 0, 0.3)) 70%, var(--eelfg-grad-color-1, rgba(0, 0, 0, 0.15)) 85%);
+  background: linear-gradient(to right, var(--shapeblock-grad-color-1, rgba(0, 0, 0, 0.15)) 15%, var(--shapeblock-grad-color-2, rgba(0, 0, 0, 0.3)) 30%, var(--shapeblock-grad-color-3, rgba(0, 0, 0, 0.5)) 50%, var(--shapeblock-grad-color-2, rgba(0, 0, 0, 0.3)) 70%, var(--shapeblock-grad-color-1, rgba(0, 0, 0, 0.15)) 85%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
   z-index: -1;
-  border-radius: var(--eelfg-grad-border-radius, 40px);
+  border-radius: var(--shapeblock-grad-border-radius, 40px);
   opacity: 0.5;
 }
 
-.eelfg-title.eelfg-gradient-title div, .eelfg-title.eelfg-gradient-title {
+.shapeblock-title.shapeblock-gradient-title div, .shapeblock-title.shapeblock-gradient-title {
   background: linear-gradient(68.75deg, #b0ff96 9.78%, #fff1b5 92.67%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -143,8 +143,8 @@
 }
 
 /* Image fill (text mask) */
-.eelfg-heading .eelfg-title.eelfg-image-fill div,
-.eelfg-heading .eelfg-title.eelfg-image-fill {
+.shapeblock-heading .shapeblock-title.shapeblock-image-fill div,
+.shapeblock-heading .shapeblock-title.shapeblock-image-fill {
   color: transparent;
   -webkit-background-clip: text;
   background-clip: text;

@@ -3,27 +3,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-function eelfg_create_block_menu_block_init() {
+function shapeblock_create_block_menu_block_init() {
 	// Shared style handle (front-end + editor) so render.php styling stays consistent.
 	// Version follows the CSS file's modified time so style updates always bust the browser cache.
 	$style_file = __DIR__ . '/build/style-index.css';
-	$style_ver  = file_exists( $style_file ) ? filemtime( $style_file ) : EELFG_VERSION;
+	$style_ver  = file_exists( $style_file ) ? filemtime( $style_file ) : SHAPEBLOCK_VERSION;
 	wp_register_style(
-		'eelfg-menu-style',
+		'shapeblock-menu-style',
 		plugins_url( 'build/style-index.css', __FILE__ ),
-		array( 'eelfg-public-style' ),
+		array( 'shapeblock-public-style' ),
 		$style_ver
 	);
 
 	register_block_type(
 		__DIR__ . '/build',
 		array(
-			'style'        => 'eelfg-menu-style',
-			'editor_style' => 'eelfg-menu-style',
+			'style'        => 'shapeblock-menu-style',
+			'editor_style' => 'shapeblock-menu-style',
 		)
 	);
 }
-add_action( 'init', 'eelfg_create_block_menu_block_init' );
+add_action( 'init', 'shapeblock_create_block_menu_block_init' );
 
 /**
  * Fetch the full Google Fonts family list from the Google Fonts API.
@@ -33,8 +33,8 @@ add_action( 'init', 'eelfg_create_block_menu_block_init' );
  *
  * @return array List of Google font family names.
  */
-function eelfg_menu_get_google_fonts() {
-	$cached = get_transient( 'eelfg_menu_google_fonts' );
+function shapeblock_menu_get_google_fonts() {
+	$cached = get_transient( 'shapeblock_menu_google_fonts' );
 	if ( is_array( $cached ) && ! empty( $cached ) ) {
 		return $cached;
 	}
@@ -60,7 +60,7 @@ function eelfg_menu_get_google_fonts() {
 	}
 
 	if ( ! empty( $fonts ) ) {
-		set_transient( 'eelfg_menu_google_fonts', $fonts, WEEK_IN_SECONDS );
+		set_transient( 'shapeblock_menu_google_fonts', $fonts, WEEK_IN_SECONDS );
 	}
 
 	return $fonts;
@@ -69,18 +69,18 @@ function eelfg_menu_get_google_fonts() {
 /**
  * Expose the fetched Google Fonts list to the Menu block editor script.
  */
-function eelfg_menu_enqueue_google_fonts_list() {
-	$fonts  = eelfg_menu_get_google_fonts();
-	$handle = 'easy-elements-for-gutenberg-menu-editor-script';
+function shapeblock_menu_enqueue_google_fonts_list() {
+	$fonts  = shapeblock_menu_get_google_fonts();
+	$handle = 'shapeblock-menu-editor-script';
 	if ( ! empty( $fonts ) && wp_script_is( $handle, 'registered' ) ) {
 		wp_add_inline_script(
 			$handle,
-			'window.eelfgMenuFonts = ' . wp_json_encode( array_values( $fonts ) ) . ';',
+			'window.shapeblockMenuFonts = ' . wp_json_encode( array_values( $fonts ) ) . ';',
 			'before'
 		);
 	}
 }
-add_action( 'enqueue_block_editor_assets', 'eelfg_menu_enqueue_google_fonts_list' );
+add_action( 'enqueue_block_editor_assets', 'shapeblock_menu_enqueue_google_fonts_list' );
 
 /**
  * Recursively sanitize a saved menu tree ( bounded depth / count ) before it is stored.
@@ -89,7 +89,7 @@ add_action( 'enqueue_block_editor_assets', 'eelfg_menu_enqueue_google_fonts_list
  * @param int   $depth Current recursion depth.
  * @return array Clean items.
  */
-function eelfg_menu_sanitize_items( $items, $depth = 0 ) {
+function shapeblock_menu_sanitize_items( $items, $depth = 0 ) {
 	$out = array();
 	if ( ! is_array( $items ) || $depth > 10 ) {
 		return $out;
@@ -136,7 +136,7 @@ function eelfg_menu_sanitize_items( $items, $depth = 0 ) {
 		if ( isset( $item['iconSide'] ) ) {
 			$node['iconSide'] = sanitize_key( $item['iconSide'] );
 		}
-		$node['children'] = ( isset( $item['children'] ) && is_array( $item['children'] ) ) ? eelfg_menu_sanitize_items( $item['children'], $depth + 1 ) : array();
+		$node['children'] = ( isset( $item['children'] ) && is_array( $item['children'] ) ) ? shapeblock_menu_sanitize_items( $item['children'], $depth + 1 ) : array();
 		$out[] = $node;
 	}
 	return $out;
@@ -146,21 +146,21 @@ function eelfg_menu_sanitize_items( $items, $depth = 0 ) {
  * REST: remember the most recently edited menu, and hand it back so a freshly inserted
  * block can auto-restore it ( the way a brand-new menu comes pre-filled by default ).
  */
-function eelfg_menu_register_last_route() {
+function shapeblock_menu_register_last_route() {
 	register_rest_route(
-		'easy-elements/v1',
+		'shapeblock/v1',
 		'/menu-last',
 		array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => 'eelfg_menu_get_last',
+				'callback'            => 'shapeblock_menu_get_last',
 				'permission_callback' => function () {
 					return current_user_can( 'edit_posts' );
 				},
 			),
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => 'eelfg_menu_save_last',
+				'callback'            => 'shapeblock_menu_save_last',
 				'permission_callback' => function () {
 					return current_user_can( 'edit_posts' );
 				},
@@ -168,15 +168,15 @@ function eelfg_menu_register_last_route() {
 		)
 	);
 }
-add_action( 'rest_api_init', 'eelfg_menu_register_last_route' );
+add_action( 'rest_api_init', 'shapeblock_menu_register_last_route' );
 
 /**
  * REST GET: return the last saved menu items.
  *
  * @return WP_REST_Response
  */
-function eelfg_menu_get_last() {
-	$items = get_option( 'eelfg_menu_last_items', array() );
+function shapeblock_menu_get_last() {
+	$items = get_option( 'shapeblock_menu_last_items', array() );
 	if ( ! is_array( $items ) ) {
 		$items = array();
 	}
@@ -189,8 +189,8 @@ function eelfg_menu_get_last() {
  * @param WP_REST_Request $request Request.
  * @return WP_REST_Response
  */
-function eelfg_menu_save_last( WP_REST_Request $request ) {
-	$items = eelfg_menu_sanitize_items( $request->get_param( 'items' ) );
-	update_option( 'eelfg_menu_last_items', $items, false );
+function shapeblock_menu_save_last( WP_REST_Request $request ) {
+	$items = shapeblock_menu_sanitize_items( $request->get_param( 'items' ) );
+	update_option( 'shapeblock_menu_last_items', $items, false );
 	return rest_ensure_response( array( 'saved' => true ) );
 }

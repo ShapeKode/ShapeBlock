@@ -9,27 +9,27 @@
 	'use strict';
 
 	function init() {
-		var wraps = document.querySelectorAll('.eelfg-search-block-wrap');
+		var wraps = document.querySelectorAll('.shapeblock-search-block-wrap');
 
 		Array.prototype.forEach.call(wraps, function (wrap) {
-			if (wrap.dataset.eelfgSearchInit === '1') {
+			if (wrap.dataset.shapeblockSearchInit === '1') {
 				return;
 			}
-			wrap.dataset.eelfgSearchInit = '1';
+			wrap.dataset.shapeblockSearchInit = '1';
 
-			var box = wrap.querySelector('.eelfg-search-lightbox');
+			var box = wrap.querySelector('.shapeblock-search-lightbox');
 			if (!box) {
 				return;
 			}
-			var openBtn = wrap.querySelector('.eelfg-search-open-btn');
-			var closers = wrap.querySelectorAll('.eelfg-search-close-btn, .eelfg-search-overlay');
-			var field = box.querySelector('.eelfg-search-field');
+			var openBtn = wrap.querySelector('.shapeblock-search-open-btn');
+			var closers = wrap.querySelectorAll('.shapeblock-search-close-btn, .shapeblock-search-overlay');
+			var field = box.querySelector('.shapeblock-search-field');
 
 			if (openBtn) {
 				openBtn.addEventListener('click', function (e) {
 					e.preventDefault();
 					e.stopPropagation();
-					box.classList.add('eelfg-lightbox');
+					box.classList.add('shapeblock-lightbox');
 					if (field) {
 						window.setTimeout(function () { field.focus(); }, 400);
 					}
@@ -40,12 +40,12 @@
 				closer.addEventListener('click', function (e) {
 					e.preventDefault();
 					e.stopPropagation();
-					box.classList.remove('eelfg-lightbox');
+					box.classList.remove('shapeblock-lightbox');
 				});
 			});
 
 			// Clicking inside the content shouldn't close the popup.
-			var content = box.querySelector('.eelfg-search-content');
+			var content = box.querySelector('.shapeblock-search-content');
 			if (content) {
 				content.addEventListener('click', function (e) {
 					e.stopPropagation();
@@ -54,7 +54,7 @@
 
 			document.addEventListener('keydown', function (e) {
 				if (e.key === 'Escape') {
-					box.classList.remove('eelfg-lightbox');
+					box.classList.remove('shapeblock-lightbox');
 				}
 			});
 		});

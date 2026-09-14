@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/offcanvas",
+  "name": "shapeblock/offcanvas",
   "version": "0.1.0",
   "title": "Offcanvas",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "description": "A toggle button that opens an off-canvas panel rendering a selected Template — classic side or modern fullscreen.",
   "keywords": [
     "offcanvas",
@@ -22,17 +22,9 @@
       "right",
       "wide",
       "full"
-    ],
-    "spacing": {
-      "margin": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ]
-    }
+    ]
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "viewScript": "file:./view.js",
   "render": "file:./render.php",
@@ -55,11 +47,19 @@
     },
     "positionOffcanvas": {
       "type": "string",
-      "default": "eelfg-offcanvas-right"
+      "default": "shapeblock-offcanvas-right"
     },
     "offcanvasWidth": {
       "type": "string",
       "default": "380"
+    },
+    "offcanvasWidthTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "offcanvasWidthMobile": {
+      "type": "string",
+      "default": ""
     },
     "contentTemplate": {
       "type": "string",
@@ -88,6 +88,14 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "openerTextTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "openerTextTypographyMobile": {
+      "type": "object",
+      "default": {}
     },
     "openerIconColor": {
       "type": "string",
@@ -123,6 +131,24 @@
     },
     "offcanvasPadding": {
       "type": "object"
+    },
+    "offcanvasPaddingTablet": {
+      "type": "object"
+    },
+    "offcanvasPaddingMobile": {
+      "type": "object"
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

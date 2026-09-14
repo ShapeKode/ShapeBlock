@@ -1,14 +1,14 @@
-body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
+body.toplevel_page_shapeblock #wpcontent {
     padding-left: 0 !important;
 }
 
-.menu-top.toplevel_page_easy-elements-for-gutenberg .wp-menu-image img {
+.menu-top.toplevel_page_shapeblock .wp-menu-image img {
     height: 20px;
     opacity: 1 !important;
 }
 
-#eelfg-dashboard {
-    .eelfg-logo {
+#shapeblock-dashboard {
+    .shapeblock-logo {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -24,7 +24,7 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
     }
 
     // Shrink the logo when the sider is collapsed
-    .ant-layout-sider-collapsed .eelfg-logo {
+    .ant-layout-sider-collapsed .shapeblock-logo {
         padding: 0 8px;
 
         img {
@@ -32,7 +32,7 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
         }
     }
 
-    .eelfg-options-content {
+    .shapeblock-options-content {
         input[type=search] {
             min-height: 100%;
             height: 100%;
@@ -44,14 +44,14 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
     top: 50px !important;
 }
 
-.eelfg-options-title {
+.shapeblock-options-title {
     font-size: 24px;
     font-weight: 600;
     line-height: 1.2;
     margin-top: 0;
 }
 
-.eelfg-block-item {
+.shapeblock-block-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -77,12 +77,12 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
         position: relative;
         flex-direction: column;
         font-size: 22px;
-        .eelfg-block-badge {
+        .shapeblock-block-badge {
             position: absolute;
             left: 50%;
             top: -4px;
             background-color: #f2295b;
-            color: var(--easy-white-color);
+            color: var(--shapeblock-white-color, #fff);
             border-radius: 36px;
             font-size: 8px;
             font-weight: 500;
@@ -101,7 +101,7 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
         strong {
             font-size: 16px;
             font-weight: 600;
-            color: var(--easy-title-color);
+            color: var(--shapeblock-title-color, inherit);
             line-height: 1.2;
         }
 
@@ -113,7 +113,7 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
 
 }
 
-.eelfg-options-content-header {
+.shapeblock-options-content-header {
     margin-bottom: 20px;
 }
 
@@ -123,10 +123,10 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
     text-transform: capitalize;
 }
 
-.eshb-responsive-content [id^="inspector-box-control-"][id$="-heading"] {
+.shapeblock-responsive-content [id^="inspector-box-control-"][id$="-heading"] {
     display: none;
 }
-.toplevel_page_easy-elements-for-gutenberg {
+.toplevel_page_shapeblock {
     input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week] {
         padding: 0 12px;
         min-height: auto;

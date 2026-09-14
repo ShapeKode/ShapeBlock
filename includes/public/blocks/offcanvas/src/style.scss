@@ -3,12 +3,12 @@
  *
  * Ported from the Elementor "Offcanvas" widget stylesheet
  * (easy-elements/widgets/offcanvas/css/offcanvas.scss). Classes use the
- * "eelfg-" prefix. The panel + body-level rules are intentionally global (the
+ * "shapeblock-" prefix. The panel + body-level rules are intentionally global (the
  * panel is fixed/page-level); per-instance colors are layered on via render.php.
  */
 
 /* Opener */
-.eelfg-offcanvas-toggle-text {
+.shapeblock-offcanvas-toggle-text {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -18,13 +18,13 @@
 		height: 20px;
 	}
 
-	.eelfg-icon-text {
+	.shapeblock-icon-text {
 		margin-right: 6px;
 		font-style: normal;
 	}
 }
 
-.eelfg-icon-menu-wrap {
+.shapeblock-icon-menu-wrap {
 	position: relative;
 	width: 26px;
 	height: 12px;
@@ -45,7 +45,7 @@
 	}
 }
 
-.eelfg-icon-menu {
+.shapeblock-icon-menu {
 	content: '';
 	display: block;
 	position: absolute;
@@ -54,8 +54,8 @@
 	border-bottom: solid 2px #000;
 }
 
-.eelfg-modern-close-toggle,
-.eelfg-offcanvas-wrapper.modern .eelfg-offcanvas-toggle label {
+.shapeblock-modern-close-toggle,
+.shapeblock-offcanvas-wrapper.modern .shapeblock-offcanvas-toggle label {
 	position: relative;
 	display: block;
 	width: 36px;
@@ -84,7 +84,7 @@
 }
 
 /* Panel — classic (side) */
-.eelfg-offcanvas:not(.modern) {
+.shapeblock-offcanvas:not(.modern) {
 	position: fixed;
 	top: 0;
 	right: 0;
@@ -97,19 +97,19 @@
 	padding: 60px 25px 40px 40px;
 	overflow-y: auto;
 
-	&.eelfg-offcanvas-left {
+	&.shapeblock-offcanvas-left {
 		left: 0;
 		right: auto;
 		transform: translateX(-100%);
 	}
 
-	&.eelfg-active {
+	&.shapeblock-active {
 		transform: translateX(0);
 	}
 }
 
 /* Panel — modern (fullscreen) */
-.eelfg-offcanvas.modern {
+.shapeblock-offcanvas.modern {
 	position: fixed;
 	background: #fff;
 	inset: 0;
@@ -122,24 +122,24 @@
 	opacity: 0;
 	transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
 
-	&.eelfg-active {
+	&.shapeblock-active {
 		visibility: visible;
 		opacity: 1;
 	}
 
-	.eelfg-offcanvas-panel {
+	.shapeblock-offcanvas-panel {
 		height: 100%;
 		display: grid;
 		align-items: center;
 	}
 
-	.eelfg-offcanvas-content {
+	.shapeblock-offcanvas-content {
 		transform: translateY(60px);
 		opacity: 0;
 		transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.5s ease;
 	}
 
-	&.eelfg-active .eelfg-offcanvas-content {
+	&.shapeblock-active .shapeblock-offcanvas-content {
 		transform: translateY(0);
 		opacity: 1;
 	}
@@ -150,7 +150,7 @@
    body-level pseudo-element could otherwise sit ABOVE the panel when an ancestor
    (e.g. the editor canvas) creates a transformed stacking context. z-index sits
    just below the panel (999999) so the panel always stays on top. */
-.eelfg-offcanvas-overlay {
+.shapeblock-offcanvas-overlay {
 	position: fixed;
 	inset: 0;
 	background: rgba(0, 0, 0, 0.4);
@@ -160,18 +160,18 @@
 	transition: opacity 0.3s ease;
 	cursor: pointer;
 }
-body.eelfg-offcanvas-active .eelfg-offcanvas-overlay {
+body.shapeblock-offcanvas-active .shapeblock-offcanvas-overlay {
 	opacity: 1;
 	visibility: visible;
 }
 
-.eelfg-offcanvas.eelfg-blur-effect {
+.shapeblock-offcanvas.shapeblock-blur-effect {
 	backdrop-filter: blur(10px);
 	-webkit-backdrop-filter: blur(10px);
 }
 
 /* Close button */
-.eelfg-offcanvas-close {
+.shapeblock-offcanvas-close {
 	position: absolute;
 	top: 20px;
 	right: 25px;
@@ -191,32 +191,32 @@ body.eelfg-offcanvas-active .eelfg-offcanvas-overlay {
 	}
 }
 
-.eelfg-modern-close {
+.shapeblock-modern-close {
 	top: 50%;
 	transform: translateY(-50%);
 	cursor: pointer;
 }
 
 /* Modern hamburger -> X animation when active */
-.eelfg-offcanvas.modern.eelfg-active .eelfg-modern-close-toggle span:nth-of-type(1) {
+.shapeblock-offcanvas.modern.shapeblock-active .shapeblock-modern-close-toggle span:nth-of-type(1) {
 	transform: rotate(45deg) translateY(-50%);
 	top: 50%;
 }
-.eelfg-offcanvas.modern.eelfg-active .eelfg-modern-close-toggle span:nth-of-type(2) {
+.shapeblock-offcanvas.modern.shapeblock-active .shapeblock-modern-close-toggle span:nth-of-type(2) {
 	transform: scale(0);
 	opacity: 0;
 }
-.eelfg-offcanvas.modern.eelfg-active .eelfg-modern-close-toggle span:nth-of-type(3) {
+.shapeblock-offcanvas.modern.shapeblock-active .shapeblock-modern-close-toggle span:nth-of-type(3) {
 	transform: rotate(-45deg) translateY(50%);
 	bottom: 50%;
 }
 
-@media screen and (max-width: 991px) {
-	.eelfg-modern-close {
+@media screen and (max-width: 1024px) {
+	.shapeblock-modern-close {
 		top: 40px;
 		transform: translateY(0);
 	}
-	.eelfg-offcanvas.modern .eelfg-offcanvas-panel {
+	.shapeblock-offcanvas.modern .shapeblock-offcanvas-panel {
 		display: block;
 	}
 }

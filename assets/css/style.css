@@ -1,13 +1,13 @@
-body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
+body.toplevel_page_shapeblock #wpcontent {
   padding-left: 0 !important;
 }
 
-.menu-top.toplevel_page_easy-elements-for-gutenberg .wp-menu-image img {
+.menu-top.toplevel_page_shapeblock .wp-menu-image img {
   height: 20px;
   opacity: 1 !important;
 }
 
-#eelfg-dashboard .eelfg-logo {
+#shapeblock-dashboard .shapeblock-logo {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,17 +16,17 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
   padding: 0 16px;
   overflow: hidden;
 }
-#eelfg-dashboard .eelfg-logo img {
+#shapeblock-dashboard .shapeblock-logo img {
   height: 32px;
   transition: height 0.2s;
 }
-#eelfg-dashboard .ant-layout-sider-collapsed .eelfg-logo {
+#shapeblock-dashboard .ant-layout-sider-collapsed .shapeblock-logo {
   padding: 0 8px;
 }
-#eelfg-dashboard .ant-layout-sider-collapsed .eelfg-logo img {
+#shapeblock-dashboard .ant-layout-sider-collapsed .shapeblock-logo img {
   height: 24px;
 }
-#eelfg-dashboard .eelfg-options-content input[type=search] {
+#shapeblock-dashboard .shapeblock-options-content input[type=search] {
   min-height: 100%;
   height: 100%;
 }
@@ -35,14 +35,14 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
   top: 50px !important;
 }
 
-.eelfg-options-title {
+.shapeblock-options-title {
   font-size: 24px;
   font-weight: 600;
   line-height: 1.2;
   margin-top: 0;
 }
 
-.eelfg-block-item {
+.shapeblock-block-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -50,12 +50,12 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
   padding: 8px 12px;
   gap: 10px;
 }
-.eelfg-block-item .meta {
+.shapeblock-block-item .meta {
   display: flex;
   align-content: center;
   gap: 10px;
 }
-.eelfg-block-item .icon {
+.shapeblock-block-item .icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,12 +69,12 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
   flex-direction: column;
   font-size: 22px;
 }
-.eelfg-block-item .icon .eelfg-block-badge {
+.shapeblock-block-item .icon .shapeblock-block-badge {
   position: absolute;
   left: 50%;
   top: -4px;
   background-color: #f2295b;
-  color: var(--easy-white-color);
+  color: var(--shapeblock-white-color, #fff);
   border-radius: 36px;
   font-size: 8px;
   font-weight: 500;
@@ -85,20 +85,20 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
   padding: 4px 6px;
   line-height: 100%;
 }
-.eelfg-block-item .content {
+.shapeblock-block-item .content {
   align-content: center;
 }
-.eelfg-block-item .content strong {
+.shapeblock-block-item .content strong {
   font-size: 16px;
   font-weight: 600;
-  color: var(--easy-title-color);
+  color: var(--shapeblock-title-color, inherit);
   line-height: 1.2;
 }
-.eelfg-block-item .content p {
+.shapeblock-block-item .content p {
   margin: 0;
 }
 
-.eelfg-options-content-header {
+.shapeblock-options-content-header {
   margin-bottom: 20px;
 }
 
@@ -107,15 +107,15 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
   text-transform: capitalize;
 }
 
-.eshb-responsive-content [id^=inspector-box-control-][id$=-heading] {
+.shapeblock-responsive-content [id^=inspector-box-control-][id$=-heading] {
   display: none;
 }
 
-.toplevel_page_easy-elements-for-gutenberg input[type=date], .toplevel_page_easy-elements-for-gutenberg input[type=datetime-local], .toplevel_page_easy-elements-for-gutenberg input[type=datetime], .toplevel_page_easy-elements-for-gutenberg input[type=email], .toplevel_page_easy-elements-for-gutenberg input[type=month], .toplevel_page_easy-elements-for-gutenberg input[type=number], .toplevel_page_easy-elements-for-gutenberg input[type=password], .toplevel_page_easy-elements-for-gutenberg input[type=search], .toplevel_page_easy-elements-for-gutenberg input[type=tel], .toplevel_page_easy-elements-for-gutenberg input[type=text], .toplevel_page_easy-elements-for-gutenberg input[type=time], .toplevel_page_easy-elements-for-gutenberg input[type=url], .toplevel_page_easy-elements-for-gutenberg input[type=week] {
+.toplevel_page_shapeblock input[type=date], .toplevel_page_shapeblock input[type=datetime-local], .toplevel_page_shapeblock input[type=datetime], .toplevel_page_shapeblock input[type=email], .toplevel_page_shapeblock input[type=month], .toplevel_page_shapeblock input[type=number], .toplevel_page_shapeblock input[type=password], .toplevel_page_shapeblock input[type=search], .toplevel_page_shapeblock input[type=tel], .toplevel_page_shapeblock input[type=text], .toplevel_page_shapeblock input[type=time], .toplevel_page_shapeblock input[type=url], .toplevel_page_shapeblock input[type=week] {
   padding: 0 12px;
   min-height: auto;
 }
-.toplevel_page_easy-elements-for-gutenberg input[type=date]:focus, .toplevel_page_easy-elements-for-gutenberg input[type=datetime-local]:focus, .toplevel_page_easy-elements-for-gutenberg input[type=datetime]:focus, .toplevel_page_easy-elements-for-gutenberg input[type=email]:focus, .toplevel_page_easy-elements-for-gutenberg input[type=month]:focus, .toplevel_page_easy-elements-for-gutenberg input[type=number]:focus, .toplevel_page_easy-elements-for-gutenberg input[type=password]:focus, .toplevel_page_easy-elements-for-gutenberg input[type=search]:focus, .toplevel_page_easy-elements-for-gutenberg input[type=tel]:focus, .toplevel_page_easy-elements-for-gutenberg input[type=text]:focus, .toplevel_page_easy-elements-for-gutenberg input[type=time]:focus, .toplevel_page_easy-elements-for-gutenberg input[type=url]:focus, .toplevel_page_easy-elements-for-gutenberg input[type=week]:focus {
+.toplevel_page_shapeblock input[type=date]:focus, .toplevel_page_shapeblock input[type=datetime-local]:focus, .toplevel_page_shapeblock input[type=datetime]:focus, .toplevel_page_shapeblock input[type=email]:focus, .toplevel_page_shapeblock input[type=month]:focus, .toplevel_page_shapeblock input[type=number]:focus, .toplevel_page_shapeblock input[type=password]:focus, .toplevel_page_shapeblock input[type=search]:focus, .toplevel_page_shapeblock input[type=tel]:focus, .toplevel_page_shapeblock input[type=text]:focus, .toplevel_page_shapeblock input[type=time]:focus, .toplevel_page_shapeblock input[type=url]:focus, .toplevel_page_shapeblock input[type=week]:focus {
   outline: none;
 }
 
@@ -123,5 +123,5 @@ body.toplevel_page_easy-elements-for-gutenberg #wpcontent {
   outline: none;
   box-shadow: none;
 }/*# sourceMappingURL=style.css.map *//* Remove the focus ring / outline "jump" on the template search fields ( AntD injects it at runtime, so !important is needed ). */
-.bolpo-template-search-box .ant-input-affix-wrapper,.bolpo-template-search-box .ant-input,.bolpo-template-search-box .ant-input-search-button{outline:none !important;}
-.bolpo-template-search-box .ant-input-affix-wrapper:focus,.bolpo-template-search-box .ant-input-affix-wrapper-focused,.bolpo-template-search-box .ant-input-affix-wrapper:focus-within,.bolpo-template-search-box .ant-input-affix-wrapper:hover,.bolpo-template-search-box .ant-input:focus,.bolpo-template-search-box .ant-input-focused{box-shadow:none !important;border-color:#d9d9d9 !important;}
+.shapeblock-template-search-box .ant-input-affix-wrapper,.shapeblock-template-search-box .ant-input,.shapeblock-template-search-box .ant-input-search-button{outline:none !important;}
+.shapeblock-template-search-box .ant-input-affix-wrapper:focus,.shapeblock-template-search-box .ant-input-affix-wrapper-focused,.shapeblock-template-search-box .ant-input-affix-wrapper:focus-within,.shapeblock-template-search-box .ant-input-affix-wrapper:hover,.shapeblock-template-search-box .ant-input:focus,.shapeblock-template-search-box .ant-input-focused{box-shadow:none !important;border-color:#d9d9d9 !important;}

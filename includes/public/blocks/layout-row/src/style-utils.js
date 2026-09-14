@@ -19,10 +19,13 @@ const boxToCss = (box, prop) => {
     if (!box || typeof box !== 'object') return {};
     const map = {};
     const k = prop;
-    if (box.top !== '' && box.top != null) map[`${k}-top`] = box.top;
-    if (box.right !== '' && box.right != null) map[`${k}-right`] = box.right;
-    if (box.bottom !== '' && box.bottom != null) map[`${k}-bottom`] = box.bottom;
-    if (box.left !== '' && box.left != null) map[`${k}-left`] = box.left;
+    // BoxControl can hand back a bare number ("30"), and `padding-top:30` is invalid
+    // CSS that the browser drops — so spacing looked dead in the editor while the
+    // front end, which runs the same values through Helper::ensure_unit(), was fine.
+    if (box.top !== '' && box.top != null) map[`${k}-top`] = ensureUnit(box.top);
+    if (box.right !== '' && box.right != null) map[`${k}-right`] = ensureUnit(box.right);
+    if (box.bottom !== '' && box.bottom != null) map[`${k}-bottom`] = ensureUnit(box.bottom);
+    if (box.left !== '' && box.left != null) map[`${k}-left`] = ensureUnit(box.left);
     return map;
 };
 
@@ -89,7 +92,7 @@ const collectDevice = (attrs, suffix) => {
     // Boxed max-width is applied to the inner via a CSS variable in style.scss — see
     // render.php for the same approach. Setting `max-width` on the wrapper would
     // constrain the wrong element and not match the frontend.
-    if (k('maxWidth')) decls['--eelfg-layout-row-max-width'] = k('maxWidth');
+    if (k('maxWidth')) decls['--shapeblock-layout-row-max-width'] = k('maxWidth');
 
     Object.assign(decls, boxToCss(k('padding'), 'padding'));
     Object.assign(decls, boxToCss(k('margin'), 'margin'));
@@ -126,7 +129,57 @@ const pickColGap = (attrs, suffix) => {
     return k('columnGap') || k('gap') || '';
 };
 
-export const buildRowEditorCss = (attrs, colCount = 0) => {
+// Basis one column takes when the row is asked for N columns per line:
+// 100/N of the row, minus the share of the gap that column gives up.
+export const columnsPerRowBasis = (count) => {
+    const n = parseInt(count, 10);
+    if (!n || n < 1) return '';
+    const pct = (100 / n).toFixed(4).replace(/\.?0+$/, '');
+    const gapShare = ((n - 1) / n).toFixed(4).replace(/\.?0+$/, '');
+    return `calc(${pct}% - var(--bp-gap, 0px) * ${gapShare})`;
+};
+
+
+
+/**
+ * Per-device widths, written per column — the same rules render.php prints.
+ *
+ * A column's own desktop width is an important rule with four classes, so a
+ * rule on the row alone can never outrank it. Naming the column in the selector
+ * does, and columns that carry a width for this device are skipped so their own
+ * value keeps winning.
+ *
+ * @param {Object} attrs       Row attributes.
+ * @param {Array}  innerBlocks The row's column blocks.
+ * @param {string} sel         Selector for this row.
+ * @return {string} CSS.
+ */
+const columnsPerRowCss = (attrs, innerBlocks, sel) => {
+    const devices = [
+        { suffix: 'Tablet', query: BREAKPOINTS.tablet, basis: columnsPerRowBasis(attrs.columnsTablet) },
+        { suffix: 'Mobile', query: BREAKPOINTS.mobile, basis: columnsPerRowBasis(attrs.columnsMobile) || '100%' },
+    ];
+
+    return devices
+        .map(({ suffix, query, basis }) => {
+            if (!basis) return '';
+
+            const rules = (innerBlocks || [])
+                .filter((b) => b && 'shapeblock/column' === b.name && b.attributes && b.attributes.blockId)
+                .filter((b) => !b.attributes[`width${suffix}`] && !b.attributes[`flexBasis${suffix}`])
+                .map(
+                    (b) =>
+                        `.shapeblock-layout-row${sel} > .shapeblock-layout-row__inner > .shapeblock-column.${b.attributes.blockId}` +
+                        `{flex:0 1 ${basis} !important;max-width:${basis} !important;}`
+                )
+                .join('');
+
+            return rules ? `${query}{${rules}}` : '';
+        })
+        .join('');
+};
+
+export const buildRowEditorCss = (attrs, colCount = 0, innerBlocks = []) => {
     if (!attrs.blockId) return '';
     const sel = `.${attrs.blockId}`;
 
@@ -142,6 +195,13 @@ export const buildRowEditorCss = (attrs, colCount = 0) => {
     if (gT) tablet['--bp-gap']  = ensureUnit(gT);
     if (gM) mobile['--bp-gap']  = ensureUnit(gM);
 
+    // Columns per line on Tablet / Mobile. Declared on the row for every device —
+    // style.scss only reads them inside the matching media query.
+    const basisT = columnsPerRowBasis(attrs.columnsTablet);
+    const basisM = columnsPerRowBasis(attrs.columnsMobile);
+    if (basisT) desktop['--bp-col-tablet'] = basisT;
+    if (basisM) desktop['--bp-col-mobile'] = basisM;
+
     let css = '';
     const d = renderDecls(desktop);
     if (d) css += `${sel}{${d}}`;
@@ -149,6 +209,8 @@ export const buildRowEditorCss = (attrs, colCount = 0) => {
     if (t) css += `${BREAKPOINTS.tablet}{${sel}{${t}}}`;
     const m = renderDecls(mobile);
     if (m) css += `${BREAKPOINTS.mobile}{${sel}{${m}}}`;
+
+    css += columnsPerRowCss(attrs, innerBlocks, sel);
 
     return css;
 };
@@ -158,7 +220,11 @@ const collectColumnDevice = (attrs, suffix) => {
     const decls = {};
 
     const widthType = attrs.widthType || 'percentage';
-    const w = k('width');
+    let w = k('width');
+    // "50" means 50% for a percentage column — the calc() below needs the unit.
+    if (widthType === 'percentage' && w !== '' && w != null && !isNaN(Number(w))) {
+        w = `${w}%`;
+    }
     // Subtract this column's share of the row gap so columns total exactly 100% of
     // the row regardless of gap. Vars are set by the parent row (see buildRowEditorCss).
     //   calc(W% - (cols - 1) * gap * W / 100)
@@ -211,7 +277,7 @@ export const buildColumnEditorCss = (attrs) => {
     if (m) css += `${BREAKPOINTS.mobile}{${sel}{${m}}}`;
 
     // Content flexbox — the inner wrapper is a flex container (matches render.php).
-    const innerSel = `${sel} > .eelfg-column__inner`;
+    const innerSel = `${sel} > .shapeblock-column__inner`;
     const innerOf = (suffix) => {
         const k = (base) => attrs[suffix === '' ? base : `${base}${suffix}`];
         const dcl = {};
@@ -226,6 +292,10 @@ export const buildColumnEditorCss = (attrs) => {
     const iD = innerOf(''), iT = innerOf('Tablet'), iM = innerOf('Mobile');
     // Flex only when the user set at least one flex option (keeps empty/default columns as normal block flow).
     if (Object.keys(iD).length || Object.keys(iT).length || Object.keys(iM).length) {
+        // Stack vertically from the top unless a direction was picked, so a single option
+        // does not flip content into a horizontal row where "align items: center" would
+        // read as vertical centring.
+        if (!iD['flex-direction']) iD['flex-direction'] = 'column';
         iD['display'] = 'flex';
     }
     const idd = renderDecls(iD);

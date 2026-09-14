@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/social-icon",
+  "name": "shapeblock/social-icon",
   "version": "0.1.0",
   "title": "Social Icon",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "description": "A row of linked social icons with per-icon or global colors, hover states and full button styling.",
   "keywords": [
     "social",
@@ -22,23 +22,9 @@
       "right",
       "wide",
       "full"
-    ],
-    "spacing": {
-      "padding": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ],
-      "margin": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ]
-    }
+    ]
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "render": "file:./render.php",
   "attributes": {
@@ -54,7 +40,7 @@
           "linkUrl": "#",
           "isExternal": false,
           "nofollow": false,
-          "icon": "eelfg-icon-logo-facebook",
+          "icon": "shapeblock-icon-logo-facebook",
           "bgColor": "#1877F2",
           "bgGradient": "",
           "iconColor": "#ffffff",
@@ -67,7 +53,7 @@
           "linkUrl": "#",
           "isExternal": false,
           "nofollow": false,
-          "icon": "eelfg-icon-logo-twitter",
+          "icon": "shapeblock-icon-logo-twitter",
           "bgColor": "#1DA1F2",
           "bgGradient": "",
           "iconColor": "#ffffff",
@@ -80,7 +66,7 @@
           "linkUrl": "#",
           "isExternal": false,
           "nofollow": false,
-          "icon": "eelfg-icon-logo-instagram",
+          "icon": "shapeblock-icon-logo-instagram",
           "bgColor": "#E4405F",
           "bgGradient": "",
           "iconColor": "#ffffff",
@@ -92,19 +78,43 @@
     },
     "colorMode": {
       "type": "string",
-      "default": "custom"
+      "default": "global"
     },
     "alignment": {
       "type": "string",
       "default": "left"
     },
+    "alignmentTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "alignmentMobile": {
+      "type": "string",
+      "default": ""
+    },
     "buttonSize": {
       "type": "string",
       "default": "45"
     },
+    "buttonSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonSizeMobile": {
+      "type": "string",
+      "default": ""
+    },
     "buttonSpacing": {
       "type": "string",
       "default": "10"
+    },
+    "buttonSpacingTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonSpacingMobile": {
+      "type": "string",
+      "default": ""
     },
     "buttonRadius": {
       "type": "object",
@@ -145,9 +155,17 @@
       "type": "string",
       "default": "18"
     },
-    "gBgColor": {
+    "iconSizeTablet": {
       "type": "string",
       "default": ""
+    },
+    "iconSizeMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "gBgColor": {
+      "type": "string",
+      "default": "#121212"
     },
     "gBgGradient": {
       "type": "string",
@@ -155,7 +173,7 @@
     },
     "gHoverBgColor": {
       "type": "string",
-      "default": ""
+      "default": "#1f2937"
     },
     "gHoverBgGradient": {
       "type": "string",
@@ -163,11 +181,23 @@
     },
     "gIconColor": {
       "type": "string",
-      "default": ""
+      "default": "#ffffff"
     },
     "gHoverIconColor": {
       "type": "string",
-      "default": ""
+      "default": "#ffffff"
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

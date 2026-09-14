@@ -3,14 +3,14 @@
  *
  * Structure ported from the Elementor widget
  * (easy-elements/widgets/icon-box/css/icon-box.scss). Element classes
- * use this plugin's own "eelfg-" prefix.
+ * use this plugin's own "shapeblock-" prefix.
  */
 
-.eelfg-icon-box-wrapper {
+.shapeblock-icon-box-wrapper {
 	position: relative;
 }
 
-.eelfg-icon-box-wrapper.eelfg-icon-box-connector::before {
+.shapeblock-icon-box-wrapper.shapeblock-icon-box-connector::before {
 	content: "";
 	width: 0px;
 	height: calc(100% - 15%);
@@ -26,39 +26,39 @@
 	display: block;
 }
 
-.eelfg-icon-box-wrapper.eelfg-icon-box-connector.eelfg-icon-box-dir-right::before {
+.shapeblock-icon-box-wrapper.shapeblock-icon-box-connector.shapeblock-icon-box-dir-right::before {
 	left: inherit;
 	right: 26px;
 }
 
-.eelfg-icon-box {
+.shapeblock-icon-box {
 	display: flex;
 	margin-bottom: 25px;
 	gap: 14px;
 }
 
 /* Alignment — center = icon on top, left = icon left, right = icon right. */
-.eelfg-icon-box-align-center {
+.shapeblock-icon-box-align-center {
 	flex-direction: column;
 	align-items: center;
 	text-align: center;
 }
-.eelfg-icon-box-align-left {
+.shapeblock-icon-box-align-left {
 	flex-direction: row;
 	align-items: flex-start;
 	text-align: left;
 }
-.eelfg-icon-box-align-right {
+.shapeblock-icon-box-align-right {
 	flex-direction: row-reverse;
 	align-items: flex-start;
 	text-align: right;
 }
 
-.eelfg-icon-box:last-child {
+.shapeblock-icon-box:last-child {
 	margin-bottom: 0 !important;
 }
 
-.eelfg-icon-box-icon {
+.shapeblock-icon-box-icon {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -71,85 +71,85 @@
 	min-height: 55px;
 }
 
-.eelfg-icon-box-icon-view-frame .eelfg-icon-box-icon,
-.eelfg-icon-box-icon-view-stracked .eelfg-icon-box-icon {
+.shapeblock-icon-box-icon-view-frame .shapeblock-icon-box-icon,
+.shapeblock-icon-box-icon-view-stracked .shapeblock-icon-box-icon {
 	background: #f4f4f4;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
-.eelfg-icon-box-icon-view-frame .eelfg-icon-box-icon {
+.shapeblock-icon-box-icon-view-frame .shapeblock-icon-box-icon {
 	border: 1px solid #f4f4f4;
 	background: #fff;
 }
 
-.eelfg-icon-box-icon-shape-rounded .eelfg-icon-box-icon {
+.shapeblock-icon-box-icon-shape-rounded .shapeblock-icon-box-icon {
 	border-radius: 4px;
 }
-.eelfg-icon-box-icon-shape-square .eelfg-icon-box-icon {
+.shapeblock-icon-box-icon-shape-square .shapeblock-icon-box-icon {
 	border-radius: 0;
 }
-.eelfg-icon-box-icon-shape-circle .eelfg-icon-box-icon {
+.shapeblock-icon-box-icon-shape-circle .shapeblock-icon-box-icon {
 	border-radius: 100px;
 }
-.eelfg-icon-box-icon-shape-sq_rotate .eelfg-icon-box-icon {
+.shapeblock-icon-box-icon-shape-sq_rotate .shapeblock-icon-box-icon {
 	transform: rotate(45deg);
 }
-.eelfg-icon-box-icon-shape-sq_rotate .eelfg-icon-box-icon svg,
-.eelfg-icon-box-icon-shape-sq_rotate .eelfg-icon-box-icon i,
-.eelfg-icon-box-icon-shape-sq_rotate .eelfg-icon-box-icon .eelfg-icon-box-number {
+.shapeblock-icon-box-icon-shape-sq_rotate .shapeblock-icon-box-icon svg,
+.shapeblock-icon-box-icon-shape-sq_rotate .shapeblock-icon-box-icon i,
+.shapeblock-icon-box-icon-shape-sq_rotate .shapeblock-icon-box-icon .shapeblock-icon-box-number {
 	transform: rotate(-45deg);
 }
 
-.eelfg-icon-box-icon svg {
+.shapeblock-icon-box-icon svg {
 	width: 20px;
 	height: 20px;
 }
-.eelfg-icon-box-icon i {
+.shapeblock-icon-box-icon i {
 	font-size: 30px;
 }
 
-.eelfg-icon-box-number {
+.shapeblock-icon-box-number {
 	font-size: 20px;
 	font-weight: 500;
 	color: #000000;
 }
 
-.eelfg-icon-box-title {
+.shapeblock-icon-box-title {
 	line-height: 1.2;
 	margin: 0;
 	color: #000000;
 }
 
-.eelfg-icon-box-desc {
+.shapeblock-icon-box-desc {
 	color: #777777;
 	margin: 0;
 }
 
 
 /* connector left */
-.eelfg-icon-box-connector-left .eelfg-icon-box {
+.shapeblock-icon-box-connector-left .shapeblock-icon-box {
 	padding-left: 30px;
 }
-.eelfg-icon-box-connector-left.eelfg-icon-box-dir-right .eelfg-icon-box {
+.shapeblock-icon-box-connector-left.shapeblock-icon-box-dir-right .shapeblock-icon-box {
 	padding-right: 30px;
 }
-.eelfg-icon-box-wrapper.eelfg-icon-box-connector.eelfg-icon-box-connector-left::before {
+.shapeblock-icon-box-wrapper.shapeblock-icon-box-connector.shapeblock-icon-box-connector-left::before {
 	height: calc(100% - 55px);
 	bottom: inherit;
 	top: 50%;
 	transform: translateY(-50%);
 	left: 0;
 }
-.eelfg-icon-box-wrapper.eelfg-icon-box-connector.eelfg-icon-box-connector-left.eelfg-icon-box-dir-right::before {
+.shapeblock-icon-box-wrapper.shapeblock-icon-box-connector.shapeblock-icon-box-connector-left.shapeblock-icon-box-dir-right::before {
 	left: inherit;
 	right: 0;
 }
-.eelfg-icon-box-connector-left .eelfg-icon-box-icon {
+.shapeblock-icon-box-connector-left .shapeblock-icon-box-icon {
 	overflow: inherit;
 }
-.eelfg-icon-box-connector-left .eelfg-icon-box-icon::after {
+.shapeblock-icon-box-connector-left .shapeblock-icon-box-icon::after {
 	content: "";
 	width: 30px;
 	height: 0px;
@@ -162,26 +162,26 @@
 	z-index: -1;
 	display: block;
 }
-.eelfg-icon-box-connector-left.eelfg-icon-box-dir-right .eelfg-icon-box-icon::after {
+.shapeblock-icon-box-connector-left.shapeblock-icon-box-dir-right .shapeblock-icon-box-icon::after {
 	left: inherit;
 	right: -30px;
 }
-.eelfg-icon-box-icon-shape-sq_rotate .eelfg-icon-box-icon::after {
+.shapeblock-icon-box-icon-shape-sq_rotate .shapeblock-icon-box-icon::after {
 	width: 20px;
 	left: -15px;
 	top: 110%;
 	transform: rotate(-45deg);
 }
-.eelfg-icon-box-icon-shape-sq_rotate .eelfg-icon-box-connector-left.eelfg-icon-box-dir-right .eelfg-icon-box-icon::after {
+.shapeblock-icon-box-icon-shape-sq_rotate .shapeblock-icon-box-connector-left.shapeblock-icon-box-dir-right .shapeblock-icon-box-icon::after {
 	left: inherit;
 	right: -15px;
 	top: calc(-14%);
 }
 
-.eelfg-icon-box-icon.eelfg-icon-box-type-image {
+.shapeblock-icon-box-icon.shapeblock-icon-box-type-image {
 	position: relative;
 }
-.eelfg-icon-box-icon.eelfg-icon-box-type-image img {
+.shapeblock-icon-box-icon.shapeblock-icon-box-type-image img {
 	position: absolute;
 	left: 50%;
 	top: 50%;
@@ -189,4 +189,24 @@
 	width: 100%;
 	transform: translate(-50%, -50%);
 	object-fit: cover;
+}
+
+/* --- Responsive defaults ------------------------------------------------
+ * Breakpoints match Helper::generate_responsive_css() and the visibility
+ * classes: tablet <= 1024px, mobile <= 767px. These are defaults only — the
+ * per-device values a user sets are printed as per-block CSS with a higher
+ * specificity, so they always win over what follows.
+ */
+@media (max-width: 767px) {
+	.shapeblock-icon-box {
+		gap: 12px;
+	}
+	/* Icon + text in a row needs the text to be allowed to shrink. */
+	.shapeblock-icon-box-align-left,
+	.shapeblock-icon-box-align-right {
+		align-items: flex-start;
+	}
+	.shapeblock-icon-box-info {
+		min-width: 0;
+	}
 }

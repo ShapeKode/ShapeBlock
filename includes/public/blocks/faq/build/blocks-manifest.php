@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/faq',
+		'name' => 'shapeblock/faq',
 		'version' => '0.1.0',
 		'title' => 'Accordion',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'An FAQ accordion with collapsible questions and custom icons.',
 		'keywords' => array(
 			'faq',
@@ -27,28 +27,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
-			),
-			'color' => array(
-				'background' => true,
-				'text' => false,
-				'gradients' => true
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
@@ -61,8 +42,8 @@ return array(
 				'type' => 'array',
 				'default' => array(
 					array(
-						'title' => 'What is Easy Elements?',
-						'description' => 'Easy Elements is a custom addon plugin that offers useful blocks.',
+						'title' => 'What is ShapeBlock?',
+						'description' => 'ShapeBlock is a custom addon plugin that offers useful blocks.',
 						'active' => false
 					),
 					array(
@@ -71,7 +52,7 @@ return array(
 						'active' => false
 					),
 					array(
-						'title' => 'How to install Easy Elements?',
+						'title' => 'How to install ShapeBlock?',
 						'description' => 'Upload the plugin via WordPress Dashboard or FTP and activate it.',
 						'active' => false
 					)
@@ -179,7 +160,21 @@ return array(
 			'itemPadding' => array(
 				'type' => 'object'
 			),
+			'itemPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'itemPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'itemsGap' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'itemsGapTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'itemsGapMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -193,6 +188,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'titleTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'titleTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'titleColor' => array(
@@ -268,6 +275,12 @@ return array(
 			'questionPadding' => array(
 				'type' => 'object'
 			),
+			'questionPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'questionPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'questionBorderRadius' => array(
 				'type' => 'object',
 				'default' => array(
@@ -287,6 +300,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'descriptionTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'descriptionTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'descriptionColor' => array(
@@ -339,6 +364,12 @@ return array(
 				)
 			),
 			'answerPadding' => array(
+				'type' => 'object'
+			),
+			'answerPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'answerPaddingMobile' => array(
 				'type' => 'object'
 			),
 			'iconColor' => array(
@@ -405,6 +436,18 @@ return array(
 			'iconPositionYActive' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

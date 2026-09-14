@@ -1,15 +1,15 @@
 .block-editor-block-list__layout.is-root-container> :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
-    max-width: var(--eelfg-layout-row-max-width, 1200px) !important;
+    max-width: var(--shapeblock-layout-row-max-width, 1200px) !important;
 }
 
-.eelfg-social-icon-item-header,
-.eelfg-info-box-item-header {
+.shapeblock-social-icon-item-header,
+.shapeblock-info-box-item-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.eshb-border-control button.components-button.is-secondary {
+.shapeblock-border-control button.components-button.is-secondary {
     border: none !important;
     box-shadow: none;
 
@@ -19,7 +19,7 @@
     }
 }
 
-.eelfg-info-box-image-control {
+.shapeblock-info-box-image-control {
     margin-bottom: 10px;
 }
 

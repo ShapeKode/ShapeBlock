@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/clients-logo-grid",
+  "name": "shapeblock/clients-logo-grid",
   "version": "0.1.0",
   "title": "Client Logo",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "description": "A responsive grid of client / partner logos with links, grayscale and hover-swap effects.",
   "keywords": [
     "logo",
@@ -22,23 +22,9 @@
       "right",
       "wide",
       "full"
-    ],
-    "spacing": {
-      "padding": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ],
-      "margin": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ]
-    }
+    ]
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "render": "file:./render.php",
   "attributes": {
@@ -79,9 +65,13 @@
       "type": "string",
       "default": ""
     },
-    "fetchpriority": {
+    "imageWidthTablet": {
       "type": "string",
-      "default": "low"
+      "default": ""
+    },
+    "imageWidthMobile": {
+      "type": "string",
+      "default": ""
     },
     "columns": {
       "type": "string",
@@ -103,7 +93,23 @@
       "type": "string",
       "default": ""
     },
+    "itemWidthTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "itemWidthMobile": {
+      "type": "string",
+      "default": ""
+    },
     "itemHeight": {
+      "type": "string",
+      "default": ""
+    },
+    "itemHeightTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "itemHeightMobile": {
       "type": "string",
       "default": ""
     },
@@ -111,6 +117,12 @@
       "type": "object"
     },
     "itemPadding": {
+      "type": "object"
+    },
+    "itemPaddingTablet": {
+      "type": "object"
+    },
+    "itemPaddingMobile": {
       "type": "object"
     },
     "itemRadius": {
@@ -193,6 +205,18 @@
     "transition": {
       "type": "string",
       "default": ""
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/icon-list",
+  "name": "shapeblock/icon-list",
   "version": "0.1.0",
   "title": "Icon List",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "description": "A vertical list of items with icon, number or image, title, description and optional connector.",
   "keywords": [
     "icon",
@@ -24,7 +24,7 @@
       "full"
     ]
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "render": "file:./render.php",
   "attributes": {
@@ -36,15 +36,15 @@
       "type": "array",
       "default": [
         {
-          "icon": "eelfg-icon-favorite",
+          "icon": "shapeblock-icon-favorite",
           "title": "Unlimited bandwidth"
         },
         {
-          "icon": "eelfg-icon-favorite",
+          "icon": "shapeblock-icon-favorite",
           "title": "Free SSL certificate"
         },
         {
-          "icon": "eelfg-icon-favorite",
+          "icon": "shapeblock-icon-favorite",
           "title": "24/7 expert support"
         }
       ]
@@ -264,10 +264,6 @@
       "type": "string",
       "default": ""
     },
-    "iconAlignment": {
-      "type": "string",
-      "default": "center"
-    },
     "iconShadow": {
       "type": "object",
       "default": {
@@ -351,6 +347,18 @@
     "descTypographyMobile": {
       "type": "object",
       "default": {}
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

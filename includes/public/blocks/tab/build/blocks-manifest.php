@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/tab',
+		'name' => 'shapeblock/tab',
 		'version' => '0.1.0',
 		'title' => 'Tabs',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'Tabbed content with icon/image titles, content title, description and a button — horizontal or vertical layouts.',
 		'keywords' => array(
 			'tab',
@@ -27,23 +27,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
@@ -116,6 +102,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'titleTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'titleTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'titleColor' => array(
 				'type' => 'string',
 				'default' => ''
@@ -144,7 +142,19 @@ return array(
 			'titlePadding' => array(
 				'type' => 'object'
 			),
+			'titlePaddingTablet' => array(
+				'type' => 'object'
+			),
+			'titlePaddingMobile' => array(
+				'type' => 'object'
+			),
 			'titleMargin' => array(
+				'type' => 'object'
+			),
+			'titleMarginTablet' => array(
+				'type' => 'object'
+			),
+			'titleMarginMobile' => array(
 				'type' => 'object'
 			),
 			'tabIconColor' => array(
@@ -168,6 +178,14 @@ return array(
 				'default' => '#5933FF'
 			),
 			'titleBottomSpacing' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'titleBottomSpacingTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'titleBottomSpacingMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -203,12 +221,32 @@ return array(
 			'contentPadding' => array(
 				'type' => 'object'
 			),
+			'contentPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'contentPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'contentMargin' => array(
+				'type' => 'object'
+			),
+			'contentMarginTablet' => array(
+				'type' => 'object'
+			),
+			'contentMarginMobile' => array(
 				'type' => 'object'
 			),
 			'descriptionAlignment' => array(
 				'type' => 'string',
 				'default' => 'center'
+			),
+			'descriptionAlignmentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'descriptionAlignmentMobile' => array(
+				'type' => 'string',
+				'default' => ''
 			),
 			'contentTitleTypography' => array(
 				'type' => 'object',
@@ -222,11 +260,29 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'contentTitleTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'contentTitleTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'contentTitleColor' => array(
 				'type' => 'string',
 				'default' => ''
 			),
 			'contentTitleMargin' => array(
+				'type' => 'object'
+			),
+			'contentTitleMarginTablet' => array(
+				'type' => 'object'
+			),
+			'contentTitleMarginMobile' => array(
 				'type' => 'object'
 			),
 			'descTypography' => array(
@@ -241,11 +297,29 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'descTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'descTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'descColor' => array(
 				'type' => 'string',
 				'default' => ''
 			),
 			'descMargin' => array(
+				'type' => 'object'
+			),
+			'descMarginTablet' => array(
+				'type' => 'object'
+			),
+			'descMarginMobile' => array(
 				'type' => 'object'
 			),
 			'btnTypography' => array(
@@ -258,6 +332,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'btnTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'btnTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'btnColor' => array(
@@ -300,8 +386,32 @@ return array(
 			'btnPadding' => array(
 				'type' => 'object'
 			),
+			'btnPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'btnPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'btnMargin' => array(
 				'type' => 'object'
+			),
+			'btnMarginTablet' => array(
+				'type' => 'object'
+			),
+			'btnMarginMobile' => array(
+				'type' => 'object'
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

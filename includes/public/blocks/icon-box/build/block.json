@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/icon-box",
+  "name": "shapeblock/icon-box",
   "version": "0.1.0",
   "title": "Icon Box",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "description": "Icon boxes with the icon on top, then title and description — icon, number or image supported.",
   "keywords": [
     "icon box",
@@ -24,7 +24,7 @@
       "full"
     ]
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "render": "file:./render.php",
   "attributes": {
@@ -42,7 +42,7 @@
     },
     "icon": {
       "type": "string",
-      "default": "eelfg-icon-favorite"
+      "default": "shapeblock-icon-favorite"
     },
     "number": {
       "type": "string",
@@ -270,6 +270,18 @@
     "descTypographyMobile": {
       "type": "object",
       "default": {}
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

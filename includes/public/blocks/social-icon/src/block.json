@@ -1,22 +1,18 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "easy-elements-for-gutenberg/social-icon",
+	"name": "shapeblock/social-icon",
 	"version": "0.1.0",
 	"title": "Social Icon",
-	"category": "easy-elements-for-gutenberg",
+	"category": "shapeblock",
 	"description": "A row of linked social icons with per-icon or global colors, hover states and full button styling.",
 	"keywords": [ "social", "icon", "link", "profile", "share" ],
 	"example": {},
 	"supports": {
 		"html": false,
-		"align": [ "left", "center", "right", "wide", "full" ],
-		"spacing": {
-			"padding": [ "top", "bottom", "left", "right" ],
-			"margin": [ "top", "bottom", "left", "right" ]
-		}
+		"align": [ "left", "center", "right", "wide", "full" ]
 	},
-	"textdomain": "easy-elements-for-gutenberg",
+	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php",
 	"attributes": {
@@ -24,27 +20,38 @@
 		"socialLinks": {
 			"type": "array",
 			"default": [
-				{ "linkTitle": "Facebook", "linkUrl": "#", "isExternal": false, "nofollow": false, "icon": "eelfg-icon-logo-facebook", "bgColor": "#1877F2", "bgGradient": "", "iconColor": "#ffffff", "hoverBgColor": "#166fe5", "hoverBgGradient": "", "hoverIconColor": "#ffffff" },
-				{ "linkTitle": "Twitter", "linkUrl": "#", "isExternal": false, "nofollow": false, "icon": "eelfg-icon-logo-twitter", "bgColor": "#1DA1F2", "bgGradient": "", "iconColor": "#ffffff", "hoverBgColor": "#1a91da", "hoverBgGradient": "", "hoverIconColor": "#ffffff" },
-				{ "linkTitle": "Instagram", "linkUrl": "#", "isExternal": false, "nofollow": false, "icon": "eelfg-icon-logo-instagram", "bgColor": "#E4405F", "bgGradient": "", "iconColor": "#ffffff", "hoverBgColor": "#d63384", "hoverBgGradient": "", "hoverIconColor": "#ffffff" }
+				{ "linkTitle": "Facebook", "linkUrl": "#", "isExternal": false, "nofollow": false, "icon": "shapeblock-icon-logo-facebook", "bgColor": "#1877F2", "bgGradient": "", "iconColor": "#ffffff", "hoverBgColor": "#166fe5", "hoverBgGradient": "", "hoverIconColor": "#ffffff" },
+				{ "linkTitle": "Twitter", "linkUrl": "#", "isExternal": false, "nofollow": false, "icon": "shapeblock-icon-logo-twitter", "bgColor": "#1DA1F2", "bgGradient": "", "iconColor": "#ffffff", "hoverBgColor": "#1a91da", "hoverBgGradient": "", "hoverIconColor": "#ffffff" },
+				{ "linkTitle": "Instagram", "linkUrl": "#", "isExternal": false, "nofollow": false, "icon": "shapeblock-icon-logo-instagram", "bgColor": "#E4405F", "bgGradient": "", "iconColor": "#ffffff", "hoverBgColor": "#d63384", "hoverBgGradient": "", "hoverIconColor": "#ffffff" }
 			]
 		},
-		"colorMode": { "type": "string", "default": "custom" },
+		"colorMode": { "type": "string", "default": "global" },
 		"alignment": { "type": "string", "default": "left" },
+		"alignmentTablet": { "type": "string", "default": "" },
+		"alignmentMobile": { "type": "string", "default": "" },
 
 		"buttonSize": { "type": "string", "default": "45" },
+		"buttonSizeTablet": { "type": "string", "default": "" },
+		"buttonSizeMobile": { "type": "string", "default": "" },
 		"buttonSpacing": { "type": "string", "default": "10" },
+		"buttonSpacingTablet": { "type": "string", "default": "" },
+		"buttonSpacingMobile": { "type": "string", "default": "" },
 		"buttonRadius": { "type": "object", "default": { "top": "50%", "right": "50%", "bottom": "50%", "left": "50%" } },
 		"buttonBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"buttonBorderHover": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"buttonBoxShadow": { "type": "object", "default": { "x": 0, "y": 0, "b": 0, "s": 0, "c": "rgba(0, 0, 0, 0)" } },
 		"iconSize": { "type": "string", "default": "18" },
+		"iconSizeTablet": { "type": "string", "default": "" },
+		"iconSizeMobile": { "type": "string", "default": "" },
 
-		"gBgColor": { "type": "string", "default": "" },
+		"gBgColor": { "type": "string", "default": "#121212" },
 		"gBgGradient": { "type": "string", "default": "" },
-		"gHoverBgColor": { "type": "string", "default": "" },
+		"gHoverBgColor": { "type": "string", "default": "#1f2937" },
 		"gHoverBgGradient": { "type": "string", "default": "" },
-		"gIconColor": { "type": "string", "default": "" },
-		"gHoverIconColor": { "type": "string", "default": "" }
-	}
+		"gIconColor": { "type": "string", "default": "#ffffff" },
+		"gHoverIconColor": { "type": "string", "default": "#ffffff" },
+	"hideDesktop": { "type": "boolean", "default": false },
+	"hideTablet": { "type": "boolean", "default": false },
+	"hideMobile": { "type": "boolean", "default": false }
+}
 }

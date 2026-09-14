@@ -19,6 +19,10 @@ const BackgroundControl = ({
     defaultGradient = ''
 }) => {
     const [isVisible, setIsVisible] = useState(false);
+    // Popover needs a stable anchor element. Without one it falls back to a
+    // placeholder node and floating-ui keeps re-measuring against a moving
+    // reference, which makes the panel visibly jitter while it is open.
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const toggleVisible = () => {
         setIsVisible((state) => !state);
@@ -36,9 +40,10 @@ const BackgroundControl = ({
     }
 
     return (
-        <div className="eshb-background-control" style={{ position: 'relative', marginBottom: '15px' }}>
+        <div className="shapeblock-background-control" style={{ position: 'relative', marginBottom: '15px' }}>
             <Button
                 variant="secondary"
+                ref={setAnchorEl}
                 onClick={toggleVisible}
                 style={{ width: '100%', justifyContent: 'space-between', boxShadow: 'none' }}
             >
@@ -64,16 +69,21 @@ const BackgroundControl = ({
             </Button>
             {isVisible && (
                 <Popover
-                    position="bottom center"
+                    anchor={anchorEl}
+                    placement="left-start"
+                    offset={20}
+                    shift
+                    flip={false}
+                    resize={false}
                     onFocusOutside={() => setIsVisible(false)}
                 >
                     <div style={{ padding: '0', width: '280px' }}>
                         <TabPanel
-                            className="eshb-background-tabs"
+                            className="shapeblock-background-tabs"
                             activeClass="is-active"
                             tabs={[
-                                { name: 'solid', title: __('Solid', 'easy-elements-for-gutenberg'), className: 'eshb-bg-tab-solid' },
-                                { name: 'gradient', title: __('Gradient', 'easy-elements-for-gutenberg'), className: 'eshb-bg-tab-gradient' },
+                                { name: 'solid', title: __('Solid', 'shapeblock'), className: 'shapeblock-bg-tab-solid' },
+                                { name: 'gradient', title: __('Gradient', 'shapeblock'), className: 'shapeblock-bg-tab-gradient' },
                             ]}
                         >
                             {(tab) => {
@@ -91,7 +101,7 @@ const BackgroundControl = ({
                                                 onClick={() => onColorChange(defaultColor)}
                                                 style={{ marginTop: '10px', width: '100%', justifyContent: 'center' }}
                                             >
-                                                {__('Reset Color', 'easy-elements-for-gutenberg')}
+                                                {__('Reset Color', 'shapeblock')}
                                             </Button>
                                         </div>
                                     );
@@ -104,7 +114,7 @@ const BackgroundControl = ({
                                                 gradients={[
                                                     {
                                                         name: 'Primary',
-                                                        gradient: 'linear-gradient(180deg, rgba(171, 137, 101, 0) 0%, var(--eshb-primary-color) 100%)',
+                                                        gradient: 'linear-gradient(180deg, rgba(171, 137, 101, 0) 0%, var(--shapeblock-preset-color-primary) 100%)',
                                                         slug: 'primary',
                                                     },
                                                     {
@@ -123,9 +133,9 @@ const BackgroundControl = ({
                                                         slug: 'deep-blue',
                                                     },
                                                     {
-                                                        name: 'Premium Dark',
+                                                        name: 'Charcoal',
                                                         gradient: 'linear-gradient(135deg, #232526 0%, #414345 100%)',
-                                                        slug: 'premium-dark',
+                                                        slug: 'charcoal',
                                                     }
                                                 ]}
                                             />
@@ -135,7 +145,7 @@ const BackgroundControl = ({
                                                 onClick={() => onGradientChange(defaultGradient)}
                                                 style={{ marginTop: '10px', width: '100%', justifyContent: 'center' }}
                                             >
-                                                {__('Reset Gradient', 'easy-elements-for-gutenberg')}
+                                                {__('Reset Gradient', 'shapeblock')}
                                             </Button>
                                         </div>
                                     );

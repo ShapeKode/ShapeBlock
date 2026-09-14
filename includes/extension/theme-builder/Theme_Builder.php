@@ -1,17 +1,17 @@
 <?php
-namespace EELFG\Extension\ThemeBuilder;
+namespace ShapeBlock\Extension\ThemeBuilder;
 
 /**
  * Theme Builder — core orchestrator.
  *
- * Registers the "Easy Elements GT Builder" post type and exposes a scalable
+ * Registers the "ShapeBlock Builder" post type and exposes a scalable
  * registry of template types. Only `header` and `footer` ship today; future
  * types (single, page, archive, search, 404 …) can be added to the registry
- * or hooked in via the `eelfg_builder_template_types` filter without touching
+ * or hooked in via the `shapeblock_builder_template_types` filter without touching
  * the rest of the system — conditions, rendering and the REST API all read
  * from this registry.
  *
- * @package EasyElementsForGutenberg
+ * @package ShapeBlock
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,17 +23,17 @@ class Theme_Builder {
 	/**
 	 * Custom post type slug.
 	 */
-	const POST_TYPE = 'eelfg-builder';
+	const POST_TYPE = 'shapeblock-builder';
 
 	/**
 	 * Post meta key holding the template type (header|footer|…).
 	 */
-	const META_TYPE = '_eelfg_builder_type';
+	const META_TYPE = '_shapeblock_builder_type';
 
 	/**
 	 * Post meta key holding the display conditions array.
 	 */
-	const META_CONDITIONS = '_eelfg_builder_conditions';
+	const META_CONDITIONS = '_shapeblock_builder_conditions';
 
 	public static function instance() {
 		static $instance = null;
@@ -52,9 +52,9 @@ class Theme_Builder {
 
 	private function includes() {
 		// Classes are PSR-4 autoloaded; instantiating them registers their hooks.
-		\EELFG\Extension\ThemeBuilder\Builder_Conditions::instance();
-		\EELFG\Extension\ThemeBuilder\Builder_Render::instance();
-		\EELFG\Extension\ThemeBuilder\Builder_API::instance();
+		\ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::instance();
+		\ShapeBlock\Extension\ThemeBuilder\Builder_Render::instance();
+		\ShapeBlock\Extension\ThemeBuilder\Builder_API::instance();
 	}
 
 	/**
@@ -69,36 +69,33 @@ class Theme_Builder {
 		$types = array(
 			'header' => array(
 				'slug'        => 'header',
-				'label'       => __( 'Header', 'easy-elements-for-gutenberg' ),
-				'plural'      => __( 'Headers', 'easy-elements-for-gutenberg' ),
-				'description' => __( 'Replaces your theme header across the site.', 'easy-elements-for-gutenberg' ),
+				'label'       => __( 'Header', 'shapeblock' ),
+				'plural'      => __( 'Headers', 'shapeblock' ),
+				'description' => __( 'Replaces your theme header across the site.', 'shapeblock' ),
 				'enabled'     => true,
-				'isPro'       => false,
 			),
 			'footer' => array(
 				'slug'        => 'footer',
-				'label'       => __( 'Footer', 'easy-elements-for-gutenberg' ),
-				'plural'      => __( 'Footers', 'easy-elements-for-gutenberg' ),
-				'description' => __( 'Replaces your theme footer across the site.', 'easy-elements-for-gutenberg' ),
+				'label'       => __( 'Footer', 'shapeblock' ),
+				'plural'      => __( 'Footers', 'shapeblock' ),
+				'description' => __( 'Replaces your theme footer across the site.', 'shapeblock' ),
 				'enabled'     => true,
-				'isPro'       => false,
 			),
 
 			'custom_block' => array(
 				'slug'        => 'custom_block',
-				'label'       => __( 'Custom Block', 'easy-elements-for-gutenberg' ),
-				'plural'      => __( 'Custom Blocks', 'easy-elements-for-gutenberg' ),
-				'description' => __( 'A reusable block you place anywhere with its shortcode — it is not injected automatically.', 'easy-elements-for-gutenberg' ),
+				'label'       => __( 'Custom Block', 'shapeblock' ),
+				'plural'      => __( 'Custom Blocks', 'shapeblock' ),
+				'description' => __( 'A reusable block you place anywhere with its shortcode — it is not injected automatically.', 'shapeblock' ),
 				'enabled'     => true,
-				'isPro'       => false,
-				// Rendered only via [eelfg_builder id="…"]; the admin shows the shortcode for this type.
+				// Rendered only via [shapeblock_builder id="…"]; the admin shows the shortcode for this type.
 				'shortcode'   => true,
 			),
 
 			/*
 			 * Future template types — register them here (or via the
-			 * `eelfg_builder_template_types` filter) when their rendering is
-			 * implemented in \EELFG\Extension\ThemeBuilder\Builder_Render. Kept commented so the UI
+			 * `shapeblock_builder_template_types` filter) when their rendering is
+			 * implemented in \ShapeBlock\Extension\ThemeBuilder\Builder_Render. Kept commented so the UI
 			 * only surfaces what actually works today.
 			 *
 			 * 'single'  => array( 'slug' => 'single',  'label' => 'Single Post', 'plural' => 'Single Posts', 'enabled' => true ),
@@ -112,7 +109,7 @@ class Theme_Builder {
 		 *
 		 * @param array $types Map of type slug => config.
 		 */
-		return apply_filters( 'eelfg_builder_template_types', $types );
+		return apply_filters( 'shapeblock_builder_template_types', $types );
 	}
 
 	/**
@@ -133,17 +130,17 @@ class Theme_Builder {
 
 	public function register_post_type() {
 		$labels = array(
-			'name'               => __( 'Easy Elements GT Builder', 'easy-elements-for-gutenberg' ),
-			'singular_name'      => __( 'Builder Template', 'easy-elements-for-gutenberg' ),
-			'add_new'            => __( 'Add New', 'easy-elements-for-gutenberg' ),
-			'add_new_item'       => __( 'Add New Builder Template', 'easy-elements-for-gutenberg' ),
-			'edit_item'          => __( 'Edit Builder Template', 'easy-elements-for-gutenberg' ),
-			'new_item'           => __( 'New Builder Template', 'easy-elements-for-gutenberg' ),
-			'view_item'          => __( 'View Builder Template', 'easy-elements-for-gutenberg' ),
-			'search_items'       => __( 'Search Builder Templates', 'easy-elements-for-gutenberg' ),
-			'not_found'          => __( 'No builder templates found', 'easy-elements-for-gutenberg' ),
-			'not_found_in_trash' => __( 'No builder templates found in Trash', 'easy-elements-for-gutenberg' ),
-			'menu_name'          => __( 'Easy Elements GT Builder', 'easy-elements-for-gutenberg' ),
+			'name'               => __( 'ShapeBlock Builder', 'shapeblock' ),
+			'singular_name'      => __( 'Builder Template', 'shapeblock' ),
+			'add_new'            => __( 'Add New', 'shapeblock' ),
+			'add_new_item'       => __( 'Add New Builder Template', 'shapeblock' ),
+			'edit_item'          => __( 'Edit Builder Template', 'shapeblock' ),
+			'new_item'           => __( 'New Builder Template', 'shapeblock' ),
+			'view_item'          => __( 'View Builder Template', 'shapeblock' ),
+			'search_items'       => __( 'Search Builder Templates', 'shapeblock' ),
+			'not_found'          => __( 'No builder templates found', 'shapeblock' ),
+			'not_found_in_trash' => __( 'No builder templates found in Trash', 'shapeblock' ),
+			'menu_name'          => __( 'ShapeBlock Builder', 'shapeblock' ),
 		);
 
 		register_post_type(
@@ -153,7 +150,7 @@ class Theme_Builder {
 				'public'              => false,
 				'publicly_queryable'  => false,
 				'show_ui'             => true,   // Allow editing in the block editor at post.php.
-				'show_in_menu'        => false,  // Managed from the Easy Elements dashboard instead.
+				'show_in_menu'        => false,  // Managed from the ShapeBlock dashboard instead.
 				'show_in_admin_bar'   => false,
 				'show_in_nav_menus'   => false,
 				'exclude_from_search' => true,
@@ -162,7 +159,7 @@ class Theme_Builder {
 				'query_var'           => false,
 				'hierarchical'        => false,
 				'show_in_rest'        => true,   // Required for the Gutenberg editor.
-				'rest_base'           => 'eelfg-builder',
+				'rest_base'           => 'shapeblock-builder',
 				'supports'            => array( 'title', 'editor', 'custom-fields', 'revisions' ),
 				'menu_icon'           => 'dashicons-layout',
 			)

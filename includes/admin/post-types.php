@@ -1,10 +1,10 @@
 <?php
-namespace EELFG\Admin;
+namespace ShapeBlock\Admin;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class EELFG_Post_Types {
+class SHAPEBLOCK_Post_Types {
     public static function instance() {
         static $instance = null;
         if ( null === $instance ) {
@@ -15,7 +15,7 @@ class EELFG_Post_Types {
 
     public function __construct() {
         add_action( 'init', array( $this, 'register_post_types' ) );
-        add_shortcode( 'eelfg_template', array( $this, 'render_shortcode' ) );
+        add_shortcode( 'shapeblock_template', array( $this, 'render_shortcode' ) );
     }
 
     public function register_post_types() {
@@ -42,21 +42,21 @@ class EELFG_Post_Types {
             'show_ui'            => true,
             'show_in_menu'       => false,
             'query_var'          => true,
-            'rewrite'            => array( 'slug' => 'eelfg-template' ),
+            'rewrite'            => array( 'slug' => 'shapeblock-template' ),
             'capability_type'    => 'post',
             'has_archive'        => false,
             'hierarchical'       => false,
             'supports'           => array( 'title', 'editor', 'author' ),
             'show_in_rest'       => true,
-            'rest_base'          => 'eelfg-templates',
+            'rest_base'          => 'shapeblock-templates',
         );
 
-        register_post_type( 'eelfg-template', $args );
+        register_post_type( 'shapeblock-template', $args );
     }
     public function render_shortcode( $atts ) {
         $atts = shortcode_atts( array(
             'id' => 0,
-        ), $atts, 'eelfg_template' );
+        ), $atts, 'shapeblock_template' );
 
         $id = absint( $atts['id'] );
         if ( ! $id ) {
@@ -64,13 +64,13 @@ class EELFG_Post_Types {
         }
 
         $post = get_post( $id );
-        if ( ! $post || $post->post_type !== 'eelfg-template' || $post->post_status !== 'publish' ) {
+        if ( ! $post || $post->post_type !== 'shapeblock-template' || $post->post_status !== 'publish' ) {
             return '';
         }
 
         // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Applying WP core filter to render shortcodes/blocks in template content.
-        return '<div class="eelfg-template-content">' . apply_filters( 'the_content', $post->post_content ) . '</div>';
+        return '<div class="shapeblock-template-content">' . apply_filters( 'the_content', $post->post_content ) . '</div>';
     }
 }
 
-EELFG_Post_Types::instance();
+SHAPEBLOCK_Post_Types::instance();

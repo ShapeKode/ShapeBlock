@@ -1,16 +1,18 @@
+@use 'style';
+
 /**
  * Editor-only styles for the Icon List block â€” clean, minimal collapsible rows
  * (WordPress-native list feel: full-width row, title + right caret, hairline
  * separators, no card boxes).
  */
-.eelfg-icon-list-repeater-item {
+.shapeblock-icon-list-repeater-item {
 	border-bottom: 1px solid #e0e0e0;
 
 	&:first-child {
 		border-top: 1px solid #e0e0e0;
 	}
 
-	.eelfg-icon-list-repeater-toggle {
+	.shapeblock-icon-list-repeater-toggle {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -33,7 +35,7 @@
 			color: #1e1e1e;
 		}
 
-		.eelfg-icon-list-caret {
+		.shapeblock-icon-list-caret {
 			display: inline-flex;
 			flex: 0 0 auto;
 			transition: transform 0.2s ease;
@@ -50,7 +52,7 @@
 		}
 	}
 
-	.eelfg-icon-list-repeater-body {
+	.shapeblock-icon-list-repeater-body {
 		padding: 4px 2px 16px;
 
 		> * {
@@ -63,7 +65,7 @@
 	}
 
 	// Move / delete row, right-aligned and muted.
-	.eelfg-icon-list-repeater-actions {
+	.shapeblock-icon-list-repeater-actions {
 		display: flex;
 		justify-content: flex-end;
 		gap: 2px;
@@ -85,13 +87,13 @@
 }
 
 // "Add Item" gets a little breathing room under the list.
-.eelfg-icon-list-repeater-item + .components-button {
+.shapeblock-icon-list-repeater-item + .components-button {
 	margin-top: 12px;
 }
 
 // Only uppercase the native ToggleGroupControl label so it matches WordPress's
 // SelectControl labels â€” weight / size / colour stay WP-native (no mismatch).
-.eelfg-caps-label {
+.shapeblock-caps-label {
 	margin-bottom: 16px;
 
 	.components-base-control__label,

@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/scroll-to-top",
+  "name": "shapeblock/scroll-to-top",
   "version": "0.1.0",
   "title": "Scroll Top",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "description": "A floating scroll-to-top button that appears after scrolling and smoothly returns to the top.",
   "keywords": [
     "scroll",
@@ -21,17 +21,9 @@
       "right",
       "wide",
       "full"
-    ],
-    "spacing": {
-      "margin": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ]
-    }
+    ]
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "viewScript": "file:./view.js",
   "render": "file:./render.php",
@@ -42,7 +34,7 @@
     },
     "scrollIcon": {
       "type": "string",
-      "default": "eelfg-icon-arrow-up"
+      "default": "shapeblock-icon-arrow-up"
     },
     "position": {
       "type": "string",
@@ -64,7 +56,23 @@
       "type": "string",
       "default": ""
     },
+    "buttonSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonSizeMobile": {
+      "type": "string",
+      "default": ""
+    },
     "iconSize": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSizeMobile": {
       "type": "string",
       "default": ""
     },
@@ -99,6 +107,24 @@
     "sttPadding": {
       "type": "object",
       "default": {}
+    },
+    "sttPaddingTablet": {
+      "type": "object"
+    },
+    "sttPaddingMobile": {
+      "type": "object"
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

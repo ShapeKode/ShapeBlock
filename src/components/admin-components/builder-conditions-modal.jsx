@@ -7,13 +7,13 @@ import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 const { Text } = Typography;
 
 /**
- * Flatten eelfg.builderRules ({ group: { slug: def } }) into:
+ * Flatten shapeblock.builderRules ({ group: { slug: def } }) into:
  *  - grouped options for the rule <Select>
  *  - a slug => def lookup (label, needsObject, objectType)
  */
 function useRuleCatalog() {
     return useMemo(() => {
-        const rules = (typeof eelfg !== 'undefined' && eelfg.builderRules) || {};
+        const rules = (typeof shapeblock !== 'undefined' && shapeblock.builderRules) || {};
         const groupLabels = { general: 'General', specific: 'Specific' };
         const groupedOptions = [];
         const defs = {};
@@ -53,9 +53,9 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
             return;
         }
         setObjectLoading((prev) => ({ ...prev, [objectType]: true }));
-        const sep = eelfg.rest_url.includes('?') ? '&' : '?';
-        fetch(`${eelfg.rest_url}builder/objects${sep}objectType=${encodeURIComponent(objectType)}`, {
-            headers: { 'X-WP-Nonce': eelfg.nonce },
+        const sep = shapeblock.rest_url.includes('?') ? '&' : '?';
+        fetch(`${shapeblock.rest_url}builder/objects${sep}objectType=${encodeURIComponent(objectType)}`, {
+            headers: { 'X-WP-Nonce': shapeblock.nonce },
         })
             .then((res) => res.json())
             .then((data) => {
@@ -75,8 +75,8 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
             return;
         }
         setLoading(true);
-        fetch(`${eelfg.rest_url}builder/${item.id}/conditions`, {
-            headers: { 'X-WP-Nonce': eelfg.nonce },
+        fetch(`${shapeblock.rest_url}builder/${item.id}/conditions`, {
+            headers: { 'X-WP-Nonce': shapeblock.nonce },
         })
             .then((res) => res.json())
             .then((data) => {
@@ -135,11 +135,11 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
             .map((r) => ({ type: r.type, rule: r.rule, ids: r.ids || [] }));
 
         setSaving(true);
-        fetch(`${eelfg.rest_url}builder/${item.id}/conditions`, {
+        fetch(`${shapeblock.rest_url}builder/${item.id}/conditions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-WP-Nonce': eelfg.nonce,
+                'X-WP-Nonce': shapeblock.nonce,
             },
             body: JSON.stringify({ conditions: payload }),
         })

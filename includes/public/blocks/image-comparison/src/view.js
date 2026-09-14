@@ -7,7 +7,7 @@ import { initComparison } from './comparison';
 	'use strict';
 
 	function initAll() {
-		var nodes = document.querySelectorAll('.eelfg-image-comparison-block-wrap .eelfg-comparison-container');
+		var nodes = document.querySelectorAll('.shapeblock-image-comparison-block-wrap .shapeblock-comparison-container');
 		Array.prototype.forEach.call(nodes, initComparison);
 	}
 

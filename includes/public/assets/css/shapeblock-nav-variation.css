@@ -1,0 +1,19 @@
+/**
+ * ShapeBlock Menu — styling for the core Navigation variation ( class .shapeblock-nav ).
+ *
+ * Core Navigation opens nested ( 2nd-level+ ) submenus as a right-side flyout. Here we make
+ * every submenu open straight down ( left-aligned under its parent ) instead of from the right.
+ */
+.shapeblock-nav .wp-block-navigation__submenu-container {
+	left: 0;
+}
+
+.shapeblock-nav .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container {
+	left: 0;
+	top: 100%;
+}
+
+/* Submenu indicator: point it down ( not to the right ) for nested items too. */
+.shapeblock-nav .wp-block-navigation__submenu-container .wp-block-navigation-submenu__toggle .wp-block-navigation__submenu-icon svg {
+	transform: rotate( 0deg );
+}

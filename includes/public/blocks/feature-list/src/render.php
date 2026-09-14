@@ -9,12 +9,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Server-side render for the Feature List block.
  *
  * Mirrors the markup of the Elementor "Feature List" widget
- * (easy-elements/widgets/feature-list). Element classes use the "eelfg-" prefix.
+ * (easy-elements/widgets/feature-list). Element classes use the "shapeblock-" prefix.
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-fea-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-fea-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $features   = isset( $attributes['features'] ) && is_array( $attributes['features'] ) ? $attributes['features'] : [];
 $dir        = ( isset( $attributes['feaDir'] ) && 'right' === $attributes['feaDir'] ) ? 'right' : 'left';
@@ -27,19 +27,19 @@ $conn_left  = $connector && ! empty( $attributes['feaConnectorLeft'] );
 $show_icon  = ! ( isset( $attributes['showIcon'] ) && false === $attributes['showIcon'] );
 
 if ( empty( $features ) ) {
-	$w = get_block_wrapper_attributes( array( 'class' => 'eelfg-block eelfg-fea-list-block-wrap ' . $unique_id ) );
-	echo '<div ' . wp_kses_post( $w ) . '><p>' . esc_html__( 'Please add list items.', 'easy-elements-for-gutenberg' ) . '</p></div>';
+	$w = get_block_wrapper_attributes( array( 'class' => 'shapeblock-block shapeblock-fea-list-block-wrap ' . $unique_id ) );
+	echo '<div ' . wp_kses_post( $w ) . '><p>' . esc_html__( 'Please add list items.', 'shapeblock' ) . '</p></div>';
 	return;
 }
 
 $wrap_classes = [
-	'eelfg-block', 'eelfg-fea-list-block-wrap', $unique_id, 'eelfg-fea-list-wrapper',
-	'eelfg-fea-list-icon-view-' . $view,
-	'eelfg-fea-list-icon-shape-' . $shape,
-	'eelfg-fea-list-dir-' . $dir,
+	'shapeblock-block', 'shapeblock-fea-list-block-wrap', $unique_id, 'shapeblock-fea-list-wrapper',
+	'shapeblock-fea-list-icon-view-' . $view,
+	'shapeblock-fea-list-icon-shape-' . $shape,
+	'shapeblock-fea-list-dir-' . $dir,
 ];
-if ( $connector ) { $wrap_classes[] = 'eelfg-fea-list-connector'; }
-if ( $conn_left ) { $wrap_classes[] = 'eelfg-fea-list-connector-left'; }
+if ( $connector ) { $wrap_classes[] = 'shapeblock-fea-list-connector'; }
+if ( $conn_left ) { $wrap_classes[] = 'shapeblock-fea-list-connector-left'; }
 
 $block_wrap_attr = get_block_wrapper_attributes( array( 'class' => implode( ' ', $wrap_classes ) ) );
 if ( empty( $block_wrap_attr ) ) {
@@ -49,8 +49,8 @@ if ( empty( $block_wrap_attr ) ) {
 // ---------------------------------------------------------------------------
 // Inline styles.
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-fea-list-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-feature-list-style';
+$selector     = '.shapeblock-fea-list-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-feature-list-style';
 
 $typo = function ( $obj ) use ( $H ) {
 	$out = [];
@@ -62,6 +62,7 @@ $typo = function ( $obj ) use ( $H ) {
 	if ( ! empty( $obj['textTransform'] ) ) $out['text-transform'] = $obj['textTransform'];
 	if ( ! empty( $obj['lineHeight'] ) ) $out['line-height'] = $obj['lineHeight'];
 	if ( ! empty( $obj['letterSpacing'] ) ) $out['letter-spacing'] = $H::ensure_unit( $obj['letterSpacing'] );
+	if ( ! empty( $obj['textDecoration'] ) ) $out['text-decoration'] = $obj['textDecoration'];
 	return $out;
 };
 $dims = function ( $obj, $type ) use ( $H ) {
@@ -119,7 +120,7 @@ $extra_css = '';
 if ( $connector ) {
 	$before_decls = $H::get_inline_styles( $conn_before );
 	if ( $before_decls ) {
-		$extra_css = $selector . '.eelfg-fea-list-connector::before{' . $before_decls . '}';
+		$extra_css = $selector . '.shapeblock-fea-list-connector::before{' . $before_decls . '}';
 	}
 }
 
@@ -173,12 +174,12 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $di
 	$css   = '';
 	$rules = [
 		''                          => $H::get_inline_styles( $wrap_m ),
-		' .eelfg-fea-list'          => $H::get_inline_styles( $list ),
-		' .eelfg-fea-list-icon'     => $H::get_inline_styles( $icon_box ),
-		' .eelfg-fea-list-icon svg' => $H::get_inline_styles( $icon_svg ),
-		' .eelfg-fea-list-number'   => $H::get_inline_styles( $icon_num ),
-		' .eelfg-fea-list-title'    => $H::get_inline_styles( $title_r ),
-		' .eelfg-fea-list-desc'     => $H::get_inline_styles( $desc_r ),
+		' .shapeblock-fea-list'          => $H::get_inline_styles( $list ),
+		' .shapeblock-fea-list-icon'     => $H::get_inline_styles( $icon_box ),
+		' .shapeblock-fea-list-icon svg' => $H::get_inline_styles( $icon_svg ),
+		' .shapeblock-fea-list-number'   => $H::get_inline_styles( $icon_num ),
+		' .shapeblock-fea-list-title'    => $H::get_inline_styles( $title_r ),
+		' .shapeblock-fea-list-desc'     => $H::get_inline_styles( $desc_r ),
 	];
 	foreach ( $rules as $sub => $decls ) {
 		if ( $decls ) {
@@ -191,14 +192,14 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $di
 		$conn = ( '' !== $uu( 'feaConnectorWidth' ) ) ? [ 'border-width' => $uu( 'feaConnectorWidth' ) ] : [];
 		$after = $H::get_inline_styles( $conn );
 		if ( $after ) {
-			$css .= $selector . ' .eelfg-fea-list-icon::after{' . $after . '}';
+			$css .= $selector . ' .shapeblock-fea-list-icon::after{' . $after . '}';
 		}
 		$before = $conn;
 		if ( 'left' === $dir && '' !== $uu( 'feaConnectorPositionX' ) )       $before['left']  = $uu( 'feaConnectorPositionX' );
 		if ( 'right' === $dir && '' !== $uu( 'feaConnectorRightPositionX' ) )  $before['right'] = $uu( 'feaConnectorRightPositionX' );
 		$before_decls = $H::get_inline_styles( $before );
 		if ( $before_decls ) {
-			$css .= $selector . '.eelfg-fea-list-connector::before{' . $before_decls . '}';
+			$css .= $selector . '.shapeblock-fea-list-connector::before{' . $before_decls . '}';
 		}
 	}
 
@@ -209,14 +210,14 @@ $mobile_css = $resp( 'Mobile' );
 
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $extra_css, [
-	'.eelfg-fea-list'                            => $H::get_inline_styles( $list ),
-	'.eelfg-fea-list-icon::after'                => $H::get_inline_styles( $conn ),
-	'.eelfg-fea-list-icon svg, ' . $selector . ' .eelfg-fea-list-icon svg path, ' . $selector . ' .eelfg-fea-list-icon i, ' . $selector . ' .eelfg-fea-list-number' => $H::get_inline_styles( $icon_color ),
-	'.eelfg-fea-list-icon'                       => $H::get_inline_styles( $icon_box ),
-	'.eelfg-fea-list-icon svg'                   => $H::get_inline_styles( $icon_svg ),
-	'.eelfg-fea-list-number'                     => $H::get_inline_styles( $icon_num ),
-	'.eelfg-fea-list-title'                      => $H::get_inline_styles( $title_styles ),
-	'.eelfg-fea-list-desc'                       => $H::get_inline_styles( $desc_styles ),
+	'.shapeblock-fea-list'                            => $H::get_inline_styles( $list ),
+	'.shapeblock-fea-list-icon::after'                => $H::get_inline_styles( $conn ),
+	'.shapeblock-fea-list-icon svg, ' . $selector . ' .shapeblock-fea-list-icon svg path, ' . $selector . ' .shapeblock-fea-list-icon i, ' . $selector . ' .shapeblock-fea-list-number' => $H::get_inline_styles( $icon_color ),
+	'.shapeblock-fea-list-icon'                       => $H::get_inline_styles( $icon_box ),
+	'.shapeblock-fea-list-icon svg'                   => $H::get_inline_styles( $icon_svg ),
+	'.shapeblock-fea-list-number'                     => $H::get_inline_styles( $icon_num ),
+	'.shapeblock-fea-list-title'                      => $H::get_inline_styles( $title_styles ),
+	'.shapeblock-fea-list-desc'                       => $H::get_inline_styles( $desc_styles ),
 ] );
 
 // Responsive media queries are printed AFTER the desktop rules so they win at
@@ -248,27 +249,27 @@ $svg_star = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.or
 			|| ( 'icon' === $type )
 			|| ( 'number' === $type && '' !== $num ) );
 		?>
-		<div class="eelfg-fea-list eelfg-fea-list-dir-<?php echo esc_attr( $dir ); ?>">
+		<div class="shapeblock-fea-list shapeblock-fea-list-dir-<?php echo esc_attr( $dir ); ?>">
 			<?php if ( $has_icon ) : ?>
-				<div class="eelfg-fea-list-icon eelfg-fea-list-type-<?php echo esc_attr( $type ); ?>">
+				<div class="shapeblock-fea-list-icon shapeblock-fea-list-type-<?php echo esc_attr( $type ); ?>">
 					<?php
 					if ( 'image' === $type && ! empty( $img['url'] ) ) {
-						echo '<img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $img['alt'] ?? $ttl ) . '" class="eelfg-fea-list-img">';
+						echo '<img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $img['alt'] ?? $ttl ) . '" class="shapeblock-fea-list-img">';
 					} elseif ( 'number' === $type ) {
-						echo '<span class="eelfg-fea-list-number">' . esc_html( $num ) . '</span>';
+						echo '<span class="shapeblock-fea-list-number">' . esc_html( $num ) . '</span>';
 					} else {
-						echo ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="eelfg-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : $svg_star; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : $svg_star; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					}
 					?>
 				</div>
 			<?php endif; ?>
 			<?php if ( '' !== $ttl || '' !== $desc ) : ?>
-				<div class="eelfg-fea-list-info">
+				<div class="shapeblock-fea-list-info">
 					<?php if ( '' !== $ttl ) : ?>
-						<?php printf( '<%1$s class="eelfg-fea-list-title">%2$s</%1$s>', tag_escape( $title_tag ), wp_kses_post( $ttl ) ); ?>
+						<?php printf( '<%1$s class="shapeblock-fea-list-title">%2$s</%1$s>', tag_escape( $title_tag ), wp_kses_post( $ttl ) ); ?>
 					<?php endif; ?>
 					<?php if ( '' !== $desc ) : ?>
-						<p class="eelfg-fea-list-desc"><?php echo esc_html( $desc ); ?></p>
+						<p class="shapeblock-fea-list-desc"><?php echo esc_html( $desc ); ?></p>
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>

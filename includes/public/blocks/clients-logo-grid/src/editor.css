@@ -1,13 +1,13 @@
 /**
  * Editor-only styles for the Client Logo Grid block (sidebar repeater UI).
  */
-.eelfg-clg-repeater-item {
+.shapeblock-clg-repeater-item {
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   padding: 12px;
   margin-bottom: 12px;
 }
-.eelfg-clg-repeater-item .eelfg-clg-repeater-head {
+.shapeblock-clg-repeater-item .shapeblock-clg-repeater-head {
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/counter',
+		'name' => 'shapeblock/counter',
 		'version' => '0.1.0',
 		'title' => 'Counter',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'An animated number counter with prefix/suffix, icon, title, and counter or odometer animation.',
 		'keywords' => array(
 			'counter',
@@ -27,23 +27,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
@@ -104,7 +90,23 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'contentGapTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'contentGapMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'contentVerticalAlign' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'contentVerticalAlignTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'contentVerticalAlignMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -112,7 +114,23 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'subPreGapTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'subPreGapMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'wrapAlign' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'wrapAlignTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'wrapAlignMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -125,6 +143,14 @@ return array(
 				'default' => 'top'
 			),
 			'iconGap' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconGapTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconGapMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -144,7 +170,27 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'numberTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'numberTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'numberStrokeWidth' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'numberStrokeWidthTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'numberStrokeWidthMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -177,6 +223,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'prefixTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'prefixTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'prefixTextShadow' => array(
 				'type' => 'object',
 				'default' => array(
@@ -200,6 +258,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'suffixTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'suffixTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'suffixTextShadow' => array(
@@ -227,7 +297,27 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'titleTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'titleTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'titleAlign' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'titleAlignTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'titleAlignMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -268,6 +358,12 @@ return array(
 			'iconPadding' => array(
 				'type' => 'object'
 			),
+			'iconPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'iconPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'iconBorder' => array(
 				'type' => 'object',
 				'default' => array(
@@ -285,6 +381,18 @@ return array(
 					's' => 0,
 					'c' => 'rgba(0, 0, 0, 0)'
 				)
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

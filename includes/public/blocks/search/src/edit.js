@@ -1,51 +1,86 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import { ServerSideRender } from '@wordpress/server-side-render';
-import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import {
+	useBlockProps,
+	InspectorControls,
+	MediaUpload,
+	MediaUploadCheck,
+} from '@wordpress/block-editor';
 import {
 	PanelBody,
 	SelectControl,
 	TextControl,
 	BoxControl,
+	TabPanel,
+	Button,
 	__experimentalDivider as Divider,
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
 import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
+import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 
 import './editor.scss';
+
+// Map a base attribute name to its per-device key (desktop uses the base name).
+const getKey = (base, device) =>
+	device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
 
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const { blockId, selectStyle } = attributes;
 
 	useEffect(() => {
 		if (!blockId) {
-			setAttributes({ blockId: 'eelfg-search-' + clientId.slice(0, 6) });
+			setAttributes({ blockId: 'shapeblock-search-' + clientId.slice(0, 6) });
 		}
 	}, [blockId, clientId, setAttributes]);
 
 	// Editor preview: open/close the popup lightbox (front-end view.js doesn't run
-	// inside ServerSideRender). Delegated on a persistent wrapper.
+	// inside ServerSideRender). Delegated on a persistent wrapper. The open state
+	// is kept in a ref and RE-APPLIED after ServerSideRender replaces the preview
+	// markup (e.g. when the Close Icon changes) — otherwise the popup would snap
+	// shut on every re-render and you could never see the close icon update.
 	const previewRef = useRef(null);
+	// Popup starts CLOSED (opens when the user clicks the search icon). Once the
+	// user opens it, the open state is re-applied after each ServerSideRender
+	// re-render so editing the close icon doesn't snap the popup shut.
+	const popupOpenRef = useRef(false);
 	useEffect(() => {
 		const root = previewRef.current;
 		if (!root) return undefined;
+
+		const applyOpen = () => {
+			const box = root.querySelector('.shapeblock-search-lightbox');
+			if (box) box.classList.toggle('shapeblock-lightbox', popupOpenRef.current);
+		};
+
 		const onClick = (e) => {
-			const open = e.target.closest('.eelfg-search-open-btn');
-			const close = e.target.closest('.eelfg-search-close-btn, .eelfg-search-overlay');
-			const box = root.querySelector('.eelfg-search-lightbox');
-			if (!box) return;
+			const open = e.target.closest('.shapeblock-search-open-btn');
+			const close = e.target.closest('.shapeblock-search-close-btn, .shapeblock-search-overlay');
 			if (open && root.contains(open)) {
 				e.preventDefault();
-				box.classList.add('eelfg-lightbox');
+				popupOpenRef.current = true;
+				applyOpen();
 			} else if (close && root.contains(close)) {
 				e.preventDefault();
-				box.classList.remove('eelfg-lightbox');
+				popupOpenRef.current = false;
+				applyOpen();
 			}
 		};
 		root.addEventListener('click', onClick);
-		return () => root.removeEventListener('click', onClick);
+
+		// ServerSideRender swaps out the inner markup on every attribute change;
+		// re-apply the popup-open state to the freshly rendered lightbox so the
+		// close button (and its icon) stays visible while being edited.
+		const observer = new MutationObserver(applyOpen);
+		observer.observe(root, { childList: true, subtree: true });
+
+		return () => {
+			root.removeEventListener('click', onClick);
+			observer.disconnect();
+		};
 	}, []);
 
 	const isPopup = selectStyle === '1';
@@ -55,89 +90,190 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const typo = (label, key) => <TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />;
 	const box = (label, key) => <BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const num = (label, key) => <TextControl label={label} type="number" value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
+	// Upload a custom image / SVG for an icon. Stored as { id, url, alt }; an image
+	// takes precedence over the icon-font glyph in render.php. Removing it clears back
+	// to the glyph (or the built-in SVG fallback).
+	const mediaControl = (label, key) => {
+		const media = attributes[key];
+		const hasImage = media && media.url;
+		return (
+			<div className="shapeblock-search-media-control" style={{ marginBottom: '15px' }}>
+				<div style={{ marginBottom: '8px', fontWeight: '500' }}>{label}</div>
+				{hasImage && (
+					<img
+						src={media.url}
+						alt={media.alt || ''}
+						style={{ maxWidth: '48px', height: 'auto', display: 'block', marginBottom: '8px' }}
+					/>
+				)}
+				<MediaUploadCheck>
+					<MediaUpload
+						onSelect={(m) => setAttributes({ [key]: { id: m.id, url: m.url, alt: m.alt || '' } })}
+						allowedTypes={['image']}
+						value={media && media.id}
+						render={({ open }) => (
+							<>
+								<Button variant="secondary" onClick={open} __next40pxDefaultSize>
+									{hasImage ? __('Replace Image', 'shapeblock') : __('Upload Image', 'shapeblock')}
+								</Button>
+								{hasImage && (
+									<Button variant="link" isDestructive onClick={() => setAttributes({ [key]: {} })} style={{ marginLeft: '8px' }}>
+										{__('Remove', 'shapeblock')}
+									</Button>
+								)}
+							</>
+						)}
+					/>
+				</MediaUploadCheck>
+			</div>
+		);
+	};
+	// Responsive variants — a device switcher above the control, editing the
+	// matching per-device attribute (base / baseTablet / baseMobile).
+	const respTypo = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => <TypographyControls attributes={attributes} setAttributes={setAttributes} attributeKey={getKey(base, device)} />}
+		</ResponsiveWrapper>
+	);
+	const respBox = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => <BoxControl values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
+		</ResponsiveWrapper>
+	);
+	const respNum = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => {
+				const k = getKey(base, device);
+				return <TextControl type="number" value={attributes[k]} onChange={(v) => setAttributes({ [k]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
+			}}
+		</ResponsiveWrapper>
+	);
+
+	// --- Tab 1: Settings (content & behavior) ---------------------------------
+	const settingsTab = (
+		<PanelBody title={__('Search Settings', 'shapeblock')} initialOpen={true}>
+			<SelectControl
+				label={__('Search Skin', 'shapeblock')}
+				value={selectStyle}
+				options={[
+					{ label: __('Search Popup', 'shapeblock'), value: '1' },
+					{ label: __('Search Fields', 'shapeblock'), value: '2' },
+				]}
+				onChange={(v) => setAttributes({ selectStyle: v })}
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			/>
+			{isPopup && <TextControl label={__('Search Title', 'shapeblock')} value={attributes.searchTitle} onChange={(v) => setAttributes({ searchTitle: v })} __next40pxDefaultSize __nextHasNoMarginBottom />}
+			<TextControl label={__('Search Placeholder', 'shapeblock')} value={attributes.placeholder} onChange={(v) => setAttributes({ placeholder: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+			<IconPicker label={__('Search Icon', 'shapeblock')} value={attributes.openIcon || ''} onChange={(v) => setAttributes({ openIcon: v })} />
+			{mediaControl(__('Or Upload Search Icon (SVG/Image)', 'shapeblock'), 'openIconImage')}
+			{isPopup && <IconPicker label={__('Close Icon', 'shapeblock')} value={attributes.closeIcon || ''} onChange={(v) => setAttributes({ closeIcon: v })} />}
+			{isPopup && mediaControl(__('Or Upload Close Icon (SVG/Image)', 'shapeblock'), 'closeIconImage')}
+		</PanelBody>
+	);
+
+	// --- Tab 2: Layout (size, spacing & position) -----------------------------
+	const layoutTab = (
+		<>
+			<PanelBody title={__('Search Icon', 'shapeblock')} initialOpen={true}>
+				{respNum(__('Icon Size (px)', 'shapeblock'), 'iconSize')}
+				{isPopup && num(__('Icon Vertical Position (px)', 'shapeblock'), 'iconVerticalPosition')}
+				{isFields && (
+					<>
+						<SelectControl
+							label={__('Icon Position', 'shapeblock')}
+							value={attributes.iconPositionSide}
+							options={[
+								{ label: __('Left', 'shapeblock'), value: 'left' },
+								{ label: __('Right', 'shapeblock'), value: 'right' },
+							]}
+							onChange={(v) => setAttributes({ iconPositionSide: v })}
+							__next40pxDefaultSize
+							__nextHasNoMarginBottom
+						/>
+						{attributes.iconPositionSide === 'right' && num(__('Offset From Right (px)', 'shapeblock'), 'iconOffsetRight')}
+						{attributes.iconPositionSide === 'left' && num(__('Offset From Left (px)', 'shapeblock'), 'iconOffsetLeft')}
+					</>
+				)}
+			</PanelBody>
+
+			<PanelBody title={__('Input Field', 'shapeblock')} initialOpen={false}>
+				{respBox(__('Padding', 'shapeblock'), 'inputPadding')}
+				{respNum(__('Height (px)', 'shapeblock'), 'inputHeight')}
+				{isFields && respNum(__('Input Field Width (px)', 'shapeblock'), 'inputFieldWidth')}
+			</PanelBody>
+
+			<PanelBody title={__('Submit Button', 'shapeblock')} initialOpen={false}>
+				{respBox(__('Padding', 'shapeblock'), 'submitPadding')}
+			</PanelBody>
+
+			{isPopup && (
+				<PanelBody title={__('Search Popup', 'shapeblock')} initialOpen={false}>
+					{respNum(__('Close Icon Size (px)', 'shapeblock'), 'closeIconSize')}
+				</PanelBody>
+			)}
+		</>
+	);
+
+	// --- Tab 3: Style (colors, typography, borders) ---------------------------
+	const styleTab = (
+		<>
+			<PanelBody title={__('Search Icon', 'shapeblock')} initialOpen={true}>
+				{color(__('Icon Color', 'shapeblock'), 'iconColor')}
+			</PanelBody>
+
+			<PanelBody title={__('Input Field', 'shapeblock')} initialOpen={false}>
+				{respTypo(__('Typography', 'shapeblock'), 'inputTypography')}
+				{color(__('Input Text Color', 'shapeblock'), 'inputTextColor')}
+				{color(__('Placeholder Color', 'shapeblock'), 'placeholderColor')}
+				{color(__('Input Background Color', 'shapeblock'), 'inputBgColor')}
+				{isFields && box(__('Border Radius', 'shapeblock'), 'inputBorderRadius')}
+				{isFields && color(__('Input Border Color', 'shapeblock'), 'inputBorderColor')}
+				{isFields && color(__('Border Color (Focus)', 'shapeblock'), 'inputFocusBorderColor')}
+			</PanelBody>
+
+			<PanelBody title={__('Submit Button', 'shapeblock')} initialOpen={false}>
+				{isPopup && color(__('Submit Icon Color', 'shapeblock'), 'submitIconColor')}
+				{isPopup && color(__('Submit Icon Hover Color', 'shapeblock'), 'submitIconHoverColor')}
+				{color(__('Submit Icon Background', 'shapeblock'), 'submitBtnBg')}
+				{isPopup && color(__('Submit Icon Hover Background', 'shapeblock'), 'submitBtnHoverBg')}
+			</PanelBody>
+
+			{isPopup && (
+				<PanelBody title={__('Search Popup', 'shapeblock')} initialOpen={false}>
+					{color(__('Overlay Background', 'shapeblock'), 'overlayBg')}
+					<Divider />
+					{color(__('Title Color', 'shapeblock'), 'popupTitleColor')}
+					{respTypo(__('Title Typography', 'shapeblock'), 'popupTitleTypography')}
+					<Divider />
+					{color(__('Close Icon Color', 'shapeblock'), 'closeIconColor')}
+				</PanelBody>
+			)}
+		</>
+	);
 
 	return (
 		<div {...useBlockProps()}>
 			<InspectorControls>
-				<PanelBody title={__('Search Settings', 'easy-elements-for-gutenberg')} initialOpen={true}>
-					<SelectControl
-						label={__('Search Skin', 'easy-elements-for-gutenberg')}
-						value={selectStyle}
-						options={[
-							{ label: __('Search Popup', 'easy-elements-for-gutenberg'), value: '1' },
-							{ label: __('Search Fields', 'easy-elements-for-gutenberg'), value: '2' },
-						]}
-						onChange={(v) => setAttributes({ selectStyle: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					{isPopup && <TextControl label={__('Search Title', 'easy-elements-for-gutenberg')} value={attributes.searchTitle} onChange={(v) => setAttributes({ searchTitle: v })} __next40pxDefaultSize __nextHasNoMarginBottom />}
-					<TextControl label={__('Search Placeholder', 'easy-elements-for-gutenberg')} value={attributes.placeholder} onChange={(v) => setAttributes({ placeholder: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					<IconPicker label={__('Search Icon', 'easy-elements-for-gutenberg')} value={attributes.openIcon || ''} onChange={(v) => setAttributes({ openIcon: v })} />
-					{isPopup && <IconPicker label={__('Close Icon', 'easy-elements-for-gutenberg')} value={attributes.closeIcon || ''} onChange={(v) => setAttributes({ closeIcon: v })} />}
-				</PanelBody>
-			</InspectorControls>
-
-			<InspectorControls group="styles">
-				<PanelBody title={__('Search Icon', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					{num(__('Icon Size (px)', 'easy-elements-for-gutenberg'), 'iconSize')}
-					{color(__('Icon Color', 'easy-elements-for-gutenberg'), 'iconColor')}
-					{isPopup && num(__('Icon Vertical Position (px)', 'easy-elements-for-gutenberg'), 'iconVerticalPosition')}
-					{isFields && (
-						<>
-							<SelectControl
-								label={__('Icon Position', 'easy-elements-for-gutenberg')}
-								value={attributes.iconPositionSide}
-								options={[
-									{ label: __('Left', 'easy-elements-for-gutenberg'), value: 'left' },
-									{ label: __('Right', 'easy-elements-for-gutenberg'), value: 'right' },
-								]}
-								onChange={(v) => setAttributes({ iconPositionSide: v })}
-								__next40pxDefaultSize
-								__nextHasNoMarginBottom
-							/>
-							{attributes.iconPositionSide === 'right' && num(__('Offset From Right (px)', 'easy-elements-for-gutenberg'), 'iconOffsetRight')}
-							{attributes.iconPositionSide === 'left' && num(__('Offset From Left (px)', 'easy-elements-for-gutenberg'), 'iconOffsetLeft')}
-						</>
+				<TabPanel
+					className="shapeblock-inspector-tabs"
+					activeClass="is-active"
+					tabs={[
+						{ name: 'settings', title: __('Settings', 'shapeblock') },
+						{ name: 'layout', title: __('Layout', 'shapeblock') },
+						{ name: 'style', title: __('Style', 'shapeblock') },
+					]}
+				>
+					{(tab) => (
+						tab.name === 'settings' ? settingsTab :
+						tab.name === 'layout' ? layoutTab :
+						styleTab
 					)}
-				</PanelBody>
-
-				<PanelBody title={__('Input Field', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					{typo(__('Typography', 'easy-elements-for-gutenberg'), 'inputTypography')}
-					{color(__('Input Text Color', 'easy-elements-for-gutenberg'), 'inputTextColor')}
-					{color(__('Placeholder Color', 'easy-elements-for-gutenberg'), 'placeholderColor')}
-					{color(__('Input Background Color', 'easy-elements-for-gutenberg'), 'inputBgColor')}
-					{box(__('Padding', 'easy-elements-for-gutenberg'), 'inputPadding')}
-					{num(__('Height (px)', 'easy-elements-for-gutenberg'), 'inputHeight')}
-					{isFields && num(__('Input Field Width (px)', 'easy-elements-for-gutenberg'), 'inputFieldWidth')}
-					{isFields && box(__('Border Radius', 'easy-elements-for-gutenberg'), 'inputBorderRadius')}
-					{isFields && color(__('Input Border Color', 'easy-elements-for-gutenberg'), 'inputBorderColor')}
-					{isFields && color(__('Border Color (Focus)', 'easy-elements-for-gutenberg'), 'inputFocusBorderColor')}
-				</PanelBody>
-
-				<PanelBody title={__('Submit Button', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					{isPopup && color(__('Submit Icon Color', 'easy-elements-for-gutenberg'), 'submitIconColor')}
-					{isPopup && color(__('Submit Icon Hover Color', 'easy-elements-for-gutenberg'), 'submitIconHoverColor')}
-					{color(__('Submit Icon Background', 'easy-elements-for-gutenberg'), 'submitBtnBg')}
-					{isPopup && color(__('Submit Icon Hover Background', 'easy-elements-for-gutenberg'), 'submitBtnHoverBg')}
-					{box(__('Padding', 'easy-elements-for-gutenberg'), 'submitPadding')}
-				</PanelBody>
-
-				{isPopup && (
-					<PanelBody title={__('Search Popup', 'easy-elements-for-gutenberg')} initialOpen={false}>
-						{color(__('Overlay Background', 'easy-elements-for-gutenberg'), 'overlayBg')}
-						<Divider />
-						{color(__('Title Color', 'easy-elements-for-gutenberg'), 'popupTitleColor')}
-						{typo(__('Title Typography', 'easy-elements-for-gutenberg'), 'popupTitleTypography')}
-						<Divider />
-						{color(__('Close Icon Color', 'easy-elements-for-gutenberg'), 'closeIconColor')}
-						{num(__('Close Icon Size (px)', 'easy-elements-for-gutenberg'), 'closeIconSize')}
-					</PanelBody>
-				)}
+				</TabPanel>
 			</InspectorControls>
 
 			<div ref={previewRef}>
-				<ServerSideRender block="easy-elements-for-gutenberg/search" attributes={attributes} httpMethod="POST" />
+				<ServerSideRender block="shapeblock/search" attributes={attributes} httpMethod="POST" />
 			</div>
 		</div>
 	);

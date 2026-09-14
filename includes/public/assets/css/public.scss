@@ -1,30 +1,30 @@
-@import 'eelfg-icon';
+@import 'shapeblock-icon';
 @import 'animate';
 :root {
-    --eelfg-preset-color-primary: #126bf0;
-    --eelfg-preset-color-secondary: #5096ff;
-    --eelfg-preset-color-tertiary: #f3f3f3;
-    --eelfg-preset-color-white: var(--wp--preset--color--white, #ffffff);
-    --eelfg-preset-color-contrast-1: var(--wp--preset--color--contrast, #0e0e0e);
-    --eelfg-preset-color-contrast-2: #0e0e0e;
-    --eelfg-preset-color-border: #8383831f;
-    --eelfg-preset-hover-transition: 0.4s ease;
+    --shapeblock-preset-color-primary: #126bf0;
+    --shapeblock-preset-color-secondary: #5096ff;
+    --shapeblock-preset-color-tertiary: #f3f3f3;
+    --shapeblock-preset-color-white: var(--wp--preset--color--white, #ffffff);
+    --shapeblock-preset-color-contrast-1: var(--wp--preset--color--contrast, #0e0e0e);
+    --shapeblock-preset-color-contrast-2: #0e0e0e;
+    --shapeblock-preset-color-border: #8383831f;
+    --shapeblock-preset-hover-transition: 0.4s ease;
 }
 
-.eelfg-text-left {
+.shapeblock-text-left {
     justify-content: flex-start;
 }
 
-.eelfg-text-center {
+.shapeblock-text-center {
     justify-content: center;
 }
 
-.eelfg-text-right {
+.shapeblock-text-right {
     justify-content: flex-end;
 }
 
-.eelfg-block {
-    color: var(--eelfg-preset-color-contrast-2);
+.shapeblock-block {
+    color: var(--shapeblock-preset-color-contrast-2);
 
     a {
         &:focus {
@@ -38,13 +38,13 @@
     h4,
     h5,
     h6 {
-        color: var(--eelfg-preset-color-contrast-1);
+        color: var(--shapeblock-preset-color-contrast-1);
         margin-top: 0;
     }
 }
 
-.eelfg-post-categories,
-.eelfg-post-metas {
+.shapeblock-post-categories,
+.shapeblock-post-metas {
     margin: 20px 0 5px;
     padding: 0;
     list-style: none;
@@ -83,16 +83,16 @@
     }
 }
 
-.eelfg-post-categories {
+.shapeblock-post-categories {
     margin: 0;
     gap: 5px;
     display: flex;
 
-    .eelfg-cat-dot {
+    .shapeblock-cat-dot {
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: var(--eelfg-preset-color-primary);
+        background-color: var(--shapeblock-preset-color-primary);
         margin-right: 6px;
     }
 
@@ -104,13 +104,13 @@
         }
     }
 
-    &.eelfg-post-categories-style-1 {
+    &.shapeblock-post-categories-style-1 {
         margin-left: 12px;
         margin-top: 12px;
 
         .bldpost-meta {
-            background: var(--eelfg-preset-color-white);
-            color: var(--eelfg-preset-color-contrast-1);
+            background: var(--shapeblock-preset-color-white);
+            color: var(--shapeblock-preset-color-contrast-1);
             padding: 8px 8px 7px;
             border-radius: 4px;
             display: flex;
@@ -121,11 +121,11 @@
         }
     }
 
-    &.eelfg-post-categories-style-2 {
+    &.shapeblock-post-categories-style-2 {
         .bldpost-meta {
             font-size: 0.875rem;
-            background: var(--eelfg-preset-color-primary);
-            color: var(--eelfg-preset-color-white);
+            background: var(--shapeblock-preset-color-primary);
+            color: var(--shapeblock-preset-color-white);
             display: inline-block;
             max-width: -moz-max-content;
             max-width: max-content;
@@ -139,17 +139,17 @@
                 color: currentColor;
 
                 &:hover {
-                    color: var(--eelfg-preset-color-tertiary) !important;
+                    color: var(--shapeblock-preset-color-tertiary) !important;
                 }
             }
 
-            .eelfg-cat-dot {
+            .shapeblock-cat-dot {
                 display: none;
             }
         }
     }
 
-    &.eelfg-post-categories-style-3 {
+    &.shapeblock-post-categories-style-3 {
         .bldpost-meta {
             font-size: 0.875rem;
             padding: 0;
@@ -161,23 +161,23 @@
                 color: currentColor;
 
                 &:hover {
-                    color: var(--eelfg-preset-color-primary) !important;
+                    color: var(--shapeblock-preset-color-primary) !important;
                 }
             }
 
-            .eelfg-cat-dot {
+            .shapeblock-cat-dot {
                 display: none;
             }
         }
     }
 }
 
-.eelfg-post-metas {
-    &.eelfg-upper-metas {
+.shapeblock-post-metas {
+    &.shapeblock-upper-metas {
         margin-top: 0px !important;
     }
 
-    &.eelfg-post-metas-style-1 {
+    &.shapeblock-post-metas-style-1 {
         .bldpost-meta {
             position: relative;
 
@@ -204,8 +204,8 @@
         }
     }
 
-    &.eelfg-post-metas-style-2,
-    &.eelfg-post-metas-style-3 {
+    &.shapeblock-post-metas-style-2,
+    &.shapeblock-post-metas-style-3 {
         .bldpost-meta {
             img {
                 width: 24px;
@@ -223,12 +223,12 @@
         }
     }
 
-    &.eelfg-post-metas-style-3 {
+    &.shapeblock-post-metas-style-3 {
         .bldpost-meta {
             position: relative;
 
-            .eelfg-meta-cat {
-                //color: var(--eelfg-preset-color-primary);
+            .shapeblock-meta-cat {
+                //color: var(--shapeblock-preset-color-primary);
             }
 
             &:not(:first-child) {
@@ -247,22 +247,22 @@
         }
     }
 
-    &.eelfg-post-meta-position-up_title {
+    &.shapeblock-post-meta-position-up_title {
         margin-top: 0 !important;
         margin-bottom: 8px;
     }
 
-    &.eelfg-post-meta-position-below_title {
+    &.shapeblock-post-meta-position-below_title {
         margin: 12px 0 0 !important;
     }
 }
 
-.eelfg-post-grid{
-    .eelfg-blog-content {
+.shapeblock-post-grid{
+    .shapeblock-blog-content {
         box-sizing: border-box;
     }
 
-    .eelfg-blog-title {
+    .shapeblock-blog-title {
         line-height: 1.2;
         a {
             background-size: 0% 1px;
@@ -281,7 +281,7 @@
     }
 
     .nav-btn {
-        transition: var(--eelfg-preset-hover-transition);
+        transition: var(--shapeblock-preset-hover-transition);
     }
     .swiper-button-next:after, .swiper-button-prev:after {
         font-size: 16px;
@@ -289,6 +289,15 @@
 
 }
 
-.eelfg-video-wrapper video {
+.shapeblock-video-wrapper video {
     background-color: #000;
+}
+/* Images inside any ShapeBlock block stay inside their container.
+ * Without this an image field renders at its natural pixel size and spills out
+ * of the card. Blocks that want a fixed size use higher-specificity selectors
+ * (e.g. `.shapeblock-tstml-inner .shapeblock-picture img`), so they still win. */
+.shapeblock-block img,
+.shapeblock-menu img {
+    max-width: 100%;
+    height: auto;
 }

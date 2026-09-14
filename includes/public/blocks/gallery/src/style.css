@@ -4,44 +4,44 @@
  *
  * Structure ported from the Elementor widget
  * (easy-elements/widgets/gallery/css/gallery.scss). Element classes use this
- * plugin's own "eelfg-" prefix.
+ * plugin's own "shapeblock-" prefix.
  */
 /* === Gallery Grid === */
-.eelfg-gallery-grid {
+.shapeblock-gallery-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
 }
 
 /* === Gallery Item === */
-.eelfg-gallery-item {
+.shapeblock-gallery-item {
   position: relative;
   overflow: hidden;
   border-radius: 8px;
 }
-.eelfg-gallery-item a {
+.shapeblock-gallery-item a {
   overflow: hidden;
   display: block;
 }
-.eelfg-gallery-item {
+.shapeblock-gallery-item {
   /* === Image === */
 }
-.eelfg-gallery-item img {
+.shapeblock-gallery-item img {
   width: 100%;
   height: auto;
   display: block;
   transition: transform 0.4s ease;
   object-fit: cover;
 }
-.eelfg-gallery-item:hover img {
+.shapeblock-gallery-item:hover img {
   transform: scale(1.05);
 }
-.eelfg-gallery-item:hover .eelfg-hover-content {
+.shapeblock-gallery-item:hover .shapeblock-hover-content {
   opacity: 1;
 }
 
 /* === Hover Overlay === */
-.eelfg-hover-content {
+.shapeblock-hover-content {
   position: absolute;
   inset: 0;
   display: flex;
@@ -53,7 +53,7 @@
 }
 
 /* === Hover Text === */
-.eelfg-hover-text span {
+.shapeblock-hover-text span {
   color: #fff;
   font-size: 18px;
   text-transform: capitalize;
@@ -61,27 +61,27 @@
 }
 
 /* === Hover Icon === */
-.eelfg-hover-icon i,
-.eelfg-hover-icon svg {
+.shapeblock-hover-icon i,
+.shapeblock-hover-icon svg {
   color: #fff;
   font-size: 36px;
   transition: transform 0.3s ease;
 }
-.eelfg-hover-icon:hover i, .eelfg-hover-icon:hover svg {
+.shapeblock-hover-icon:hover i, .shapeblock-hover-icon:hover svg {
   transform: scale(1.2);
 }
-.eelfg-hover-icon svg {
+.shapeblock-hover-icon svg {
   height: 1em;
   width: 1em;
 }
 
-.eelfg-gallery-image-wrap {
+.shapeblock-gallery-image-wrap {
   position: relative;
   overflow: hidden;
 }
 
 /* === Caption === */
-.eelfg-gallery-caption {
+.shapeblock-gallery-caption {
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -95,7 +95,7 @@
 }
 
 /* === Lightbox === */
-.eelfg-lightbox-gallery {
+.shapeblock-lightbox-gallery {
   display: none;
   position: fixed;
   z-index: 9999;
@@ -108,15 +108,15 @@
   align-items: center;
   place-items: center;
 }
-.eelfg-lightbox-gallery.is-open {
+.shapeblock-lightbox-gallery.is-open {
   display: grid;
 }
-.eelfg-lightbox-gallery img {
+.shapeblock-lightbox-gallery img {
   max-width: 90%;
   max-height: 80%;
   border-radius: 10px;
 }
-.eelfg-lightbox-gallery .eelfg-close {
+.shapeblock-lightbox-gallery .shapeblock-close {
   position: absolute;
   top: 15px;
   right: 25px;
@@ -124,7 +124,7 @@
   color: white;
   cursor: pointer;
 }
-.eelfg-lightbox-gallery button {
+.shapeblock-lightbox-gallery button {
   background: none;
   border: none;
   color: white;
@@ -135,10 +135,10 @@
   cursor: pointer;
 }
 
-.eelfg-prev {
+.shapeblock-prev {
   left: 40px;
 }
 
-.eelfg-next {
+.shapeblock-next {
   right: 40px;
 }/*# sourceMappingURL=style.css.map */

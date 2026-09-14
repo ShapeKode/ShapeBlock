@@ -10,23 +10,23 @@
 	'use strict';
 
 	function initGallery(wrap) {
-		if (wrap.dataset.eelfgGalleryInit === '1') {
+		if (wrap.dataset.shapeblockGalleryInit === '1') {
 			return;
 		}
-		wrap.dataset.eelfgGalleryInit = '1';
+		wrap.dataset.shapeblockGalleryInit = '1';
 
-		var grid = wrap.querySelector('.eelfg-gallery-grid.eelfg-popup-enabled');
-		var lightbox = wrap.querySelector('.eelfg-lightbox-gallery');
+		var grid = wrap.querySelector('.shapeblock-gallery-grid.shapeblock-popup-enabled');
+		var lightbox = wrap.querySelector('.shapeblock-lightbox-gallery');
 
 		if (!grid || !lightbox) {
 			return;
 		}
 
-		var links = Array.prototype.slice.call(grid.querySelectorAll('.eelfg-popup-link'));
-		var image = lightbox.querySelector('.eelfg-lightbox-image');
-		var nextBtn = lightbox.querySelector('.eelfg-next');
-		var prevBtn = lightbox.querySelector('.eelfg-prev');
-		var closeBtn = lightbox.querySelector('.eelfg-close');
+		var links = Array.prototype.slice.call(grid.querySelectorAll('.shapeblock-popup-link'));
+		var image = lightbox.querySelector('.shapeblock-lightbox-image');
+		var nextBtn = lightbox.querySelector('.shapeblock-next');
+		var prevBtn = lightbox.querySelector('.shapeblock-prev');
+		var closeBtn = lightbox.querySelector('.shapeblock-close');
 
 		if (!links.length || !image) {
 			return;
@@ -93,7 +93,7 @@
 	}
 
 	function initAll() {
-		var wraps = document.querySelectorAll('.eelfg-gallery-block-wrap');
+		var wraps = document.querySelectorAll('.shapeblock-gallery-block-wrap');
 		Array.prototype.forEach.call(wraps, initGallery);
 	}
 

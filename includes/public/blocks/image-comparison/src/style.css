@@ -4,10 +4,10 @@
  *
  * Ported from the Elementor "Image Comparison" widget stylesheet
  * (easy-elements/widgets/image-comparison/css/image-before-after.scss). Classes
- * use the "eelfg-" prefix and everything is scoped under
- * `.eelfg-image-comparison-block-wrap`.
+ * use the "shapeblock-" prefix and everything is scoped under
+ * `.shapeblock-image-comparison-block-wrap`.
  */
-.eelfg-image-comparison-block-wrap .eelfg-comparison-container {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-container {
   box-sizing: content-box;
   z-index: 1;
   overflow: hidden;
@@ -16,26 +16,26 @@
   min-height: 540px;
   width: 100%;
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-container * {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-container * {
   box-sizing: content-box;
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-container img {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-container img {
   width: 100%;
   position: absolute;
   top: 0;
   left: 0;
   display: block;
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-before {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-before {
   z-index: 20;
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-after {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-after {
   z-index: 10;
 }
-.eelfg-image-comparison-block-wrap {
+.shapeblock-image-comparison-block-wrap {
   /* Handle */
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-handle {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-handle {
   height: 38px;
   width: 38px;
   position: absolute;
@@ -50,8 +50,8 @@
   cursor: pointer;
   touch-action: none;
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-handle:before,
-.eelfg-image-comparison-block-wrap .eelfg-comparison-handle:after {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-handle:before,
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-handle:after {
   content: " ";
   display: block;
   background: #fff;
@@ -59,51 +59,51 @@
   z-index: 30;
   box-shadow: 0px 0px 12px rgba(51, 51, 51, 0.5);
 }
-.eelfg-image-comparison-block-wrap {
+.shapeblock-image-comparison-block-wrap {
   /* Horizontal lines */
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-horizontal .eelfg-comparison-handle:before,
-.eelfg-image-comparison-block-wrap .eelfg-comparison-horizontal .eelfg-comparison-handle:after {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-horizontal .shapeblock-comparison-handle:before,
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-horizontal .shapeblock-comparison-handle:after {
   width: 3px;
   height: 9999px;
   left: 50%;
   margin-left: -1.5px;
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-horizontal .eelfg-comparison-handle:before {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-horizontal .shapeblock-comparison-handle:before {
   bottom: 50%;
   margin-bottom: 22px;
   box-shadow: 0 3px 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-horizontal .eelfg-comparison-handle:after {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-horizontal .shapeblock-comparison-handle:after {
   top: 50%;
   margin-top: 22px;
   box-shadow: 0 -3px 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
 }
-.eelfg-image-comparison-block-wrap {
+.shapeblock-image-comparison-block-wrap {
   /* Vertical lines */
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-vertical .eelfg-comparison-handle:before,
-.eelfg-image-comparison-block-wrap .eelfg-comparison-vertical .eelfg-comparison-handle:after {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-vertical .shapeblock-comparison-handle:before,
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-vertical .shapeblock-comparison-handle:after {
   width: 9999px;
   height: 3px;
   top: 50%;
   margin-top: -1.5px;
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-vertical .eelfg-comparison-handle:before {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-vertical .shapeblock-comparison-handle:before {
   left: 50%;
   margin-left: 22px;
   box-shadow: 3px 0 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-vertical .eelfg-comparison-handle:after {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-vertical .shapeblock-comparison-handle:after {
   right: 50%;
   margin-right: 22px;
   box-shadow: -3px 0 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
 }
-.eelfg-image-comparison-block-wrap {
+.shapeblock-image-comparison-block-wrap {
   /* Arrows */
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-left-arrow,
-.eelfg-image-comparison-block-wrap .eelfg-comparison-right-arrow {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-left-arrow,
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-right-arrow {
   width: 0;
   height: 0;
   border: 6px inset transparent;
@@ -111,18 +111,18 @@
   top: 50%;
   margin-top: -6px;
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-left-arrow {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-left-arrow {
   border-right: 6px solid #fff;
   left: 50%;
   margin-left: -17px;
 }
-.eelfg-image-comparison-block-wrap .eelfg-comparison-right-arrow {
+.shapeblock-image-comparison-block-wrap .shapeblock-comparison-right-arrow {
   border-left: 6px solid #fff;
   right: 50%;
   margin-right: -17px;
 }
 @media (max-width: 767px) {
-  .eelfg-image-comparison-block-wrap .eelfg-comparison-container img {
+  .shapeblock-image-comparison-block-wrap .shapeblock-comparison-container img {
     height: 100%;
     object-fit: cover;
   }

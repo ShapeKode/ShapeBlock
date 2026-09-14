@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/breadcrumb',
+		'name' => 'shapeblock/breadcrumb',
 		'version' => '0.1.0',
 		'title' => 'Breadcrumb',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'A dynamic breadcrumb trail for the current page, with home icon, separator and full styling.',
 		'keywords' => array(
 			'breadcrumb',
@@ -26,23 +26,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'render' => 'file:./render.php',
 		'attributes' => array(
@@ -94,10 +80,34 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'textTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'textTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'textPadding' => array(
 				'type' => 'object'
 			),
+			'textPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'textPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'textPaddingActive' => array(
+				'type' => 'object'
+			),
+			'textPaddingActiveTablet' => array(
+				'type' => 'object'
+			),
+			'textPaddingActiveMobile' => array(
 				'type' => 'object'
 			),
 			'textBgColor' => array(
@@ -150,6 +160,12 @@ return array(
 			'homeIconPadding' => array(
 				'type' => 'object'
 			),
+			'homeIconPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'homeIconPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'homeIconPosY' => array(
 				'type' => 'string',
 				'default' => ''
@@ -178,11 +194,23 @@ return array(
 			'separatorPadding' => array(
 				'type' => 'object'
 			),
+			'separatorPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'separatorPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'separatorSize' => array(
 				'type' => 'string',
 				'default' => ''
 			),
 			'separatorGap' => array(
+				'type' => 'object'
+			),
+			'separatorGapTablet' => array(
+				'type' => 'object'
+			),
+			'separatorGapMobile' => array(
 				'type' => 'object'
 			),
 			'separatorPosY' => array(
@@ -192,6 +220,18 @@ return array(
 			'separatorPosX' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

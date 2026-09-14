@@ -2,8 +2,8 @@
  * Editor-only styles for the Search block.
  *
  * The popup lightbox is fixed + hidden by default (from style.scss); the editor
- * toggle adds `.eelfg-lightbox` to preview it. Nothing extra needed here.
+ * toggle adds `.shapeblock-lightbox` to preview it. Nothing extra needed here.
  */
-.eelfg-search-block-wrap {
+.shapeblock-search-block-wrap {
   min-height: 1px;
 }/*# sourceMappingURL=editor.css.map */

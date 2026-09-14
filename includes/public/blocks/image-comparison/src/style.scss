@@ -3,11 +3,11 @@
  *
  * Ported from the Elementor "Image Comparison" widget stylesheet
  * (easy-elements/widgets/image-comparison/css/image-before-after.scss). Classes
- * use the "eelfg-" prefix and everything is scoped under
- * `.eelfg-image-comparison-block-wrap`.
+ * use the "shapeblock-" prefix and everything is scoped under
+ * `.shapeblock-image-comparison-block-wrap`.
  */
-.eelfg-image-comparison-block-wrap {
-	.eelfg-comparison-container {
+.shapeblock-image-comparison-block-wrap {
+	.shapeblock-comparison-container {
 		box-sizing: content-box;
 		z-index: 1;
 		overflow: hidden;
@@ -29,15 +29,15 @@
 		}
 	}
 
-	.eelfg-comparison-before {
+	.shapeblock-comparison-before {
 		z-index: 20;
 	}
-	.eelfg-comparison-after {
+	.shapeblock-comparison-after {
 		z-index: 10;
 	}
 
 	/* Handle */
-	.eelfg-comparison-handle {
+	.shapeblock-comparison-handle {
 		height: 38px;
 		width: 38px;
 		position: absolute;
@@ -53,8 +53,8 @@
 		touch-action: none;
 	}
 
-	.eelfg-comparison-handle:before,
-	.eelfg-comparison-handle:after {
+	.shapeblock-comparison-handle:before,
+	.shapeblock-comparison-handle:after {
 		content: ' ';
 		display: block;
 		background: #fff;
@@ -64,46 +64,46 @@
 	}
 
 	/* Horizontal lines */
-	.eelfg-comparison-horizontal .eelfg-comparison-handle:before,
-	.eelfg-comparison-horizontal .eelfg-comparison-handle:after {
+	.shapeblock-comparison-horizontal .shapeblock-comparison-handle:before,
+	.shapeblock-comparison-horizontal .shapeblock-comparison-handle:after {
 		width: 3px;
 		height: 9999px;
 		left: 50%;
 		margin-left: -1.5px;
 	}
-	.eelfg-comparison-horizontal .eelfg-comparison-handle:before {
+	.shapeblock-comparison-horizontal .shapeblock-comparison-handle:before {
 		bottom: 50%;
 		margin-bottom: 22px;
 		box-shadow: 0 3px 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
 	}
-	.eelfg-comparison-horizontal .eelfg-comparison-handle:after {
+	.shapeblock-comparison-horizontal .shapeblock-comparison-handle:after {
 		top: 50%;
 		margin-top: 22px;
 		box-shadow: 0 -3px 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
 	}
 
 	/* Vertical lines */
-	.eelfg-comparison-vertical .eelfg-comparison-handle:before,
-	.eelfg-comparison-vertical .eelfg-comparison-handle:after {
+	.shapeblock-comparison-vertical .shapeblock-comparison-handle:before,
+	.shapeblock-comparison-vertical .shapeblock-comparison-handle:after {
 		width: 9999px;
 		height: 3px;
 		top: 50%;
 		margin-top: -1.5px;
 	}
-	.eelfg-comparison-vertical .eelfg-comparison-handle:before {
+	.shapeblock-comparison-vertical .shapeblock-comparison-handle:before {
 		left: 50%;
 		margin-left: 22px;
 		box-shadow: 3px 0 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
 	}
-	.eelfg-comparison-vertical .eelfg-comparison-handle:after {
+	.shapeblock-comparison-vertical .shapeblock-comparison-handle:after {
 		right: 50%;
 		margin-right: 22px;
 		box-shadow: -3px 0 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
 	}
 
 	/* Arrows */
-	.eelfg-comparison-left-arrow,
-	.eelfg-comparison-right-arrow {
+	.shapeblock-comparison-left-arrow,
+	.shapeblock-comparison-right-arrow {
 		width: 0;
 		height: 0;
 		border: 6px inset transparent;
@@ -111,19 +111,19 @@
 		top: 50%;
 		margin-top: -6px;
 	}
-	.eelfg-comparison-left-arrow {
+	.shapeblock-comparison-left-arrow {
 		border-right: 6px solid #fff;
 		left: 50%;
 		margin-left: -17px;
 	}
-	.eelfg-comparison-right-arrow {
+	.shapeblock-comparison-right-arrow {
 		border-left: 6px solid #fff;
 		right: 50%;
 		margin-right: -17px;
 	}
 
 	@media (max-width: 767px) {
-		.eelfg-comparison-container img {
+		.shapeblock-comparison-container img {
 			height: 100%;
 			object-fit: cover;
 		}

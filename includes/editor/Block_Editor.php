@@ -1,11 +1,28 @@
 <?php
-namespace EELFG\Editor;
+namespace ShapeBlock\Editor;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 class Block_Editor {
-    private $api_site_url = 'https://themewant.com/plugins/eelfgst/wp-json/eelfgst/v1';
+    /**
+     * Base URL the template importer would talk to.
+     *
+     * The importer itself is currently parked — `src/index.js` does not import
+     * `template-importer`, so nothing in the editor bundle reads this value. It
+     * defaults to this site's own REST root rather than a third-party host, so
+     * the plugin makes no outside request. When the importer is wired up again,
+     * point this filter at whichever host serves the library.
+     *
+     * @return string
+     */
+    private function get_api_url() {
+        return apply_filters(
+            'shapeblock_template_api_url',
+            untrailingslashit( rest_url( 'shapeblock/v1' ) )
+        );
+    }
+
     public static function instance() {
         static $instance = null;
         if ( null === $instance ) {
@@ -25,32 +42,32 @@ class Block_Editor {
            return;
         }
         
-        $asset_file = include EELFG_PL_PATH . 'build/index.asset.php';
+        $asset_file = include SHAPEBLOCK_PL_PATH . 'build/index.asset.php';
 
         wp_enqueue_script(
-            'eelfg-block-editor-js',
-            EELFG_PL_URL . 'build/index.js',
+            'shapeblock-block-editor-js',
+            SHAPEBLOCK_PL_URL . 'build/index.js',
             $asset_file['dependencies'],
             $asset_file['version'],
             true
         );
 
         wp_enqueue_style(
-            'eelfg-block-editor-css',
-            EELFG_PL_URL . 'build/index.css',
+            'shapeblock-block-editor-css',
+            SHAPEBLOCK_PL_URL . 'build/index.css',
             array( 'wp-components' ),
             $asset_file['version']
         );
 
         wp_localize_script(
-            'eelfg-block-editor-js',
-            'eelfgEditor',
+            'shapeblock-block-editor-js',
+            'shapeblockEditor',
             [
-                'plugin_url'    => EELFG_PL_URL,
-                'api_url'       => $this->api_site_url,
+                'plugin_url'    => SHAPEBLOCK_PL_URL,
+                'api_url'       => $this->get_api_url(),
                 'nonce'         => wp_create_nonce( 'wp_rest' ),
                 'admin_url'     => admin_url(),
-                'new_tpl_url'   => admin_url( 'post-new.php?post_type=eelfg-template' ),
+                'new_tpl_url'   => admin_url( 'post-new.php?post_type=shapeblock-template' ),
             ]
         );
     }
@@ -60,7 +77,7 @@ class Block_Editor {
         if (!$pagenow || 'post.php' !== $pagenow) {
            return $classes;
         }
-        $classes .= ' eelfg-block-editor';
+        $classes .= ' shapeblock-block-editor';
         return $classes;
     }
 }

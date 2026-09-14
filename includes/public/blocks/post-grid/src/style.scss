@@ -1,11 +1,11 @@
-.eelfg-post-grid-block-wrap {
-	.eelfg-post-grid {
+.shapeblock-post-grid-block-wrap {
+	.shapeblock-post-grid {
 		// Grid handled by Bootstrap classes
 
 		box-sizing: border-box;
 		margin-bottom: 0px; // Reset any previous margins
 
-		.eelfg-grid-item-inner {
+		.shapeblock-grid-item-inner {
 			box-sizing: border-box;
 			height: 100%;
 
@@ -13,16 +13,16 @@
 
 		}
 
-		.eelfg-blog-content {
+		.shapeblock-blog-content {
 			padding-top: 10px;
 		}
 
-		.eelfg-grid-item {
+		.shapeblock-grid-item {
 			position: relative;
-			transition: var(--eelfg-preset-hover-transition);
+			transition: var(--shapeblock-preset-hover-transition);
 			box-sizing: border-box;
 
-			.eelfg-grid-item-inner {
+			.shapeblock-grid-item-inner {
 				overflow: hidden;
 				display: flex;
 				flex-direction: column;
@@ -34,16 +34,16 @@
 				height: auto;
 				display: block;
 				object-fit: cover;
-				transition: transform var(--eelfg-preset-hover-transition);
+				transition: transform var(--shapeblock-preset-hover-transition);
 			}
 
 			i {
 				font-size: 16px;
 			}
 
-			.eelfg-blog-date-top {
+			.shapeblock-blog-date-top {
 				z-index: 1;
-				background-color: var(--eelfg-preset-color-primary);
+				background-color: var(--shapeblock-preset-color-primary);
 
 				h4 {
 					margin: 0;
@@ -68,7 +68,7 @@
 				}
 			}
 
-			.eelfg-blog-img {
+			.shapeblock-blog-img {
 				position: relative;
 				max-width: 100%;
 				height: auto;
@@ -83,11 +83,11 @@
 					width: 100%;
 				}
 
-				&.eelfg-animate {
+				&.shapeblock-animate {
 					overflow: hidden;
 
 					img {
-						transition: transform var(--eelfg-preset-hover-transition);
+						transition: transform var(--shapeblock-preset-hover-transition);
 					}
 
 					&.left_right {
@@ -104,19 +104,19 @@
 				}
 			}
 
-			.eelfg-blog-title {
+			.shapeblock-blog-title {
 				font-weight: bold;
 				margin: 10px 0 5px;
 				font-size: 1.2em;
-				color: var(--eelfg-preset-color-contrast-1);
+				color: var(--shapeblock-preset-color-contrast-1);
 				a {
 					color: currentColor;
-					transition: var(--eelfg-preset-hover-transition);
+					transition: var(--shapeblock-preset-hover-transition);
 					text-decoration: none;
 				}
 			}
 
-			.eelfg-post-metas {
+			.shapeblock-post-metas {
 				margin: 20px 0 5px;
 				padding: 0;
 				list-style: none;
@@ -150,43 +150,43 @@
 				}
 			}
 
-			.eelfg-read-more {
+			.shapeblock-read-more {
 				display: block;
 				margin-top: 10px;
 				text-decoration: none;
 
-				.eelfg-read-more-link {
+				.shapeblock-read-more-link {
 					display: inline-flex;
 					align-items: center;
 					text-decoration: none;
 					padding: 7px 16px;
-					background-color: var(--eelfg-preset-color-primary);
-					color: var(--eelfg-preset-color-white);
+					background-color: var(--shapeblock-preset-color-primary);
+					color: var(--shapeblock-preset-color-white);
 					font-size: 14px;
 					font-weight: 600;
 					transition: 0.3s ease-in-out;
 
 					&:hover {
-						background-color: var(--eelfg-preset-color-secondary);
+						background-color: var(--shapeblock-preset-color-secondary);
 					}
 				}
 
-				.eelfg-read-more-icon.after {
+				.shapeblock-read-more-icon.after {
 					margin-left: 6px;
 					top: 1px;
 				}
 
-				.eelfg-read-more-icon.before {
+				.shapeblock-read-more-icon.before {
 					margin-right: 6px;
 					top: 1px;
 				}
 			}
 
-			.eelfg-blog-excerpt {
+			.shapeblock-blog-excerpt {
 				margin-top: 20px;
 				margin-bottom: 20px;
 				font-size: 18px;
-				color: var(--eelfg-preset-color-contrast-2);
+				color: var(--shapeblock-preset-color-contrast-2);
 
 				a {
 					color: currentColor;
@@ -195,21 +195,21 @@
 
 			a {
 				&:hover {
-					color: var(--eelfg-preset-color-primary);
+					color: var(--shapeblock-preset-color-primary);
 				}
 			}
 
 		}
 
 		&.style-1 {
-			.eelfg-grid-item-inner {
+			.shapeblock-grid-item-inner {
 				position: relative;
 			}
 
-			.eelfg-grid-item {
+			.shapeblock-grid-item {
 				position: relative;
 
-				.eelfg-blog-content {
+				.shapeblock-blog-content {
 					position: absolute;
 					bottom: 0;
 					padding: 0 30px 30px;
@@ -219,7 +219,7 @@
 					justify-content: flex-end;
 				}
 
-				.eelfg-overlay-all {
+				.shapeblock-overlay-all {
 					position: absolute;
 					bottom: 0;
 					left: 0;
@@ -228,29 +228,29 @@
 					background: rgb(0 0 0 / 47%);
 				}
 
-				.eelfg-blog-img img {
+				.shapeblock-blog-img img {
 					height: 400px;
 					object-fit: cover;
 					width: 100%;
 				}
 
-				.eelfg-blog-title,
-				.eelfg-post-metas,
-				.eelfg-blog-excerpt,
-				.eelfg-read-more a {
+				.shapeblock-blog-title,
+				.shapeblock-post-metas,
+				.shapeblock-blog-excerpt,
+				.shapeblock-read-more a {
 					color: #fff;
 				}
 
 				a {
 					&:hover {
-						color: var(--eelfg-preset-color-primary);
+						color: var(--shapeblock-preset-color-primary);
 					}
 				}
 			}
 		}
 	}
 
-	.eelfg-pagination {
+	.shapeblock-pagination {
 		margin-top: 40px;
 		display: flex;
 		justify-content: center;
@@ -266,12 +266,54 @@
 			font-size: 14px;
 			border-radius: 50%;
 			text-decoration: none;
-			transition: var(--eelfg-preset-hover-transition);
+			transition: var(--shapeblock-preset-hover-transition);
 			box-shadow: 0 5px 10px #0e0d0d1a;
 		}
 
 		span.current {
 			cursor: default;
 		}
+	}
+}
+
+/* --- Responsive defaults ------------------------------------------------
+ * Breakpoints match Helper::generate_responsive_css() and the visibility
+ * classes: tablet <= 1024px, mobile <= 767px. These are defaults only — the
+ * per-device values a user sets are printed as per-block CSS with a higher
+ * specificity, so they always win over what follows.
+ */
+@media (max-width: 767px) {
+	.shapeblock-post-grid-block-wrap {
+		.shapeblock-post-metas {
+			flex-wrap: wrap;
+			row-gap: 6px;
+			column-gap: 12px;
+		}
+		.shapeblock-blog-date-top span {
+			font-size: 28px;
+		}
+		.shapeblock-pagination {
+			flex-wrap: wrap;
+			row-gap: 8px;
+		}
+	}
+}
+
+/* --- Narrow container safety -------------------------------------------
+ * A block can sit in a column far narrower than the screen, where media queries
+ * are no help. These rules keep it inside its box at any width.
+ */
+.shapeblock-post-grid-block-wrap {
+	/* The meta row is as narrow as the card it sits in, which can be a lot
+	 * narrower than the screen — so it wraps everywhere, not just on a phone. */
+	.shapeblock-post-metas {
+		flex-wrap: wrap;
+	}
+
+	.shapeblock-blog-title,
+	.shapeblock-blog-excerpt,
+	.shapeblock-post-metas {
+		min-width: 0;
+		overflow-wrap: break-word;
 	}
 }

@@ -9,12 +9,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Server-side render for the Icon Box block.
  *
  * Mirrors the markup of the Elementor "Icon Box" widget
- * (easy-elements/widgets/icon-box). Element classes use the "eelfg-" prefix.
+ * (easy-elements/widgets/icon-box). Element classes use the "shapeblock-" prefix.
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-icon-box-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-icon-box-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $view       = isset( $attributes['iconView'] ) ? $attributes['iconView'] : 'stracked';
 $shape      = isset( $attributes['iconShape'] ) ? $attributes['iconShape'] : 'rounded';
@@ -33,9 +33,9 @@ $desc = isset( $attributes['desc'] ) ? $attributes['desc'] : '';
 $align = ( isset( $attributes['boxAlign'] ) && in_array( $attributes['boxAlign'], [ 'left', 'center', 'right' ], true ) ) ? $attributes['boxAlign'] : 'center';
 
 $wrap_classes = [
-	'eelfg-block', 'eelfg-icon-box-block-wrap', $unique_id, 'eelfg-icon-box-wrapper',
-	'eelfg-icon-box-icon-view-' . $view,
-	'eelfg-icon-box-icon-shape-' . $shape,
+	'shapeblock-block', 'shapeblock-icon-box-block-wrap', $unique_id, 'shapeblock-icon-box-wrapper',
+	'shapeblock-icon-box-icon-view-' . $view,
+	'shapeblock-icon-box-icon-shape-' . $shape,
 ];
 
 $block_wrap_attr = get_block_wrapper_attributes( array( 'class' => implode( ' ', $wrap_classes ) ) );
@@ -46,8 +46,8 @@ if ( empty( $block_wrap_attr ) ) {
 // ---------------------------------------------------------------------------
 // Inline styles.
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-icon-box-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-icon-box-style';
+$selector     = '.shapeblock-icon-box-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-icon-box-style';
 
 $typo = function ( $obj ) use ( $H ) {
 	$out = [];
@@ -59,6 +59,7 @@ $typo = function ( $obj ) use ( $H ) {
 	if ( ! empty( $obj['textTransform'] ) ) $out['text-transform'] = $obj['textTransform'];
 	if ( ! empty( $obj['lineHeight'] ) ) $out['line-height'] = $obj['lineHeight'];
 	if ( ! empty( $obj['letterSpacing'] ) ) $out['letter-spacing'] = $H::ensure_unit( $obj['letterSpacing'] );
+	if ( ! empty( $obj['textDecoration'] ) ) $out['text-decoration'] = $obj['textDecoration'];
 	return $out;
 };
 $dims = function ( $obj, $type ) use ( $H ) {
@@ -156,12 +157,12 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H ) {
 	$css   = '';
 	$rules = [
 		''                          => $H::get_inline_styles( $wrap_m ),
-		' .eelfg-icon-box'          => $H::get_inline_styles( $list ),
-		' .eelfg-icon-box-icon'     => $H::get_inline_styles( $icon_box ),
-		' .eelfg-icon-box-icon svg' => $H::get_inline_styles( $icon_svg ),
-		' .eelfg-icon-box-number'   => $H::get_inline_styles( $icon_num ),
-		' .eelfg-icon-box-title'    => $H::get_inline_styles( $title_r ),
-		' .eelfg-icon-box-desc'     => $H::get_inline_styles( $desc_r ),
+		' .shapeblock-icon-box'          => $H::get_inline_styles( $list ),
+		' .shapeblock-icon-box-icon'     => $H::get_inline_styles( $icon_box ),
+		' .shapeblock-icon-box-icon svg' => $H::get_inline_styles( $icon_svg ),
+		' .shapeblock-icon-box-number'   => $H::get_inline_styles( $icon_num ),
+		' .shapeblock-icon-box-title'    => $H::get_inline_styles( $title_r ),
+		' .shapeblock-icon-box-desc'     => $H::get_inline_styles( $desc_r ),
 	];
 	foreach ( $rules as $sub => $decls ) {
 		if ( $decls ) {
@@ -176,13 +177,13 @@ $mobile_css = $resp( 'Mobile' );
 
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $extra_css, [
-	'.eelfg-icon-box'                            => $H::get_inline_styles( $list ),
-	'.eelfg-icon-box-icon svg, ' . $selector . ' .eelfg-icon-box-icon svg path, ' . $selector . ' .eelfg-icon-box-icon i, ' . $selector . ' .eelfg-icon-box-number' => $H::get_inline_styles( $icon_color ),
-	'.eelfg-icon-box-icon'                       => $H::get_inline_styles( $icon_box ),
-	'.eelfg-icon-box-icon svg'                   => $H::get_inline_styles( $icon_svg ),
-	'.eelfg-icon-box-number'                     => $H::get_inline_styles( $icon_num ),
-	'.eelfg-icon-box-title'                      => $H::get_inline_styles( $title_styles ),
-	'.eelfg-icon-box-desc'                       => $H::get_inline_styles( $desc_styles ),
+	'.shapeblock-icon-box'                            => $H::get_inline_styles( $list ),
+	'.shapeblock-icon-box-icon svg, ' . $selector . ' .shapeblock-icon-box-icon svg path, ' . $selector . ' .shapeblock-icon-box-icon i, ' . $selector . ' .shapeblock-icon-box-number' => $H::get_inline_styles( $icon_color ),
+	'.shapeblock-icon-box-icon'                       => $H::get_inline_styles( $icon_box ),
+	'.shapeblock-icon-box-icon svg'                   => $H::get_inline_styles( $icon_svg ),
+	'.shapeblock-icon-box-number'                     => $H::get_inline_styles( $icon_num ),
+	'.shapeblock-icon-box-title'                      => $H::get_inline_styles( $title_styles ),
+	'.shapeblock-icon-box-desc'                       => $H::get_inline_styles( $desc_styles ),
 ] );
 
 // Responsive media queries are printed AFTER the desktop rules so they win at
@@ -207,27 +208,27 @@ $svg_star = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.or
 		|| ( 'icon' === $type )
 		|| ( 'number' === $type && '' !== $num ) );
 	?>
-	<div class="eelfg-icon-box eelfg-icon-box-align-<?php echo esc_attr( $align ); ?>">
+	<div class="shapeblock-icon-box shapeblock-icon-box-align-<?php echo esc_attr( $align ); ?>">
 		<?php if ( $has_icon ) : ?>
-			<div class="eelfg-icon-box-icon eelfg-icon-box-type-<?php echo esc_attr( $type ); ?>">
+			<div class="shapeblock-icon-box-icon shapeblock-icon-box-type-<?php echo esc_attr( $type ); ?>">
 				<?php
 				if ( 'image' === $type && ! empty( $img['url'] ) ) {
-					echo '<img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $img['alt'] ?? $ttl ) . '" class="eelfg-icon-box-img">';
+					echo '<img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $img['alt'] ?? $ttl ) . '" class="shapeblock-icon-box-img">';
 				} elseif ( 'number' === $type ) {
-					echo '<span class="eelfg-icon-box-number">' . esc_html( $num ) . '</span>';
+					echo '<span class="shapeblock-icon-box-number">' . esc_html( $num ) . '</span>';
 				} else {
-					echo ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="eelfg-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : $svg_star; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : $svg_star; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 				?>
 			</div>
 		<?php endif; ?>
 		<?php if ( '' !== $ttl || '' !== $desc ) : ?>
-			<div class="eelfg-icon-box-info">
+			<div class="shapeblock-icon-box-info">
 				<?php if ( '' !== $ttl ) : ?>
-					<?php printf( '<%1$s class="eelfg-icon-box-title">%2$s</%1$s>', tag_escape( $title_tag ), wp_kses_post( $ttl ) ); ?>
+					<?php printf( '<%1$s class="shapeblock-icon-box-title">%2$s</%1$s>', tag_escape( $title_tag ), wp_kses_post( $ttl ) ); ?>
 				<?php endif; ?>
 				<?php if ( '' !== $desc ) : ?>
-					<p class="eelfg-icon-box-desc"><?php echo esc_html( $desc ); ?></p>
+					<p class="shapeblock-icon-box-desc"><?php echo esc_html( $desc ); ?></p>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>

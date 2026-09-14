@@ -1,5 +1,5 @@
 <?php
-namespace EELFG;
+namespace ShapeBlock;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
@@ -20,14 +20,14 @@ class Main {
         // Initialize the plugin
         add_action( 'admin_init', array( $this, 'register_settings' ) );
         add_action( 'admin_menu', array( $this, 'add_menu' ) );
-        add_filter( 'plugin_action_links_' . EELFG_PLUGIN_BASE, array( $this, 'plugin_action_links' ), 10, 4 );
+        add_filter( 'plugin_action_links_' . SHAPEBLOCK_PLUGIN_BASE, array( $this, 'plugin_action_links' ), 10, 4 );
         add_filter( 'upload_mimes', array( $this, 'allow_svg_upload' ) );
 
         $this->includes();
     }
 
     public function register_settings() {
-        register_setting( 'eelfg_settings', 'eelfg_version', 'sanitize_text_field' );
+        register_setting( 'shapeblock_settings', 'shapeblock_version', 'sanitize_text_field' );
     }
 
     public function includes() {
@@ -39,9 +39,10 @@ class Main {
         Extension\ThemeBuilder\Theme_Builder::instance();
 
         // Procedural files (define functions / run bootstrap code — not autoloadable).
-        require_once EELFG_PL_PATH . 'includes/admin/post-types.php';
-        require_once EELFG_PL_PATH . 'includes/public/scripts.php';
-        require_once EELFG_PL_PATH . 'includes/public/blocks/blocks.php';
+        require_once SHAPEBLOCK_PL_PATH . 'includes/admin/post-types.php';
+        require_once SHAPEBLOCK_PL_PATH . 'includes/public/scripts.php';
+        require_once SHAPEBLOCK_PL_PATH . 'includes/public/responsive-visibility.php';
+        require_once SHAPEBLOCK_PL_PATH . 'includes/public/blocks/blocks.php';
     }
 
     /**
@@ -50,28 +51,28 @@ class Main {
      */
     public static function get_admin_pages() {
         return array(
-            'easy-elements-for-gutenberg' => array( 'tab' => 'blocks',        'label' => 'Blocks Settings' ),
-            'eelfg-theme-builder'          => array( 'tab' => 'theme-builder', 'label' => 'Theme Builder' ),
-            'eelfg-templates'              => array( 'tab' => 'templates',     'label' => 'Custom Templates' ),
-            'eelfg-settings'               => array( 'tab' => 'settings',      'label' => 'Settings' ),
+            'shapeblock' => array( 'tab' => 'blocks',        'label' => 'Blocks Settings' ),
+            'shapeblock-theme-builder'          => array( 'tab' => 'theme-builder', 'label' => 'Theme Builder' ),
+            'shapeblock-templates'              => array( 'tab' => 'templates',     'label' => 'Custom Templates' ),
+            'shapeblock-settings'               => array( 'tab' => 'settings',      'label' => 'Settings' ),
         );
     }
 
     public function add_menu() {
         add_menu_page(
-            'Easy Elements - Gutenberg',
-            'Easy Elements - Gutenberg',
+            'ShapeBlock',
+            'ShapeBlock',
             'manage_options',
-            'easy-elements-for-gutenberg',
+            'shapeblock',
             array( $this, 'render_menu_page' ),
-            EELFG_PL_URL . 'assets/images/icons/plugin-icon-18_18.svg', // image icon
+            SHAPEBLOCK_PL_URL . 'assets/images/icons/plugin-icon-18_18.svg', // image icon
             26
         );
 
         foreach ( self::get_admin_pages() as $slug => $page ) {
             add_submenu_page(
-                'easy-elements-for-gutenberg',
-                'Easy Elements - ' . $page['label'],
+                'shapeblock',
+                'ShapeBlock - ' . $page['label'],
                 $page['label'],
                 'manage_options',
                 $slug,
@@ -86,42 +87,40 @@ class Main {
         $page  = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
         $tab   = isset( $pages[ $page ] ) ? $pages[ $page ]['tab'] : 'blocks';
 
-        echo '<div class="eelfg-options-wrap">';
-        echo '<div id="eelfg-dashboard" data-initial-tab="' . esc_attr( $tab ) . '"></div>';
+        echo '<div class="shapeblock-options-wrap">';
+        echo '<div id="shapeblock-dashboard" data-initial-tab="' . esc_attr( $tab ) . '"></div>';
         echo '</div>';
     }
 
     public function render_blocks_page() {
-        echo '<div class="eelfg-options-wrap">';
-        echo '<div id="eelfg-blocks">Easy Elements Blocks</div>';
+        echo '<div class="shapeblock-options-wrap">';
+        echo '<div id="shapeblock-blocks">ShapeBlock Blocks</div>';
         echo '</div>';
     }
 
     public static function activate() {
-        update_option( 'eelfg_version', EELFG_VERSION );
+        update_option( 'shapeblock_version', SHAPEBLOCK_VERSION );
 
         // enable all blocks 
-        $blocks = \EELFG\Admin\Blocks::instance()->get_blocks();
+        $blocks = \ShapeBlock\Admin\Blocks::instance()->get_blocks();
         foreach ( $blocks as $block ) {
             // update option if option not exist
-            if (!get_option('eelfg_block_' . $block['id'])) {
-                update_option('eelfg_block_' . $block['id'], 'enable');
+            if (!get_option('shapeblock_block_' . $block['id'])) {
+                update_option('shapeblock_block_' . $block['id'], 'enable');
             }
         }
     }
 
     public static function deactivate() {
-        delete_option( 'eelfg_version' );
+        delete_option( 'shapeblock_version' );
     }
 
     public function plugin_action_links( $plugin_actions, $plugin_file, $plugin_data, $context ) {
 
 		$new_actions = array();
 		/* translators: 1: Settings Text */
-		$new_actions['eelfg_plugin_actions_setting'] = sprintf( __( '<a href="%s" target="_self">Settings</a>', 'easy-elements-for-gutenberg' ), esc_url( admin_url( 'admin.php?page=easy-elements-for-gutenberg' ) ) );
-		
-		/* translators: 1: Upgrade to pro text. */
-		$new_actions['eelfg_plugin_actions_upgrade'] = sprintf( __( '<a href="%s" style="color: #39b54a; font-weight: bold;"  target="_blank">Upgrade to Pro</a>', 'easy-elements-for-gutenberg' ), esc_url( 'https://themewant.com/plugins/easy-elements-for-gutenberg/pricing/' ) );
+		$new_actions['shapeblock_plugin_actions_setting'] = sprintf( __( '<a href="%s" target="_self">Settings</a>', 'shapeblock' ), esc_url( admin_url( 'admin.php?page=shapeblock' ) ) );
+
 		return array_merge( $new_actions, $plugin_actions );
 
 	}

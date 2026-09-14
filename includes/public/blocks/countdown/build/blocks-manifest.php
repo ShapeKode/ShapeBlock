@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/countdown',
+		'name' => 'shapeblock/countdown',
 		'version' => '0.1.0',
 		'title' => 'Countdown',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'A countdown timer to a target date with days/hours/minutes/seconds, custom labels, separators and full styling.',
 		'keywords' => array(
 			'countdown',
@@ -27,23 +27,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
@@ -74,7 +60,7 @@ return array(
 			),
 			'separator' => array(
 				'type' => 'string',
-				'default' => 'eelfg-cntdwn-space'
+				'default' => 'shapeblock-cntdwn-space'
 			),
 			'labelUnderNumber' => array(
 				'type' => 'boolean',
@@ -84,7 +70,23 @@ return array(
 				'type' => 'string',
 				'default' => 'center'
 			),
+			'contentAlignTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'contentAlignMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'midGap' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'midGapTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'midGapMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -130,6 +132,12 @@ return array(
 			'itemPadding' => array(
 				'type' => 'object'
 			),
+			'itemPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'itemPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'daysTypography' => array(
 				'type' => 'object',
 				'default' => array(
@@ -140,6 +148,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'daysTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'daysTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'daysColor' => array(
@@ -162,6 +182,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'daysLabelTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'daysLabelTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'hoursTypography' => array(
 				'type' => 'object',
 				'default' => array(
@@ -172,6 +204,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'hoursTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'hoursTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'hoursColor' => array(
@@ -194,6 +238,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'hoursLabelTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'hoursLabelTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'minutesTypography' => array(
 				'type' => 'object',
 				'default' => array(
@@ -204,6 +260,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'minutesTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'minutesTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'minutesColor' => array(
@@ -226,6 +294,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'minutesLabelTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'minutesLabelTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'secondsTypography' => array(
 				'type' => 'object',
 				'default' => array(
@@ -236,6 +316,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'secondsTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'secondsTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'secondsColor' => array(
@@ -257,6 +349,30 @@ return array(
 					'lineHeight' => '',
 					'letterSpacing' => ''
 				)
+			),
+			'secondsLabelTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'secondsLabelTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

@@ -1,40 +1,42 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "easy-elements-for-gutenberg/icon",
+	"name": "shapeblock/icon",
 	"version": "0.1.0",
 	"title": "Icon",
-	"category": "easy-elements-for-gutenberg",
+	"category": "shapeblock",
 	"description": "A single icon with color, size, background, border, rotation and link — like Elementor's Icon widget.",
 	"keywords": [ "icon", "svg", "glyph", "symbol" ],
 	"example": {},
 	"supports": {
 		"html": false,
-		"align": [ "left", "center", "right", "wide", "full" ],
-		"spacing": {
-			"padding": [ "top", "bottom", "left", "right" ],
-			"margin": [ "top", "bottom", "left", "right" ]
-		}
+		"align": [ "left", "center", "right", "wide", "full" ]
 	},
-	"textdomain": "easy-elements-for-gutenberg",
+	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php",
 	"attributes": {
 		"blockId": { "type": "string", "default": "" },
 
-		"icon": { "type": "string", "default": "eelfg-icon-favorite" },
+		"icon": { "type": "string", "default": "shapeblock-icon-favorite" },
 		"view": { "type": "string", "default": "default" },
 		"shape": { "type": "string", "default": "circle" },
 		"iconUrl": { "type": "string", "default": "" },
 		"iconTarget": { "type": "boolean", "default": false },
 		"iconNofollow": { "type": "boolean", "default": false },
 		"alignment": { "type": "string", "default": "center" },
+		"alignmentTablet": { "type": "string", "default": "" },
+		"alignmentMobile": { "type": "string", "default": "" },
 
 		"iconColor": { "type": "string", "default": "" },
 		"iconSize": { "type": "string", "default": "48" },
+		"iconSizeTablet": { "type": "string", "default": "" },
+		"iconSizeMobile": { "type": "string", "default": "" },
 		"iconRotation": { "type": "string", "default": "" },
 		"iconBg": { "type": "string", "default": "" },
 		"iconPadding": { "type": "object" },
+		"iconPaddingTablet": { "type": "object" },
+		"iconPaddingMobile": { "type": "object" },
 		"iconBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"iconBorderRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"iconBoxShadow": { "type": "object", "default": { "x": 0, "y": 0, "b": 0, "s": 0, "c": "rgba(0, 0, 0, 0)" } },
@@ -42,6 +44,9 @@
 		"iconColorHover": { "type": "string", "default": "" },
 		"iconBgHover": { "type": "string", "default": "" },
 		"iconBorderHover": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
-		"iconRotationHover": { "type": "string", "default": "" }
-	}
+		"iconRotationHover": { "type": "string", "default": "" },
+	"hideDesktop": { "type": "boolean", "default": false },
+	"hideTablet": { "type": "boolean", "default": false },
+	"hideMobile": { "type": "boolean", "default": false }
+}
 }

@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/image-comparison',
+		'name' => 'shapeblock/image-comparison',
 		'version' => '0.1.0',
 		'title' => 'Image Comparison',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'A before / after image comparison slider with a draggable handle — horizontal or vertical.',
 		'keywords' => array(
 			'before',
@@ -27,23 +27,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
@@ -76,6 +62,14 @@ return array(
 				'type' => 'string',
 				'default' => '540'
 			),
+			'heightTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'heightMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'containerRadius' => array(
 				'type' => 'object',
 				'default' => array(
@@ -84,6 +78,18 @@ return array(
 					'bottom' => '',
 					'left' => ''
 				)
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

@@ -1,5 +1,17 @@
-# node_modules
-node_modules
+# Dependencies — reinstalled with `npm install`, never committed.
+node_modules/
 
-# all zip
+# Packaged releases and logs.
 *.zip
+*.log
+
+# Source maps are build output, not source.
+*.map
+
+# OS cruft.
+.DS_Store
+Thumbs.db
+
+# Local environment.
+.env
+.env.*

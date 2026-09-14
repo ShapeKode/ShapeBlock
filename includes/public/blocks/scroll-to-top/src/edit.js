@@ -7,6 +7,7 @@ import {
 	SelectControl,
 	TextControl,
 	BoxControl,
+	TabPanel,
 	__experimentalDivider as Divider,
 } from '@wordpress/components';
 
@@ -14,15 +15,20 @@ import ColorPopover from '../../custom-components/ColorPopover';
 import IconPicker from '../../custom-components/IconPicker';
 import BorderControl from '../../custom-components/BorderControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
+import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 
 import './editor.scss';
+
+// Map a base attribute name to its per-device key (desktop uses the base name).
+const getKey = (base, device) =>
+	device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
 
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const { blockId } = attributes;
 
 	useEffect(() => {
 		if (!blockId) {
-			setAttributes({ blockId: 'eelfg-stt-' + clientId.slice(0, 6) });
+			setAttributes({ blockId: 'shapeblock-stt-' + clientId.slice(0, 6) });
 		}
 	}, [blockId, clientId, setAttributes]);
 
@@ -49,51 +55,90 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			__nextHasNoMarginBottom
 		/>
 	);
+	// Responsive variants — a device switcher above the control, editing the
+	// matching per-device attribute (base / baseTablet / baseMobile).
+	const respBox = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => <BoxControl values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
+		</ResponsiveWrapper>
+	);
+	const respNum = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => {
+				const k = getKey(base, device);
+				return <TextControl type="number" value={attributes[k]} onChange={(v) => setAttributes({ [k]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
+			}}
+		</ResponsiveWrapper>
+	);
+
+	// --- Tab 1: Settings (content & behavior) ---------------------------------
+	const settingsTab = (
+		<PanelBody title={__('Button', 'shapeblock')} initialOpen={true}>
+			<IconPicker label={__('Icon', 'shapeblock')} value={attributes.scrollIcon || ''} onChange={(v) => setAttributes({ scrollIcon: v })} />
+			<SelectControl
+				label={__('Horizontal Position', 'shapeblock')}
+				value={attributes.position}
+				options={[
+					{ label: __('Right', 'shapeblock'), value: 'right' },
+					{ label: __('Left', 'shapeblock'), value: 'left' },
+				]}
+				onChange={(v) => setAttributes({ position: v })}
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			/>
+			<Divider />
+			{num(__('Show After Scroll (px)', 'shapeblock'), 'showAfter')}
+		</PanelBody>
+	);
+
+	// --- Tab 2: Layout (size, spacing & position) -----------------------------
+	const layoutTab = (
+		<PanelBody title={__('Button', 'shapeblock')} initialOpen={true}>
+			{respNum(__('Button Size (px)', 'shapeblock'), 'buttonSize')}
+			{respNum(__('Icon Size (px)', 'shapeblock'), 'iconSize')}
+			{respBox(__('Padding', 'shapeblock'), 'sttPadding')}
+			<Divider />
+			{num(__('Horizontal Offset (px)', 'shapeblock'), 'offsetX')}
+			{num(__('Bottom Offset (px)', 'shapeblock'), 'offsetY')}
+		</PanelBody>
+	);
+
+	// --- Tab 3: Style (appearance) --------------------------------------------
+	const styleTab = (
+		<PanelBody title={__('Button', 'shapeblock')} initialOpen={true}>
+			{color(__('Icon Color', 'shapeblock'), 'color')}
+			{color(__('Background', 'shapeblock'), 'bgColor')}
+			{border(__('Border', 'shapeblock'), 'sttBorder')}
+			{shadow(__('Box Shadow', 'shapeblock'), 'sttBoxShadow')}
+			<Divider />
+			{color(__('Icon Color (Hover)', 'shapeblock'), 'colorHover')}
+			{color(__('Background (Hover)', 'shapeblock'), 'bgColorHover')}
+			<Divider />
+			{box(__('Border Radius', 'shapeblock'), 'sttRadius')}
+		</PanelBody>
+	);
 
 	return (
 		<div {...useBlockProps()}>
 			<InspectorControls>
-				<PanelBody title={__('Button', 'easy-elements-for-gutenberg')} initialOpen={true}>
-					<IconPicker label={__('Icon', 'easy-elements-for-gutenberg')} value={attributes.scrollIcon || ''} onChange={(v) => setAttributes({ scrollIcon: v })} />
-					{num(__('Button Size (px)', 'easy-elements-for-gutenberg'), 'buttonSize')}
-					{num(__('Icon Size (px)', 'easy-elements-for-gutenberg'), 'iconSize')}
-				</PanelBody>
-
-				<PanelBody title={__('Position', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					<SelectControl
-						label={__('Horizontal Position', 'easy-elements-for-gutenberg')}
-						value={attributes.position}
-						options={[
-							{ label: __('Right', 'easy-elements-for-gutenberg'), value: 'right' },
-							{ label: __('Left', 'easy-elements-for-gutenberg'), value: 'left' },
-						]}
-						onChange={(v) => setAttributes({ position: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					{num(__('Horizontal Offset (px)', 'easy-elements-for-gutenberg'), 'offsetX')}
-					{num(__('Bottom Offset (px)', 'easy-elements-for-gutenberg'), 'offsetY')}
-					<Divider />
-					{num(__('Show After Scroll (px)', 'easy-elements-for-gutenberg'), 'showAfter')}
-				</PanelBody>
+				<TabPanel
+					className="shapeblock-inspector-tabs"
+					activeClass="is-active"
+					tabs={[
+						{ name: 'settings', title: __('Settings', 'shapeblock') },
+						{ name: 'layout', title: __('Layout', 'shapeblock') },
+						{ name: 'style', title: __('Style', 'shapeblock') },
+					]}
+				>
+					{(tab) => (
+						tab.name === 'settings' ? settingsTab :
+						tab.name === 'layout' ? layoutTab :
+						styleTab
+					)}
+				</TabPanel>
 			</InspectorControls>
 
-			<InspectorControls group="styles">
-				<PanelBody title={__('Button', 'easy-elements-for-gutenberg')} initialOpen={false}>
-					{color(__('Icon Color', 'easy-elements-for-gutenberg'), 'color')}
-					{color(__('Background', 'easy-elements-for-gutenberg'), 'bgColor')}
-					{border(__('Border', 'easy-elements-for-gutenberg'), 'sttBorder')}
-					{shadow(__('Box Shadow', 'easy-elements-for-gutenberg'), 'sttBoxShadow')}
-					<Divider />
-					{color(__('Icon Color (Hover)', 'easy-elements-for-gutenberg'), 'colorHover')}
-					{color(__('Background (Hover)', 'easy-elements-for-gutenberg'), 'bgColorHover')}
-					<Divider />
-					{box(__('Border Radius', 'easy-elements-for-gutenberg'), 'sttRadius')}
-					{box(__('Padding', 'easy-elements-for-gutenberg'), 'sttPadding')}
-				</PanelBody>
-			</InspectorControls>
-
-			<ServerSideRender block="easy-elements-for-gutenberg/scroll-to-top" attributes={attributes} httpMethod="POST" />
+			<ServerSideRender block="shapeblock/scroll-to-top" attributes={attributes} httpMethod="POST" />
 		</div>
 	);
 }

@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/icon',
+		'name' => 'shapeblock/icon',
 		'version' => '0.1.0',
 		'title' => 'Icon',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'A single icon with color, size, background, border, rotation and link — like Elementor\'s Icon widget.',
 		'keywords' => array(
 			'icon',
@@ -26,23 +26,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'render' => 'file:./render.php',
 		'attributes' => array(
@@ -52,7 +38,7 @@ return array(
 			),
 			'icon' => array(
 				'type' => 'string',
-				'default' => 'eelfg-icon-favorite'
+				'default' => 'shapeblock-icon-favorite'
 			),
 			'view' => array(
 				'type' => 'string',
@@ -78,6 +64,14 @@ return array(
 				'type' => 'string',
 				'default' => 'center'
 			),
+			'alignmentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'alignmentMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'iconColor' => array(
 				'type' => 'string',
 				'default' => ''
@@ -85,6 +79,14 @@ return array(
 			'iconSize' => array(
 				'type' => 'string',
 				'default' => '48'
+			),
+			'iconSizeTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'iconSizeMobile' => array(
+				'type' => 'string',
+				'default' => ''
 			),
 			'iconRotation' => array(
 				'type' => 'string',
@@ -95,6 +97,12 @@ return array(
 				'default' => ''
 			),
 			'iconPadding' => array(
+				'type' => 'object'
+			),
+			'iconPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'iconPaddingMobile' => array(
 				'type' => 'object'
 			),
 			'iconBorder' => array(
@@ -143,6 +151,18 @@ return array(
 			'iconRotationHover' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

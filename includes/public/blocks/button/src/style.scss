@@ -3,10 +3,10 @@
  *
  * Structure ported from the Elementor widget
  * (easy-elements/widgets/button/css/button.scss). Element classes use this
- * plugin's own "eelfg-" prefix and preset CSS variables.
+ * plugin's own "shapeblock-" prefix and preset CSS variables.
  */
 
-.eelfg-button-gradient {
+.shapeblock-button-gradient {
 	position: relative;
 	overflow: hidden;
 
@@ -25,9 +25,9 @@
 	&::after {
 		background: linear-gradient(
 			68.75deg,
-			var(--eelfg-gradient-1, #4750cc) 9.78%,
-			var(--eelfg-gradient-2, #ef5ce8) 58.79%,
-			var(--eelfg-gradient-3, #efc7ae) 92.67%
+			var(--shapeblock-gradient-1, #4750cc) 9.78%,
+			var(--shapeblock-gradient-2, #ef5ce8) 58.79%,
+			var(--shapeblock-gradient-3, #efc7ae) 92.67%
 		);
 		opacity: 1;
 	}
@@ -35,9 +35,9 @@
 	&::before {
 		background: linear-gradient(
 			-68.75deg,
-			var(--eelfg-gradient-1, #4750cc) 9.78%,
-			var(--eelfg-gradient-2, #ef5ce8) 58.79%,
-			var(--eelfg-gradient-3, #efc7ae) 92.67%
+			var(--shapeblock-gradient-1, #4750cc) 9.78%,
+			var(--shapeblock-gradient-2, #ef5ce8) 58.79%,
+			var(--shapeblock-gradient-3, #efc7ae) 92.67%
 		);
 		opacity: 0;
 	}
@@ -58,7 +58,7 @@
 }
 
 /* Base button */
-.eelfg-button {
+.shapeblock-button {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -83,44 +83,44 @@
 	}
 }
 
-.eelfg-button-primary {
-	background-color: var(--eelfg-preset-color-primary, #ffd012);
+.shapeblock-button-primary {
+	background-color: var(--shapeblock-preset-color-primary, #ffd012);
 	color: #ffffff;
 
 	&:hover {
-		background-color: var(--eelfg-preset-color-secondary, #0b3665);
-		border-color: var(--eelfg-preset-color-secondary, #0b3665);
+		background-color: var(--shapeblock-preset-color-secondary, #0b3665);
+		border-color: var(--shapeblock-preset-color-secondary, #0b3665);
 	}
 }
 
-.eelfg-button-outline {
+.shapeblock-button-outline {
 	background-color: transparent;
-	color: var(--eelfg-preset-color-secondary, #0b3665);
-	border: 2px solid var(--eelfg-preset-color-secondary, #0b3665);
+	color: var(--shapeblock-preset-color-secondary, #0b3665);
+	border: 2px solid var(--shapeblock-preset-color-secondary, #0b3665);
 
 	&:hover {
-		background-color: var(--eelfg-preset-color-primary, #ffd012);
+		background-color: var(--shapeblock-preset-color-primary, #ffd012);
 	}
 }
 
 /* Icon wrappers */
-.eelfg-button-icon-before,
-.eelfg-button-icon-after {
+.shapeblock-button-icon-before,
+.shapeblock-button-icon-after {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	transition: all 0.3s ease;
 }
 
-.eelfg-button-icon-before {
+.shapeblock-button-icon-before {
 	margin-right: 8px;
 }
 
-.eelfg-button-icon-after {
+.shapeblock-button-icon-after {
 	margin-left: 8px;
 }
 
-.eelfg-button {
+.shapeblock-button {
 	i,
 	svg {
 		color: inherit;
@@ -132,8 +132,8 @@
 		height: 1em;
 	}
 
-	.eelfg-button-icon-before svg path,
-	.eelfg-button-icon-after svg path {
+	.shapeblock-button-icon-before svg path,
+	.shapeblock-button-icon-after svg path {
 		fill: currentColor;
 	}
 
@@ -145,32 +145,32 @@
 	}
 }
 
-.eelfg-button-text {
+.shapeblock-button-text {
 	display: inline-block;
 	vertical-align: middle;
 }
 
 /* Icon-only button variant */
-.eelfg-button-icon_btn {
+.shapeblock-button-icon_btn {
 	background: transparent;
 
-	.eelfg-button-icon-after,
-	.eelfg-button-icon-before {
+	.shapeblock-button-icon-after,
+	.shapeblock-button-icon-before {
 		display: inline-grid;
 		place-content: center;
 		place-items: center;
 		width: 64px;
 		height: 64px;
 		border-radius: 50%;
-		background-color: var(--eelfg-preset-color-primary, #ffd012);
+		background-color: var(--shapeblock-preset-color-primary, #ffd012);
 		color: #ffffff;
 		margin-right: 16px;
 	}
 }
 
 /* Gradient border button */
-.eelfg-button {
-	&.eelfg-button-border-gradient {
+.shapeblock-button {
+	&.shapeblock-button-border-gradient {
 		z-index: 1;
 		transition: all 0.4s ease;
 		position: relative;
@@ -182,7 +182,7 @@
 			position: absolute;
 			inset: 0;
 			padding: 2px;
-			background: linear-gradient(90deg, var(--eelfg-border-gradient-1, #a53e1b) 0%, var(--eelfg-border-gradient-2, #173998) 100%);
+			background: linear-gradient(90deg, var(--shapeblock-border-gradient-1, #a53e1b) 0%, var(--shapeblock-border-gradient-2, #173998) 100%);
 			-webkit-mask:
 				linear-gradient(#fff 0 0) content-box,
 				linear-gradient(#fff 0 0);
@@ -194,7 +194,21 @@
 
 		&:hover {
 			color: #fff;
-			background: linear-gradient(90deg, var(--eelfg-border-gradient-1, #a53e1b), var(--eelfg-border-gradient-2, #173998));
+			background: linear-gradient(90deg, var(--shapeblock-border-gradient-1, #a53e1b), var(--shapeblock-border-gradient-2, #173998));
 		}
+	}
+}
+
+/* --- Responsive defaults ------------------------------------------------
+ * Breakpoints match Helper::generate_responsive_css() and the visibility
+ * classes: tablet <= 1024px, mobile <= 767px. These are defaults only — the
+ * per-device values a user sets are printed as per-block CSS with a higher
+ * specificity, so they always win over what follows.
+ */
+@media (max-width: 767px) {
+	/* A long label must wrap instead of pushing the page sideways. */
+	.shapeblock-button-block-wrap .shapeblock-button {
+		max-width: 100%;
+		white-space: normal;
 	}
 }

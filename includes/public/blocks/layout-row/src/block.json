@@ -1,10 +1,10 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "easy-elements-for-gutenberg/layout-row",
+    "name": "shapeblock/layout-row",
     "version": "0.1.0",
     "title": "Row",
-    "category": "easy-elements-for-gutenberg",
+    "category": "shapeblock",
     "icon": "grid-view",
     "description": "A flexible row container that holds columns. Build any layout with responsive presets, flexbox controls and per-device styling.",
     "keywords": ["row", "container", "section", "layout", "columns", "grid", "flex"],
@@ -12,11 +12,9 @@
     "supports": {
         "html": false,
         "anchor": true,
-        "align": ["left", "center", "right", "wide", "full"],
-        "spacing": { "padding": false, "margin": false },
-        "color": { "background": false, "text": false, "gradients": false }
+        "align": ["left", "center", "right", "wide", "full"]
     },
-    "textdomain": "easy-elements-for-gutenberg",
+    "textdomain": "shapeblock",
     "editorScript": "file:./index.js",
     "editorStyle":  "file:./index.css",
     "render": "file:./render.php",
@@ -125,6 +123,10 @@
 
         "overflow":  { "type": "string", "default": "" },
         "zIndex":    { "type": "string", "default": "" },
-        "position":  { "type": "string", "default": "" }
+        "position":  { "type": "string", "default": "" },
+
+    "hideDesktop": { "type": "boolean", "default": false },
+    "hideTablet":  { "type": "boolean", "default": false },
+    "hideMobile":  { "type": "boolean", "default": false }
     }
 }

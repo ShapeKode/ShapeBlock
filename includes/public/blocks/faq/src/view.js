@@ -46,26 +46,26 @@
 	}
 
 	function initAccordion(wrap) {
-		if (wrap.dataset.eelfgFaqInit === '1') {
+		if (wrap.dataset.shapeblockFaqInit === '1') {
 			return;
 		}
-		wrap.dataset.eelfgFaqInit = '1';
+		wrap.dataset.shapeblockFaqInit = '1';
 
-		var accordion = wrap.querySelector('.eelfg-faq-accordion');
+		var accordion = wrap.querySelector('.shapeblock-faq-accordion');
 		if (!accordion) {
 			return;
 		}
 
 		// In "open all" mode every answer stays visible (handled by CSS); no toggling.
-		if (accordion.classList.contains('eelfg-faq-open-all')) {
+		if (accordion.classList.contains('shapeblock-faq-open-all')) {
 			return;
 		}
 
-		var items = Array.prototype.slice.call(accordion.querySelectorAll('.eelfg-faq-item'));
+		var items = Array.prototype.slice.call(accordion.querySelectorAll('.shapeblock-faq-item'));
 
 		items.forEach(function (item) {
-			var question = item.querySelector('.eelfg-faq-question');
-			var answer = item.querySelector('.eelfg-faq-answer');
+			var question = item.querySelector('.shapeblock-faq-question');
+			var answer = item.querySelector('.shapeblock-faq-answer');
 
 			if (!question || !answer) {
 				return;
@@ -81,7 +81,7 @@
 				items.forEach(function (other) {
 					if (other !== item && other.classList.contains('active')) {
 						other.classList.remove('active');
-						var otherAnswer = other.querySelector('.eelfg-faq-answer');
+						var otherAnswer = other.querySelector('.shapeblock-faq-answer');
 						if (otherAnswer) {
 							slideUp(otherAnswer);
 						}
@@ -101,12 +101,12 @@
 	}
 
 	function checkSticky() {
-		var hasSticky = !!document.querySelector('.eelfg-faq-sticky');
+		var hasSticky = !!document.querySelector('.shapeblock-faq-sticky');
 		document.body.classList.toggle('sticky-enabled-overlap-faq', hasSticky);
 	}
 
 	function initAll() {
-		var wraps = document.querySelectorAll('.eelfg-faq-block-wrap');
+		var wraps = document.querySelectorAll('.shapeblock-faq-block-wrap');
 		Array.prototype.forEach.call(wraps, initAccordion);
 		checkSticky();
 	}

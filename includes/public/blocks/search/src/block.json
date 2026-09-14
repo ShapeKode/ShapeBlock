@@ -1,21 +1,18 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "easy-elements-for-gutenberg/search",
+	"name": "shapeblock/search",
 	"version": "0.1.0",
 	"title": "Search",
-	"category": "easy-elements-for-gutenberg",
+	"category": "shapeblock",
 	"description": "A site search — popup lightbox skin or inline search field skin, with full styling.",
 	"keywords": [ "search", "input", "field", "popup", "form" ],
 	"example": {},
 	"supports": {
 		"html": false,
-		"align": [ "left", "center", "right", "wide", "full" ],
-		"spacing": {
-			"margin": [ "top", "bottom", "left", "right" ]
-		}
+		"align": [ "left", "center", "right", "wide", "full" ]
 	},
-	"textdomain": "easy-elements-for-gutenberg",
+	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
 	"viewScript": "file:./view.js",
 	"render": "file:./render.php",
@@ -26,8 +23,12 @@
 		"placeholder": { "type": "string", "default": "Type keywords here..." },
 		"openIcon": { "type": "string", "default": "" },
 		"closeIcon": { "type": "string", "default": "" },
+		"openIconImage": { "type": "object", "default": {} },
+		"closeIconImage": { "type": "object", "default": {} },
 
 		"iconSize": { "type": "string", "default": "" },
+		"iconSizeTablet": { "type": "string", "default": "" },
+		"iconSizeMobile": { "type": "string", "default": "" },
 		"iconColor": { "type": "string", "default": "" },
 		"iconVerticalPosition": { "type": "string", "default": "" },
 		"iconPositionSide": { "type": "string", "default": "right" },
@@ -38,12 +39,20 @@
 			"type": "object",
 			"default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" }
 		},
+		"inputTypographyTablet": { "type": "object", "default": {} },
+		"inputTypographyMobile": { "type": "object", "default": {} },
 		"inputTextColor": { "type": "string", "default": "" },
 		"placeholderColor": { "type": "string", "default": "" },
 		"inputBgColor": { "type": "string", "default": "" },
 		"inputPadding": { "type": "object" },
+		"inputPaddingTablet": { "type": "object" },
+		"inputPaddingMobile": { "type": "object" },
 		"inputHeight": { "type": "string", "default": "" },
+		"inputHeightTablet": { "type": "string", "default": "" },
+		"inputHeightMobile": { "type": "string", "default": "" },
 		"inputFieldWidth": { "type": "string", "default": "" },
+		"inputFieldWidthTablet": { "type": "string", "default": "" },
+		"inputFieldWidthMobile": { "type": "string", "default": "" },
 		"inputBorderRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"inputBorderColor": { "type": "string", "default": "" },
 		"inputFocusBorderColor": { "type": "string", "default": "" },
@@ -53,6 +62,8 @@
 		"submitBtnBg": { "type": "string", "default": "" },
 		"submitBtnHoverBg": { "type": "string", "default": "" },
 		"submitPadding": { "type": "object" },
+		"submitPaddingTablet": { "type": "object" },
+		"submitPaddingMobile": { "type": "object" },
 
 		"overlayBg": { "type": "string", "default": "" },
 		"popupTitleColor": { "type": "string", "default": "" },
@@ -60,7 +71,14 @@
 			"type": "object",
 			"default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" }
 		},
+		"popupTitleTypographyTablet": { "type": "object", "default": {} },
+		"popupTitleTypographyMobile": { "type": "object", "default": {} },
 		"closeIconColor": { "type": "string", "default": "" },
-		"closeIconSize": { "type": "string", "default": "" }
-	}
+		"closeIconSize": { "type": "string", "default": "" },
+		"closeIconSizeTablet": { "type": "string", "default": "" },
+		"closeIconSizeMobile": { "type": "string", "default": "" },
+	"hideDesktop": { "type": "boolean", "default": false },
+	"hideTablet": { "type": "boolean", "default": false },
+	"hideMobile": { "type": "boolean", "default": false }
+}
 }

@@ -10,12 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Mirrors the markup of the Elementor "Team Grid" widget
  * (easy-elements/widgets/team-grid) — 5 skins, social icons, contact info and
- * an optional popup. Element classes use this plugin's "eelfg-" prefix.
+ * an optional popup. Element classes use this plugin's "shapeblock-" prefix.
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id  = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-team-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id  = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-team-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 $popup_id   = $unique_id . '-popup';
 
 $skin       = isset( $attributes['teamSkin'] ) ? $attributes['teamSkin'] : 'default';
@@ -37,24 +37,23 @@ $social_pos   = isset( $attributes['socialIconPosition'] ) ? $attributes['social
 $social_show  = isset( $attributes['socialIconShow'] ) ? $attributes['socialIconShow'] : 'dafault_show';
 $social_hover_icon = isset( $attributes['socialHoverIcon'] ) ? $attributes['socialHoverIcon'] : '';
 $social_links = isset( $attributes['socialLinks'] ) && is_array( $attributes['socialLinks'] ) ? $attributes['socialLinks'] : [];
-$fetch      = isset( $attributes['fetchpriority'] ) ? $attributes['fetchpriority'] : '';
 
 $show_contact = ! empty( $attributes['showContactInfo'] );
 $email      = isset( $attributes['teamEmail'] ) ? $attributes['teamEmail'] : '';
 $phone      = isset( $attributes['teamPhone'] ) ? $attributes['teamPhone'] : '';
 
 $block_wrap_attr = get_block_wrapper_attributes( array(
-	'class' => 'eelfg-block eelfg-team-grid-block-wrap ' . $unique_id . ' eelfg-team-wraps eelfg-team-grid eelfg-grid-layout ' . $skin,
+	'class' => 'shapeblock-block shapeblock-team-grid-block-wrap ' . $unique_id . ' shapeblock-team-wraps shapeblock-team-grid shapeblock-grid-layout ' . $skin,
 ) );
 if ( empty( $block_wrap_attr ) ) {
-	$block_wrap_attr = 'class="eelfg-block eelfg-team-grid-block-wrap ' . esc_attr( $unique_id ) . ' eelfg-team-wraps eelfg-team-grid eelfg-grid-layout ' . esc_attr( $skin ) . '"';
+	$block_wrap_attr = 'class="shapeblock-block shapeblock-team-grid-block-wrap ' . esc_attr( $unique_id ) . ' shapeblock-team-wraps shapeblock-team-grid shapeblock-grid-layout ' . esc_attr( $skin ) . '"';
 }
 
 // ---------------------------------------------------------------------------
 // Inline styles.
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-team-grid-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-team-grid-style';
+$selector     = '.shapeblock-team-grid-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-team-grid-style';
 
 $typo = function ( $obj ) use ( $H ) {
 	$out = [];
@@ -66,6 +65,7 @@ $typo = function ( $obj ) use ( $H ) {
 	if ( ! empty( $obj['textTransform'] ) ) $out['text-transform'] = $obj['textTransform'];
 	if ( ! empty( $obj['lineHeight'] ) ) $out['line-height'] = $obj['lineHeight'];
 	if ( ! empty( $obj['letterSpacing'] ) ) $out['letter-spacing'] = $H::ensure_unit( $obj['letterSpacing'] );
+	if ( ! empty( $obj['textDecoration'] ) ) $out['text-decoration'] = $obj['textDecoration'];
 	return $out;
 };
 $dims = function ( $obj, $type ) use ( $H ) {
@@ -200,52 +200,162 @@ $pop_det = $typo( $attributes['popupDetailsTypography'] ?? [] );
 if ( ! empty( $attributes['popupDetailsColor'] ) ) $pop_det['color'] = $attributes['popupDetailsColor'];
 $pop_close = ! empty( $attributes['popupCloseColor'] ) ? [ 'color' => $attributes['popupCloseColor'] ] : [];
 
-$scale_off = ! empty( $attributes['disableImageScale'] ) ? [ 'transform' => 'none' ] : [];
-$lift_off  = ! empty( $attributes['disableSocialLift'] ) ? [ 'transform' => 'none' ] : [];
+// ---------------------------------------------------------------------------
+// Responsive (Tablet / Mobile) overrides. The desktop CSS above is unchanged;
+// these rules are emitted only when the matching per-device attribute is set,
+// so existing content renders identically.
+// ---------------------------------------------------------------------------
+$name_sel        = '.shapeblock-name, ' . $selector . ' .shapeblock-team-grid.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-name';
+$deg_sel         = '.shapeblock-designation, ' . $selector . ' .shapeblock-team-grid.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-designation';
+$cicon_glyph_sel = '.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon i, ' . $selector . ' .shapeblock-team-card.skin5 .shapeblock-contact-icon svg';
+$soc_sel         = '.shapeblock-team-social ul li a, ' . $selector . ' .shapeblock-team-social .shapeblock-team-social-hover a';
+
+$build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $name_sel, $deg_sel, $cicon_glyph_sel, $soc_sel ) {
+	$ru = function ( $key ) use ( $attributes, $H ) {
+		return ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? $H::ensure_unit( $attributes[ $key ] ) : '';
+	};
+
+	// Team item padding.
+	$card = $dims( $attributes[ 'itemPadding' . $suffix ] ?? [], 'padding' );
+
+	// Name & designation area: padding + margin + alignment.
+	$wrap = array_merge( $dims( $attributes[ 'wrapPadding' . $suffix ] ?? [], 'padding' ), $dims( $attributes[ 'wrapMargin' . $suffix ] ?? [], 'margin' ) );
+	if ( ! empty( $attributes[ 'teamContentAlignment' . $suffix ] ) ) $wrap['text-align'] = $attributes[ 'teamContentAlignment' . $suffix ];
+
+	// Image box / img / area.
+	$img_box  = ( '' !== $ru( 'imageWidth' . $suffix ) ) ? [ 'max-width' => $ru( 'imageWidth' . $suffix ) ] : [];
+	$img_el   = ( '' !== $ru( 'imageHeightStyle' . $suffix ) ) ? [ 'height' => $ru( 'imageHeightStyle' . $suffix ) ] : [];
+	$img_area = $dims( $attributes[ 'imagePadding' . $suffix ] ?? [], 'padding' );
+	$below    = ( isset( $attributes[ 'imageBelowHeight' . $suffix ] ) && '' !== $attributes[ 'imageBelowHeight' . $suffix ] ) ? [ 'height' => $attributes[ 'imageBelowHeight' . $suffix ] . '%' ] : [];
+
+	// Name / designation typography.
+	$name_styles = $typo( $attributes[ 'nameTypography' . $suffix ] ?? [] );
+	$deg_styles  = $typo( $attributes[ 'designationTypography' . $suffix ] ?? [] );
+
+	// Contact (skin5).
+	$contact_wrap       = ( '' !== $ru( 'contactGap' . $suffix ) ) ? [ 'gap' => $ru( 'contactGap' . $suffix ) ] : [];
+	$contact_item       = $typo( $attributes[ 'contactTypography' . $suffix ] ?? [] );
+	$contact_icon       = ( '' !== $ru( 'contactIconBoxSize' . $suffix ) ) ? [ 'width' => $ru( 'contactIconBoxSize' . $suffix ), 'height' => $ru( 'contactIconBoxSize' . $suffix ) ] : [];
+	$contact_icon_glyph = ( '' !== $ru( 'contactIconSize' . $suffix ) ) ? [ 'font-size' => $ru( 'contactIconSize' . $suffix ) ] : [];
+
+	// Description.
+	$tdesc = $typo( $attributes[ 'teamDescriptionTypography' . $suffix ] ?? [] );
+	$desc3 = $typo( $attributes[ 'descTypography' . $suffix ] ?? [] );
+
+	// Social.
+	$soc = $typo( $attributes[ 'sIconTypography' . $suffix ] ?? [] );
+	if ( '' !== $ru( 'sIconButtonSize' . $suffix ) ) { $soc['width'] = $ru( 'sIconButtonSize' . $suffix ); $soc['height'] = $ru( 'sIconButtonSize' . $suffix ); }
+	$soc_ul    = ( '' !== $ru( 'sIconGap' . $suffix ) ) ? [ 'gap' => $ru( 'sIconGap' . $suffix ) ] : [];
+	$soc_area  = $dims( $attributes[ 'sIconAreaPadding' . $suffix ] ?? [], 'padding' );
+	$soc_align = ! empty( $attributes[ 'teamSocialIconAlignment' . $suffix ] ) ? [ 'justify-content' => $attributes[ 'teamSocialIconAlignment' . $suffix ] ] : [];
+
+	// Popup typography.
+	$pop_name = $typo( $attributes[ 'popupNameTypography' . $suffix ] ?? [] );
+	$pop_deg  = $typo( $attributes[ 'popupDesignationTypography' . $suffix ] ?? [] );
+	$pop_det  = $typo( $attributes[ 'popupDetailsTypography' . $suffix ] ?? [] );
+
+	return [
+		'.shapeblock-team-grid .shapeblock-team-card'                                                   => $card,
+		'.shapeblock-team-grid .shapeblock-team-card .shapeblock-name-deg-wrap'                              => $wrap,
+		'.shapeblock-team-card .shapeblock-team-img-box'                                                => $img_box,
+		'.shapeblock-team-card .shapeblock-team-img-box img'                                            => $img_el,
+		'.shapeblock-team-card .shapeblock-team-img-area'                                               => $img_area,
+		'.shapeblock-team-card .shapeblock-team-img-area .shapeblock-image-below-bg'                         => $below,
+		$name_sel                                                                             => $name_styles,
+		$deg_sel                                                                              => $deg_styles,
+		'.shapeblock-team-card.skin5 .shapeblock-author-contact'                                        => $contact_wrap,
+		'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item'                    => $contact_item,
+		'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon' => $contact_icon,
+		$cicon_glyph_sel                                                                      => $contact_icon_glyph,
+		'.shapeblock-team-description'                                                             => $tdesc,
+		'.shapeblock-image-content .shapeblock-description'                                             => $desc3,
+		$soc_sel                                                                              => $soc,
+		'.shapeblock-team-social ul'                                                               => $soc_ul,
+		'.shapeblock-team-social'                                                                  => $soc_area,
+		'.shapeblock-team-card .shapeblock-team-social.default ul'                                      => $soc_align,
+		'.shapeblock-popup-name .shapeblock-name'                                                       => $pop_name,
+		'.shapeblock-popup-designation'                                                            => $pop_deg,
+		'.shapeblock-popup-details'                                                                => $pop_det,
+	];
+};
+$dev_data      = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
+$sub_selectors = [
+	'.shapeblock-team-grid .shapeblock-team-card',
+	'.shapeblock-team-grid .shapeblock-team-card .shapeblock-name-deg-wrap',
+	'.shapeblock-team-card .shapeblock-team-img-box',
+	'.shapeblock-team-card .shapeblock-team-img-box img',
+	'.shapeblock-team-card .shapeblock-team-img-area',
+	'.shapeblock-team-card .shapeblock-team-img-area .shapeblock-image-below-bg',
+	$name_sel,
+	$deg_sel,
+	'.shapeblock-team-card.skin5 .shapeblock-author-contact',
+	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item',
+	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon',
+	$cicon_glyph_sel,
+	'.shapeblock-team-description',
+	'.shapeblock-image-content .shapeblock-description',
+	$soc_sel,
+	'.shapeblock-team-social ul',
+	'.shapeblock-team-social',
+	'.shapeblock-team-card .shapeblock-team-social.default ul',
+	'.shapeblock-popup-name .shapeblock-name',
+	'.shapeblock-popup-designation',
+	'.shapeblock-popup-details',
+];
+$resp_css = '';
+foreach ( $sub_selectors as $sub_sel ) {
+	$rdata = [];
+	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
+			$rdata[ $device_key ] = $dev_data[ $suffix ][ $sub_sel ];
+		}
+	}
+	if ( ! empty( $rdata ) ) {
+		$resp_css .= $H::generate_responsive_css( $selector . ' ' . $sub_sel, $rdata );
+	}
+}
 
 wp_enqueue_style( $style_handle );
-$H::add_custom_style( $style_handle, $selector, '', [
-	'.eelfg-team-grid .eelfg-team-card'                  => $H::get_inline_styles( $card ),
-	'.eelfg-team-grid .eelfg-team-card:hover'            => $H::get_inline_styles( $card_hover ),
-	'.eelfg-team-grid .eelfg-team-card .eelfg-name-deg-wrap' => $H::get_inline_styles( array_merge( $area, $content_align ) ),
-	'.eelfg-team-card .eelfg-team-img-box'               => $H::get_inline_styles( $img_box ),
-	'.eelfg-team-card .eelfg-team-img-box img'           => $H::get_inline_styles( $img_el ),
-	'.eelfg-team-card .eelfg-team-img-area'              => $H::get_inline_styles( $img_area ),
-	'.eelfg-team-card .eelfg-team-img-area .eelfg-image-below-bg' => $H::get_inline_styles( $below ),
-	'.eelfg-team-card .eelfg-image-overlay'              => $H::get_inline_styles( $overlay ),
-	'.eelfg-team-card .eelfg-team-img:hover img, ' . $selector . ' .eelfg-team-card .eelfg-team-img-area:hover img' => $H::get_inline_styles( $scale_off ),
-	'.eelfg-team-grid.skin4 .eelfg-team-hover-content, ' . $selector . ' .eelfg-team-grid.skin4 .eelfg-team-card .eelfg-team-hover-content.overlay2' => $H::get_inline_styles( $ov ),
-	'.eelfg-team-grid.skin4 .eelfg-team-card .eelfg-team-hover-content.overlay2' => $H::get_inline_styles( $ov2 ),
-	'.eelfg-name, ' . $selector . ' .eelfg-team-grid.skin4 .eelfg-team-hover-content.overlay2 .eelfg-name' => $H::get_inline_styles( $name_styles ),
-	'.eelfg-designation, ' . $selector . ' .eelfg-team-grid.skin4 .eelfg-team-hover-content.overlay2 .eelfg-designation' => $H::get_inline_styles( $deg_styles ),
-	'.eelfg-team-card.skin5 .eelfg-author-contact'       => $H::get_inline_styles( $contact_wrap ),
-	'.eelfg-team-card.skin5 .eelfg-author-contact .eelfg-contact-item' => $H::get_inline_styles( $contact_item ),
-	'.eelfg-team-card.skin5 .eelfg-author-contact .eelfg-contact-item:hover' => $H::get_inline_styles( $contact_item_hover ),
-	'.eelfg-team-card.skin5 .eelfg-author-contact .eelfg-contact-item .eelfg-contact-icon' => $H::get_inline_styles( $contact_icon ),
-	'.eelfg-team-card.skin5 .eelfg-author-contact .eelfg-contact-item .eelfg-contact-icon i, ' . $selector . ' .eelfg-team-card.skin5 .eelfg-contact-icon svg' => $H::get_inline_styles( array_merge( $contact_icon_glyph, $contact_icon_fill ) ),
-	'.eelfg-team-description'                            => $H::get_inline_styles( $tdesc ),
-	'.eelfg-image-content .eelfg-description'            => $H::get_inline_styles( $desc3 ),
-	'.eelfg-image-content'                               => $H::get_inline_styles( $desc3_box ),
-	'.eelfg-image-content:hover .eelfg-description'      => $H::get_inline_styles( $desc3_hover ),
-	'.eelfg-image-content:hover::before'                 => $H::get_inline_styles( $desc3_hover_bg ),
-	'.eelfg-team-social ul li a, ' . $selector . ' .eelfg-team-social .eelfg-team-social-hover a' => $H::get_inline_styles( $soc ),
-	'.eelfg-team-social ul li a:hover, ' . $selector . ' .eelfg-team-social .eelfg-team-social-hover a:hover' => $H::get_inline_styles( $soc_hover ),
-	'.eelfg-team-social ul'                              => $H::get_inline_styles( $soc_ul ),
-	'.eelfg-team-social'                                 => $H::get_inline_styles( array_merge( $soc_area, $soc_pos ) ),
-	'.eelfg-team-card .eelfg-team-social.default ul'     => $H::get_inline_styles( $soc_align ),
-	'.eelfg-team-social .eelfg-team-social-hover a:hover, ' . $selector . ' .eelfg-team-social ul li a:hover' => $H::get_inline_styles( $lift_off ),
-	'.eelfg-popup-content'                               => $H::get_inline_styles( $pop_content ),
-	'.eelfg-popup-name .eelfg-name'                      => $H::get_inline_styles( $pop_name ),
-	'.eelfg-popup-designation'                           => $H::get_inline_styles( $pop_deg ),
-	'.eelfg-popup-details'                               => $H::get_inline_styles( $pop_det ),
-	'.eelfg-popup-close'                                 => $H::get_inline_styles( $pop_close ),
+$H::add_custom_style( $style_handle, $selector, $resp_css, [
+	'.shapeblock-team-grid .shapeblock-team-card'                  => $H::get_inline_styles( $card ),
+	'.shapeblock-team-grid .shapeblock-team-card:hover'            => $H::get_inline_styles( $card_hover ),
+	'.shapeblock-team-grid .shapeblock-team-card .shapeblock-name-deg-wrap' => $H::get_inline_styles( array_merge( $area, $content_align ) ),
+	'.shapeblock-team-card .shapeblock-team-img-box'               => $H::get_inline_styles( $img_box ),
+	'.shapeblock-team-card .shapeblock-team-img-box img'           => $H::get_inline_styles( $img_el ),
+	'.shapeblock-team-card .shapeblock-team-img-area'              => $H::get_inline_styles( $img_area ),
+	'.shapeblock-team-card .shapeblock-team-img-area .shapeblock-image-below-bg' => $H::get_inline_styles( $below ),
+	'.shapeblock-team-card .shapeblock-image-overlay'              => $H::get_inline_styles( $overlay ),
+	'.shapeblock-team-grid.skin4 .shapeblock-team-hover-content, ' . $selector . ' .shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2' => $H::get_inline_styles( $ov ),
+	'.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2' => $H::get_inline_styles( $ov2 ),
+	'.shapeblock-name, ' . $selector . ' .shapeblock-team-grid.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-name' => $H::get_inline_styles( $name_styles ),
+	'.shapeblock-designation, ' . $selector . ' .shapeblock-team-grid.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-designation' => $H::get_inline_styles( $deg_styles ),
+	'.shapeblock-team-card.skin5 .shapeblock-author-contact'       => $H::get_inline_styles( $contact_wrap ),
+	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item' => $H::get_inline_styles( $contact_item ),
+	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item:hover' => $H::get_inline_styles( $contact_item_hover ),
+	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon' => $H::get_inline_styles( $contact_icon ),
+	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon i, ' . $selector . ' .shapeblock-team-card.skin5 .shapeblock-contact-icon svg' => $H::get_inline_styles( array_merge( $contact_icon_glyph, $contact_icon_fill ) ),
+	'.shapeblock-team-description'                            => $H::get_inline_styles( $tdesc ),
+	'.shapeblock-image-content .shapeblock-description'            => $H::get_inline_styles( $desc3 ),
+	'.shapeblock-image-content'                               => $H::get_inline_styles( $desc3_box ),
+	'.shapeblock-image-content:hover .shapeblock-description'      => $H::get_inline_styles( $desc3_hover ),
+	'.shapeblock-image-content:hover::before'                 => $H::get_inline_styles( $desc3_hover_bg ),
+	'.shapeblock-team-social ul li a, ' . $selector . ' .shapeblock-team-social .shapeblock-team-social-hover a' => $H::get_inline_styles( $soc ),
+	'.shapeblock-team-social ul li a:hover, ' . $selector . ' .shapeblock-team-social .shapeblock-team-social-hover a:hover' => $H::get_inline_styles( $soc_hover ),
+	'.shapeblock-team-social ul'                              => $H::get_inline_styles( $soc_ul ),
+	'.shapeblock-team-social'                                 => $H::get_inline_styles( array_merge( $soc_area, $soc_pos ) ),
+	'.shapeblock-team-card .shapeblock-team-social.default ul'     => $H::get_inline_styles( $soc_align ),
+	'.shapeblock-popup-content'                               => $H::get_inline_styles( $pop_content ),
+	'.shapeblock-popup-name .shapeblock-name'                      => $H::get_inline_styles( $pop_name ),
+	'.shapeblock-popup-designation'                           => $H::get_inline_styles( $pop_deg ),
+	'.shapeblock-popup-details'                               => $H::get_inline_styles( $pop_det ),
+	'.shapeblock-popup-close'                                 => $H::get_inline_styles( $pop_close ),
 ] );
 
 // ---------------------------------------------------------------------------
 // Markup helpers.
 // ---------------------------------------------------------------------------
 $icon_i = function ( $val, $fallback ) {
-	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="eelfg-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : $fallback;
+	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : $fallback;
 };
 $svg_link  = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12a3 3 0 013-3h3v2H6.9a1 1 0 100 2h3v2h-3a3 3 0 01-3-3zm6 1h4v-2h-4v2zm4-4h3a3 3 0 010 6h-3v-2h3a1 1 0 100-2h-3V9z"/></svg>';
 $svg_plus  = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M11 5v6H5v2h6v6h2v-6h6v-2h-6V5z"/></svg>';
@@ -259,11 +369,11 @@ if ( 'link' === $action && $link ) {
 	$open_link = '<a href="' . esc_url( $link ) . '"' . $target . $nofollow . '>';
 	$close_link = '</a>';
 } elseif ( 'popup' === $action ) {
-	$open_link = '<a href="#' . esc_attr( $popup_id ) . '" class="eelfg-popup-trigger" data-popup-id="' . esc_attr( $popup_id ) . '">';
+	$open_link = '<a href="#' . esc_attr( $popup_id ) . '" class="shapeblock-popup-trigger" data-popup-id="' . esc_attr( $popup_id ) . '">';
 	$close_link = '</a>';
 }
 
-$name_html = $name ? sprintf( '<%1$s class="eelfg-name">%2$s</%1$s>', tag_escape( $tag ), esc_html( $name ) ) : '';
+$name_html = $name ? sprintf( '<%1$s class="shapeblock-name">%2$s</%1$s>', tag_escape( $tag ), esc_html( $name ) ) : '';
 
 // Social markup.
 $social_html = '';
@@ -271,9 +381,9 @@ if ( $show_social && ! empty( $social_links ) ) {
 	$pos_classes = $social_pos . ' ' . $social_show;
 	ob_start();
 	?>
-	<div class="eelfg-team-social <?php echo esc_attr( $pos_classes ); ?>">
+	<div class="shapeblock-team-social <?php echo esc_attr( $pos_classes ); ?>">
 		<?php if ( 'hover_show' === $social_show && ! empty( $social_hover_icon ) ) : ?>
-			<div class="eelfg-team-social-hover"><a href="#"><?php echo $icon_i( $social_hover_icon, $svg_plus ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a></div>
+			<div class="shapeblock-team-social-hover"><a href="#"><?php echo $icon_i( $social_hover_icon, $svg_plus ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a></div>
 		<?php endif; ?>
 		<ul>
 			<?php foreach ( $social_links as $s ) : $su = isset( $s['url'] ) ? $s['url'] : '#'; ?>
@@ -288,18 +398,18 @@ $social_default = ( $show_social && ! empty( $social_links ) && 'default' === $s
 $social_positioned = ( $show_social && ! empty( $social_links ) && 'default' !== $social_pos ) ? $social_html : '';
 
 // Image markup.
-$img_alt = $img_url ? esc_attr( $image['alt'] ?? '' ) : esc_attr__( 'Team Image', 'easy-elements-for-gutenberg' );
-$placeholder = EELFG_PL_URL . 'includes/public/assets/img/placeholder.png';
+$img_alt = $img_url ? esc_attr( $image['alt'] ?? '' ) : esc_attr__( 'Team Image', 'shapeblock' );
+$placeholder = SHAPEBLOCK_PL_URL . 'includes/public/assets/img/placeholder.png';
 $img_src = $img_url ? $img_url : $placeholder;
 ob_start();
 ?>
-<div class="eelfg-team-img-box">
-	<img class="eelfg-team-img" src="<?php echo esc_url( $img_src ); ?>" alt="<?php echo $img_alt; // phpcs:ignore ?>" loading="lazy" decoding="async" fetchpriority="<?php echo esc_attr( $fetch ); ?>">
-	<div class="eelfg-image-below-bg"></div>
-	<div class="eelfg-image-overlay"></div>
+<div class="shapeblock-team-img-box">
+	<img class="shapeblock-team-img" src="<?php echo esc_url( $img_src ); ?>" alt="<?php echo $img_alt; // phpcs:ignore ?>" loading="lazy" decoding="async">
+	<div class="shapeblock-image-below-bg"></div>
+	<div class="shapeblock-image-overlay"></div>
 	<?php if ( in_array( $skin, [ 'skin3', 'skin5' ], true ) && $details ) : ?>
-		<div class="eelfg-image-content <?php echo 'skin5' === $skin ? 'has-description' : ''; ?>">
-			<div class="eelfg-description"><?php echo nl2br( esc_html( $details ) ); ?></div>
+		<div class="shapeblock-image-content <?php echo 'skin5' === $skin ? 'has-description' : ''; ?>">
+			<div class="shapeblock-description"><?php echo nl2br( esc_html( $details ) ); ?></div>
 		</div>
 	<?php endif; ?>
 </div>
@@ -310,10 +420,10 @@ $img_box_html = ob_get_clean();
 $build_name_wrap = function ( $extra_class = '', $with_details = true, $with_social = true ) use ( $name_html, $designation, $details, $social_default ) {
 	ob_start();
 	?>
-	<div class="eelfg-name-deg-wrap <?php echo esc_attr( $extra_class ); ?>">
+	<div class="shapeblock-name-deg-wrap <?php echo esc_attr( $extra_class ); ?>">
 		<?php echo $name_html; // phpcs:ignore ?>
-		<?php if ( $designation ) : ?><div class="eelfg-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
-		<?php if ( $with_details && $details ) : ?><div class="eelfg-team-description"><?php echo nl2br( esc_html( $details ) ); ?></div><?php endif; ?>
+		<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
+		<?php if ( $with_details && $details ) : ?><div class="shapeblock-team-description"><?php echo nl2br( esc_html( $details ) ); ?></div><?php endif; ?>
 		<?php if ( $with_social ) { echo $social_default; } // phpcs:ignore ?>
 	</div>
 	<?php
@@ -323,76 +433,76 @@ $build_name_wrap = function ( $extra_class = '', $with_details = true, $with_soc
 ob_start();
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="eelfg-grid-wrap">
+	<div class="shapeblock-grid-wrap">
 		<?php if ( 'skin1' === $skin ) : ?>
-			<div class="eelfg-grid-item">
-				<div class="eelfg-team-card">
-					<div class="eelfg-team-left">
+			<div class="shapeblock-grid-item">
+				<div class="shapeblock-team-card">
+					<div class="shapeblock-team-left">
 						<?php echo $open_link; // phpcs:ignore ?>
-						<div class="eelfg-team-img-area"><?php echo $img_box_html; // phpcs:ignore ?></div>
+						<div class="shapeblock-team-img-area"><?php echo $img_box_html; // phpcs:ignore ?></div>
 						<?php echo $close_link; // phpcs:ignore ?>
 					</div>
-					<div class="eelfg-team-right">
+					<div class="shapeblock-team-right">
 						<?php echo $build_name_wrap( '', true, false ); // phpcs:ignore ?>
 						<?php echo $social_default; // phpcs:ignore ?>
 					</div>
 				</div>
 			</div>
 		<?php elseif ( 'skin3' === $skin ) : ?>
-			<div class="eelfg-grid-item skin3">
-				<div class="eelfg-team-card">
+			<div class="shapeblock-grid-item skin3">
+				<div class="shapeblock-team-card">
 					<?php echo $open_link; // phpcs:ignore ?>
-					<div class="eelfg-team-img-area"><?php echo $img_box_html; // phpcs:ignore ?></div>
-					<div class="eelfg-team-deg-content">
-						<div class="eelfg-name-deg-wrap">
+					<div class="shapeblock-team-img-area"><?php echo $img_box_html; // phpcs:ignore ?></div>
+					<div class="shapeblock-team-deg-content">
+						<div class="shapeblock-name-deg-wrap">
 							<?php echo $name_html; // phpcs:ignore ?>
-							<?php if ( $designation ) : ?><div class="eelfg-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
+							<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
 						</div>
 					</div>
 					<?php echo $close_link; // phpcs:ignore ?>
-					<div class="eelfg-social-media"><?php echo $social_default; // phpcs:ignore ?></div>
+					<div class="shapeblock-social-media"><?php echo $social_default; // phpcs:ignore ?></div>
 					<?php echo $social_positioned; // phpcs:ignore ?>
 				</div>
 			</div>
 		<?php elseif ( 'skin4' === $skin ) : ?>
-			<div class="eelfg-grid-item">
-				<div class="eelfg-team-card">
+			<div class="shapeblock-grid-item">
+				<div class="shapeblock-team-card">
 					<?php echo $open_link; // phpcs:ignore ?>
-					<div class="eelfg-team-img-area"><?php echo $img_box_html; // phpcs:ignore ?></div>
+					<div class="shapeblock-team-img-area"><?php echo $img_box_html; // phpcs:ignore ?></div>
 					<?php echo $close_link; // phpcs:ignore ?>
-					<div class="eelfg-team-hover-content <?php echo esc_attr( $overlay4 ); ?>">
-						<div class="eelfg-name-deg-wrap">
+					<div class="shapeblock-team-hover-content <?php echo esc_attr( $overlay4 ); ?>">
+						<div class="shapeblock-name-deg-wrap">
 							<?php echo $name_html; // phpcs:ignore ?>
-							<?php if ( $designation ) : ?><div class="eelfg-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
+							<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
 						</div>
 						<?php echo ( $show_social && ! empty( $social_links ) ) ? $social_html : ''; // phpcs:ignore ?>
 					</div>
 				</div>
 			</div>
 		<?php elseif ( 'skin5' === $skin ) : ?>
-			<div class="eelfg-grid-item">
-				<div class="eelfg-team-card skin5">
-					<div class="eelfg-team-img-area">
+			<div class="shapeblock-grid-item">
+				<div class="shapeblock-team-card skin5">
+					<div class="shapeblock-team-img-area">
 						<?php echo $open_link; // phpcs:ignore ?>
 						<?php echo $img_box_html; // phpcs:ignore ?>
 						<?php echo $close_link; // phpcs:ignore ?>
-						<div class="eelfg-name-deg-wrap">
-							<div class="eelfg-author-content">
+						<div class="shapeblock-name-deg-wrap">
+							<div class="shapeblock-author-content">
 								<?php echo $name_html; // phpcs:ignore ?>
-								<?php if ( $designation ) : ?><div class="eelfg-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
+								<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
 							</div>
 							<?php if ( $show_contact && ( $email || $phone ) ) : ?>
-								<div class="eelfg-author-contact">
-									<div class="eelfg-contact-inner">
+								<div class="shapeblock-author-contact">
+									<div class="shapeblock-contact-inner">
 										<?php if ( $email ) : ?>
-											<div class="eelfg-team-email eelfg-contact-item">
-												<div class="eelfg-contact-icon"><?php echo $icon_i( $attributes['teamEmailIcon'] ?? '', $svg_mail ); // phpcs:ignore ?></div>
+											<div class="shapeblock-team-email shapeblock-contact-item">
+												<div class="shapeblock-contact-icon"><?php echo $icon_i( $attributes['teamEmailIcon'] ?? '', $svg_mail ); // phpcs:ignore ?></div>
 												<?php echo esc_html( $email ); ?>
 											</div>
 										<?php endif; ?>
 										<?php if ( $phone ) : ?>
-											<div class="eelfg-team-phone eelfg-contact-item">
-												<div class="eelfg-contact-icon"><?php echo $icon_i( $attributes['teamPhoneIcon'] ?? '', $svg_phone ); // phpcs:ignore ?></div>
+											<div class="shapeblock-team-phone shapeblock-contact-item">
+												<div class="shapeblock-contact-icon"><?php echo $icon_i( $attributes['teamPhoneIcon'] ?? '', $svg_phone ); // phpcs:ignore ?></div>
 												<?php echo esc_html( $phone ); ?>
 											</div>
 										<?php endif; ?>
@@ -404,9 +514,9 @@ ob_start();
 				</div>
 			</div>
 		<?php else : // default + skin2 ?>
-			<div class="eelfg-grid-item">
-				<div class="eelfg-team-card">
-					<div class="eelfg-team-img-area">
+			<div class="shapeblock-grid-item">
+				<div class="shapeblock-team-card">
+					<div class="shapeblock-team-img-area">
 						<?php echo $open_link; // phpcs:ignore ?>
 						<?php echo $img_box_html; // phpcs:ignore ?>
 						<?php echo $close_link; // phpcs:ignore ?>
@@ -419,15 +529,15 @@ ob_start();
 		<?php endif; ?>
 
 		<?php if ( 'popup' === $action ) : ?>
-			<div id="<?php echo esc_attr( $popup_id ); ?>" class="eelfg-popup-modal" style="display:none;">
-				<div class="eelfg-popup-content">
-					<span class="eelfg-popup-close">&times;</span>
-					<div class="eelfg-popup-header">
-						<?php if ( $name_html ) : ?><div class="eelfg-popup-name"><?php echo $name_html; // phpcs:ignore ?></div><?php endif; ?>
-						<?php if ( $designation ) : ?><div class="eelfg-popup-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
+			<div id="<?php echo esc_attr( $popup_id ); ?>" class="shapeblock-popup-modal" style="display:none;">
+				<div class="shapeblock-popup-content">
+					<span class="shapeblock-popup-close">&times;</span>
+					<div class="shapeblock-popup-header">
+						<?php if ( $name_html ) : ?><div class="shapeblock-popup-name"><?php echo $name_html; // phpcs:ignore ?></div><?php endif; ?>
+						<?php if ( $designation ) : ?><div class="shapeblock-popup-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
 					</div>
-					<div class="eelfg-popup-details">
-						<?php echo $details ? nl2br( esc_html( $details ) ) : '<p>' . esc_html__( 'No additional details available.', 'easy-elements-for-gutenberg' ) . '</p>'; ?>
+					<div class="shapeblock-popup-details">
+						<?php echo $details ? nl2br( esc_html( $details ) ) : '<p>' . esc_html__( 'No additional details available.', 'shapeblock' ) . '</p>'; ?>
 					</div>
 				</div>
 			</div>

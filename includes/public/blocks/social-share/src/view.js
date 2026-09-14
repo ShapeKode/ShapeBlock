@@ -30,10 +30,10 @@
 	}
 
 	function initCopy(btn) {
-		if (btn.dataset.eelfgCopyInit === '1') {
+		if (btn.dataset.shapeblockCopyInit === '1') {
 			return;
 		}
-		btn.dataset.eelfgCopyInit = '1';
+		btn.dataset.shapeblockCopyInit = '1';
 
 		btn.addEventListener('click', function (e) {
 			e.preventDefault();
@@ -42,17 +42,17 @@
 			copyText(url).then(function () {
 				var original = btn.innerHTML;
 				btn.innerHTML = CHECK_SVG;
-				btn.classList.add('eelfg-copied');
+				btn.classList.add('shapeblock-copied');
 				window.setTimeout(function () {
 					btn.innerHTML = original;
-					btn.classList.remove('eelfg-copied');
+					btn.classList.remove('shapeblock-copied');
 				}, 2000);
 			});
 		});
 	}
 
 	function initAll() {
-		var buttons = document.querySelectorAll('.eelfg-social-share-block-wrap .eelfg-social-copy');
+		var buttons = document.querySelectorAll('.shapeblock-social-share-block-wrap .shapeblock-social-copy');
 		Array.prototype.forEach.call(buttons, initCopy);
 	}
 

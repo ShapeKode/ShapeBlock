@@ -9,14 +9,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Server-side render for the Image Comparison block.
  *
  * Mirrors the markup of the Elementor "Image Comparison" widget
- * (easy-elements/widgets/image-comparison). Element classes use the "eelfg-" prefix.
+ * (easy-elements/widgets/image-comparison). Element classes use the "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-cmp-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-cmp-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $before = isset( $attributes['beforeImage'] ) && is_array( $attributes['beforeImage'] ) ? $attributes['beforeImage'] : [];
 $after  = isset( $attributes['afterImage'] ) && is_array( $attributes['afterImage'] ) ? $attributes['afterImage'] : [];
@@ -26,21 +26,21 @@ $after_url  = ! empty( $after['url'] ) ? $after['url'] : '';
 $orientation = ( isset( $attributes['orientation'] ) && 'vertical' === $attributes['orientation'] ) ? 'vertical' : 'horizontal';
 $offset      = isset( $attributes['offset'] ) ? max( 0, min( 100, (int) $attributes['offset'] ) ) / 100 : 0.5;
 
-$block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'eelfg-block eelfg-image-comparison-block-wrap ' . $unique_id ) );
+$block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'shapeblock-block shapeblock-image-comparison-block-wrap ' . $unique_id ) );
 if ( empty( $block_wrap_attr ) ) {
-	$block_wrap_attr = 'class="eelfg-block eelfg-image-comparison-block-wrap ' . esc_attr( $unique_id ) . '"';
+	$block_wrap_attr = 'class="shapeblock-block shapeblock-image-comparison-block-wrap ' . esc_attr( $unique_id ) . '"';
 }
 
 if ( '' === $before_url && '' === $after_url ) {
-	echo '<div ' . wp_kses_post( $block_wrap_attr ) . '><p>' . esc_html__( 'Please select before and after images.', 'easy-elements-for-gutenberg' ) . '</p></div>';
+	echo '<div ' . wp_kses_post( $block_wrap_attr ) . '><p>' . esc_html__( 'Please select before and after images.', 'shapeblock' ) . '</p></div>';
 	return;
 }
 
 // ---------------------------------------------------------------------------
 // Inline styles (scoped to this instance).
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-image-comparison-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-image-comparison-style';
+$selector     = '.shapeblock-image-comparison-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-image-comparison-style';
 
 $dims = function ( $obj ) use ( $H ) {
 	$out = [];
@@ -60,24 +60,51 @@ if ( '' !== $u( 'height' ) ) $container['min-height'] = $u( 'height' );
 
 $img = ( '' !== $u( 'height' ) ) ? [ 'height' => $u( 'height' ) ] : [];
 
+// ---------------------------------------------------------------------------
+// Responsive (Tablet / Mobile) overrides. The desktop CSS above is unchanged;
+// these rules are emitted only when the matching per-device attribute is set,
+// so existing content renders identically.
+// ---------------------------------------------------------------------------
+$build_dev = function ( $suffix ) use ( $attributes, $H ) {
+	$key = 'height' . $suffix;
+	$val = ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? $H::ensure_unit( $attributes[ $key ] ) : '';
+	return [
+		'.shapeblock-comparison-container'     => ( '' !== $val ) ? [ 'min-height' => $val ] : [],
+		'.shapeblock-comparison-container img' => ( '' !== $val ) ? [ 'height' => $val ] : [],
+	];
+};
+$dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
+$resp_css = '';
+foreach ( [ '.shapeblock-comparison-container', '.shapeblock-comparison-container img' ] as $sub_sel ) {
+	$rdata = [];
+	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
+			$rdata[ $device_key ] = $dev_data[ $suffix ][ $sub_sel ];
+		}
+	}
+	if ( ! empty( $rdata ) ) {
+		$resp_css .= $H::generate_responsive_css( $selector . ' ' . $sub_sel, $rdata );
+	}
+}
+
 wp_enqueue_style( $style_handle );
-$H::add_custom_style( $style_handle, $selector, '', [
-	'.eelfg-comparison-container'     => $H::get_inline_styles( $container ),
-	'.eelfg-comparison-container img' => $H::get_inline_styles( $img ),
+$H::add_custom_style( $style_handle, $selector, $resp_css, [
+	'.shapeblock-comparison-container'     => $H::get_inline_styles( $container ),
+	'.shapeblock-comparison-container img' => $H::get_inline_styles( $img ),
 ] );
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="eelfg-comparison eelfg-comparison-<?php echo esc_attr( $orientation ); ?>">
-		<div class="eelfg-comparison-container" data-offset="<?php echo esc_attr( $offset ); ?>" data-orientation="<?php echo esc_attr( $orientation ); ?>">
+	<div class="shapeblock-comparison shapeblock-comparison-<?php echo esc_attr( $orientation ); ?>">
+		<div class="shapeblock-comparison-container" data-offset="<?php echo esc_attr( $offset ); ?>" data-orientation="<?php echo esc_attr( $orientation ); ?>">
 			<?php if ( '' !== $before_url ) : ?>
-				<img class="eelfg-comparison-before" src="<?php echo esc_url( $before_url ); ?>" alt="<?php echo esc_attr( $before['alt'] ?? __( 'Before', 'easy-elements-for-gutenberg' ) ); ?>">
+				<img class="shapeblock-comparison-before" src="<?php echo esc_url( $before_url ); ?>" alt="<?php echo esc_attr( $before['alt'] ?? __( 'Before', 'shapeblock' ) ); ?>">
 			<?php endif; ?>
 			<?php if ( '' !== $after_url ) : ?>
-				<img class="eelfg-comparison-after" src="<?php echo esc_url( $after_url ); ?>" alt="<?php echo esc_attr( $after['alt'] ?? __( 'After', 'easy-elements-for-gutenberg' ) ); ?>">
+				<img class="shapeblock-comparison-after" src="<?php echo esc_url( $after_url ); ?>" alt="<?php echo esc_attr( $after['alt'] ?? __( 'After', 'shapeblock' ) ); ?>">
 			<?php endif; ?>
-			<div class="eelfg-comparison-handle">
-				<span class="eelfg-comparison-left-arrow"></span>
-				<span class="eelfg-comparison-right-arrow"></span>
+			<div class="shapeblock-comparison-handle">
+				<span class="shapeblock-comparison-left-arrow"></span>
+				<span class="shapeblock-comparison-right-arrow"></span>
 			</div>
 		</div>
 	</div>

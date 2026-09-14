@@ -2,7 +2,7 @@
  * Tabs — front-end behaviour.
  *
  * Switching is done by toggling the `.active` class only; the stylesheet is the single source of
- * truth for show/hide + the opacity fade ( .eelfg-tab-content / .eelfg-tab-content.active ). The
+ * truth for show/hide + the opacity fade ( .shapeblock-tab-content / .shapeblock-tab-content.active ). The
  * previous setTimeout-based slide left multiple panels visible when tabs were clicked quickly
  * ( each click queued its own 300ms "hide" timer ), so switching is intentionally instant here.
  */
@@ -25,18 +25,18 @@
 	}
 
 	function initTabs(wrap) {
-		if (wrap.dataset.eelfgTabInit === '1') {
+		if (wrap.dataset.shapeblockTabInit === '1') {
 			return;
 		}
-		wrap.dataset.eelfgTabInit = '1';
+		wrap.dataset.shapeblockTabInit = '1';
 
-		var wrapper = wrap.querySelector('.eelfg-tabs-wrapper');
+		var wrapper = wrap.querySelector('.shapeblock-tabs-wrapper');
 		if (!wrapper) {
 			return;
 		}
 
-		var tabs = Array.prototype.slice.call(wrapper.querySelectorAll('.eelfg-tab-titles li'));
-		var contents = Array.prototype.slice.call(wrapper.querySelectorAll('.eelfg-tab-content'));
+		var tabs = Array.prototype.slice.call(wrapper.querySelectorAll('.shapeblock-tab-titles li'));
+		var contents = Array.prototype.slice.call(wrapper.querySelectorAll('.shapeblock-tab-content'));
 
 		if (!tabs.length || !contents.length) {
 			return;
@@ -63,7 +63,7 @@
 	}
 
 	function initAll() {
-		var wraps = document.querySelectorAll('.eelfg-tab-block-wrap');
+		var wraps = document.querySelectorAll('.shapeblock-tab-block-wrap');
 		Array.prototype.forEach.call(wraps, initTabs);
 	}
 

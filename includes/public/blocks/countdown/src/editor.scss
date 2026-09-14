@@ -1,7 +1,9 @@
+@use 'style';
+
 /**
  * Editor-only styles for the Countdown block.
  */
-.eelfg-countdown-block-wrap {
+.shapeblock-countdown-block-wrap {
 	// Nothing block-specific needed in the editor — the shared style.scss
 	// renders the preview. Placeholder kept so a build/index.css is emitted.
 	min-height: 1px;

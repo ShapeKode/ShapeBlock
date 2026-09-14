@@ -9,12 +9,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Server-side render for the Counter block.
  *
  * Mirrors the markup of the Elementor "Counter" widget
- * (easy-elements/widgets/counter). Element classes use the "eelfg-" prefix.
+ * (easy-elements/widgets/counter). Element classes use the "shapeblock-" prefix.
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-cnt-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-cnt-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $number    = isset( $attributes['number'] ) && '' !== $attributes['number'] ? $attributes['number'] : '0';
 $start     = isset( $attributes['startNumber'] ) && '' !== $attributes['startNumber'] ? $attributes['startNumber'] : '0';
@@ -31,9 +31,9 @@ $icon      = isset( $attributes['icon'] ) ? $attributes['icon'] : '';
 $title_pos = isset( $attributes['titlePosition'] ) ? $attributes['titlePosition'] : 'bottom';
 $icon_pos  = isset( $attributes['iconPosition'] ) ? $attributes['iconPosition'] : 'top';
 
-$wrap_classes = [ 'eelfg-block', 'eelfg-cnt-block-wrap', $unique_id ];
-if ( '' !== $title ) { $wrap_classes[] = 'eelfg-cnt-title-pos-' . $title_pos; }
-if ( $icon_on ) { $wrap_classes[] = 'eelfg-cnt-icon-pos-' . $icon_pos; }
+$wrap_classes = [ 'shapeblock-block', 'shapeblock-cnt-block-wrap', $unique_id ];
+if ( '' !== $title ) { $wrap_classes[] = 'shapeblock-cnt-title-pos-' . $title_pos; }
+if ( $icon_on ) { $wrap_classes[] = 'shapeblock-cnt-icon-pos-' . $icon_pos; }
 
 $block_wrap_attr = get_block_wrapper_attributes( array( 'class' => implode( ' ', $wrap_classes ) ) );
 if ( empty( $block_wrap_attr ) ) {
@@ -43,8 +43,8 @@ if ( empty( $block_wrap_attr ) ) {
 // ---------------------------------------------------------------------------
 // Inline styles.
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-cnt-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-counter-style';
+$selector     = '.shapeblock-cnt-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-counter-style';
 
 $typo = function ( $obj ) use ( $H ) {
 	$out = [];
@@ -56,6 +56,7 @@ $typo = function ( $obj ) use ( $H ) {
 	if ( ! empty( $obj['textTransform'] ) ) $out['text-transform'] = $obj['textTransform'];
 	if ( ! empty( $obj['lineHeight'] ) ) $out['line-height'] = $obj['lineHeight'];
 	if ( ! empty( $obj['letterSpacing'] ) ) $out['letter-spacing'] = $H::ensure_unit( $obj['letterSpacing'] );
+	if ( ! empty( $obj['textDecoration'] ) ) $out['text-decoration'] = $obj['textDecoration'];
 	return $out;
 };
 $dims = function ( $obj, $type ) use ( $H ) {
@@ -132,44 +133,94 @@ $icon_color = ! empty( $attributes['iconColor'] ) ? [ 'color' => $attributes['ic
 $icon_svg = ( '' !== $u( 'iconSize' ) ) ? [ 'width' => $u( 'iconSize' ) . ' !important', 'height' => $u( 'iconSize' ) . ' !important' ] : [];
 $icon_i = ( '' !== $u( 'iconSize' ) ) ? [ 'font-size' => $u( 'iconSize' ) ] : [];
 
+// ---------------------------------------------------------------------------
+// Responsive (Tablet / Mobile) overrides for layout controls. The desktop CSS
+// above is unchanged; these rules are emitted only when the matching per-device
+// attribute is set, so existing content renders identically.
+// ---------------------------------------------------------------------------
+$build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $u, $icon_on ) {
+	$wrap = [];
+	if ( ! empty( $attributes[ 'wrapAlign' . $suffix ] ) ) $wrap['align-items'] = $attributes[ 'wrapAlign' . $suffix ];
+	if ( $icon_on && '' !== $u( 'iconGap' . $suffix ) ) $wrap['gap'] = $u( 'iconGap' . $suffix );
+
+	$content = [];
+	if ( '' !== $u( 'contentGap' . $suffix ) ) $content['gap'] = $u( 'contentGap' . $suffix );
+	if ( ! empty( $attributes[ 'contentVerticalAlign' . $suffix ] ) ) $content['align-items'] = $attributes[ 'contentVerticalAlign' . $suffix ];
+
+	$number = $typo( $attributes[ 'numberTypography' . $suffix ] ?? [] );
+	if ( '' !== $u( 'numberStrokeWidth' . $suffix ) ) $number['-webkit-text-stroke-width'] = $u( 'numberStrokeWidth' . $suffix );
+	if ( '' !== $u( 'subPreGap' . $suffix ) ) $number['gap'] = $u( 'subPreGap' . $suffix );
+
+	$prefix   = $typo( $attributes[ 'prefixTypography' . $suffix ] ?? [] );
+	$suffix_s = $typo( $attributes[ 'suffixTypography' . $suffix ] ?? [] );
+
+	$title = $typo( $attributes[ 'titleTypography' . $suffix ] ?? [] );
+	if ( ! empty( $attributes[ 'titleAlign' . $suffix ] ) ) $title['text-align'] = $attributes[ 'titleAlign' . $suffix ];
+
+	$icon = $dims( $attributes[ 'iconPadding' . $suffix ] ?? [], 'padding' );
+
+	return [
+		'.shapeblock-cnt-wrap'        => $wrap,
+		'.shapeblock-cnt-content'     => $content,
+		'.shapeblock-cnt-number-wrap' => $number,
+		'.shapeblock-cnt-prefix'      => $prefix,
+		'.shapeblock-cnt-suffix'      => $suffix_s,
+		'.shapeblock-cnt-title'       => $title,
+		'.shapeblock-cnt-icon'        => $icon,
+	];
+};
+$dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
+$resp_css = '';
+foreach ( [ '.shapeblock-cnt-wrap', '.shapeblock-cnt-content', '.shapeblock-cnt-number-wrap', '.shapeblock-cnt-prefix', '.shapeblock-cnt-suffix', '.shapeblock-cnt-title', '.shapeblock-cnt-icon' ] as $sub_sel ) {
+	$rdata = [];
+	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
+			$rdata[ $device_key ] = $dev_data[ $suffix ][ $sub_sel ];
+		}
+	}
+	if ( ! empty( $rdata ) ) {
+		$resp_css .= $H::generate_responsive_css( $selector . ' ' . $sub_sel, $rdata );
+	}
+}
+
 wp_enqueue_style( $style_handle );
-$H::add_custom_style( $style_handle, $selector, '', [
-	'.eelfg-cnt-wrap'                            => $H::get_inline_styles( $wrap ),
-	'.eelfg-cnt-content'                         => $H::get_inline_styles( $content ),
-	'.eelfg-cnt-number-wrap'                     => $H::get_inline_styles( $number_styles ),
-	'.eelfg-cnt-prefix'                          => $H::get_inline_styles( $prefix_styles ),
-	'.eelfg-cnt-suffix'                          => $H::get_inline_styles( $suffix_styles ),
-	'.eelfg-cnt-title'                           => $H::get_inline_styles( $title_styles ),
-	'.eelfg-cnt-icon'                            => $H::get_inline_styles( $icon_box ),
-	'.eelfg-cnt-icon svg, ' . $selector . ' .eelfg-cnt-icon svg path, ' . $selector . ' .eelfg-cnt-icon i' => $H::get_inline_styles( $icon_color ),
-	'.eelfg-cnt-icon svg'                        => $H::get_inline_styles( $icon_svg ),
-	'.eelfg-cnt-icon i'                          => $H::get_inline_styles( $icon_i ),
+$H::add_custom_style( $style_handle, $selector, $resp_css, [
+	'.shapeblock-cnt-wrap'                            => $H::get_inline_styles( $wrap ),
+	'.shapeblock-cnt-content'                         => $H::get_inline_styles( $content ),
+	'.shapeblock-cnt-number-wrap'                     => $H::get_inline_styles( $number_styles ),
+	'.shapeblock-cnt-prefix'                          => $H::get_inline_styles( $prefix_styles ),
+	'.shapeblock-cnt-suffix'                          => $H::get_inline_styles( $suffix_styles ),
+	'.shapeblock-cnt-title'                           => $H::get_inline_styles( $title_styles ),
+	'.shapeblock-cnt-icon'                            => $H::get_inline_styles( $icon_box ),
+	'.shapeblock-cnt-icon svg, ' . $selector . ' .shapeblock-cnt-icon svg path, ' . $selector . ' .shapeblock-cnt-icon i' => $H::get_inline_styles( $icon_color ),
+	'.shapeblock-cnt-icon svg'                        => $H::get_inline_styles( $icon_svg ),
+	'.shapeblock-cnt-icon i'                          => $H::get_inline_styles( $icon_i ),
 ] );
 
-$icon_html = ( $icon_on && ! empty( $icon ) && 'none' !== $icon ) ? '<i class="eelfg-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';
+$icon_html = ( $icon_on && ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="eelfg-cnt-wrap">
+	<div class="shapeblock-cnt-wrap">
 		<?php if ( $icon_html ) : ?>
-			<div class="eelfg-cnt-icon"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+			<div class="shapeblock-cnt-icon"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 		<?php endif; ?>
-		<div class="eelfg-cnt-content">
-			<div class="eelfg-cnt-number-wrap">
+		<div class="shapeblock-cnt-content">
+			<div class="shapeblock-cnt-number-wrap">
 				<?php if ( '' !== $prefix ) : ?>
-					<span class="eelfg-cnt-prefix"><?php echo esc_html( $prefix ); ?></span>
+					<span class="shapeblock-cnt-prefix"><?php echo esc_html( $prefix ); ?></span>
 				<?php endif; ?>
-				<span class="eelfg-cnt-number eelfg-counter"
+				<span class="shapeblock-cnt-number shapeblock-counter"
 					data-count="<?php echo esc_attr( $number ); ?>"
 					data-start="<?php echo esc_attr( $start ); ?>"
 					data-duration="<?php echo esc_attr( $duration ); ?>"
 					data-format="<?php echo esc_attr( $format ); ?>"
 					data-animation="<?php echo esc_attr( $animation ); ?>"><?php echo esc_html( $start ); ?></span>
 				<?php if ( '' !== $suffix ) : ?>
-					<span class="eelfg-cnt-suffix"><?php echo esc_html( $suffix ); ?></span>
+					<span class="shapeblock-cnt-suffix"><?php echo esc_html( $suffix ); ?></span>
 				<?php endif; ?>
 			</div>
 			<?php if ( '' !== $title ) : ?>
-				<<?php echo tag_escape( $title_tag ); ?> class="eelfg-cnt-title"><?php echo wp_kses_post( $title ); ?></<?php echo tag_escape( $title_tag ); ?>>
+				<<?php echo tag_escape( $title_tag ); ?> class="shapeblock-cnt-title"><?php echo wp_kses_post( $title ); ?></<?php echo tag_escape( $title_tag ); ?>>
 			<?php endif; ?>
 		</div>
 	</div>

@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/progress',
+		'name' => 'shapeblock/progress',
 		'version' => '0.1.0',
 		'title' => 'Progress Bar',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'A progress / skill bar with title and percent — two layout styles and full styling.',
 		'keywords' => array(
 			'progress',
@@ -27,23 +27,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
@@ -84,6 +70,14 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'progressHeightTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'progressHeightMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'progressRadius' => array(
 				'type' => 'string',
 				'default' => ''
@@ -104,6 +98,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'titleTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'titleTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'percentColor' => array(
 				'type' => 'string',
 				'default' => ''
@@ -119,6 +125,30 @@ return array(
 					'lineHeight' => '',
 					'letterSpacing' => ''
 				)
+			),
+			'percentTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'percentTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

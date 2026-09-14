@@ -33,16 +33,16 @@ const catIcon = () => {
         )
     );
 }
-registerBlockCategory('easy-elements-for-gutenberg', 'Easy Elements For Guttenberg', catIcon);
+registerBlockCategory('shapeblock', 'ShapeBlock', catIcon);
 
 const disableBlockLinks = () => {
-    const selector = '.eelfg-block a';
+    const selector = '.shapeblock-block a';
 
     const processDocument = (doc) => {
         if (!doc) return;
 
         // Block click events in the capture phase
-        if (!doc._eelfgLinkBlockerBound) {
+        if (!doc._shapeblockLinkBlockerBound) {
             doc.addEventListener('click', (e) => {
                 const link = e.target.closest(selector);
                 if (link) {
@@ -50,7 +50,7 @@ const disableBlockLinks = () => {
                     e.stopPropagation();
                 }
             }, true);
-            doc._eelfgLinkBlockerBound = true;
+            doc._shapeblockLinkBlockerBound = true;
         }
 
         // Remove href attributes to avoid navigation and hover effects

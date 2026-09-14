@@ -2,13 +2,13 @@
  * Table block — front-end + shared styles.
  *
  * Ported from the Elementor "Table" widget stylesheet
- * (easy-elements/widgets/table/css/table.scss). Classes use the "eelfg-"
- * prefix and everything is scoped under `.eelfg-table-block-wrap`. The original
+ * (easy-elements/widgets/table/css/table.scss). Classes use the "shapeblock-"
+ * prefix and everything is scoped under `.shapeblock-table-block-wrap`. The original
  * relied on Bootstrap's `.table` base styles, so the base table rules are
  * reproduced here so the block is self-contained.
  */
-.eelfg-table-block-wrap {
-	.eelfg-table {
+.shapeblock-table-block-wrap {
+	.shapeblock-table {
 		width: 100%;
 		overflow: hidden;
 		border-collapse: collapse;
@@ -18,23 +18,23 @@
 		vertical-align: top;
 	}
 
-	.eelfg-table th,
-	.eelfg-table td {
+	.shapeblock-table th,
+	.shapeblock-table td {
 		padding: 12px 16px;
 		text-align: left;
 		vertical-align: top;
 	}
 
-	.eelfg-table-header th {
+	.shapeblock-table-header th {
 		font-weight: 700;
 	}
 
-	.eelfg-table-footer th {
+	.shapeblock-table-footer th {
 		font-weight: 600;
 	}
 
 	/* Header icon */
-	.eelfg-header-icon {
+	.shapeblock-header-icon {
 		position: relative;
 		display: inline-block;
 		cursor: pointer;
@@ -51,14 +51,14 @@
 	}
 
 	/* Flex data cell */
-	.eelfg-table-body td.eelfg-data-flex {
+	.shapeblock-table-body td.shapeblock-data-flex {
 		display: flex;
 		align-items: center;
 		gap: 10px;
 	}
 
 	/* Body image */
-	.eelfg-table-image {
+	.shapeblock-table-image {
 		width: 100%;
 		max-width: 40px;
 		height: 40px;
@@ -66,7 +66,7 @@
 	}
 
 	/* Tooltip */
-	.eelfg-tbl-tooltip {
+	.shapeblock-tbl-tooltip {
 		position: relative;
 		display: inline-block;
 		cursor: pointer;
@@ -80,7 +80,7 @@
 		}
 	}
 
-	.eelfg-tbl-tooltip-content {
+	.shapeblock-tbl-tooltip-content {
 		position: absolute;
 		bottom: 125%;
 		left: 50%;
@@ -98,47 +98,59 @@
 		z-index: 9999;
 	}
 
-	.eelfg-tbl-tooltip.show .eelfg-tbl-tooltip-content {
+	.shapeblock-tbl-tooltip.show .shapeblock-tbl-tooltip-content {
 		opacity: 1;
 		pointer-events: auto;
 		transform: translateX(-50%) translateY(-5px);
 	}
 
 	/* Tooltip placement variants */
-	.eelfg-tbl-tooltip[data-placement='bottom'] .eelfg-tbl-tooltip-content {
+	.shapeblock-tbl-tooltip[data-placement='bottom'] .shapeblock-tbl-tooltip-content {
 		bottom: auto;
 		top: 125%;
 	}
-	.eelfg-tbl-tooltip[data-placement='bottom'].show .eelfg-tbl-tooltip-content {
+	.shapeblock-tbl-tooltip[data-placement='bottom'].show .shapeblock-tbl-tooltip-content {
 		transform: translateX(-50%) translateY(5px);
 	}
-	.eelfg-tbl-tooltip[data-placement='left'] .eelfg-tbl-tooltip-content {
+	.shapeblock-tbl-tooltip[data-placement='left'] .shapeblock-tbl-tooltip-content {
 		bottom: auto;
 		top: 50%;
 		left: auto;
 		right: 125%;
 		transform: translateY(-50%);
 	}
-	.eelfg-tbl-tooltip[data-placement='left'].show .eelfg-tbl-tooltip-content {
+	.shapeblock-tbl-tooltip[data-placement='left'].show .shapeblock-tbl-tooltip-content {
 		transform: translateY(-50%) translateX(-5px);
 	}
-	.eelfg-tbl-tooltip[data-placement='right'] .eelfg-tbl-tooltip-content {
+	.shapeblock-tbl-tooltip[data-placement='right'] .shapeblock-tbl-tooltip-content {
 		bottom: auto;
 		top: 50%;
 		left: 125%;
 		transform: translateY(-50%);
 	}
-	.eelfg-tbl-tooltip[data-placement='right'].show .eelfg-tbl-tooltip-content {
+	.shapeblock-tbl-tooltip[data-placement='right'].show .shapeblock-tbl-tooltip-content {
 		transform: translateY(-50%) translateX(5px);
 	}
 
-	@media (max-width: 880px) {
-		.eelfg-table {
+	@media (max-width: 1024px) {
+		.shapeblock-table {
 			display: block;
-			overflow: scroll;
+			overflow-x: auto;
 		}
-		.eelfg-table .eelfg-table-body td {
+		.shapeblock-table .shapeblock-table-body td {
 			min-width: 150px;
 		}
 	}
+}
+
+/* --- Narrow container safety -------------------------------------------
+ * A block can sit in a column far narrower than the screen, where media queries
+ * are no help. These rules keep it inside its box at any width.
+ */
+/* A table cannot shrink past its content, so it scrolls inside the block at any
+ * width — the wrapper render.php prints around it. */
+.shapeblock-table-scroll {
+	max-width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
 }

@@ -17,31 +17,31 @@ $stretch       = ! empty( $attributes['stretchColumns'] );
 $custom_class  = isset( $attributes['customClass'] ) ? trim( (string) $attributes['customClass'] ) : '';
 $unique_id     = ! empty( $attributes['blockId'] )
     ? sanitize_html_class( $attributes['blockId'] )
-    : 'eelfg-layout-row-' . wp_rand( 100, 99999 );
+    : 'shapeblock-layout-row-' . wp_rand( 100, 99999 );
 
 $selector = '.' . $unique_id;
 
 $row_responsive = [ 'desktop' => [], 'tablet' => [], 'mobile' => [] ];
 
 // Flexbox controls (D/T/M).
-\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'flexDirection',  'flex-direction' );
-\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'justifyContent', 'justify-content' );
-\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'alignItems',     'align-items' );
-\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'alignContent',   'align-content' );
-\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'flexWrap',       'flex-wrap' );
-\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'gap',            'gap' );
-\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'rowGap',         'row-gap' );
-\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'columnGap',      'column-gap' );
-\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'minHeight',      'min-height' );
+\ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'flexDirection',  'flex-direction' );
+\ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'justifyContent', 'justify-content' );
+\ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'alignItems',     'align-items' );
+\ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'alignContent',   'align-content' );
+\ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'flexWrap',       'flex-wrap' );
+\ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'gap',            'gap' );
+\ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'rowGap',         'row-gap' );
+\ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'columnGap',      'column-gap' );
+\ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'minHeight',      'min-height' );
 
 // Padding / margin (object, D/T/M).
-\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'padding', '', [
+\ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'padding', '', [
     'top'    => 'padding-top',
     'right'  => 'padding-right',
     'bottom' => 'padding-bottom',
     'left'   => 'padding-left',
 ], true );
-\EELFG\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'margin', '', [
+\ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'margin', '', [
     'top'    => 'margin-top',
     'right'  => 'margin-right',
     'bottom' => 'margin-bottom',
@@ -73,21 +73,21 @@ if ( $bg_image_url ) {
 
 // Border.
 if ( ! empty( $attributes['border'] ) ) {
-    foreach ( \EELFG\Frontend\Helper::border_to_css_props( $attributes['border'] ) as $prop => $val ) {
+    foreach ( \ShapeBlock\Frontend\Helper::border_to_css_props( $attributes['border'] ) as $prop => $val ) {
         $row_responsive['desktop'][ $prop ] = $val;
     }
 }
 
 // Border radius.
 $radius = isset( $attributes['borderRadius'] ) ? $attributes['borderRadius'] : [];
-if ( ! empty( $radius['top'] ) )    $row_responsive['desktop']['border-top-left-radius']     = \EELFG\Frontend\Helper::ensure_unit( $radius['top'] );
-if ( ! empty( $radius['right'] ) )  $row_responsive['desktop']['border-top-right-radius']    = \EELFG\Frontend\Helper::ensure_unit( $radius['right'] );
-if ( ! empty( $radius['bottom'] ) ) $row_responsive['desktop']['border-bottom-right-radius'] = \EELFG\Frontend\Helper::ensure_unit( $radius['bottom'] );
-if ( ! empty( $radius['left'] ) )   $row_responsive['desktop']['border-bottom-left-radius']  = \EELFG\Frontend\Helper::ensure_unit( $radius['left'] );
+if ( ! empty( $radius['top'] ) )    $row_responsive['desktop']['border-top-left-radius']     = \ShapeBlock\Frontend\Helper::ensure_unit( $radius['top'] );
+if ( ! empty( $radius['right'] ) )  $row_responsive['desktop']['border-top-right-radius']    = \ShapeBlock\Frontend\Helper::ensure_unit( $radius['right'] );
+if ( ! empty( $radius['bottom'] ) ) $row_responsive['desktop']['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $radius['bottom'] );
+if ( ! empty( $radius['left'] ) )   $row_responsive['desktop']['border-bottom-left-radius']  = \ShapeBlock\Frontend\Helper::ensure_unit( $radius['left'] );
 
 // Box shadow.
 if ( ! empty( $attributes['boxShadow'] ) && ! empty( $attributes['boxShadow']['c'] ) && $attributes['boxShadow']['c'] !== 'rgba(0,0,0,0)' ) {
-    $row_responsive['desktop']['box-shadow'] = \EELFG\Frontend\Helper::box_shadow_to_css( $attributes['boxShadow'] );
+    $row_responsive['desktop']['box-shadow'] = \ShapeBlock\Frontend\Helper::box_shadow_to_css( $attributes['boxShadow'] );
 }
 
 // Advanced.
@@ -112,36 +112,116 @@ foreach ( [ '' => 'desktop', 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $sf
     foreach ( [ 'columnGap', 'gap' ] as $base ) {
         $val = isset( $attributes[ $base . $sfx ] ) ? trim( (string) $attributes[ $base . $sfx ] ) : '';
         if ( $val !== '' ) {
-            $row_responsive[ $dev ]['--bp-gap'] = \EELFG\Frontend\Helper::ensure_unit( $val );
+            $row_responsive[ $dev ]['--bp-gap'] = \ShapeBlock\Frontend\Helper::ensure_unit( $val );
             break;
         }
     }
 }
 
+// Columns per line on Tablet / Mobile. 0 (the default) leaves the row exactly
+// as it was: desktop widths on tablet, one column per row on mobile.
+$columns_per_row = function ( $count ) {
+    $count = (int) $count;
+    if ( $count < 1 ) {
+        return '';
+    }
+    $pct       = rtrim( rtrim( number_format( 100 / $count, 4, '.', '' ), '0' ), '.' );
+    $gap_share = rtrim( rtrim( number_format( ( $count - 1 ) / $count, 4, '.', '' ), '0' ), '.' );
+    return 'calc(' . $pct . '% - var(--bp-gap, 0px) * ' . $gap_share . ')';
+};
+$cols_tablet = $columns_per_row( $attributes['columnsTablet'] ?? 0 );
+$cols_mobile = $columns_per_row( $attributes['columnsMobile'] ?? 0 );
+if ( $cols_tablet ) {
+    $row_responsive['desktop']['--bp-col-tablet'] = $cols_tablet;
+}
+if ( $cols_mobile ) {
+    $row_responsive['desktop']['--bp-col-mobile'] = $cols_mobile;
+}
+
+// Per-device widths, written per column.
+//
+// A column prints its own desktop width as an !important rule with four classes
+// (see column/src/render.php), which a rule on the row alone can never outrank —
+// that is what kept a 25% column at 25% on a phone. So the row writes one rule
+// per column instead, adding that column's own class, and simply skips the
+// columns that carry a width for this device themselves. The cascade then reads:
+// the column's own per-device width first, this next, its desktop width last.
+$per_device_css = '';
+$inner_blocks   = ( isset( $block ) && isset( $block->parsed_block['innerBlocks'] ) )
+    ? $block->parsed_block['innerBlocks']
+    : [];
+
+foreach ( [
+    'Tablet' => [ '@media (max-width: 1024px)', $cols_tablet ],
+    'Mobile' => [ '@media (max-width: 767px)', $cols_mobile ? $cols_mobile : '100%' ],
+] as $suffix => $device ) {
+    list( $query, $basis ) = $device;
+
+    if ( '' === $basis ) {
+        continue;
+    }
+
+    $rules = '';
+
+    foreach ( $inner_blocks as $inner ) {
+        if ( empty( $inner['blockName'] ) || 'shapeblock/column' !== $inner['blockName'] ) {
+            continue;
+        }
+
+        $col_attrs = isset( $inner['attrs'] ) && is_array( $inner['attrs'] ) ? $inner['attrs'] : [];
+        $col_id    = isset( $col_attrs['blockId'] ) ? sanitize_html_class( $col_attrs['blockId'] ) : '';
+
+        if ( '' === $col_id ) {
+            continue;
+        }
+
+        // The column speaks for itself on this device.
+        $own_width = trim( (string) ( $col_attrs[ 'width' . $suffix ] ?? '' ) );
+        $own_basis = trim( (string) ( $col_attrs[ 'flexBasis' . $suffix ] ?? '' ) );
+
+        if ( '' !== $own_width || '' !== $own_basis ) {
+            continue;
+        }
+
+        $rules .= '.shapeblock-layout-row' . $selector . ' > .shapeblock-layout-row__inner > .shapeblock-column.' . $col_id
+            . '{flex:0 1 ' . $basis . ' !important;max-width:' . $basis . ' !important;}';
+    }
+
+    if ( '' !== $rules ) {
+        $per_device_css .= $query . '{' . $rules . '}';
+    }
+}
+
 // Max-width for boxed mode. Write the CSS variable on the row wrapper — the SCSS
-// in style.scss already reads it on the inner via var(--eelfg-layout-row-max-width).
+// in style.scss already reads it on the inner via var(--shapeblock-layout-row-max-width).
 // Setting it as a direct max-width inline would lose a specificity fight with the
 // SCSS .is-content-boxed > .__inner rule, so use the variable.
 if ( $content_width === 'boxed' ) {
-    \EELFG\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'maxWidth', '--eelfg-layout-row-max-width' );
+    \ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'maxWidth', '--shapeblock-layout-row-max-width' );
 }
 
 // Compile CSS.
-$style_handle = 'eelfg-layout-row-style';
-$css  = \EELFG\Frontend\Helper::generate_responsive_css( $selector, $row_responsive );
+$style_handle = 'shapeblock-layout-row-style';
+$css  = \ShapeBlock\Frontend\Helper::generate_responsive_css( $selector, $row_responsive );
+$css .= $per_device_css;
 
 wp_enqueue_style( $style_handle );
-\EELFG\Frontend\Helper::add_custom_style( $style_handle, $selector, $css, [] );
+\ShapeBlock\Frontend\Helper::add_custom_style( $style_handle, $selector, $css, [] );
 
 $classes = [
-    'eelfg-block',
-    'eelfg-layout-row',
+    'shapeblock-block',
+    'shapeblock-layout-row',
     $unique_id,
     'is-content-' . sanitize_html_class( $content_width ),
 ];
 if ( $vertical )     $classes[] = 'is-valign-' . sanitize_html_class( $vertical );
 if ( $equal_height ) $classes[] = 'is-equal-height';
 if ( $stretch )      $classes[] = 'is-stretch';
+if ( $cols_tablet )  $classes[] = 'has-tablet-columns';
+if ( $cols_mobile )  $classes[] = 'has-mobile-columns';
+if ( ! empty( $attributes['hideDesktop'] ) ) $classes[] = 'shapeblock-hide-desktop';
+if ( ! empty( $attributes['hideTablet'] ) )  $classes[] = 'shapeblock-hide-tablet';
+if ( ! empty( $attributes['hideMobile'] ) )  $classes[] = 'shapeblock-hide-mobile';
 if ( $custom_class ) {
     foreach ( explode( ' ', $custom_class ) as $c ) {
         $c = sanitize_html_class( $c );
@@ -153,7 +233,7 @@ $wrapper_attrs = get_block_wrapper_attributes( [ 'class' => implode( ' ', $class
 
 // Output.
 printf(
-    '<%1$s %2$s><div class="eelfg-layout-row__inner">%3$s</div></%1$s>',
+    '<%1$s %2$s><div class="shapeblock-layout-row__inner">%3$s</div></%1$s>',
     tag_escape( $tag ),
     $wrapper_attrs, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from get_block_wrapper_attributes()
     $content        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $content is pre-rendered inner blocks HTML

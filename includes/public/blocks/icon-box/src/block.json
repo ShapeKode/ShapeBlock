@@ -1,10 +1,10 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "easy-elements-for-gutenberg/icon-box",
+	"name": "shapeblock/icon-box",
 	"version": "0.1.0",
 	"title": "Icon Box",
-	"category": "easy-elements-for-gutenberg",
+	"category": "shapeblock",
 	"description": "Icon boxes with the icon on top, then title and description — icon, number or image supported.",
 	"keywords": [ "icon box", "icon", "feature", "service", "box" ],
 	"example": {},
@@ -12,14 +12,14 @@
 		"html": false,
 		"align": [ "left", "center", "right", "wide", "full" ]
 	},
-	"textdomain": "easy-elements-for-gutenberg",
+	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php",
 	"attributes": {
 		"blockId": { "type": "string", "default": "" },
 		"showIcon": { "type": "boolean", "default": true },
 		"iconType": { "type": "string", "default": "icon" },
-		"icon": { "type": "string", "default": "eelfg-icon-favorite" },
+		"icon": { "type": "string", "default": "shapeblock-icon-favorite" },
 		"number": { "type": "string", "default": "01" },
 		"image": { "type": "object", "default": {} },
 		"title": { "type": "string", "default": "Lightning Fast" },
@@ -72,6 +72,9 @@
 		"descColor": { "type": "string", "default": "" },
 		"descTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
 		"descTypographyTablet": { "type": "object", "default": {} },
-		"descTypographyMobile": { "type": "object", "default": {} }
-	}
+		"descTypographyMobile": { "type": "object", "default": {} },
+	"hideDesktop": { "type": "boolean", "default": false },
+	"hideTablet": { "type": "boolean", "default": false },
+	"hideMobile": { "type": "boolean", "default": false }
+}
 }

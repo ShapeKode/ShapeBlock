@@ -3,8 +3,8 @@
 <svg xmlns="http://www.w3.org/2000/svg">
 <metadata>Copyright (C) 2026 by original authors @ fontello.com</metadata>
 <defs>
-<font id="boldpo-icon" horiz-adv-x="1000" >
-<font-face font-family="boldpo-icon" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<font id="shapeblock-icon" horiz-adv-x="1000" >
+<font-face font-family="shapeblock-icon" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
 <missing-glyph horiz-adv-x="1000" />
 <glyph glyph-name="tags" unicode="&#xe800;" d="M1000 782c0 18-7 35-20 48s-30 20-48 20c-18 0-35-7-48-20-6-6-16-17-21-24-6-7-5-17 2-23 7-5 17-4 23 2 8 11 15 19 18 22 7 7 16 11 26 11 0 0 0 0 0 0 10 0 18-4 25-11 7-6 10-15 10-25 0-9-3-18-10-25-6-6-27-23-58-44-17 31-50 51-88 51h-237c-32 0-62-12-85-35l-474-475c-10-9-15-22-15-35s5-27 15-36l318-318c10-10 23-15 36-15s26 5 36 15l474 474c22 23 35 53 35 85v237c0 7-1 14-2 21 34 23 59 43 68 52 13 13 20 30 20 48z m-119-358c0-24-9-45-25-62l-475-474c-7-8-18-8-25 0l-318 318c-4 3-6 8-6 12s2 10 6 13l474 475c17 16 38 25 62 25h237c27 0 50-15 62-37-19-12-41-26-63-39-1 1-2 1-3 2-26 27-69 27-96 0s-26-69 0-96c13-13 31-20 48-20 18 0 35 7 48 20 18 18 24 43 18 65 20 12 39 24 56 35 0 0 0 0 0 0l0-237 0 0z m-136 178c3-6 8-9 14-9 3 0 5 1 7 2 10 4 19 10 29 15 0-10-4-19-11-26-13-14-36-14-50 0-14 14-14 37 0 50 7 7 16 11 25 11 7 0 15-2 21-7-9-5-19-10-28-15-8-3-11-13-7-21z" horiz-adv-x="1000" />
 

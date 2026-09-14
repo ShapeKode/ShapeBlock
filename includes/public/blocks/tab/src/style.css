@@ -3,31 +3,31 @@
  * Tabs block — front-end + shared styles.
  *
  * Ported from the Elementor "Tabs" widget stylesheet
- * (easy-elements/widgets/tab/css/tab.scss). Classes use the "eelfg-" prefix and
- * everything is scoped under `.eelfg-tab-block-wrap`.
+ * (easy-elements/widgets/tab/css/tab.scss). Classes use the "shapeblock-" prefix and
+ * everything is scoped under `.shapeblock-tab-block-wrap`.
  */
-.eelfg-tab-block-wrap {
-  --eelfg-tab-primary: #5933ff;
-  --eelfg-tab-secondary: #0b3665;
+.shapeblock-tab-block-wrap {
+  --shapeblock-tab-primary: #5933ff;
+  --shapeblock-tab-secondary: #0b3665;
 }
-.eelfg-tab-block-wrap .eelfg-tabs-wrapper[data-tab-direction=right],
-.eelfg-tab-block-wrap .eelfg-tabs-wrapper[data-tab-direction=left] {
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=right],
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=left] {
   display: flex;
   gap: 46px;
 }
-.eelfg-tab-block-wrap .eelfg-tabs-wrapper[data-tab-direction=right] {
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=right] {
   flex-direction: row-reverse;
 }
-.eelfg-tab-block-wrap .eelfg-tabs-wrapper[data-tab-direction=right] .eelfg-tab-titles,
-.eelfg-tab-block-wrap .eelfg-tabs-wrapper[data-tab-direction=left] .eelfg-tab-titles {
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=right] .shapeblock-tab-titles,
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=left] .shapeblock-tab-titles {
   min-width: 37%;
   display: grid;
 }
-.eelfg-tab-block-wrap .eelfg-tabs-wrapper[data-tab-direction=left] .eelfg-tab-contents .eelfg-content-title,
-.eelfg-tab-block-wrap .eelfg-tabs-wrapper[data-tab-direction=right] .eelfg-tab-contents .eelfg-content-title {
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=left] .shapeblock-tab-contents .shapeblock-content-title,
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=right] .shapeblock-tab-contents .shapeblock-content-title {
   margin-top: 0;
 }
-.eelfg-tab-block-wrap .eelfg-tab-titles {
+.shapeblock-tab-block-wrap .shapeblock-tab-titles {
   display: flex;
   list-style: none;
   gap: 20px;
@@ -35,11 +35,11 @@
   margin: 0;
   padding: 0;
 }
-.eelfg-tab-block-wrap .eelfg-tabs-wrapper[data-tab-direction=top] .eelfg-tab-titles {
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=top] .shapeblock-tab-titles {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1019607843);
   padding: 0 0 36px;
 }
-.eelfg-tab-block-wrap .eelfg-tab-titles li {
+.shapeblock-tab-block-wrap .shapeblock-tab-titles li {
   align-items: center;
   gap: 16px;
   background: rgba(246, 244, 240, 0.368627451);
@@ -47,43 +47,43 @@
   padding: 16px;
   transition: all 0.5s ease;
 }
-.eelfg-tab-block-wrap .eelfg-tab-titles li.active,
-.eelfg-tab-block-wrap .eelfg-tab-titles li:hover {
-  background: var(--eelfg-tab-primary);
+.shapeblock-tab-block-wrap .shapeblock-tab-titles li.active,
+.shapeblock-tab-block-wrap .shapeblock-tab-titles li:hover {
+  background: var(--shapeblock-tab-primary);
 }
-.eelfg-tab-block-wrap .eelfg-tabs-wrapper[data-icon-position=right] .eelfg-tab-titles li,
-.eelfg-tab-block-wrap .eelfg-tabs-wrapper[data-icon-position=left] .eelfg-tab-titles li {
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-icon-position=right] .shapeblock-tab-titles li,
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-icon-position=left] .shapeblock-tab-titles li {
   display: flex;
   flex: 1;
 }
-.eelfg-tab-block-wrap .eelfg-tabs-wrapper[data-icon-position=top] .eelfg-tab-titles li {
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-icon-position=top] .shapeblock-tab-titles li {
   display: grid;
   place-items: center;
   flex: 1;
 }
-.eelfg-tab-block-wrap .eelfg-tabs-wrapper[data-icon-position=right] .eelfg-tab-titles li {
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-icon-position=right] .shapeblock-tab-titles li {
   flex-direction: row-reverse;
   text-align: right;
 }
-.eelfg-tab-block-wrap .eelfg-tab-title-text {
+.shapeblock-tab-block-wrap .shapeblock-tab-title-text {
   font-size: 20px;
   font-weight: 700;
-  color: var(--eelfg-tab-secondary);
+  color: var(--shapeblock-tab-secondary);
   line-height: 130%;
 }
-.eelfg-tab-block-wrap .eelfg-tab-titles i,
-.eelfg-tab-block-wrap .eelfg-tab-titles svg {
+.shapeblock-tab-block-wrap .shapeblock-tab-titles i,
+.shapeblock-tab-block-wrap .shapeblock-tab-titles svg {
   height: 1.2em;
   width: 1.2em;
   display: block;
   font-size: 15px;
 }
-.eelfg-tab-block-wrap .eelfg-tab-titles img {
+.shapeblock-tab-block-wrap .shapeblock-tab-titles img {
   height: 26px;
   display: block;
 }
-.eelfg-tab-block-wrap .eelfg-tab-image,
-.eelfg-tab-block-wrap .eelfg-tab-icon {
+.shapeblock-tab-block-wrap .shapeblock-tab-image,
+.shapeblock-tab-block-wrap .shapeblock-tab-icon {
   display: grid;
   height: 56px;
   background: #efeff9;
@@ -92,43 +92,43 @@
   min-width: 56px;
   place-items: center;
 }
-.eelfg-tab-block-wrap .eelfg-tab-contents .eelfg-tab-content {
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-tab-content {
   display: none;
 }
-.eelfg-tab-block-wrap .eelfg-tabs-wrapper[data-tab-direction=top] .eelfg-tab-contents .eelfg-tab-content {
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=top] .shapeblock-tab-contents .shapeblock-tab-content {
   margin-top: 30px;
 }
-.eelfg-tab-block-wrap .eelfg-tab-contents .eelfg-tab-content.active {
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-tab-content.active {
   display: block;
 }
-.eelfg-tab-block-wrap .eelfg-tab-content {
+.shapeblock-tab-block-wrap .shapeblock-tab-content {
   display: none;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
-.eelfg-tab-block-wrap .eelfg-tab-content.active {
+.shapeblock-tab-block-wrap .shapeblock-tab-content.active {
   display: block;
   opacity: 1;
 }
-.eelfg-tab-block-wrap .eelfg-tab-contents .eelfg-content-title {
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-content-title {
   font-size: 32px;
   font-weight: 700;
-  color: var(--eelfg-tab-secondary);
+  color: var(--shapeblock-tab-secondary);
   margin: 35px 0 30px;
 }
-.eelfg-tab-block-wrap .eelfg-content-description {
+.shapeblock-tab-block-wrap .shapeblock-content-description {
   margin: 0;
 }
-.eelfg-tab-block-wrap .eelfg-tab-contents .eelfg-read-more {
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-read-more {
   font-size: 16px;
   font-weight: 700;
-  color: var(--eelfg-tab-secondary);
+  color: var(--shapeblock-tab-secondary);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1215686275);
   line-height: 24px;
   display: inline-block;
   text-decoration: none;
 }
-.eelfg-tab-block-wrap .eelfg-tab-contents .eelfg-read-more .eelfg-read-more-icon {
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-read-more .shapeblock-read-more-icon {
   width: 18px;
   height: 18px;
   top: 3px;
@@ -139,9 +139,9 @@
   display: inline-block;
   vertical-align: middle;
 }
-.eelfg-tab-block-wrap .eelfg-tab-contents .eelfg-read-more:hover {
-  border-bottom-color: var(--eelfg-tab-primary);
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-read-more:hover {
+  border-bottom-color: var(--shapeblock-tab-primary);
 }
-.eelfg-tab-block-wrap .eelfg-tab-contents .eelfg-read-more:hover .eelfg-read-more-icon {
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-read-more:hover .shapeblock-read-more-icon {
   left: 3px;
 }/*# sourceMappingURL=style.css.map */

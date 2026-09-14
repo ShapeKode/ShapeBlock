@@ -17,7 +17,6 @@ export function buildCacheKey( params ) {
         params.per_page || 12,
         params.block_type || '',
         params.template_type || '',
-        params.tier || '',
         params.search || '',
     ];
     return parts.join( '|' );

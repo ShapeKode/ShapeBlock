@@ -9,33 +9,35 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Server-side render for the Social Icon block.
  *
  * Mirrors the markup of the Elementor "Social Icon" widget
- * (easy-elements/widgets/social-icon). Element classes use the "eelfg-" prefix.
+ * (easy-elements/widgets/social-icon). Element classes use the "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-si-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-si-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $links      = isset( $attributes['socialLinks'] ) && is_array( $attributes['socialLinks'] ) ? $attributes['socialLinks'] : [];
-$color_mode = isset( $attributes['colorMode'] ) ? $attributes['colorMode'] : 'custom';
+// Must match the block.json default, or a block saved without the attribute
+// would render in a different mode than the editor shows.
+$color_mode = isset( $attributes['colorMode'] ) ? $attributes['colorMode'] : 'global';
 
-$block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'eelfg-block eelfg-social-icon-block-wrap ' . $unique_id ) );
+$block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'shapeblock-block shapeblock-social-icon-block-wrap ' . $unique_id ) );
 if ( empty( $block_wrap_attr ) ) {
-	$block_wrap_attr = 'class="eelfg-block eelfg-social-icon-block-wrap ' . esc_attr( $unique_id ) . '"';
+	$block_wrap_attr = 'class="shapeblock-block shapeblock-social-icon-block-wrap ' . esc_attr( $unique_id ) . '"';
 }
 
 if ( empty( $links ) ) {
-	echo '<div ' . wp_kses_post( $block_wrap_attr ) . '><p>' . esc_html__( 'Please add social links.', 'easy-elements-for-gutenberg' ) . '</p></div>';
+	echo '<div ' . wp_kses_post( $block_wrap_attr ) . '><p>' . esc_html__( 'Please add social links.', 'shapeblock' ) . '</p></div>';
 	return;
 }
 
 // ---------------------------------------------------------------------------
 // Inline styles (scoped to this instance).
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-social-icon-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-social-icon-style';
+$selector     = '.shapeblock-social-icon-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-social-icon-style';
 
 $dims = function ( $obj ) use ( $H ) {
 	$out = [];
@@ -73,26 +75,26 @@ $icon_i   = ( '' !== $u( 'iconSize' ) ) ? [ 'font-size' => $u( 'iconSize' ) ] : 
 $icon_svg = ( '' !== $u( 'iconSize' ) ) ? [ 'width' => $u( 'iconSize' ), 'height' => $u( 'iconSize' ) ] : [];
 
 $sub = [
-	'.eelfg-si-buttons'        => $H::get_inline_styles( $buttons_wrap ),
-	'.eelfg-si-button'         => $H::get_inline_styles( $button ),
-	'.eelfg-si-button:hover'   => $H::get_inline_styles( $button_hover ),
-	'.eelfg-si-button i'       => $H::get_inline_styles( $icon_i ),
-	'.eelfg-si-button svg'     => $H::get_inline_styles( $icon_svg ),
+	'.shapeblock-si-buttons'        => $H::get_inline_styles( $buttons_wrap ),
+	'.shapeblock-si-button'         => $H::get_inline_styles( $button ),
+	'.shapeblock-si-button:hover'   => $H::get_inline_styles( $button_hover ),
+	'.shapeblock-si-button i'       => $H::get_inline_styles( $icon_i ),
+	'.shapeblock-si-button svg'     => $H::get_inline_styles( $icon_svg ),
 ];
 
 // Global colour mode: one set of colours for all buttons.
 if ( 'global' === $color_mode ) {
 	$g_bg = ! empty( $attributes['gBgGradient'] ) ? $attributes['gBgGradient'] : ( ! empty( $attributes['gBgColor'] ) ? $attributes['gBgColor'] : '' );
 	$g_hbg = ! empty( $attributes['gHoverBgGradient'] ) ? $attributes['gHoverBgGradient'] : ( ! empty( $attributes['gHoverBgColor'] ) ? $attributes['gHoverBgColor'] : '' );
-	if ( '' !== $g_bg )  $sub['.eelfg-si-button']       = $H::get_inline_styles( array_merge( $button, [ 'background' => $g_bg ] ) );
-	if ( '' !== $g_hbg ) $sub['.eelfg-si-button:hover'] = $H::get_inline_styles( array_merge( $button_hover, [ 'background' => $g_hbg ] ) );
+	if ( '' !== $g_bg )  $sub['.shapeblock-si-button']       = $H::get_inline_styles( array_merge( $button, [ 'background' => $g_bg ] ) );
+	if ( '' !== $g_hbg ) $sub['.shapeblock-si-button:hover'] = $H::get_inline_styles( array_merge( $button_hover, [ 'background' => $g_hbg ] ) );
 	if ( ! empty( $attributes['gIconColor'] ) ) {
-		$sub['.eelfg-si-button i']   = $H::get_inline_styles( array_merge( $icon_i, [ 'color' => $attributes['gIconColor'] ] ) );
-		$sub['.eelfg-si-button svg'] = $H::get_inline_styles( array_merge( $icon_svg, [ 'fill' => $attributes['gIconColor'] ] ) );
+		$sub['.shapeblock-si-button i']   = $H::get_inline_styles( array_merge( $icon_i, [ 'color' => $attributes['gIconColor'] ] ) );
+		$sub['.shapeblock-si-button svg'] = $H::get_inline_styles( array_merge( $icon_svg, [ 'fill' => $attributes['gIconColor'] ] ) );
 	}
 	if ( ! empty( $attributes['gHoverIconColor'] ) ) {
-		$sub['.eelfg-si-button:hover i']   = 'color:' . $attributes['gHoverIconColor'];
-		$sub['.eelfg-si-button:hover svg'] = 'fill:' . $attributes['gHoverIconColor'];
+		$sub['.shapeblock-si-button:hover i']   = 'color:' . $attributes['gHoverIconColor'];
+		$sub['.shapeblock-si-button:hover svg'] = 'fill:' . $attributes['gHoverIconColor'];
 	}
 }
 
@@ -100,7 +102,7 @@ if ( 'global' === $color_mode ) {
 $extra_css = '';
 if ( 'custom' === $color_mode ) {
 	foreach ( $links as $index => $link ) {
-		$item_sel = $selector . ' .eelfg-si-item-' . $index;
+		$item_sel = $selector . ' .shapeblock-si-item-' . $index;
 		$hbg = ! empty( $link['hoverBgGradient'] ) ? $link['hoverBgGradient'] : ( ! empty( $link['hoverBgColor'] ) ? $link['hoverBgColor'] : '' );
 		$hic = ! empty( $link['hoverIconColor'] ) ? $link['hoverIconColor'] : '';
 		if ( '' !== $hbg ) {
@@ -112,17 +114,58 @@ if ( 'custom' === $color_mode ) {
 	}
 }
 
-// Alignment — align the icon row (left / center / right) within the block.
-$align       = isset( $attributes['alignment'] ) ? $attributes['alignment'] : 'left';
+// Alignment — align the icon row (left / center / right) within the block,
+// responsive per device (alignment / alignmentTablet / alignmentMobile).
 $justify_map = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end' ];
-$extra_css  .= $selector . ' .eelfg-si-buttons{justify-content:' . ( $justify_map[ $align ] ?? 'flex-start' ) . ';}';
+$align_resp  = [];
+foreach ( [ '' => 'desktop', 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+	$align_val = isset( $attributes[ 'alignment' . $suffix ] ) ? $attributes[ 'alignment' . $suffix ] : '';
+	if ( $align_val !== '' && isset( $justify_map[ $align_val ] ) ) {
+		$align_resp[ $device_key ]['justify-content'] = $justify_map[ $align_val ];
+	}
+}
+$extra_css .= $H::generate_responsive_css( $selector . ' .shapeblock-si-buttons', $align_resp );
+
+// Sizing (Button Size / Button Spacing / Icon Size) — responsive Tablet/Mobile
+// overrides. The desktop values above are unchanged; these rules are emitted
+// only when the matching per-device attribute is set, so existing content
+// renders identically.
+$u_dev = function ( $key ) use ( $attributes, $H ) {
+	return ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? $H::ensure_unit( $attributes[ $key ] ) : '';
+};
+$size_resp = [
+	'.shapeblock-si-buttons'    => [],
+	'.shapeblock-si-button'     => [],
+	'.shapeblock-si-button i'   => [],
+	'.shapeblock-si-button svg' => [],
+];
+foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+	$bs = $u_dev( 'buttonSize' . $suffix );
+	if ( '' !== $bs ) {
+		$size_resp['.shapeblock-si-button'][ $device_key ] = [ 'width' => $bs, 'height' => $bs, 'line-height' => $bs ];
+	}
+	$sp = $u_dev( 'buttonSpacing' . $suffix );
+	if ( '' !== $sp ) {
+		$size_resp['.shapeblock-si-buttons'][ $device_key ] = [ 'gap' => $sp ];
+	}
+	$isz = $u_dev( 'iconSize' . $suffix );
+	if ( '' !== $isz ) {
+		$size_resp['.shapeblock-si-button i'][ $device_key ]   = [ 'font-size' => $isz ];
+		$size_resp['.shapeblock-si-button svg'][ $device_key ] = [ 'width' => $isz, 'height' => $isz ];
+	}
+}
+foreach ( $size_resp as $sub_sel => $rdata ) {
+	if ( ! empty( $rdata ) ) {
+		$extra_css .= $H::generate_responsive_css( $selector . ' ' . $sub_sel, $rdata );
+	}
+}
 
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $extra_css, $sub );
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="eelfg-si-share">
-		<div class="eelfg-si-buttons">
+	<div class="shapeblock-si-share">
+		<div class="shapeblock-si-buttons">
 			<?php
 			foreach ( $links as $index => $link ) {
 				$title = isset( $link['linkTitle'] ) ? $link['linkTitle'] : '';
@@ -149,10 +192,10 @@ $H::add_custom_style( $style_handle, $selector, $extra_css, $sub );
 					}
 				}
 
-				echo '<a href="' . esc_url( $url ) . '" class="eelfg-si-button eelfg-si-item-' . esc_attr( $index ) . '" target="' . esc_attr( $target ) . '"' . $rel_attr // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<a href="' . esc_url( $url ) . '" class="shapeblock-si-button shapeblock-si-item-' . esc_attr( $index ) . '" target="' . esc_attr( $target ) . '"' . $rel_attr // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					. ' title="' . esc_attr( $title ) . '"' . ( '' !== $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>';
 				if ( ! empty( $icon ) && 'none' !== $icon ) {
-					echo '<i class="eelfg-icon ' . esc_attr( $icon ) . '" aria-hidden="true"' . $icon_style . '></i>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"' . $icon_style . '></i>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 				echo '</a>';
 			}

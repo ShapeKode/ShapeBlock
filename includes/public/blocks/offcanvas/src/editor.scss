@@ -1,11 +1,13 @@
+@use 'style';
+
 /**
  * Editor-only styles for the Offcanvas block.
  *
  * The panel is fixed and stays off-screen / hidden by default (from style.scss),
- * so it doesn't cover the canvas. When the editor toggle adds `.eelfg-active`
+ * so it doesn't cover the canvas. When the editor toggle adds `.shapeblock-active`
  * it slides / fades in just like the front end. Inside the iframed canvas the
  * fixed panel is positioned relative to the canvas viewport.
  */
-.eelfg-offcanvas-block-wrap {
+.shapeblock-offcanvas-block-wrap {
 	min-height: 1px;
 }

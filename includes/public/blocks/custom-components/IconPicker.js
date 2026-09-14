@@ -14,7 +14,7 @@ const IconPicker = ({ label, value, onChange }) => {
     const [search, setSearch] = useState('');
 
     useEffect(() => {
-        const pluginUrl = window.eelfgEditor ? window.eelfgEditor.plugin_url : '/wp-content/plugins/easy-elements-for-gutenberg/';
+        const pluginUrl = window.shapeblockEditor ? window.shapeblockEditor.plugin_url : '/wp-content/plugins/shapeblock/';
 
         fetch(`${pluginUrl}includes/public/assets/icon/config.json`)
             .then(res => res.json())
@@ -30,10 +30,15 @@ const IconPicker = ({ label, value, onChange }) => {
         icon.css.toLowerCase().includes(search.toLowerCase())
     );
 
+    // Blocks store the full CSS class, and the icon font groups the brand marks
+    // under a "logo-" family. Neither belongs on screen — show the icon's name
+    // alone. No glyph name collides once "logo-" is dropped.
+    const iconLabel = (val) => String(val).replace(/^shapeblock-icon-/, '').replace(/^logo-/, '');
+
     const toggleVisible = () => setIsVisible(!isVisible);
 
     return (
-        <div className="eelfg-icon-picker-control" style={{ position: 'relative', marginBottom: '15px' }}>
+        <div className="shapeblock-icon-picker-control" style={{ position: 'relative', marginBottom: '15px' }}>
             {label && <div style={{ marginBottom: '8px', fontWeight: '500' }}>{label}</div>}
             <Button
                 variant="secondary"
@@ -42,13 +47,13 @@ const IconPicker = ({ label, value, onChange }) => {
             >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {value && value !== 'none' ? (
-                        <i className={`eelfg-icon ${value}`} style={{ fontSize: '20px' }}></i>
+                        <i className={`shapeblock-icon ${value}`} style={{ fontSize: '20px' }}></i>
                     ) : (
                         <div style={{ width: '20px', height: '20px', border: '1px dashed #ccc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
 
                         </div>
                     )}
-                    <span>{value && value !== 'none' ? value : __('Select Icon', 'easy-elements-for-gutenberg')}</span>
+                    <span>{value && value !== 'none' ? iconLabel(value) : __('Select Icon', 'shapeblock')}</span>
                 </div>
                 <Icon icon="edit" />
             </Button>
@@ -57,11 +62,11 @@ const IconPicker = ({ label, value, onChange }) => {
                 <Popover
                     position="bottom center"
                     onFocusOutside={() => setIsVisible(false)}
-                    className="eelfg-icon-picker-popover"
+                    className="shapeblock-icon-picker-popover"
                 >
                     <div style={{ padding: '15px', width: '300px' }}>
                         <TextControl
-                            placeholder={__('Search icons...', 'easy-elements-for-gutenberg')}
+                            placeholder={__('Search icons...', 'shapeblock')}
                             value={search}
                             onChange={setSearch}
                             autoFocus
@@ -74,7 +79,7 @@ const IconPicker = ({ label, value, onChange }) => {
                             overflowY: 'auto',
                             padding: '5px'
                         }}>
-                            <Tooltip text={__('None', 'easy-elements-for-gutenberg')}>
+                            <Tooltip text={__('None', 'shapeblock')}>
                                 <Button
                                     onClick={() => {
                                         onChange('none');
@@ -93,10 +98,10 @@ const IconPicker = ({ label, value, onChange }) => {
                                 </Button>
                             </Tooltip>
                             {filteredIcons.map(icon => (
-                                <Tooltip text={icon.css} key={icon.uid}>
+                                <Tooltip text={iconLabel(icon.css)} key={icon.uid}>
                                     <Button
                                         onClick={() => {
-                                            onChange(`eelfg-icon-${icon.css}`);
+                                            onChange(`shapeblock-icon-${icon.css}`);
                                             setIsVisible(false);
                                         }}
                                         style={{
@@ -105,10 +110,10 @@ const IconPicker = ({ label, value, onChange }) => {
                                             width: '40px',
                                             display: 'flex',
                                             justifyContent: 'center',
-                                            border: value === icon.css ? '2px solid #007cba' : '1px solid #eee'
+                                            border: value === `shapeblock-icon-${icon.css}` ? '2px solid #007cba' : '1px solid #eee'
                                         }}
                                     >
-                                        <i className={`eelfg-icon eelfg-icon-${icon.css}`} style={{ fontSize: '18px' }}></i>
+                                        <i className={`shapeblock-icon shapeblock-icon-${icon.css}`} style={{ fontSize: '18px' }}></i>
                                     </Button>
                                 </Tooltip>
                             ))}

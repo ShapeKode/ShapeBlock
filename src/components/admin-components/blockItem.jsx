@@ -8,13 +8,12 @@ export default function BlockItem(
         description,
         icon,
         onChangeHandler,
-        status,
-        isPro
+        status
     }
 ) {
     return (
         <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
-            <div className="eelfg-block-item">
+            <div className="shapeblock-block-item">
                 <div className="meta">
                     <div className='icon'>
                         <i className={icon} ></i>

@@ -3,26 +3,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-function eelfg_create_block_social_share_block_init() {
+function shapeblock_create_block_social_share_block_init() {
 	// Front-end + shared style handle so render.php can attach per-instance inline CSS.
 	wp_register_style(
-		'eelfg-social-share-style',
+		'shapeblock-social-share-style',
 		plugins_url( 'build/style-index.css', __FILE__ ),
-		array( 'eelfg-public-style' ),
-		EELFG_VERSION
+		array( 'shapeblock-public-style' ),
+		shapeblock_asset_version( __DIR__ . '/build/style-index.css' )
 	);
 
 	// Editor-only styles (sidebar repeater UI). Compiled from src/editor.scss.
 	wp_register_style(
-		'eelfg-social-share-editor-style',
+		'shapeblock-social-share-editor-style',
 		plugins_url( 'build/index.css', __FILE__ ),
-		array( 'eelfg-social-share-style' ),
-		EELFG_VERSION
+		array( 'shapeblock-social-share-style' ),
+		shapeblock_asset_version( __DIR__ . '/build/index.css' )
 	);
 
 	register_block_type( __DIR__ . '/build', array(
-		'style'        => 'eelfg-social-share-style',
-		'editor_style' => 'eelfg-social-share-editor-style',
+		'style'        => 'shapeblock-social-share-style',
+		'editor_style' => 'shapeblock-social-share-editor-style',
 	) );
 }
-add_action( 'init', 'eelfg_create_block_social_share_block_init' );
+add_action( 'init', 'shapeblock_create_block_social_share_block_init' );

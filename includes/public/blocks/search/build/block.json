@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/search",
+  "name": "shapeblock/search",
   "version": "0.1.0",
   "title": "Search",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "description": "A site search — popup lightbox skin or inline search field skin, with full styling.",
   "keywords": [
     "search",
@@ -22,17 +22,9 @@
       "right",
       "wide",
       "full"
-    ],
-    "spacing": {
-      "margin": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ]
-    }
+    ]
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "viewScript": "file:./view.js",
   "render": "file:./render.php",
@@ -61,7 +53,23 @@
       "type": "string",
       "default": ""
     },
+    "openIconImage": {
+      "type": "object",
+      "default": {}
+    },
+    "closeIconImage": {
+      "type": "object",
+      "default": {}
+    },
     "iconSize": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSizeMobile": {
       "type": "string",
       "default": ""
     },
@@ -97,6 +105,14 @@
         "letterSpacing": ""
       }
     },
+    "inputTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "inputTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "inputTextColor": {
       "type": "string",
       "default": ""
@@ -112,11 +128,33 @@
     "inputPadding": {
       "type": "object"
     },
+    "inputPaddingTablet": {
+      "type": "object"
+    },
+    "inputPaddingMobile": {
+      "type": "object"
+    },
     "inputHeight": {
       "type": "string",
       "default": ""
     },
+    "inputHeightTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "inputHeightMobile": {
+      "type": "string",
+      "default": ""
+    },
     "inputFieldWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "inputFieldWidthTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "inputFieldWidthMobile": {
       "type": "string",
       "default": ""
     },
@@ -156,6 +194,12 @@
     "submitPadding": {
       "type": "object"
     },
+    "submitPaddingTablet": {
+      "type": "object"
+    },
+    "submitPaddingMobile": {
+      "type": "object"
+    },
     "overlayBg": {
       "type": "string",
       "default": ""
@@ -176,6 +220,14 @@
         "letterSpacing": ""
       }
     },
+    "popupTitleTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "popupTitleTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "closeIconColor": {
       "type": "string",
       "default": ""
@@ -183,6 +235,26 @@
     "closeIconSize": {
       "type": "string",
       "default": ""
+    },
+    "closeIconSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "closeIconSizeMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

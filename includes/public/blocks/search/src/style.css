@@ -3,26 +3,26 @@
  * Search block — front-end + shared styles.
  *
  * Ported from the Elementor "Search" widget stylesheet
- * (easy-elements/widgets/search/css/search.scss). Classes use the "eelfg-"
- * prefix and everything is scoped under `.eelfg-search-block-wrap`.
+ * (easy-elements/widgets/search/css/search.scss). Classes use the "shapeblock-"
+ * prefix and everything is scoped under `.shapeblock-search-block-wrap`.
  */
-.eelfg-search-block-wrap {
-  --eelfg-search-primary: #eaa638;
+.shapeblock-search-block-wrap {
+  --shapeblock-search-primary: #eaa638;
 }
-.eelfg-search-block-wrap .eelfg-search-open-btn {
+.shapeblock-search-block-wrap .shapeblock-search-open-btn {
   cursor: pointer;
   padding: 0;
   font-size: 16px;
   display: inline-block;
   color: inherit;
 }
-.eelfg-search-block-wrap .eelfg-search-open-btn svg {
+.shapeblock-search-block-wrap .shapeblock-search-open-btn svg {
   height: 1em;
 }
-.eelfg-search-block-wrap {
+.shapeblock-search-block-wrap {
   /* Popup lightbox */
 }
-.eelfg-search-block-wrap .eelfg-search-lightbox {
+.shapeblock-search-block-wrap .shapeblock-search-lightbox {
   position: fixed;
   display: flex;
   top: 0;
@@ -36,12 +36,12 @@
   transition: opacity 0.3s ease, visibility 0.3s ease;
   pointer-events: none;
 }
-.eelfg-search-block-wrap .eelfg-search-lightbox.eelfg-lightbox {
+.shapeblock-search-block-wrap .shapeblock-search-lightbox.shapeblock-lightbox {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
 }
-.eelfg-search-block-wrap .eelfg-search-overlay {
+.shapeblock-search-block-wrap .shapeblock-search-overlay {
   position: absolute;
   left: 0;
   right: 0;
@@ -53,10 +53,10 @@
   top: 0;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.031372549);
 }
-.eelfg-search-block-wrap .eelfg-lightbox .eelfg-search-overlay {
+.shapeblock-search-block-wrap .shapeblock-lightbox .shapeblock-search-overlay {
   height: 100%;
 }
-.eelfg-search-block-wrap .eelfg-search-content {
+.shapeblock-search-block-wrap .shapeblock-search-content {
   border-radius: 0;
   position: relative;
   box-sizing: border-box;
@@ -69,12 +69,12 @@
   place-content: center;
   z-index: 99;
 }
-.eelfg-search-block-wrap .eelfg-search-content .eelfg-search-title {
+.shapeblock-search-block-wrap .shapeblock-search-content .shapeblock-search-title {
   text-align: center;
   margin: 0 0 50px;
   font-size: 30px;
 }
-.eelfg-search-block-wrap .eelfg-search-content .eelfg-search-field {
+.shapeblock-search-block-wrap .shapeblock-search-content .shapeblock-search-field {
   width: 100%;
   padding: 15px 40px 15px 0;
   border-radius: 8px 0 0 8px;
@@ -85,7 +85,7 @@
   font-size: 18px;
   background: none;
 }
-.eelfg-search-block-wrap .eelfg-search-content .eelfg-search-submit {
+.shapeblock-search-block-wrap .shapeblock-search-content .shapeblock-search-submit {
   border: none;
   background: none;
   border-radius: 0;
@@ -95,20 +95,20 @@
   top: 15px;
   padding: 0;
 }
-.eelfg-search-block-wrap .eelfg-search-content .eelfg-search-submit svg {
+.shapeblock-search-block-wrap .shapeblock-search-content .shapeblock-search-submit svg {
   width: 25px;
   height: 25px;
   fill: currentColor;
 }
-.eelfg-search-block-wrap .eelfg-search-content .eelfg-search-form {
+.shapeblock-search-block-wrap .shapeblock-search-content .shapeblock-search-form {
   position: relative;
   border-bottom: 2px solid rgba(0, 0, 0, 0.1215686275);
 }
-.eelfg-search-block-wrap .eelfg-lightbox .eelfg-search-content {
+.shapeblock-search-block-wrap .shapeblock-lightbox .shapeblock-search-content {
   transform: translateY(0);
   opacity: 1;
 }
-.eelfg-search-block-wrap .eelfg-search-close-btn {
+.shapeblock-search-block-wrap .shapeblock-search-close-btn {
   position: absolute;
   top: 20px;
   right: 25px;
@@ -122,18 +122,18 @@
   display: grid;
   place-content: center;
 }
-.eelfg-search-block-wrap .eelfg-search-close-btn svg {
+.shapeblock-search-block-wrap .shapeblock-search-close-btn svg {
   height: 1em;
   fill: currentColor;
 }
-.eelfg-search-block-wrap {
+.shapeblock-search-block-wrap {
   /* Style 2 — inline fields */
 }
-.eelfg-search-block-wrap .eelfg-search-style-2 .eelfg-search-form {
+.shapeblock-search-block-wrap .shapeblock-search-style-2 .shapeblock-search-form {
   position: relative;
   margin: 0;
 }
-.eelfg-search-block-wrap .eelfg-search-style-2 .eelfg-search-field {
+.shapeblock-search-block-wrap .shapeblock-search-style-2 .shapeblock-search-field {
   height: 44px;
   border-radius: 100px;
   font-size: 14px;
@@ -143,12 +143,12 @@
   outline: none;
   transition: all 0.4s ease-out 0s;
 }
-.eelfg-search-block-wrap .eelfg-search-style-2 .eelfg-search-field:focus {
-  border-color: var(--eelfg-search-primary);
+.shapeblock-search-block-wrap .shapeblock-search-style-2 .shapeblock-search-field:focus {
+  border-color: var(--shapeblock-search-primary);
 }
-.eelfg-search-block-wrap .eelfg-search-style-2 .eelfg-search-submit-btn {
+.shapeblock-search-block-wrap .shapeblock-search-style-2 .shapeblock-search-submit-btn {
   font-size: 22px;
-  color: var(--eelfg-search-primary);
+  color: var(--shapeblock-search-primary);
   background: transparent;
   border: none;
   position: absolute;
@@ -159,23 +159,23 @@
   padding: 0;
   cursor: pointer;
 }
-.eelfg-search-block-wrap .eelfg-search-style-2 .eelfg-search-submit-btn svg {
+.shapeblock-search-block-wrap .shapeblock-search-style-2 .shapeblock-search-submit-btn svg {
   width: 18px;
   height: 18px;
-  fill: var(--eelfg-search-primary);
+  fill: var(--shapeblock-search-primary);
 }
 @media screen and (max-width: 991px) {
-  .eelfg-search-block-wrap .eelfg-search-content .eelfg-search-field {
+  .shapeblock-search-block-wrap .shapeblock-search-content .shapeblock-search-field {
     min-width: auto;
   }
 }
 @media screen and (max-width: 767px) {
-  .eelfg-search-block-wrap .eelfg-search-content {
+  .shapeblock-search-block-wrap .shapeblock-search-content {
     min-height: 370px;
   }
 }
 @media screen and (max-width: 500px) {
-  .eelfg-search-block-wrap .eelfg-search-content {
+  .shapeblock-search-block-wrap .shapeblock-search-content {
     max-width: 230px;
   }
 }/*# sourceMappingURL=style.css.map */

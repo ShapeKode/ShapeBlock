@@ -2,13 +2,13 @@
  * Search block — front-end + shared styles.
  *
  * Ported from the Elementor "Search" widget stylesheet
- * (easy-elements/widgets/search/css/search.scss). Classes use the "eelfg-"
- * prefix and everything is scoped under `.eelfg-search-block-wrap`.
+ * (easy-elements/widgets/search/css/search.scss). Classes use the "shapeblock-"
+ * prefix and everything is scoped under `.shapeblock-search-block-wrap`.
  */
-.eelfg-search-block-wrap {
-	--eelfg-search-primary: #eaa638;
+.shapeblock-search-block-wrap {
+	--shapeblock-search-primary: #eaa638;
 
-	.eelfg-search-open-btn {
+	.shapeblock-search-open-btn {
 		cursor: pointer;
 		padding: 0;
 		font-size: 16px;
@@ -21,7 +21,7 @@
 	}
 
 	/* Popup lightbox */
-	.eelfg-search-lightbox {
+	.shapeblock-search-lightbox {
 		position: fixed;
 		display: flex;
 		top: 0;
@@ -36,13 +36,13 @@
 		pointer-events: none;
 	}
 
-	.eelfg-search-lightbox.eelfg-lightbox {
+	.shapeblock-search-lightbox.shapeblock-lightbox {
 		visibility: visible;
 		opacity: 1;
 		pointer-events: auto;
 	}
 
-	.eelfg-search-overlay {
+	.shapeblock-search-overlay {
 		position: absolute;
 		left: 0;
 		right: 0;
@@ -55,11 +55,11 @@
 		box-shadow: 0 10px 20px #00000008;
 	}
 
-	.eelfg-lightbox .eelfg-search-overlay {
+	.shapeblock-lightbox .shapeblock-search-overlay {
 		height: 100%;
 	}
 
-	.eelfg-search-content {
+	.shapeblock-search-content {
 		border-radius: 0;
 		position: relative;
 		box-sizing: border-box;
@@ -72,13 +72,13 @@
 		place-content: center;
 		z-index: 99;
 
-		.eelfg-search-title {
+		.shapeblock-search-title {
 			text-align: center;
 			margin: 0 0 50px;
 			font-size: 30px;
 		}
 
-		.eelfg-search-field {
+		.shapeblock-search-field {
 			width: 100%;
 			padding: 15px 40px 15px 0;
 			border-radius: 8px 0 0 8px;
@@ -90,7 +90,7 @@
 			background: none;
 		}
 
-		.eelfg-search-submit {
+		.shapeblock-search-submit {
 			border: none;
 			background: none;
 			border-radius: 0;
@@ -107,18 +107,18 @@
 			}
 		}
 
-		.eelfg-search-form {
+		.shapeblock-search-form {
 			position: relative;
 			border-bottom: 2px solid #0000001f;
 		}
 	}
 
-	.eelfg-lightbox .eelfg-search-content {
+	.shapeblock-lightbox .shapeblock-search-content {
 		transform: translateY(0);
 		opacity: 1;
 	}
 
-	.eelfg-search-close-btn {
+	.shapeblock-search-close-btn {
 		position: absolute;
 		top: 20px;
 		right: 25px;
@@ -139,13 +139,13 @@
 	}
 
 	/* Style 2 — inline fields */
-	.eelfg-search-style-2 {
-		.eelfg-search-form {
+	.shapeblock-search-style-2 {
+		.shapeblock-search-form {
 			position: relative;
 			margin: 0;
 		}
 
-		.eelfg-search-field {
+		.shapeblock-search-field {
 			height: 44px;
 			border-radius: 100px;
 			font-size: 14px;
@@ -156,13 +156,13 @@
 			transition: all 0.4s ease-out 0s;
 
 			&:focus {
-				border-color: var(--eelfg-search-primary);
+				border-color: var(--shapeblock-search-primary);
 			}
 		}
 
-		.eelfg-search-submit-btn {
+		.shapeblock-search-submit-btn {
 			font-size: 22px;
-			color: var(--eelfg-search-primary);
+			color: var(--shapeblock-search-primary);
 			background: transparent;
 			border: none;
 			position: absolute;
@@ -176,25 +176,25 @@
 			svg {
 				width: 18px;
 				height: 18px;
-				fill: var(--eelfg-search-primary);
+				fill: var(--shapeblock-search-primary);
 			}
 		}
 	}
 
-	@media screen and (max-width: 991px) {
-		.eelfg-search-content .eelfg-search-field {
+	@media screen and (max-width: 1024px) {
+		.shapeblock-search-content .shapeblock-search-field {
 			min-width: auto;
 		}
 	}
 
 	@media screen and (max-width: 767px) {
-		.eelfg-search-content {
+		.shapeblock-search-content {
 			min-height: 370px;
 		}
 	}
 
 	@media screen and (max-width: 500px) {
-		.eelfg-search-content {
+		.shapeblock-search-content {
 			max-width: 230px;
 		}
 	}

@@ -1,13 +1,13 @@
 /**
  * Editor-only styles for the Social Icon block (sidebar repeater UI).
  */
-.eelfg-si-repeater-item {
+.shapeblock-si-repeater-item {
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   padding: 12px;
   margin-bottom: 12px;
 }
-.eelfg-si-repeater-item .eelfg-si-repeater-head {
+.shapeblock-si-repeater-item .shapeblock-si-repeater-head {
   display: flex;
   justify-content: space-between;
   align-items: center;

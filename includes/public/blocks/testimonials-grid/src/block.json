@@ -1,94 +1,382 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "easy-elements-for-gutenberg/testimonials-grid",
+	"name": "shapeblock/testimonials-grid",
 	"version": "0.1.0",
 	"title": "Testimonial",
-	"category": "easy-elements-for-gutenberg",
-	"description": "A grid of testimonials with 6 skins, ratings, quote icons, logos and a view-all reveal.",
-	"keywords": [ "testimonial", "review", "feedback", "quote", "grid" ],
+	"category": "shapeblock",
+	"description": "A grid of testimonials with three styles, ratings, quote icons and logos.",
+	"keywords": [
+		"testimonial",
+		"review",
+		"feedback",
+		"quote",
+		"grid"
+	],
 	"example": {},
 	"supports": {
 		"html": false,
-		"align": [ "left", "center", "right", "wide", "full" ],
-		"spacing": {
-			"padding": [ "top", "bottom", "left", "right" ],
-			"margin": [ "top", "bottom", "left", "right" ]
-		}
+		"align": [
+			"left",
+			"center",
+			"right",
+			"wide",
+			"full"
+		]
 	},
-	"textdomain": "easy-elements-for-gutenberg",
+	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
-	"viewScript": "file:./view.js",
 	"render": "file:./render.php",
 	"attributes": {
-		"blockId": { "type": "string", "default": "" },
-		"testimonialsSkin": { "type": "string", "default": "default" },
-		"avatarImageTop": { "type": "boolean", "default": false },
-		"showLoadmore": { "type": "boolean", "default": false },
-		"loadMoreText": { "type": "string", "default": "View all reviews" },
-
+		"blockId": {
+			"type": "string",
+			"default": ""
+		},
+		"testimonialsSkin": {
+			"type": "string",
+			"default": "default"
+		},
 		"testimonials": {
 			"type": "array",
 			"default": [
-				{ "image": {}, "name": "Stefan Sears", "designation": "Developer, Easy Elements Inc", "description": "This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.", "quoteIcon": "", "showQuoteIconSkin1": false, "rating": "5", "logo": {} },
-				{ "image": {}, "name": "Stefan Sears", "designation": "Developer, Easy Elements Inc", "description": "This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.", "quoteIcon": "", "showQuoteIconSkin1": false, "rating": "5", "logo": {} },
-				{ "image": {}, "name": "Stefan Sears", "designation": "Developer, Easy Elements Inc", "description": "This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.", "quoteIcon": "", "showQuoteIconSkin1": false, "rating": "5", "logo": {} },
-				{ "image": {}, "name": "Stefan Sears", "designation": "Developer, Easy Elements Inc", "description": "This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.", "quoteIcon": "", "showQuoteIconSkin1": false, "rating": "5", "logo": {} }
+				{
+					"image": {},
+					"name": "Stefan Sears",
+					"designation": "Developer, ShapeBlock Inc",
+					"description": "This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.",
+					"quoteIcon": "",
+					"showQuoteIconSkin1": false,
+					"rating": "5",
+					"logo": {}
+				},
+				{
+					"image": {},
+					"name": "Stefan Sears",
+					"designation": "Developer, ShapeBlock Inc",
+					"description": "This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.",
+					"quoteIcon": "",
+					"showQuoteIconSkin1": false,
+					"rating": "5",
+					"logo": {}
+				},
+				{
+					"image": {},
+					"name": "Stefan Sears",
+					"designation": "Developer, ShapeBlock Inc",
+					"description": "This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.",
+					"quoteIcon": "",
+					"showQuoteIconSkin1": false,
+					"rating": "5",
+					"logo": {}
+				},
+				{
+					"image": {},
+					"name": "Stefan Sears",
+					"designation": "Developer, ShapeBlock Inc",
+					"description": "This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.",
+					"quoteIcon": "",
+					"showQuoteIconSkin1": false,
+					"rating": "5",
+					"logo": {}
+				}
 			]
 		},
-
-		"showImage": { "type": "boolean", "default": true },
-		"columns": { "type": "string", "default": "3" },
-		"columnsTablet": { "type": "string", "default": "3" },
-		"columnsMobile": { "type": "string", "default": "2" },
-		"itemPadding": { "type": "object" },
-		"logoHeight": { "type": "string", "default": "" },
-		"testimonialsAlignment": { "type": "string", "default": "" },
-		"showRating": { "type": "boolean", "default": true },
-		"ratingColor": { "type": "string", "default": "" },
-		"ratingSize": { "type": "string", "default": "" },
-		"titleIcon": { "type": "string", "default": "" },
-
-		"bgColor": { "type": "string", "default": "" },
-		"bgGradient": { "type": "string", "default": "" },
-		"itemBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
-		"itemBorderRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
-		"itemBoxShadow": { "type": "object", "default": { "x": 0, "y": 0, "b": 0, "s": 0, "c": "rgba(0, 0, 0, 0)" } },
-		"itemInnerPadding": { "type": "object" },
-		"wrapperGap": { "type": "string", "default": "" },
-
-		"nameColor": { "type": "string", "default": "" },
-		"nameTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
-		"nameMargin": { "type": "object" },
-
-		"designationColor": { "type": "string", "default": "" },
-		"designationTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
-
-		"descriptionColor": { "type": "string", "default": "" },
-		"descriptionTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
-		"descriptionMargin": { "type": "object" },
-		"minHeight": { "type": "string", "default": "" },
-		"maxWidth": { "type": "string", "default": "" },
-
-		"authorMetaAlignment": { "type": "string", "default": "flex-start" },
-		"authorMetaAlignmentStyle4": { "type": "string", "default": "left" },
-		"authorMetaGap": { "type": "object" },
-		"authorImageSize": { "type": "string", "default": "" },
-		"authorImageBorderRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
-
-		"quoteIconColor": { "type": "string", "default": "" },
-		"quoteIconSize": { "type": "string", "default": "" },
-
-		"loadMoreTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
-		"loadMoreColor": { "type": "string", "default": "" },
-		"loadMoreBgColor": { "type": "string", "default": "" },
-		"loadMoreBgGradient": { "type": "string", "default": "" },
-		"loadmorePadding": { "type": "object" },
-		"loadmoreBorderRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
-		"loadMoreBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
-		"loadMoreHoverColor": { "type": "string", "default": "" },
-		"loadMoreHoverBgColor": { "type": "string", "default": "" },
-		"loadMoreHoverBgGradient": { "type": "string", "default": "" },
-		"loadMoreHoverBorderColor": { "type": "string", "default": "" }
+		"showImage": {
+			"type": "boolean",
+			"default": true
+		},
+		"columns": {
+			"type": "string",
+			"default": "3"
+		},
+		"columnsTablet": {
+			"type": "string",
+			"default": "2"
+		},
+		"columnsMobile": {
+			"type": "string",
+			"default": "1"
+		},
+		"itemPadding": {
+			"type": "object"
+		},
+		"itemPaddingTablet": {
+			"type": "object"
+		},
+		"itemPaddingMobile": {
+			"type": "object"
+		},
+		"logoHeight": {
+			"type": "string",
+			"default": ""
+		},
+		"logoHeightTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"logoHeightMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"testimonialsAlignment": {
+			"type": "string",
+			"default": ""
+		},
+		"testimonialsAlignmentTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"testimonialsAlignmentMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"showRating": {
+			"type": "boolean",
+			"default": true
+		},
+		"ratingColor": {
+			"type": "string",
+			"default": ""
+		},
+		"ratingSize": {
+			"type": "string",
+			"default": ""
+		},
+		"bgColor": {
+			"type": "string",
+			"default": ""
+		},
+		"bgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"itemBorder": {
+			"type": "object",
+			"default": {
+				"width": 0,
+				"color": "",
+				"style": "solid"
+			}
+		},
+		"itemBorderRadius": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"itemBoxShadow": {
+			"type": "object",
+			"default": {
+				"x": 0,
+				"y": 0,
+				"b": 0,
+				"s": 0,
+				"c": "rgba(0, 0, 0, 0)"
+			}
+		},
+		"itemInnerPadding": {
+			"type": "object"
+		},
+		"itemInnerPaddingTablet": {
+			"type": "object"
+		},
+		"itemInnerPaddingMobile": {
+			"type": "object"
+		},
+		"wrapperGap": {
+			"type": "string",
+			"default": ""
+		},
+		"wrapperGapTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"wrapperGapMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"nameColor": {
+			"type": "string",
+			"default": ""
+		},
+		"nameTypography": {
+			"type": "object",
+			"default": {
+				"fontFamily": "",
+				"fontSize": "",
+				"fontWeight": "",
+				"fontStyle": "",
+				"textTransform": "",
+				"lineHeight": "",
+				"letterSpacing": ""
+			}
+		},
+		"nameTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"nameTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"nameMargin": {
+			"type": "object"
+		},
+		"nameMarginTablet": {
+			"type": "object"
+		},
+		"nameMarginMobile": {
+			"type": "object"
+		},
+		"designationColor": {
+			"type": "string",
+			"default": ""
+		},
+		"designationTypography": {
+			"type": "object",
+			"default": {
+				"fontFamily": "",
+				"fontSize": "",
+				"fontWeight": "",
+				"fontStyle": "",
+				"textTransform": "",
+				"lineHeight": "",
+				"letterSpacing": ""
+			}
+		},
+		"designationTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"designationTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"descriptionColor": {
+			"type": "string",
+			"default": ""
+		},
+		"descriptionTypography": {
+			"type": "object",
+			"default": {
+				"fontFamily": "",
+				"fontSize": "",
+				"fontWeight": "",
+				"fontStyle": "",
+				"textTransform": "",
+				"lineHeight": "",
+				"letterSpacing": ""
+			}
+		},
+		"descriptionTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"descriptionTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"descriptionMargin": {
+			"type": "object"
+		},
+		"descriptionMarginTablet": {
+			"type": "object"
+		},
+		"descriptionMarginMobile": {
+			"type": "object"
+		},
+		"minHeight": {
+			"type": "string",
+			"default": ""
+		},
+		"minHeightTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"minHeightMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"maxWidth": {
+			"type": "string",
+			"default": ""
+		},
+		"maxWidthTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"maxWidthMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"authorMetaAlignment": {
+			"type": "string",
+			"default": "flex-start"
+		},
+		"authorMetaAlignmentTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"authorMetaAlignmentMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"authorMetaAlignmentStyle4": {
+			"type": "string",
+			"default": "left"
+		},
+		"authorMetaAlignmentStyle4Tablet": {
+			"type": "string",
+			"default": ""
+		},
+		"authorMetaAlignmentStyle4Mobile": {
+			"type": "string",
+			"default": ""
+		},
+		"authorMetaGap": {
+			"type": "object"
+		},
+		"authorMetaGapTablet": {
+			"type": "object"
+		},
+		"authorMetaGapMobile": {
+			"type": "object"
+		},
+		"authorImageSize": {
+			"type": "string",
+			"default": ""
+		},
+		"authorImageBorderRadius": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"quoteIconColor": {
+			"type": "string",
+			"default": ""
+		},
+		"quoteIconSize": {
+			"type": "string",
+			"default": ""
+		},
+		"hideDesktop": {
+			"type": "boolean",
+			"default": false
+		},
+		"hideTablet": {
+			"type": "boolean",
+			"default": false
+		},
+		"hideMobile": {
+			"type": "boolean",
+			"default": false
+		}
 	}
 }

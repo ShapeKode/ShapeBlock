@@ -1,17 +1,17 @@
 /* Column editor-only styles */
 
-.wp-block-eelfg-column {
+.wp-block-shapeblock-column {
     min-height: 60px;
     position: relative;
     transition: outline 100ms ease;
 
-    > .eelfg-column__inner {
+    > .shapeblock-column__inner {
         min-height: 40px;
     }
 
     /* Width-label badge (e.g. "50%"). Hidden by default; shown on selection /
      * hover / empty-state. Sits unobtrusively in the top-right. */
-    > .eelfg-column__width-label {
+    > .shapeblock-column__width-label {
         position: absolute;
         top: 8px;
         right: 10px;
@@ -28,10 +28,10 @@
         z-index: 2;
     }
 
-    &:hover > .eelfg-column__width-label,
-    &.is-selected > .eelfg-column__width-label,
-    &.has-child-selected > .eelfg-column__width-label,
-    &.is-empty > .eelfg-column__width-label {
+    &:hover > .shapeblock-column__width-label,
+    &.is-selected > .shapeblock-column__width-label,
+    &.has-child-selected > .shapeblock-column__width-label,
+    &.is-empty > .shapeblock-column__width-label {
         opacity: 1;
     }
 
@@ -41,7 +41,7 @@
         border-radius: 3px;
         background: transparent;
 
-        > .eelfg-column__inner {
+        > .shapeblock-column__inner {
             display: flex;
             align-items: center;
             justify-content: center;

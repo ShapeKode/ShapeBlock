@@ -6,7 +6,8 @@ import {
     BaseControl,
     Popover,
     Button,
-    Icon
+    Icon,
+    ToggleControl
 } from '@wordpress/components';
 
 const BoxShadowControls = ({ label, value, onChange }) => {
@@ -17,11 +18,12 @@ const BoxShadowControls = ({ label, value, onChange }) => {
         b: value?.b ?? 0,
         s: value?.s ?? 0,
         c: value?.c || 'rgba(0,0,0,0)',
+        inset: !!value?.inset,
     };
 
     // Construct preview string
-    const { x, y, b, s, c } = shadowValue;
-    const shadowString = `${x}px ${y}px ${b}px ${s}px ${c}`;
+    const { x, y, b, s, c, inset } = shadowValue;
+    const shadowString = `${inset ? 'inset ' : ''}${x}px ${y}px ${b}px ${s}px ${c}`;
 
     const [isVisible, setIsVisible] = useState(false);
 
@@ -40,7 +42,7 @@ const BoxShadowControls = ({ label, value, onChange }) => {
     };
 
     return (
-        <div className="eshb-box-shadow-control" style={{ position: 'relative' }}>
+        <div className="shapeblock-box-shadow-control" style={{ position: 'relative' }}>
             <Button
                 variant="secondary"
                 onClick={toggleVisible}
@@ -56,7 +58,7 @@ const BoxShadowControls = ({ label, value, onChange }) => {
                         background: '#fff',
                         marginRight: '5px'
                     }} />
-                    {label || __('Box Shadow', 'easy-elements-for-gutenberg')}
+                    {label || __('Box Shadow', 'shapeblock')}
                 </div>
                 <Icon icon="plus" />
             </Button>
@@ -67,30 +69,37 @@ const BoxShadowControls = ({ label, value, onChange }) => {
                 >
                     <div style={{ padding: '16px', width: '280px' }}>
                         <RangeControl
-                            label={__('Horizontal Offset (X)', 'easy-elements-for-gutenberg')}
+                            label={__('Horizontal Offset (X)', 'shapeblock')}
                             value={x}
                             onChange={(val) => updateShadow({ x: val })}
                             min={-50} max={50}
                         />
                         <RangeControl
-                            label={__('Vertical Offset (Y)', 'easy-elements-for-gutenberg')}
+                            label={__('Vertical Offset (Y)', 'shapeblock')}
                             value={y}
                             onChange={(val) => updateShadow({ y: val })}
                             min={-50} max={50}
                         />
                         <RangeControl
-                            label={__('Blur', 'easy-elements-for-gutenberg')}
+                            label={__('Blur', 'shapeblock')}
                             value={b}
                             onChange={(val) => updateShadow({ b: val })}
                             min={0} max={100}
                         />
                         <RangeControl
-                            label={__('Spread', 'easy-elements-for-gutenberg')}
+                            label={__('Spread', 'shapeblock')}
                             value={s}
                             onChange={(val) => updateShadow({ s: val })}
                             min={-50} max={50}
                         />
-                        <BaseControl label={__('Shadow Color', 'easy-elements-for-gutenberg')} __nextHasNoMarginBottom={true}>
+                        <ToggleControl
+                            label={__('Inset', 'shapeblock')}
+                            help={__('Draw the shadow inside the element instead of outside.', 'shapeblock')}
+                            checked={inset}
+                            onChange={(val) => updateShadow({ inset: val })}
+                            __nextHasNoMarginBottom={true}
+                        />
+                        <BaseControl label={__('Shadow Color', 'shapeblock')} __nextHasNoMarginBottom={true}>
                             <ColorPicker
                                 color={c}
                                 onChange={handleColorChange}
@@ -101,12 +110,12 @@ const BoxShadowControls = ({ label, value, onChange }) => {
                             variant="secondary"
                             isSmall
                             onClick={() => {
-                                onChange({ x: 0, y: 0, b: 0, s: 0, c: 'rgba(0,0,0,0)' });
+                                onChange({ x: 0, y: 0, b: 0, s: 0, c: 'rgba(0,0,0,0)', inset: false });
                                 setIsVisible(false);
                             }}
                             style={{ marginTop: '10px', width: '100%', justifyContent: 'center' }}
                         >
-                            {__('Reset', 'easy-elements-for-gutenberg')}
+                            {__('Reset', 'shapeblock')}
                         </Button>
                     </div>
                 </Popover>

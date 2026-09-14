@@ -6,12 +6,10 @@ import {
 import {
     PlusOutlined, EditOutlined, DeleteOutlined,
     SearchOutlined, ReloadOutlined, CopyOutlined,
-    CrownOutlined, UndoOutlined
+    UndoOutlined
 } from '@ant-design/icons';
 
 const { Search } = Input;
-
-const FREE_TEMPLATE_LIMIT = 3;
 
 export default function Templates() {
     const [templates, setTemplates] = useState([]);
@@ -25,15 +23,12 @@ export default function Templates() {
     const [sorter, setSorter] = useState({ field: 'date', order: 'descend' });
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
-    const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
     const [form] = Form.useForm();
     const [submitting, setSubmitting] = useState(false);
-    const [templateCount, setTemplateCount] = useState(Number(eelfg.templateCount) || 0);
+    const [templateCount, setTemplateCount] = useState(Number(shapeblock.templateCount) || 0);
     const [trashCount, setTrashCount] = useState(0);
     const [viewStatus, setViewStatus] = useState('publish');
 
-    const isPro = Boolean(eelfg.isProActive);
-    const isLimitReached = !isPro && templateCount >= FREE_TEMPLATE_LIMIT;
     const isTrashView = viewStatus === 'trash';
 
     const orderParam = () => (sorter.order === 'ascend' ? 'ASC' : 'DESC');
@@ -49,11 +44,11 @@ export default function Templates() {
             status,
         });
 
-        // rest_url may be the plain-permalink form (index.php?rest_route=/easy-elements-for-gutenberg/v1/),
+        // rest_url may be the plain-permalink form (index.php?rest_route=/shapeblock/v1/),
         // so query args must be appended with "&", not "?".
-        const sep = eelfg.rest_url.includes('?') ? '&' : '?';
-        fetch(`${eelfg.rest_url}templates${sep}${params}`, {
-            headers: { 'X-WP-Nonce': eelfg.nonce },
+        const sep = shapeblock.rest_url.includes('?') ? '&' : '?';
+        fetch(`${shapeblock.rest_url}templates${sep}${params}`, {
+            headers: { 'X-WP-Nonce': shapeblock.nonce },
         })
             .then(res => res.json())
             .then(data => {
@@ -102,10 +97,6 @@ export default function Templates() {
     };
 
     const openAddModal = () => {
-        if (isLimitReached) {
-            setUpgradeModalOpen(true);
-            return;
-        }
         form.resetFields();
         setModalOpen(true);
     };
@@ -114,11 +105,11 @@ export default function Templates() {
         form.validateFields().then(values => {
             setSubmitting(true);
 
-            fetch(`${eelfg.rest_url}templates`, {
+            fetch(`${shapeblock.rest_url}templates`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-WP-Nonce': eelfg.nonce,
+                    'X-WP-Nonce': shapeblock.nonce,
                 },
                 body: JSON.stringify(values),
             })
@@ -137,9 +128,6 @@ export default function Templates() {
                         } else {
                             refetch();
                         }
-                    } else if (data.code === 'template_limit') {
-                        setModalOpen(false);
-                        setUpgradeModalOpen(true);
                     } else {
                         notification.error({ message: data.message || 'Operation failed' });
                     }
@@ -153,10 +141,10 @@ export default function Templates() {
 
     // force = true permanently deletes (from Trash); otherwise moves to Trash.
     const handleDelete = (id, force = false) => {
-        const sep = force ? (`${eelfg.rest_url}templates/${id}`.includes('?') ? '&force=true' : '?force=true') : '';
-        fetch(`${eelfg.rest_url}templates/${id}${sep}`, {
+        const sep = force ? (`${shapeblock.rest_url}templates/${id}`.includes('?') ? '&force=true' : '?force=true') : '';
+        fetch(`${shapeblock.rest_url}templates/${id}${sep}`, {
             method: 'DELETE',
-            headers: { 'X-WP-Nonce': eelfg.nonce },
+            headers: { 'X-WP-Nonce': shapeblock.nonce },
         })
             .then(res => res.json())
             .then(data => {
@@ -175,9 +163,9 @@ export default function Templates() {
     };
 
     const handleRestore = (id) => {
-        fetch(`${eelfg.rest_url}templates/${id}/restore`, {
+        fetch(`${shapeblock.rest_url}templates/${id}/restore`, {
             method: 'POST',
-            headers: { 'X-WP-Nonce': eelfg.nonce },
+            headers: { 'X-WP-Nonce': shapeblock.nonce },
         })
             .then(res => res.json())
             .then(data => {
@@ -193,11 +181,11 @@ export default function Templates() {
     };
 
     const runBulk = (action) => {
-        fetch(`${eelfg.rest_url}templates/bulk-delete`, {
+        fetch(`${shapeblock.rest_url}templates/bulk-delete`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-WP-Nonce': eelfg.nonce,
+                'X-WP-Nonce': shapeblock.nonce,
             },
             body: JSON.stringify({ ids: selectedRowKeys, action }),
         })
@@ -264,7 +252,7 @@ export default function Templates() {
         key: 'shortcode',
         width: 280,
         render: (_, record) => {
-            const shortcode = `[eelfg_template id="${record.id}"]`;
+            const shortcode = `[shapeblock_template id="${record.id}"]`;
             return (
                 <Space.Compact style={{ width: '100%' }}>
                     <Input
@@ -389,7 +377,7 @@ export default function Templates() {
     };
 
     return (
-        <div className="eelfg-options-content">
+        <div className="shapeblock-options-content">
             <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -397,10 +385,7 @@ export default function Templates() {
                 marginBottom: 16,
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <h1 className="eelfg-options-title" style={{ margin: 0 }}>Templates</h1>
-                    {!isPro && (
-                        <Tag color="orange">{templateCount}/{FREE_TEMPLATE_LIMIT}</Tag>
-                    )}
+                    <h1 className="shapeblock-options-title" style={{ margin: 0 }}>Templates</h1>
                 </div>
                 {!isTrashView && (
                     <Button
@@ -452,15 +437,15 @@ export default function Templates() {
                             const v = e.target.value;
                             setSearch(v);
                             setSelectedRowKeys([]);
-                            clearTimeout(window.__eelfgTplSearchT);
-                            window.__eelfgTplSearchT = setTimeout(
+                            clearTimeout(window.__shapeblockTplSearchT);
+                            window.__shapeblockTplSearchT = setTimeout(
                                 () => fetchTemplates(1, pagination.pageSize, v, sorter.field, orderParam(), viewStatus),
                                 300
                             );
                         }}
                         style={{ width: 250 }}
                         prefix={<SearchOutlined />}
-                        className='bolpo-template-search-box'
+                        className='shapeblock-template-search-box'
                     />
                     <Button
                         icon={<ReloadOutlined />}
@@ -510,33 +495,6 @@ export default function Templates() {
                         <Input placeholder="Enter template name" />
                     </Form.Item>
                 </Form>
-            </Modal>
-
-            <Modal
-                open={upgradeModalOpen}
-                onCancel={() => setUpgradeModalOpen(false)}
-                footer={null}
-                centered
-                width={480}
-            >
-                <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                    <CrownOutlined style={{ fontSize: 48, color: '#a216ff', marginBottom: 16 }} />
-                    <h2 style={{ margin: '0 0 8px', fontSize: 22 }}>Upgrade to Pro</h2>
-                    <p style={{ color: '#666', fontSize: 15, margin: '0 0 20px' }}>
-                        You've reached the free limit of <strong>{FREE_TEMPLATE_LIMIT} templates</strong>.<br />
-                        Upgrade to eelfg Pro for unlimited templates and premium features.
-                    </p>
-                    <Button
-                        type="primary"
-                        size="large"
-                        icon={<CrownOutlined />}
-                        href={eelfg.proUrl}
-                        target="_blank"
-                        style={{ background: '#a216ff', borderColor: '#a216ff' }}
-                    >
-                        Get eelfg Pro
-                    </Button>
-                </div>
             </Modal>
         </div>
     );

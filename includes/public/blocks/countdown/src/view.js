@@ -15,20 +15,20 @@
 		DAY = HOUR * 24;
 
 	function initCountdown(cd) {
-		if (cd.dataset.eelfgCntdwnInit === '1') {
+		if (cd.dataset.shapeblockCntdwnInit === '1') {
 			return;
 		}
-		cd.dataset.eelfgCntdwnInit = '1';
+		cd.dataset.shapeblockCntdwnInit = '1';
 
 		var targetDate = new Date(cd.dataset.target).getTime();
 		if (isNaN(targetDate)) {
 			return;
 		}
 
-		var daysEl = cd.querySelector('.eelfg-cntdwn-days');
-		var hoursEl = cd.querySelector('.eelfg-cntdwn-hours');
-		var minutesEl = cd.querySelector('.eelfg-cntdwn-minutes');
-		var secondsEl = cd.querySelector('.eelfg-cntdwn-seconds');
+		var daysEl = cd.querySelector('.shapeblock-cntdwn-days');
+		var hoursEl = cd.querySelector('.shapeblock-cntdwn-hours');
+		var minutesEl = cd.querySelector('.shapeblock-cntdwn-minutes');
+		var secondsEl = cd.querySelector('.shapeblock-cntdwn-seconds');
 
 		if (!daysEl || !hoursEl || !minutesEl || !secondsEl) {
 			return;
@@ -59,7 +59,7 @@
 	}
 
 	function initAll() {
-		var nodes = document.querySelectorAll('.eelfg-countdown-block-wrap .eelfg-cntdwn[data-target]');
+		var nodes = document.querySelectorAll('.shapeblock-countdown-block-wrap .shapeblock-cntdwn[data-target]');
 		Array.prototype.forEach.call(nodes, initCountdown);
 	}
 

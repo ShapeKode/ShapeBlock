@@ -1,13 +1,15 @@
+@use 'style';
+
 /**
  * Editor-only styles for the Table block (sidebar repeater UI).
  */
-.eelfg-tbl-repeater-item {
+.shapeblock-tbl-repeater-item {
 	border: 1px solid #e0e0e0;
 	border-radius: 4px;
 	padding: 12px;
 	margin-bottom: 12px;
 
-	.eelfg-tbl-repeater-head {
+	.shapeblock-tbl-repeater-head {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

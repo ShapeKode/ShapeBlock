@@ -10,14 +10,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Mirrors the markup produced by the Elementor "Pricing Table" widget
  * (easy-elements/widgets/pricing-table/pricing.php) so the shared CSS applies
- * identically on the front end. Element classes use this plugin's "eelfg-" prefix.
+ * identically on the front end. Element classes use this plugin's "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-pricing-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-pricing-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $skin_style   = isset( $attributes['skinStyle'] ) ? $attributes['skinStyle'] : 'skin1';
 $title        = isset( $attributes['title'] ) ? $attributes['title'] : '';
@@ -38,18 +38,18 @@ $show_button  = ! empty( $attributes['showButton'] );
 $button_pos   = isset( $attributes['buttonPosition'] ) ? $attributes['buttonPosition'] : 'after_features';
 
 $block_wrap_attr = get_block_wrapper_attributes( array(
-	'class' => 'eelfg-block eelfg-pricing-table-block-wrap ' . $unique_id,
+	'class' => 'shapeblock-block shapeblock-pricing-table-block-wrap ' . $unique_id,
 ) );
 
 if ( empty( $block_wrap_attr ) ) {
-	$block_wrap_attr = 'class="eelfg-block eelfg-pricing-table-block-wrap ' . esc_attr( $unique_id ) . '"';
+	$block_wrap_attr = 'class="shapeblock-block shapeblock-pricing-table-block-wrap ' . esc_attr( $unique_id ) . '"';
 }
 
 // ---------------------------------------------------------------------------
 // Inline styles (scoped to this block instance via $unique_id).
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-pricing-table-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-pricing-table-style';
+$selector     = '.shapeblock-pricing-table-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-pricing-table-style';
 
 /** Local helper: typography object -> CSS map. */
 $typo = function ( $obj ) use ( $H ) {
@@ -64,6 +64,7 @@ $typo = function ( $obj ) use ( $H ) {
 	if ( ! empty( $obj['textTransform'] ) ) $out['text-transform'] = $obj['textTransform'];
 	if ( ! empty( $obj['lineHeight'] ) ) $out['line-height'] = $obj['lineHeight'];
 	if ( ! empty( $obj['letterSpacing'] ) ) $out['letter-spacing'] = $H::ensure_unit( $obj['letterSpacing'] );
+	if ( ! empty( $obj['textDecoration'] ) ) $out['text-decoration'] = $obj['textDecoration'];
 	return $out;
 };
 
@@ -218,35 +219,159 @@ $subtext_styles = $typo( $attributes['buttonSubtextTypography'] ?? [] );
 if ( ! empty( $attributes['buttonSubtextColor'] ) ) $subtext_styles['color'] = $attributes['buttonSubtextColor'];
 $subtext_styles = array_merge( $subtext_styles, $dims( $attributes['buttonSubtextMargin'] ?? [], 'margin' ) );
 
+// ---------------------------------------------------------------------------
+// Responsive (Tablet / Mobile) overrides. The desktop CSS above is unchanged;
+// these rules are emitted only when the matching per-device attribute is set,
+// so existing content renders identically.
+// ---------------------------------------------------------------------------
+$build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $ribbon_style ) {
+	$dev_header_align = ( ! empty( $attributes[ 'headerAlignment' . $suffix ] ) ) ? [ 'text-align' => $attributes[ 'headerAlignment' . $suffix ] ] : [];
+
+	// Title.
+	$title = array_merge( $typo( $attributes[ 'titleTypography' . $suffix ] ?? [] ), $dev_header_align, $dims( $attributes[ 'titlePadding' . $suffix ] ?? [], 'padding' ), $dims( $attributes[ 'titleMargin' . $suffix ] ?? [], 'margin' ) );
+
+	// Description.
+	$desc = array_merge( $typo( $attributes[ 'descriptionTypography' . $suffix ] ?? [] ), $dev_header_align, $dims( $attributes[ 'descriptionPadding' . $suffix ] ?? [], 'padding' ), $dims( $attributes[ 'descriptionMargin' . $suffix ] ?? [], 'margin' ) );
+
+	// Price wrap.
+	$price_wrap = array_merge( $dev_header_align, $dims( $attributes[ 'priceMargin' . $suffix ] ?? [], 'margin' ) );
+
+	// Amount / sale price / period.
+	$amount = $typo( $attributes[ 'priceTypography' . $suffix ] ?? [] );
+	$sale   = $typo( $attributes[ 'salePriceTypography' . $suffix ] ?? [] );
+	$period = array_merge( $typo( $attributes[ 'periodTypography' . $suffix ] ?? [] ), $dims( $attributes[ 'periodMargin' . $suffix ] ?? [], 'margin' ) );
+
+	// Currency.
+	$currency = array_merge( $typo( $attributes[ 'currencyTypography' . $suffix ] ?? [] ), $dims( $attributes[ 'currencyMargin' . $suffix ] ?? [], 'margin' ) );
+
+	// Features description.
+	$fdesc = array_merge( $typo( $attributes[ 'featuresDescriptionTypography' . $suffix ] ?? [] ), $dims( $attributes[ 'featuresDescriptionPadding' . $suffix ] ?? [], 'padding' ), $dims( $attributes[ 'featuresDescriptionMargin' . $suffix ] ?? [], 'margin' ) );
+
+	// Features list alignment + item.
+	$features_align = ( ! empty( $attributes[ 'featureTextAlignment' . $suffix ] ) ) ? [ 'text-align' => $attributes[ 'featureTextAlignment' . $suffix ] ] : [];
+	$features_li    = array_merge( $typo( $attributes[ 'featuresTextTypography' . $suffix ] ?? [] ), $dims( $attributes[ 'featuresPadding' . $suffix ] ?? [], 'padding' ), $dims( $attributes[ 'featuresMargin' . $suffix ] ?? [], 'margin' ) );
+	if ( isset( $attributes[ 'featuresIconGap' . $suffix ] ) && '' !== $attributes[ 'featuresIconGap' . $suffix ] ) {
+		$features_li['display']     = 'flex';
+		$features_li['align-items'] = 'center';
+		$features_li['gap']         = $H::ensure_unit( $attributes[ 'featuresIconGap' . $suffix ] );
+	}
+
+	// Feature icon padding (box variants).
+	$feat_icon_box = $dims( $attributes[ 'featureIconPadding' . $suffix ] ?? [], 'padding' );
+
+	// Ribbon typography + padding (style1) / alignment position swap (style2).
+	$ribbon = $typo( $attributes[ 'ribbonTypography' . $suffix ] ?? [] );
+	if ( 'style1' === $ribbon_style ) {
+		$ribbon = array_merge( $ribbon, $dims( $attributes[ 'ribbonPadding' . $suffix ] ?? [], 'padding' ) );
+	}
+	if ( 'style2' === $ribbon_style && ! empty( $attributes[ 'ribbonAlignment' . $suffix ] ) ) {
+		if ( 'left' === $attributes[ 'ribbonAlignment' . $suffix ] ) {
+			$ribbon = array_merge( $ribbon, [ 'left' => '-60px', 'right' => 'auto', 'transform' => 'rotate(-45deg)' ] );
+		} else {
+			$ribbon = array_merge( $ribbon, [ 'right' => '-60px', 'left' => 'auto', 'transform' => 'rotate(45deg)' ] );
+		}
+	}
+
+	// Button alignment + button.
+	$btn_align = ( ! empty( $attributes[ 'btnAlignment' . $suffix ] ) ) ? [ 'text-align' => $attributes[ 'btnAlignment' . $suffix ] ] : [];
+	$button    = array_merge( $typo( $attributes[ 'buttonTypography' . $suffix ] ?? [] ), $dims( $attributes[ 'buttonPadding' . $suffix ] ?? [], 'padding' ), $dims( $attributes[ 'buttonMargin' . $suffix ] ?? [], 'margin' ) );
+
+	$btn_icon_before = [];
+	$btn_icon_after  = [];
+	if ( isset( $attributes[ 'buttonIconSpacing' . $suffix ] ) && '' !== $attributes[ 'buttonIconSpacing' . $suffix ] ) {
+		$bis             = $H::ensure_unit( $attributes[ 'buttonIconSpacing' . $suffix ] );
+		$btn_icon_before = [ 'margin-right' => $bis ];
+		$btn_icon_after  = [ 'margin-left' => $bis ];
+	}
+
+	// Button subtext.
+	$subtext = array_merge( $typo( $attributes[ 'buttonSubtextTypography' . $suffix ] ?? [] ), $dims( $attributes[ 'buttonSubtextMargin' . $suffix ] ?? [], 'margin' ) );
+
+	return [
+		'.shapeblock-price-title'                        => $title,
+		'.shapeblock-subtitle-price'                     => $desc,
+		'.shapeblock-price'                              => $price_wrap,
+		'.shapeblock-price .shapeblock-amount'                => $amount,
+		'.shapeblock-price .shapeblock-sale-price'            => $sale,
+		'.shapeblock-price .shapeblock-period'                => $period,
+		'.shapeblock-currency'                           => $currency,
+		'.shapeblock-features-description'               => $fdesc,
+		'ul.shapeblock-features'                         => $features_align,
+		'.shapeblock-features li'                        => $features_li,
+		'.shapeblock-features .feature-icon.icon-bg'     => $feat_icon_box,
+		'.shapeblock-features .feature-icon.icon-border' => $feat_icon_box,
+		'.shapeblock-ribbon'                             => $ribbon,
+		'.shapeblock-btn-part'                           => $btn_align,
+		'.shapeblock-button'                             => $button,
+		'.shapeblock-button .shapeblock-icon-before'          => $btn_icon_before,
+		'.shapeblock-button .shapeblock-icon-after'           => $btn_icon_after,
+		'.shapeblock-button-subtext'                     => $subtext,
+	];
+};
+
+$dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
+$resp_css = '';
+$resp_sub_selectors = [
+	'.shapeblock-price-title',
+	'.shapeblock-subtitle-price',
+	'.shapeblock-price',
+	'.shapeblock-price .shapeblock-amount',
+	'.shapeblock-price .shapeblock-sale-price',
+	'.shapeblock-price .shapeblock-period',
+	'.shapeblock-currency',
+	'.shapeblock-features-description',
+	'ul.shapeblock-features',
+	'.shapeblock-features li',
+	'.shapeblock-features .feature-icon.icon-bg',
+	'.shapeblock-features .feature-icon.icon-border',
+	'.shapeblock-ribbon',
+	'.shapeblock-btn-part',
+	'.shapeblock-button',
+	'.shapeblock-button .shapeblock-icon-before',
+	'.shapeblock-button .shapeblock-icon-after',
+	'.shapeblock-button-subtext',
+];
+foreach ( $resp_sub_selectors as $sub_sel ) {
+	$rdata = [];
+	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
+			$rdata[ $device_key ] = $dev_data[ $suffix ][ $sub_sel ];
+		}
+	}
+	if ( ! empty( $rdata ) ) {
+		$resp_css .= $H::generate_responsive_css( $selector . ' ' . $sub_sel, $rdata );
+	}
+}
+
 wp_enqueue_style( $style_handle );
-$H::add_custom_style( $style_handle, $selector, '', [
-	'.eelfg-price-title'                              => $H::get_inline_styles( $title_styles ),
-	'.eelfg-price-title span'                         => ! empty( $attributes['titleHighlightColor'] ) ? 'color:' . $attributes['titleHighlightColor'] : '',
-	'.eelfg-subtitle-price'                           => $H::get_inline_styles( $desc_styles ),
-	'.eelfg-price'                                    => $H::get_inline_styles( $price_wrap_styles ),
-	'.eelfg-price .eelfg-amount'                      => $H::get_inline_styles( $amount_styles ),
-	'.eelfg-price .eelfg-sale-price'                  => $H::get_inline_styles( $sale_styles ),
-	'.eelfg-old-price'                                => ! empty( $attributes['oldPriceColor'] ) ? 'color:' . $attributes['oldPriceColor'] : '',
-	'.eelfg-price .eelfg-period'                      => $H::get_inline_styles( $period_styles ),
-	'.eelfg-currency'                                 => $H::get_inline_styles( $currency_styles ),
-	'.eelfg-features-description'                     => $H::get_inline_styles( $fdesc_styles ),
-	'ul.eelfg-features'                               => ! empty( $attributes['featureTextAlignment'] ) ? 'text-align:' . $attributes['featureTextAlignment'] : '',
-	'.eelfg-features li'                              => $H::get_inline_styles( $features_text_styles ),
-	'.eelfg-features li .feature-icon'                => $H::get_inline_styles( $features_icon_styles ),
-	'.eelfg-features li svg path'                     => $H::get_inline_styles( $features_icon_fill ),
-	'.eelfg-features svg.feature-icon'                => $H::get_inline_styles( $feat_icon_size_svg ),
-	'.eelfg-features i.feature-icon'                  => $H::get_inline_styles( $feat_icon_size_i ),
-	'.eelfg-features .feature-icon.icon-bg'           => $H::get_inline_styles( $feat_icon_bg_styles ),
-	'.eelfg-features .feature-icon.icon-border'       => $H::get_inline_styles( $feat_icon_border_styles ),
-	'.eelfg-ribbon'                                   => $H::get_inline_styles( $ribbon_styles ),
-	'.eelfg-btn-part'                                 => ! empty( $attributes['btnAlignment'] ) ? 'text-align:' . $attributes['btnAlignment'] : '',
-	'.eelfg-button'                                   => $H::get_inline_styles( $button_styles ),
-	'.eelfg-button:hover'                             => $H::get_inline_styles( $button_hover_styles ),
-	'.eelfg-button .eelfg-icon-before, .eelfg-button .eelfg-icon-after' => $H::get_inline_styles( $button_icon_styles ),
-	'.eelfg-button .eelfg-icon-before svg path, .eelfg-button .eelfg-icon-after svg path' => $H::get_inline_styles( $button_icon_fill ),
-	'.eelfg-button .eelfg-icon-before'                => $H::get_inline_styles( $btn_icon_before ),
-	'.eelfg-button .eelfg-icon-after'                 => $H::get_inline_styles( $btn_icon_after ),
-	'.eelfg-button-subtext'                           => $H::get_inline_styles( $subtext_styles ),
+$H::add_custom_style( $style_handle, $selector, $resp_css, [
+	'.shapeblock-price-title'                              => $H::get_inline_styles( $title_styles ),
+	'.shapeblock-price-title span'                         => ! empty( $attributes['titleHighlightColor'] ) ? 'color:' . $attributes['titleHighlightColor'] : '',
+	'.shapeblock-subtitle-price'                           => $H::get_inline_styles( $desc_styles ),
+	'.shapeblock-price'                                    => $H::get_inline_styles( $price_wrap_styles ),
+	'.shapeblock-price .shapeblock-amount'                      => $H::get_inline_styles( $amount_styles ),
+	'.shapeblock-price .shapeblock-sale-price'                  => $H::get_inline_styles( $sale_styles ),
+	'.shapeblock-old-price'                                => ! empty( $attributes['oldPriceColor'] ) ? 'color:' . $attributes['oldPriceColor'] : '',
+	'.shapeblock-price .shapeblock-period'                      => $H::get_inline_styles( $period_styles ),
+	'.shapeblock-currency'                                 => $H::get_inline_styles( $currency_styles ),
+	'.shapeblock-features-description'                     => $H::get_inline_styles( $fdesc_styles ),
+	'ul.shapeblock-features'                               => ! empty( $attributes['featureTextAlignment'] ) ? 'text-align:' . $attributes['featureTextAlignment'] : '',
+	'.shapeblock-features li'                              => $H::get_inline_styles( $features_text_styles ),
+	'.shapeblock-features li .feature-icon'                => $H::get_inline_styles( $features_icon_styles ),
+	'.shapeblock-features li svg path'                     => $H::get_inline_styles( $features_icon_fill ),
+	'.shapeblock-features svg.feature-icon'                => $H::get_inline_styles( $feat_icon_size_svg ),
+	'.shapeblock-features i.feature-icon'                  => $H::get_inline_styles( $feat_icon_size_i ),
+	'.shapeblock-features .feature-icon.icon-bg'           => $H::get_inline_styles( $feat_icon_bg_styles ),
+	'.shapeblock-features .feature-icon.icon-border'       => $H::get_inline_styles( $feat_icon_border_styles ),
+	'.shapeblock-ribbon'                                   => $H::get_inline_styles( $ribbon_styles ),
+	'.shapeblock-btn-part'                                 => ! empty( $attributes['btnAlignment'] ) ? 'text-align:' . $attributes['btnAlignment'] : '',
+	'.shapeblock-button'                                   => $H::get_inline_styles( $button_styles ),
+	'.shapeblock-button:hover'                             => $H::get_inline_styles( $button_hover_styles ),
+	'.shapeblock-button .shapeblock-icon-before, .shapeblock-button .shapeblock-icon-after' => $H::get_inline_styles( $button_icon_styles ),
+	'.shapeblock-button .shapeblock-icon-before svg path, .shapeblock-button .shapeblock-icon-after svg path' => $H::get_inline_styles( $button_icon_fill ),
+	'.shapeblock-button .shapeblock-icon-before'                => $H::get_inline_styles( $btn_icon_before ),
+	'.shapeblock-button .shapeblock-icon-after'                 => $H::get_inline_styles( $btn_icon_after ),
+	'.shapeblock-button-subtext'                           => $H::get_inline_styles( $subtext_styles ),
 ] );
 
 // Default feature icon (checkmark) when none is selected.
@@ -254,7 +379,7 @@ $default_feature_icon = '<svg class="feature-icon ' . esc_attr( $icon_style ) . 
 
 /** Renders the price markup honouring currency placement. */
 $render_price_value = function ( $value ) use ( $currency, $currency_pos ) {
-	$currency_html = '<span class="eelfg-currency">' . esc_html( $currency ) . '</span>';
+	$currency_html = '<span class="shapeblock-currency">' . esc_html( $currency ) . '</span>';
 	if ( 'left' === $currency_pos ) {
 		return $currency_html . esc_html( $value );
 	}
@@ -266,7 +391,7 @@ $render_button = function () use ( $attributes, $H ) {
 	if ( empty( $attributes['showButton'] ) ) {
 		return;
 	}
-	$full_width = ! empty( $attributes['buttonFullWidth'] ) ? 'eelfg--full-btn' : '';
+	$full_width = ! empty( $attributes['buttonFullWidth'] ) ? 'shapeblock--full-btn' : '';
 	$url        = ! empty( $attributes['buttonUrl'] ) ? $attributes['buttonUrl'] : '#';
 	$target     = ! empty( $attributes['buttonTarget'] ) ? ' target="_blank"' : '';
 	$nofollow   = ! empty( $attributes['buttonNofollow'] ) ? ' rel="nofollow"' : '';
@@ -274,26 +399,26 @@ $render_button = function () use ( $attributes, $H ) {
 	$icon_pos   = isset( $attributes['buttonIconPosition'] ) ? $attributes['buttonIconPosition'] : 'after';
 	$text       = isset( $attributes['buttonText'] ) ? $attributes['buttonText'] : '';
 	$subtext    = isset( $attributes['buttonSubtext'] ) ? $attributes['buttonSubtext'] : '';
-	$icon_html  = ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="eelfg-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';
+	$icon_html  = ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';
 	?>
-	<div class="eelfg-btn-part">
-		<a href="<?php echo esc_url( $url ); ?>"<?php echo $target . $nofollow; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static attribute strings. ?> class="eelfg-button <?php echo esc_attr( $full_width ); ?>">
+	<div class="shapeblock-btn-part">
+		<a href="<?php echo esc_url( $url ); ?>"<?php echo $target . $nofollow; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static attribute strings. ?> class="shapeblock-button <?php echo esc_attr( $full_width ); ?>">
 			<?php if ( 'before' === $icon_pos && $icon_html ) : ?>
-				<span class="eelfg-icon eelfg-icon-before"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?></span>
+				<span class="shapeblock-icon shapeblock-icon-before"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?></span>
 			<?php endif; ?>
 			<?php echo esc_html( $text ); ?>
 			<?php if ( 'after' === $icon_pos && $icon_html ) : ?>
-				<span class="eelfg-icon eelfg-icon-after"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?></span>
+				<span class="shapeblock-icon shapeblock-icon-after"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?></span>
 			<?php endif; ?>
 		</a>
 		<?php if ( ! empty( $subtext ) ) : ?>
-			<div class="eelfg-button-subtext"><?php echo esc_html( $subtext ); ?></div>
+			<div class="shapeblock-button-subtext"><?php echo esc_html( $subtext ); ?></div>
 		<?php endif; ?>
 	</div>
 	<?php
 };
 
-$wrap_classes = 'eelfg-pricing-table eelfg--' . $skin_style;
+$wrap_classes = 'shapeblock-pricing-table shapeblock--' . $skin_style;
 if ( $is_featured ) {
 	$wrap_classes .= ' featured ' . $ribbon_style;
 }
@@ -301,42 +426,42 @@ if ( $is_featured ) {
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="<?php echo esc_attr( $wrap_classes ); ?>">
 		<?php if ( $is_featured ) : ?>
-			<div class="eelfg-ribbon eelfg-<?php echo esc_attr( $ribbon_align ); ?>">
+			<div class="shapeblock-ribbon shapeblock-<?php echo esc_attr( $ribbon_align ); ?>">
 				<?php echo esc_html( $featured_txt ); ?>
 			</div>
 		<?php endif; ?>
 
-		<h3 class="eelfg-price-title"><?php echo wp_kses_post( $title ); ?></h3>
-		<div class="eelfg-subtitle-price"><?php echo wp_kses_post( $description ); ?></div>
+		<h3 class="shapeblock-price-title"><?php echo wp_kses_post( $title ); ?></h3>
+		<div class="shapeblock-subtitle-price"><?php echo wp_kses_post( $description ); ?></div>
 
-		<div class="eelfg-price">
+		<div class="shapeblock-price">
 			<?php if ( $on_sale ) : ?>
-				<span class="eelfg-old-price"><?php echo $render_price_value( $attributes['regularPrice'] ?? '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from esc_html in closure. ?></span>
-				<span class="eelfg-sale-price"><?php echo $render_price_value( $attributes['salePrice'] ?? '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from esc_html in closure. ?></span>
+				<span class="shapeblock-old-price"><?php echo $render_price_value( $attributes['regularPrice'] ?? '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from esc_html in closure. ?></span>
+				<span class="shapeblock-sale-price"><?php echo $render_price_value( $attributes['salePrice'] ?? '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from esc_html in closure. ?></span>
 			<?php else : ?>
-				<span class="eelfg-amount"><?php echo $render_price_value( $attributes['price'] ?? '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from esc_html in closure. ?></span>
+				<span class="shapeblock-amount"><?php echo $render_price_value( $attributes['price'] ?? '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from esc_html in closure. ?></span>
 			<?php endif; ?>
-			<span class="eelfg-period"><?php echo esc_html( $separator . $period ); ?></span>
+			<span class="shapeblock-period"><?php echo esc_html( $separator . $period ); ?></span>
 		</div>
 
 		<?php if ( 'in_features' === $button_pos ) { $render_button(); } ?>
 
 		<?php if ( ! empty( $features_des ) ) : ?>
-			<div class="eelfg-features-description"><?php echo wp_kses_post( $features_des ); ?></div>
+			<div class="shapeblock-features-description"><?php echo wp_kses_post( $features_des ); ?></div>
 		<?php endif; ?>
 
-		<ul class="eelfg-features">
+		<ul class="shapeblock-features">
 			<?php foreach ( $features as $feature ) : ?>
 				<li class="<?php echo esc_attr( $icon_style ); ?>">
 					<?php
 					$f_icon = isset( $feature['icon'] ) ? $feature['icon'] : '';
 					if ( ! empty( $f_icon ) && 'none' !== $f_icon ) {
-						echo '<i class="eelfg-icon ' . esc_attr( $f_icon ) . ' feature-icon ' . esc_attr( $icon_style ) . '" aria-hidden="true"></i>';
+						echo '<i class="shapeblock-icon ' . esc_attr( $f_icon ) . ' feature-icon ' . esc_attr( $icon_style ) . '" aria-hidden="true"></i>';
 					} else {
 						echo $default_feature_icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static inline SVG.
 					}
 					?>
-					<span class="eelfg-feature-text"><?php echo esc_html( isset( $feature['text'] ) ? $feature['text'] : '' ); ?></span>
+					<span class="shapeblock-feature-text"><?php echo esc_html( isset( $feature['text'] ) ? $feature['text'] : '' ); ?></span>
 				</li>
 			<?php endforeach; ?>
 		</ul>

@@ -4,10 +4,10 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'easy-elements-for-gutenberg/pricing-table',
+		'name' => 'shapeblock/pricing-table',
 		'version' => '0.1.0',
 		'title' => 'Pricing Table',
-		'category' => 'easy-elements-for-gutenberg',
+		'category' => 'shapeblock',
 		'description' => 'A configurable pricing table with features list, featured ribbon and call-to-action button.',
 		'keywords' => array(
 			'pricing',
@@ -27,28 +27,9 @@ return array(
 				'right',
 				'wide',
 				'full'
-			),
-			'spacing' => array(
-				'padding' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				),
-				'margin' => array(
-					'top',
-					'bottom',
-					'left',
-					'right'
-				)
-			),
-			'color' => array(
-				'background' => true,
-				'text' => false,
-				'gradients' => true
 			)
 		),
-		'textdomain' => 'easy-elements-for-gutenberg',
+		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'render' => 'file:./render.php',
 		'attributes' => array(
@@ -104,6 +85,14 @@ return array(
 				'type' => 'string',
 				'default' => 'left'
 			),
+			'headerAlignmentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'headerAlignmentMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'featuresDescription' => array(
 				'type' => 'string',
 				'default' => ''
@@ -153,6 +142,14 @@ return array(
 				'type' => 'string',
 				'default' => 'left'
 			),
+			'featureTextAlignmentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'featureTextAlignmentMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'featureIconBgColor' => array(
 				'type' => 'string',
 				'default' => ''
@@ -170,6 +167,12 @@ return array(
 				'default' => ''
 			),
 			'featureIconPadding' => array(
+				'type' => 'object'
+			),
+			'featureIconPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'featureIconPaddingMobile' => array(
 				'type' => 'object'
 			),
 			'featureIconBorderRadius' => array(
@@ -196,6 +199,14 @@ return array(
 			'ribbonAlignment' => array(
 				'type' => 'string',
 				'default' => 'right'
+			),
+			'ribbonAlignmentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'ribbonAlignmentMobile' => array(
+				'type' => 'string',
+				'default' => ''
 			),
 			'showButton' => array(
 				'type' => 'boolean',
@@ -237,6 +248,14 @@ return array(
 				'type' => 'string',
 				'default' => 'left'
 			),
+			'btnAlignmentTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'btnAlignmentMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'buttonFullWidth' => array(
 				'type' => 'boolean',
 				'default' => false
@@ -259,6 +278,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'titleTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'titleTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'titleBgColor' => array(
@@ -285,7 +316,19 @@ return array(
 			'titlePadding' => array(
 				'type' => 'object'
 			),
+			'titlePaddingTablet' => array(
+				'type' => 'object'
+			),
+			'titlePaddingMobile' => array(
+				'type' => 'object'
+			),
 			'titleMargin' => array(
+				'type' => 'object'
+			),
+			'titleMarginTablet' => array(
+				'type' => 'object'
+			),
+			'titleMarginMobile' => array(
 				'type' => 'object'
 			),
 			'descriptionColor' => array(
@@ -304,6 +347,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'descriptionTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'descriptionTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'descriptionBorder' => array(
 				'type' => 'object',
 				'default' => array(
@@ -315,7 +370,19 @@ return array(
 			'descriptionPadding' => array(
 				'type' => 'object'
 			),
+			'descriptionPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'descriptionPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'descriptionMargin' => array(
+				'type' => 'object'
+			),
+			'descriptionMarginTablet' => array(
+				'type' => 'object'
+			),
+			'descriptionMarginMobile' => array(
 				'type' => 'object'
 			),
 			'priceColor' => array(
@@ -334,7 +401,25 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'priceTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'priceTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'priceMargin' => array(
+				'type' => 'object'
+			),
+			'priceMarginTablet' => array(
+				'type' => 'object'
+			),
+			'priceMarginMobile' => array(
 				'type' => 'object'
 			),
 			'salePriceColor' => array(
@@ -351,6 +436,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'salePriceTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'salePriceTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'oldPriceColor' => array(
@@ -373,7 +470,25 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'periodTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'periodTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'periodMargin' => array(
+				'type' => 'object'
+			),
+			'periodMarginTablet' => array(
+				'type' => 'object'
+			),
+			'periodMarginMobile' => array(
 				'type' => 'object'
 			),
 			'currencyColor' => array(
@@ -392,7 +507,25 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'currencyTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'currencyTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'currencyMargin' => array(
+				'type' => 'object'
+			),
+			'currencyMarginTablet' => array(
+				'type' => 'object'
+			),
+			'currencyMarginMobile' => array(
 				'type' => 'object'
 			),
 			'currencyVerticalPosition' => array(
@@ -415,6 +548,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'featuresDescriptionTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'featuresDescriptionTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'featuresDescriptionBorder' => array(
 				'type' => 'object',
 				'default' => array(
@@ -426,7 +571,19 @@ return array(
 			'featuresDescriptionPadding' => array(
 				'type' => 'object'
 			),
+			'featuresDescriptionPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'featuresDescriptionPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'featuresDescriptionMargin' => array(
+				'type' => 'object'
+			),
+			'featuresDescriptionMarginTablet' => array(
+				'type' => 'object'
+			),
+			'featuresDescriptionMarginMobile' => array(
 				'type' => 'object'
 			),
 			'featuresTextColor' => array(
@@ -449,6 +606,18 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'featuresTextTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'featuresTextTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'featuresBorder' => array(
 				'type' => 'object',
 				'default' => array(
@@ -460,11 +629,31 @@ return array(
 			'featuresPadding' => array(
 				'type' => 'object'
 			),
+			'featuresPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'featuresPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'featuresIconGap' => array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'featuresIconGapTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'featuresIconGapMobile' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'featuresMargin' => array(
+				'type' => 'object'
+			),
+			'featuresMarginTablet' => array(
+				'type' => 'object'
+			),
+			'featuresMarginMobile' => array(
 				'type' => 'object'
 			),
 			'ribbonColor' => array(
@@ -487,7 +676,25 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'ribbonTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'ribbonTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'ribbonPadding' => array(
+				'type' => 'object'
+			),
+			'ribbonPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'ribbonPaddingMobile' => array(
 				'type' => 'object'
 			),
 			'ribbonBorderRadius' => array(
@@ -529,6 +736,18 @@ return array(
 					'textTransform' => '',
 					'lineHeight' => '',
 					'letterSpacing' => ''
+				)
+			),
+			'buttonTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'buttonTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
 				)
 			),
 			'buttonBorder' => array(
@@ -579,10 +798,30 @@ return array(
 			'buttonPadding' => array(
 				'type' => 'object'
 			),
+			'buttonPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'buttonPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'buttonMargin' => array(
 				'type' => 'object'
 			),
+			'buttonMarginTablet' => array(
+				'type' => 'object'
+			),
+			'buttonMarginMobile' => array(
+				'type' => 'object'
+			),
 			'buttonIconSpacing' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'buttonIconSpacingTablet' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'buttonIconSpacingMobile' => array(
 				'type' => 'string',
 				'default' => ''
 			),
@@ -602,8 +841,38 @@ return array(
 					'letterSpacing' => ''
 				)
 			),
+			'buttonSubtextTypographyTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
+			'buttonSubtextTypographyMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					
+				)
+			),
 			'buttonSubtextMargin' => array(
 				'type' => 'object'
+			),
+			'buttonSubtextMarginTablet' => array(
+				'type' => 'object'
+			),
+			'buttonSubtextMarginMobile' => array(
+				'type' => 'object'
+			),
+			'hideDesktop' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideTablet' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'hideMobile' => array(
+				'type' => 'boolean',
+				'default' => false
 			)
 		)
 	)

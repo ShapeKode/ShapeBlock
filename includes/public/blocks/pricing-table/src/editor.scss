@@ -1,13 +1,15 @@
+@use 'style';
+
 /**
  * Editor-only styles for the Pricing Table block.
  */
-.eelfg-pricing-repeater-item {
+.shapeblock-pricing-repeater-item {
 	border: 1px solid #e0e0e0;
 	border-radius: 4px;
 	padding: 12px;
 	margin-bottom: 12px;
 
-	.eelfg-pricing-repeater-head {
+	.shapeblock-pricing-repeater-head {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

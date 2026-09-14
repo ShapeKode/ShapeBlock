@@ -10,14 +10,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Mirrors the markup produced by the Elementor "Accordion" widget
  * (easy-elements/widgets/faq/faq.php) so the shared CSS/JS apply identically
- * on the front end. Element classes use this plugin's own "eelfg-" prefix.
+ * on the front end. Element classes use this plugin's own "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
 $faq_items = isset( $attributes['faqItems'] ) && is_array( $attributes['faqItems'] ) ? $attributes['faqItems'] : [];
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-faq-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-faq-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $allowed_tags = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p' ];
 $title_tag    = isset( $attributes['titleTag'] ) && in_array( $attributes['titleTag'], $allowed_tags, true ) ? $attributes['titleTag'] : 'h4';
@@ -29,15 +29,15 @@ $icon_open     = isset( $attributes['iconOpen'] ) ? $attributes['iconOpen'] : ''
 $icon_close    = isset( $attributes['iconClose'] ) ? $attributes['iconClose'] : '';
 $icon_position = isset( $attributes['iconPosition'] ) ? $attributes['iconPosition'] : 'row';
 
-$open_all_class = $open_all ? 'eelfg-faq-open-all' : '';
-$sticky_class   = $enable_sticky ? 'eelfg-faq-sticky' : '';
+$open_all_class = $open_all ? 'shapeblock-faq-open-all' : '';
+$sticky_class   = $enable_sticky ? 'shapeblock-faq-sticky' : '';
 
 $block_wrap_attr = get_block_wrapper_attributes( array(
-	'class' => 'eelfg-block eelfg-faq-block-wrap ' . $unique_id,
+	'class' => 'shapeblock-block shapeblock-faq-block-wrap ' . $unique_id,
 ) );
 
 if ( empty( $block_wrap_attr ) ) {
-	$block_wrap_attr = 'class="eelfg-block eelfg-faq-block-wrap ' . esc_attr( $unique_id ) . '"';
+	$block_wrap_attr = 'class="shapeblock-block shapeblock-faq-block-wrap ' . esc_attr( $unique_id ) . '"';
 }
 
 // ---------------------------------------------------------------------------
@@ -46,7 +46,7 @@ if ( empty( $block_wrap_attr ) ) {
 if ( empty( $faq_items ) ) {
 	?>
 	<div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-		<p><?php esc_html_e( 'Please add FAQ items to display the accordion.', 'easy-elements-for-gutenberg' ); ?></p>
+		<p><?php esc_html_e( 'Please add FAQ items to display the accordion.', 'shapeblock' ); ?></p>
 	</div>
 	<?php
 	return;
@@ -55,10 +55,10 @@ if ( empty( $faq_items ) ) {
 // ---------------------------------------------------------------------------
 // Dynamic / inline styles (scoped to this block instance via $unique_id).
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-faq-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-faq-style';
+$selector     = '.shapeblock-faq-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-faq-style';
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
 /** Helper: dimensions object -> CSS map for a given property. */
 $dims = function ( $obj, $prop ) use ( $H ) {
@@ -84,6 +84,16 @@ $dims = function ( $obj, $prop ) use ( $H ) {
 $accordion_styles = [];
 if ( ! empty( $attributes['itemsGap'] ) ) {
 	$accordion_styles['gap'] = $H::ensure_unit( $attributes['itemsGap'] );
+}
+
+// Responsive (Tablet / Mobile) accordion gap. Desktop above is unchanged; these
+// keys are added only when the matching per-device attribute is set.
+$accordion_responsive = [ 'desktop' => $accordion_styles ];
+if ( ! empty( $attributes['itemsGapTablet'] ) ) {
+	$accordion_responsive['tablet'] = [ 'gap' => $H::ensure_unit( $attributes['itemsGapTablet'] ) ];
+}
+if ( ! empty( $attributes['itemsGapMobile'] ) ) {
+	$accordion_responsive['mobile'] = [ 'gap' => $H::ensure_unit( $attributes['itemsGapMobile'] ) ];
 }
 
 $question_layout_styles = [
@@ -130,11 +140,14 @@ if ( ! empty( $attributes['itemBoxShadowActive'] ) ) {
 // ---- Title (text) responsive + states -------------------------------------
 $title_responsive = [ 'desktop' => [], 'tablet' => [], 'mobile' => [] ];
 $H::add_responsive_vars( $attributes, $title_responsive, 'titleTypography', '', [
+	'fontFamily'    => 'font-family',
 	'fontSize'      => 'font-size',
 	'fontWeight'    => 'font-weight',
+	'fontStyle'     => 'font-style',
 	'lineHeight'    => 'line-height',
 	'textTransform' => 'text-transform',
 	'letterSpacing' => 'letter-spacing',
+	'textDecoration' => 'text-decoration',
 ], true );
 if ( ! empty( $attributes['titleColor'] ) ) {
 	$title_responsive['desktop']['color'] = $attributes['titleColor'];
@@ -189,11 +202,14 @@ if ( ! empty( $attributes['titleBoxShadowActive'] ) ) {
 // ---- Answer (description) responsive + states -----------------------------
 $answer_responsive = [ 'desktop' => [], 'tablet' => [], 'mobile' => [] ];
 $H::add_responsive_vars( $attributes, $answer_responsive, 'descriptionTypography', '', [
+	'fontFamily'    => 'font-family',
 	'fontSize'      => 'font-size',
 	'fontWeight'    => 'font-weight',
+	'fontStyle'     => 'font-style',
 	'lineHeight'    => 'line-height',
 	'textTransform' => 'text-transform',
 	'letterSpacing' => 'letter-spacing',
+	'textDecoration' => 'text-decoration',
 ], true );
 if ( ! empty( $attributes['descriptionColor'] ) ) {
 	$answer_responsive['desktop']['color'] = $attributes['descriptionColor'];
@@ -202,6 +218,8 @@ if ( ! empty( $attributes['descriptionBgColor'] ) ) {
 	$answer_responsive['desktop']['background-color'] = $attributes['descriptionBgColor'];
 }
 $answer_responsive['desktop'] = array_merge( $answer_responsive['desktop'], $dims( $attributes['answerPadding'] ?? [], 'padding' ) );
+$answer_responsive['tablet']  = array_merge( $answer_responsive['tablet'], $dims( $attributes['answerPaddingTablet'] ?? [], 'padding' ) );
+$answer_responsive['mobile']  = array_merge( $answer_responsive['mobile'], $dims( $attributes['answerPaddingMobile'] ?? [], 'padding' ) );
 $answer_responsive['desktop'] = array_merge( $answer_responsive['desktop'], $dims( $attributes['descriptionBorderRadius'] ?? [], 'radius' ) );
 if ( ! empty( $attributes['descriptionBorder'] ) ) {
 	$answer_responsive['desktop'] = array_merge( $answer_responsive['desktop'], $H::border_to_css_props( $attributes['descriptionBorder'] ) );
@@ -285,25 +303,54 @@ if ( isset( $attributes['iconPositionYActive'] ) && '' !== $attributes['iconPosi
 }
 
 // ---- Assemble responsive + state CSS --------------------------------------
-$full_responsive_css  = $H::generate_responsive_css( $selector . ' .eelfg-faq-accordion', [ 'desktop' => $accordion_styles ] );
-$full_responsive_css .= $H::generate_responsive_css( $selector . ' .eelfg-faq-title', $title_responsive );
-$full_responsive_css .= $H::generate_responsive_css( $selector . ' .eelfg-faq-answer', $answer_responsive );
+$full_responsive_css  = $H::generate_responsive_css( $selector . ' .shapeblock-faq-accordion', $accordion_responsive );
+$full_responsive_css .= $H::generate_responsive_css( $selector . ' .shapeblock-faq-title', $title_responsive );
+$full_responsive_css .= $H::generate_responsive_css( $selector . ' .shapeblock-faq-answer', $answer_responsive );
+
+// Responsive (Tablet / Mobile) padding for the item + question. Desktop padding
+// stays in the inline sub-styles below (unchanged); only per-device overrides
+// are emitted here, and only when the matching attribute is set.
+$item_padding_responsive = [];
+$item_padding_tablet     = $dims( $attributes['itemPaddingTablet'] ?? [], 'padding' );
+$item_padding_mobile     = $dims( $attributes['itemPaddingMobile'] ?? [], 'padding' );
+if ( ! empty( $item_padding_tablet ) ) {
+	$item_padding_responsive['tablet'] = $item_padding_tablet;
+}
+if ( ! empty( $item_padding_mobile ) ) {
+	$item_padding_responsive['mobile'] = $item_padding_mobile;
+}
+if ( ! empty( $item_padding_responsive ) ) {
+	$full_responsive_css .= $H::generate_responsive_css( $selector . ' .shapeblock-faq-item', $item_padding_responsive );
+}
+
+$question_padding_responsive = [];
+$question_padding_tablet     = $dims( $attributes['questionPaddingTablet'] ?? [], 'padding' );
+$question_padding_mobile     = $dims( $attributes['questionPaddingMobile'] ?? [], 'padding' );
+if ( ! empty( $question_padding_tablet ) ) {
+	$question_padding_responsive['tablet'] = $question_padding_tablet;
+}
+if ( ! empty( $question_padding_mobile ) ) {
+	$question_padding_responsive['mobile'] = $question_padding_mobile;
+}
+if ( ! empty( $question_padding_responsive ) ) {
+	$full_responsive_css .= $H::generate_responsive_css( $selector . ' .shapeblock-faq-question', $question_padding_responsive );
+}
 
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $full_responsive_css, [
-	'.eelfg-faq-item'                                  => $H::get_inline_styles( $item_styles ),
-	'.eelfg-faq-item:hover'                            => $H::get_inline_styles( $item_hover_styles ),
-	'.eelfg-faq-item.active'                           => $H::get_inline_styles( $item_active_styles ),
-	'.eelfg-faq-question'                              => $H::get_inline_styles( $question_styles ),
-	'.eelfg-faq-item:hover .eelfg-faq-question'        => $H::get_inline_styles( $question_hover_styles ),
-	'.eelfg-faq-item.active .eelfg-faq-question'       => $H::get_inline_styles( $question_active_styles ),
-	'.eelfg-faq-item:hover .eelfg-faq-title'           => $H::get_inline_styles( $title_hover_styles ),
-	'.eelfg-faq-item.active .eelfg-faq-title'          => $H::get_inline_styles( $title_active_styles ),
-	'.eelfg-faq-item:hover .eelfg-faq-answer'          => $H::get_inline_styles( $answer_hover_styles ),
-	'.eelfg-faq-item.active .eelfg-faq-answer'         => $H::get_inline_styles( $answer_active_styles ),
-	'.eelfg-faq-icon'                                  => $H::get_inline_styles( $icon_styles ),
-	'.eelfg-faq-item:hover .eelfg-faq-icon'            => $H::get_inline_styles( $icon_hover_styles ),
-	'.eelfg-faq-item.active .eelfg-faq-icon'           => $H::get_inline_styles( $icon_active_styles ),
+	'.shapeblock-faq-item'                                  => $H::get_inline_styles( $item_styles ),
+	'.shapeblock-faq-item:hover'                            => $H::get_inline_styles( $item_hover_styles ),
+	'.shapeblock-faq-item.active'                           => $H::get_inline_styles( $item_active_styles ),
+	'.shapeblock-faq-question'                              => $H::get_inline_styles( $question_styles ),
+	'.shapeblock-faq-item:hover .shapeblock-faq-question'        => $H::get_inline_styles( $question_hover_styles ),
+	'.shapeblock-faq-item.active .shapeblock-faq-question'       => $H::get_inline_styles( $question_active_styles ),
+	'.shapeblock-faq-item:hover .shapeblock-faq-title'           => $H::get_inline_styles( $title_hover_styles ),
+	'.shapeblock-faq-item.active .shapeblock-faq-title'          => $H::get_inline_styles( $title_active_styles ),
+	'.shapeblock-faq-item:hover .shapeblock-faq-answer'          => $H::get_inline_styles( $answer_hover_styles ),
+	'.shapeblock-faq-item.active .shapeblock-faq-answer'         => $H::get_inline_styles( $answer_active_styles ),
+	'.shapeblock-faq-icon'                                  => $H::get_inline_styles( $icon_styles ),
+	'.shapeblock-faq-item:hover .shapeblock-faq-icon'            => $H::get_inline_styles( $icon_hover_styles ),
+	'.shapeblock-faq-item.active .shapeblock-faq-icon'           => $H::get_inline_styles( $icon_active_styles ),
 ] );
 
 // Default icons (used when no custom icon is selected). Plus = collapsed, minus = expanded.
@@ -312,38 +359,38 @@ $default_icon_open  = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http:/
 
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="eelfg-faq-accordion <?php echo esc_attr( $open_all_class ); ?> <?php echo esc_attr( $sticky_class ); ?>">
+	<div class="shapeblock-faq-accordion <?php echo esc_attr( $open_all_class ); ?> <?php echo esc_attr( $sticky_class ); ?>">
 		<?php
 		foreach ( $faq_items as $item ) :
 			$title       = isset( $item['title'] ) ? $item['title'] : '';
 			$description = isset( $item['description'] ) ? $item['description'] : '';
 			$is_active   = ! empty( $item['active'] ) ? 'active' : '';
 			?>
-			<div class="eelfg-faq-item <?php echo esc_attr( $is_active ); ?>">
-				<div class="eelfg-faq-question">
-					<<?php echo esc_html( $title_tag ); ?> class="eelfg-faq-title" tabindex="0">
+			<div class="shapeblock-faq-item <?php echo esc_attr( $is_active ); ?>">
+				<div class="shapeblock-faq-question">
+					<<?php echo esc_html( $title_tag ); ?> class="shapeblock-faq-title" tabindex="0">
 						<?php echo wp_kses_post( $title ); ?>
 					</<?php echo esc_html( $title_tag ); ?>>
-					<span class="eelfg-faq-icon eelfg-faq-icon-open">
+					<span class="shapeblock-faq-icon shapeblock-faq-icon-open">
 						<?php
 						if ( ! empty( $icon_open ) && 'none' !== $icon_open ) {
-							echo '<i class="eelfg-icon ' . esc_attr( $icon_open ) . '" aria-hidden="true"></i>';
+							echo '<i class="shapeblock-icon ' . esc_attr( $icon_open ) . '" aria-hidden="true"></i>';
 						} else {
 							echo $default_icon_open; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static inline SVG.
 						}
 						?>
 					</span>
-					<span class="eelfg-faq-icon eelfg-faq-icon-close">
+					<span class="shapeblock-faq-icon shapeblock-faq-icon-close">
 						<?php
 						if ( ! empty( $icon_close ) && 'none' !== $icon_close ) {
-							echo '<i class="eelfg-icon ' . esc_attr( $icon_close ) . '" aria-hidden="true"></i>';
+							echo '<i class="shapeblock-icon ' . esc_attr( $icon_close ) . '" aria-hidden="true"></i>';
 						} else {
 							echo $default_icon_close; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static inline SVG.
 						}
 						?>
 					</span>
 				</div>
-				<div class="eelfg-faq-answer">
+				<div class="shapeblock-faq-answer">
 					<?php echo wp_kses_post( $description ); ?>
 				</div>
 			</div>

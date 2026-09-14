@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "easy-elements-for-gutenberg/pricing-table",
+  "name": "shapeblock/pricing-table",
   "version": "0.1.0",
   "title": "Pricing Table",
-  "category": "easy-elements-for-gutenberg",
+  "category": "shapeblock",
   "description": "A configurable pricing table with features list, featured ribbon and call-to-action button.",
   "keywords": [
     "pricing",
@@ -22,28 +22,9 @@
       "right",
       "wide",
       "full"
-    ],
-    "spacing": {
-      "padding": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ],
-      "margin": [
-        "top",
-        "bottom",
-        "left",
-        "right"
-      ]
-    },
-    "color": {
-      "background": true,
-      "text": false,
-      "gradients": true
-    }
+    ]
   },
-  "textdomain": "easy-elements-for-gutenberg",
+  "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "render": "file:./render.php",
   "attributes": {
@@ -99,6 +80,14 @@
       "type": "string",
       "default": "left"
     },
+    "headerAlignmentTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "headerAlignmentMobile": {
+      "type": "string",
+      "default": ""
+    },
     "featuresDescription": {
       "type": "string",
       "default": ""
@@ -148,6 +137,14 @@
       "type": "string",
       "default": "left"
     },
+    "featureTextAlignmentTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "featureTextAlignmentMobile": {
+      "type": "string",
+      "default": ""
+    },
     "featureIconBgColor": {
       "type": "string",
       "default": ""
@@ -165,6 +162,12 @@
       "default": ""
     },
     "featureIconPadding": {
+      "type": "object"
+    },
+    "featureIconPaddingTablet": {
+      "type": "object"
+    },
+    "featureIconPaddingMobile": {
       "type": "object"
     },
     "featureIconBorderRadius": {
@@ -191,6 +194,14 @@
     "ribbonAlignment": {
       "type": "string",
       "default": "right"
+    },
+    "ribbonAlignmentTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "ribbonAlignmentMobile": {
+      "type": "string",
+      "default": ""
     },
     "showButton": {
       "type": "boolean",
@@ -232,6 +243,14 @@
       "type": "string",
       "default": "left"
     },
+    "btnAlignmentTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "btnAlignmentMobile": {
+      "type": "string",
+      "default": ""
+    },
     "buttonFullWidth": {
       "type": "boolean",
       "default": false
@@ -255,6 +274,14 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "titleTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "titleTypographyMobile": {
+      "type": "object",
+      "default": {}
     },
     "titleBgColor": {
       "type": "string",
@@ -280,7 +307,19 @@
     "titlePadding": {
       "type": "object"
     },
+    "titlePaddingTablet": {
+      "type": "object"
+    },
+    "titlePaddingMobile": {
+      "type": "object"
+    },
     "titleMargin": {
+      "type": "object"
+    },
+    "titleMarginTablet": {
+      "type": "object"
+    },
+    "titleMarginMobile": {
       "type": "object"
     },
     "descriptionColor": {
@@ -299,6 +338,14 @@
         "letterSpacing": ""
       }
     },
+    "descriptionTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "descriptionTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "descriptionBorder": {
       "type": "object",
       "default": {
@@ -310,7 +357,19 @@
     "descriptionPadding": {
       "type": "object"
     },
+    "descriptionPaddingTablet": {
+      "type": "object"
+    },
+    "descriptionPaddingMobile": {
+      "type": "object"
+    },
     "descriptionMargin": {
+      "type": "object"
+    },
+    "descriptionMarginTablet": {
+      "type": "object"
+    },
+    "descriptionMarginMobile": {
       "type": "object"
     },
     "priceColor": {
@@ -329,7 +388,21 @@
         "letterSpacing": ""
       }
     },
+    "priceTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "priceTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "priceMargin": {
+      "type": "object"
+    },
+    "priceMarginTablet": {
+      "type": "object"
+    },
+    "priceMarginMobile": {
       "type": "object"
     },
     "salePriceColor": {
@@ -347,6 +420,14 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "salePriceTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "salePriceTypographyMobile": {
+      "type": "object",
+      "default": {}
     },
     "oldPriceColor": {
       "type": "string",
@@ -368,7 +449,21 @@
         "letterSpacing": ""
       }
     },
+    "periodTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "periodTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "periodMargin": {
+      "type": "object"
+    },
+    "periodMarginTablet": {
+      "type": "object"
+    },
+    "periodMarginMobile": {
       "type": "object"
     },
     "currencyColor": {
@@ -387,7 +482,21 @@
         "letterSpacing": ""
       }
     },
+    "currencyTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "currencyTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "currencyMargin": {
+      "type": "object"
+    },
+    "currencyMarginTablet": {
+      "type": "object"
+    },
+    "currencyMarginMobile": {
       "type": "object"
     },
     "currencyVerticalPosition": {
@@ -410,6 +519,14 @@
         "letterSpacing": ""
       }
     },
+    "featuresDescriptionTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "featuresDescriptionTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "featuresDescriptionBorder": {
       "type": "object",
       "default": {
@@ -421,7 +538,19 @@
     "featuresDescriptionPadding": {
       "type": "object"
     },
+    "featuresDescriptionPaddingTablet": {
+      "type": "object"
+    },
+    "featuresDescriptionPaddingMobile": {
+      "type": "object"
+    },
     "featuresDescriptionMargin": {
+      "type": "object"
+    },
+    "featuresDescriptionMarginTablet": {
+      "type": "object"
+    },
+    "featuresDescriptionMarginMobile": {
       "type": "object"
     },
     "featuresTextColor": {
@@ -444,6 +573,14 @@
         "letterSpacing": ""
       }
     },
+    "featuresTextTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "featuresTextTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "featuresBorder": {
       "type": "object",
       "default": {
@@ -455,11 +592,31 @@
     "featuresPadding": {
       "type": "object"
     },
+    "featuresPaddingTablet": {
+      "type": "object"
+    },
+    "featuresPaddingMobile": {
+      "type": "object"
+    },
     "featuresIconGap": {
       "type": "string",
       "default": ""
     },
+    "featuresIconGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "featuresIconGapMobile": {
+      "type": "string",
+      "default": ""
+    },
     "featuresMargin": {
+      "type": "object"
+    },
+    "featuresMarginTablet": {
+      "type": "object"
+    },
+    "featuresMarginMobile": {
       "type": "object"
     },
     "ribbonColor": {
@@ -482,7 +639,21 @@
         "letterSpacing": ""
       }
     },
+    "ribbonTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "ribbonTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "ribbonPadding": {
+      "type": "object"
+    },
+    "ribbonPaddingTablet": {
+      "type": "object"
+    },
+    "ribbonPaddingMobile": {
       "type": "object"
     },
     "ribbonBorderRadius": {
@@ -525,6 +696,14 @@
         "lineHeight": "",
         "letterSpacing": ""
       }
+    },
+    "buttonTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "buttonTypographyMobile": {
+      "type": "object",
+      "default": {}
     },
     "buttonBorder": {
       "type": "object",
@@ -574,10 +753,30 @@
     "buttonPadding": {
       "type": "object"
     },
+    "buttonPaddingTablet": {
+      "type": "object"
+    },
+    "buttonPaddingMobile": {
+      "type": "object"
+    },
     "buttonMargin": {
       "type": "object"
     },
+    "buttonMarginTablet": {
+      "type": "object"
+    },
+    "buttonMarginMobile": {
+      "type": "object"
+    },
     "buttonIconSpacing": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonIconSpacingTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonIconSpacingMobile": {
       "type": "string",
       "default": ""
     },
@@ -597,8 +796,34 @@
         "letterSpacing": ""
       }
     },
+    "buttonSubtextTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "buttonSubtextTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
     "buttonSubtextMargin": {
       "type": "object"
+    },
+    "buttonSubtextMarginTablet": {
+      "type": "object"
+    },
+    "buttonSubtextMarginMobile": {
+      "type": "object"
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

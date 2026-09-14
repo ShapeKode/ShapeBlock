@@ -9,35 +9,35 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Server-side render for the Tabs block.
  *
  * Mirrors the markup of the Elementor "Tabs" widget
- * (easy-elements/widgets/tab). Element classes use this plugin's "eelfg-" prefix.
+ * (easy-elements/widgets/tab). Element classes use this plugin's "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-tab-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-tab-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $tabs      = isset( $attributes['tabs'] ) && is_array( $attributes['tabs'] ) ? $attributes['tabs'] : [];
 $allowed   = [ 'left', 'top', 'right' ];
 $direction = isset( $attributes['layoutDirection'] ) && in_array( $attributes['layoutDirection'], $allowed, true ) ? $attributes['layoutDirection'] : 'top';
 $icon_pos  = isset( $attributes['iconPosition'] ) && in_array( $attributes['iconPosition'], $allowed, true ) ? $attributes['iconPosition'] : 'left';
 
-$block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'eelfg-block eelfg-tab-block-wrap ' . $unique_id ) );
+$block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'shapeblock-block shapeblock-tab-block-wrap ' . $unique_id ) );
 if ( empty( $block_wrap_attr ) ) {
-	$block_wrap_attr = 'class="eelfg-block eelfg-tab-block-wrap ' . esc_attr( $unique_id ) . '"';
+	$block_wrap_attr = 'class="shapeblock-block shapeblock-tab-block-wrap ' . esc_attr( $unique_id ) . '"';
 }
 
 if ( empty( $tabs ) ) {
-	echo '<div ' . wp_kses_post( $block_wrap_attr ) . '><p>' . esc_html__( 'Please add tab items.', 'easy-elements-for-gutenberg' ) . '</p></div>';
+	echo '<div ' . wp_kses_post( $block_wrap_attr ) . '><p>' . esc_html__( 'Please add tab items.', 'shapeblock' ) . '</p></div>';
 	return;
 }
 
 // ---------------------------------------------------------------------------
 // Inline styles (scoped to this instance via $unique_id).
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-tab-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-tab-style';
+$selector     = '.shapeblock-tab-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-tab-style';
 
 $typo = function ( $obj ) use ( $H ) {
 	$out = [];
@@ -49,6 +49,7 @@ $typo = function ( $obj ) use ( $H ) {
 	if ( ! empty( $obj['textTransform'] ) ) $out['text-transform'] = $obj['textTransform'];
 	if ( ! empty( $obj['lineHeight'] ) ) $out['line-height'] = $obj['lineHeight'];
 	if ( ! empty( $obj['letterSpacing'] ) ) $out['letter-spacing'] = $H::ensure_unit( $obj['letterSpacing'] );
+	if ( ! empty( $obj['textDecoration'] ) ) $out['text-decoration'] = $obj['textDecoration'];
 	return $out;
 };
 $dims = function ( $obj, $type ) use ( $H ) {
@@ -129,31 +130,116 @@ if ( ! empty( $attributes['btnHoverColor'] ) ) $btn_hover['color'] = $attributes
 if ( ! empty( $attributes['btnHoverBgColor'] ) ) $btn_hover['background-color'] = $attributes['btnHoverBgColor'];
 if ( ! empty( $attributes['btnHoverBorderColor'] ) ) $btn_hover['border-color'] = $attributes['btnHoverBorderColor'];
 
+// ---------------------------------------------------------------------------
+// Responsive (Tablet / Mobile) overrides. The desktop CSS above is unchanged;
+// these rules are emitted only when the matching per-device attribute is set,
+// so existing content renders identically. Only LAYOUT controls (typography,
+// padding/margin, bottom spacing and description alignment) are responsive.
+// ---------------------------------------------------------------------------
+$build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H ) {
+	// Tab title text (typography).
+	$title_text = $typo( $attributes[ 'titleTypography' . $suffix ] ?? [] );
+
+	// Tab title (li) padding + margin.
+	$title_li = array_merge(
+		$dims( $attributes[ 'titlePadding' . $suffix ] ?? [], 'padding' ),
+		$dims( $attributes[ 'titleMargin' . $suffix ] ?? [], 'margin' )
+	);
+
+	// Nav bottom spacing (top layout).
+	$nav = [];
+	if ( isset( $attributes[ 'titleBottomSpacing' . $suffix ] ) && '' !== $attributes[ 'titleBottomSpacing' . $suffix ] ) {
+		$nav['padding'] = '0 0 ' . $H::ensure_unit( $attributes[ 'titleBottomSpacing' . $suffix ] );
+	}
+
+	// Content area padding + margin.
+	$content = array_merge(
+		$dims( $attributes[ 'contentPadding' . $suffix ] ?? [], 'padding' ),
+		$dims( $attributes[ 'contentMargin' . $suffix ] ?? [], 'margin' )
+	);
+
+	// Description alignment.
+	$contents_align = [];
+	if ( ! empty( $attributes[ 'descriptionAlignment' . $suffix ] ) ) $contents_align['text-align'] = $attributes[ 'descriptionAlignment' . $suffix ];
+
+	// Content title (typography + margin).
+	$content_title = array_merge(
+		$typo( $attributes[ 'contentTitleTypography' . $suffix ] ?? [] ),
+		$dims( $attributes[ 'contentTitleMargin' . $suffix ] ?? [], 'margin' )
+	);
+
+	// Description (typography + margin).
+	$desc = array_merge(
+		$typo( $attributes[ 'descTypography' . $suffix ] ?? [] ),
+		$dims( $attributes[ 'descMargin' . $suffix ] ?? [], 'margin' )
+	);
+
+	// Button (typography + padding + margin).
+	$btn = array_merge(
+		$typo( $attributes[ 'btnTypography' . $suffix ] ?? [] ),
+		$dims( $attributes[ 'btnPadding' . $suffix ] ?? [], 'padding' ),
+		$dims( $attributes[ 'btnMargin' . $suffix ] ?? [], 'margin' )
+	);
+
+	return [
+		'.shapeblock-tab-titles li'                                            => $title_li,
+		'.shapeblock-tab-title-text'                                           => $title_text,
+		'.shapeblock-tabs-wrapper[data-tab-direction="top"] .shapeblock-tab-titles' => $nav,
+		'.shapeblock-tab-content'                                              => $content,
+		'.shapeblock-tab-contents'                                             => $contents_align,
+		'.shapeblock-content-title'                                            => $content_title,
+		'.shapeblock-content-description'                                      => $desc,
+		'.shapeblock-read-more'                                                => $btn,
+	];
+};
+$dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
+$resp_css = '';
+foreach ( [
+	'.shapeblock-tab-titles li',
+	'.shapeblock-tab-title-text',
+	'.shapeblock-tabs-wrapper[data-tab-direction="top"] .shapeblock-tab-titles',
+	'.shapeblock-tab-content',
+	'.shapeblock-tab-contents',
+	'.shapeblock-content-title',
+	'.shapeblock-content-description',
+	'.shapeblock-read-more',
+] as $sub_sel ) {
+	$rdata = [];
+	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
+			$rdata[ $device_key ] = $dev_data[ $suffix ][ $sub_sel ];
+		}
+	}
+	if ( ! empty( $rdata ) ) {
+		$resp_css .= $H::generate_responsive_css( $selector . ' ' . $sub_sel, $rdata );
+	}
+}
+
 wp_enqueue_style( $style_handle );
-$H::add_custom_style( $style_handle, $selector, '', [
-	'.eelfg-tab-titles li'                                        => $H::get_inline_styles( $title_li ),
-	'.eelfg-tab-title-text'                                       => $H::get_inline_styles( $title_text ),
-	'.eelfg-tab-titles i, ' . $selector . ' .eelfg-tab-titles svg' => $H::get_inline_styles( $icon_color ),
-	'.eelfg-tab-image, ' . $selector . ' .eelfg-tab-icon'         => $H::get_inline_styles( $icon_box ),
-	'.eelfg-tab-titles li.active, ' . $selector . ' .eelfg-tab-titles li:hover' => $H::get_inline_styles( $title_li_active ),
-	'.eelfg-tab-titles li.active .eelfg-tab-title-text, ' . $selector . ' .eelfg-tab-titles li:hover .eelfg-tab-title-text' => $H::get_inline_styles( $title_text_active ),
-	'.eelfg-tabs-wrapper[data-tab-direction="top"] .eelfg-tab-titles' => $H::get_inline_styles( $nav ),
-	'.eelfg-tab-content'                                          => $H::get_inline_styles( $content ),
-	'.eelfg-tab-contents'                                         => $H::get_inline_styles( $contents_align ),
-	'.eelfg-content-title'                                        => $H::get_inline_styles( $content_title ),
-	'.eelfg-content-description'                                  => $H::get_inline_styles( array_merge( $desc, $desc_wrap ) ),
-	'.eelfg-read-more'                                            => $H::get_inline_styles( $btn ),
-	'.eelfg-read-more:hover'                                      => $H::get_inline_styles( $btn_hover ),
+$H::add_custom_style( $style_handle, $selector, $resp_css, [
+	'.shapeblock-tab-titles li'                                        => $H::get_inline_styles( $title_li ),
+	'.shapeblock-tab-title-text'                                       => $H::get_inline_styles( $title_text ),
+	'.shapeblock-tab-titles i, ' . $selector . ' .shapeblock-tab-titles svg' => $H::get_inline_styles( $icon_color ),
+	'.shapeblock-tab-image, ' . $selector . ' .shapeblock-tab-icon'         => $H::get_inline_styles( $icon_box ),
+	'.shapeblock-tab-titles li.active, ' . $selector . ' .shapeblock-tab-titles li:hover' => $H::get_inline_styles( $title_li_active ),
+	'.shapeblock-tab-titles li.active .shapeblock-tab-title-text, ' . $selector . ' .shapeblock-tab-titles li:hover .shapeblock-tab-title-text' => $H::get_inline_styles( $title_text_active ),
+	'.shapeblock-tabs-wrapper[data-tab-direction="top"] .shapeblock-tab-titles' => $H::get_inline_styles( $nav ),
+	'.shapeblock-tab-content'                                          => $H::get_inline_styles( $content ),
+	'.shapeblock-tab-contents'                                         => $H::get_inline_styles( $contents_align ),
+	'.shapeblock-content-title'                                        => $H::get_inline_styles( $content_title ),
+	'.shapeblock-content-description'                                  => $H::get_inline_styles( array_merge( $desc, $desc_wrap ) ),
+	'.shapeblock-read-more'                                            => $H::get_inline_styles( $btn ),
+	'.shapeblock-read-more:hover'                                      => $H::get_inline_styles( $btn_hover ),
 ] );
 
 // Default icon when an item has type "icon" but no custom icon selected.
 $default_icon = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 21s-6.7-4.3-9.3-8.5C1 9.6 2 6 5.3 5.2 7.3 4.7 9 5.8 12 8.6c3-2.8 4.7-3.9 6.7-3.4C22 6 23 9.6 21.3 12.5 18.7 16.7 12 21 12 21z"/></svg>';
 // Button chevron icon.
-$chevron = '<svg class="eelfg-read-more-icon" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+$chevron = '<svg class="shapeblock-read-more-icon" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="eelfg-tabs-wrapper" data-tab-direction="<?php echo esc_attr( $direction ); ?>" data-icon-position="<?php echo esc_attr( $icon_pos ); ?>">
-		<ul class="eelfg-tab-titles">
+	<div class="shapeblock-tabs-wrapper" data-tab-direction="<?php echo esc_attr( $direction ); ?>" data-icon-position="<?php echo esc_attr( $icon_pos ); ?>">
+		<ul class="shapeblock-tab-titles">
 			<?php foreach ( $tabs as $index => $item ) : ?>
 				<?php
 				$type     = isset( $item['iconType'] ) ? $item['iconType'] : 'icon';
@@ -162,21 +248,21 @@ $chevron = '<svg class="eelfg-read-more-icon" viewBox="0 0 24 24" aria-hidden="t
 				$tab_title = isset( $item['tabTitle'] ) ? $item['tabTitle'] : '';
 				$active    = 0 === $index ? ' active' : '';
 				?>
-				<li class="eelfg-tab-nav-item<?php echo esc_attr( $active ); ?>" data-tab="<?php echo esc_attr( $unique_id . '-tab-' . $index ); ?>">
+				<li class="shapeblock-tab-nav-item<?php echo esc_attr( $active ); ?>" data-tab="<?php echo esc_attr( $unique_id . '-tab-' . $index ); ?>">
 					<?php
 					if ( 'icon' === $type ) {
-						echo '<span class="eelfg-tab-icon">';
-						echo ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="eelfg-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : $default_icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo '<span class="shapeblock-tab-icon">';
+						echo ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : $default_icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						echo '</span>';
 					} elseif ( 'image' === $type && ! empty( $img['url'] ) ) {
-						echo '<span class="eelfg-tab-image"><img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $img['alt'] ?? $tab_title ) . '"></span>';
+						echo '<span class="shapeblock-tab-image"><img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $img['alt'] ?? $tab_title ) . '"></span>';
 					}
 					?>
-					<span class="eelfg-tab-title-text"><?php echo esc_html( $tab_title ); ?></span>
+					<span class="shapeblock-tab-title-text"><?php echo esc_html( $tab_title ); ?></span>
 				</li>
 			<?php endforeach; ?>
 		</ul>
-		<div class="eelfg-tab-contents">
+		<div class="shapeblock-tab-contents">
 			<?php foreach ( $tabs as $index => $item ) : ?>
 				<?php
 				$content_title_txt = isset( $item['contentTitle'] ) ? $item['contentTitle'] : '';
@@ -186,15 +272,15 @@ $chevron = '<svg class="eelfg-read-more-icon" viewBox="0 0 24 24" aria-hidden="t
 				$btn_target        = ! empty( $item['readMoreNewTab'] ) ? '_blank' : '_self';
 				$active            = 0 === $index ? ' active' : '';
 				?>
-				<div class="eelfg-tab-content<?php echo esc_attr( $active ); ?>" id="<?php echo esc_attr( $unique_id . '-tab-' . $index ); ?>">
+				<div class="shapeblock-tab-content<?php echo esc_attr( $active ); ?>" id="<?php echo esc_attr( $unique_id . '-tab-' . $index ); ?>">
 					<?php if ( '' !== $content_title_txt ) : ?>
-						<h4 class="eelfg-content-title"><?php echo esc_html( $content_title_txt ); ?></h4>
+						<h4 class="shapeblock-content-title"><?php echo esc_html( $content_title_txt ); ?></h4>
 					<?php endif; ?>
 					<?php if ( '' !== $description ) : ?>
-						<div class="eelfg-content-description"><?php echo wp_kses_post( wpautop( $description ) ); ?></div>
+						<div class="shapeblock-content-description"><?php echo wp_kses_post( wpautop( $description ) ); ?></div>
 					<?php endif; ?>
 					<?php if ( '' !== $btn_text && '' !== $btn_url ) : ?>
-						<a class="eelfg-read-more" href="<?php echo esc_url( $btn_url ); ?>" target="<?php echo esc_attr( $btn_target ); ?>">
+						<a class="shapeblock-read-more" href="<?php echo esc_url( $btn_url ); ?>" target="<?php echo esc_attr( $btn_target ); ?>">
 							<?php echo esc_html( $btn_text ); ?>
 							<?php echo $chevron; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static inline SVG. ?>
 						</a>

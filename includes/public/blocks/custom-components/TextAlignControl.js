@@ -5,7 +5,7 @@ const TextAlignControl = ({
     attributes,
     setAttributes,
     attributeKey,
-    label = __('Text Align', 'easy-elements-for-gutenberg'),
+    label = __('Text Align', 'shapeblock'),
 }) => {
     const value = attributes[attributeKey] || '';
 
@@ -13,11 +13,11 @@ const TextAlignControl = ({
         <SelectControl
             value={value}
             options={[
-                { label: __('Default', 'easy-elements-for-gutenberg'), value: '' },
-                { label: __('Left', 'easy-elements-for-gutenberg'), value: 'left' },
-                { label: __('Center', 'easy-elements-for-gutenberg'), value: 'center' },
-                { label: __('Right', 'easy-elements-for-gutenberg'), value: 'right' },
-                { label: __('Justify', 'easy-elements-for-gutenberg'), value: 'justify' },
+                { label: __('Default', 'shapeblock'), value: '' },
+                { label: __('Left', 'shapeblock'), value: 'left' },
+                { label: __('Center', 'shapeblock'), value: 'center' },
+                { label: __('Right', 'shapeblock'), value: 'right' },
+                { label: __('Justify', 'shapeblock'), value: 'justify' },
             ]}
             onChange={(newValue) => setAttributes({ [attributeKey]: newValue })}
             __nextHasNoMarginBottom={true}

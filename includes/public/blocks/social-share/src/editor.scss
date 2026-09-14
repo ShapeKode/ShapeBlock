@@ -1,13 +1,15 @@
+@use 'style';
+
 /**
  * Editor-only styles for the Social Share block (sidebar repeater UI).
  */
-.eelfg-soc-repeater-item {
+.shapeblock-soc-repeater-item {
 	border: 1px solid #e0e0e0;
 	border-radius: 4px;
 	padding: 12px;
 	margin-bottom: 12px;
 
-	.eelfg-soc-repeater-head {
+	.shapeblock-soc-repeater-head {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

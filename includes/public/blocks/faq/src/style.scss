@@ -3,16 +3,16 @@
  *
  * Structure ported from the Elementor widget
  * (easy-elements/widgets/faq/css/faq.scss). Element classes use this plugin's
- * own "eelfg-" prefix.
+ * own "shapeblock-" prefix.
  */
 
-.eelfg-faq-accordion {
+.shapeblock-faq-accordion {
 	display: inline-grid;
 	gap: 16px;
 	width: 100%;
 }
 
-.eelfg-faq-item {
+.shapeblock-faq-item {
 	background: #f5f6f8;
 	border-radius: 16px;
 	border: 1px solid #e2e8f0;
@@ -20,7 +20,7 @@
 	padding: 32px;
 }
 
-.eelfg-faq-sticky .eelfg-faq-item {
+.shapeblock-faq-sticky .shapeblock-faq-item {
 	position: sticky;
 	top: 70px;
 }
@@ -29,15 +29,15 @@
 	overflow-x: visible !important;
 }
 
-.eelfg-faq-item.active .eelfg-faq-question {
+.shapeblock-faq-item.active .shapeblock-faq-question {
 	padding-bottom: 15px;
 }
 
-.eelfg-faq-open-all .eelfg-faq-item .eelfg-faq-question {
+.shapeblock-faq-open-all .shapeblock-faq-item .shapeblock-faq-question {
 	padding-bottom: 12px;
 }
 
-.eelfg-faq-question {
+.shapeblock-faq-question {
 	cursor: pointer;
 	display: flex;
 	justify-content: space-between;
@@ -47,7 +47,7 @@
 	align-items: center;
 }
 
-.eelfg-faq-icon {
+.shapeblock-faq-icon {
 	font-size: 24px;
 	line-height: 0;
 	transform: translateY(3px);
@@ -59,44 +59,44 @@
 	}
 }
 
-.eelfg-faq-icon-close {
+.shapeblock-faq-icon-close {
 	display: inline-block;
 }
 
-.eelfg-faq-icon-open {
+.shapeblock-faq-icon-open {
 	display: none;
 }
 
-.eelfg-faq-item.active .eelfg-faq-icon-close {
+.shapeblock-faq-item.active .shapeblock-faq-icon-close {
 	display: none;
 }
 
-.eelfg-faq-item.active .eelfg-faq-icon-open {
+.shapeblock-faq-item.active .shapeblock-faq-icon-open {
 	display: inline-block;
 }
 
-.eelfg-faq-answer {
+.shapeblock-faq-answer {
 	overflow: hidden;
 	display: none;
 }
 
 /* Items active by default stay open even before the toggle script runs
    (progressive enhancement). The script sets inline display when toggling. */
-.eelfg-faq-item.active .eelfg-faq-answer {
+.shapeblock-faq-item.active .shapeblock-faq-answer {
 	display: block;
 }
 
-.eelfg-faq-title {
+.shapeblock-faq-title {
 	margin: 0;
 	width: 100%;
 	outline: none;
 }
 
-.eelfg-faq-open-all .eelfg-faq-answer {
+.shapeblock-faq-open-all .shapeblock-faq-answer {
 	display: block !important;
 }
 
-.eelfg-faq-open-all .eelfg-faq-icon {
+.shapeblock-faq-open-all .shapeblock-faq-icon {
 	display: none !important;
 }
 
@@ -105,8 +105,29 @@
 		overflow-x: hidden !important;
 	}
 
-	.eelfg-faq-sticky .eelfg-faq-item {
+	.shapeblock-faq-sticky .shapeblock-faq-item {
 		position: unset;
 		top: 0px;
+	}
+}
+
+/* --- Narrow container safety -------------------------------------------
+ * A block can sit in a column far narrower than the screen, where media queries
+ * are no help. These rules keep it inside its box at any width.
+ */
+.shapeblock-faq-block-wrap {
+	.shapeblock-faq-item,
+	.shapeblock-faq-question,
+	.shapeblock-faq-answer {
+		min-width: 0;
+	}
+
+	.shapeblock-faq-question {
+		flex-wrap: wrap;
+	}
+
+	.shapeblock-faq-title,
+	.shapeblock-faq-answer {
+		overflow-wrap: break-word;
 	}
 }

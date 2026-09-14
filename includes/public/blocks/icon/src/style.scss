@@ -1,13 +1,13 @@
 /**
  * Icon block — front-end + shared styles.
  */
-.eelfg-icon-block-wrap {
-	.eelfg-icon-wrap {
+.shapeblock-icon-block-wrap {
+	.shapeblock-icon-wrap {
 		display: flex;
 		align-items: center;
 	}
 
-	.eelfg-icon-el {
+	.shapeblock-icon-el {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -38,33 +38,45 @@
 	/* Stacked & Framed share a square box ( width == height ) so the Circle shape
 	   is a true circle and the Square is even on all sides, regardless of the
 	   glyph's own aspect ratio. The box scales with the icon font-size ( em ). */
-	.eelfg-icon-el.eelfg-icon-view-stacked,
-	.eelfg-icon-el.eelfg-icon-view-framed {
+	.shapeblock-icon-el.shapeblock-icon-view-stacked,
+	.shapeblock-icon-el.shapeblock-icon-view-framed {
 		width: 2em;
 		height: 2em;
 		padding: 0;
 	}
 
 	/* View: Stacked — filled background, contrasting icon. */
-	.eelfg-icon-el.eelfg-icon-view-stacked {
+	.shapeblock-icon-el.shapeblock-icon-view-stacked {
 		background-color: #6d3ff0;
 		color: #ffffff;
 	}
 
 	/* View: Framed — bordered box, transparent background. */
-	.eelfg-icon-el.eelfg-icon-view-framed {
+	.shapeblock-icon-el.shapeblock-icon-view-framed {
 		border: 3px solid #6d3ff0;
 		color: #6d3ff0;
 	}
 
 	/* Shape (only meaningful for stacked / framed). */
-	.eelfg-icon-el.eelfg-icon-shape-circle {
+	.shapeblock-icon-el.shapeblock-icon-shape-circle {
 		border-radius: 50%;
 	}
-	.eelfg-icon-el.eelfg-icon-shape-rounded {
+	.shapeblock-icon-el.shapeblock-icon-shape-rounded {
 		border-radius: 8px;
 	}
-	.eelfg-icon-el.eelfg-icon-shape-square {
+	.shapeblock-icon-el.shapeblock-icon-shape-square {
 		border-radius: 0;
+	}
+}
+
+/* --- Responsive defaults ------------------------------------------------
+ * Breakpoints match Helper::generate_responsive_css() and the visibility
+ * classes: tablet <= 1024px, mobile <= 767px. These are defaults only — the
+ * per-device values a user sets are printed as per-block CSS with a higher
+ * specificity, so they always win over what follows.
+ */
+@media (max-width: 767px) {
+	.shapeblock-icon-block-wrap .shapeblock-icon-wrap {
+		max-width: 100%;
 	}
 }

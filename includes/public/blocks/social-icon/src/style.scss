@@ -3,17 +3,17 @@
  *
  * Ported from the Elementor "Social Icon" widget stylesheet
  * (easy-elements/widgets/social-icon/css/social.scss). Classes use the
- * "eelfg-" prefix and everything is scoped under `.eelfg-social-icon-block-wrap`.
+ * "shapeblock-" prefix and everything is scoped under `.shapeblock-social-icon-block-wrap`.
  */
-.eelfg-social-icon-block-wrap {
-	.eelfg-si-buttons {
+.shapeblock-social-icon-block-wrap {
+	.shapeblock-si-buttons {
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
 		gap: 10px;
 	}
 
-	.eelfg-si-button {
+	.shapeblock-si-button {
 		display: grid;
 		place-items: center;
 		text-align: center;

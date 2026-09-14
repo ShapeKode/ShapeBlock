@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -9,12 +9,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Server-side render for the Icon List block.
  *
  * Mirrors the markup of the Elementor "Icon List" widget
- * (easy-elements/widgets/icon-list). Element classes use the "eelfg-" prefix.
+ * (easy-elements/widgets/icon-list). Element classes use the "shapeblock-" prefix.
  */
 
-$H = '\EELFG\Frontend\Helper';
+$H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'eelfg-icon-list-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-icon-list-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $features   = isset( $attributes['features'] ) && is_array( $attributes['features'] ) ? $attributes['features'] : [];
 $dir        = ( isset( $attributes['feaDir'] ) && 'right' === $attributes['feaDir'] ) ? 'right' : 'left';
@@ -31,23 +31,23 @@ $divider    = ! empty( $attributes['divider'] );
 $show_icon  = ! ( isset( $attributes['showIcon'] ) && false === $attributes['showIcon'] );
 
 if ( empty( $features ) ) {
-	$w = get_block_wrapper_attributes( array( 'class' => 'eelfg-block eelfg-icon-list-block-wrap ' . $unique_id ) );
-	echo '<div ' . wp_kses_post( $w ) . '><p>' . esc_html__( 'Please add list items.', 'easy-elements-for-gutenberg' ) . '</p></div>';
+	$w = get_block_wrapper_attributes( array( 'class' => 'shapeblock-block shapeblock-icon-list-block-wrap ' . $unique_id ) );
+	echo '<div ' . wp_kses_post( $w ) . '><p>' . esc_html__( 'Please add list items.', 'shapeblock' ) . '</p></div>';
 	return;
 }
 
 $wrap_classes = [
-	'eelfg-block', 'eelfg-icon-list-block-wrap', $unique_id, 'eelfg-icon-list-wrapper',
-	'eelfg-icon-list-icon-view-' . $view,
-	'eelfg-icon-list-icon-shape-' . $shape,
-	'eelfg-icon-list-dir-' . $dir,
-	'eelfg-icon-list-layout-' . $layout,
-	'eelfg-icon-list-align-' . $align,
-	'eelfg-icon-list-ihalign-' . $ihalign,
+	'shapeblock-block', 'shapeblock-icon-list-block-wrap', $unique_id, 'shapeblock-icon-list-wrapper',
+	'shapeblock-icon-list-icon-view-' . $view,
+	'shapeblock-icon-list-icon-shape-' . $shape,
+	'shapeblock-icon-list-dir-' . $dir,
+	'shapeblock-icon-list-layout-' . $layout,
+	'shapeblock-icon-list-align-' . $align,
+	'shapeblock-icon-list-ihalign-' . $ihalign,
 ];
-if ( $connector ) { $wrap_classes[] = 'eelfg-icon-list-connector'; }
-if ( $conn_left ) { $wrap_classes[] = 'eelfg-icon-list-connector-left'; }
-if ( $divider ) { $wrap_classes[] = 'eelfg-icon-list-has-divider'; }
+if ( $connector ) { $wrap_classes[] = 'shapeblock-icon-list-connector'; }
+if ( $conn_left ) { $wrap_classes[] = 'shapeblock-icon-list-connector-left'; }
+if ( $divider ) { $wrap_classes[] = 'shapeblock-icon-list-has-divider'; }
 
 $block_wrap_attr = get_block_wrapper_attributes( array( 'class' => implode( ' ', $wrap_classes ) ) );
 if ( empty( $block_wrap_attr ) ) {
@@ -57,8 +57,8 @@ if ( empty( $block_wrap_attr ) ) {
 // ---------------------------------------------------------------------------
 // Inline styles.
 // ---------------------------------------------------------------------------
-$selector     = '.eelfg-icon-list-block-wrap.' . $unique_id;
-$style_handle = 'eelfg-icon-list-style';
+$selector     = '.shapeblock-icon-list-block-wrap.' . $unique_id;
+$style_handle = 'shapeblock-icon-list-style';
 
 $typo = function ( $obj ) use ( $H ) {
 	$out = [];
@@ -70,6 +70,7 @@ $typo = function ( $obj ) use ( $H ) {
 	if ( ! empty( $obj['textTransform'] ) ) $out['text-transform'] = $obj['textTransform'];
 	if ( ! empty( $obj['lineHeight'] ) ) $out['line-height'] = $obj['lineHeight'];
 	if ( ! empty( $obj['letterSpacing'] ) ) $out['letter-spacing'] = $H::ensure_unit( $obj['letterSpacing'] );
+	if ( ! empty( $obj['textDecoration'] ) ) $out['text-decoration'] = $obj['textDecoration'];
 	return $out;
 };
 $dims = function ( $obj, $type ) use ( $H ) {
@@ -126,7 +127,7 @@ $extra_css = '';
 if ( $connector ) {
 	$before_decls = $H::get_inline_styles( $conn_before );
 	if ( $before_decls ) {
-		$extra_css = $selector . '.eelfg-icon-list-connector::before{' . $before_decls . '}';
+		$extra_css = $selector . '.shapeblock-icon-list-connector::before{' . $before_decls . '}';
 	}
 }
 
@@ -142,9 +143,9 @@ if ( '' !== $u( 'iconOffsetY' ) ) $icon_box['transform'] = 'translateY(' . $u( '
 // Icon hover colour.
 if ( ! empty( $attributes['iconColorHover'] ) ) {
 	$hover_decls = $H::get_inline_styles( [ 'color' => $attributes['iconColorHover'], 'fill' => $attributes['iconColorHover'] ] );
-	$extra_css  .= $selector . ' .eelfg-icon-list:hover .eelfg-icon-list-icon i,'
-		. $selector . ' .eelfg-icon-list:hover .eelfg-icon-list-icon svg,'
-		. $selector . ' .eelfg-icon-list:hover .eelfg-icon-list-icon svg path{' . $hover_decls . '}';
+	$extra_css  .= $selector . ' .shapeblock-icon-list:hover .shapeblock-icon-list-icon i,'
+		. $selector . ' .shapeblock-icon-list:hover .shapeblock-icon-list-icon svg,'
+		. $selector . ' .shapeblock-icon-list:hover .shapeblock-icon-list-icon svg path{' . $hover_decls . '}';
 }
 $icon_svg = ( '' !== $u( 'iconSize' ) ) ? [ 'width' => $u( 'iconSize' ), 'height' => $u( 'iconSize' ) ] : [];
 $icon_num = ( '' !== $u( 'iconSize' ) ) ? [ 'font-size' => $u( 'iconSize' ) ] : [];
@@ -160,8 +161,8 @@ if ( ! empty( $attributes['descColor'] ) ) $desc_styles['color'] = $attributes['
 // Block wrapper margin + space-between (gap) + divider colour on the list (desktop).
 // The gap is stored in a CSS variable so the divider (::after) can centre itself in it.
 $block_margin = $dims( $attributes['feaBlockMargin'] ?? [], 'margin' );
-if ( '' !== $u( 'feaItemGap' ) ) $block_margin['--eelfg-list-gap'] = $u( 'feaItemGap' );
-if ( $divider && ! empty( $attributes['dividerColor'] ) ) $block_margin['--eelfg-divider-color'] = $attributes['dividerColor'];
+if ( '' !== $u( 'feaItemGap' ) ) $block_margin['--shapeblock-list-gap'] = $u( 'feaItemGap' );
+if ( $divider && ! empty( $attributes['dividerColor'] ) ) $block_margin['--shapeblock-divider-color'] = $attributes['dividerColor'];
 $block_margin_decls = $H::get_inline_styles( $block_margin );
 if ( $block_margin_decls ) {
 	$extra_css .= $selector . '{' . $block_margin_decls . '}';
@@ -182,7 +183,7 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $di
 	if ( '' !== $uu( 'feaMiddleGap' ) ) $list['gap']           = $uu( 'feaMiddleGap' );
 
 	$wrap_m   = $dims( $attributes[ 'feaBlockMargin' . $suffix ] ?? [], 'margin' );
-	if ( '' !== $uu( 'feaItemGap' ) ) $wrap_m['--eelfg-list-gap'] = $uu( 'feaItemGap' );
+	if ( '' !== $uu( 'feaItemGap' ) ) $wrap_m['--shapeblock-list-gap'] = $uu( 'feaItemGap' );
 	$icon_box = ( '' !== $uu( 'iconBoxSize' ) ) ? [ 'min-width' => $uu( 'iconBoxSize' ), 'min-height' => $uu( 'iconBoxSize' ), 'line-height' => $uu( 'iconBoxSize' ) ] : [];
 	if ( '' !== $uu( 'iconOffsetY' ) ) $icon_box['transform'] = 'translateY(' . $uu( 'iconOffsetY' ) . ')';
 	$icon_svg = ( '' !== $uu( 'iconSize' ) ) ? [ 'width' => $uu( 'iconSize' ), 'height' => $uu( 'iconSize' ) ] : [];
@@ -194,13 +195,13 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $di
 	$css   = '';
 	$rules = [
 		''                          => $H::get_inline_styles( $wrap_m ),
-		' .eelfg-icon-list'          => $H::get_inline_styles( $list ),
-		' .eelfg-icon-list-icon'     => $H::get_inline_styles( $icon_box ),
-		' .eelfg-icon-list-icon svg' => $H::get_inline_styles( $icon_svg ),
-		' .eelfg-icon-list-icon i'   => $H::get_inline_styles( $icon_i ),
-		' .eelfg-icon-list-number'   => $H::get_inline_styles( $icon_num ),
-		' .eelfg-icon-list-title'    => $H::get_inline_styles( $title_r ),
-		' .eelfg-icon-list-desc'     => $H::get_inline_styles( $desc_r ),
+		' .shapeblock-icon-list'          => $H::get_inline_styles( $list ),
+		' .shapeblock-icon-list-icon'     => $H::get_inline_styles( $icon_box ),
+		' .shapeblock-icon-list-icon svg' => $H::get_inline_styles( $icon_svg ),
+		' .shapeblock-icon-list-icon i'   => $H::get_inline_styles( $icon_i ),
+		' .shapeblock-icon-list-number'   => $H::get_inline_styles( $icon_num ),
+		' .shapeblock-icon-list-title'    => $H::get_inline_styles( $title_r ),
+		' .shapeblock-icon-list-desc'     => $H::get_inline_styles( $desc_r ),
 	];
 	foreach ( $rules as $sub => $decls ) {
 		if ( $decls ) {
@@ -213,14 +214,14 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $di
 		$conn = ( '' !== $uu( 'feaConnectorWidth' ) ) ? [ 'border-width' => $uu( 'feaConnectorWidth' ) ] : [];
 		$after = $H::get_inline_styles( $conn );
 		if ( $after ) {
-			$css .= $selector . ' .eelfg-icon-list-icon::after{' . $after . '}';
+			$css .= $selector . ' .shapeblock-icon-list-icon::after{' . $after . '}';
 		}
 		$before = $conn;
 		if ( 'left' === $dir && '' !== $uu( 'feaConnectorPositionX' ) )       $before['left']  = $uu( 'feaConnectorPositionX' );
 		if ( 'right' === $dir && '' !== $uu( 'feaConnectorRightPositionX' ) )  $before['right'] = $uu( 'feaConnectorRightPositionX' );
 		$before_decls = $H::get_inline_styles( $before );
 		if ( $before_decls ) {
-			$css .= $selector . '.eelfg-icon-list-connector::before{' . $before_decls . '}';
+			$css .= $selector . '.shapeblock-icon-list-connector::before{' . $before_decls . '}';
 		}
 	}
 
@@ -231,15 +232,15 @@ $mobile_css = $resp( 'Mobile' );
 
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $extra_css, [
-	'.eelfg-icon-list'                            => $H::get_inline_styles( $list ),
-	'.eelfg-icon-list-icon::after'                => $H::get_inline_styles( $conn ),
-	'.eelfg-icon-list-icon svg, ' . $selector . ' .eelfg-icon-list-icon svg path, ' . $selector . ' .eelfg-icon-list-icon i, ' . $selector . ' .eelfg-icon-list-number' => $H::get_inline_styles( $icon_color ),
-	'.eelfg-icon-list-icon'                       => $H::get_inline_styles( $icon_box ),
-	'.eelfg-icon-list-icon svg'                   => $H::get_inline_styles( $icon_svg ),
-	'.eelfg-icon-list-icon i'                     => $H::get_inline_styles( $icon_i ),
-	'.eelfg-icon-list-number'                     => $H::get_inline_styles( $icon_num ),
-	'.eelfg-icon-list-title'                      => $H::get_inline_styles( $title_styles ),
-	'.eelfg-icon-list-desc'                       => $H::get_inline_styles( $desc_styles ),
+	'.shapeblock-icon-list'                            => $H::get_inline_styles( $list ),
+	'.shapeblock-icon-list-icon::after'                => $H::get_inline_styles( $conn ),
+	'.shapeblock-icon-list-icon svg, ' . $selector . ' .shapeblock-icon-list-icon svg path, ' . $selector . ' .shapeblock-icon-list-icon i, ' . $selector . ' .shapeblock-icon-list-number' => $H::get_inline_styles( $icon_color ),
+	'.shapeblock-icon-list-icon'                       => $H::get_inline_styles( $icon_box ),
+	'.shapeblock-icon-list-icon svg'                   => $H::get_inline_styles( $icon_svg ),
+	'.shapeblock-icon-list-icon i'                     => $H::get_inline_styles( $icon_i ),
+	'.shapeblock-icon-list-number'                     => $H::get_inline_styles( $icon_num ),
+	'.shapeblock-icon-list-title'                      => $H::get_inline_styles( $title_styles ),
+	'.shapeblock-icon-list-desc'                       => $H::get_inline_styles( $desc_styles ),
 ] );
 
 // Responsive media queries are printed AFTER the desktop rules so they win at
@@ -262,15 +263,15 @@ $svg_star = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.or
 		$icon = isset( $item['icon'] ) ? $item['icon'] : '';
 		$ttl  = isset( $item['title'] ) ? $item['title'] : '';
 		?>
-		<li class="eelfg-icon-list eelfg-icon-list-dir-<?php echo esc_attr( $dir ); ?>">
+		<li class="shapeblock-icon-list shapeblock-icon-list-dir-<?php echo esc_attr( $dir ); ?>">
 			<?php if ( $show_icon ) : ?>
-			<span class="eelfg-icon-list-icon eelfg-icon-list-type-icon">
-				<?php echo ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="eelfg-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : $svg_star; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<span class="shapeblock-icon-list-icon shapeblock-icon-list-type-icon">
+				<?php echo ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : $svg_star; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</span>
 			<?php endif; ?>
 			<?php if ( '' !== $ttl ) : ?>
-				<span class="eelfg-icon-list-info">
-					<?php printf( '<%1$s class="eelfg-icon-list-title">%2$s</%1$s>', tag_escape( $title_tag ), wp_kses_post( $ttl ) ); ?>
+				<span class="shapeblock-icon-list-info">
+					<?php printf( '<%1$s class="shapeblock-icon-list-title">%2$s</%1$s>', tag_escape( $title_tag ), wp_kses_post( $ttl ) ); ?>
 				</span>
 			<?php endif; ?>
 		</li>

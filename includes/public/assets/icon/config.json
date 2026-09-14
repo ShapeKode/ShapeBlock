@@ -1,6 +1,6 @@
 {
-  "name": "eelfg-icon",
-  "css_prefix_text": "eelfg-icon-",
+  "name": "shapeblock-icon",
+  "css_prefix_text": "shapeblock-icon-",
   "css_use_suffix": false,
   "hinting": true,
   "units_per_em": 1000,

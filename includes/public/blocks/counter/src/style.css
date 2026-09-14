@@ -4,118 +4,118 @@
  *
  * Structure ported from the Elementor widget
  * (easy-elements/widgets/counter/css/counter.scss). Element classes use this
- * plugin's own "eelfg-" prefix and preset CSS variables.
+ * plugin's own "shapeblock-" prefix and preset CSS variables.
  */
-.eelfg-cnt-wrap {
+.shapeblock-cnt-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.eelfg-cnt-number-wrap {
+.shapeblock-cnt-number-wrap {
   font-size: 70px;
   font-weight: 600;
   line-height: 1;
-  color: var(--eelfg-preset-color-secondary, #0b3665);
+  color: var(--shapeblock-preset-color-secondary, #0b3665);
   display: flex;
   place-items: center;
 }
 
-.eelfg-cnt-title {
+.shapeblock-cnt-title {
   font-size: 16px;
   font-weight: 400;
   display: inline-block;
   margin: 0;
 }
 
-.eelfg-cnt-icon {
+.shapeblock-cnt-icon {
   place-items: center;
   display: grid;
 }
 
-.eelfg-cnt-icon svg {
+.shapeblock-cnt-icon svg {
   width: 60px;
   height: 60px;
-  fill: var(--eelfg-preset-color-secondary, #0b3665);
+  fill: var(--shapeblock-preset-color-secondary, #0b3665);
 }
 
-.eelfg-cnt-icon i {
+.shapeblock-cnt-icon i {
   font-size: 40px;
 }
 
 /* Icon position */
-.eelfg-cnt-icon-pos-left .eelfg-cnt-wrap {
+.shapeblock-cnt-icon-pos-left .shapeblock-cnt-wrap {
   flex-direction: row;
   text-align: left;
   justify-content: flex-start;
 }
 
-.eelfg-cnt-icon-pos-left .eelfg-cnt-icon {
+.shapeblock-cnt-icon-pos-left .shapeblock-cnt-icon {
   margin-right: 12px;
 }
 
-.eelfg-cnt-icon-pos-right .eelfg-cnt-wrap {
+.shapeblock-cnt-icon-pos-right .shapeblock-cnt-wrap {
   flex-direction: row-reverse;
   text-align: right;
   justify-content: flex-end;
 }
 
-.eelfg-cnt-icon-pos-right .eelfg-cnt-icon {
+.shapeblock-cnt-icon-pos-right .shapeblock-cnt-icon {
   margin-left: 12px;
 }
 
-.eelfg-cnt-icon-pos-top .eelfg-cnt-wrap {
+.shapeblock-cnt-icon-pos-top .shapeblock-cnt-wrap {
   flex-direction: column;
   text-align: center;
 }
 
-.eelfg-cnt-icon-pos-top .eelfg-cnt-icon {
+.shapeblock-cnt-icon-pos-top .shapeblock-cnt-icon {
   margin-bottom: 12px;
 }
 
-.eelfg-cnt-icon-pos-bottom .eelfg-cnt-wrap {
+.shapeblock-cnt-icon-pos-bottom .shapeblock-cnt-wrap {
   flex-direction: column-reverse;
   text-align: center;
 }
 
-.eelfg-cnt-icon-pos-bottom .eelfg-cnt-icon {
+.shapeblock-cnt-icon-pos-bottom .shapeblock-cnt-icon {
   margin-top: 12px;
 }
 
 /* Title position (number vs title layout) */
-.eelfg-cnt-content {
+.shapeblock-cnt-content {
   display: flex;
   flex-direction: column;
 }
 
-.eelfg-cnt-title-pos-top .eelfg-cnt-content {
+.shapeblock-cnt-title-pos-top .shapeblock-cnt-content {
   flex-direction: column-reverse;
 }
 
-.eelfg-cnt-title-pos-left .eelfg-cnt-content {
+.shapeblock-cnt-title-pos-left .shapeblock-cnt-content {
   flex-direction: row-reverse;
   align-items: center;
 }
 
-.eelfg-cnt-title-pos-right .eelfg-cnt-content {
+.shapeblock-cnt-title-pos-right .shapeblock-cnt-content {
   flex-direction: row;
   align-items: center;
 }
 
-.eelfg-cnt-title-pos-left .eelfg-cnt-title,
-.eelfg-cnt-title-pos-right .eelfg-cnt-title {
+.shapeblock-cnt-title-pos-left .shapeblock-cnt-title,
+.shapeblock-cnt-title-pos-right .shapeblock-cnt-title {
   margin-top: 0;
 }
 
 /* Odometer */
-.eelfg-cnt-odometer-wrap {
+.shapeblock-cnt-odometer-wrap {
   display: inline-flex;
   align-items: flex-end;
   line-height: 1;
 }
 
-.eelfg-cnt-odometer-digit {
+.shapeblock-cnt-odometer-digit {
   display: inline-block;
   overflow: hidden;
   height: 1em;
@@ -123,18 +123,18 @@
   vertical-align: bottom;
 }
 
-.eelfg-cnt-odometer-roll {
+.shapeblock-cnt-odometer-roll {
   display: block;
   will-change: transform;
 }
 
-.eelfg-cnt-odometer-num {
+.shapeblock-cnt-odometer-num {
   display: block;
   height: 1em;
   line-height: 1em;
 }
 
-.eelfg-cnt-odometer-sep {
+.shapeblock-cnt-odometer-sep {
   display: inline-block;
   line-height: 1em;
 }/*# sourceMappingURL=style.css.map */
