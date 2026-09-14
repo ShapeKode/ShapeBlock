@@ -1,0 +1,115 @@
+/**
+ * Slider block — front-end + shared styles.
+ *
+ * Everything is scoped under `.shapeblock-slider-block-wrap` so the per-instance
+ * rules render.php prints can override these without !important.
+ */
+.shapeblock-slider-block-wrap {
+	position: relative;
+
+	.shapeblock-slider {
+		overflow: hidden;
+	}
+
+	.shapeblock-slider-slide {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 420px;
+		overflow: hidden;
+		background-color: #f2f2f2;
+	}
+
+	.shapeblock-slider-image {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	.shapeblock-slider-overlay {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	.shapeblock-slider-content {
+		position: relative;
+		z-index: 1;
+		width: 100%;
+		padding: 32px;
+		text-align: center;
+		color: #fff;
+	}
+
+	.shapeblock-slider-title {
+		margin: 0 0 12px;
+		color: inherit;
+	}
+
+	.shapeblock-slider-text {
+		margin: 0 0 20px;
+		color: inherit;
+	}
+
+	.shapeblock-slider-btn {
+		display: inline-block;
+		padding: 12px 26px;
+		border-radius: 4px;
+		background-color: #a216ff;
+		color: #fff;
+		text-decoration: none;
+		transition: background-color 0.3s ease, color 0.3s ease;
+
+		&:hover,
+		&:focus {
+			color: #fff;
+			text-decoration: none;
+		}
+	}
+
+	/* Arrows sit outside the Swiper container so slide overflow cannot clip them. */
+	.shapeblock-slider-arrow {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		z-index: 2;
+		display: grid;
+		place-items: center;
+		width: 44px;
+		height: 44px;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background-color: rgba(255, 255, 255, 0.9);
+		color: #121212;
+		cursor: pointer;
+		transition: opacity 0.3s ease;
+
+		svg {
+			width: 60%;
+			height: 60%;
+		}
+
+		&.swiper-button-disabled {
+			opacity: 0.35;
+			cursor: default;
+		}
+	}
+
+	.shapeblock-slider-prev {
+		left: 12px;
+	}
+
+	.shapeblock-slider-next {
+		right: 12px;
+	}
+
+	.swiper-pagination {
+		position: relative;
+		margin-top: 14px;
+	}
+}

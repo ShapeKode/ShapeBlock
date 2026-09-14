@@ -211,10 +211,17 @@ class Blocks {
                 'iconClass'    => 'shapeblock-icon-navigation',
                 'status'      => 'enable',
             ],
+            [
+                'title'       => 'Slider',
+                'id'          => 'slider',
+                'description' => 'A content slider with image slides, heading, text and a button.',
+                'iconClass'    => 'shapeblock-icon-slider',
+                'status'      => 'enable',
+            ],
         ];
 
         // Default-enabled IDs: any block we want available without the user toggling it on first.
-        $default_enabled = [ 'layout-row', 'column', 'post-grid', 'gallery', 'faq', 'pricing-table', 'button', 'icon', 'heading', 'team-grid', 'testimonials-grid', 'feature-list', 'icon-box', 'icon-list', 'counter', 'tab', 'countdown', 'table', 'social-share', 'social-icon', 'progress', 'clients-logo-grid', 'image-comparison', 'scroll-to-top', 'offcanvas', 'search', 'breadcrumb', 'menu' ];
+        $default_enabled = [ 'layout-row', 'column', 'post-grid', 'gallery', 'faq', 'pricing-table', 'button', 'icon', 'heading', 'team-grid', 'testimonials-grid', 'feature-list', 'icon-box', 'icon-list', 'counter', 'tab', 'countdown', 'table', 'social-share', 'social-icon', 'progress', 'clients-logo-grid', 'image-comparison', 'scroll-to-top', 'offcanvas', 'search', 'breadcrumb', 'menu', 'slider' ];
 
         // Merge status from DB
         foreach ($blocks as &$block) {
