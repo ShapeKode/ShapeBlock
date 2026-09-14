@@ -1,12 +1,12 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "shapeblock/slider",
+	"name": "shapeblock/image-carousel",
 	"version": "0.1.0",
-	"title": "Slider",
+	"title": "Image Carousel",
 	"category": "shapeblock",
-	"description": "An image slider.",
-	"keywords": [ "slider", "carousel", "slideshow", "image", "gallery" ],
+	"description": "A multi-image carousel with centred slides and continuous scrolling.",
+	"keywords": [ "carousel", "images", "logos", "marquee", "slider" ],
 	"example": {},
 	"supports": {
 		"html": false,
@@ -19,32 +19,44 @@
 	"attributes": {
 		"blockId": { "type": "string", "default": "" },
 
-		"slides": {
+		"images": {
 			"type": "array",
-			"default": [ { "image": {} }, { "image": {} } ]
+			"default": [ { "image": {} }, { "image": {} }, { "image": {} }, { "image": {} } ]
 		},
 
-		"slidesPerView": { "type": "string", "default": "1" },
-		"slidesPerViewTablet": { "type": "string", "default": "" },
-		"slidesPerViewMobile": { "type": "string", "default": "" },
-		"spaceBetween": { "type": "string", "default": "24" },
+		"slidesPerView": { "type": "string", "default": "3" },
+		"slidesPerViewTablet": { "type": "string", "default": "2" },
+		"slidesPerViewMobile": { "type": "string", "default": "1" },
+		"spaceBetween": { "type": "string", "default": "20" },
 		"spaceBetweenTablet": { "type": "string", "default": "" },
 		"spaceBetweenMobile": { "type": "string", "default": "" },
 
+		"centeredSlides": { "type": "boolean", "default": false },
+		"inactiveScale": { "type": "string", "default": "" },
+		"inactiveOpacity": { "type": "string", "default": "" },
+
 		"loop": { "type": "boolean", "default": true },
-		"autoplay": { "type": "boolean", "default": false },
-		"autoplayDelay": { "type": "string", "default": "4000" },
+		"autoplay": { "type": "boolean", "default": true },
+		"autoplayDelay": { "type": "string", "default": "3000" },
 		"pauseOnHover": { "type": "boolean", "default": true },
 		"speed": { "type": "string", "default": "600" },
+		"marquee": { "type": "boolean", "default": false },
+		"marqueeSpeed": { "type": "string", "default": "4000" },
 		"showArrows": { "type": "boolean", "default": true },
-		"showDots": { "type": "boolean", "default": true },
+		"showDots": { "type": "boolean", "default": false },
 
-		"slideHeight": { "type": "string", "default": "420" },
+		"slideHeight": { "type": "string", "default": "260" },
 		"slideHeightTablet": { "type": "string", "default": "" },
 		"slideHeightMobile": { "type": "string", "default": "" },
 		"imageFit": { "type": "string", "default": "cover" },
+		"imageSize": { "type": "string", "default": "thumbnail" },
+		"slidePadding": { "type": "object" },
+		"slidePaddingTablet": { "type": "object" },
+		"slidePaddingMobile": { "type": "object" },
 
+		"slideBg": { "type": "string", "default": "" },
 		"slideRadius": { "type": "object" },
+		"slideBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"overlayColor": { "type": "string", "default": "" },
 		"overlayGradient": { "type": "string", "default": "" },
 

@@ -1,5 +1,5 @@
 /**
- * Slider block — front-end behaviour.
+ * Image Carousel block — front-end behaviour.
  *
  * Every option is read from the container's data attribute, which render.php
  * writes, so no inline script is printed per instance. Swiper itself is the
@@ -10,14 +10,14 @@
 
 	function readOptions(el) {
 		try {
-			return JSON.parse(el.dataset.shapeblockSlider || '{}');
+			return JSON.parse(el.dataset.shapeblockImageCarousel || '{}');
 		} catch (e) {
 			return {};
 		}
 	}
 
 	function init(el) {
-		if (el.dataset.shapeblockSliderReady === '1') {
+		if (el.dataset.shapeblockImageCarouselReady === '1') {
 			return;
 		}
 		if (typeof window.Swiper === 'undefined') {
@@ -27,19 +27,28 @@
 		const opts = readOptions(el);
 		// The arrows sit outside the Swiper container so they can be positioned
 		// against the block, not clipped by the slides' overflow.
-		const wrap = el.closest('.shapeblock-slider-block-wrap') || el.parentNode;
+		const wrap = el.closest('.shapeblock-image-carousel-block-wrap') || el.parentNode;
 
 		const config = {
 			slidesPerView: opts.slidesPerView || 1,
-			spaceBetween: typeof opts.spaceBetween === 'number' ? opts.spaceBetween : 24,
+			spaceBetween: typeof opts.spaceBetween === 'number' ? opts.spaceBetween : 20,
 			speed: typeof opts.speed === 'number' ? opts.speed : 600,
 			loop: !!opts.loop,
+			centeredSlides: !!opts.centeredSlides,
+			watchSlidesProgress: true,
 			breakpoints: opts.breakpoints || undefined,
 			a11y: { enabled: true },
 		};
 
 		if (opts.autoplay) {
 			config.autoplay = opts.autoplay;
+		}
+
+		// Continuous scroll only reads as continuous when the track wraps around,
+		// so looping is part of the mode rather than a separate choice.
+		if (opts.marquee) {
+			config.loop = true;
+			config.allowTouchMove = false;
 		}
 
 		if (opts.dots) {
@@ -50,8 +59,8 @@
 		}
 
 		if (opts.arrows && wrap) {
-			const next = wrap.querySelector('.shapeblock-slider-next');
-			const prev = wrap.querySelector('.shapeblock-slider-prev');
+			const next = wrap.querySelector('.shapeblock-image-carousel-next');
+			const prev = wrap.querySelector('.shapeblock-image-carousel-prev');
 			if (next && prev) {
 				config.navigation = { nextEl: next, prevEl: prev };
 			}
@@ -67,12 +76,12 @@
 			}
 		}
 
-		el.dataset.shapeblockSliderReady = '1';
+		el.dataset.shapeblockImageCarouselReady = '1';
 		new window.Swiper(el, config);
 	}
 
 	function initAll() {
-		document.querySelectorAll('.shapeblock-slider[data-shapeblock-slider]').forEach(init);
+		document.querySelectorAll('.shapeblock-image-carousel[data-shapeblock-image-carousel]').forEach(init);
 	}
 
 	function start() {

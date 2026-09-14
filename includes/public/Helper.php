@@ -99,13 +99,20 @@ class Helper {
 	}
 
 	public static function add_custom_style( $handle, $selector, $responsive_css = "", $sub_styles = [] ) {
-		$css = $responsive_css;
-		
+		// Desktop rules first, media queries after. A media query adds no
+		// specificity, so whichever rule comes last wins — emitting the
+		// responsive CSS first let every desktop value override its own
+		// tablet/mobile override, which silently disabled per-device settings
+		// wherever a desktop value was also set.
+		$css = "";
+
 		foreach ( $sub_styles as $sub_sel => $style ) {
 			if ( ! empty( $style ) ) {
 				 $css .= $selector . " " . $sub_sel . " { " . $style . "; }\n";
 			}
 		}
+
+		$css .= $responsive_css;
 
 		if ( ! empty( $css ) ) {
 			if ( is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {

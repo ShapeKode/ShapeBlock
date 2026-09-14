@@ -4,17 +4,17 @@ return array(
 	'build' => array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
-		'name' => 'shapeblock/slider',
+		'name' => 'shapeblock/image-carousel',
 		'version' => '0.1.0',
-		'title' => 'Slider',
+		'title' => 'Image Carousel',
 		'category' => 'shapeblock',
-		'description' => 'An image slider.',
+		'description' => 'A multi-image carousel with centred slides and continuous scrolling.',
 		'keywords' => array(
-			'slider',
 			'carousel',
-			'slideshow',
-			'image',
-			'gallery'
+			'images',
+			'logos',
+			'marquee',
+			'slider'
 		),
 		'example' => array(
 			
@@ -38,9 +38,19 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
-			'slides' => array(
+			'images' => array(
 				'type' => 'array',
 				'default' => array(
+					array(
+						'image' => array(
+							
+						)
+					),
+					array(
+						'image' => array(
+							
+						)
+					),
 					array(
 						'image' => array(
 							
@@ -55,19 +65,19 @@ return array(
 			),
 			'slidesPerView' => array(
 				'type' => 'string',
-				'default' => '1'
+				'default' => '3'
 			),
 			'slidesPerViewTablet' => array(
 				'type' => 'string',
-				'default' => ''
+				'default' => '2'
 			),
 			'slidesPerViewMobile' => array(
 				'type' => 'string',
-				'default' => ''
+				'default' => '1'
 			),
 			'spaceBetween' => array(
 				'type' => 'string',
-				'default' => '24'
+				'default' => '20'
 			),
 			'spaceBetweenTablet' => array(
 				'type' => 'string',
@@ -77,17 +87,29 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'centeredSlides' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'inactiveScale' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'inactiveOpacity' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'loop' => array(
 				'type' => 'boolean',
 				'default' => true
 			),
 			'autoplay' => array(
 				'type' => 'boolean',
-				'default' => false
+				'default' => true
 			),
 			'autoplayDelay' => array(
 				'type' => 'string',
-				'default' => '4000'
+				'default' => '3000'
 			),
 			'pauseOnHover' => array(
 				'type' => 'boolean',
@@ -97,17 +119,25 @@ return array(
 				'type' => 'string',
 				'default' => '600'
 			),
+			'marquee' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'marqueeSpeed' => array(
+				'type' => 'string',
+				'default' => '4000'
+			),
 			'showArrows' => array(
 				'type' => 'boolean',
 				'default' => true
 			),
 			'showDots' => array(
 				'type' => 'boolean',
-				'default' => true
+				'default' => false
 			),
 			'slideHeight' => array(
 				'type' => 'string',
-				'default' => '420'
+				'default' => '260'
 			),
 			'slideHeightTablet' => array(
 				'type' => 'string',
@@ -121,8 +151,33 @@ return array(
 				'type' => 'string',
 				'default' => 'cover'
 			),
+			'imageSize' => array(
+				'type' => 'string',
+				'default' => 'thumbnail'
+			),
+			'slidePadding' => array(
+				'type' => 'object'
+			),
+			'slidePaddingTablet' => array(
+				'type' => 'object'
+			),
+			'slidePaddingMobile' => array(
+				'type' => 'object'
+			),
+			'slideBg' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'slideRadius' => array(
 				'type' => 'object'
+			),
+			'slideBorder' => array(
+				'type' => 'object',
+				'default' => array(
+					'width' => 0,
+					'color' => '',
+					'style' => 'solid'
+				)
 			),
 			'overlayColor' => array(
 				'type' => 'string',

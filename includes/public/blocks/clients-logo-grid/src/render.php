@@ -20,6 +20,11 @@ $unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shape
 
 $logos = isset( $attributes['logos'] ) && is_array( $attributes['logos'] ) ? $attributes['logos'] : [];
 $swap  = ! empty( $attributes['hoverSwap'] );
+
+// A logo whose image has not been chosen yet shows the plugin's placeholder, so
+// a grid that was just dragged in already reads as a logo grid. Matches
+// team-grid, testimonials-grid, slider and image-carousel.
+$placeholder = SHAPEBLOCK_PL_URL . 'includes/public/assets/img/placeholder.png';
 $gray  = ! empty( $attributes['grayscale'] ) ? ( $attributes['grayscaleOption'] ?? 'normal_grayscale' ) : '';
 
 $gray_class_map = [
@@ -169,7 +174,7 @@ $H::add_custom_style( $style_handle, $selector, $responsive_css, [
 				$target   = ! empty( $item['linkNewTab'] ) ? ' target="_blank"' : '';
 				$rel      = ! empty( $item['linkNofollow'] ) ? ' rel="nofollow"' : '';
 
-				$box_class = trim( 'shapeblock-logo-img ' . $gray_class );
+				$box_class = trim( 'shapeblock-logo-img ' . $gray_class . ( '' === $url ? ' is-placeholder' : '' ) );
 				?>
 				<div class="shapeblock-grid-item">
 					<div class="<?php echo esc_attr( $box_class ); ?>">
@@ -185,7 +190,7 @@ $H::add_custom_style( $style_handle, $selector, $responsive_css, [
 								<img class="shapeblock-grid-img" src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async">
 							<?php endif; ?>
 						<?php else : ?>
-							<span class="shapeblock-logo-placeholder"><?php esc_html_e( 'Logo', 'shapeblock' ); ?></span>
+							<img class="shapeblock-grid-img shapeblock-logo-placeholder-img" src="<?php echo esc_url( $placeholder ); ?>" alt="<?php esc_attr_e( 'Placeholder image', 'shapeblock' ); ?>" loading="lazy" decoding="async">
 						<?php endif; ?>
 
 						<?php if ( '' !== $link ) : ?>

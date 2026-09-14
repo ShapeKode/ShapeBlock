@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
 import { ServerSideRender } from '@wordpress/server-side-render';
 import {
 	useBlockProps,
@@ -24,6 +25,35 @@ import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 
 import './editor.scss';
+
+/**
+ * Thumbnail preview for one logo row.
+ *
+ * The URL is resolved from the attachment id on every render instead of being
+ * saved into the block, so it always matches the logo the row currently points
+ * at — replace the image or regenerate the site's sizes and the preview
+ * follows. A logo that is not in the media library (or whose thumbnail has not
+ * been generated) falls back to its own URL.
+ */
+function ItemThumb({ image }) {
+	const id = image?.id;
+	const thumb = useSelect(
+		(select) => {
+			if (!id) {
+				return '';
+			}
+			const media = select('core').getMedia(id);
+			return media?.media_details?.sizes?.thumbnail?.source_url || '';
+		},
+		[id]
+	);
+
+	const src = thumb || image?.url;
+	if (!src) {
+		return null;
+	}
+	return <img src={src} alt="" style={{ maxWidth: '100%', marginBottom: '6px' }} />;
+}
 
 // Map a base attribute name to its per-device key (desktop uses the base name).
 const getKey = (base, device) =>
@@ -116,7 +146,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								value={item.image?.id}
 								render={({ open }) => (
 									<div style={{ marginBottom: '8px' }}>
-										{item.image?.url && <img src={item.image.url} alt="" style={{ maxWidth: '100%', marginBottom: '6px' }} />}
+										<ItemThumb image={item.image} />
 										<Button variant="secondary" size="small" onClick={open}>{item.image?.url ? __('Replace Logo', 'shapeblock') : __('Select Logo', 'shapeblock')}</Button>
 									</div>
 								)}

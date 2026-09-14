@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
 import { ServerSideRender } from '@wordpress/server-side-render';
 import {
 	useBlockProps,
@@ -20,6 +21,7 @@ import {
 
 import ColorPopover from '../../custom-components/ColorPopover';
 import BackgroundControl from '../../custom-components/BackgroundControl';
+import BorderControl from '../../custom-components/BorderControl';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 
 import './editor.scss';
@@ -41,28 +43,67 @@ const FIT = [
 	{ label: __('Fill', 'shapeblock'), value: 'fill' },
 ];
 
+/**
+ * Thumbnail preview for one repeater item.
+ *
+ * The URL is resolved from the attachment id on every render instead of being
+ * saved into the block, so it always matches the image the item currently
+ * points at — replace the image, re-crop it, or regenerate the site's sizes and
+ * the preview follows. An image that is not in the media library (or whose
+ * thumbnail has not been generated) falls back to its own URL.
+ */
+function ItemThumb({ image }) {
+	const id = image?.id;
+	const thumb = useSelect(
+		(select) => {
+			if (!id) {
+				return '';
+			}
+			const media = select('core').getMedia(id);
+			return media?.media_details?.sizes?.thumbnail?.source_url || '';
+		},
+		[id]
+	);
+
+	const src = thumb || image?.url;
+	if (!src) {
+		return null;
+	}
+	return <img src={src} alt="" style={{ maxWidth: '100%', marginBottom: '6px' }} />;
+}
+
 // Map a base attribute name to its per-device key (desktop uses the base name).
 const getKey = (base, device) =>
 	device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
 
 export default function Edit({ attributes, setAttributes, clientId }) {
-	const { blockId, slides, autoplay, showArrows, showDots } = attributes;
+	const { blockId, images, autoplay, marquee, showArrows, showDots, centeredSlides } = attributes;
 
 	useEffect(() => {
 		if (!blockId) {
-			setAttributes({ blockId: 'shapeblock-slider-' + clientId.slice(0, 6) });
+			setAttributes({ blockId: 'shapeblock-image-carousel-' + clientId.slice(0, 6) });
 		}
 	}, [blockId, clientId, setAttributes]);
 
-	const items = Array.isArray(slides) ? slides : [];
-	const update = (i, key, val) => setAttributes({ slides: items.map((it, idx) => (idx === i ? { ...it, [key]: val } : it)) });
-	const add = () => setAttributes({ slides: [...items, { image: {} }] });
-	const remove = (i) => setAttributes({ slides: items.filter((_, idx) => idx !== i) });
+	// The sizes this site actually has registered, so the dropdown never offers
+	// one that would silently fall back to the full upload.
+	const imageSizes = useSelect((select) => {
+		const settings = select('core/block-editor').getSettings();
+		const sizes = settings.imageSizes || [];
+		return sizes.length
+			? sizes.map((s) => ({ label: s.name, value: s.slug }))
+			: [{ label: __('Thumbnail', 'shapeblock'), value: 'thumbnail' }, { label: __('Full Size', 'shapeblock'), value: 'full' }];
+	}, []);
+
+	const items = Array.isArray(images) ? images : [];
+	const update = (i, key, val) => setAttributes({ images: items.map((it, idx) => (idx === i ? { ...it, [key]: val } : it)) });
+	const add = () => setAttributes({ images: [...items, { image: {} }] });
+	const remove = (i) => setAttributes({ images: items.filter((_, idx) => idx !== i) });
 	// Deep copy, so the clone's image object is not shared with the original.
 	const duplicate = (i) => {
 		const next = items.slice();
 		next.splice(i + 1, 0, JSON.parse(JSON.stringify(items[i])));
-		setAttributes({ slides: next });
+		setAttributes({ images: next });
 	};
 	const move = (i, dir) => {
 		const t = i + dir;
@@ -70,16 +111,26 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		const next = items.slice();
 		const [m] = next.splice(i, 1);
 		next.splice(t, 0, m);
-		setAttributes({ slides: next });
+		setAttributes({ images: next });
 	};
 
-	// Adding several images at once is the usual way to build an image slider.
+	// Only the attachment's identity is stored. The thumbnail is looked up from
+	// that id when the item is drawn (see ItemThumb), so replacing or re-cropping
+	// an image can never leave an out-of-date thumbnail behind, and any `thumb`
+	// an older item still carries is dropped the moment its image is updated.
+	const toItem = (m) => ({
+		image: {
+			id: m.id,
+			url: m.url,
+			alt: m.alt || '',
+		},
+	});
+
+	// A carousel is normally filled from the library in one go.
 	const addFromLibrary = (media) => {
-		const picked = (Array.isArray(media) ? media : [media])
-			.filter((m) => m && m.url)
-			.map((m) => ({ image: { id: m.id, url: m.url, alt: m.alt || '' } }));
+		const picked = (Array.isArray(media) ? media : [media]).filter((m) => m && m.url).map(toItem);
 		if (picked.length) {
-			setAttributes({ slides: [...items, ...picked] });
+			setAttributes({ images: [...items, ...picked] });
 		}
 	};
 
@@ -101,13 +152,22 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		</ResponsiveWrapper>
 	);
 
+	const respBox = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(d) => {
+				const k = getKey(base, d);
+				return <BoxControl values={attributes[k]} onChange={(v) => setAttributes({ [k]: v })} />;
+			}}
+		</ResponsiveWrapper>
+	);
+
 	// --- Tab 1: Settings (content & behaviour) --------------------------------
 	const settingsTab = (
 		<>
 			<PanelBody title={__('Images', 'shapeblock')} initialOpen={true}>
 				{items.map((item, index) => (
-					<div className="shapeblock-slider-repeater-item" key={index}>
-						<div className="shapeblock-slider-repeater-head">
+					<div className="shapeblock-image-carousel-repeater-item" key={index}>
+						<div className="shapeblock-image-carousel-repeater-head">
 							<strong>{__('Image', 'shapeblock')} #{index + 1}</strong>
 							<div>
 								<Button icon={ICON_UP} label={__('Move up', 'shapeblock')} onClick={() => move(index, -1)} disabled={index === 0} size="small" />
@@ -119,12 +179,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 						<MediaUploadCheck>
 							<MediaUpload
-								onSelect={(media) => update(index, 'image', { id: media.id, url: media.url, alt: media.alt })}
+								onSelect={(media) => update(index, 'image', toItem(media).image)}
 								allowedTypes={['image']}
 								value={item.image?.id}
 								render={({ open }) => (
 									<div>
-										{item.image?.url && <img src={item.image.url} alt="" style={{ maxWidth: '100%', marginBottom: '6px' }} />}
+										<ItemThumb image={item.image} />
 										<Button variant="secondary" size="small" onClick={open}>
 											{item.image?.url ? __('Replace Image', 'shapeblock') : __('Select Image', 'shapeblock')}
 										</Button>
@@ -146,19 +206,30 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						)}
 					/>
 				</MediaUploadCheck>
-				<Button variant="secondary" onClick={add} style={{ marginLeft: '8px' }}>{__('Add Empty Slide', 'shapeblock')}</Button>
+				<Button variant="secondary" onClick={add} style={{ marginLeft: '8px' }}>{__('Add Empty Item', 'shapeblock')}</Button>
 			</PanelBody>
 
 			<PanelBody title={__('Playback', 'shapeblock')} initialOpen={false}>
+				<ToggleControl
+					label={__('Continuous Scroll', 'shapeblock')}
+					help={__('Slides glide without stopping, like a marquee.', 'shapeblock')}
+					checked={marquee}
+					onChange={(v) => setAttributes({ marquee: v })}
+					__nextHasNoMarginBottom
+				/>
 				<ToggleControl label={__('Loop', 'shapeblock')} checked={attributes.loop} onChange={(v) => setAttributes({ loop: v })} __nextHasNoMarginBottom />
-				<ToggleControl label={__('Autoplay', 'shapeblock')} checked={autoplay} onChange={(v) => setAttributes({ autoplay: v })} __nextHasNoMarginBottom />
-				{autoplay && (
+				{!marquee && (
+					<ToggleControl label={__('Autoplay', 'shapeblock')} checked={autoplay} onChange={(v) => setAttributes({ autoplay: v })} __nextHasNoMarginBottom />
+				)}
+				{(autoplay || marquee) && (
 					<>
-						{num(__('Autoplay Delay (ms)', 'shapeblock'), 'autoplayDelay')}
+						{!marquee && num(__('Autoplay Delay (ms)', 'shapeblock'), 'autoplayDelay')}
 						<ToggleControl label={__('Pause on hover', 'shapeblock')} checked={attributes.pauseOnHover} onChange={(v) => setAttributes({ pauseOnHover: v })} __nextHasNoMarginBottom />
 					</>
 				)}
-				{num(__('Transition Speed (ms)', 'shapeblock'), 'speed')}
+				{marquee
+					? num(__('Scroll Speed (ms)', 'shapeblock'), 'marqueeSpeed', __('How long one image takes to travel. A larger number scrolls more slowly.', 'shapeblock'))
+					: num(__('Transition Speed (ms)', 'shapeblock'), 'speed')}
 			</PanelBody>
 
 			<PanelBody title={__('Navigation', 'shapeblock')} initialOpen={false}>
@@ -170,28 +241,54 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	// --- Tab 2: Layout --------------------------------------------------------
 	const layoutTab = (
-		<PanelBody title={__('Layout', 'shapeblock')} initialOpen={true}>
-			{respNum(__('Slides Per View', 'shapeblock'), 'slidesPerView')}
-			{respNum(__('Space Between (px)', 'shapeblock'), 'spaceBetween')}
-			<Divider />
-			{respNum(__('Slide Height (px)', 'shapeblock'), 'slideHeight')}
-			<SelectControl
-				label={__('Image Fit', 'shapeblock')}
-				value={attributes.imageFit}
-				options={FIT}
-				help={__('Cover fills the slide and crops; Contain shows the whole image.', 'shapeblock')}
-				onChange={(v) => setAttributes({ imageFit: v })}
-				__next40pxDefaultSize
-				__nextHasNoMarginBottom
-			/>
-		</PanelBody>
+		<>
+			<PanelBody title={__('Layout', 'shapeblock')} initialOpen={true}>
+				{respNum(__('Images Per View', 'shapeblock'), 'slidesPerView')}
+				{respNum(__('Space Between (px)', 'shapeblock'), 'spaceBetween')}
+				<Divider />
+				<ToggleControl
+					label={__('Centered Slides', 'shapeblock')}
+					help={__('Keeps the active image in the middle, with its neighbours peeking in.', 'shapeblock')}
+					checked={centeredSlides}
+					onChange={(v) => setAttributes({ centeredSlides: v })}
+					__nextHasNoMarginBottom
+				/>
+				{num(__('Inactive Image Scale (%)', 'shapeblock'), 'inactiveScale', __('Shrinks every image except the active one, so the active image stands out. Leave empty to keep them all the same size.', 'shapeblock'))}
+				{num(__('Inactive Image Opacity (%)', 'shapeblock'), 'inactiveOpacity', __('Leave empty to keep every image fully opaque.', 'shapeblock'))}
+			</PanelBody>
+
+			<PanelBody title={__('Image', 'shapeblock')} initialOpen={false}>
+				{respNum(__('Image Height (px)', 'shapeblock'), 'slideHeight')}
+				<SelectControl
+					label={__('Image Fit', 'shapeblock')}
+					value={attributes.imageFit}
+					options={FIT}
+					help={__('Cover fills the box and crops; Contain shows the whole image.', 'shapeblock')}
+					onChange={(v) => setAttributes({ imageFit: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+				<SelectControl
+					label={__('Image Size', 'shapeblock')}
+					value={attributes.imageSize}
+					options={imageSizes}
+					help={__('Several images show at once, so a smaller size loads faster. Pick a larger one if they look soft.', 'shapeblock')}
+					onChange={(v) => setAttributes({ imageSize: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+				{respBox(__('Padding', 'shapeblock'), 'slidePadding')}
+			</PanelBody>
+		</>
 	);
 
 	// --- Tab 3: Style ---------------------------------------------------------
 	const styleTab = (
 		<>
-			<PanelBody title={__('Slide', 'shapeblock')} initialOpen={true}>
-				<BoxControl label={__('Border Radius', 'shapeblock')} values={attributes.slideRadius} onChange={(v) => setAttributes({ slideRadius: v })} />
+			<PanelBody title={__('Image Box', 'shapeblock')} initialOpen={true}>
+				{color(__('Background', 'shapeblock'), 'slideBg')}
+				<BorderControl label={__('Border', 'shapeblock')} value={attributes.slideBorder} onChange={(v) => setAttributes({ slideBorder: v })} />
+				{box(__('Border Radius', 'shapeblock'), 'slideRadius')}
 				<BackgroundControl
 					label={__('Image Overlay', 'shapeblock')}
 					colorValue={attributes.overlayColor}
@@ -240,7 +337,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</TabPanel>
 			</InspectorControls>
 
-			<ServerSideRender block="shapeblock/slider" attributes={attributes} httpMethod="POST" />
+			<ServerSideRender block="shapeblock/image-carousel" attributes={attributes} httpMethod="POST" />
 		</div>
 	);
 }

@@ -3,9 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-function shapeblock_create_block_slider_block_init() {
+function shapeblock_create_block_image_carousel_block_init() {
 	wp_register_style(
-		'shapeblock-slider-style',
+		'shapeblock-image-carousel-style',
 		plugins_url( 'build/style-index.css', __FILE__ ),
 		array( 'shapeblock-public-style', 'swiper' ),
 		shapeblock_asset_version( __DIR__ . '/build/style-index.css' )
@@ -13,37 +13,37 @@ function shapeblock_create_block_slider_block_init() {
 
 	// Editor-only styles (compiled from src/editor.scss).
 	wp_register_style(
-		'shapeblock-slider-editor-style',
+		'shapeblock-image-carousel-editor-style',
 		plugins_url( 'build/index.css', __FILE__ ),
-		array( 'shapeblock-slider-style' ),
+		array( 'shapeblock-image-carousel-style' ),
 		shapeblock_asset_version( __DIR__ . '/build/index.css' )
 	);
 
 	register_block_type( __DIR__ . '/build', array(
-		'style'        => 'shapeblock-slider-style',
-		'editor_style' => 'shapeblock-slider-editor-style',
+		'style'        => 'shapeblock-image-carousel-style',
+		'editor_style' => 'shapeblock-image-carousel-editor-style',
 	) );
 }
-add_action( 'init', 'shapeblock_create_block_slider_block_init' );
+add_action( 'init', 'shapeblock_create_block_image_carousel_block_init' );
 
 /**
- * Run the slider in the editor canvas too.
+ * Run the carousel in the editor canvas too.
  *
  * WordPress only enqueues a block's `viewScript` on the front end, so without
- * this the editor preview shows every slide side by side instead of a slider.
+ * this the editor preview shows every image stacked instead of a carousel.
  * Swiper itself is already present in the canvas via `enqueue_block_assets`.
  */
-function shapeblock_slider_editor_preview_script() {
+function shapeblock_image_carousel_editor_preview_script() {
 	if ( ! is_admin() ) {
 		return;
 	}
 
 	wp_enqueue_script(
-		'shapeblock-slider-editor-preview',
+		'shapeblock-image-carousel-editor-preview',
 		plugins_url( 'build/view.js', __FILE__ ),
 		array( 'swiper' ),
 		shapeblock_asset_version( __DIR__ . '/build/view.js' ),
 		true
 	);
 }
-add_action( 'enqueue_block_assets', 'shapeblock_slider_editor_preview_script' );
+add_action( 'enqueue_block_assets', 'shapeblock_image_carousel_editor_preview_script' );

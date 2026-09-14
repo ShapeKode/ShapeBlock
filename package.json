@@ -58,7 +58,9 @@
     "build:search": "wp-scripts build --blocks-manifest --webpack-src-dir=includes/public/blocks/search/src --output-path=includes/public/blocks/search/build",
     "build:breadcrumb": "wp-scripts build --blocks-manifest --webpack-src-dir=includes/public/blocks/breadcrumb/src --output-path=includes/public/blocks/breadcrumb/build",
     "build:slider": "wp-scripts build --blocks-manifest --webpack-src-dir=includes/public/blocks/slider/src --output-path=includes/public/blocks/slider/build",
-    "start:slider": "wp-scripts start --blocks-manifest --webpack-src-dir=includes/public/blocks/slider/src --output-path=includes/public/blocks/slider/build"
+    "start:slider": "wp-scripts start --blocks-manifest --webpack-src-dir=includes/public/blocks/slider/src --output-path=includes/public/blocks/slider/build",
+    "build:imageCarousel": "wp-scripts build --blocks-manifest --webpack-src-dir=includes/public/blocks/image-carousel/src --output-path=includes/public/blocks/image-carousel/build",
+    "start:imageCarousel": "wp-scripts start --blocks-manifest --webpack-src-dir=includes/public/blocks/image-carousel/src --output-path=includes/public/blocks/image-carousel/build"
   },
   "devDependencies": {
     "@wordpress/scripts": "^32.4.0",

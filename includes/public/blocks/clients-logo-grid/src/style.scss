@@ -72,16 +72,19 @@
 		transform: translateY(0);
 	}
 
-	/* Empty placeholder (editor / no image set) */
-	.shapeblock-logo-placeholder {
-		display: grid;
-		place-content: center;
-		min-height: 80px;
-		width: 100%;
-		border: 1px dashed rgba(0, 0, 0, 0.2);
-		border-radius: 8px;
-		color: rgba(0, 0, 0, 0.4);
-		font-size: 14px;
+	/* A logo whose image has not been chosen yet. The glyph is shown whole and
+	   never grayscaled, so an empty slot always reads as "pick an image here". */
+	.shapeblock-logo-img.is-placeholder {
+		.shapeblock-logo-placeholder-img {
+			width: 100%;
+			max-width: 180px;
+			object-fit: contain;
+			opacity: 0.85;
+		}
+
+		img {
+			filter: none;
+		}
 	}
 }
 

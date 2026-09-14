@@ -1,11 +1,11 @@
 @use 'style';
 
 /**
- * Editor-only styles for the Slider block.
+ * Editor-only styles for the Image Carousel block.
  */
 
 /**
- * Let a click on a slide select the block.
+ * Let a click on an image select the block.
  *
  * Swiper binds pointer handlers to the slides for dragging, which swallows the
  * click before the editor sees it — so the block could never be selected by
@@ -14,27 +14,28 @@
  * `[data-block]` only exists in the editor canvas, so the front end is
  * untouched.
  */
-[data-block] .shapeblock-slider-block-wrap {
+[data-block] .shapeblock-image-carousel-block-wrap {
 	.swiper-wrapper,
-	.shapeblock-slider-slide,
-	.shapeblock-slider-image,
-	.shapeblock-slider-overlay {
+	.shapeblock-image-carousel-slide,
+	.shapeblock-image-carousel-image,
+	.shapeblock-image-carousel-overlay {
 		pointer-events: none;
 	}
 
-	.shapeblock-slider-arrow,
+	.shapeblock-image-carousel-arrow,
 	.swiper-pagination,
 	.swiper-pagination-bullet {
 		pointer-events: auto;
 	}
 }
-.shapeblock-slider-repeater-item {
+
+.shapeblock-image-carousel-repeater-item {
 	border: 1px solid #e0e0e0;
 	border-radius: 4px;
 	padding: 12px;
 	margin-bottom: 12px;
 
-	.shapeblock-slider-repeater-head {
+	.shapeblock-image-carousel-repeater-head {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
