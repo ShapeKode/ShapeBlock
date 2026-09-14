@@ -1,129 +1,125 @@
 === ShapeBlock ===
 Contributors: shapekode22
-Tags: post grid, post list, post slider, gutenberg blocks, category list
-Requires at least: 6.0
+Tags: blocks, gutenberg, block editor, carousel, slider
+Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.0.0
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Display posts beautifully with customizable grids, lists, sliders & category displays. Perfect for blogs, magazines & content-rich sites.
+A library of 30 Gutenberg blocks - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls.
 
 == Description ==
 
-ShapeBlock is a modern Gutenberg post grid and layout plugin that helps you display blog posts in beautiful grids, lists, sliders, and category showcases. Perfect for blogs, news, magazine, and content-rich WordPress websites.
+ShapeBlock is a block library for the WordPress block editor. It adds 30 blocks for the things a page usually needs - sliders and carousels, post and team grids, tabs and accordions, pricing tables, counters and countdowns, navigation, search and more.
 
+Every block is built the same way: a Settings tab for content, a Layout tab for structure, and a Style tab for colours, typography, borders, spacing and shadows. Sizes, spacing and layout values can be set separately for desktop, tablet and mobile.
 
-** 🌟 Key Features of ShapeBlock **
+= Blocks included =
 
-### Lightweight and fast
-A lightweight and fast Gutenberg addon that adds powerful custom blocks.
+1. Accordion - Collapsible question and answer sections.
+2. Breadcrumb - Show visitors where they are in the site.
+3. Button - Buttons with icons, sizes and hover styles.
+4. Client Logo - A grid of client or partner logos with links, grayscale and hover-swap.
+5. Column - A column inside a Row, with its own width per device.
+6. Countdown - A countdown timer to a date and time.
+7. Counter - Animated number counters.
+8. Features List - Icon-based feature lists.
+9. Heading - Headings with typography, gradient and highlight options.
+10. Icon - A single icon with colour, size and link.
+11. Icon Box - An icon, heading and text together, with several layouts.
+12. Icon List - A list of items, each with its own icon.
+13. Image Carousel - Several images at once, with centred slides and continuous scrolling.
+14. Image Comparison - A before / after image slider with a draggable handle.
+15. Menu - Display a WordPress navigation menu with layout, alignment and colours.
+16. Offcanvas - Slide-in panels for menus, sidebars or extra content.
+17. Post Grid - Show posts in grid layouts, with pagination and optional video.
+18. Pricing Table - Pricing plans with features, badges and a call to action.
+19. Progress Bar - Animated progress and skill bars.
+20. Row - A responsive row that holds Column blocks.
+21. Scroll Top - A back-to-top button.
+22. Search - A site search field you can place anywhere.
+23. Simple Gallery - An image gallery with spacing and column controls.
+24. Slider - A full-width image slider with arrows, dots and autoplay.
+25. Social Icon - A row of linked social icons with global or per-icon colours.
+26. Social Share - Share buttons for the current page.
+27. Table - Build a table with styled headers, rows and cells.
+28. Tabs - Tabbed content with icons and several tab styles.
+29. Team Member - Present team members with photo, role and social links.
+30. Testimonial - Client feedback with photo, rating and company logo.
 
-### Unique Gutenberg Blocks
-A fast and lightweight addon offering unique Gutenberg blocks for creative designs.
+= Turn off what you do not use =
 
-### Clean, extendable code
-Unique Gutenberg blocks crafted with clean, extendable, developer-friendly code.
+Every block can be switched off from the ShapeBlock settings screen, so only the blocks you actually use are registered and only their assets load.
 
-### Elements Control Option
-Enable or disable individual elements to optimize performance. Turn off any blocks you don’t need to keep your pages fast, smooth, and lightweight.
+= Templates and theme areas =
 
-### Fully compatible with the Block Editor
-Works seamlessly with the WordPress block editor and block themes for a smooth building experience.
+ShapeBlock includes a template post type and a builder for site areas such as the header and footer. Saved templates can also be placed with the `[shapeblock_template]` shortcode, and builder areas with `[shapeblock_builder]`.
 
+= Built for the block editor =
 
-### Ideal for developers and designers who want to save time and stay in control.
-
-
-Get access beautifully designed, high-impact blocks that elevate your Gutenberg design capabilities.
-
-1. Heading - Style Your Headings Beautifully with ShapeBlock
-2. Button - Button Widget helps you create visually appealing buttons
-3. Clients Logo Grid - The Logo Grid plugin makes it easy to showcase client, sponsor, or partner logos
-4. Tab - Design stylish, eye-catching Tab effortlessly with ShapeBlock
-5. Testimonials Grid - Create engaging testimonial grid blocks in WordPress to showcase client feedback beautifully.
-6. Info Box - Create stylish information boxes in WordPress using icons, links, and text.
-7. Team Grid - Showcase your team with style using the team widget.
-8. Contact Box - Build your contact box with ShapeBlock
-9. Contact Form 7 - Build your Contact Form 7 Design with ShapeBlock
-10. FAQ - Help visitors find answers instantly with a stylish FAQ section in WordPress.
-11. Post Grid - Create engaging post grid layouts in WordPress to showcase your latest articles, portfolio items, or news.
-12. Video - Showcase your video with ShapeBlock
-13. Pricing Table - Create clean and modern pricing table with titles, descriptions, and prices.
-14. Service List - Create clean and modern service list with titles, descriptions and button.
-15. Social Share - Design beautiful info boxes from predefined styles
-16. Breadcrumb - Enhance navigation on your WordPress site with the breadcrumb widget.
-17. Simple Gallery - Visualize your workflow beautifully! Create sleek Simple Gallery in WordPress to highlight every step of your service or project journey with icons, titles, and smooth animations all with ShapeBlock.
-18. Social Icon - Boost visibility with quick, one-click social sharing.
-19. Offcanvas - Add modern off-canvas panels to your WordPress site for menus, sidebars, or extra content.
-20. Site Logo - You can show your site logo easily
-21. Simple Search - Add your site search anywhere
-22. Process Grid - Create clean and modern process grid with titles, descriptions and button.
-23. Process List - Create clean and modern process grid with titles, descriptions and button.
-24. Scroll Top - You can display a Scroll to Top button
-25. Table - Create clean and modern table with titles, descriptions, and prices.
-26. Counter - Create amazing Counter Up effects with ShapeBlock. Preview the Counter Up addon on this page.
-27. Countdown Timer - Create stunning Countdown timers with ShapeBlock. Preview the Countdown Timer addon on this page.
-28. Feature List - Create beautiful, icon-based feature lists for your website.
-29. Single Navigation Menu - With Easy One Page Navigation, navigating a one-page website becomes simple and seamless. It helps you build a visually engaging single-page design and ensures a better browsing experience for your visitors.
-30. Login / Register - Add stylish login and registration forms to your WordPress site with ShapeBlock.
-
-
-
-= Gutenberg Block Editor =
-
-ShapeBlock integrates seamlessly with the WordPress block editor, providing you with native blocks that feel right at home in Gutenberg. Each block comes with an intuitive interface and live preview, making it easy to create beautiful post displays without any coding knowledge.
-
-= Performance Optimized =
-
-Built with performance in mind, ShapeBlock uses efficient queries and minimal JavaScript to ensure your site stays fast. The plugin only loads assets when needed and follows WordPress best practices for optimal performance.
+The blocks are native block-editor blocks with live previews in the canvas, no page-builder layer and no shortcode required for normal use. Styles are printed per block instance and scoped to that block, so two copies of the same block on one page never affect each other.
 
 == External services ==
 
+**Google Fonts**
+
 This plugin connects to the Google Fonts API to fetch the list of available font families, so the font pickers in the block settings can show up-to-date choices.
 
-It requests `https://fonts.google.com/metadata/fonts` when a font list is first needed in the editor, and caches the result. Only that request is made — no site data, personal data or user data is sent, and the request happens in the admin only.
-
-This service is provided by Google: [terms of service](https://policies.google.com/terms), [privacy policy](https://policies.google.com/privacy).
+It requests `https://fonts.google.com/metadata/fonts` when a font list is first needed in the editor, and caches the result. Only that request is made - no site data, personal data or user data is sent, and the request happens in the admin only.
 
 Selected font families are then loaded on the front end from `https://fonts.googleapis.com` and `https://fonts.gstatic.com`, which is what renders the font you picked. Again, only the font request itself is sent.
 
+This service is provided by Google: [terms of service](https://policies.google.com/terms), [privacy policy](https://policies.google.com/privacy).
+
+**Video embeds (only if you add a video URL)**
+
+If you enter a video URL in the Post Grid block, WordPress' own oEmbed handling contacts that video provider to build the embed - for example YouTube or Vimeo - and the resulting player is loaded from the provider when the page is viewed. This happens only for a URL you enter yourself; no request is made otherwise, and no site or user data is sent beyond the URL itself.
+
+YouTube: [terms of service](https://www.youtube.com/t/terms), [privacy policy](https://policies.google.com/privacy).
+Vimeo: [terms of service](https://vimeo.com/terms), [privacy policy](https://vimeo.com/privacy).
+
+The Social Share block only builds ordinary links to the sharing pages of the networks you enable. Nothing is requested or sent until a visitor clicks one.
+
 == Installation ==
 
-1. Upload the `ShapeBlock` folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to any post or page and add a ShapeBlock block from the block inserter
-4. Customize your block settings and publish!
+1. Upload the `shapeblock` folder to the `/wp-content/plugins/` directory, or install the plugin through the Plugins screen in WordPress.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Edit any post or page and add a ShapeBlock block from the block inserter.
+4. Adjust the block in the Settings, Layout and Style tabs, then publish.
 
 == Frequently Asked Questions ==
 
 = Is ShapeBlock compatible with my theme? =
 
-Yes! ShapeBlock is designed to work with any properly coded WordPress theme. The blocks inherit your theme's typography and can be fully customized to match your design.
+Yes. ShapeBlock is designed to work with any properly coded WordPress theme, block themes included. The blocks inherit your theme's typography and can be restyled from the block settings.
 
-= Can I use ShapeBlock with page builders? =
+= Do I have to use all 30 blocks? =
 
-ShapeBlock works natively inside the WordPress Block Editor (Gutenberg).
+No. Open the ShapeBlock settings screen and switch off any block you do not need. A block that is off is not registered and its assets are not loaded.
 
-= How do I mark posts as featured? =
+= Can I set different values for mobile and tablet? =
 
-When editing a post, you'll find a "Featured Post" meta box in the sidebar. Simply check the box to mark a post as featured, then use the "Show Featured Posts Only" option in any ShapeBlock block.
+Yes. Sizes, spacing, column counts and similar settings have a device switcher, so desktop, tablet and mobile can each hold their own value.
 
 = Can I customize the block styles? =
 
-Absolutely! Each block comes with extensive styling options including colors, typography, spacing, borders, and more. You can customize everything directly from the block settings panel.
-
-= Is the plugin translation ready? =
-
-Yes, ShapeBlock is fully translation ready and follows WordPress internationalization standards.
+Yes. Each block has a Style tab with colours, typography, spacing, borders, radius, shadows and hover states.
 
 = Does it work with custom post types? =
 
-Currently, ShapeBlock is designed to work with standard WordPress posts. Custom post type support may be added in future versions.
+The Post Grid block is built around standard WordPress posts. Custom post type support may be added in a future version.
 
+= Is the plugin translation ready? =
+
+Yes. ShapeBlock follows WordPress internationalization standards and ships with a `.pot` file in the `languages` folder.
+
+= Does ShapeBlock work with page builders? =
+
+ShapeBlock works natively inside the WordPress block editor. It does not add widgets to third-party page builders.
 
 == Changelog ==
 
 = 1.0.0 =
-Initial release of ShapeBlock. Install and start creating beautiful post displays!
+* Initial release.

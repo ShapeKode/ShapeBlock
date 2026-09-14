@@ -2,13 +2,13 @@
 /**
  * Plugin Name: ShapeBlock
  * Plugin URI:  https://profiles.wordpress.org/shapekode22/
- * Description: Provides a set of custom Gutenberg blocks, shortcodes, and enhancements.
+ * Description: A library of 30 Gutenberg blocks - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls.
  * Version:     1.0.0
  * Author:      ShapeKode
  * Author URI:  https://profiles.wordpress.org/shapekode22/
  * Text Domain: shapeblock
  * Domain Path: /languages
- * Requires at least: 6.0
+ * Requires at least: 6.3
  * Requires PHP: 7.4
  * License:     GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
