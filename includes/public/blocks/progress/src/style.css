@@ -1,0 +1,79 @@
+@charset "UTF-8";
+/**
+ * Progress Bar block — front-end + shared styles.
+ *
+ * Ported from the Elementor "Progress Bar" widget stylesheet
+ * (easy-elements/widgets/progress/css/progress.scss). The reference CSS targeted
+ * `.rt-progress-bar` while the markup used the block's own class (a mismatch that
+ * left the base rules inert); here the classes use the "shapeblock-" prefix and match
+ * the markup, scoped under `.shapeblock-progress-bar-block-wrap`.
+ */
+.shapeblock-progress-bar-block-wrap {
+  --shapeblock-pb-primary: #ffd012;
+  --shapeblock-pb-secondary: #0b3665;
+  /* Style 1 */
+}
+.shapeblock-progress-bar-block-wrap .shapeblock-progress-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.shapeblock-progress-bar-block-wrap .shapeblock-progress-top .shapeblock-pb-title {
+  color: var(--shapeblock-pb-secondary);
+  font-weight: 500;
+  margin: 0 0 15px;
+}
+.shapeblock-progress-bar-block-wrap .shapeblock-progress-top .shapeblock-pb-percent {
+  color: var(--shapeblock-pb-secondary);
+  font-weight: 500;
+}
+.shapeblock-progress-bar-block-wrap .shapeblock-progress {
+  height: 8px;
+  background: #f2f2f2;
+  overflow: hidden;
+  position: relative;
+}
+.shapeblock-progress-bar-block-wrap .shapeblock-progress .shapeblock-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--shapeblock-pb-primary);
+  transition: width 1.5s ease;
+}
+.shapeblock-progress-bar-block-wrap {
+  /* Style 2 */
+}
+.shapeblock-progress-bar-block-wrap .shapeblock-progress-style2 {
+  position: relative;
+}
+.shapeblock-progress-bar-block-wrap .shapeblock-progress-style2 .shapeblock-pb-title {
+  position: absolute;
+  margin: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 30px;
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--shapeblock-pb-secondary);
+  z-index: 1;
+}
+.shapeblock-progress-bar-block-wrap .shapeblock-progress-style2 .shapeblock-progress {
+  height: 40px;
+  background: linear-gradient(90deg, rgba(32, 40, 45, 0.1607843137) 0%, rgba(242, 242, 242, 0.0196078431) 100%);
+  opacity: 1;
+  border-radius: 40px;
+  overflow: hidden;
+}
+.shapeblock-progress-bar-block-wrap .shapeblock-progress-style2 .shapeblock-progress .shapeblock-progress-fill {
+  background: transparent;
+}
+.shapeblock-progress-bar-block-wrap .shapeblock-progress-style2 .shapeblock-progress .shapeblock-pb-percent {
+  position: absolute;
+  right: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: var(--shapeblock-pb-secondary);
+  font-weight: 700;
+}/*# sourceMappingURL=style.css.map */

@@ -1,0 +1,219 @@
+/**
+ * Pricing Table — front-end + editor styles.
+ *
+ * Structure ported from the Elementor widget
+ * (easy-elements/widgets/pricing-table/css/pricing.scss). Element classes use
+ * this plugin's own "shapeblock-" prefix. The box styling that Elementor applied to
+ * the widget container is applied here to `.shapeblock-pricing-table`.
+ */
+
+.shapeblock-pricing-table {
+	position: relative;
+	border: 1px solid #eeeeeeb8;
+	padding: 30px;
+	border-radius: 16px;
+	overflow: hidden;
+	box-shadow: 0 5px 16px #00000005;
+	background: #fff;
+}
+
+.shapeblock-price-title {
+	display: inline-block;
+	margin-bottom: 15px;
+}
+
+.shapeblock-price {
+	font-size: 36px;
+	margin-bottom: 20px;
+}
+
+.shapeblock-price .shapeblock-period {
+	font-size: 14px;
+	margin-left: 5px;
+}
+
+.shapeblock-features {
+	list-style: none;
+	padding: 0;
+	margin: 0 0 20px 0;
+}
+
+.shapeblock-features li {
+	padding: 10px 0;
+	display: flex;
+	align-items: center;
+}
+
+.shapeblock-features li + li {
+	border-top: 1px solid #eeeeeed9;
+}
+
+.shapeblock-btn-part .shapeblock-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+	padding: 10px 26px;
+	background-color: var(--shapeblock-preset-color-primary, #ffd012);
+	color: #fff;
+	border-radius: 6px;
+	transition: all 0.3s ease;
+
+	&.shapeblock--full-btn {
+		display: block;
+	}
+}
+
+.shapeblock-button svg {
+	width: 16px;
+	height: 16px;
+}
+
+/* Ribbon styles */
+.shapeblock-ribbon {
+	position: absolute;
+	top: 0;
+	padding: 3px 15px;
+	background: var(--e-global-color-secondary, #0b3665);
+	color: #fff;
+	width: 100%;
+	left: 0;
+	border-radius: 16px 16px 0 0;
+	text-align: center;
+}
+
+.shapeblock-old-price {
+	text-decoration: line-through;
+	margin-right: 8px;
+	font-size: 22px;
+	font-weight: 400;
+}
+
+.shapeblock-sale-price {
+	color: var(--shapeblock-preset-color-primary, #ffd012);
+	font-size: 36px;
+}
+
+.shapeblock-features li svg.feature-icon,
+.shapeblock-features li .feature-icon i {
+	margin-right: 10px;
+	color: var(--shapeblock-preset-color-primary, #ffd012);
+	font-size: 18px;
+	width: 22px;
+	height: 22px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.shapeblock-features svg.feature-icon.icon-bg,
+.shapeblock-features svg.feature-icon.icon-border {
+	width: 36px;
+	height: 36px;
+}
+
+.shapeblock-button-subtext {
+	margin-top: 8px;
+	font-size: 14px;
+}
+
+.shapeblock-features .feature-icon {
+	font-size: 16px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: 8px;
+	line-height: 1;
+}
+
+.feature-icon.icon-bg {
+	background-color: #f1f1f1;
+	color: var(--e-global-color-secondary, #0b3665);
+	padding: 5px;
+	border-radius: 50%;
+}
+
+li.icon-bg svg {
+	width: 16px;
+	height: 16px;
+	margin-right: 10px;
+}
+
+.feature-icon.icon-border {
+	border: 1px solid #ccc;
+	padding: 5px;
+	border-radius: 50%;
+}
+
+.featured.style2 {
+	.shapeblock-ribbon {
+		position: absolute;
+		background: var(--e-global-color-secondary, #0b3665);
+		color: #fff;
+		top: 22px;
+		right: -60px;
+		z-index: 10;
+		transform: rotate(45deg);
+		width: 200px;
+		padding: 4px 0;
+		white-space: nowrap;
+		left: auto;
+
+		&.shapeblock-left {
+			left: -60px;
+			transform: rotate(-45deg);
+			right: auto;
+		}
+	}
+}
+
+/* --- Responsive defaults ------------------------------------------------
+ * Breakpoints match Helper::generate_responsive_css() and the visibility
+ * classes: tablet <= 1024px, mobile <= 767px. These are defaults only — the
+ * per-device values a user sets are printed as per-block CSS with a higher
+ * specificity, so they always win over what follows.
+ */
+@media (max-width: 767px) {
+	.shapeblock-pricing-table {
+		padding: 20px;
+	}
+	.shapeblock-price,
+	.shapeblock-sale-price {
+		font-size: 30px;
+	}
+	.shapeblock-old-price {
+		font-size: 18px;
+	}
+	.shapeblock-btn-part .shapeblock-button {
+		padding: 10px 18px;
+	}
+	/* The diagonal ribbon is sized for a wide card; keep it inside a narrow one. */
+	.featured.style2 .shapeblock-ribbon {
+		width: 160px;
+		right: -48px;
+
+		&.shapeblock-left {
+			left: -48px;
+		}
+	}
+}
+
+/* --- Narrow container safety -------------------------------------------
+ * A block can sit in a column far narrower than the screen, where media queries
+ * are no help. These rules keep it inside its box at any width.
+ */
+.shapeblock-pricing-table {
+	.shapeblock-btn-part .shapeblock-button {
+		max-width: 100%;
+		white-space: normal;
+	}
+
+	.shapeblock-features li {
+		min-width: 0;
+		overflow-wrap: break-word;
+	}
+
+	.shapeblock-price,
+	.shapeblock-price-title {
+		overflow-wrap: break-word;
+	}
+}

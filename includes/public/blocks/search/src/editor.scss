@@ -1,0 +1,11 @@
+@use 'style';
+
+/**
+ * Editor-only styles for the Search block.
+ *
+ * The popup lightbox is fixed + hidden by default (from style.scss); the editor
+ * toggle adds `.shapeblock-lightbox` to preview it. Nothing extra needed here.
+ */
+.shapeblock-search-block-wrap {
+	min-height: 1px;
+}

@@ -1,0 +1,35 @@
+@charset "UTF-8";
+/**
+ * Breadcrumb block — front-end + shared styles.
+ *
+ * Ported from the Elementor "Breadcrumb" widget stylesheet
+ * (easy-elements/widgets/breadcrumb/css/breadcrumb.scss). Classes use the
+ * "shapeblock-" prefix and everything is scoped under `.shapeblock-breadcrumb-block-wrap`.
+ */
+.shapeblock-breadcrumb-block-wrap {
+  --shapeblock-bc-primary: #ffd012;
+  --shapeblock-bc-secondary: #0b3665;
+}
+.shapeblock-breadcrumb-block-wrap .shapeblock-breadcrumb {
+  display: inline-block;
+}
+.shapeblock-breadcrumb-block-wrap .shapeblock-breadcrumb-path a {
+  text-decoration: none;
+  color: inherit;
+}
+.shapeblock-breadcrumb-block-wrap .shapeblock-breadcrumb-path svg {
+  height: 1em;
+  width: 1em;
+}
+.shapeblock-breadcrumb-block-wrap .shapeblock-breadcrumb-separator {
+  display: inline-block;
+  margin: 0 6px;
+  font-weight: 400;
+  color: var(--shapeblock-bc-secondary, #0b3665);
+  font-size: 1em;
+  vertical-align: middle;
+}
+.shapeblock-breadcrumb-block-wrap .shapeblock-breadcrumb-home-icon {
+  position: relative;
+  top: 1px;
+}/*# sourceMappingURL=style.css.map */

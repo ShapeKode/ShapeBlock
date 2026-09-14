@@ -1,0 +1,100 @@
+/**
+ * Client Logo Grid block — front-end + shared styles.
+ *
+ * Ported from the Elementor "Client Logo Grid" widget stylesheet
+ * (easy-elements/widgets/clients-logo-grid/css/clients-logo.scss). Classes use
+ * the "shapeblock-" prefix and everything is scoped under `.shapeblock-clients-logo-wrap`.
+ */
+.shapeblock-clients-logo-wrap {
+	.shapeblock-grid-wrap {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+
+	.shapeblock-grid-item {
+		box-sizing: border-box;
+		padding: 15px;
+		width: calc(100% / 4);
+	}
+
+	.shapeblock-logo-img {
+		position: relative;
+		box-sizing: border-box;
+		display: inline-block;
+		max-width: 100%;
+		width: 100%;
+		overflow: hidden;
+		transition: all 0.5s ease;
+	}
+
+	.shapeblock-grid-img {
+		display: block;
+		margin: 0 auto;
+		height: auto;
+		transition: all 0.5s ease;
+	}
+
+	/* Grayscale options */
+	.shapeblock-logo-img.shapeblock-normal-grayscale img {
+		filter: grayscale(1);
+	}
+	.shapeblock-logo-img.shapeblock-hover-grayscale:hover img {
+		filter: grayscale(1);
+	}
+	.shapeblock-logo-img.shapeblock-hover-to-default img {
+		filter: grayscale(100%);
+	}
+	.shapeblock-logo-img.shapeblock-hover-to-default:hover img {
+		filter: grayscale(0%);
+	}
+
+	/* Hover swap effect */
+	.shapeblock-logo-img-normal,
+	.shapeblock-logo-img-hover {
+		display: block;
+		transition: transform 0.5s ease !important;
+	}
+	.shapeblock-logo-img-normal {
+		transform: translateY(0);
+	}
+	.shapeblock-logo-img-hover {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		transform: translateY(100%);
+	}
+	.shapeblock-logo-img:hover .shapeblock-logo-img-normal {
+		transform: translateY(-100%);
+	}
+	.shapeblock-logo-img:hover .shapeblock-logo-img-hover {
+		transform: translateY(0);
+	}
+
+	/* Empty placeholder (editor / no image set) */
+	.shapeblock-logo-placeholder {
+		display: grid;
+		place-content: center;
+		min-height: 80px;
+		width: 100%;
+		border: 1px dashed rgba(0, 0, 0, 0.2);
+		border-radius: 8px;
+		color: rgba(0, 0, 0, 0.4);
+		font-size: 14px;
+	}
+}
+
+/* --- Responsive defaults ------------------------------------------------
+ * Breakpoints match Helper::generate_responsive_css() and the visibility
+ * classes: tablet <= 1024px, mobile <= 767px. These are defaults only — the
+ * per-device values a user sets are printed as per-block CSS with a higher
+ * specificity, so they always win over what follows.
+ */
+@media (max-width: 767px) {
+	.shapeblock-clients-logo-wrap .shapeblock-grid-img img,
+	.shapeblock-clients-logo-wrap .shapeblock-logo-img img {
+		max-width: 100%;
+		height: auto;
+	}
+}

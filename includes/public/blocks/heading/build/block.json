@@ -1,0 +1,165 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "shapeblock/heading",
+  "version": "0.1.0",
+  "title": "Heading",
+  "category": "shapeblock",
+  "description": "A heading with sub-heading, highlight, separator, gradient text and watermark.",
+  "keywords": [
+    "heading",
+    "title",
+    "subtitle",
+    "text"
+  ],
+  "example": {},
+  "supports": {
+    "html": false
+  },
+  "textdomain": "shapeblock",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "type": "string",
+      "default": "Heading"
+    },
+    "titleTag": {
+      "type": "string",
+      "default": "h2"
+    },
+    "linkUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "linkTarget": {
+      "type": "boolean",
+      "default": false
+    },
+    "linkNofollow": {
+      "type": "boolean",
+      "default": false
+    },
+    "align": {
+      "type": "string",
+      "default": ""
+    },
+    "titleColor": {
+      "type": "string",
+      "default": ""
+    },
+    "titleTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "titleTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "titleTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "titleMargin": {
+      "type": "object"
+    },
+    "titleMarginTablet": {
+      "type": "object"
+    },
+    "titleMarginMobile": {
+      "type": "object"
+    },
+    "titlePadding": {
+      "type": "object"
+    },
+    "titlePaddingTablet": {
+      "type": "object"
+    },
+    "titlePaddingMobile": {
+      "type": "object"
+    },
+    "highlightColor": {
+      "type": "string",
+      "default": ""
+    },
+    "highlightBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "highlightBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "highlightTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "highlightTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "highlightTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "highlightPadding": {
+      "type": "object"
+    },
+    "highlightPaddingTablet": {
+      "type": "object"
+    },
+    "highlightPaddingMobile": {
+      "type": "object"
+    },
+    "highlightMargin": {
+      "type": "object"
+    },
+    "highlightMarginTablet": {
+      "type": "object"
+    },
+    "highlightMarginMobile": {
+      "type": "object"
+    },
+    "highlightBorderRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

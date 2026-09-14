@@ -1,0 +1,103 @@
+@use 'style';
+
+/**
+ * Editor-only styles for the Icon List block â€” clean, minimal collapsible rows
+ * (WordPress-native list feel: full-width row, title + right caret, hairline
+ * separators, no card boxes).
+ */
+.shapeblock-icon-list-repeater-item {
+	border-bottom: 1px solid #e0e0e0;
+
+	&:first-child {
+		border-top: 1px solid #e0e0e0;
+	}
+
+	.shapeblock-icon-list-repeater-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		gap: 8px;
+		padding: 12px 2px;
+		background: none;
+		border: 0;
+		cursor: pointer;
+		text-align: left;
+
+		strong {
+			flex: 1;
+			min-width: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			font-size: 13px;
+			font-weight: 600;
+			color: #1e1e1e;
+		}
+
+		.shapeblock-icon-list-caret {
+			display: inline-flex;
+			flex: 0 0 auto;
+			transition: transform 0.2s ease;
+
+			svg {
+				width: 18px;
+				height: 18px;
+				fill: #949494;
+			}
+		}
+
+		&:hover strong {
+			color: #3858e9;
+		}
+	}
+
+	.shapeblock-icon-list-repeater-body {
+		padding: 4px 2px 16px;
+
+		> * {
+			margin-bottom: 14px;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	// Move / delete row, right-aligned and muted.
+	.shapeblock-icon-list-repeater-actions {
+		display: flex;
+		justify-content: flex-end;
+		gap: 2px;
+		padding-top: 4px;
+		border-top: 1px solid #f0f0f0;
+
+		.components-button {
+			color: #757575;
+
+			&:not(:disabled):hover {
+				color: #1e1e1e;
+			}
+
+			&.is-destructive:not(:disabled):hover {
+				color: #cc1818;
+			}
+		}
+	}
+}
+
+// "Add Item" gets a little breathing room under the list.
+.shapeblock-icon-list-repeater-item + .components-button {
+	margin-top: 12px;
+}
+
+// Only uppercase the native ToggleGroupControl label so it matches WordPress's
+// SelectControl labels â€” weight / size / colour stay WP-native (no mismatch).
+.shapeblock-caps-label {
+	margin-bottom: 16px;
+
+	.components-base-control__label,
+	label {
+		text-transform: uppercase;
+	}
+}

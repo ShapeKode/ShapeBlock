@@ -1,0 +1,66 @@
+@charset "UTF-8";
+/* Column editor-only styles */
+.wp-block-shapeblock-column {
+  min-height: 60px;
+  position: relative;
+  transition: outline 100ms ease;
+}
+.wp-block-shapeblock-column > .shapeblock-column__inner {
+  min-height: 40px;
+}
+.wp-block-shapeblock-column {
+  /* Width-label badge (e.g. "50%"). Hidden by default; shown on selection /
+   * hover / empty-state. Sits unobtrusively in the top-right. */
+}
+.wp-block-shapeblock-column > .shapeblock-column__width-label {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #7a7a7a;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 1px 6px;
+  border-radius: 3px;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+  z-index: 2;
+}
+.wp-block-shapeblock-column:hover > .shapeblock-column__width-label, .wp-block-shapeblock-column.is-selected > .shapeblock-column__width-label, .wp-block-shapeblock-column.has-child-selected > .shapeblock-column__width-label, .wp-block-shapeblock-column.is-empty > .shapeblock-column__width-label {
+  opacity: 1;
+}
+.wp-block-shapeblock-column {
+  /* Empty column — solid border + big "+" appender in the middle. */
+}
+.wp-block-shapeblock-column.is-empty {
+  border: 1px solid #d0d0d0;
+  border-radius: 3px;
+  background: transparent;
+}
+.wp-block-shapeblock-column.is-empty > .shapeblock-column__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  padding: 8px;
+}
+.wp-block-shapeblock-column.is-empty > .shapeblock-column__inner .block-editor-button-block-appender {
+  margin: 0;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: #8e8e8e;
+  box-shadow: none;
+  transition: color 120ms ease, transform 120ms ease;
+}
+.wp-block-shapeblock-column.is-empty > .shapeblock-column__inner .block-editor-button-block-appender:hover {
+  color: #a216ff;
+  transform: scale(1.08);
+}
+.wp-block-shapeblock-column.is-empty > .shapeblock-column__inner .block-editor-button-block-appender svg {
+  width: 22px;
+  height: 22px;
+}/*# sourceMappingURL=editor.css.map */

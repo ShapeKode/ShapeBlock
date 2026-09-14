@@ -1,0 +1,43 @@
+/**
+ * Social Icon block — front-end + shared styles.
+ *
+ * Ported from the Elementor "Social Icon" widget stylesheet
+ * (easy-elements/widgets/social-icon/css/social.scss). Classes use the
+ * "shapeblock-" prefix and everything is scoped under `.shapeblock-social-icon-block-wrap`.
+ */
+.shapeblock-social-icon-block-wrap {
+	.shapeblock-si-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.shapeblock-si-button {
+		display: grid;
+		place-items: center;
+		text-align: center;
+		width: 45px;
+		height: 45px;
+		border-radius: 50%;
+		color: #fff;
+		text-decoration: none;
+		transition: all 0.3s ease;
+
+		&:hover {
+			color: #fff;
+			text-decoration: none;
+		}
+
+		i {
+			font-size: 18px;
+			line-height: 1;
+		}
+
+		svg {
+			width: 18px;
+			height: 18px;
+			fill: currentColor;
+		}
+	}
+}

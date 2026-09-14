@@ -1,0 +1,137 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "shapeblock/gallery",
+	"version": "0.1.0",
+	"title": "Simple Gallery",
+	"category": "shapeblock",
+	"description": "A responsive image gallery with captions, hover effects and a lightbox.",
+	"keywords": [ "gallery", "image", "photo", "portfolio", "lightbox" ],
+	"example": {},
+	"supports": {
+		"html": false,
+		"align": [ "left", "center", "right", "wide", "full" ]
+	},
+	"textdomain": "shapeblock",
+	"editorScript": "file:./index.js",
+	"viewScript": "file:./view.js",
+	"render": "file:./render.php",
+	"attributes": {
+		"blockId": {
+			"type": "string",
+			"default": ""
+		},
+		"galleryImages": {
+			"type": "array",
+			"default": []
+		},
+		"columns": {
+			"type": "string",
+			"default": "4"
+		},
+		"columnsTablet": {
+			"type": "string",
+			"default": "2"
+		},
+		"columnsMobile": {
+			"type": "string",
+			"default": "1"
+		},
+		"imageGap": {
+			"type": "string",
+			"default": "10"
+		},
+		"imageGapTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"imageGapMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"thumbnailSize": {
+			"type": "string",
+			"default": "large"
+		},
+		"showCaption": {
+			"type": "boolean",
+			"default": true
+		},
+		"captionSource": {
+			"type": "string",
+			"default": "media"
+		},
+		"showDescription": {
+			"type": "boolean",
+			"default": false
+		},
+		"enablePopup": {
+			"type": "boolean",
+			"default": true
+		},
+		"orderBy": {
+			"type": "string",
+			"default": "menu_order"
+		},
+		"hoverStyle": {
+			"type": "string",
+			"default": "default"
+		},
+		"hoverText": {
+			"type": "string",
+			"default": "View"
+		},
+		"hoverIcon": {
+			"type": "string",
+			"default": ""
+		},
+		"imageHeight": {
+			"type": "string",
+			"default": ""
+		},
+		"imageBorderRadius": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"captionColor": {
+			"type": "string",
+			"default": ""
+		},
+		"captionBgColor": {
+			"type": "string",
+			"default": ""
+		},
+		"captionAlign": {
+			"type": "string",
+			"default": ""
+		},
+		"descriptionColor": {
+			"type": "string",
+			"default": ""
+		},
+		"hoverOverlayColor": {
+			"type": "string",
+			"default": "rgba(0,0,0,0.6)"
+		},
+		"hoverIconSize": {
+			"type": "string",
+			"default": "16"
+		},
+		"hoverIconColor": {
+			"type": "string",
+			"default": "#ffffff"
+		},
+		"hoverTextColor": {
+			"type": "string",
+			"default": "#ffffff"
+		},
+	"hideDesktop": { "type": "boolean", "default": false },
+	"hideTablet": { "type": "boolean", "default": false },
+	"hideMobile": { "type": "boolean", "default": false }
+}
+}

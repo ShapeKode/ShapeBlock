@@ -1,0 +1,131 @@
+/**
+ * Image Comparison block — front-end + shared styles.
+ *
+ * Ported from the Elementor "Image Comparison" widget stylesheet
+ * (easy-elements/widgets/image-comparison/css/image-before-after.scss). Classes
+ * use the "shapeblock-" prefix and everything is scoped under
+ * `.shapeblock-image-comparison-block-wrap`.
+ */
+.shapeblock-image-comparison-block-wrap {
+	.shapeblock-comparison-container {
+		box-sizing: content-box;
+		z-index: 1;
+		overflow: hidden;
+		position: relative;
+		user-select: none;
+		min-height: 540px;
+		width: 100%;
+
+		* {
+			box-sizing: content-box;
+		}
+
+		img {
+			width: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			display: block;
+		}
+	}
+
+	.shapeblock-comparison-before {
+		z-index: 20;
+	}
+	.shapeblock-comparison-after {
+		z-index: 10;
+	}
+
+	/* Handle */
+	.shapeblock-comparison-handle {
+		height: 38px;
+		width: 38px;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		margin-left: -22px;
+		margin-top: -22px;
+		border: 3px solid #fff;
+		border-radius: 1000px;
+		box-shadow: 0px 0px 12px rgba(51, 51, 51, 0.5);
+		z-index: 40;
+		cursor: pointer;
+		touch-action: none;
+	}
+
+	.shapeblock-comparison-handle:before,
+	.shapeblock-comparison-handle:after {
+		content: ' ';
+		display: block;
+		background: #fff;
+		position: absolute;
+		z-index: 30;
+		box-shadow: 0px 0px 12px rgba(51, 51, 51, 0.5);
+	}
+
+	/* Horizontal lines */
+	.shapeblock-comparison-horizontal .shapeblock-comparison-handle:before,
+	.shapeblock-comparison-horizontal .shapeblock-comparison-handle:after {
+		width: 3px;
+		height: 9999px;
+		left: 50%;
+		margin-left: -1.5px;
+	}
+	.shapeblock-comparison-horizontal .shapeblock-comparison-handle:before {
+		bottom: 50%;
+		margin-bottom: 22px;
+		box-shadow: 0 3px 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
+	}
+	.shapeblock-comparison-horizontal .shapeblock-comparison-handle:after {
+		top: 50%;
+		margin-top: 22px;
+		box-shadow: 0 -3px 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
+	}
+
+	/* Vertical lines */
+	.shapeblock-comparison-vertical .shapeblock-comparison-handle:before,
+	.shapeblock-comparison-vertical .shapeblock-comparison-handle:after {
+		width: 9999px;
+		height: 3px;
+		top: 50%;
+		margin-top: -1.5px;
+	}
+	.shapeblock-comparison-vertical .shapeblock-comparison-handle:before {
+		left: 50%;
+		margin-left: 22px;
+		box-shadow: 3px 0 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
+	}
+	.shapeblock-comparison-vertical .shapeblock-comparison-handle:after {
+		right: 50%;
+		margin-right: 22px;
+		box-shadow: -3px 0 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
+	}
+
+	/* Arrows */
+	.shapeblock-comparison-left-arrow,
+	.shapeblock-comparison-right-arrow {
+		width: 0;
+		height: 0;
+		border: 6px inset transparent;
+		position: absolute;
+		top: 50%;
+		margin-top: -6px;
+	}
+	.shapeblock-comparison-left-arrow {
+		border-right: 6px solid #fff;
+		left: 50%;
+		margin-left: -17px;
+	}
+	.shapeblock-comparison-right-arrow {
+		border-left: 6px solid #fff;
+		right: 50%;
+		margin-right: -17px;
+	}
+
+	@media (max-width: 767px) {
+		.shapeblock-comparison-container img {
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+}

@@ -1,0 +1,70 @@
+/* Column editor-only styles */
+
+.wp-block-shapeblock-column {
+    min-height: 60px;
+    position: relative;
+    transition: outline 100ms ease;
+
+    > .shapeblock-column__inner {
+        min-height: 40px;
+    }
+
+    /* Width-label badge (e.g. "50%"). Hidden by default; shown on selection /
+     * hover / empty-state. Sits unobtrusively in the top-right. */
+    > .shapeblock-column__width-label {
+        position: absolute;
+        top: 8px;
+        right: 10px;
+        font-size: 11px;
+        font-weight: 500;
+        color: #7a7a7a;
+        background: rgba(255, 255, 255, 0.85);
+        padding: 1px 6px;
+        border-radius: 3px;
+        line-height: 1.4;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 120ms ease;
+        z-index: 2;
+    }
+
+    &:hover > .shapeblock-column__width-label,
+    &.is-selected > .shapeblock-column__width-label,
+    &.has-child-selected > .shapeblock-column__width-label,
+    &.is-empty > .shapeblock-column__width-label {
+        opacity: 1;
+    }
+
+    /* Empty column — solid border + big "+" appender in the middle. */
+    &.is-empty {
+        border: 1px solid #d0d0d0;
+        border-radius: 3px;
+        background: transparent;
+
+        > .shapeblock-column__inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+            padding: 8px;
+
+            .block-editor-button-block-appender {
+                margin: 0;
+                width: 32px;
+                height: 32px;
+                border: none;
+                background: transparent;
+                color: #8e8e8e;
+                box-shadow: none;
+                transition: color 120ms ease, transform 120ms ease;
+
+                &:hover {
+                    color: #a216ff;
+                    transform: scale(1.08);
+                }
+
+                svg { width: 22px; height: 22px; }
+            }
+        }
+    }
+}

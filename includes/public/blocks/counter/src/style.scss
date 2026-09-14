@@ -1,0 +1,177 @@
+/**
+ * Counter — front-end + editor styles.
+ *
+ * Structure ported from the Elementor widget
+ * (easy-elements/widgets/counter/css/counter.scss). Element classes use this
+ * plugin's own "shapeblock-" prefix and preset CSS variables.
+ */
+
+.shapeblock-cnt-wrap {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+.shapeblock-cnt-number-wrap {
+	font-size: 70px;
+	font-weight: 600;
+	line-height: 1;
+	color: var(--shapeblock-preset-color-secondary, #0b3665);
+	display: flex;
+	place-items: center;
+}
+
+.shapeblock-cnt-title {
+	font-weight: 400;
+	display: inline-block;
+	margin: 0;
+}
+
+.shapeblock-cnt-icon {
+	place-items: center;
+	display: grid;
+}
+
+.shapeblock-cnt-icon svg {
+	width: 60px;
+	height: 60px;
+	fill: var(--shapeblock-preset-color-secondary, #0b3665);
+}
+
+.shapeblock-cnt-icon i {
+	font-size: 40px;
+}
+
+/* Icon position */
+.shapeblock-cnt-icon-pos-left .shapeblock-cnt-wrap {
+	flex-direction: row;
+	text-align: left;
+	justify-content: flex-start;
+}
+.shapeblock-cnt-icon-pos-left .shapeblock-cnt-icon {
+	margin-right: 12px;
+}
+.shapeblock-cnt-icon-pos-right .shapeblock-cnt-wrap {
+	flex-direction: row-reverse;
+	text-align: right;
+	justify-content: flex-end;
+}
+.shapeblock-cnt-icon-pos-right .shapeblock-cnt-icon {
+	margin-left: 12px;
+}
+.shapeblock-cnt-icon-pos-top .shapeblock-cnt-wrap {
+	flex-direction: column;
+	text-align: center;
+}
+.shapeblock-cnt-icon-pos-top .shapeblock-cnt-icon {
+	margin-bottom: 12px;
+}
+.shapeblock-cnt-icon-pos-bottom .shapeblock-cnt-wrap {
+	flex-direction: column-reverse;
+	text-align: center;
+}
+.shapeblock-cnt-icon-pos-bottom .shapeblock-cnt-icon {
+	margin-top: 12px;
+}
+
+/* Title position (number vs title layout) */
+.shapeblock-cnt-content {
+	display: flex;
+	flex-direction: column;
+}
+.shapeblock-cnt-title-pos-top .shapeblock-cnt-content {
+	flex-direction: column-reverse;
+}
+.shapeblock-cnt-title-pos-left .shapeblock-cnt-content {
+	flex-direction: row-reverse;
+	align-items: center;
+}
+.shapeblock-cnt-title-pos-right .shapeblock-cnt-content {
+	flex-direction: row;
+	align-items: center;
+}
+.shapeblock-cnt-title-pos-left .shapeblock-cnt-title,
+.shapeblock-cnt-title-pos-right .shapeblock-cnt-title {
+	margin-top: 0;
+}
+
+/* Odometer */
+.shapeblock-cnt-odometer-wrap {
+	display: inline-flex;
+	align-items: flex-end;
+	line-height: 1;
+}
+.shapeblock-cnt-odometer-digit {
+	display: inline-block;
+	overflow: hidden;
+	height: 1em;
+	line-height: 1em;
+	vertical-align: bottom;
+}
+.shapeblock-cnt-odometer-roll {
+	display: block;
+	will-change: transform;
+}
+.shapeblock-cnt-odometer-num {
+	display: block;
+	height: 1em;
+	line-height: 1em;
+}
+.shapeblock-cnt-odometer-sep {
+	display: inline-block;
+	line-height: 1em;
+}
+
+/* --- Responsive defaults ------------------------------------------------
+ * Breakpoints match Helper::generate_responsive_css() and the visibility
+ * classes: tablet <= 1024px, mobile <= 767px. These are defaults only — the
+ * per-device values a user sets are printed as per-block CSS with a higher
+ * specificity, so they always win over what follows.
+ */
+@media (max-width: 1024px) {
+	.shapeblock-cnt-number-wrap {
+		font-size: 56px;
+	}
+	.shapeblock-cnt-icon svg {
+		width: 48px;
+		height: 48px;
+	}
+	.shapeblock-cnt-icon i {
+		font-size: 34px;
+	}
+}
+
+@media (max-width: 767px) {
+	.shapeblock-cnt-number-wrap {
+		font-size: 40px;
+	}
+	.shapeblock-cnt-icon svg {
+		width: 40px;
+		height: 40px;
+	}
+	.shapeblock-cnt-icon i {
+		font-size: 28px;
+	}
+	/* Number and title side by side leaves no room for either. */
+	.shapeblock-cnt-title-pos-left .shapeblock-cnt-content,
+	.shapeblock-cnt-title-pos-right .shapeblock-cnt-content {
+		flex-wrap: wrap;
+	}
+}
+
+/* --- Narrow container safety -------------------------------------------
+ * A block can sit in a column far narrower than the screen, where media queries
+ * are no help. These rules keep it inside its box at any width.
+ */
+.shapeblock-cnt-wrap,
+.shapeblock-cnt-content {
+	min-width: 0;
+	flex-wrap: wrap;
+}
+
+.shapeblock-cnt-number-wrap,
+.shapeblock-cnt-title {
+	min-width: 0;
+	overflow-wrap: break-word;
+}

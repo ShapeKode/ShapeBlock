@@ -1,0 +1,251 @@
+/**
+ * Tabs block — front-end + shared styles.
+ *
+ * Ported from the Elementor "Tabs" widget stylesheet
+ * (easy-elements/widgets/tab/css/tab.scss). Classes use the "shapeblock-" prefix and
+ * everything is scoped under `.shapeblock-tab-block-wrap`.
+ */
+.shapeblock-tab-block-wrap {
+	--shapeblock-tab-primary: #5933ff;
+	--shapeblock-tab-secondary: #0b3665;
+
+	.shapeblock-tabs-wrapper[data-tab-direction='right'],
+	.shapeblock-tabs-wrapper[data-tab-direction='left'] {
+		display: flex;
+		gap: 46px;
+	}
+	.shapeblock-tabs-wrapper[data-tab-direction='right'] {
+		flex-direction: row-reverse;
+	}
+	.shapeblock-tabs-wrapper[data-tab-direction='right'] .shapeblock-tab-titles,
+	.shapeblock-tabs-wrapper[data-tab-direction='left'] .shapeblock-tab-titles {
+		min-width: 37%;
+		display: grid;
+	}
+	.shapeblock-tabs-wrapper[data-tab-direction='left'] .shapeblock-tab-contents .shapeblock-content-title,
+	.shapeblock-tabs-wrapper[data-tab-direction='right'] .shapeblock-tab-contents .shapeblock-content-title {
+		margin-top: 0;
+	}
+
+	.shapeblock-tab-titles {
+		display: flex;
+		list-style: none;
+		gap: 20px;
+		cursor: pointer;
+		margin: 0;
+		padding: 0;
+	}
+
+	.shapeblock-tabs-wrapper[data-tab-direction='top'] .shapeblock-tab-titles {
+		border-bottom: 1px solid #0000001a;
+		padding: 0 0 36px;
+	}
+
+	.shapeblock-tab-titles li {
+		align-items: center;
+		gap: 16px;
+		background: #f6f4f05e;
+		border-radius: 16px;
+		padding: 16px;
+		transition: all 0.5s ease;
+	}
+
+	.shapeblock-tab-titles li.active,
+	.shapeblock-tab-titles li:hover {
+		background: var(--shapeblock-tab-primary);
+	}
+
+	.shapeblock-tabs-wrapper[data-icon-position='right'] .shapeblock-tab-titles li,
+	.shapeblock-tabs-wrapper[data-icon-position='left'] .shapeblock-tab-titles li {
+		display: flex;
+		flex: 1;
+	}
+	.shapeblock-tabs-wrapper[data-icon-position='top'] .shapeblock-tab-titles li {
+		display: grid;
+		place-items: center;
+		flex: 1;
+	}
+	.shapeblock-tabs-wrapper[data-icon-position='right'] .shapeblock-tab-titles li {
+		flex-direction: row-reverse;
+		text-align: right;
+	}
+
+	.shapeblock-tab-title-text {
+		font-size: 20px;
+		font-weight: 700;
+		color: var(--shapeblock-tab-secondary);
+		line-height: 130%;
+	}
+
+	.shapeblock-tab-titles i,
+	.shapeblock-tab-titles svg {
+		height: 1.2em;
+		width: 1.2em;
+		display: block;
+		font-size: 15px;
+	}
+	.shapeblock-tab-titles img {
+		height: 26px;
+		display: block;
+	}
+
+	.shapeblock-tab-image,
+	.shapeblock-tab-icon {
+		display: grid;
+		height: 56px;
+		background: #efeff9;
+		padding: 0;
+		border-radius: 16px;
+		min-width: 56px;
+		place-items: center;
+	}
+
+	.shapeblock-tab-contents .shapeblock-tab-content {
+		display: none;
+	}
+	.shapeblock-tabs-wrapper[data-tab-direction='top'] .shapeblock-tab-contents .shapeblock-tab-content {
+		margin-top: 30px;
+	}
+	.shapeblock-tab-contents .shapeblock-tab-content.active {
+		display: block;
+	}
+	.shapeblock-tab-content {
+		display: none;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+	.shapeblock-tab-content.active {
+		display: block;
+		opacity: 1;
+	}
+
+	.shapeblock-tab-contents .shapeblock-content-title {
+		font-size: 32px;
+		font-weight: 700;
+		color: var(--shapeblock-tab-secondary);
+		margin: 35px 0 30px;
+	}
+
+	.shapeblock-content-description {
+		margin: 0;
+	}
+
+	.shapeblock-tab-contents .shapeblock-read-more {
+		font-size: 16px;
+		font-weight: 700;
+		color: var(--shapeblock-tab-secondary);
+		border-bottom: 1px solid #0000001f;
+		line-height: 24px;
+		display: inline-block;
+		text-decoration: none;
+	}
+	.shapeblock-tab-contents .shapeblock-read-more .shapeblock-read-more-icon {
+		width: 18px;
+		height: 18px;
+		top: 3px;
+		position: relative;
+		transition: all 0.3s ease;
+		margin-left: -5px;
+		left: 5px;
+		display: inline-block;
+		vertical-align: middle;
+	}
+	.shapeblock-tab-contents .shapeblock-read-more:hover {
+		border-bottom-color: var(--shapeblock-tab-primary);
+	}
+	.shapeblock-tab-contents .shapeblock-read-more:hover .shapeblock-read-more-icon {
+		left: 3px;
+	}
+}
+
+/* --- Responsive defaults ------------------------------------------------
+ * Breakpoints match Helper::generate_responsive_css() and the visibility
+ * classes: tablet <= 1024px, mobile <= 767px. These are defaults only — the
+ * per-device values a user sets are printed as per-block CSS with a higher
+ * specificity, so they always win over what follows.
+ */
+@media (max-width: 1024px) {
+	.shapeblock-tab-block-wrap {
+		.shapeblock-tabs-wrapper[data-tab-direction='right'],
+		.shapeblock-tabs-wrapper[data-tab-direction='left'] {
+			gap: 24px;
+		}
+		.shapeblock-tab-titles {
+			flex-wrap: wrap;
+		}
+		.shapeblock-tabs-wrapper[data-tab-direction='top'] .shapeblock-tab-titles {
+			padding-bottom: 20px;
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	.shapeblock-tab-block-wrap {
+		/* Side tabs cannot keep a 37% rail next to the content on a phone. */
+		.shapeblock-tabs-wrapper[data-tab-direction='right'],
+		.shapeblock-tabs-wrapper[data-tab-direction='left'] {
+			flex-direction: column;
+			gap: 20px;
+		}
+		.shapeblock-tabs-wrapper[data-tab-direction='right'] .shapeblock-tab-titles,
+		.shapeblock-tabs-wrapper[data-tab-direction='left'] .shapeblock-tab-titles {
+			min-width: 100%;
+		}
+		.shapeblock-tab-titles {
+			gap: 10px;
+		}
+		.shapeblock-tab-titles li {
+			flex: 1 1 100%;
+			padding: 12px;
+		}
+		.shapeblock-tabs-wrapper[data-tab-direction='top'] .shapeblock-tab-contents .shapeblock-tab-content {
+			margin-top: 20px;
+		}
+		.shapeblock-tab-contents .shapeblock-content-title {
+			margin: 20px 0 15px;
+		}
+	}
+}
+
+/* --- Narrow container safety -------------------------------------------
+ * A block can sit in a column far narrower than the screen, where media queries
+ * are no help. These rules keep it inside its box at any width.
+ */
+.shapeblock-tab-block-wrap {
+	.shapeblock-tab-titles {
+		flex-wrap: wrap;
+		min-width: 0;
+	}
+
+	.shapeblock-tab-titles li {
+		min-width: 0;
+	}
+
+	.shapeblock-tab-title-text,
+	.shapeblock-tab-contents .shapeblock-content-title,
+	.shapeblock-content-description {
+		min-width: 0;
+		overflow-wrap: break-word;
+	}
+
+	/* Side tabs keep a rail beside the content. Rather than a fixed 37% that a
+	 * narrow box cannot honour, the rail and the panel are both allowed to
+	 * shrink and to wrap onto their own line when there is no room left. */
+	.shapeblock-tabs-wrapper[data-tab-direction='right'],
+	.shapeblock-tabs-wrapper[data-tab-direction='left'] {
+		flex-wrap: wrap;
+		gap: clamp(16px, 4%, 46px);
+	}
+
+	.shapeblock-tabs-wrapper[data-tab-direction='right'] .shapeblock-tab-titles,
+	.shapeblock-tabs-wrapper[data-tab-direction='left'] .shapeblock-tab-titles {
+		flex: 1 1 220px;
+		min-width: 0;
+	}
+
+	.shapeblock-tabs-wrapper[data-tab-direction='right'] .shapeblock-tab-contents,
+	.shapeblock-tabs-wrapper[data-tab-direction='left'] .shapeblock-tab-contents {
+		flex: 1 1 260px;
+		min-width: 0;
+	}
+}

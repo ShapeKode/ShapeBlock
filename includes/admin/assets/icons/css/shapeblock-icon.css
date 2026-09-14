@@ -1,0 +1,135 @@
+@font-face {
+  font-family: 'shapeblock-icon';
+  src: url('../font/shapeblock-icon.eot?90756145');
+  src: url('../font/shapeblock-icon.eot?90756145#iefix') format('embedded-opentype'),
+       url('../font/shapeblock-icon.woff2?90756145') format('woff2'),
+       url('../font/shapeblock-icon.woff?90756145') format('woff'),
+       url('../font/shapeblock-icon.ttf?90756145') format('truetype'),
+       url('../font/shapeblock-icon.svg?90756145#shapeblock-icon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'shapeblock-icon';
+    src: url('../font/shapeblock-icon.svg?90756145#shapeblock-icon') format('svg');
+  }
+}
+*/
+[class^="shapeblock-icon-"]:before, [class*=" shapeblock-icon-"]:before {
+  font-family: "shapeblock-icon";
+  font-style: normal;
+  font-weight: normal;
+  speak: never;
+
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.shapeblock-icon-clients-logo-slider:before { content: '\e800'; } /* '' */
+.shapeblock-icon-comments:before { content: '\e801'; } /* '' */
+.shapeblock-icon-contact-box:before { content: '\e802'; } /* '' */
+.shapeblock-icon-demo:before { content: '\e803'; } /* '' */
+.shapeblock-icon-custom-projects:before { content: '\e804'; } /* '' */
+.shapeblock-icon-domain-search:before { content: '\e805'; } /* '' */
+.shapeblock-icon-faq:before { content: '\e806'; } /* '' */
+.shapeblock-icon-heading:before { content: '\e807'; } /* '' */
+.shapeblock-icon-icon-box-slider:before { content: '\e808'; } /* '' */
+.shapeblock-icon-iconbox:before { content: '\e809'; } /* '' */
+.shapeblock-icon-image-accordion:before { content: '\e80a'; } /* '' */
+.shapeblock-icon-image-carousel:before { content: '\e80b'; } /* '' */
+.shapeblock-icon-marquee-logo:before { content: '\e80c'; } /* '' */
+.shapeblock-icon-meta:before { content: '\e80d'; } /* '' */
+.shapeblock-icon-page-title:before { content: '\e80e'; } /* '' */
+.shapeblock-icon-pagination:before { content: '\e80f'; } /* '' */
+.shapeblock-icon-post-content:before { content: '\e810'; } /* '' */
+.shapeblock-icon-post-excerpt:before { content: '\e811'; } /* '' */
+.shapeblock-icon-post-grid:before { content: '\e812'; } /* '' */
+.shapeblock-icon-post-slider:before { content: '\e813'; } /* '' */
+.shapeblock-icon-post-tag:before { content: '\e814'; } /* '' */
+.shapeblock-icon-post-title:before { content: '\e815'; } /* '' */
+.shapeblock-icon-pricing-list:before { content: '\e816'; } /* '' */
+.shapeblock-icon-pricing-table:before { content: '\e817'; } /* '' */
+.shapeblock-icon-process-grid:before { content: '\e818'; } /* '' */
+.shapeblock-icon-process-list:before { content: '\e819'; } /* '' */
+.shapeblock-icon-process-slider:before { content: '\e81a'; } /* '' */
+.shapeblock-icon-related-post:before { content: '\e81b'; } /* '' */
+.shapeblock-icon-search:before { content: '\e81c'; } /* '' */
+.shapeblock-icon-service-list:before { content: '\e81d'; } /* '' */
+.shapeblock-icon-slider:before { content: '\e81e'; } /* '' */
+.shapeblock-icon-site-logo:before { content: '\e81f'; } /* '' */
+.shapeblock-icon-social-icons:before { content: '\e820'; } /* '' */
+.shapeblock-icon-social-share:before { content: '\e821'; } /* '' */
+.shapeblock-icon-team-grid:before { content: '\e822'; } /* '' */
+.shapeblock-icon-tab:before { content: '\e823'; } /* '' */
+.shapeblock-icon-team-slider:before { content: '\e824'; } /* '' */
+.shapeblock-icon-testimonials-grid:before { content: '\e825'; } /* '' */
+.shapeblock-icon-testimonials-slider:before { content: '\e826'; } /* '' */
+.shapeblock-icon-timeline-slider:before { content: '\e827'; } /* '' */
+.shapeblock-icon-video:before { content: '\e828'; } /* '' */
+.shapeblock-icon-author:before { content: '\e829'; } /* '' */
+.shapeblock-icon-breadcumb:before { content: '\e82a'; } /* '' */
+.shapeblock-icon-button:before { content: '\e82b'; } /* '' */
+.shapeblock-icon-canvas:before { content: '\e82c'; } /* '' */
+.shapeblock-icon-clients-logo-grid:before { content: '\e82d'; } /* '' */
+.shapeblock-icon-extension:before { content: '\e82e'; } /* '' */
+.shapeblock-icon-home:before { content: '\e82f'; } /* '' */
+.shapeblock-icon-image-horizontal-scroll:before { content: '\e830'; } /* '' */
+.shapeblock-icon-widgets:before { content: '\e831'; } /* '' */
+.shapeblock-icon-document:before { content: '\e832'; } /* '' */
+.shapeblock-icon-monitor:before { content: '\e833'; } /* '' */
+.shapeblock-icon-notification:before { content: '\e834'; } /* '' */
+.shapeblock-icon-messages:before { content: '\e835'; } /* '' */
+.shapeblock-icon-sms-tracking:before { content: '\e836'; } /* '' */
+.shapeblock-icon-video-tick:before { content: '\e837'; } /* '' */
+.shapeblock-icon-tick-square:before { content: '\e839'; } /* '' */
+.shapeblock-icon-navigation:before { content: '\e83a'; } /* '' */
+.shapeblock-icon-filterable-gallery:before { content: '\e83b'; } /* '' */
+.shapeblock-icon-scroll-top:before { content: '\e83c'; } /* '' */
+.shapeblock-icon-advance-search:before { content: '\e83d'; } /* '' */
+.shapeblock-icon-protected-content:before { content: '\e83e'; } /* '' */
+.shapeblock-icon-contact-form:before { content: '\e83f'; } /* '' */
+.shapeblock-icon-faq-1:before { content: '\e840'; } /* '' */
+.shapeblock-icon-animated-title:before { content: '\e841'; } /* '' */
+.shapeblock-icon-badge:before { content: '\e842'; } /* '' */
+.shapeblock-icon-countdown:before { content: '\e843'; } /* '' */
+.shapeblock-icon-counter:before { content: '\e844'; } /* '' */
+.shapeblock-icon-flip-box:before { content: '\e845'; } /* '' */
+.shapeblock-icon-facebook-feed:before { content: '\e846'; } /* '' */
+.shapeblock-icon-instagram-feed:before { content: '\e847'; } /* '' */
+.shapeblock-icon-login:before { content: '\e848'; } /* '' */
+.shapeblock-icon-progress-bar:before { content: '\e849'; } /* '' */
+.shapeblock-icon-title-scrolltrigger:before { content: '\e84a'; } /* '' */
+.shapeblock-icon-twitter:before { content: '\e84b'; } /* '' */
+.shapeblock-icon-calculator:before { content: '\e84c'; } /* '' */
+.shapeblock-icon-setting:before { content: '\e84d'; } /* '' */
+.shapeblock-icon-row:before { content: '\f096'; } /* '' */
+.shapeblock-icon-columns:before { content: '\f0db'; } /* '' */

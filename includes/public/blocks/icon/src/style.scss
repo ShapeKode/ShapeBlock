@@ -1,0 +1,82 @@
+/**
+ * Icon block — front-end + shared styles.
+ */
+.shapeblock-icon-block-wrap {
+	.shapeblock-icon-wrap {
+		display: flex;
+		align-items: center;
+	}
+
+	.shapeblock-icon-el {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		line-height: 1;
+		font-size: 48px;
+		color: inherit;
+		text-decoration: none;
+		transition: all 0.3s ease;
+
+		i,
+		svg {
+			transition: all 0.3s ease;
+			line-height: 1;
+		}
+
+		i {
+			font-size: 1em;
+		}
+
+		svg {
+			width: 1em;
+			height: 1em;
+			fill: currentColor;
+		}
+	}
+
+	/* Stacked & Framed share a square box ( width == height ) so the Circle shape
+	   is a true circle and the Square is even on all sides, regardless of the
+	   glyph's own aspect ratio. The box scales with the icon font-size ( em ). */
+	.shapeblock-icon-el.shapeblock-icon-view-stacked,
+	.shapeblock-icon-el.shapeblock-icon-view-framed {
+		width: 2em;
+		height: 2em;
+		padding: 0;
+	}
+
+	/* View: Stacked — filled background, contrasting icon. */
+	.shapeblock-icon-el.shapeblock-icon-view-stacked {
+		background-color: #6d3ff0;
+		color: #ffffff;
+	}
+
+	/* View: Framed — bordered box, transparent background. */
+	.shapeblock-icon-el.shapeblock-icon-view-framed {
+		border: 3px solid #6d3ff0;
+		color: #6d3ff0;
+	}
+
+	/* Shape (only meaningful for stacked / framed). */
+	.shapeblock-icon-el.shapeblock-icon-shape-circle {
+		border-radius: 50%;
+	}
+	.shapeblock-icon-el.shapeblock-icon-shape-rounded {
+		border-radius: 8px;
+	}
+	.shapeblock-icon-el.shapeblock-icon-shape-square {
+		border-radius: 0;
+	}
+}
+
+/* --- Responsive defaults ------------------------------------------------
+ * Breakpoints match Helper::generate_responsive_css() and the visibility
+ * classes: tablet <= 1024px, mobile <= 767px. These are defaults only — the
+ * per-device values a user sets are printed as per-block CSS with a higher
+ * specificity, so they always win over what follows.
+ */
+@media (max-width: 767px) {
+	.shapeblock-icon-block-wrap .shapeblock-icon-wrap {
+		max-width: 100%;
+	}
+}

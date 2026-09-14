@@ -1,0 +1,11 @@
+@use 'style';
+
+/**
+ * Editor-only styles for the Button block.
+ */
+.shapeblock-button-block-wrap {
+	.shapeblock-button {
+		// Prevent the editor link-disabler from collapsing the button.
+		cursor: default;
+	}
+}

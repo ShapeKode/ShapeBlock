@@ -1,0 +1,226 @@
+@charset "UTF-8";
+/**
+ * Social Share block — front-end + shared styles.
+ *
+ * Ported from the Elementor "Social Share" widget stylesheet
+ * (easy-elements/widgets/social-share/css/social-share.scss). Classes use the
+ * "shapeblock-" prefix and everything is scoped under `.shapeblock-social-share-block-wrap`.
+ */
+.shapeblock-social-share-block-wrap .shapeblock-social-share {
+  display: flex;
+  transition: all 0.3s ease;
+}
+.shapeblock-social-share-block-wrap .shapeblock-social-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.shapeblock-social-share-block-wrap .shapeblock-social-layout-vertical .shapeblock-social-buttons {
+  flex-direction: column;
+  align-items: center;
+}
+.shapeblock-social-share-block-wrap .shapeblock-social-layout-grid .shapeblock-social-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 300px;
+}
+.shapeblock-social-share-block-wrap .shapeblock-social-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  text-decoration: none;
+  color: #fff;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  position: relative;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.shapeblock-social-share-block-wrap .shapeblock-social-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  text-decoration: none;
+}
+.shapeblock-social-share-block-wrap .shapeblock-social-button:active {
+  transform: translateY(0);
+}
+.shapeblock-social-share-block-wrap .shapeblock-social-button i {
+  font-size: 18px;
+  line-height: 1;
+}
+.shapeblock-social-share-block-wrap .shapeblock-social-button svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+.shapeblock-social-share-block-wrap {
+  /* Platform colours */
+}
+.shapeblock-social-share-block-wrap .shapeblock-facebook {
+  background-color: #1877f2;
+}
+.shapeblock-social-share-block-wrap .shapeblock-facebook:hover {
+  background-color: #166fe5;
+}
+.shapeblock-social-share-block-wrap .shapeblock-twitter {
+  background-color: #000000;
+}
+.shapeblock-social-share-block-wrap .shapeblock-twitter:hover {
+  background-color: #333333;
+}
+.shapeblock-social-share-block-wrap .shapeblock-instagram {
+  background-color: #e4405f;
+}
+.shapeblock-social-share-block-wrap .shapeblock-instagram:hover {
+  background-color: #d63384;
+}
+.shapeblock-social-share-block-wrap .shapeblock-linkedin {
+  background-color: #0077b5;
+}
+.shapeblock-social-share-block-wrap .shapeblock-linkedin:hover {
+  background-color: #006097;
+}
+.shapeblock-social-share-block-wrap .shapeblock-youtube {
+  background-color: #ff0000;
+}
+.shapeblock-social-share-block-wrap .shapeblock-youtube:hover {
+  background-color: #cc0000;
+}
+.shapeblock-social-share-block-wrap .shapeblock-tiktok {
+  background-color: #000000;
+}
+.shapeblock-social-share-block-wrap .shapeblock-tiktok:hover {
+  background-color: #333333;
+}
+.shapeblock-social-share-block-wrap .shapeblock-pinterest {
+  background-color: #e60023;
+}
+.shapeblock-social-share-block-wrap .shapeblock-pinterest:hover {
+  background-color: #cc001f;
+}
+.shapeblock-social-share-block-wrap .shapeblock-whatsapp {
+  background-color: #25d366;
+}
+.shapeblock-social-share-block-wrap .shapeblock-whatsapp:hover {
+  background-color: #20ba5a;
+}
+.shapeblock-social-share-block-wrap .shapeblock-telegram {
+  background-color: #0088cc;
+}
+.shapeblock-social-share-block-wrap .shapeblock-telegram:hover {
+  background-color: #0077b3;
+}
+.shapeblock-social-share-block-wrap .shapeblock-snapchat {
+  background-color: #fffc00;
+  color: #000;
+}
+.shapeblock-social-share-block-wrap .shapeblock-snapchat:hover {
+  background-color: #e6e300;
+}
+.shapeblock-social-share-block-wrap .shapeblock-reddit {
+  background-color: #ff4500;
+}
+.shapeblock-social-share-block-wrap .shapeblock-reddit:hover {
+  background-color: #cc3700;
+}
+.shapeblock-social-share-block-wrap .shapeblock-discord {
+  background-color: #5865f2;
+}
+.shapeblock-social-share-block-wrap .shapeblock-discord:hover {
+  background-color: #4752c4;
+}
+.shapeblock-social-share-block-wrap .shapeblock-spotify {
+  background-color: #1db954;
+}
+.shapeblock-social-share-block-wrap .shapeblock-spotify:hover {
+  background-color: #1aa34a;
+}
+.shapeblock-social-share-block-wrap .shapeblock-email {
+  background-color: #ea4335;
+}
+.shapeblock-social-share-block-wrap .shapeblock-email:hover {
+  background-color: #d33426;
+}
+.shapeblock-social-share-block-wrap .shapeblock-copy {
+  background-color: #6c757d;
+}
+.shapeblock-social-share-block-wrap .shapeblock-copy:hover {
+  background-color: #5a6268;
+}
+.shapeblock-social-share-block-wrap .shapeblock-copy.shapeblock-copied {
+  background-color: #28a745;
+  animation: shapeblock-soc-pulse 0.6s ease-in-out;
+}
+.shapeblock-social-share-block-wrap {
+  /* Layout-specific hover */
+}
+.shapeblock-social-share-block-wrap .shapeblock-social-layout-horizontal .shapeblock-social-button:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+.shapeblock-social-share-block-wrap .shapeblock-social-layout-vertical .shapeblock-social-button:hover {
+  transform: translateX(5px) scale(1.05);
+}
+.shapeblock-social-share-block-wrap .shapeblock-social-layout-grid .shapeblock-social-button:hover {
+  transform: scale(1.1);
+}
+.shapeblock-social-share-block-wrap .shapeblock-social-button:focus {
+  outline: 2px solid #007cba;
+  outline-offset: 2px;
+}
+.shapeblock-social-share-block-wrap .shapeblock-social-button:focus:not(:focus-visible) {
+  outline: none;
+}
+@media (max-width: 768px) {
+  .shapeblock-social-share-block-wrap .shapeblock-social-button {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  .shapeblock-social-share-block-wrap .shapeblock-social-button i {
+    font-size: 16px;
+  }
+  .shapeblock-social-share-block-wrap .shapeblock-social-button svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+@media (max-width: 480px) {
+  .shapeblock-social-share-block-wrap .shapeblock-social-button {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+  }
+  .shapeblock-social-share-block-wrap .shapeblock-social-button i {
+    font-size: 14px;
+  }
+  .shapeblock-social-share-block-wrap .shapeblock-social-button svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@keyframes shapeblock-soc-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@media print {
+  .shapeblock-social-share-block-wrap {
+    display: none;
+  }
+}/*# sourceMappingURL=style.css.map */

@@ -1,0 +1,15 @@
+/**
+ * Editor-only styles for the Testimonials Grid block.
+ */
+.shapeblock-tstml-repeater-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+.shapeblock-tstml-repeater-item .shapeblock-tstml-repeater-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}/*# sourceMappingURL=editor.css.map */

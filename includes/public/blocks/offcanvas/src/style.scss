@@ -1,0 +1,222 @@
+/**
+ * Offcanvas block — front-end + shared styles.
+ *
+ * Ported from the Elementor "Offcanvas" widget stylesheet
+ * (easy-elements/widgets/offcanvas/css/offcanvas.scss). Classes use the
+ * "shapeblock-" prefix. The panel + body-level rules are intentionally global (the
+ * panel is fixed/page-level); per-instance colors are layered on via render.php.
+ */
+
+/* Opener */
+.shapeblock-offcanvas-toggle-text {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+
+	svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.shapeblock-icon-text {
+		margin-right: 6px;
+		font-style: normal;
+	}
+}
+
+.shapeblock-icon-menu-wrap {
+	position: relative;
+	width: 26px;
+	height: 12px;
+	cursor: pointer;
+
+	* {
+		transition: all ease-in 0.5s;
+	}
+
+	&:hover em {
+		width: 70%;
+	}
+
+	em:nth-child(2) {
+		top: auto;
+		bottom: 0;
+		right: 0;
+	}
+}
+
+.shapeblock-icon-menu {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	border-bottom: solid 2px #000;
+}
+
+.shapeblock-modern-close-toggle,
+.shapeblock-offcanvas-wrapper.modern .shapeblock-offcanvas-toggle label {
+	position: relative;
+	display: block;
+	width: 36px;
+	height: 36px;
+	cursor: pointer;
+
+	span {
+		position: absolute;
+		width: 100%;
+		height: 2px;
+		background: #000;
+		display: block;
+		left: 0;
+		transition: 0.3s ease-in-out;
+
+		&:nth-of-type(1) {
+			top: 27%;
+		}
+		&:nth-of-type(2) {
+			top: 50%;
+		}
+		&:nth-of-type(3) {
+			bottom: 22%;
+		}
+	}
+}
+
+/* Panel — classic (side) */
+.shapeblock-offcanvas:not(.modern) {
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 380px;
+	height: 100%;
+	background: #fff;
+	transform: translateX(100%);
+	transition: transform 0.3s ease;
+	z-index: 999999;
+	padding: 60px 25px 40px 40px;
+	overflow-y: auto;
+
+	&.shapeblock-offcanvas-left {
+		left: 0;
+		right: auto;
+		transform: translateX(-100%);
+	}
+
+	&.shapeblock-active {
+		transform: translateX(0);
+	}
+}
+
+/* Panel — modern (fullscreen) */
+.shapeblock-offcanvas.modern {
+	position: fixed;
+	background: #fff;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 999999;
+	padding: 60px 100px 40px 40px;
+	overflow-y: auto;
+	visibility: hidden;
+	opacity: 0;
+	transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+
+	&.shapeblock-active {
+		visibility: visible;
+		opacity: 1;
+	}
+
+	.shapeblock-offcanvas-panel {
+		height: 100%;
+		display: grid;
+		align-items: center;
+	}
+
+	.shapeblock-offcanvas-content {
+		transform: translateY(60px);
+		opacity: 0;
+		transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.5s ease;
+	}
+
+	&.shapeblock-active .shapeblock-offcanvas-content {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
+/* Overlay behind an open panel. It is a real element rendered as a sibling of
+   the panel (not a body::before) so it shares the panel's stacking context — a
+   body-level pseudo-element could otherwise sit ABOVE the panel when an ancestor
+   (e.g. the editor canvas) creates a transformed stacking context. z-index sits
+   just below the panel (999999) so the panel always stays on top. */
+.shapeblock-offcanvas-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.4);
+	z-index: 999998;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.3s ease;
+	cursor: pointer;
+}
+body.shapeblock-offcanvas-active .shapeblock-offcanvas-overlay {
+	opacity: 1;
+	visibility: visible;
+}
+
+.shapeblock-offcanvas.shapeblock-blur-effect {
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+}
+
+/* Close button */
+.shapeblock-offcanvas-close {
+	position: absolute;
+	top: 20px;
+	right: 25px;
+	font-size: 25px;
+	border-radius: 100%;
+	border: none;
+	cursor: pointer;
+	color: #000;
+	z-index: 1;
+	padding: 0;
+	display: grid;
+	place-content: center;
+
+	svg {
+		height: 1em;
+		fill: currentColor;
+	}
+}
+
+.shapeblock-modern-close {
+	top: 50%;
+	transform: translateY(-50%);
+	cursor: pointer;
+}
+
+/* Modern hamburger -> X animation when active */
+.shapeblock-offcanvas.modern.shapeblock-active .shapeblock-modern-close-toggle span:nth-of-type(1) {
+	transform: rotate(45deg) translateY(-50%);
+	top: 50%;
+}
+.shapeblock-offcanvas.modern.shapeblock-active .shapeblock-modern-close-toggle span:nth-of-type(2) {
+	transform: scale(0);
+	opacity: 0;
+}
+.shapeblock-offcanvas.modern.shapeblock-active .shapeblock-modern-close-toggle span:nth-of-type(3) {
+	transform: rotate(-45deg) translateY(50%);
+	bottom: 50%;
+}
+
+@media screen and (max-width: 1024px) {
+	.shapeblock-modern-close {
+		top: 40px;
+		transform: translateY(0);
+	}
+	.shapeblock-offcanvas.modern .shapeblock-offcanvas-panel {
+		display: block;
+	}
+}

@@ -1,0 +1,199 @@
+@charset "UTF-8";
+/**
+ * Feature List — front-end + editor styles.
+ *
+ * Structure ported from the Elementor widget
+ * (easy-elements/widgets/feature-list/css/feature-list.scss). Element classes
+ * use this plugin's own "shapeblock-" prefix.
+ */
+.shapeblock-fea-list-wrapper {
+  position: relative;
+}
+
+.shapeblock-fea-list-wrapper.shapeblock-fea-list-connector::before {
+  content: "";
+  width: 0px;
+  height: 85%;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #f4f4f4;
+  position: absolute;
+  border-inline-end-style: none;
+  left: 26px;
+  bottom: 50%;
+  transform: translateY(50%);
+  z-index: -1;
+  display: block;
+}
+
+.shapeblock-fea-list-wrapper.shapeblock-fea-list-connector.shapeblock-fea-list-dir-right::before {
+  left: inherit;
+  right: 26px;
+}
+
+.shapeblock-fea-list {
+  display: flex;
+  margin-bottom: 25px;
+  gap: 20px;
+}
+
+.shapeblock-fea-list:last-child {
+  margin-bottom: 0 !important;
+}
+
+.shapeblock-fea-list-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  min-width: 55px;
+  min-height: 55px;
+}
+
+.shapeblock-fea-list-icon-view-frame .shapeblock-fea-list-icon,
+.shapeblock-fea-list-icon-view-stracked .shapeblock-fea-list-icon {
+  background: #f4f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shapeblock-fea-list-icon-view-frame .shapeblock-fea-list-icon {
+  border: 1px solid #f4f4f4;
+  background: #fff;
+}
+
+.shapeblock-fea-list-icon-shape-rounded .shapeblock-fea-list-icon {
+  border-radius: 4px;
+}
+
+.shapeblock-fea-list-icon-shape-square .shapeblock-fea-list-icon {
+  border-radius: 0;
+}
+
+.shapeblock-fea-list-icon-shape-circle .shapeblock-fea-list-icon {
+  border-radius: 100px;
+}
+
+.shapeblock-fea-list-icon-shape-sq_rotate .shapeblock-fea-list-icon {
+  transform: rotate(45deg);
+}
+
+.shapeblock-fea-list-icon-shape-sq_rotate .shapeblock-fea-list-icon svg,
+.shapeblock-fea-list-icon-shape-sq_rotate .shapeblock-fea-list-icon i,
+.shapeblock-fea-list-icon-shape-sq_rotate .shapeblock-fea-list-icon .shapeblock-fea-list-number {
+  transform: rotate(-45deg);
+}
+
+.shapeblock-fea-list-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.shapeblock-fea-list-icon i {
+  font-size: 30px;
+}
+
+.shapeblock-fea-list-number {
+  font-size: 20px;
+  font-weight: 500;
+  color: #000000;
+}
+
+.shapeblock-fea-list-title {
+  font-size: 22px;
+  line-height: 1.2;
+  margin: 0;
+  color: #000000;
+}
+
+.shapeblock-fea-list-desc {
+  color: #777777;
+  margin: 0;
+}
+
+.shapeblock-fea-list-dir-left {
+  flex-direction: row;
+  text-align: left;
+}
+
+.shapeblock-fea-list-dir-right {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+/* connector left */
+.shapeblock-fea-list-connector-left .shapeblock-fea-list {
+  padding-left: 30px;
+}
+
+.shapeblock-fea-list-connector-left.shapeblock-fea-list-dir-right .shapeblock-fea-list {
+  padding-right: 30px;
+}
+
+.shapeblock-fea-list-wrapper.shapeblock-fea-list-connector.shapeblock-fea-list-connector-left::before {
+  height: calc(100% - 55px);
+  bottom: inherit;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+}
+
+.shapeblock-fea-list-wrapper.shapeblock-fea-list-connector.shapeblock-fea-list-connector-left.shapeblock-fea-list-dir-right::before {
+  left: inherit;
+  right: 0;
+}
+
+.shapeblock-fea-list-connector-left .shapeblock-fea-list-icon {
+  overflow: inherit;
+}
+
+.shapeblock-fea-list-connector-left .shapeblock-fea-list-icon::after {
+  content: "";
+  width: 30px;
+  height: 0px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #f4f4f4;
+  position: absolute;
+  border-inline-end-style: none;
+  left: -30px;
+  z-index: -1;
+  display: block;
+}
+
+.shapeblock-fea-list-connector-left.shapeblock-fea-list-dir-right .shapeblock-fea-list-icon::after {
+  left: inherit;
+  right: -30px;
+}
+
+.shapeblock-fea-list-icon-shape-sq_rotate .shapeblock-fea-list-icon::after {
+  width: 20px;
+  left: -15px;
+  top: 110%;
+  transform: rotate(-45deg);
+}
+
+.shapeblock-fea-list-icon-shape-sq_rotate .shapeblock-fea-list-connector-left.shapeblock-fea-list-dir-right .shapeblock-fea-list-icon::after {
+  left: inherit;
+  right: -15px;
+  top: -14%;
+}
+
+.shapeblock-fea-list-icon.shapeblock-fea-list-type-image {
+  position: relative;
+}
+
+.shapeblock-fea-list-icon.shapeblock-fea-list-type-image img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 100%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+}/*# sourceMappingURL=style.css.map */

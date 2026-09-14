@@ -1,0 +1,579 @@
+/**
+ * Team Member — front-end + editor styles.
+ *
+ * Structure ported from the Elementor widget
+ * (easy-elements/widgets/team-grid/css/team-grid.scss). Element classes use
+ * this plugin's own "shapeblock-" prefix and preset CSS variables.
+ */
+
+$primary: var(--shapeblock-preset-color-primary, #5933ff);
+
+.shapeblock-team-grid {
+	.shapeblock-grid-item {
+		box-sizing: border-box;
+
+		.shapeblock-team-card {
+			position: relative;
+			overflow: hidden;
+			border-radius: 16px;
+			transition: all 0.5s ease;
+
+			.shapeblock-team-img-area {
+				position: relative;
+				z-index: 1;
+				overflow: hidden;
+
+				.shapeblock-team-img-box {
+					overflow: hidden;
+					border-radius: 16px;
+					margin: 0 auto;
+				}
+
+				.shapeblock-team-img {
+					width: 100%;
+					height: auto;
+					display: block;
+					margin: 0 auto;
+					position: relative;
+					transition: all 0.5s ease;
+					z-index: 0;
+					object-fit: cover;
+				}
+
+				.shapeblock-image-below-bg {
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					border-radius: 10px;
+					z-index: -1;
+				}
+			}
+
+			.shapeblock-image-overlay {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				pointer-events: none;
+				border-radius: inherit;
+				transition: background 0.3s, opacity 0.3s;
+				z-index: 1;
+			}
+
+			.shapeblock-name-deg-wrap {
+				background: #fff;
+				padding: 26px 24px 24px 24px;
+				border-radius: 8px;
+				text-align: center;
+
+				&.inside {
+					position: absolute;
+					bottom: 24px;
+					left: 24px;
+					right: 24px;
+					z-index: 2;
+				}
+
+				.shapeblock-name {
+					margin: 0 0 5px;
+				}
+			}
+
+			&:hover img {
+				transform: scale(1.1);
+			}
+		}
+	}
+
+	&.skin1 {
+		.shapeblock-team-card {
+			display: flex;
+			align-items: center;
+			padding: 16px;
+			gap: 20px;
+			background: #f1f2fa;
+
+			.shapeblock-team-left {
+				width: 50%;
+			}
+
+			.shapeblock-team-right {
+				width: 50%;
+
+				.shapeblock-name-deg-wrap {
+					background: transparent;
+					padding: 0px 0px 20px;
+					border-radius: 0;
+					text-align: left;
+					color: #000;
+				}
+
+				.shapeblock-team-social.default {
+					border-top: 1px solid #d9d9d9;
+
+					ul {
+						justify-content: flex-start;
+					}
+				}
+			}
+		}
+	}
+
+	&.skin2 {
+		.shapeblock-team-img-area {
+			padding: 20px 20px 0;
+
+			.shapeblock-image-below-bg {
+				height: 80%;
+				background: $primary;
+			}
+		}
+	}
+}
+
+/* Social */
+.shapeblock-team-social {
+	position: relative;
+
+	.shapeblock-team-social-hover {
+		transition: all 0.3s ease;
+	}
+
+	.shapeblock-team-social-hover a,
+	ul li a:not(.shapeblock-popup-trigger) {
+		background: $primary;
+		color: #fff;
+		transition: all 0.5s ease;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		border-radius: 100%;
+
+		svg {
+			fill: currentColor;
+			height: 1em;
+		}
+
+		path {
+			fill: currentColor;
+		}
+
+		&:hover {
+			background: #000;
+			transform: translateY(-5px);
+		}
+	}
+
+	ul {
+		list-style: none;
+		display: flex;
+		align-items: center;
+		gap: 1em;
+		margin: 0;
+		padding: 0;
+	}
+
+	&.hover_show {
+		ul {
+			position: absolute;
+			transition: all 0.8s ease;
+			opacity: 0;
+		}
+
+		&:hover {
+			.shapeblock-team-social-hover {
+				opacity: 0;
+				visibility: hidden;
+			}
+
+			ul {
+				z-index: 2;
+				opacity: 1;
+			}
+		}
+	}
+
+	&.default {
+		padding-top: 20px;
+	}
+
+	&.posi_left,
+	&.posi_right,
+	&.posi_botttom_left,
+	&.posi_botttom_right {
+		position: absolute;
+		z-index: 1;
+
+		ul {
+			flex-direction: column;
+			gap: 10px;
+		}
+	}
+
+	&.posi_left,
+	&.posi_right {
+		top: 16px;
+
+		&.hover_show ul {
+			transform: translateY(-100%);
+		}
+		&.hover_show:hover ul {
+			transform: translateY(-40%);
+		}
+	}
+
+	&.posi_botttom_left,
+	&.posi_botttom_right {
+		bottom: 16px;
+
+		&.hover_show ul {
+			transform: translateY(50px);
+		}
+		&.hover_show:hover ul {
+			transform: translateY(-100%);
+		}
+	}
+
+	&.posi_left,
+	&.posi_botttom_left {
+		left: 16px;
+	}
+
+	&.posi_right,
+	&.posi_botttom_right {
+		right: 16px;
+	}
+}
+
+/* Popup */
+.shapeblock-popup-modal {
+	display: none;
+	position: fixed;
+	z-index: 9999;
+	left: 0;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+	overflow: auto;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.shapeblock-popup-content {
+	background: #fff;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 40px 50px;
+	border-radius: 8px;
+	max-width: 550px;
+	box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+}
+
+.shapeblock-popup-close {
+	position: absolute;
+	top: 10px;
+	right: 16px;
+	font-size: 24px;
+	color: #888;
+	cursor: pointer;
+}
+
+.shapeblock-popup-details {
+	font-size: 15px;
+	color: #333;
+	line-height: 1.6;
+	margin-top: 10px;
+}
+
+.shapeblock-popup-header {
+	margin-bottom: 12px;
+}
+
+.shapeblock-popup-name .shapeblock-name {
+	font-size: 18px;
+	color: #222;
+	margin: 0 0 5px;
+}
+
+.shapeblock-popup-designation {
+	font-size: 15px;
+	color: #888;
+	margin-bottom: 6px;
+}
+
+.shapeblock-team-grid {
+	&.skin3 {
+		.shapeblock-team-img-box {
+			.shapeblock-image-content {
+				position: absolute;
+				padding: 30px;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				display: flex;
+				border-radius: inherit;
+				align-items: end;
+				overflow: hidden;
+
+				.shapeblock-description {
+					position: relative;
+					z-index: 2;
+					opacity: 0;
+					transition: opacity 0.4s ease;
+				}
+
+				&::before {
+					content: '';
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					background: rgba(0, 0, 0, 0.6);
+					opacity: 0;
+					transition: opacity 0.4s ease;
+				}
+			}
+
+			&:hover .shapeblock-image-content .shapeblock-description {
+				opacity: 1;
+			}
+		}
+
+		.shapeblock-team-deg-content .shapeblock-name-deg-wrap {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+		}
+	}
+
+	&.skin4 {
+		.shapeblock-grid-item .shapeblock-team-card {
+			position: relative;
+			overflow: hidden;
+
+			.shapeblock-team-hover-content {
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				z-index: 3;
+				opacity: 0;
+				pointer-events: none;
+			}
+
+			&:hover .shapeblock-team-hover-content {
+				opacity: 1;
+				pointer-events: auto;
+			}
+		}
+	}
+}
+
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content {
+	background: rgba(17, 17, 17, 0.75);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	transition: opacity 0.4s ease;
+	color: #fff;
+}
+
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-name-deg-wrap {
+	background: transparent;
+}
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-name-deg-wrap .shapeblock-name {
+	margin: 0 0 4px;
+}
+
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 {
+	top: 50%;
+	left: 50%;
+	right: auto;
+	bottom: auto;
+	width: clamp(170px, 62%, 230px);
+	aspect-ratio: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.9);
+	color: #111827;
+	text-align: center;
+	transform: translate(-50%, -50%) scale(0.96);
+	transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.shapeblock-team-grid.skin4 .shapeblock-grid-item .shapeblock-team-card:hover .shapeblock-team-hover-content.overlay2 {
+	transform: translate(-50%, -50%) scale(1);
+}
+
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-name-deg-wrap {
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-name {
+	color: #111827;
+	font-size: 15px;
+	font-weight: 700;
+	line-height: 1.2;
+}
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-designation {
+	color: #6b7280;
+	font-size: 12px;
+	line-height: 1.3;
+}
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-team-social {
+	position: relative;
+	top: auto;
+	right: auto;
+	bottom: auto;
+	left: auto;
+	padding-top: 12px;
+}
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-team-social ul {
+	position: static;
+	opacity: 1;
+	transform: none;
+	flex-direction: row;
+	justify-content: center;
+	gap: 8px;
+}
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-team-social ul li a:not(.shapeblock-popup-trigger) {
+	width: 22px;
+	height: 22px;
+	font-size: 10px;
+	background: #ffffff;
+	color: #111827;
+	box-shadow: 0 6px 18px rgba(17, 24, 39, 0.12);
+}
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-team-social ul li:first-child a:not(.shapeblock-popup-trigger) {
+	background: #465cff;
+	color: #ffffff;
+}
+
+/* Skin 05 */
+.shapeblock-team-grid .shapeblock-team-card.skin5 {
+	position: relative;
+	overflow: hidden;
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-team-img-area,
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-team-img-box {
+	overflow: hidden;
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-team-img-area .shapeblock-team-img {
+	transition: transform 1.3s ease;
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-name-deg-wrap {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: #fff;
+	text-align: center;
+	border-radius: 0;
+	z-index: 2;
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-designation {
+	color: #6e777d;
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact {
+	margin-top: 0;
+	max-height: 0;
+	opacity: 0;
+	overflow: hidden;
+	transition: max-height 0.5s ease, margin-top 0.5s ease, opacity 0.4s ease;
+	display: grid;
+	justify-content: center;
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-inner {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	transform: translateY(12px);
+	transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	background: #f2f3f5;
+	color: #6e777d;
+	font-weight: 500;
+	border-radius: 100px;
+	min-width: 215px;
+	max-width: max-content;
+	padding-right: 28px;
+	transition: all 0.3s ease;
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item:hover {
+	color: #2563eb;
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon {
+	flex-shrink: 0;
+	height: 50px;
+	width: 50px;
+	border-radius: 100px;
+	background: #2563eb;
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon i,
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon svg {
+	height: 1em;
+	fill: currentColor;
+	font-size: 16px;
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5:hover .shapeblock-team-img-area .shapeblock-team-img {
+	transform: scale(1.15);
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5:hover .shapeblock-author-contact {
+	max-height: 200px;
+	margin-top: 20px;
+	opacity: 1;
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5:hover .shapeblock-author-contact .shapeblock-contact-inner {
+	transform: translateY(0);
+}
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-image-content:not(.has-description) .shapeblock-description {
+	display: none;
+}
+
+body.shapeblock-popup-open {
+	overflow: hidden;
+}
+
+/* --- Responsive defaults ------------------------------------------------
+ * Breakpoints match Helper::generate_responsive_css() and the visibility
+ * classes: tablet <= 1024px, mobile <= 767px. These are defaults only — the
+ * per-device values a user sets are printed as per-block CSS with a higher
+ * specificity, so they always win over what follows.
+ */
+@media (max-width: 767px) {
+	.shapeblock-team-grid {
+		/* Skin 1 puts the photo beside the text — too narrow for both on a phone. */
+		&.skin1 .shapeblock-team-card {
+			flex-direction: column;
+			gap: 16px;
+		}
+		&.skin1 .shapeblock-team-left,
+		&.skin1 .shapeblock-team-right {
+			width: 100%;
+		}
+	}
+
+	.shapeblock-popup-content {
+		max-width: calc(100vw - 32px);
+	}
+}

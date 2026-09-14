@@ -1,0 +1,193 @@
+/**
+ * Heading — front-end + editor styles.
+ *
+ * Structure ported from the Elementor widget
+ * (easy-elements/widgets/heading/css/heading.scss). Element classes use this
+ * plugin's own "shapeblock-" prefix and preset CSS variables. JS-driven animations
+ * from the original widget are intentionally omitted.
+ */
+
+.shapeblock-title {
+	color: var(--shapeblock-preset-color-secondary, #0b3665);
+	margin: 0;
+
+	a {
+		color: currentColor;
+	}
+
+	span {
+		color: var(--shapeblock-preset-color-primary, #ffd012);
+		display: inline-block;
+	}
+}
+
+.shapeblock-description {
+	color: var(--shapeblock-preset-color-text, #121212bf);
+	font-size: 20px;
+	line-height: 150%;
+}
+
+.shapeblock-sub-heading {
+	img,
+	svg {
+		height: 1em;
+		width: auto;
+	}
+
+	&.top {
+		display: inline-block;
+		span {
+			display: block;
+		}
+	}
+
+	&.left,
+	&.right {
+		display: inline-flex !important;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&.right {
+		flex-direction: row-reverse;
+	}
+}
+
+.shapeblock-separator-icon-wrap {
+	svg {
+		height: 1em;
+	}
+}
+
+.shapeblock-separator-icon {
+	height: 4px;
+	width: 50px;
+	background: var(--shapeblock-preset-color-primary, #ffd012);
+	border-radius: 2px;
+	position: relative;
+	margin: 0 auto;
+	display: inline-block;
+
+	&.dotted {
+		&::before {
+			content: "";
+			position: absolute;
+			top: 0;
+			right: -10px;
+			display: inline-block;
+			width: 4px;
+			height: 4px;
+			border-radius: 50%;
+			background-color: var(--shapeblock-preset-color-primary, #ffd012);
+			color: var(--shapeblock-preset-color-primary, #ffd012);
+			box-shadow: 9px 0 0 currentColor, 18px 0 0 currentColor;
+		}
+	}
+}
+
+.shapeblock-full-title-start,
+.shapeblock-title-start .shapeblock-title {
+	border-left: 6px solid var(--shapeblock-preset-color-primary, #ffd012);
+	display: inline-table;
+	padding-left: 10px;
+	width: 100%;
+}
+
+.shapeblock-full-title-end,
+.shapeblock-title-end .shapeblock-title {
+	border-right: 6px solid var(--shapeblock-preset-color-primary, #ffd012);
+	display: inline-table;
+	padding-right: 10px;
+	width: 100%;
+}
+
+.shapeblock-heading.has-watermark {
+	position: relative;
+	z-index: 1;
+}
+
+.shapeblock-watermark {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	font-size: 120px;
+	font-weight: bold;
+	color: transparent;
+	-webkit-text-stroke: 1px rgba(0, 0, 0, 0.3);
+	pointer-events: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	white-space: nowrap;
+	z-index: 0;
+	transform: translateY(-50%);
+	line-height: 60%;
+}
+
+.shapeblock-sub-heading.shapeblock-sub-gradient-border {
+	display: inline-block;
+}
+
+.shapeblock-sub-gradient-border {
+	position: relative;
+	padding: 4px 18px;
+
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		padding: 1px;
+		background: linear-gradient(
+			to right,
+			var(--shapeblock-grad-color-1, rgba(0, 0, 0, 0.15)) 15%,
+			var(--shapeblock-grad-color-2, rgba(0, 0, 0, 0.30)) 30%,
+			var(--shapeblock-grad-color-3, rgba(0, 0, 0, 0.50)) 50%,
+			var(--shapeblock-grad-color-2, rgba(0, 0, 0, 0.30)) 70%,
+			var(--shapeblock-grad-color-1, rgba(0, 0, 0, 0.15)) 85%
+		);
+		-webkit-mask:
+			linear-gradient(#fff 0 0) content-box,
+			linear-gradient(#fff 0 0);
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+		pointer-events: none;
+		z-index: -1;
+		border-radius: var(--shapeblock-grad-border-radius, 40px);
+		opacity: 0.5;
+	}
+}
+
+.shapeblock-title {
+	&.shapeblock-gradient-title div,
+	&.shapeblock-gradient-title {
+		background: linear-gradient(68.75deg, #b0ff96 9.78%, #fff1b5 92.67%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		line-height: 1.1;
+	}
+}
+
+/* Image fill (text mask) */
+.shapeblock-heading .shapeblock-title.shapeblock-image-fill div,
+.shapeblock-heading .shapeblock-title.shapeblock-image-fill {
+	color: transparent;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+}
+
+/* --- Responsive defaults ------------------------------------------------
+ * Breakpoints match Helper::generate_responsive_css() and the visibility
+ * classes: tablet <= 1024px, mobile <= 767px. These are defaults only — the
+ * per-device values a user sets are printed as per-block CSS with a higher
+ * specificity, so they always win over what follows.
+ */
+@media (max-width: 767px) {
+	.shapeblock-heading-block-wrap .shapeblock-title {
+		word-break: break-word;
+	}
+}

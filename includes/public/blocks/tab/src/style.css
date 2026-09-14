@@ -1,0 +1,147 @@
+@charset "UTF-8";
+/**
+ * Tabs block — front-end + shared styles.
+ *
+ * Ported from the Elementor "Tabs" widget stylesheet
+ * (easy-elements/widgets/tab/css/tab.scss). Classes use the "shapeblock-" prefix and
+ * everything is scoped under `.shapeblock-tab-block-wrap`.
+ */
+.shapeblock-tab-block-wrap {
+  --shapeblock-tab-primary: #5933ff;
+  --shapeblock-tab-secondary: #0b3665;
+}
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=right],
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=left] {
+  display: flex;
+  gap: 46px;
+}
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=right] {
+  flex-direction: row-reverse;
+}
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=right] .shapeblock-tab-titles,
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=left] .shapeblock-tab-titles {
+  min-width: 37%;
+  display: grid;
+}
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=left] .shapeblock-tab-contents .shapeblock-content-title,
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=right] .shapeblock-tab-contents .shapeblock-content-title {
+  margin-top: 0;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-titles {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=top] .shapeblock-tab-titles {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1019607843);
+  padding: 0 0 36px;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-titles li {
+  align-items: center;
+  gap: 16px;
+  background: rgba(246, 244, 240, 0.368627451);
+  border-radius: 16px;
+  padding: 16px;
+  transition: all 0.5s ease;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-titles li.active,
+.shapeblock-tab-block-wrap .shapeblock-tab-titles li:hover {
+  background: var(--shapeblock-tab-primary);
+}
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-icon-position=right] .shapeblock-tab-titles li,
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-icon-position=left] .shapeblock-tab-titles li {
+  display: flex;
+  flex: 1;
+}
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-icon-position=top] .shapeblock-tab-titles li {
+  display: grid;
+  place-items: center;
+  flex: 1;
+}
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-icon-position=right] .shapeblock-tab-titles li {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-title-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--shapeblock-tab-secondary);
+  line-height: 130%;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-titles i,
+.shapeblock-tab-block-wrap .shapeblock-tab-titles svg {
+  height: 1.2em;
+  width: 1.2em;
+  display: block;
+  font-size: 15px;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-titles img {
+  height: 26px;
+  display: block;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-image,
+.shapeblock-tab-block-wrap .shapeblock-tab-icon {
+  display: grid;
+  height: 56px;
+  background: #efeff9;
+  padding: 0;
+  border-radius: 16px;
+  min-width: 56px;
+  place-items: center;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-tab-content {
+  display: none;
+}
+.shapeblock-tab-block-wrap .shapeblock-tabs-wrapper[data-tab-direction=top] .shapeblock-tab-contents .shapeblock-tab-content {
+  margin-top: 30px;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-tab-content.active {
+  display: block;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-content {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-content.active {
+  display: block;
+  opacity: 1;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-content-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--shapeblock-tab-secondary);
+  margin: 35px 0 30px;
+}
+.shapeblock-tab-block-wrap .shapeblock-content-description {
+  margin: 0;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-read-more {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--shapeblock-tab-secondary);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1215686275);
+  line-height: 24px;
+  display: inline-block;
+  text-decoration: none;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-read-more .shapeblock-read-more-icon {
+  width: 18px;
+  height: 18px;
+  top: 3px;
+  position: relative;
+  transition: all 0.3s ease;
+  margin-left: -5px;
+  left: 5px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-read-more:hover {
+  border-bottom-color: var(--shapeblock-tab-primary);
+}
+.shapeblock-tab-block-wrap .shapeblock-tab-contents .shapeblock-read-more:hover .shapeblock-read-more-icon {
+  left: 3px;
+}/*# sourceMappingURL=style.css.map */

@@ -1,0 +1,110 @@
+// Step 1: Prefix
+$prefix: "shapeblock-"; // change this to your plugin prefix
+
+// Step 2: Import required SCSS from node_modules
+@import "../../../node_modules/bootstrap/scss/functions";
+@import "../../../node_modules/bootstrap/scss/variables";
+@import "../../../node_modules/bootstrap/scss/maps";
+@import "../../../node_modules/bootstrap/scss/mixins";
+@import "../../../node_modules/bootstrap/scss/utilities";
+
+// Step 3: Prefix Utilities
+// We modify the $utilities map before the API generates the classes.
+$new-utilities: (
+);
+
+@each $key, $utility in $utilities {
+    @if type-of($utility)=="map" {
+        $class: map-get($utility, "class");
+
+        @if $class ==null {
+            $class: $key;
+        }
+
+        $utility: map-merge($utility, ("class": "#{$prefix}#{$class}"));
+        $new-utilities: map-merge($new-utilities, ($key: $utility));
+    }
+
+    @else {
+        $new-utilities: map-merge($new-utilities, ($key: $utility));
+    }
+}
+
+$utilities: $new-utilities;
+
+// Step 4: Only grid & flex utilities
+// Disable default grid classes so we can manually define them with prefix
+$enable-grid-classes: false;
+
+@import "../../../node_modules/bootstrap/scss/grid";
+@import "../../../node_modules/bootstrap/scss/utilities/api";
+
+// Step 5: Manually add prefixed grid classes
+.#{$prefix}row {
+    @include make-row();
+    box-sizing: border-box;
+
+    >* {
+        @include make-col-ready();
+        box-sizing: border-box;
+    }
+}
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    @include media-breakpoint-up($breakpoint, $grid-breakpoints) {
+
+        // Provide basic `.col-{bp}` classes for equal-width flexbox columns
+        .#{$prefix}col#{$infix} {
+            flex: 1 0 0;
+        }
+
+        .#{$prefix}row-cols#{$infix}-auto>* {
+            @include make-col-auto();
+        }
+
+        @if $grid-row-columns >0 {
+            @for $i from 1 through $grid-row-columns {
+                .#{$prefix}row-cols#{$infix}-#{$i} {
+                    @include row-cols($i);
+                }
+            }
+        }
+
+        .#{$prefix}col#{$infix}-auto {
+            @include make-col-auto();
+        }
+
+        @if $grid-columns >0 {
+            @for $i from 1 through $grid-columns {
+                .#{$prefix}col#{$infix}-#{$i} {
+                    @include make-col($i, $grid-columns);
+                }
+            }
+
+            // Offset
+            @for $i from 0 through ($grid-columns - 1) {
+                @if not ($infix =="" and $i ==0) {
+                    .#{$prefix}offset#{$infix}-#{$i} {
+                        @include make-col-offset($i, $grid-columns);
+                    }
+                }
+            }
+        }
+
+        // Gutters
+        @each $key, $value in $gutters {
+
+            .#{$prefix}g#{$infix}-#{$key},
+            .#{$prefix}gx#{$infix}-#{$key} {
+                --#{$prefix}gutter-x: #{$value};
+            }
+
+            .#{$prefix}g#{$infix}-#{$key},
+            .#{$prefix}gy#{$infix}-#{$key} {
+                --#{$prefix}gutter-y: #{$value};
+            }
+        }
+    }
+}

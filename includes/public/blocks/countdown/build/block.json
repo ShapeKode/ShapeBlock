@@ -1,0 +1,341 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "shapeblock/countdown",
+  "version": "0.1.0",
+  "title": "Countdown",
+  "category": "shapeblock",
+  "description": "A countdown timer to a target date with days/hours/minutes/seconds, custom labels, separators and full styling.",
+  "keywords": [
+    "countdown",
+    "timer",
+    "schedule",
+    "time",
+    "date"
+  ],
+  "example": {},
+  "supports": {
+    "html": false,
+    "align": [
+      "left",
+      "center",
+      "right",
+      "wide",
+      "full"
+    ]
+  },
+  "textdomain": "shapeblock",
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php",
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "dayLabel": {
+      "type": "string",
+      "default": "Days"
+    },
+    "hoursLabel": {
+      "type": "string",
+      "default": "Hours"
+    },
+    "minuteLabel": {
+      "type": "string",
+      "default": "Minutes"
+    },
+    "secondsLabel": {
+      "type": "string",
+      "default": "Seconds"
+    },
+    "targetDate": {
+      "type": "string",
+      "default": ""
+    },
+    "separator": {
+      "type": "string",
+      "default": "shapeblock-cntdwn-space"
+    },
+    "labelUnderNumber": {
+      "type": "boolean",
+      "default": false
+    },
+    "contentAlign": {
+      "type": "string",
+      "default": "center"
+    },
+    "contentAlignTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "contentAlignMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "midGap": {
+      "type": "string",
+      "default": ""
+    },
+    "midGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "midGapMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "separatorPositionX": {
+      "type": "string",
+      "default": ""
+    },
+    "separatorColor": {
+      "type": "string",
+      "default": ""
+    },
+    "itemBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "itemBorder": {
+      "type": "object",
+      "default": {
+        "width": 0,
+        "color": "",
+        "style": "solid"
+      }
+    },
+    "itemBoxShadow": {
+      "type": "object",
+      "default": {
+        "x": 0,
+        "y": 0,
+        "b": 0,
+        "s": 0,
+        "c": "rgba(0, 0, 0, 0)"
+      }
+    },
+    "itemBorderRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "itemPadding": {
+      "type": "object"
+    },
+    "itemPaddingTablet": {
+      "type": "object"
+    },
+    "itemPaddingMobile": {
+      "type": "object"
+    },
+    "daysTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "daysTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "daysTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "daysColor": {
+      "type": "string",
+      "default": ""
+    },
+    "daysLabelColor": {
+      "type": "string",
+      "default": ""
+    },
+    "daysLabelTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "daysLabelTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "daysLabelTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "hoursTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "hoursTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "hoursTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "hoursColor": {
+      "type": "string",
+      "default": ""
+    },
+    "hoursLabelColor": {
+      "type": "string",
+      "default": ""
+    },
+    "hoursLabelTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "hoursLabelTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "hoursLabelTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "minutesTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "minutesTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "minutesTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "minutesColor": {
+      "type": "string",
+      "default": ""
+    },
+    "minutesLabelColor": {
+      "type": "string",
+      "default": ""
+    },
+    "minutesLabelTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "minutesLabelTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "minutesLabelTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "secondsTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "secondsTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "secondsTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "secondsColor": {
+      "type": "string",
+      "default": ""
+    },
+    "secondsLabelColor": {
+      "type": "string",
+      "default": ""
+    },
+    "secondsLabelTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "secondsLabelTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "secondsLabelTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

@@ -1,0 +1,174 @@
+/**
+ * Simple Gallery — front-end + editor styles.
+ *
+ * Structure ported from the Elementor widget
+ * (easy-elements/widgets/gallery/css/gallery.scss). Element classes use this
+ * plugin's own "shapeblock-" prefix.
+ */
+
+/* === Gallery Grid === */
+.shapeblock-gallery-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 15px;
+}
+
+/* === Gallery Item === */
+.shapeblock-gallery-item {
+	position: relative;
+	overflow: hidden;
+	border-radius: 8px;
+
+	a {
+		overflow: hidden;
+		display: block;
+	}
+
+	/* === Image === */
+	img {
+		width: 100%;
+		height: auto;
+		display: block;
+		transition: transform 0.4s ease;
+		object-fit: cover;
+	}
+
+	&:hover img {
+		transform: scale(1.05);
+	}
+
+	&:hover .shapeblock-hover-content {
+		opacity: 1;
+	}
+}
+
+/* === Hover Overlay === */
+.shapeblock-hover-content {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	opacity: 0;
+	transition: all 0.3s ease;
+	background: rgba(0, 0, 0, 0.55);
+}
+
+/* === Hover Text === */
+.shapeblock-hover-text span {
+	color: #fff;
+	font-size: 18px;
+	text-transform: capitalize;
+	letter-spacing: 0.5px;
+}
+
+/* === Hover Icon === */
+.shapeblock-hover-icon {
+	i,
+	svg {
+		color: #fff;
+		font-size: 36px;
+		transition: transform 0.3s ease;
+	}
+
+	&:hover i,
+	&:hover svg {
+		transform: scale(1.2);
+	}
+
+	svg {
+		height: 1em;
+		width: 1em;
+	}
+}
+
+.shapeblock-gallery-image-wrap {
+	position: relative;
+	overflow: hidden;
+}
+
+/* === Caption === */
+.shapeblock-gallery-caption {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	background: rgba(0, 0, 0, 0.6);
+	color: #fff;
+	text-align: center;
+	padding: 8px;
+	font-size: 14px;
+	opacity: 1;
+	transition: opacity 0.3s ease;
+}
+
+/* === Lightbox === */
+.shapeblock-lightbox-gallery {
+	display: none;
+	position: fixed;
+	z-index: 9999;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.9);
+	justify-content: center;
+	align-items: center;
+	place-items: center;
+
+	&.is-open {
+		display: grid;
+	}
+
+	img {
+		max-width: 90%;
+		max-height: 80%;
+		border-radius: 10px;
+	}
+
+	.shapeblock-close {
+		position: absolute;
+		top: 15px;
+		right: 25px;
+		font-size: 35px;
+		color: white;
+		cursor: pointer;
+	}
+
+	button {
+		background: none;
+		border: none;
+		color: white;
+		font-size: 40px;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		cursor: pointer;
+	}
+}
+
+.shapeblock-prev {
+	left: 40px;
+}
+
+.shapeblock-next {
+	right: 40px;
+}
+
+/* --- Responsive defaults ------------------------------------------------
+ * Breakpoints match Helper::generate_responsive_css() and the visibility
+ * classes: tablet <= 1024px, mobile <= 767px. These are defaults only — the
+ * per-device values a user sets are printed as per-block CSS with a higher
+ * specificity, so they always win over what follows.
+ */
+/* Fallback for the grid until a per-device column count is generated. */
+@media (max-width: 1024px) {
+	.shapeblock-gallery-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 767px) {
+	.shapeblock-gallery-grid {
+		grid-template-columns: 1fr;
+	}
+}

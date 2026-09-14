@@ -1,0 +1,201 @@
+/**
+ * Search block — front-end + shared styles.
+ *
+ * Ported from the Elementor "Search" widget stylesheet
+ * (easy-elements/widgets/search/css/search.scss). Classes use the "shapeblock-"
+ * prefix and everything is scoped under `.shapeblock-search-block-wrap`.
+ */
+.shapeblock-search-block-wrap {
+	--shapeblock-search-primary: #eaa638;
+
+	.shapeblock-search-open-btn {
+		cursor: pointer;
+		padding: 0;
+		font-size: 16px;
+		display: inline-block;
+		color: inherit;
+
+		svg {
+			height: 1em;
+		}
+	}
+
+	/* Popup lightbox */
+	.shapeblock-search-lightbox {
+		position: fixed;
+		display: flex;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 999999;
+		align-items: center;
+		justify-content: center;
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 0.3s ease, visibility 0.3s ease;
+		pointer-events: none;
+	}
+
+	.shapeblock-search-lightbox.shapeblock-lightbox {
+		visibility: visible;
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	.shapeblock-search-overlay {
+		position: absolute;
+		left: 0;
+		right: 0;
+		height: 0;
+		cursor: pointer;
+		background: #ffffff;
+		transition: all 0.5s ease;
+		z-index: 9;
+		top: 0;
+		box-shadow: 0 10px 20px #00000008;
+	}
+
+	.shapeblock-lightbox .shapeblock-search-overlay {
+		height: 100%;
+	}
+
+	.shapeblock-search-content {
+		border-radius: 0;
+		position: relative;
+		box-sizing: border-box;
+		transform: translateY(-80px);
+		opacity: 0;
+		transition: transform 0.4s ease, opacity 0.4s ease;
+		transition-delay: 0.3s;
+		min-height: 450px;
+		display: grid;
+		place-content: center;
+		z-index: 99;
+
+		.shapeblock-search-title {
+			text-align: center;
+			margin: 0 0 50px;
+			font-size: 30px;
+		}
+
+		.shapeblock-search-field {
+			width: 100%;
+			padding: 15px 40px 15px 0;
+			border-radius: 8px 0 0 8px;
+			border: none;
+			margin-bottom: 0;
+			min-width: 700px;
+			outline: none;
+			font-size: 18px;
+			background: none;
+		}
+
+		.shapeblock-search-submit {
+			border: none;
+			background: none;
+			border-radius: 0;
+			position: absolute;
+			cursor: pointer;
+			right: 0;
+			top: 15px;
+			padding: 0;
+
+			svg {
+				width: 25px;
+				height: 25px;
+				fill: currentColor;
+			}
+		}
+
+		.shapeblock-search-form {
+			position: relative;
+			border-bottom: 2px solid #0000001f;
+		}
+	}
+
+	.shapeblock-lightbox .shapeblock-search-content {
+		transform: translateY(0);
+		opacity: 1;
+	}
+
+	.shapeblock-search-close-btn {
+		position: absolute;
+		top: 20px;
+		right: 25px;
+		font-size: 25px;
+		border-radius: 100%;
+		border: none;
+		cursor: pointer;
+		color: #000;
+		z-index: 1;
+		padding: 0;
+		display: grid;
+		place-content: center;
+
+		svg {
+			height: 1em;
+			fill: currentColor;
+		}
+	}
+
+	/* Style 2 — inline fields */
+	.shapeblock-search-style-2 {
+		.shapeblock-search-form {
+			position: relative;
+			margin: 0;
+		}
+
+		.shapeblock-search-field {
+			height: 44px;
+			border-radius: 100px;
+			font-size: 14px;
+			width: 240px;
+			border: 1px solid rgba(97, 94, 252, 0.4);
+			padding: 0 40px 0 15px;
+			outline: none;
+			transition: all 0.4s ease-out 0s;
+
+			&:focus {
+				border-color: var(--shapeblock-search-primary);
+			}
+		}
+
+		.shapeblock-search-submit-btn {
+			font-size: 22px;
+			color: var(--shapeblock-search-primary);
+			background: transparent;
+			border: none;
+			position: absolute;
+			right: 15px;
+			top: 50%;
+			transform: translateY(-50%);
+			min-width: max-content;
+			padding: 0;
+			cursor: pointer;
+
+			svg {
+				width: 18px;
+				height: 18px;
+				fill: var(--shapeblock-search-primary);
+			}
+		}
+	}
+
+	@media screen and (max-width: 1024px) {
+		.shapeblock-search-content .shapeblock-search-field {
+			min-width: auto;
+		}
+	}
+
+	@media screen and (max-width: 767px) {
+		.shapeblock-search-content {
+			min-height: 370px;
+		}
+	}
+
+	@media screen and (max-width: 500px) {
+		.shapeblock-search-content {
+			max-width: 230px;
+		}
+	}
+}

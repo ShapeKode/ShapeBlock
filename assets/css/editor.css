@@ -1,0 +1,45 @@
+.block-editor-block-list__layout.is-root-container> :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+    max-width: var(--shapeblock-layout-row-max-width, 1200px) !important;
+}
+
+.shapeblock-social-icon-item-header,
+.shapeblock-info-box-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.shapeblock-border-control button.components-button.is-secondary {
+    border: none !important;
+    box-shadow: none;
+
+    &:hover {
+        border: none !important;
+        box-shadow: none;
+    }
+}
+
+.shapeblock-info-box-image-control {
+    margin-bottom: 10px;
+}
+
+.block-editor-block-inspector__tabs {
+    background: #d8c7f02e;
+}
+
+.components-toggle-group-control {
+    border: 1px solid #ededed;
+    min-height: 35px;
+}
+
+.components-toggle-group-control-option-base svg {
+    width: 16px;
+}
+
+.components-input-control__container {
+    border-radius: 5px !important;
+}
+
+.block-editor-block-inspector__tabs button[data-active-item="true"] {
+    background: #e9c7ff;
+}

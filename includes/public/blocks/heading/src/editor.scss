@@ -1,0 +1,9 @@
+/**
+ * Editor-only styles for the Heading block.
+ */
+.shapeblock-heading-block-wrap {
+	.shapeblock-watermark {
+		// Keep the watermark visible (not clipped) while editing.
+		pointer-events: none;
+	}
+}

@@ -1,0 +1,329 @@
+/* Premade Designs Button in Toolbar */
+.shapeblock-premade-designs-btn.components-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    margin-left: 8px;
+    margin-right: 8px;
+    background: linear-gradient(135deg, #7B2FF2 0%, #A216FF 100%);
+    color: #fff !important;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    height: 32px;
+    white-space: nowrap;
+}
+
+.shapeblock-premade-designs-btn.components-button:hover {
+    opacity: 0.85;
+    color: #fff !important;
+}
+
+.shapeblock-premade-designs-btn.components-button:focus {
+    outline: 2px solid #A216FF;
+    outline-offset: 1px;
+    box-shadow: none;
+}
+
+.shapeblock-premade-designs-btn svg {
+    flex-shrink: 0;
+}
+
+/* Modal Overrides */
+.shapeblock-template-importer-modal .components-modal__content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.shapeblock-template-importer-modal .components-modal__header {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 16px 24px;
+    margin: 0;
+}
+
+/* Importer Container */
+.shapeblock-template-importer {
+    padding: 24px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Filter Toolbar */
+.shapeblock-template-importer__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    border: 1px solid #e8e8e8;
+}
+
+.shapeblock-template-importer__filter,
+.shapeblock-template-importer__search {
+    min-width: 240px;
+    max-width: 300px;
+}
+
+/* Normalize heights for select and search inputs */
+.shapeblock-template-importer__filter .components-input-control__container,
+.shapeblock-template-importer__search .components-input-control__container {
+    border-radius: 5px;
+}
+
+.shapeblock-template-importer__toolbar .components-select-control__input,
+.shapeblock-template-importer__toolbar .components-search-control__input {
+    height: 40px !important;
+    min-height: 40px !important;
+    font-size: 13px;
+    background: #fff;
+}
+
+.shapeblock-template-importer__toolbar .components-search-control__input:focus,
+.shapeblock-template-importer__toolbar .components-select-control__input:focus {
+    border-color: #A216FF;
+    box-shadow: 0 0 0 1px #A216FF;
+}
+
+.shapeblock-template-importer__toolbar .components-search-control {
+    position: relative;
+}
+
+.shapeblock-template-importer__toolbar .components-search-control__icon {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.shapeblock-template-importer__filter .components-input-control__container .components-input-control__backdrop,
+.shapeblock-template-importer__search .components-input-control__container .components-input-control__backdrop {
+    border-color: #A216FF !important;
+    box-shadow: none !important;
+}
+
+/* Type Filter Buttons */
+.shapeblock-template-importer__type-filter {
+    margin-left: auto;
+}
+
+.shapeblock-template-importer__type-filter .components-button-group {
+    display: flex;
+    gap: 0;
+}
+
+.shapeblock-tier-btn.components-button {
+    height: 40px;
+    min-height: 40px;
+    font-size: 13px;
+    padding: 0 16px;
+    border: none;
+    box-shadow: inset 0 0 0 1px #c280ff;
+    color: #000;
+    margin-left: -1px;
+}
+
+.shapeblock-tier-btn.components-button:first-child {
+    border-radius: 6px 0 0 6px;
+    margin-left: 0;
+}
+
+.shapeblock-tier-btn.components-button:last-child {
+    border-radius: 0 6px 6px 0;
+}
+
+.shapeblock-tier-btn.components-button.is-active,
+.shapeblock-tier-btn.components-button.is-primary {
+    background: #A216FF;
+    box-shadow: inset 0 0 0 1px #c280ff;
+    color: #fff;
+    z-index: 1;
+    position: relative;
+}
+
+.shapeblock-tier-btn.components-button:hover {
+    background: #A216FF !important;
+    color: #fff !important;
+}
+
+/* Synchronize Button */
+.shapeblock-template-importer__sync-btn.components-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    min-height: 40px;
+    padding: 0 14px;
+    font-size: 13px;
+    color: #A216FF;
+    border: 1px solid #d9b3ff;
+    border-radius: 6px;
+    background: #fff;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.shapeblock-template-importer__sync-btn.components-button:hover {
+    background: #A216FF !important;
+    color: #fff !important;
+}
+
+.shapeblock-template-importer__sync-btn.components-button.is-busy {
+    opacity: 0.7;
+}
+
+.shapeblock-template-importer__sync-btn.components-button.is-busy svg {
+    animation: shapeblock-spin 1s linear infinite;
+}
+
+@keyframes shapeblock-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Loading State */
+.shapeblock-template-importer__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    gap: 16px;
+    color: #757575;
+}
+
+/* Empty State */
+.shapeblock-template-importer__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    color: #757575;
+    font-size: 14px;
+}
+
+/* Masonry Grid */
+.shapeblock-template-importer__masonry {
+    columns: 4 280px;
+    column-gap: 20px;
+}
+
+/* Template Item */
+.shapeblock-template-importer__item {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.shapeblock-template-importer__item:hover {
+    border-color: #A216FF;
+    box-shadow: 0 6px 20px rgba(162, 22, 255, 0.18);
+    transform: translateY(-2px);
+}
+
+/* Preview Area — auto height for masonry */
+.shapeblock-template-importer__preview {
+    width: 100%;
+    overflow: hidden;
+    background: #f8f8f8;
+    position: relative;
+}
+
+.shapeblock-template-importer__preview img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.shapeblock-template-importer__preview-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 180px;
+    padding: 24px 16px;
+    background: linear-gradient(145deg, #f0e6ff 0%, #e8f0fe 100%);
+    color: #9b59b6;
+}
+
+.shapeblock-template-importer__preview-placeholder svg {
+    opacity: 0.4;
+}
+
+.shapeblock-template-importer__preview-placeholder span {
+    font-size: 13px;
+    font-weight: 500;
+    color: #7e57c2;
+    text-align: center;
+    line-height: 1.3;
+    opacity: 0.7;
+}
+
+/* Info Area */
+.shapeblock-template-importer__info {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.shapeblock-template-importer__title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e1e1e;
+    line-height: 1.4;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Import Button */
+.shapeblock-template-importer__import-btn.components-button.is-primary {
+    background: #A216FF;
+    border-color: #A216FF;
+    flex-shrink: 0;
+    font-size: 12px;
+    padding: 6px 16px;
+    border-radius: 4px;
+}
+
+.shapeblock-template-importer__import-btn.components-button.is-primary:hover {
+    background: #8a0ee0;
+    border-color: #8a0ee0;
+}
+
+/* Infinite Scroll Sentinel */
+.shapeblock-template-importer__sentinel {
+    min-height: 1px;
+    padding: 8px 0;
+}
+
+.shapeblock-template-importer__loading-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px 0;
+    color: #757575;
+    font-size: 13px;
+}

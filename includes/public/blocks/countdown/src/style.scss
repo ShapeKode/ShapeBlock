@@ -1,0 +1,98 @@
+/**
+ * Countdown block — front-end + shared styles.
+ *
+ * Ported from the Elementor "Countdown" widget stylesheet
+ * (easy-elements/widgets/countdown/css/countdown.scss). Classes use the
+ * "shapeblock-" prefix and everything is scoped under `.shapeblock-countdown-block-wrap`.
+ */
+.shapeblock-countdown-block-wrap {
+	--shapeblock-cntdwn-primary: #ffd012;
+	--shapeblock-cntdwn-secondary: #0b3665;
+
+	.shapeblock-cntdwn {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 25px;
+		justify-content: center;
+	}
+
+	.shapeblock-cntdwn-days-label,
+	.shapeblock-cntdwn-hours-label,
+	.shapeblock-cntdwn-minutes-label,
+	.shapeblock-cntdwn-seconds-label {
+		color: var(--shapeblock-cntdwn-secondary);
+		justify-content: center;
+		font-size: 14px;
+		line-height: 1.4;
+		font-weight: 300;
+	}
+
+	.shapeblock-cntdwn-days,
+	.shapeblock-cntdwn-hours,
+	.shapeblock-cntdwn-minutes,
+	.shapeblock-cntdwn-seconds {
+		text-align: center;
+		display: inline-block;
+		font-size: 44px;
+		font-weight: 400;
+		line-height: 1;
+		color: var(--shapeblock-cntdwn-primary);
+	}
+
+	.shapeblock-cntdwn-item {
+		position: relative;
+	}
+
+	/* divider bullets style */
+	.shapeblock-cntdwn-bullets::before,
+	.shapeblock-cntdwn-bullets::after {
+		content: '';
+		display: block;
+		width: 6px;
+		height: 6px;
+		background: var(--shapeblock-cntdwn-secondary);
+		position: absolute;
+		left: 112%;
+		bottom: 30%;
+	}
+	.shapeblock-cntdwn-bullets::after {
+		bottom: inherit;
+		top: 35%;
+	}
+	.shapeblock-cntdwn-bullets:last-child::after,
+	.shapeblock-cntdwn-bullets:last-child::before {
+		display: none;
+	}
+
+	/* divider dash style */
+	.shapeblock-cntdwn-dash::before {
+		content: '';
+		display: block;
+		width: 10px;
+		height: 5px;
+		background: var(--shapeblock-cntdwn-secondary);
+		position: absolute;
+		left: 110%;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+	.shapeblock-cntdwn-dash:last-child::before {
+		display: none;
+	}
+
+	@media screen and (max-width: 767px) {
+		.shapeblock-cntdwn-days-label,
+		.shapeblock-cntdwn-hours-label,
+		.shapeblock-cntdwn-minutes-label,
+		.shapeblock-cntdwn-seconds-label {
+			font-size: 12px;
+		}
+		.shapeblock-cntdwn-days,
+		.shapeblock-cntdwn-hours,
+		.shapeblock-cntdwn-minutes,
+		.shapeblock-cntdwn-seconds {
+			font-size: 22px;
+		}
+	}
+}

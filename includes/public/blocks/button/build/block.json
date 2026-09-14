@@ -1,0 +1,297 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "shapeblock/button",
+  "version": "0.1.0",
+  "title": "Button",
+  "category": "shapeblock",
+  "description": "A flexible button with icon, gradient and full style controls.",
+  "keywords": [
+    "button",
+    "link",
+    "cta",
+    "click"
+  ],
+  "example": {},
+  "supports": {
+    "html": false,
+    "align": [
+      "left",
+      "center",
+      "right",
+      "wide",
+      "full"
+    ]
+  },
+  "textdomain": "shapeblock",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Click Here"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "default": "#"
+    },
+    "buttonTarget": {
+      "type": "boolean",
+      "default": false
+    },
+    "buttonNofollow": {
+      "type": "boolean",
+      "default": false
+    },
+    "buttonType": {
+      "type": "string",
+      "default": "primary"
+    },
+    "buttonIcon": {
+      "type": "string",
+      "default": ""
+    },
+    "iconPosition": {
+      "type": "string",
+      "default": "after"
+    },
+    "iconSpacing": {
+      "type": "string",
+      "default": "8"
+    },
+    "iconSpacingTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSpacingMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "minWidth": {
+      "type": "string",
+      "default": "150"
+    },
+    "minWidthTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "minWidthMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonAlignment": {
+      "type": "string",
+      "default": "center"
+    },
+    "buttonAlignmentTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonAlignmentMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "showGradient": {
+      "type": "boolean",
+      "default": false
+    },
+    "gradient1": {
+      "type": "string",
+      "default": "#4750CC"
+    },
+    "gradient2": {
+      "type": "string",
+      "default": "#EF5CE8"
+    },
+    "gradient3": {
+      "type": "string",
+      "default": "#EFC7AE"
+    },
+    "borderGradientButton": {
+      "type": "boolean",
+      "default": false
+    },
+    "borderGradientColor1": {
+      "type": "string",
+      "default": "#A53E1B"
+    },
+    "borderGradientColor2": {
+      "type": "string",
+      "default": "#173998"
+    },
+    "buttonTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "buttonTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "buttonTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "textColor": {
+      "type": "string",
+      "default": ""
+    },
+    "bgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonBorder": {
+      "type": "object",
+      "default": {
+        "width": 0,
+        "color": "",
+        "style": "solid"
+      }
+    },
+    "buttonBorderRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "buttonBoxShadow": {
+      "type": "object",
+      "default": {
+        "x": 0,
+        "y": 0,
+        "b": 0,
+        "s": 0,
+        "c": "rgba(0, 0, 0, 0)"
+      }
+    },
+    "buttonPadding": {
+      "type": "object"
+    },
+    "buttonPaddingTablet": {
+      "type": "object"
+    },
+    "buttonPaddingMobile": {
+      "type": "object"
+    },
+    "buttonMargin": {
+      "type": "object"
+    },
+    "buttonMarginTablet": {
+      "type": "object"
+    },
+    "buttonMarginMobile": {
+      "type": "object"
+    },
+    "textColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "bgColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonBorderHover": {
+      "type": "object",
+      "default": {
+        "width": 0,
+        "color": "",
+        "style": "solid"
+      }
+    },
+    "iconColor": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBg": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSize": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSizeMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxWidthTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxWidthMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxHeight": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxHeightTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxHeightMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxBorderRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "iconRotation": {
+      "type": "string",
+      "default": ""
+    },
+    "iconColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBgHover": {
+      "type": "string",
+      "default": ""
+    },
+    "iconRotationHover": {
+      "type": "string",
+      "default": ""
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

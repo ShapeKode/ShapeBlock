@@ -1,0 +1,28 @@
+/* Column — frontend + editor shared structural styles. Visual styles come from
+ * generated per-block CSS in render.php. Keep this file lightweight. */
+
+.shapeblock-column {
+    flex: 1 1 0%;
+    min-width: 0;
+    box-sizing: border-box;
+    position: relative;
+
+    > .shapeblock-column__inner {
+        display: block;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+    }
+
+    &.is-self-flex-start { align-self: flex-start; }
+    &.is-self-center     { align-self: center; }
+    &.is-self-flex-end   { align-self: flex-end; }
+    &.is-self-stretch    { align-self: stretch; }
+}
+
+.shapeblock-layout-row.is-equal-height > .shapeblock-layout-row__inner > .shapeblock-column > .shapeblock-column__inner {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+

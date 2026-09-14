@@ -1,0 +1,364 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "shapeblock/icon-list",
+  "version": "0.1.0",
+  "title": "Icon List",
+  "category": "shapeblock",
+  "description": "A vertical list of items with icon, number or image, title, description and optional connector.",
+  "keywords": [
+    "icon",
+    "list",
+    "feature",
+    "steps",
+    "service"
+  ],
+  "example": {},
+  "supports": {
+    "html": false,
+    "align": [
+      "left",
+      "center",
+      "right",
+      "wide",
+      "full"
+    ]
+  },
+  "textdomain": "shapeblock",
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php",
+  "attributes": {
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "features": {
+      "type": "array",
+      "default": [
+        {
+          "icon": "shapeblock-icon-favorite",
+          "title": "Unlimited bandwidth"
+        },
+        {
+          "icon": "shapeblock-icon-favorite",
+          "title": "Free SSL certificate"
+        },
+        {
+          "icon": "shapeblock-icon-favorite",
+          "title": "24/7 expert support"
+        }
+      ]
+    },
+    "feaDir": {
+      "type": "string",
+      "default": "left"
+    },
+    "showIcon": {
+      "type": "boolean",
+      "default": true
+    },
+    "feaVerticalAlign": {
+      "type": "string",
+      "default": "center"
+    },
+    "layout": {
+      "type": "string",
+      "default": "default"
+    },
+    "listAlign": {
+      "type": "string",
+      "default": "left"
+    },
+    "divider": {
+      "type": "boolean",
+      "default": false
+    },
+    "dividerColor": {
+      "type": "string",
+      "default": ""
+    },
+    "iconView": {
+      "type": "string",
+      "default": "default"
+    },
+    "iconShape": {
+      "type": "string",
+      "default": "rounded"
+    },
+    "titleTag": {
+      "type": "string",
+      "default": "span"
+    },
+    "listBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "listBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "feaItemGap": {
+      "type": "string",
+      "default": ""
+    },
+    "feaItemGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "feaItemGapMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "feaMiddleGap": {
+      "type": "string",
+      "default": ""
+    },
+    "feaMiddleGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "feaMiddleGapMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnector": {
+      "type": "boolean",
+      "default": false
+    },
+    "feaConnectorLeft": {
+      "type": "boolean",
+      "default": false
+    },
+    "feaConnectorType": {
+      "type": "string",
+      "default": "solid"
+    },
+    "feaConnectorWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnectorWidthTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnectorWidthMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnectorPositionX": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnectorPositionXTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnectorPositionXMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnectorRightPositionX": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnectorRightPositionXTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnectorRightPositionXMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "feaConnectorColor": {
+      "type": "string",
+      "default": ""
+    },
+    "feaListBorder": {
+      "type": "object",
+      "default": {
+        "width": 0,
+        "color": "",
+        "style": "solid"
+      }
+    },
+    "feaListBorderRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "feaListPadding": {
+      "type": "object"
+    },
+    "feaListPaddingTablet": {
+      "type": "object"
+    },
+    "feaListPaddingMobile": {
+      "type": "object"
+    },
+    "feaBlockMargin": {
+      "type": "object"
+    },
+    "feaBlockMarginTablet": {
+      "type": "object"
+    },
+    "feaBlockMarginMobile": {
+      "type": "object"
+    },
+    "iconColor": {
+      "type": "string",
+      "default": ""
+    },
+    "iconColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "iconHAlign": {
+      "type": "string",
+      "default": "left"
+    },
+    "iconOffsetY": {
+      "type": "string",
+      "default": ""
+    },
+    "iconOffsetYTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "iconOffsetYMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSize": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSizeMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxSize": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxSizeMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "iconShadow": {
+      "type": "object",
+      "default": {
+        "x": 0,
+        "y": 0,
+        "b": 0,
+        "s": 0,
+        "c": "rgba(0, 0, 0, 0)"
+      }
+    },
+    "iconBorder": {
+      "type": "object",
+      "default": {
+        "width": 0,
+        "color": "",
+        "style": "solid"
+      }
+    },
+    "iconRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "titleColor": {
+      "type": "string",
+      "default": ""
+    },
+    "titleTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "titleTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "titleTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "titlePadding": {
+      "type": "object"
+    },
+    "titlePaddingTablet": {
+      "type": "object"
+    },
+    "titlePaddingMobile": {
+      "type": "object"
+    },
+    "descColor": {
+      "type": "string",
+      "default": ""
+    },
+    "descTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "descTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "descTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "hideDesktop": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideTablet": {
+      "type": "boolean",
+      "default": false
+    },
+    "hideMobile": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

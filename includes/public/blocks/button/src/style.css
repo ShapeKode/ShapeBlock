@@ -1,0 +1,167 @@
+@charset "UTF-8";
+/**
+ * Button — front-end + editor styles.
+ *
+ * Structure ported from the Elementor widget
+ * (easy-elements/widgets/button/css/button.scss). Element classes use this
+ * plugin's own "shapeblock-" prefix and preset CSS variables.
+ */
+.shapeblock-button-gradient {
+  position: relative;
+  overflow: hidden;
+}
+.shapeblock-button-gradient::after, .shapeblock-button-gradient::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.6s ease-in-out;
+  z-index: 0;
+}
+.shapeblock-button-gradient::after {
+  background: linear-gradient(68.75deg, var(--shapeblock-gradient-1, #4750cc) 9.78%, var(--shapeblock-gradient-2, #ef5ce8) 58.79%, var(--shapeblock-gradient-3, #efc7ae) 92.67%);
+  opacity: 1;
+}
+.shapeblock-button-gradient::before {
+  background: linear-gradient(-68.75deg, var(--shapeblock-gradient-1, #4750cc) 9.78%, var(--shapeblock-gradient-2, #ef5ce8) 58.79%, var(--shapeblock-gradient-3, #efc7ae) 92.67%);
+  opacity: 0;
+}
+.shapeblock-button-gradient:hover::after {
+  opacity: 0;
+}
+.shapeblock-button-gradient:hover::before {
+  opacity: 1;
+}
+.shapeblock-button-gradient span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Base button */
+.shapeblock-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  transition: all 0.5s ease;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 1.5;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+.shapeblock-button:hover {
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.shapeblock-button-primary {
+  background-color: var(--shapeblock-preset-color-primary, #ffd012);
+  color: #ffffff;
+}
+.shapeblock-button-primary:hover {
+  background-color: var(--shapeblock-preset-color-secondary, #0b3665);
+  border-color: var(--shapeblock-preset-color-secondary, #0b3665);
+}
+
+.shapeblock-button-outline {
+  background-color: transparent;
+  color: var(--shapeblock-preset-color-secondary, #0b3665);
+  border: 2px solid var(--shapeblock-preset-color-secondary, #0b3665);
+}
+.shapeblock-button-outline:hover {
+  background-color: var(--shapeblock-preset-color-primary, #ffd012);
+}
+
+/* Icon wrappers */
+.shapeblock-button-icon-before,
+.shapeblock-button-icon-after {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.shapeblock-button-icon-before {
+  margin-right: 8px;
+}
+
+.shapeblock-button-icon-after {
+  margin-left: 8px;
+}
+
+.shapeblock-button i,
+.shapeblock-button svg {
+  color: inherit;
+  font-size: inherit;
+}
+.shapeblock-button svg {
+  width: 1em;
+  height: 1em;
+}
+.shapeblock-button .shapeblock-button-icon-before svg path,
+.shapeblock-button .shapeblock-button-icon-after svg path {
+  fill: currentColor;
+}
+.shapeblock-button img {
+  width: 1em;
+  height: 1em;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+.shapeblock-button-text {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Icon-only button variant */
+.shapeblock-button-icon_btn {
+  background: transparent;
+}
+.shapeblock-button-icon_btn .shapeblock-button-icon-after,
+.shapeblock-button-icon_btn .shapeblock-button-icon-before {
+  display: inline-grid;
+  place-content: center;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--shapeblock-preset-color-primary, #ffd012);
+  color: #ffffff;
+  margin-right: 16px;
+}
+
+/* Gradient border button */
+.shapeblock-button.shapeblock-button-border-gradient {
+  z-index: 1;
+  transition: all 0.4s ease;
+  position: relative;
+  background: #fff;
+  color: currentColor;
+}
+.shapeblock-button.shapeblock-button-border-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(90deg, var(--shapeblock-border-gradient-1, #a53e1b) 0%, var(--shapeblock-border-gradient-2, #173998) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+  transition: background 0.5s ease;
+}
+.shapeblock-button.shapeblock-button-border-gradient:hover {
+  color: #fff;
+  background: linear-gradient(90deg, var(--shapeblock-border-gradient-1, #a53e1b), var(--shapeblock-border-gradient-2, #173998));
+}/*# sourceMappingURL=style.css.map */

@@ -1,0 +1,112 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "shapeblock/column",
+    "version": "0.1.0",
+    "title": "Column",
+    "category": "shapeblock",
+    "icon": "align-center",
+    "description": "A column inside a shapeblock Row. Holds any block — including nested Rows.",
+    "keywords": ["column", "container", "layout"],
+    "example": {},
+    "supports": {
+        "html": false,
+        "anchor": true,
+        "reusable": false,
+        "inserter": true
+    },
+    "textdomain": "shapeblock",
+    "editorScript": "file:./index.js",
+    "editorStyle":  "file:./index.css",
+    "render": "file:./render.php",
+    "attributes": {
+        "blockId":           { "type": "string", "default": "" },
+        "htmlTag":           { "type": "string", "default": "div" },
+        "customClass":       { "type": "string", "default": "" },
+
+        "widthType":         { "type": "string", "default": "percentage" },
+
+        "width":             { "type": "string", "default": "" },
+        "widthTablet":       { "type": "string", "default": "" },
+        "widthMobile":       { "type": "string", "default": "" },
+
+        "flexGrow":          { "type": "string", "default": "" },
+        "flexGrowTablet":    { "type": "string", "default": "" },
+        "flexGrowMobile":    { "type": "string", "default": "" },
+
+        "flexBasis":         { "type": "string", "default": "" },
+        "flexBasisTablet":   { "type": "string", "default": "" },
+        "flexBasisMobile":   { "type": "string", "default": "" },
+
+        "minHeight":         { "type": "string", "default": "" },
+        "minHeightTablet":   { "type": "string", "default": "" },
+        "minHeightMobile":   { "type": "string", "default": "" },
+
+        "verticalAlign":     { "type": "string", "default": "" },
+
+        "flexDirection":         { "type": "string", "default": "" },
+        "flexDirectionTablet":   { "type": "string", "default": "" },
+        "flexDirectionMobile":   { "type": "string", "default": "" },
+        "justifyContent":        { "type": "string", "default": "" },
+        "justifyContentTablet":  { "type": "string", "default": "" },
+        "justifyContentMobile":  { "type": "string", "default": "" },
+        "alignItems":            { "type": "string", "default": "" },
+        "alignItemsTablet":      { "type": "string", "default": "" },
+        "alignItemsMobile":      { "type": "string", "default": "" },
+        "alignContent":          { "type": "string", "default": "" },
+        "alignContentTablet":    { "type": "string", "default": "" },
+        "alignContentMobile":    { "type": "string", "default": "" },
+        "flexWrap":              { "type": "string", "default": "" },
+        "flexWrapTablet":        { "type": "string", "default": "" },
+        "flexWrapMobile":        { "type": "string", "default": "" },
+        "contentGap":            { "type": "string", "default": "" },
+        "contentGapTablet":      { "type": "string", "default": "" },
+        "contentGapMobile":      { "type": "string", "default": "" },
+
+        "padding": {
+            "type": "object",
+            "default": { "top": "", "right": "", "bottom": "", "left": "" }
+        },
+        "paddingTablet": {
+            "type": "object",
+            "default": { "top": "", "right": "", "bottom": "", "left": "" }
+        },
+        "paddingMobile": {
+            "type": "object",
+            "default": { "top": "", "right": "", "bottom": "", "left": "" }
+        },
+
+        "margin": {
+            "type": "object",
+            "default": { "top": "", "right": "", "bottom": "", "left": "" }
+        },
+        "marginTablet": {
+            "type": "object",
+            "default": { "top": "", "right": "", "bottom": "", "left": "" }
+        },
+        "marginMobile": {
+            "type": "object",
+            "default": { "top": "", "right": "", "bottom": "", "left": "" }
+        },
+
+        "background":         { "type": "string", "default": "" },
+        "backgroundGradient": { "type": "string", "default": "" },
+
+        "border": {
+            "type": "object",
+            "default": { "width": 0, "color": "", "style": "solid" }
+        },
+        "borderRadius": {
+            "type": "object",
+            "default": { "top": "", "right": "", "bottom": "", "left": "" }
+        },
+        "boxShadow": {
+            "type": "object",
+            "default": { "x": 0, "y": 0, "b": 0, "s": 0, "c": "" }
+        },
+
+    "hideDesktop": { "type": "boolean", "default": false },
+    "hideTablet":  { "type": "boolean", "default": false },
+    "hideMobile":  { "type": "boolean", "default": false }
+    }
+}

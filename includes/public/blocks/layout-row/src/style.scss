@@ -1,0 +1,84 @@
+/* Row — frontend + editor shared structural styles. Visual styles come from
+ * generated per-block CSS in render.php. Keep this file lightweight. */
+
+.wp-block-shapeblock-layout-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: inherit;
+    gap: 20px;
+    /* Mirror the gap default for the calc() in column widths. If we don't set this,
+     * an empty `gap` attribute lets --bp-gap fall back to 0 while the actual rendered
+     * gap is still 20px — causing columns to overflow the row and wrap. */
+    --bp-gap: 20px;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+
+    .shapeblock-layout-row__inner {
+        display: flex;
+        flex-wrap: inherit;
+        flex-direction: inherit;
+        gap: inherit;
+        align-items: inherit;
+        justify-content: inherit;
+        align-content: inherit;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    &.is-content-boxed > .shapeblock-layout-row__inner {
+        max-width: var(--shapeblock-layout-row-max-width, 1200px);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    &.is-content-full > .shapeblock-layout-row__inner {
+        max-width: none;
+    }
+
+    &.is-equal-height > .shapeblock-layout-row__inner > .shapeblock-column {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &.is-stretch > .shapeblock-layout-row__inner > .shapeblock-column {
+        align-self: stretch;
+    }
+
+    &.is-valign-top > .shapeblock-layout-row__inner    { align-items: flex-start; }
+    &.is-valign-middle > .shapeblock-layout-row__inner { align-items: center; }
+    &.is-valign-bottom > .shapeblock-layout-row__inner { align-items: flex-end; }
+}
+
+/* Columns per row, Tablet. Without !important, so a column that carries its own
+ * Tablet width still wins ( that rule is printed with !important ). */
+@media (max-width: 1024px) {
+    .shapeblock-layout-row.has-tablet-columns > .shapeblock-layout-row__inner {
+        flex-wrap: wrap;
+    }
+
+    .shapeblock-layout-row.has-tablet-columns > .shapeblock-layout-row__inner > .shapeblock-column {
+        flex: 0 1 var(--bp-col-tablet, 100%);
+        max-width: var(--bp-col-tablet, 100%);
+    }
+}
+
+@media (max-width: 767px) {
+    /* Default: one column per row. A row that sets its own mobile column count
+     * opts out here and uses the rule below instead. */
+    .shapeblock-layout-row:not(:where(.has-mobile-columns)) > .shapeblock-layout-row__inner > .shapeblock-column {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+    }
+
+    .shapeblock-layout-row.has-mobile-columns > .shapeblock-layout-row__inner {
+        flex-wrap: wrap;
+    }
+
+    .shapeblock-layout-row.has-mobile-columns > .shapeblock-layout-row__inner > .shapeblock-column {
+        flex: 0 1 var(--bp-col-mobile, 100%);
+        max-width: var(--bp-col-mobile, 100%);
+    }
+}
+
