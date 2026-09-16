@@ -17,6 +17,7 @@
     "textdomain": "shapeblock",
     "editorScript": "file:./index.js",
     "editorStyle":  "file:./index.css",
+    "viewScript": "file:./view.js",
     "render": "file:./render.php",
     "attributes": {
         "blockId":            { "type": "string", "default": "" },
@@ -124,6 +125,9 @@
         "overflow":  { "type": "string", "default": "" },
         "zIndex":    { "type": "string", "default": "" },
         "position":  { "type": "string", "default": "" },
+
+        "isSticky":  { "type": "boolean", "default": false },
+        "stickyTop": { "type": "string", "default": "0px" },
 
     "hideDesktop": { "type": "boolean", "default": false },
     "hideTablet":  { "type": "boolean", "default": false },

@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useCallback } from '@wordpress/element';
+import { useEffect, useMemo, useCallback, useRef } from '@wordpress/element';
 import { createBlock } from '@wordpress/blocks';
 import { useSelect, useDispatch } from '@wordpress/data';
 import {
@@ -38,11 +38,11 @@ import {
 import BackgroundControl from '../../custom-components/BackgroundControl';
 import BorderControl from '../../custom-components/BorderControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
-import ColorPopover from '../../custom-components/ColorPopover';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 
 import { LAYOUT_PRESETS, presetTemplate, getPresetById } from './presets';
 import { buildRowEditorCss } from './style-utils';
+import { observeStickyRow } from './sticky-release';
 
 import './editor.scss';
 
@@ -111,6 +111,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         verticalAlign ? `is-valign-${verticalAlign}` : '',
         equalHeight ? 'is-equal-height' : '',
         stretchColumns ? 'is-stretch' : '',
+        attributes.isSticky ? 'is-sticky' : '',
         parseInt(attributes.columnsTablet, 10) > 0 ? 'has-tablet-columns' : '',
         parseInt(attributes.columnsMobile, 10) > 0 ? 'has-mobile-columns' : '',
         customClass,
@@ -118,7 +119,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         .filter(Boolean)
         .join(' ');
 
-    const blockProps = useBlockProps({ className: wrapperClasses });
+    const rowRef = useRef(null);
+    const blockProps = useBlockProps({ className: wrapperClasses, ref: rowRef });
+
+    // Preview the front-end release behaviour inside the editor canvas.
+    useEffect(() => {
+        if (!attributes.isSticky || !rowRef.current) {
+            return undefined;
+        }
+        return observeStickyRow(rowRef.current);
+    }, [attributes.isSticky, attributes.stickyTop]);
 
     const innerBlocksProps = useInnerBlocksProps(
         { className: 'shapeblock-layout-row__inner' },
@@ -207,6 +217,25 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             </PanelBody>
 
             <PanelBody title={__('Position & Z-Index', 'shapeblock')} initialOpen={false}>
+                <ToggleControl
+                    label={__('Make Sticky', 'shapeblock')}
+                    checked={attributes.isSticky}
+                    onChange={(v) => setAttributes({ isSticky: v })}
+                    __nextHasNoMarginBottom
+                />
+
+                {attributes.isSticky && (
+                    <>
+                        <Divider />
+                        <UnitControl
+                            label={__('Sticky Top Offset', 'shapeblock')}
+                            value={attributes.stickyTop}
+                            onChange={(v) => setAttributes({ stickyTop: v })}
+                        />
+                    </>
+                )}
+
+                <Divider />
                 <SelectControl
                     label={__('Position', 'shapeblock')}
                     value={attributes.position}
@@ -216,12 +245,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         { label: 'relative', value: 'relative' },
                         { label: 'absolute', value: 'absolute' },
                         { label: 'fixed', value: 'fixed' },
-                        { label: 'sticky', value: 'sticky' },
                     ]}
                     onChange={(v) => setAttributes({ position: v })}
                     __next40pxDefaultSize
                     __nextHasNoMarginBottom
                 />
+
                 <Divider />
                 <SelectControl
                     label={__('Overflow', 'shapeblock')}

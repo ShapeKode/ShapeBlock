@@ -31,6 +31,7 @@
   "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
+  "viewScript": "file:./view.js",
   "render": "file:./render.php",
   "attributes": {
     "blockId": {
@@ -320,6 +321,14 @@
     "position": {
       "type": "string",
       "default": ""
+    },
+    "isSticky": {
+      "type": "boolean",
+      "default": false
+    },
+    "stickyTop": {
+      "type": "string",
+      "default": "0px"
     },
     "hideDesktop": {
       "type": "boolean",

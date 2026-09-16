@@ -98,6 +98,16 @@ if ( $attributes['zIndex'] !== '' && $attributes['zIndex'] !== null ) {
     if ( $z !== '' ) $row_responsive['desktop']['z-index'] = (int) $z;
 }
 
+// Sticky positioning - apply when isSticky is enabled.
+if ( ! empty( $attributes['isSticky'] ) ) {
+    $row_responsive['desktop']['position'] = 'sticky';
+    $row_responsive['desktop']['z-index'] = 'auto';
+    $row_responsive['desktop']['width'] = '100%';
+
+    $sticky_top = isset( $attributes['stickyTop'] ) ? trim( (string) $attributes['stickyTop'] ) : '0px';
+    $row_responsive['desktop']['top'] = \ShapeBlock\Frontend\Helper::ensure_unit( $sticky_top );
+}
+
 // CSS custom props for the column-width calc — columns read these via cascade and
 // compute their own width as `calc(W% - (cols-1) * gap * W / 100)` so non-zero gap
 // never pushes the row to overflow. See column/src/render.php.
@@ -219,6 +229,7 @@ if ( $equal_height ) $classes[] = 'is-equal-height';
 if ( $stretch )      $classes[] = 'is-stretch';
 if ( $cols_tablet )  $classes[] = 'has-tablet-columns';
 if ( $cols_mobile )  $classes[] = 'has-mobile-columns';
+if ( ! empty( $attributes['isSticky'] ) ) $classes[] = 'is-sticky';
 if ( ! empty( $attributes['hideDesktop'] ) ) $classes[] = 'shapeblock-hide-desktop';
 if ( ! empty( $attributes['hideTablet'] ) )  $classes[] = 'shapeblock-hide-tablet';
 if ( ! empty( $attributes['hideMobile'] ) )  $classes[] = 'shapeblock-hide-mobile';
@@ -229,9 +240,24 @@ if ( $custom_class ) {
     }
 }
 
-$wrapper_attrs = get_block_wrapper_attributes( [ 'class' => implode( ' ', $classes ) ] );
+// Sticky is written inline as well as in the generated stylesheet: the inline
+// declaration is the only one that outranks a theme rule setting position on
+// the same element, and style.scss keys off [style*="position:sticky"].
+$sticky_styles = '';
+if ( ! empty( $attributes['isSticky'] ) ) {
+    $sticky_styles  = 'position:sticky;z-index:auto;';
+    $sticky_styles .= 'top:' . \ShapeBlock\Frontend\Helper::ensure_unit(
+        ! empty( $attributes['stickyTop'] ) ? (string) $attributes['stickyTop'] : '0px'
+    ) . ';';
+}
 
-// Output.
+$wrapper_args = [ 'class' => implode( ' ', $classes ) ];
+if ( $sticky_styles ) {
+    $wrapper_args['style'] = $sticky_styles;
+}
+$wrapper_attrs = get_block_wrapper_attributes( $wrapper_args );
+
+// Output row with inner content.
 printf(
     '<%1$s %2$s><div class="shapeblock-layout-row__inner">%3$s</div></%1$s>',
     tag_escape( $tag ),

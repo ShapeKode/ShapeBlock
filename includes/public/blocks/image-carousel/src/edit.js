@@ -52,7 +52,7 @@ const FIT = [
  * the preview follows. An image that is not in the media library (or whose
  * thumbnail has not been generated) falls back to its own URL.
  */
-function ItemThumb({ image }) {
+function ItemThumb({ image, onClick }) {
 	const id = image?.id;
 	const thumb = useSelect(
 		(select) => {
@@ -65,11 +65,40 @@ function ItemThumb({ image }) {
 		[id]
 	);
 
-	const src = thumb || image?.url;
+	// An item with no image yet shows the same placeholder the canvas does, so
+	// the row never looks blank while it waits to be filled in.
+	const src = thumb || image?.url || window.shapeblockPlaceholder;
 	if (!src) {
 		return null;
 	}
-	return <img src={src} alt="" style={{ maxWidth: '100%', marginBottom: '6px' }} />;
+	const isPlaceholder = !thumb && !image?.url;
+	const img = (
+		<img
+			src={src}
+			alt=""
+			style={{
+				display: 'block',
+				maxWidth: '100%',
+				...(isPlaceholder ? { border: '1px solid #e0e0e0', borderRadius: '2px' } : {}),
+			}}
+		/>
+	);
+
+	// The preview is the obvious thing to click, so it opens the media library
+	// itself rather than only labelling the button underneath it.
+	if (!onClick) {
+		return <div style={{ marginBottom: '6px' }}>{img}</div>;
+	}
+	return (
+		<button
+			type="button"
+			onClick={onClick}
+			aria-label={isPlaceholder ? __('Select image', 'shapeblock') : __('Replace image', 'shapeblock')}
+			style={{ display: 'block', width: '100%', padding: 0, border: 0, background: 'none', cursor: 'pointer', marginBottom: '6px' }}
+		>
+			{img}
+		</button>
+	);
 }
 
 // Map a base attribute name to its per-device key (desktop uses the base name).
@@ -184,7 +213,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								value={item.image?.id}
 								render={({ open }) => (
 									<div>
-										<ItemThumb image={item.image} />
+										<ItemThumb image={item.image} onClick={open} />
 										<Button variant="secondary" size="small" onClick={open}>
 											{item.image?.url ? __('Replace Image', 'shapeblock') : __('Select Image', 'shapeblock')}
 										</Button>

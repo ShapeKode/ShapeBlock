@@ -1,6 +1,11 @@
 /* Row — frontend + editor shared structural styles. Visual styles come from
  * generated per-block CSS in render.php. Keep this file lightweight. */
 
+/* Ensure sticky positioning works on body */
+body {
+    overflow-y: visible;
+}
+
 .wp-block-shapeblock-layout-row {
     display: flex;
     flex-direction: row;
@@ -14,6 +19,14 @@
     justify-content: flex-start;
     width: 100%;
     box-sizing: border-box;
+
+    /* Sticky positioning support - z-index auto allows natural stacking */
+    &[style*="position:sticky"],
+    &.is-sticky {
+        position: sticky;
+        z-index: auto;
+        width: 100%;
+    }
 
     .shapeblock-layout-row__inner {
         display: flex;

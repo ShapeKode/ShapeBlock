@@ -70,6 +70,17 @@ function shapeblock_expose_google_fonts_editor() {
 		);
 	}
 
+	// The placeholder image the repeater controls show for an item whose image
+	// has not been chosen yet, so an empty row looks the same in the sidebar as
+	// it does on the canvas.
+	if ( wp_script_is( 'wp-blocks', 'registered' ) ) {
+		wp_add_inline_script(
+			'wp-blocks',
+			'window.shapeblockPlaceholder = ' . wp_json_encode( SHAPEBLOCK_PL_URL . 'includes/public/assets/img/placeholder.png' ) . ';',
+			'before'
+		);
+	}
+
 	// Loads every used font family into the editor canvas on load / block change
 	// so the preview always matches the selected font (no need to select the
 	// block or open its Typography control).

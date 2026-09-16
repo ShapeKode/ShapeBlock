@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
 import { ServerSideRender } from '@wordpress/server-side-render';
 import {
 	useBlockProps,
@@ -40,6 +41,61 @@ const FIT = [
 	{ label: __('Contain', 'shapeblock'), value: 'contain' },
 	{ label: __('Fill', 'shapeblock'), value: 'fill' },
 ];
+
+/**
+ * Thumbnail preview for one slide.
+ *
+ * The URL is resolved from the attachment id on every render instead of being
+ * saved into the block, so it always matches the image the slide currently
+ * points at. A slide with no image yet shows the same placeholder the canvas
+ * does, so the row never looks blank while it waits to be filled in.
+ */
+function ItemThumb({ image, onClick }) {
+	const id = image?.id;
+	const thumb = useSelect(
+		(select) => {
+			if (!id) {
+				return '';
+			}
+			const media = select('core').getMedia(id);
+			return media?.media_details?.sizes?.thumbnail?.source_url || '';
+		},
+		[id]
+	);
+
+	const src = thumb || image?.url || window.shapeblockPlaceholder;
+	if (!src) {
+		return null;
+	}
+	const isPlaceholder = !thumb && !image?.url;
+	const img = (
+		<img
+			src={src}
+			alt=""
+			style={{
+				display: 'block',
+				maxWidth: '100%',
+				...(isPlaceholder ? { border: '1px solid #e0e0e0', borderRadius: '2px' } : {}),
+			}}
+		/>
+	);
+
+	// The preview is the obvious thing to click, so it opens the media library
+	// itself rather than only labelling the button underneath it.
+	if (!onClick) {
+		return <div style={{ marginBottom: '6px' }}>{img}</div>;
+	}
+	return (
+		<button
+			type="button"
+			onClick={onClick}
+			aria-label={isPlaceholder ? __('Select image', 'shapeblock') : __('Replace image', 'shapeblock')}
+			style={{ display: 'block', width: '100%', padding: 0, border: 0, background: 'none', cursor: 'pointer', marginBottom: '6px' }}
+		>
+			{img}
+		</button>
+	);
+}
 
 // Map a base attribute name to its per-device key (desktop uses the base name).
 const getKey = (base, device) =>
@@ -124,7 +180,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								value={item.image?.id}
 								render={({ open }) => (
 									<div>
-										{item.image?.url && <img src={item.image.url} alt="" style={{ maxWidth: '100%', marginBottom: '6px' }} />}
+										<ItemThumb image={item.image} onClick={open} />
 										<Button variant="secondary" size="small" onClick={open}>
 											{item.image?.url ? __('Replace Image', 'shapeblock') : __('Select Image', 'shapeblock')}
 										</Button>

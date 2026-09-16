@@ -36,6 +36,7 @@ return array(
 		'textdomain' => 'shapeblock',
 		'editorScript' => 'file:./index.js',
 		'editorStyle' => 'file:./index.css',
+		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
 		'attributes' => array(
 			'blockId' => array(
@@ -325,6 +326,14 @@ return array(
 			'position' => array(
 				'type' => 'string',
 				'default' => ''
+			),
+			'isSticky' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'stickyTop' => array(
+				'type' => 'string',
+				'default' => '0px'
 			),
 			'hideDesktop' => array(
 				'type' => 'boolean',

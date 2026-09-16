@@ -117,6 +117,14 @@ const collectDevice = (attrs, suffix) => {
         if (attrs.overflow) decls.overflow = attrs.overflow;
         if (attrs.position) decls.position = attrs.position;
         if (attrs.zIndex !== '' && attrs.zIndex != null) decls['z-index'] = attrs.zIndex;
+
+        // Mirrors the sticky branch in render.php so the editor previews it too.
+        if (attrs.isSticky) {
+            decls.position = 'sticky';
+            decls['z-index'] = 'auto';
+            decls.width = '100%';
+            decls.top = ensureUnit(attrs.stickyTop) || '0px';
+        }
     }
 
     return decls;
