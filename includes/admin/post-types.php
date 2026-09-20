@@ -68,7 +68,12 @@ class SHAPEBLOCK_Post_Types {
             return '';
         }
 
-        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Applying WP core filter to render shortcodes/blocks in template content.
+        // Applying WordPress core's own 'the_content' filter chain (so other
+        // plugins' content filters, e.g. page builders, run on the template
+        // content the same as they would on a normal post) — the hook name is
+        // WordPress core's, not this plugin's, so it is intentionally not
+        // shapeblock-prefixed; renaming it (directly or via a variable) would
+        // stop other plugins' the_content hooks from ever running here.
         return '<div class="shapeblock-template-content">' . apply_filters( 'the_content', $post->post_content ) . '</div>';
     }
 }

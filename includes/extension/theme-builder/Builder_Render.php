@@ -140,7 +140,6 @@ class Builder_Render {
 				'order'          => 'DESC',
 				'no_found_rows'  => true,
 				'fields'         => 'ids',
-				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Filtering a small template post type by its type meta to resolve the active template.
 				'meta_query'     => array(
 					array(
 						'key'   => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE,

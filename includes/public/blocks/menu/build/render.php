@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Menu block.
@@ -80,6 +79,40 @@ if ( ! function_exists( 'shapeblock_menu_len' ) ) {
 			return $v . 'px';
 		}
 		return preg_match( '/^-?\d+(\.\d+)?(px|em|rem|%|vw|vh)$/', $v ) ? $v : '';
+	}
+}
+
+if ( ! function_exists( 'shapeblock_menu_paint' ) ) {
+	/**
+	 * Allow only a colour or a gradient into the generated CSS; '' otherwise.
+	 *
+	 * esc_attr() is not a CSS escaper: it leaves ";" and "}" intact, so a
+	 * stored colour could close the rule and inject selectors of its own.
+	 *
+	 * @param mixed $v Raw value.
+	 * @return string Safe colour/gradient or ''.
+	 */
+	function shapeblock_menu_paint( $v ) {
+		$v = trim( (string) $v );
+		if ( '' === $v ) {
+			return '';
+		}
+		if ( preg_match( '/[{}<>;@\\\\]/', $v ) || false !== strpos( $v, '/*' ) ) {
+			return '';
+		}
+		if ( preg_match( '/^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i', $v ) ) {
+			return $v;
+		}
+		if ( preg_match( '/^(?:rgb|rgba|hsl|hsla)\([0-9a-z.,%\/\s-]+\)$/i', $v ) ) {
+			return $v;
+		}
+		if ( preg_match( '/^(?:repeating-)?(?:linear|radial|conic)-gradient\([#0-9a-z.,%\/\s()-]+\)$/i', $v ) ) {
+			return $v;
+		}
+		if ( preg_match( '/^var\(\s*--[A-Za-z0-9_-]+\s*\)$/', $v ) ) {
+			return $v;
+		}
+		return preg_match( '/^[a-z]+$/i', $v ) ? $v : '';
 	}
 }
 
@@ -273,8 +306,12 @@ if ( isset( $font_stacks[ $font_family ] ) ) {
 	// Google font: sanitize the family name, enqueue it from Google, then apply it.
 	$safe_family = trim( preg_replace( '/[^A-Za-z0-9 ]/', '', $font_family ) );
 	if ( '' !== $safe_family ) {
+		// The stylesheet is only requested from Google once the site owner has
+		// opted in; the family is still applied so a locally installed font works.
+		if ( function_exists( 'shapeblock_google_fonts_enabled' ) && shapeblock_google_fonts_enabled() ) {
 		$font_url = 'https://fonts.googleapis.com/css2?family=' . str_replace( '%20', '+', rawurlencode( $safe_family ) ) . ':wght@300;400;500;600;700&display=swap';
-		wp_enqueue_style( 'shapeblock-menu-font-' . sanitize_title( $safe_family ), esc_url_raw( $font_url ), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External Google Fonts URL is versioned by Google.
+			wp_enqueue_style( 'shapeblock-menu-font-' . sanitize_title( $safe_family ), esc_url_raw( $font_url ), array(), SHAPEBLOCK_VERSION );
+		}
 		$font_css .= 'font-family:"' . $safe_family . '",sans-serif;';
 	}
 }
@@ -305,16 +342,16 @@ if ( '' !== $fs_mob ) {
 }
 
 if ( ! empty( $attributes['textColor'] ) ) {
-	$css .= $selector . ' .shapeblock-menu-list a{color:' . esc_attr( $attributes['textColor'] ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list a{color:' . shapeblock_menu_paint( $attributes['textColor'] ) . ';}';
 }
 if ( ! empty( $attributes['hoverColor'] ) ) {
-	$css .= $selector . ' .shapeblock-menu-list a:hover,' . $selector . ' .shapeblock-menu-list a:focus{color:' . esc_attr( $attributes['hoverColor'] ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list a:hover,' . $selector . ' .shapeblock-menu-list a:focus{color:' . shapeblock_menu_paint( $attributes['hoverColor'] ) . ';}';
 }
 if ( ! empty( $attributes['activeColor'] ) ) {
-	$css .= $selector . ' .shapeblock-menu-list .current-menu-item > a{color:' . esc_attr( $attributes['activeColor'] ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list .current-menu-item > a{color:' . shapeblock_menu_paint( $attributes['activeColor'] ) . ';}';
 }
 if ( ! empty( $attributes['descriptionColor'] ) ) {
-	$css .= $selector . ' .shapeblock-menu-desc{color:' . esc_attr( $attributes['descriptionColor'] ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-desc{color:' . shapeblock_menu_paint( $attributes['descriptionColor'] ) . ';}';
 }
 // Backgrounds prefer the gradient when set, otherwise the solid colour.
 $item_bg_n   = ! empty( $attributes['itemBgGradient'] ) ? $attributes['itemBgGradient'] : ( ! empty( $attributes['itemBgColor'] ) ? $attributes['itemBgColor'] : '' );
@@ -327,29 +364,29 @@ if ( '' !== $item_bg_n || '' !== $item_bg_h || '' !== $item_bg_a ) {
 	$css .= $selector . ' .shapeblock-menu-list > li > a{padding:8px 14px;border-radius:6px;}';
 }
 if ( '' !== $item_bg_n ) {
-	$css .= $selector . ' .shapeblock-menu-list > li > a{background:' . esc_attr( $item_bg_n ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list > li > a{background:' . shapeblock_menu_paint( $item_bg_n ) . ';}';
 }
 if ( '' !== $item_bg_h ) {
-	$css .= $selector . ' .shapeblock-menu-list > li > a:hover,' . $selector . ' .shapeblock-menu-list > li > a:focus{background:' . esc_attr( $item_bg_h ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list > li > a:hover,' . $selector . ' .shapeblock-menu-list > li > a:focus{background:' . shapeblock_menu_paint( $item_bg_h ) . ';}';
 }
 if ( '' !== $item_bg_a ) {
-	$css .= $selector . ' .shapeblock-menu-list > li.current-menu-item > a{background:' . esc_attr( $item_bg_a ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list > li.current-menu-item > a{background:' . shapeblock_menu_paint( $item_bg_a ) . ';}';
 }
 // Dropdown ( sub-menu ) colours.
 if ( '' !== $dd_bg ) {
-	$css .= $selector . ' .sub-menu{background:' . esc_attr( $dd_bg ) . ';}';
+	$css .= $selector . ' .sub-menu{background:' . shapeblock_menu_paint( $dd_bg ) . ';}';
 }
 if ( ! empty( $attributes['dropdownTextColor'] ) ) {
-	$css .= $selector . ' .sub-menu a{color:' . esc_attr( $attributes['dropdownTextColor'] ) . ';}';
+	$css .= $selector . ' .sub-menu a{color:' . shapeblock_menu_paint( $attributes['dropdownTextColor'] ) . ';}';
 }
 if ( ! empty( $attributes['dropdownHoverColor'] ) ) {
-	$css .= $selector . ' .sub-menu a:hover,' . $selector . ' .sub-menu a:focus{color:' . esc_attr( $attributes['dropdownHoverColor'] ) . ';}';
+	$css .= $selector . ' .sub-menu a:hover,' . $selector . ' .sub-menu a:focus{color:' . shapeblock_menu_paint( $attributes['dropdownHoverColor'] ) . ';}';
 }
 if ( '' !== $dd_hover_bg ) {
-	$css .= $selector . ' .sub-menu a:hover,' . $selector . ' .sub-menu a:focus{background:' . esc_attr( $dd_hover_bg ) . ';}';
+	$css .= $selector . ' .sub-menu a:hover,' . $selector . ' .sub-menu a:focus{background:' . shapeblock_menu_paint( $dd_hover_bg ) . ';}';
 }
 if ( ! empty( $attributes['toggleColor'] ) ) {
-	$css .= $selector . ' .shapeblock-menu-toggle{color:' . esc_attr( $attributes['toggleColor'] ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-toggle{color:' . shapeblock_menu_paint( $attributes['toggleColor'] ) . ';}';
 }
 
 // Hamburger button skin. The base stylesheet ships a transparent background and
@@ -359,20 +396,20 @@ $toggle_sel   = $selector . ' .shapeblock-menu-toggle';
 $toggle_hover = $toggle_sel . ':hover,' . $toggle_sel . ':focus';
 
 if ( ! empty( $attributes['toggleBg'] ) ) {
-	$css .= $toggle_sel . '{background:' . esc_attr( $attributes['toggleBg'] ) . ';}';
+	$css .= $toggle_sel . '{background:' . shapeblock_menu_paint( $attributes['toggleBg'] ) . ';}';
 }
 if ( ! empty( $attributes['toggleBorderColor'] ) ) {
-	$css .= $toggle_sel . '{border-color:' . esc_attr( $attributes['toggleBorderColor'] ) . ';}';
+	$css .= $toggle_sel . '{border-color:' . shapeblock_menu_paint( $attributes['toggleBorderColor'] ) . ';}';
 }
 // Hover: colour drives the bars too, since they are painted with currentColor.
 if ( ! empty( $attributes['toggleColorHover'] ) ) {
-	$css .= $toggle_hover . '{color:' . esc_attr( $attributes['toggleColorHover'] ) . ';}';
+	$css .= $toggle_hover . '{color:' . shapeblock_menu_paint( $attributes['toggleColorHover'] ) . ';}';
 }
 if ( ! empty( $attributes['toggleBgHover'] ) ) {
-	$css .= $toggle_hover . '{background:' . esc_attr( $attributes['toggleBgHover'] ) . ';}';
+	$css .= $toggle_hover . '{background:' . shapeblock_menu_paint( $attributes['toggleBgHover'] ) . ';}';
 }
 if ( ! empty( $attributes['toggleBorderColorHover'] ) ) {
-	$css .= $toggle_hover . '{border-color:' . esc_attr( $attributes['toggleBorderColorHover'] ) . ';}';
+	$css .= $toggle_hover . '{border-color:' . shapeblock_menu_paint( $attributes['toggleBorderColorHover'] ) . ';}';
 }
 
 // Drawer close button skin. Its icon colour used to be painted by toggleColor, so
@@ -383,22 +420,22 @@ $close_hover = $close_sel . ':hover,' . $close_sel . ':focus';
 $close_color = '' !== $attributes['closeColor'] ? $attributes['closeColor'] : $attributes['toggleColor'];
 
 if ( ! empty( $close_color ) ) {
-	$css .= $close_sel . '{color:' . esc_attr( $close_color ) . ';}';
+	$css .= $close_sel . '{color:' . shapeblock_menu_paint( $close_color ) . ';}';
 }
 if ( ! empty( $attributes['closeBg'] ) ) {
-	$css .= $close_sel . '{background:' . esc_attr( $attributes['closeBg'] ) . ';}';
+	$css .= $close_sel . '{background:' . shapeblock_menu_paint( $attributes['closeBg'] ) . ';}';
 }
 if ( ! empty( $attributes['closeBorderColor'] ) ) {
-	$css .= $close_sel . '{border-color:' . esc_attr( $attributes['closeBorderColor'] ) . ';}';
+	$css .= $close_sel . '{border-color:' . shapeblock_menu_paint( $attributes['closeBorderColor'] ) . ';}';
 }
 if ( ! empty( $attributes['closeColorHover'] ) ) {
-	$css .= $close_hover . '{color:' . esc_attr( $attributes['closeColorHover'] ) . ';}';
+	$css .= $close_hover . '{color:' . shapeblock_menu_paint( $attributes['closeColorHover'] ) . ';}';
 }
 if ( ! empty( $attributes['closeBgHover'] ) ) {
-	$css .= $close_hover . '{background:' . esc_attr( $attributes['closeBgHover'] ) . ';}';
+	$css .= $close_hover . '{background:' . shapeblock_menu_paint( $attributes['closeBgHover'] ) . ';}';
 }
 if ( ! empty( $attributes['closeBorderColorHover'] ) ) {
-	$css .= $close_hover . '{border-color:' . esc_attr( $attributes['closeBorderColorHover'] ) . ';}';
+	$css .= $close_hover . '{border-color:' . shapeblock_menu_paint( $attributes['closeBorderColorHover'] ) . ';}';
 }
 
 
@@ -412,7 +449,7 @@ if ( ! $menu_wrap ) {
 if ( $mobile_on ) {
 	$off    = ( 'left' === $drawer_side ) ? '-100%' : '100%';
 	$w_css  = esc_attr( $drawer_width ) . 'px';
-	$bg_css = esc_attr( $drawer_bg );
+	$bg_css = shapeblock_menu_paint( $drawer_bg );
 	$side   = $drawer_side; // 'left' or 'right', both safe literals.
 
 	// Where the hamburger button sits on the row. `display:flex` makes it a block
@@ -450,22 +487,22 @@ if ( $mobile_on ) {
 	$m_bg_h = ! empty( $attributes['mobileBgHoverGradient'] ) ? $attributes['mobileBgHoverGradient'] : ( ! empty( $attributes['mobileBgHoverColor'] ) ? $attributes['mobileBgHoverColor'] : '' );
 	$m_bg_a = ! empty( $attributes['mobileBgActiveGradient'] ) ? $attributes['mobileBgActiveGradient'] : ( ! empty( $attributes['mobileBgActiveColor'] ) ? $attributes['mobileBgActiveColor'] : '' );
 	if ( ! empty( $attributes['mobileTextColor'] ) ) {
-		$drawer .= $selector . ' .shapeblock-menu-list a{color:' . esc_attr( $attributes['mobileTextColor'] ) . ';}';
+		$drawer .= $selector . ' .shapeblock-menu-list a{color:' . shapeblock_menu_paint( $attributes['mobileTextColor'] ) . ';}';
 	}
 	if ( ! empty( $attributes['mobileHoverColor'] ) ) {
-		$drawer .= $selector . ' .shapeblock-menu-list a:hover,' . $selector . ' .shapeblock-menu-list a:focus{color:' . esc_attr( $attributes['mobileHoverColor'] ) . ';}';
+		$drawer .= $selector . ' .shapeblock-menu-list a:hover,' . $selector . ' .shapeblock-menu-list a:focus{color:' . shapeblock_menu_paint( $attributes['mobileHoverColor'] ) . ';}';
 	}
 	if ( ! empty( $attributes['mobileActiveColor'] ) ) {
-		$drawer .= $selector . ' .shapeblock-menu-list .current-menu-item > a{color:' . esc_attr( $attributes['mobileActiveColor'] ) . ';}';
+		$drawer .= $selector . ' .shapeblock-menu-list .current-menu-item > a{color:' . shapeblock_menu_paint( $attributes['mobileActiveColor'] ) . ';}';
 	}
 	if ( '' !== $m_bg_n ) {
-		$drawer .= $selector . ' .shapeblock-menu-list > li > a{background:' . esc_attr( $m_bg_n ) . ';border-radius:6px;}';
+		$drawer .= $selector . ' .shapeblock-menu-list > li > a{background:' . shapeblock_menu_paint( $m_bg_n ) . ';border-radius:6px;}';
 	}
 	if ( '' !== $m_bg_h ) {
-		$drawer .= $selector . ' .shapeblock-menu-list > li > a:hover,' . $selector . ' .shapeblock-menu-list > li > a:focus{background:' . esc_attr( $m_bg_h ) . ';}';
+		$drawer .= $selector . ' .shapeblock-menu-list > li > a:hover,' . $selector . ' .shapeblock-menu-list > li > a:focus{background:' . shapeblock_menu_paint( $m_bg_h ) . ';}';
 	}
 	if ( '' !== $m_bg_a ) {
-		$drawer .= $selector . ' .shapeblock-menu-list > li.current-menu-item > a{background:' . esc_attr( $m_bg_a ) . ';}';
+		$drawer .= $selector . ' .shapeblock-menu-list > li.current-menu-item > a{background:' . shapeblock_menu_paint( $m_bg_a ) . ';}';
 	}
 
 	if ( 'always' === $mobile_mode ) {
@@ -501,14 +538,87 @@ $close   = $mobile_on
 	? '<button type="button" class="shapeblock-menu-close" aria-label="' . esc_attr__( 'Close menu', 'shapeblock' ) . '">' . shapeblock_menu_icon_svg( 'close' ) . '</button>'
 	: '';
 
-// $wrapper_attributes escaped by core; $toggle/$overlay/$close are fixed strings; $list is escaped
-// per item; $css only from esc_attr()'d values above.
-printf(
-	'%5$s<nav %1$s>%3$s%4$s<div class="shapeblock-menu-panel">%6$s<ul class="shapeblock-menu-list">%2$s</ul></div></nav>',
-	$wrapper_attributes, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by core.
-	$list,               // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped per item above.
-	$toggle,             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Fixed markup, escaped label.
-	$overlay,            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Fixed markup.
-	'' !== $css ? '<style>' . $css . '</style>' : '', // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Values escaped with esc_attr().
-	$close               // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Fixed markup, escaped label.
+// The generated CSS is handed to the shared helper, which enqueues it (or returns it
+// with the block in the editor) instead of printing a <style> tag from here.
+if ( '' !== $css ) {
+	\ShapeBlock\Frontend\Helper::add_css( 'shapeblock-menu-style', $css );
+}
+
+// Allow-list for the nav markup assembled above: $list is per-item escaped inside
+// shapeblock_menu_render_items() (esc_url/esc_html/wp_kses), $toggle/$overlay/$close are
+// fixed strings built from the hard-coded shapeblock_menu_icon_svg() output plus an
+// esc_attr__()'d aria-label.
+$menu_allowed_html = array(
+	'li'     => array( 'class' => true ),
+	'ul'     => array( 'class' => true ),
+	'a'      => array(
+		'href'   => true,
+		'target' => true,
+		'rel'    => true,
+	),
+	'span'   => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+	'div'    => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+	'img'    => array(
+		'class' => true,
+		'src'   => true,
+		'alt'   => true,
+	),
+	'button' => array(
+		'type'          => true,
+		'class'         => true,
+		'aria-expanded' => true,
+		'aria-label'    => true,
+	),
+	'strong' => array(),
+	'b'      => array(),
+	'em'     => array(),
+	'i'      => array(),
+	'svg'    => array(
+		'class'       => true,
+		'viewbox'     => true,
+		'aria-hidden' => true,
+		'focusable'   => true,
+		'xmlns'       => true,
+		'fill'        => true,
+		'stroke'      => true,
+		'stroke-width'    => true,
+		'stroke-linecap'  => true,
+		'stroke-linejoin' => true,
+	),
+	'path'   => array(
+		'd'    => true,
+		'fill' => true,
+	),
+	'circle' => array(
+		'cx' => true,
+		'cy' => true,
+		'r'  => true,
+	),
+	'rect'   => array(
+		'x'      => true,
+		'y'      => true,
+		'width'  => true,
+		'height' => true,
+		'rx'     => true,
+	),
 );
+
+// $wrapper_attributes is built by core's get_block_wrapper_attributes(); $toggle/$overlay/
+// $close/$list are guarded by $menu_allowed_html above.
+printf(
+	'<nav %1$s>%3$s%4$s<div class="shapeblock-menu-panel">%6$s<ul class="shapeblock-menu-list">%2$s</ul></div></nav>',
+	wp_kses_post( $wrapper_attributes ),
+	wp_kses( $list, $menu_allowed_html ),
+	wp_kses( $toggle, $menu_allowed_html ),
+	wp_kses( $overlay, $menu_allowed_html ),
+	'', // Styles are enqueued above, never printed here.
+	wp_kses( $close, $menu_allowed_html )
+);
+
+} )( $attributes, $content, $block );

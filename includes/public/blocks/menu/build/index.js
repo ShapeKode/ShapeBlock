@@ -188,6 +188,12 @@
 	// Live Google Fonts list ( fetched server-side from the Google Fonts API and localized ).
 	// Falls back to the bundled popular list when the API list is unavailable.
 	function shapeblockGoogleFontList() {
+		// Google Fonts is an opt-in connection ( ShapeBlock > Settings ). While it
+		// is off, only the web-safe stacks are offered and nothing is requested
+		// from Google.
+		if ( ! window.shapeblockGoogleFonts ) {
+			return [];
+		}
 		if ( window.shapeblockMenuFonts && window.shapeblockMenuFonts.length ) {
 			return window.shapeblockMenuFonts;
 		}
@@ -1383,8 +1389,10 @@
 			if ( attributes.fontFamily && shapeblockIsWebSafe( attributes.fontFamily ) ) {
 				edFont += 'font-family:' + SHAPEBLOCK_FONTS[ attributes.fontFamily ] + ';';
 			} else if ( attributes.fontFamily ) {
-				// A Google font family name — load it and apply it.
-				edImport += "@import url('" + shapeblockGoogleFontUrl( attributes.fontFamily ) + "');";
+				// A Google font family name — only fetched once the site has opted in.
+				if ( window.shapeblockGoogleFonts ) {
+					edImport += "@import url('" + shapeblockGoogleFontUrl( attributes.fontFamily ) + "');";
+				}
 				edFont += 'font-family:"' + attributes.fontFamily + '",sans-serif;';
 			}
 			// Show the font size for the CURRENTLY selected device ( tablet/mobile fall back to desktop ).

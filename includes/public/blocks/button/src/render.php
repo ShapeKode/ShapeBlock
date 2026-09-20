@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Button block.
@@ -261,15 +260,23 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 ] );
 
 $icon_html = ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';
+// Only the icon font class markup above is ever put in this string, so a single-tag allow-list is enough.
+$icon_allowed_html = array(
+	'i' => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+);
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<a href="<?php echo esc_url( $url ); ?>" class="<?php echo esc_attr( implode( ' ', $button_classes ) ); ?>" target="<?php echo esc_attr( $target ); ?>"<?php echo $rel_attr ? ' rel="' . esc_attr( $rel_attr ) . '"' : ''; ?>>
 		<?php if ( $icon_html && 'before' === $icon_position ) : ?>
-			<span class="shapeblock-button-icon-before"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?></span>
+			<span class="shapeblock-button-icon-before"><?php echo wp_kses( $icon_html, $icon_allowed_html ); ?></span>
 		<?php endif; ?>
 		<span class="shapeblock-button-text"><?php echo esc_html( $text ); ?></span>
 		<?php if ( $icon_html && 'after' === $icon_position ) : ?>
-			<span class="shapeblock-button-icon-after"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?></span>
+			<span class="shapeblock-button-icon-after"><?php echo wp_kses( $icon_html, $icon_allowed_html ); ?></span>
 		<?php endif; ?>
 	</a>
 </div>
+<?php } )( $attributes, $content, $block );

@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Offcanvas block.
@@ -155,6 +154,22 @@ $render_icon = function ( $val ) {
 	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : '';
 };
 $default_close = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"></path></svg>';
+// Icon markup produced above: icon-font <i> (esc_attr'd class) or a static fallback SVG.
+$icon_allowed_html = array(
+	'i'    => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+	'svg'  => array(
+		'viewbox'     => true,
+		'aria-hidden' => true,
+		'xmlns'       => true,
+	),
+	'path' => array(
+		'fill' => true,
+		'd'    => true,
+	),
+);
 
 // Panel content from the selected template.
 //
@@ -187,7 +202,7 @@ if ( $template && $template !== get_queried_object_id() ) {
 				<?php if ( 'classic' === $layout ) : ?>
 					<?php
 					if ( '' !== $render_icon( $btn_icon ) ) {
-						echo $render_icon( $btn_icon ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo wp_kses( $render_icon( $btn_icon ), $icon_allowed_html );
 					} else {
 						echo '<span class="shapeblock-icon-menu-wrap"><em class="shapeblock-icon-menu"></em><em class="shapeblock-icon-menu"></em></span>';
 					}
@@ -203,7 +218,7 @@ if ( $template && $template !== get_queried_object_id() ) {
 			<div class="shapeblock-offcanvas-panel">
 				<?php if ( 'classic' === $layout ) : ?>
 					<span class="shapeblock-offcanvas-close shapeblock-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0">
-						<?php echo ( '' !== $render_icon( $close_icon ) ) ? $render_icon( $close_icon ) : $default_close; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<?php echo wp_kses( ( '' !== $render_icon( $close_icon ) ) ? $render_icon( $close_icon ) : $default_close, $icon_allowed_html ); ?>
 					</span>
 				<?php else : ?>
 					<span class="shapeblock-offcanvas-close shapeblock-offcanvas-toggle shapeblock-modern-close" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0">
@@ -211,9 +226,10 @@ if ( $template && $template !== get_queried_object_id() ) {
 					</span>
 				<?php endif; ?>
 				<div class="shapeblock-offcanvas-content">
-					<?php echo $content_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Template content via the_content filter. ?>
+					<?php echo $content_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered template markup (do_blocks/wpautop/do_shortcode output), the same class of content WordPress core prints unescaped via the_content; the source template is an admin-authored ShapeBlock Template post, not third-party or visitor input. ?>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

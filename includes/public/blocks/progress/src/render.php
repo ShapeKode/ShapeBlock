@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Progress Bar block.
@@ -131,3 +130,4 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 		<?php endif; ?>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

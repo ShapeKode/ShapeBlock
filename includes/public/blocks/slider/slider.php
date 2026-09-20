@@ -34,7 +34,10 @@ add_action( 'init', 'shapeblock_create_block_slider_block_init' );
  * Swiper itself is already present in the canvas via `enqueue_block_assets`.
  */
 function shapeblock_slider_editor_preview_script() {
-	if ( ! is_admin() ) {
+	// enqueue_block_assets fires on every wp-admin screen, not only the block
+	// editor, so is_admin() alone is not enough — see blocks.php's
+	// shapeblock_is_block_editor_screen().
+	if ( ! function_exists( 'shapeblock_is_block_editor_screen' ) || ! shapeblock_is_block_editor_screen() ) {
 		return;
 	}
 

@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Icon Box block.
@@ -199,6 +198,19 @@ if ( '' !== $responsive_media ) {
 // Markup.
 // ---------------------------------------------------------------------------
 $svg_star = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>';
+// Icon markup is either the icon-font <i> tag (esc_attr'd class) or the static fallback star SVG above.
+$icon_allowed_html = array(
+	'i'    => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+	'svg'  => array(
+		'viewbox'     => true,
+		'aria-hidden' => true,
+		'xmlns'       => true,
+	),
+	'path' => array( 'd' => true ),
+);
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<?php
@@ -217,7 +229,7 @@ $svg_star = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.or
 				} elseif ( 'number' === $type ) {
 					echo '<span class="shapeblock-icon-box-number">' . esc_html( $num ) . '</span>';
 				} else {
-					echo ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : $svg_star; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo wp_kses( ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : $svg_star, $icon_allowed_html );
 				}
 				?>
 			</div>
@@ -234,3 +246,4 @@ $svg_star = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.or
 		<?php endif; ?>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

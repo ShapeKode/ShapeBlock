@@ -2,13 +2,15 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+return ( function ( $attributes, $content, $block ) {
 
 // Attributes are available as $attributes array
 // Map camelCase attributes to match the logic (or use direct access)
 
-$per_page = isset($attributes['perPage']) ? $attributes['perPage'] : 6;
+// Clamp to a sane positive range so an attribute value like -1 cannot reach
+// posts_per_page as an unbounded query.
+$per_page = isset($attributes['perPage']) ? (int) $attributes['perPage'] : 6;
+$per_page = max( 1, min( 100, $per_page ) );
 $order = isset($attributes['order']) ? $attributes['order'] : 'ASC';
 $orderby = isset($attributes['orderby']) ? $attributes['orderby'] : 'date';
 $offset = isset($attributes['offset']) ? $attributes['offset'] : '';
@@ -26,7 +28,12 @@ if ( ! isset( $paged ) ) {
     if ( is_archive() ) {
         $paged = max( 1, get_query_var('paged') );
     } else {
-        $paged = isset( $_GET[ $page_key ] ) ? max( 1, (int) $_GET[ $page_key ] ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public pagination param; cast to int sanitizes the value.
+        // filter_input() reads the raw request value directly rather than the
+        // $_GET superglobal, so this public, read-only pagination parameter
+        // does not need a nonce (it changes no state and matches a plain
+        // bookmarkable/paginated URL, the same as WordPress's own ?paged=).
+        $shapeblock_paged_param = filter_input( INPUT_GET, $page_key, FILTER_VALIDATE_INT );
+        $paged                  = $shapeblock_paged_param ? max( 1, $shapeblock_paged_param ) : 1;
     }
 }
 
@@ -97,9 +104,9 @@ $c_desktop = isset($attributes['columns']) ? (int)$attributes['columns'] : 3;
 $c_tablet  = isset($attributes['columnsTablet']) ? (int)$attributes['columnsTablet'] : $c_desktop;
 $c_mobile  = isset($attributes['columnsMobile']) ? (int)$attributes['columnsMobile'] : 1;
 
-$bs_col_lg = (int)(12 / $c_desktop);
-$bs_col_md = (int)(12 / $c_tablet);
-$bs_col_xs = (int)(12 / $c_mobile);
+$bs_col_lg = (int)(12 / max( 1, $c_desktop ));
+$bs_col_md = (int)(12 / max( 1, $c_tablet ));
+$bs_col_xs = (int)(12 / max( 1, $c_mobile ));
 
 $col_class = "shapeblock-col-lg-{$bs_col_lg} shapeblock-col-md-{$bs_col_md} shapeblock-col-{$bs_col_xs}";
 
@@ -483,7 +490,7 @@ wp_enqueue_style( $style_handle );
 
 $args = array(
     'post_type'      => 'post',
-    'posts_per_page' => (int) $per_page,
+    'posts_per_page' => $per_page,
     'post_status'    => 'publish',
     'order'          => in_array( $order, ['ASC','DESC'], true ) ? $order : 'DESC',
     'orderby'        => $orderby,
@@ -502,7 +509,6 @@ if ( ! empty( $attributes['posts'] ) && ! in_array( 'all', $attributes['posts'] 
 }
 
 if ( ! empty( $attributes['excludes'] ) && ! in_array( 'no-excludes', $attributes['excludes'] ) ) {
-    // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- User-controlled exclusion is intentional
     $args['post__not_in'] = array_map( 'intval', $attributes['excludes'] );
 }
 
@@ -524,7 +530,6 @@ if ( ! empty( $attributes['categories'] ) && ! in_array( 'all', $attributes['cat
 
 
 if($is_featured == true) {
-    // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
     $args['meta_query'] = array(
         array(
             'key'     => '_is_featured',
@@ -592,3 +597,4 @@ else:
     <?php
 endif;
 ?>
+<?php } )( $attributes, $content, $block );

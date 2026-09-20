@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Scroll Top block.
@@ -194,3 +193,4 @@ $shapeblock_icon_allowed = array(
 		<?php echo wp_kses( $icon_html, $shapeblock_icon_allowed ); ?>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

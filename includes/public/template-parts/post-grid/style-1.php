@@ -1,6 +1,5 @@
 <?php
 	if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-	// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables.
 ?>
 <div class="shapeblock-grid-item <?php echo esc_attr( $item_class ); ?>">
     <div class="shapeblock-grid-item-inner">
@@ -20,11 +19,6 @@
             <?php } ?>
             </a>
             <?php //if ( $show_meta ) include SHAPEBLOCK_PL_PATH . 'includes/public/template-parts/post-meta/post-cat.php'; ?>
-            <?php
-            // Strip 'category' from meta row (post-cat.php handles it above)
-            $_saved_metas = $attributes['allowedMetas'];
-            //$attributes['allowedMetas'] = array_values( array_diff( $attributes['allowedMetas'], ['category'] ) );
-            ?>
         </div>
 
         <div class="shapeblock-blog-content">
@@ -60,6 +54,5 @@
                 <span><?php echo esc_html( get_the_time('M') ); ?></span>
             </div>
         <?php endif; ?>
-        <?php $attributes['allowedMetas'] = $_saved_metas; ?>
     </div>
 </div>

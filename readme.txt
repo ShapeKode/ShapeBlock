@@ -49,6 +49,12 @@ Every block is built the same way: a Settings tab for content, a Layout tab for 
 29. Team Member - Present team members with photo, role and social links.
 30. Testimonial - Client feedback with photo, rating and company logo.
 
+= No external connections by default =
+
+ShapeBlock works entirely on your own site. Google Fonts is optional and switched
+off until you enable it in ShapeBlock > Settings, so nothing is requested from
+Google unless you ask for it.
+
 = Turn off what you do not use =
 
 Every block can be switched off from the ShapeBlock settings screen, so only the blocks you actually use are registered and only their assets load.
@@ -63,24 +69,118 @@ The blocks are native block-editor blocks with live previews in the canvas, no p
 
 == External services ==
 
-**Google Fonts**
+ShapeBlock works without any external service. The two connections below are the
+only ones it can make, and each one is described with exactly what is sent and
+when.
 
-This plugin connects to the Google Fonts API to fetch the list of available font families, so the font pickers in the block settings can show up-to-date choices.
+= Google Fonts (optional, off by default) =
 
-It requests `https://fonts.google.com/metadata/fonts` when a font list is first needed in the editor, and caches the result. Only that request is made - no site data, personal data or user data is sent, and the request happens in the admin only.
+ShapeBlock can use Google Fonts for the Font Family pickers in the block
+settings and for loading the chosen font on the front end.
 
-Selected font families are then loaded on the front end from `https://fonts.googleapis.com` and `https://fonts.gstatic.com`, which is what renders the font you picked. Again, only the font request itself is sent.
+This connection is **off by default**. While it is off the plugin never contacts
+Google at all: the font list is not downloaded, the font pickers offer only the
+locally available font stacks, and no stylesheet is requested from Google on the
+front end. To turn it on, go to **ShapeBlock > Settings > Google Fonts** and tick
+"Allow ShapeBlock to connect to Google Fonts".
 
-This service is provided by Google: [terms of service](https://policies.google.com/terms), [privacy policy](https://policies.google.com/privacy).
+Once it is switched on:
 
-**Video embeds (only if you add a video URL)**
+* In the WordPress admin, the plugin requests the font catalogue from
+  `https://fonts.google.com/metadata/fonts` the first time a font list is needed,
+  and caches the result for one week. Only the request itself is sent; no site
+  data, post data or user data is included.
+* In the block editor, the browser requests a font stylesheet from
+  `https://fonts.googleapis.com/css2?family=...` so the picker and the canvas can
+  preview a font.
+* On the front end, a visitor's browser requests the chosen font stylesheet from
+  `https://fonts.googleapis.com` and the font files from `https://fonts.gstatic.com`.
+  As with any browser request, the visitor's IP address, user agent and the
+  referring page reach Google.
 
-If you enter a video URL in the Post Grid block, WordPress' own oEmbed handling contacts that video provider to build the embed - for example YouTube or Vimeo - and the resulting player is loaded from the provider when the page is viewed. This happens only for a URL you enter yourself; no request is made otherwise, and no site or user data is sent beyond the URL itself.
+Service provided by Google LLC. Terms of service: https://policies.google.com/terms
+Privacy policy: https://policies.google.com/privacy
 
-YouTube: [terms of service](https://www.youtube.com/t/terms), [privacy policy](https://policies.google.com/privacy).
-Vimeo: [terms of service](https://vimeo.com/terms), [privacy policy](https://vimeo.com/privacy).
+= Video embeds (only for a video URL you enter yourself) =
 
-The Social Share block only builds ordinary links to the sharing pages of the networks you enable. Nothing is requested or sent until a visitor clicks one.
+If you enter a video URL in the Post Grid block, WordPress' own oEmbed handling
+contacts that provider to build the embed, and the player is then loaded from the
+provider when the page is viewed. Only the URL you entered is sent from the
+server; when a visitor views the page their browser contacts the provider
+directly, so their IP address, user agent and the referring page reach it. No
+request is made unless you enter a URL.
+
+YouTube (Google LLC) - terms of service: https://www.youtube.com/t/terms
+Privacy policy: https://policies.google.com/privacy
+
+Vimeo, Inc. - terms of service: https://vimeo.com/terms
+Privacy policy: https://vimeo.com/privacy
+
+= Social Share links =
+
+The Social Share block does not contact anything. It builds an ordinary link to
+each network's own sharing page, and nothing at all is sent until a visitor
+clicks one. When a visitor does click, their browser opens that network's page
+and the network receives the current page's URL and title (plus, where noted, the
+excerpt or featured image URL) as part of the address, together with the normal
+information any browser sends, such as their IP address and user agent.
+
+The links each enabled network produces:
+
+* Facebook - `https://www.facebook.com/sharer/sharer.php?u=` + page URL.
+  Terms: https://www.facebook.com/terms.php - Privacy: https://www.facebook.com/privacy/policy/
+* X (Twitter) - `https://twitter.com/intent/tweet?url=` + page URL + `&text=` + page title.
+  Terms: https://x.com/en/tos - Privacy: https://x.com/en/privacy
+* LinkedIn - `https://www.linkedin.com/sharing/share-offsite/?url=` + page URL.
+  Terms: https://www.linkedin.com/legal/user-agreement - Privacy: https://www.linkedin.com/legal/privacy-policy
+* Pinterest - `https://pinterest.com/pin/create/button/?url=` + page URL + `&description=` + page title + optional `&media=` + featured image URL.
+  Terms: https://policy.pinterest.com/en/terms-of-service - Privacy: https://policy.pinterest.com/en/privacy-policy
+* WhatsApp - `https://api.whatsapp.com/send?text=` + page title + page URL.
+  Terms: https://www.whatsapp.com/legal/terms-of-service - Privacy: https://www.whatsapp.com/legal/privacy-policy
+* Telegram - `https://t.me/share/url?url=` + page URL + `&text=` + page title.
+  Terms: https://telegram.org/tos - Privacy: https://telegram.org/privacy
+* Reddit - `https://www.reddit.com/submit?url=` + page URL + `&title=` + page title.
+  Terms: https://www.redditinc.com/policies/user-agreement - Privacy: https://www.reddit.com/policies/privacy-policy
+
+The Instagram, YouTube, TikTok, Snapchat, Discord and Spotify buttons are plain
+links to those sites' home pages and carry no page data:
+`https://www.instagram.com/`, `https://www.youtube.com/`, `https://www.tiktok.com/`,
+`https://www.snapchat.com/`, `https://discord.com/`, `https://open.spotify.com/`.
+
+* Instagram - Terms: https://help.instagram.com/581066165581870 - Privacy: https://privacycenter.instagram.com/policy
+* YouTube - Terms: https://www.youtube.com/t/terms - Privacy: https://policies.google.com/privacy
+* TikTok - Terms: https://www.tiktok.com/legal/page/row/terms-of-service/en - Privacy: https://www.tiktok.com/legal/page/row/privacy-policy/en
+* Snapchat - Terms: https://snap.com/en-US/terms - Privacy: https://snap.com/en-US/privacy/privacy-policy
+* Discord - Terms: https://discord.com/terms - Privacy: https://discord.com/privacy
+* Spotify - Terms: https://www.spotify.com/legal/end-user-agreement/ - Privacy: https://www.spotify.com/legal/privacy-policy/
+
+The Email button is a `mailto:` link and opens the visitor's own mail program;
+no service is contacted. The Copy Link button copies the page URL locally.
+
+The Social Icon block only outputs the links you type into it yourself, so it
+contacts nothing on its own.
+
+== Credits ==
+
+ShapeBlock's own code is GPLv2-or-later, as stated above. It bundles two
+third-party front-end libraries, each under its own MIT license, with the
+upstream license text shipped alongside the library files:
+
+* Swiper (https://swiperjs.com), Copyright (c) 2014-2025 Vladimir Kharlampidi
+  - `assets/lib/swiper/LICENSE`.
+* Bootstrap's grid component (https://getbootstrap.com), Copyright (c)
+  2011-2025 The Bootstrap Authors - `assets/lib/bootstrap/LICENSE`. Only the
+  grid CSS is used, recompiled with a `shapeblock-` class/variable prefix.
+
+Both licenses are compatible with the GPLv2-or-later this plugin is
+distributed under.
+
+The bundled icon font (`includes/public/assets/icon/`) is built with Fontello
+from 81 glyphs original to this plugin, plus 3 glyphs from other icon sets,
+each under the SIL Open Font License 1.1 (GPL-compatible):
+
+* `map-o` and `h-sigh` — Font Awesome 4.7 (https://fontawesome.com/v4/license/).
+* `move` — Elusive Icons (https://github.com/aristath/elusive-iconfont).
 
 == Installation ==
 

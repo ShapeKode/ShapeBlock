@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Icon block.
@@ -183,6 +182,13 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 ] );
 
 $icon_html = ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';
+// Only the icon font class markup above is ever put in this string, so a single-tag allow-list is enough.
+$icon_allowed_html = array(
+	'i' => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+);
 
 // Optional link wrapper.
 $has_link = ( '' !== $url && '#' !== $url );
@@ -193,19 +199,18 @@ if ( $is_external ) {
 if ( $nofollow ) {
 	$rel[] = 'nofollow';
 }
-$rel_attr = ! empty( $rel ) ? ' rel="' . esc_attr( implode( ' ', $rel ) ) . '"' : '';
-$target   = $is_external ? ' target="_blank"' : '';
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-icon-wrap">
 		<?php if ( $has_link ) : ?>
-			<a class="<?php echo esc_attr( $el_classes ); ?>" href="<?php echo esc_url( $url ); ?>"<?php echo $target . $rel_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?>>
-				<?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?>
+			<a class="<?php echo esc_attr( $el_classes ); ?>" href="<?php echo esc_url( $url ); ?>"<?php if ( $is_external ) : ?> target="_blank"<?php endif; ?><?php if ( ! empty( $rel ) ) : ?> rel="<?php echo esc_attr( implode( ' ', $rel ) ); ?>"<?php endif; ?>>
+				<?php echo wp_kses( $icon_html, $icon_allowed_html ); ?>
 			</a>
 		<?php else : ?>
 			<span class="<?php echo esc_attr( $el_classes ); ?>">
-				<?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?>
+				<?php echo wp_kses( $icon_html, $icon_allowed_html ); ?>
 			</span>
 		<?php endif; ?>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

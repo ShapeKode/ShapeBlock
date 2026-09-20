@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Countdown block.
@@ -207,3 +206,4 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, $sub_styles );
 		<div class="shapeblock-cntdwn-item <?php echo esc_attr( $separator ); ?>"><span class="shapeblock-cntdwn-seconds"><?php echo esc_html( $i_seconds ); ?></span> <span class="shapeblock-cntdwn-seconds-label"><?php echo wp_kses_post( $seconds_label ); ?></span></div>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

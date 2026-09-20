@@ -28,12 +28,21 @@ add_action( 'init', 'shapeblock_create_block_menu_block_init' );
 /**
  * Fetch the full Google Fonts family list from the Google Fonts API.
  *
+ * Only ever called when the site owner has opted in ( see
+ * shapeblock_google_fonts_enabled() ); returns an empty array otherwise.
+ *
  * The result is cached for a week to avoid a remote request on every editor load.
  * Returns an empty array on failure; the editor then falls back to a bundled list.
  *
  * @return array List of Google font family names.
  */
 function shapeblock_menu_get_google_fonts() {
+	// The catalogue is only fetched once the site owner has switched the
+	// Google Fonts connection on in ShapeBlock > Settings ( off by default ).
+	if ( ! function_exists( 'shapeblock_google_fonts_enabled' ) || ! shapeblock_google_fonts_enabled() ) {
+		return array();
+	}
+
 	$cached = get_transient( 'shapeblock_menu_google_fonts' );
 	if ( is_array( $cached ) && ! empty( $cached ) ) {
 		return $cached;
@@ -143,6 +152,20 @@ function shapeblock_menu_sanitize_items( $items, $depth = 0 ) {
 }
 
 /**
+ * Who may read or write the "last used menu" convenience value.
+ *
+ * This is not site configuration: it only mirrors menu items the same user can
+ * already create and see by placing the Menu block, and every item is run
+ * through shapeblock_menu_sanitize_items() before it is stored. The capability
+ * therefore matches the one the block editor itself requires.
+ *
+ * @return bool
+ */
+function shapeblock_menu_last_permission() {
+	return current_user_can( 'edit_posts' );
+}
+
+/**
  * REST: remember the most recently edited menu, and hand it back so a freshly inserted
  * block can auto-restore it ( the way a brand-new menu comes pre-filled by default ).
  */
@@ -154,16 +177,18 @@ function shapeblock_menu_register_last_route() {
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => 'shapeblock_menu_get_last',
-				'permission_callback' => function () {
-					return current_user_can( 'edit_posts' );
-				},
+				'permission_callback' => 'shapeblock_menu_last_permission',
 			),
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => 'shapeblock_menu_save_last',
-				'permission_callback' => function () {
-					return current_user_can( 'edit_posts' );
-				},
+				'permission_callback' => 'shapeblock_menu_last_permission',
+				'args'                => array(
+					'items' => array(
+						'type'     => 'array',
+						'required' => true,
+					),
+				),
 			),
 		)
 	);

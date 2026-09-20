@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template variables.
+return ( function ( $attributes, $content, $block ) {
 
 $allowed_tags = [ 'div', 'section', 'article', 'main', 'header', 'footer', 'aside' ];
 $tag          = isset( $attributes['htmlTag'] ) && in_array( $attributes['htmlTag'], $allowed_tags, true )
@@ -261,6 +260,8 @@ $wrapper_attrs = get_block_wrapper_attributes( $wrapper_args );
 printf(
     '<%1$s %2$s><div class="shapeblock-layout-row__inner">%3$s</div></%1$s>',
     tag_escape( $tag ),
-    $wrapper_attrs, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from get_block_wrapper_attributes()
-    $content        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $content is pre-rendered inner blocks HTML
+    wp_kses_post( $wrapper_attrs ),
+    $content // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $content is the pre-rendered inner blocks HTML from render_block(), the standard WordPress core pattern for wrapper blocks (e.g. core/group); it cannot be escaped further without breaking nested block markup.
 );
+
+} )( $attributes, $content, $block );

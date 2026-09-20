@@ -21,17 +21,15 @@ class Api {
         register_rest_route( 'shapeblock/v1', '/update-block-status', array(
             'methods' => 'POST',
             'callback' => array( $this, 'update_block_status' ),
-            'permission_callback' => function () {
-                return current_user_can('edit_posts');
-            }
+            // Enabling / disabling a block is a site-wide setting, and the screen
+            // that offers it is a manage_options screen.
+            'permission_callback' => array( $this, 'can_manage' )
         ) );
 
         register_rest_route( 'shapeblock/v1', '/update-all-block-status', array(
             'methods' => 'POST',
             'callback' => array( $this, 'update_all_block_status' ),
-            'permission_callback' => function () {
-                return current_user_can('edit_posts');
-            }
+            'permission_callback' => array( $this, 'can_manage' )
         ) );
 
         // Templates endpoints
@@ -39,16 +37,12 @@ class Api {
             array(
                 'methods'  => 'GET',
                 'callback' => array( $this, 'get_templates' ),
-                'permission_callback' => function () {
-                    return current_user_can('edit_posts');
-                },
+                'permission_callback' => array( $this, 'can_manage' ),
             ),
             array(
                 'methods'  => 'POST',
                 'callback' => array( $this, 'create_template' ),
-                'permission_callback' => function () {
-                    return current_user_can('edit_posts');
-                },
+                'permission_callback' => array( $this, 'can_create_template' ),
             ),
         ) );
 
@@ -56,40 +50,32 @@ class Api {
             array(
                 'methods'  => 'GET',
                 'callback' => array( $this, 'get_template' ),
-                'permission_callback' => function () {
-                    return current_user_can('edit_posts');
-                },
+                'permission_callback' => array( $this, 'can_edit_template' ),
             ),
             array(
                 'methods'  => 'PUT,PATCH',
                 'callback' => array( $this, 'update_template' ),
-                'permission_callback' => function () {
-                    return current_user_can('edit_posts');
-                },
+                'permission_callback' => array( $this, 'can_edit_template' ),
             ),
             array(
                 'methods'  => 'DELETE',
                 'callback' => array( $this, 'delete_template' ),
-                'permission_callback' => function () {
-                    return current_user_can('edit_posts');
-                },
+                'permission_callback' => array( $this, 'can_delete_template' ),
             ),
         ) );
 
         register_rest_route( 'shapeblock/v1', '/templates/(?P<id>\d+)/restore', array(
             'methods'  => 'POST',
             'callback' => array( $this, 'restore_template' ),
-            'permission_callback' => function () {
-                return current_user_can('edit_posts');
-            },
+            'permission_callback' => array( $this, 'can_delete_template' ),
         ) );
 
         register_rest_route( 'shapeblock/v1', '/templates/bulk-delete', array(
             'methods'  => 'POST',
             'callback' => array( $this, 'bulk_delete_templates' ),
-            'permission_callback' => function () {
-                return current_user_can('edit_posts');
-            },
+            // Bulk trash / restore / permanent delete: authorise the most
+            // destructive action the endpoint can take, for every id it names.
+            'permission_callback' => array( $this, 'can_bulk_template' ),
         ) );
 
         // Colors endpoints
@@ -97,16 +83,12 @@ class Api {
             array(
                 'methods'  => 'GET',
                 'callback' => array( $this, 'get_colors' ),
-                'permission_callback' => function () {
-                    return current_user_can('manage_options');
-                },
+                'permission_callback' => array( $this, 'can_manage' ),
             ),
             array(
                 'methods'  => 'POST',
                 'callback' => array( $this, 'save_colors' ),
-                'permission_callback' => function () {
-                    return current_user_can('manage_options');
-                },
+                'permission_callback' => array( $this, 'can_manage' ),
             ),
         ) );
 
@@ -115,16 +97,12 @@ class Api {
             array(
                 'methods'  => 'GET',
                 'callback' => array( $this, 'get_layout' ),
-                'permission_callback' => function () {
-                    return current_user_can('manage_options');
-                },
+                'permission_callback' => array( $this, 'can_manage' ),
             ),
             array(
                 'methods'  => 'POST',
                 'callback' => array( $this, 'save_layout' ),
-                'permission_callback' => function () {
-                    return current_user_can('manage_options');
-                },
+                'permission_callback' => array( $this, 'can_manage' ),
             ),
         ) );
 
@@ -132,18 +110,113 @@ class Api {
         register_rest_route( 'shapeblock/v1', '/export', array(
             'methods'  => 'GET',
             'callback' => array( $this, 'export_data' ),
-            'permission_callback' => function () {
-                return current_user_can('manage_options');
-            },
+            'permission_callback' => array( $this, 'can_manage' ),
         ) );
 
         register_rest_route( 'shapeblock/v1', '/import', array(
             'methods'  => 'POST',
             'callback' => array( $this, 'import_data' ),
-            'permission_callback' => function () {
-                return current_user_can('manage_options');
-            },
+            'permission_callback' => array( $this, 'can_manage' ),
         ) );
+    }
+
+    /**
+     * Every route here backs the ShapeBlock admin screens, which are registered
+     * with manage_options. A generic edit_posts check would expose the same data
+     * and the same destructive actions to a far lower role, so manage_options is
+     * the floor; the per-template routes then authorise the template they name.
+     *
+     * @return bool
+     */
+    public function can_manage() {
+        return current_user_can( 'manage_options' );
+    }
+
+    /**
+     * Creating a custom template.
+     *
+     * @return bool
+     */
+    public function can_create_template() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return false;
+        }
+        $type = get_post_type_object( 'shapeblock-template' );
+        return $type ? current_user_can( $type->cap->create_posts ) : false;
+    }
+
+    /**
+     * Reading or writing one specific template.
+     *
+     * @param \WP_REST_Request $request Request.
+     * @return bool
+     */
+    public function can_edit_template( $request ) {
+        return $this->can_template( $request, 'edit_post' );
+    }
+
+    /**
+     * Trashing, restoring or deleting one specific template.
+     *
+     * @param \WP_REST_Request $request Request.
+     * @return bool
+     */
+    public function can_delete_template( $request ) {
+        return $this->can_template( $request, 'delete_post' );
+    }
+
+    /**
+     * Authorise a capability against the template the request names.
+     *
+     * @param \WP_REST_Request $request Request.
+     * @param string           $cap     Meta capability to test.
+     * @return bool
+     */
+    private function can_template( $request, $cap ) {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return false;
+        }
+
+        $id   = (int) $request->get_param( 'id' );
+        $post = $id ? get_post( $id ) : null;
+
+        // An id that is not a template is left to the callback, which answers 404.
+        if ( ! $post || 'shapeblock-template' !== $post->post_type ) {
+            return true;
+        }
+
+        return current_user_can( $cap, $id );
+    }
+
+    /**
+     * Bulk trash / restore / delete: the most destructive capability the
+     * endpoint can exercise, checked per item.
+     *
+     * @param \WP_REST_Request $request Request.
+     * @return bool
+     */
+    public function can_bulk_template( $request ) {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return false;
+        }
+
+        $ids = $request->get_param( 'ids' );
+        if ( ! is_array( $ids ) ) {
+            return true; // The callback rejects a malformed payload with 400.
+        }
+
+        foreach ( $ids as $id ) {
+            $id   = (int) $id;
+            $post = $id ? get_post( $id ) : null;
+            if ( ! $post || 'shapeblock-template' !== $post->post_type ) {
+                continue;
+            }
+            if ( ! current_user_can( 'delete_post', $id ) ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -432,8 +505,12 @@ class Api {
         if ( isset( $settings['layout'] ) && is_array( $settings['layout'] ) ) {
             $defaults  = self::get_layout_defaults();
             $sanitized = isset( $settings['layout']['container_width'] ) ? $this->sanitize_css_length( $settings['layout']['container_width'] ) : '';
+            $current   = self::get_saved_layout();
             update_option( 'shapeblock_layout', array(
                 'container_width' => '' !== $sanitized ? $sanitized : $defaults['container_width'],
+                // An import never switches the Google Fonts connection on or off;
+                // that consent belongs to this site, not to the file.
+                'google_fonts'    => empty( $current['google_fonts'] ) ? 0 : 1,
             ) );
             $summary['layout'] = true;
         }
@@ -660,6 +737,9 @@ class Api {
     public static function get_layout_defaults() {
         return array(
             'container_width' => '1200px',
+            // Off by default: the plugin makes no request to Google until the
+            // site owner switches this on.
+            'google_fonts'    => 0,
         );
     }
 
@@ -714,6 +794,14 @@ class Api {
             $clean['container_width'] = $defaults['container_width'];
         }
 
+        // google_fonts — the opt-in for the Google Fonts connection.
+        $clean['google_fonts'] = ( isset( $input['google_fonts'] ) && rest_sanitize_boolean( $input['google_fonts'] ) ) ? 1 : 0;
+
+        // Switching it off must also drop the cached catalogue.
+        if ( empty( $clean['google_fonts'] ) ) {
+            delete_transient( 'shapeblock_menu_google_fonts' );
+        }
+
         update_option( 'shapeblock_layout', $clean );
 
         return rest_ensure_response( array(
@@ -723,11 +811,18 @@ class Api {
     }
 
     public function update_block_status( $request ) {
-        $block_id = $request->get_param( 'blockId' );
-        $status = $request->get_param( 'status' );
+        $block_id = sanitize_text_field( (string) $request->get_param( 'blockId' ) );
+        $status   = $request->get_param( 'status' );
 
+        // Only allow the two valid statuses, same rule as update_all_block_status().
+        if ( ! in_array( $status, array( 'enable', 'disable' ), true ) ) {
+            return new \WP_Error( 'invalid_status', 'Invalid status value.', array( 'status' => 400 ) );
+        }
 
-        
+        if ( '' === $block_id ) {
+            return new \WP_Error( 'invalid_block_id', 'No block provided.', array( 'status' => 400 ) );
+        }
+
         // Update the block status in the database
         update_option( 'shapeblock_block_' . $block_id, $status );
 

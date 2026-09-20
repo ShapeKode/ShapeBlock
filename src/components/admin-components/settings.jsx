@@ -4,7 +4,7 @@ import { DownloadOutlined, UploadOutlined, InboxOutlined } from '@ant-design/ico
 
 // Guarded: this runs at module-eval time, and the same bundle is also loaded in
 // the block editor where the `shapeblock` global is not localized.
-const LAYOUT_DEFAULTS = (typeof shapeblock !== 'undefined' && shapeblock.layoutDefaults) || { container_width: '1200px' };
+const LAYOUT_DEFAULTS = (typeof shapeblock !== 'undefined' && shapeblock.layoutDefaults) || { container_width: '1200px', google_fonts: 0 };
 
 // The three sections an export file can carry. Values match the REST `include` param.
 const SECTIONS = [
@@ -52,6 +52,12 @@ export default function Settings() {
     );
     const [containerWidth, setContainerWidth] = useState(initialContainerWidth);
 
+    // Google Fonts is an external connection, so it stays off until it is
+    // switched on here.
+    const [googleFonts, setGoogleFonts] = useState(
+        !!(shapeblock.layout && shapeblock.layout.google_fonts)
+    );
+
     // Export / Import state
     const [exportSections, setExportSections] = useState(ALL_SECTIONS);
     const [exporting, setExporting] = useState(false);
@@ -88,14 +94,14 @@ export default function Settings() {
             ? `${containerWidth}px`
             : LAYOUT_DEFAULTS.container_width;
 
-        postJson('layout', { layout: { container_width: containerWidthValue } })
+        postJson('layout', { layout: { container_width: containerWidthValue, google_fonts: googleFonts ? 1 : 0 } })
             .then((res) => {
                 const layoutOk = res && res.status === 'success';
                 if (layoutOk) {
-                    shapeblock.layout = res.layout || { container_width: containerWidthValue };
+                    shapeblock.layout = res.layout || { container_width: containerWidthValue, google_fonts: googleFonts ? 1 : 0 };
                     notification.success({
                         message: 'Settings Saved',
-                        description: 'Container width has been updated.',
+                        description: 'Your settings have been updated.',
                         duration: 2,
                     });
                 } else {
@@ -116,6 +122,7 @@ export default function Settings() {
         const defaultWidth = parseContainerWidth(LAYOUT_DEFAULTS.container_width);
         setContainerWidth(defaultWidth);
         applyContainerWidthToRoot(defaultWidth);
+        setGoogleFonts(false);
     };
 
     // --- Export -----------------------------------------------------------
@@ -225,6 +232,7 @@ export default function Settings() {
                     const width = parseContainerWidth(res.layout.container_width);
                     setContainerWidth(width);
                     applyContainerWidthToRoot(width);
+                    setGoogleFonts(!!res.layout.google_fonts);
                 }
 
                 const r = res.imported || {};
@@ -287,6 +295,25 @@ export default function Settings() {
                     </div>
                 </Col>
             </Row>
+
+            <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 32 }}>Google Fonts</h2>
+            <p style={{ marginTop: 0, color: '#555' }}>
+                Off by default. While this is off ShapeBlock never contacts Google: the font
+                pickers offer only the fonts already available on the visitor&rsquo;s device, and no
+                request is made to fonts.google.com or fonts.googleapis.com.
+            </p>
+            <p style={{ marginTop: 0, color: '#555' }}>
+                Turning it on lets the editor download the Google Fonts list and lets the front end
+                load the font files you choose from Google&rsquo;s servers. Your visitors&rsquo; IP
+                addresses are then sent to Google &mdash; see Google&rsquo;s{' '}
+                <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer noopener">terms of service</a>{' '}
+                and{' '}
+                <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer noopener">privacy policy</a>.
+            </p>
+
+            <Checkbox checked={googleFonts} onChange={(e) => setGoogleFonts(e.target.checked)}>
+                Allow ShapeBlock to connect to Google Fonts
+            </Checkbox>
 
             <div style={{ marginTop: 24, display: 'flex', gap: 8 }}>
                 <Button type="primary" onClick={handleSave} loading={saving}>Save Changes</Button>

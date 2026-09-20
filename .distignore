@@ -1,0 +1,61 @@
+# Files/directories excluded from the WordPress.org release ZIP.
+# Keep this in sync with the packaging step — this is the reproducible
+# definition of what ships, so the ZIP never again depends on someone
+# remembering the exclude list by hand.
+
+# Version control / CI
+.git
+.github
+.gitignore
+.gitattributes
+.svn
+
+# Dependencies (not needed at runtime; build/ ships instead)
+node_modules
+vendor
+
+# Uncompiled sources — build/ is what WordPress loads.
+# NOTE: the "menu" block has no src/ at all; build/render.php there is
+# the only copy and must never be caught by a blanket src/ rule.
+src
+includes/public/blocks/*/src
+
+# Shared editor-only source components (bundled into each block's
+# build/index.js by webpack at compile time; nothing loads this at
+# runtime).
+includes/public/blocks/custom-components
+
+# Build/dev tooling and metadata
+package.json
+package-lock.json
+includes/public/blocks/*/package.json
+composer.json
+composer.lock
+webpack.config.js
+.eslintrc
+.eslintrc.js
+.eslintrc.json
+.prettierrc
+.prettierrc.js
+.prettierrc.json
+.editorconfig
+phpcs.xml
+phpcs.xml.dist
+.phpcs.xml
+.phpcs.xml.dist
+
+# Generated/debug artefacts
+*.map
+.DS_Store
+Thumbs.db
+*.log
+*.zip
+.env
+.env.*
+
+# Tests / CI
+tests
+test
+phpunit.xml
+phpunit.xml.dist
+.travis.yml

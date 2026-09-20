@@ -175,8 +175,9 @@ class Theme_Builder {
 				'single'            => true,
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'sanitize_key',
-				'auth_callback'     => function () {
-					return current_user_can( 'edit_posts' );
+				// Authorise the template this meta belongs to, not the post type.
+				'auth_callback'     => function ( $allowed, $meta_key, $object_id ) {
+					return $object_id ? current_user_can( 'edit_post', $object_id ) : current_user_can( 'manage_options' );
 				},
 			)
 		);
@@ -190,8 +191,8 @@ class Theme_Builder {
 				'type'          => 'array',
 				'single'        => true,
 				'show_in_rest'  => false,
-				'auth_callback' => function () {
-					return current_user_can( 'edit_posts' );
+				'auth_callback' => function ( $allowed, $meta_key, $object_id ) {
+					return $object_id ? current_user_can( 'edit_post', $object_id ) : current_user_can( 'manage_options' );
 				},
 			)
 		);

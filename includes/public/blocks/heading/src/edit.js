@@ -118,6 +118,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// whether or not the block is selected (the sidebar control isn't required).
 	useEffect(() => {
 		if (typeof document === 'undefined') return;
+		// Google Fonts is an opt-in connection ( ShapeBlock > Settings ).
+		if (!window.shapeblockGoogleFonts) return;
 		const fams = [attributes.titleTypography, attributes.highlightTypography]
 			.map((t) => (t && t.fontFamily) || '')
 			.filter((f) => f && f.indexOf(',') === -1);

@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Counter block.
@@ -198,11 +197,18 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 ] );
 
 $icon_html = ( $icon_on && ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';
+// Only the icon font class markup above is ever put in this string, so a single-tag allow-list is enough.
+$icon_allowed_html = array(
+	'i' => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+);
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-cnt-wrap">
 		<?php if ( $icon_html ) : ?>
-			<div class="shapeblock-cnt-icon"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+			<div class="shapeblock-cnt-icon"><?php echo wp_kses( $icon_html, $icon_allowed_html ); ?></div>
 		<?php endif; ?>
 		<div class="shapeblock-cnt-content">
 			<div class="shapeblock-cnt-number-wrap">
@@ -225,3 +231,4 @@ $icon_html = ( $icon_on && ! empty( $icon ) && 'none' !== $icon ) ? '<i class="s
 		</div>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

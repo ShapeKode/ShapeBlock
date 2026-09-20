@@ -27,7 +27,41 @@
             
                 <?php if ( ! empty($embed_video) ) { ?>
                     <div class="shapeblock-video-wrapper">
-                        <?php echo $embed_video; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Trusted markup from \ShapeBlock\Frontend\Helper::shapeblock_get_video_embed(), built from esc_attr/esc_url and wp_oembed_get. ?>
+                        <?php
+                        // Provider embed (self-hosted <video> or an oEmbed <iframe> from
+                        // wp_oembed_get()/YouTube/Vimeo). wp_kses_post() has no entry for
+                        // <iframe>, so this echo needs its own allow-list covering exactly
+                        // the tags/attributes \ShapeBlock\Frontend\Helper::shapeblock_get_video_embed()
+                        // can emit.
+                        $shapeblock_video_allowed_html = array(
+                            'video'  => array(
+                                'width'      => true,
+                                'height'     => true,
+                                'controls'   => true,
+                                'autoplay'   => true,
+                                'muted'      => true,
+                                'playsinline' => true,
+                                'class'      => true,
+                            ),
+                            'source' => array(
+                                'src'  => true,
+                                'type' => true,
+                            ),
+                            'iframe' => array(
+                                'src'             => true,
+                                'width'           => true,
+                                'height'          => true,
+                                'frameborder'     => true,
+                                'allow'           => true,
+                                'allowfullscreen' => true,
+                                'referrerpolicy'  => true,
+                                'title'           => true,
+                                'loading'         => true,
+                                'class'           => true,
+                            ),
+                        );
+                        echo wp_kses( $embed_video, $shapeblock_video_allowed_html );
+                        ?>
                         <span class="play-icon"></span>
                     </div>
                 <?php } ?>

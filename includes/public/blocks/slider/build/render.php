@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Slider block.
@@ -213,3 +212,4 @@ $svg_allowed = array(
 		</button>
 	<?php endif; ?>
 </div>
+<?php } )( $attributes, $content, $block );

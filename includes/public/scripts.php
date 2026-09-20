@@ -8,6 +8,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 // iframe, which the editor flags as "added to the iframe incorrectly".
 add_action( 'enqueue_block_assets', 'shapeblock_enqueue_block_scripts' );
 function shapeblock_enqueue_block_scripts() {
+	// shapeblock_should_load_common_assets() is defined in blocks.php: only load
+	// on a block editor screen, or on a front-end request that actually
+	// contains a ShapeBlock block. See that function for why — this hook
+	// otherwise fires on every wp-admin screen and every front-end page.
+	if ( ! function_exists( 'shapeblock_should_load_common_assets' ) || ! shapeblock_should_load_common_assets() ) {
+		return;
+	}
+
 	wp_enqueue_style( 'shapeblock-public-style', SHAPEBLOCK_PL_URL . 'includes/public/assets/css/public.css', array(), SHAPEBLOCK_VERSION );
 
 	// Styling for the "ShapeBlock Menu" core-Navigation variation ( .shapeblock-nav ). Versioned by

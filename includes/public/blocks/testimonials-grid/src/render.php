@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Testimonials Grid block.
@@ -237,6 +236,34 @@ $svg_quote = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.o
 $icon_i = function ( $val, $fallback ) {
 	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : $fallback;
 };
+// Allow-list for the markup assembled by the $render_* closures below: every dynamic
+// value going into them is already run through esc_url()/esc_attr()/esc_html() at the
+// point it is inserted, this only guards the static wrapper structure around them.
+$testimonial_allowed_html = array(
+	'div'  => array(
+		'class'      => true,
+		'aria-label' => true,
+		'aria-hidden' => true,
+	),
+	'span' => array( 'class' => true ),
+	'em'   => array( 'class' => true ),
+	'img'  => array(
+		'src'      => true,
+		'alt'      => true,
+		'loading'  => true,
+		'decoding' => true,
+	),
+	'i'    => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+	'svg'  => array(
+		'viewbox'     => true,
+		'aria-hidden' => true,
+		'xmlns'       => true,
+	),
+	'path' => array( 'd' => true ),
+);
 
 $render_picture = function ( $item ) use ( $show_image, $placeholder ) {
 	if ( ! $show_image ) return '';
@@ -303,9 +330,10 @@ $render_inner = function ( $item ) use ( $skin, $render_picture, $render_logo, $
 			?>
 			<div class="shapeblock-grid-item shapeblock-testimonials--<?php echo esc_attr( $skin ); ?>">
 				<div class="shapeblock-testimonial-item">
-					<?php echo $render_inner( $item ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Assembled from escaped parts. ?>
+					<?php echo wp_kses( $render_inner( $item ), $testimonial_allowed_html ); ?>
 				</div>
 			</div>
 		<?php endforeach; ?>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

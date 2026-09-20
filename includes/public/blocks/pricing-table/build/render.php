@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Pricing Table block.
@@ -376,6 +375,21 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 
 // Default feature icon (checkmark) when none is selected.
 $default_feature_icon = '<svg class="feature-icon ' . esc_attr( $icon_style ) . '" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5L4 14.2l5 5 11-11-1.5-1.5z"/></svg>';
+// Icon markup used across this template: icon-font <i>, a plain <span>, or the static fallback checkmark SVG above.
+$icon_allowed_html = array(
+	'i'    => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+	'span' => array( 'class' => true ),
+	'svg'  => array(
+		'class'       => true,
+		'viewbox'     => true,
+		'aria-hidden' => true,
+		'xmlns'       => true,
+	),
+	'path' => array( 'd' => true ),
+);
 
 /** Renders the price markup honouring currency placement. */
 $render_price_value = function ( $value ) use ( $currency, $currency_pos ) {
@@ -387,14 +401,14 @@ $render_price_value = function ( $value ) use ( $currency, $currency_pos ) {
 };
 
 /** Renders the CTA button. */
-$render_button = function () use ( $attributes, $H ) {
+$render_button = function () use ( $attributes, $H, $icon_allowed_html ) {
 	if ( empty( $attributes['showButton'] ) ) {
 		return;
 	}
 	$full_width = ! empty( $attributes['buttonFullWidth'] ) ? 'shapeblock--full-btn' : '';
 	$url        = ! empty( $attributes['buttonUrl'] ) ? $attributes['buttonUrl'] : '#';
-	$target     = ! empty( $attributes['buttonTarget'] ) ? ' target="_blank"' : '';
-	$nofollow   = ! empty( $attributes['buttonNofollow'] ) ? ' rel="nofollow"' : '';
+	$new_tab    = ! empty( $attributes['buttonTarget'] );
+	$nofollow   = ! empty( $attributes['buttonNofollow'] );
 	$icon       = isset( $attributes['buttonIcon'] ) ? $attributes['buttonIcon'] : '';
 	$icon_pos   = isset( $attributes['buttonIconPosition'] ) ? $attributes['buttonIconPosition'] : 'after';
 	$text       = isset( $attributes['buttonText'] ) ? $attributes['buttonText'] : '';
@@ -402,13 +416,13 @@ $render_button = function () use ( $attributes, $H ) {
 	$icon_html  = ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';
 	?>
 	<div class="shapeblock-btn-part">
-		<a href="<?php echo esc_url( $url ); ?>"<?php echo $target . $nofollow; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static attribute strings. ?> class="shapeblock-button <?php echo esc_attr( $full_width ); ?>">
+		<a href="<?php echo esc_url( $url ); ?>"<?php echo $new_tab ? ' target="_blank"' : ''; ?><?php echo $nofollow ? ' rel="nofollow"' : ''; ?> class="shapeblock-button <?php echo esc_attr( $full_width ); ?>">
 			<?php if ( 'before' === $icon_pos && $icon_html ) : ?>
-				<span class="shapeblock-icon shapeblock-icon-before"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?></span>
+				<span class="shapeblock-icon shapeblock-icon-before"><?php echo wp_kses( $icon_html, $icon_allowed_html ); ?></span>
 			<?php endif; ?>
 			<?php echo esc_html( $text ); ?>
 			<?php if ( 'after' === $icon_pos && $icon_html ) : ?>
-				<span class="shapeblock-icon shapeblock-icon-after"><?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Icon markup escaped above. ?></span>
+				<span class="shapeblock-icon shapeblock-icon-after"><?php echo wp_kses( $icon_html, $icon_allowed_html ); ?></span>
 			<?php endif; ?>
 		</a>
 		<?php if ( ! empty( $subtext ) ) : ?>
@@ -436,10 +450,10 @@ if ( $is_featured ) {
 
 		<div class="shapeblock-price">
 			<?php if ( $on_sale ) : ?>
-				<span class="shapeblock-old-price"><?php echo $render_price_value( $attributes['regularPrice'] ?? '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from esc_html in closure. ?></span>
-				<span class="shapeblock-sale-price"><?php echo $render_price_value( $attributes['salePrice'] ?? '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from esc_html in closure. ?></span>
+				<span class="shapeblock-old-price"><?php echo wp_kses( $render_price_value( $attributes['regularPrice'] ?? '' ), $icon_allowed_html ); ?></span>
+				<span class="shapeblock-sale-price"><?php echo wp_kses( $render_price_value( $attributes['salePrice'] ?? '' ), $icon_allowed_html ); ?></span>
 			<?php else : ?>
-				<span class="shapeblock-amount"><?php echo $render_price_value( $attributes['price'] ?? '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from esc_html in closure. ?></span>
+				<span class="shapeblock-amount"><?php echo wp_kses( $render_price_value( $attributes['price'] ?? '' ), $icon_allowed_html ); ?></span>
 			<?php endif; ?>
 			<span class="shapeblock-period"><?php echo esc_html( $separator . $period ); ?></span>
 		</div>
@@ -458,7 +472,7 @@ if ( $is_featured ) {
 					if ( ! empty( $f_icon ) && 'none' !== $f_icon ) {
 						echo '<i class="shapeblock-icon ' . esc_attr( $f_icon ) . ' feature-icon ' . esc_attr( $icon_style ) . '" aria-hidden="true"></i>';
 					} else {
-						echo $default_feature_icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static inline SVG.
+						echo wp_kses( $default_feature_icon, $icon_allowed_html );
 					}
 					?>
 					<span class="shapeblock-feature-text"><?php echo esc_html( isset( $feature['text'] ) ? $feature['text'] : '' ); ?></span>
@@ -469,3 +483,4 @@ if ( $is_featured ) {
 		<?php if ( 'after_features' === $button_pos ) { $render_button(); } ?>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

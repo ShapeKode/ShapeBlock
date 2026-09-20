@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the FAQ Accordion block.
@@ -356,6 +355,14 @@ $H::add_custom_style( $style_handle, $selector, $full_responsive_css, [
 // Default icons (used when no custom icon is selected). Plus = collapsed, minus = expanded.
 $default_icon_close = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"/></svg>'; // plus
 $default_icon_open  = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M5 11h14v2H5z"/></svg>'; // minus
+$svg_allowed_html    = array(
+	'svg'  => array(
+		'viewbox'     => true,
+		'aria-hidden' => true,
+		'xmlns'       => true,
+	),
+	'path' => array( 'd' => true ),
+);
 
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
@@ -376,7 +383,7 @@ $default_icon_open  = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http:/
 						if ( ! empty( $icon_open ) && 'none' !== $icon_open ) {
 							echo '<i class="shapeblock-icon ' . esc_attr( $icon_open ) . '" aria-hidden="true"></i>';
 						} else {
-							echo $default_icon_open; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static inline SVG.
+							echo wp_kses( $default_icon_open, $svg_allowed_html );
 						}
 						?>
 					</span>
@@ -385,7 +392,7 @@ $default_icon_open  = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http:/
 						if ( ! empty( $icon_close ) && 'none' !== $icon_close ) {
 							echo '<i class="shapeblock-icon ' . esc_attr( $icon_close ) . '" aria-hidden="true"></i>';
 						} else {
-							echo $default_icon_close; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static inline SVG.
+							echo wp_kses( $default_icon_close, $svg_allowed_html );
 						}
 						?>
 					</span>
@@ -397,3 +404,4 @@ $default_icon_open  = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http:/
 		<?php endforeach; ?>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

@@ -11,6 +11,12 @@
 		return;
 	}
 
+	// Google Fonts is an opt-in connection ( ShapeBlock > Settings ). While it is
+	// off, nothing here contacts fonts.googleapis.com.
+	if ( ! window.shapeblockGoogleFonts ) {
+		return;
+	}
+
 	function fontHref( fam ) {
 		return 'https://fonts.googleapis.com/css2?family=' +
 			encodeURIComponent( fam ).replace( /%20/g, '+' ) +

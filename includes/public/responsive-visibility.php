@@ -136,7 +136,10 @@ add_action( 'wp_enqueue_scripts', 'shapeblock_visibility_inline_css', 20 );
  * instead — you can see it will not show, and still click it.
  */
 function shapeblock_visibility_editor_preview_css() {
-	if ( ! is_admin() ) {
+	// enqueue_block_assets fires on every wp-admin screen, not only the block
+	// editor, so is_admin() alone is not enough — see blocks.php's
+	// shapeblock_is_block_editor_screen().
+	if ( ! function_exists( 'shapeblock_is_block_editor_screen' ) || ! shapeblock_is_block_editor_screen() ) {
 		return;
 	}
 	wp_register_style( 'shapeblock-visibility-editor', false, array(), SHAPEBLOCK_VERSION );

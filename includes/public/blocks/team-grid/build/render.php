@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Team Member block.
@@ -357,6 +356,41 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 $icon_i = function ( $val, $fallback ) {
 	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : $fallback;
 };
+// Allow-list for every markup fragment assembled below ($open_link, $img_box_html,
+// $name_html, the social/contact markup, $build_name_wrap()). Every dynamic value going
+// into these fragments is already run through esc_url()/esc_attr()/esc_html() (or
+// tag_escape() for the heading tag) at the point it is inserted; this only guards the
+// static tag/attribute structure they are wrapped in.
+$shapeblock_allowed_html = array(
+	'div'  => array( 'class' => true ),
+	'span' => array( 'class' => true ),
+	'p'    => array( 'class' => true ),
+	'h1'   => array( 'class' => true ),
+	'h2'   => array( 'class' => true ),
+	'h3'   => array( 'class' => true ),
+	'h4'   => array( 'class' => true ),
+	'h5'   => array( 'class' => true ),
+	'h6'   => array( 'class' => true ),
+	'a'    => array(
+		'href'          => true,
+		'class'         => true,
+		'target'        => true,
+		'rel'           => true,
+		'data-popup-id' => true,
+	),
+	'ul'   => array(),
+	'li'   => array(),
+	'i'    => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+	'svg'  => array(
+		'viewbox'     => true,
+		'aria-hidden' => true,
+		'xmlns'       => true,
+	),
+	'path' => array( 'd' => true ),
+);
 $svg_link  = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12a3 3 0 013-3h3v2H6.9a1 1 0 100 2h3v2h-3a3 3 0 01-3-3zm6 1h4v-2h-4v2zm4-4h3a3 3 0 010 6h-3v-2h3a1 1 0 100-2h-3V9z"/></svg>';
 $svg_plus  = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M11 5v6H5v2h6v6h2v-6h6v-2h-6V5z"/></svg>';
 $svg_mail  = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M3 5h18v14H3V5zm9 7L4 7v1l8 5 8-5V7l-8 5z"/></svg>';
@@ -383,11 +417,11 @@ if ( $show_social && ! empty( $social_links ) ) {
 	?>
 	<div class="shapeblock-team-social <?php echo esc_attr( $pos_classes ); ?>">
 		<?php if ( 'hover_show' === $social_show && ! empty( $social_hover_icon ) ) : ?>
-			<div class="shapeblock-team-social-hover"><a href="#"><?php echo $icon_i( $social_hover_icon, $svg_plus ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a></div>
+			<div class="shapeblock-team-social-hover"><a href="#"><?php echo wp_kses( $icon_i( $social_hover_icon, $svg_plus ), $shapeblock_allowed_html ); ?></a></div>
 		<?php endif; ?>
 		<ul>
 			<?php foreach ( $social_links as $s ) : $su = isset( $s['url'] ) ? $s['url'] : '#'; ?>
-				<li><a href="<?php echo esc_url( $su ); ?>"><?php echo $icon_i( isset( $s['icon'] ) ? $s['icon'] : '', $svg_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a></li>
+				<li><a href="<?php echo esc_url( $su ); ?>"><?php echo wp_kses( $icon_i( isset( $s['icon'] ) ? $s['icon'] : '', $svg_link ), $shapeblock_allowed_html ); ?></a></li>
 			<?php endforeach; ?>
 		</ul>
 	</div>
@@ -398,13 +432,13 @@ $social_default = ( $show_social && ! empty( $social_links ) && 'default' === $s
 $social_positioned = ( $show_social && ! empty( $social_links ) && 'default' !== $social_pos ) ? $social_html : '';
 
 // Image markup.
-$img_alt = $img_url ? esc_attr( $image['alt'] ?? '' ) : esc_attr__( 'Team Image', 'shapeblock' );
+$img_alt_text = $img_url ? ( $image['alt'] ?? '' ) : __( 'Team Image', 'shapeblock' );
 $placeholder = SHAPEBLOCK_PL_URL . 'includes/public/assets/img/placeholder.png';
 $img_src = $img_url ? $img_url : $placeholder;
 ob_start();
 ?>
 <div class="shapeblock-team-img-box">
-	<img class="shapeblock-team-img" src="<?php echo esc_url( $img_src ); ?>" alt="<?php echo $img_alt; // phpcs:ignore ?>" loading="lazy" decoding="async">
+	<img class="shapeblock-team-img" src="<?php echo esc_url( $img_src ); ?>" alt="<?php echo esc_attr( $img_alt_text ); ?>" loading="lazy" decoding="async">
 	<div class="shapeblock-image-below-bg"></div>
 	<div class="shapeblock-image-overlay"></div>
 	<?php if ( in_array( $skin, [ 'skin3', 'skin5' ], true ) && $details ) : ?>
@@ -417,20 +451,19 @@ ob_start();
 $img_box_html = ob_get_clean();
 
 // Name-deg-wrap (with optional details + default social).
-$build_name_wrap = function ( $extra_class = '', $with_details = true, $with_social = true ) use ( $name_html, $designation, $details, $social_default ) {
+$build_name_wrap = function ( $extra_class = '', $with_details = true, $with_social = true ) use ( $name_html, $designation, $details, $social_default, $shapeblock_allowed_html ) {
 	ob_start();
 	?>
 	<div class="shapeblock-name-deg-wrap <?php echo esc_attr( $extra_class ); ?>">
-		<?php echo $name_html; // phpcs:ignore ?>
+		<?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?>
 		<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
 		<?php if ( $with_details && $details ) : ?><div class="shapeblock-team-description"><?php echo nl2br( esc_html( $details ) ); ?></div><?php endif; ?>
-		<?php if ( $with_social ) { echo $social_default; } // phpcs:ignore ?>
+		<?php if ( $with_social ) { echo wp_kses( $social_default, $shapeblock_allowed_html ); } ?>
 	</div>
 	<?php
 	return ob_get_clean();
 };
 
-ob_start();
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-grid-wrap">
@@ -438,44 +471,44 @@ ob_start();
 			<div class="shapeblock-grid-item">
 				<div class="shapeblock-team-card">
 					<div class="shapeblock-team-left">
-						<?php echo $open_link; // phpcs:ignore ?>
-						<div class="shapeblock-team-img-area"><?php echo $img_box_html; // phpcs:ignore ?></div>
-						<?php echo $close_link; // phpcs:ignore ?>
+						<?php echo wp_kses( $open_link, $shapeblock_allowed_html ); ?>
+						<div class="shapeblock-team-img-area"><?php echo wp_kses( $img_box_html, $shapeblock_allowed_html ); ?></div>
+						<?php echo wp_kses( $close_link, $shapeblock_allowed_html ); ?>
 					</div>
 					<div class="shapeblock-team-right">
-						<?php echo $build_name_wrap( '', true, false ); // phpcs:ignore ?>
-						<?php echo $social_default; // phpcs:ignore ?>
+						<?php echo wp_kses( $build_name_wrap( '', true, false ), $shapeblock_allowed_html ); ?>
+						<?php echo wp_kses( $social_default, $shapeblock_allowed_html ); ?>
 					</div>
 				</div>
 			</div>
 		<?php elseif ( 'skin3' === $skin ) : ?>
 			<div class="shapeblock-grid-item skin3">
 				<div class="shapeblock-team-card">
-					<?php echo $open_link; // phpcs:ignore ?>
-					<div class="shapeblock-team-img-area"><?php echo $img_box_html; // phpcs:ignore ?></div>
+					<?php echo wp_kses( $open_link, $shapeblock_allowed_html ); ?>
+					<div class="shapeblock-team-img-area"><?php echo wp_kses( $img_box_html, $shapeblock_allowed_html ); ?></div>
 					<div class="shapeblock-team-deg-content">
 						<div class="shapeblock-name-deg-wrap">
-							<?php echo $name_html; // phpcs:ignore ?>
+							<?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?>
 							<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
 						</div>
 					</div>
-					<?php echo $close_link; // phpcs:ignore ?>
-					<div class="shapeblock-social-media"><?php echo $social_default; // phpcs:ignore ?></div>
-					<?php echo $social_positioned; // phpcs:ignore ?>
+					<?php echo wp_kses( $close_link, $shapeblock_allowed_html ); ?>
+					<div class="shapeblock-social-media"><?php echo wp_kses( $social_default, $shapeblock_allowed_html ); ?></div>
+					<?php echo wp_kses( $social_positioned, $shapeblock_allowed_html ); ?>
 				</div>
 			</div>
 		<?php elseif ( 'skin4' === $skin ) : ?>
 			<div class="shapeblock-grid-item">
 				<div class="shapeblock-team-card">
-					<?php echo $open_link; // phpcs:ignore ?>
-					<div class="shapeblock-team-img-area"><?php echo $img_box_html; // phpcs:ignore ?></div>
-					<?php echo $close_link; // phpcs:ignore ?>
+					<?php echo wp_kses( $open_link, $shapeblock_allowed_html ); ?>
+					<div class="shapeblock-team-img-area"><?php echo wp_kses( $img_box_html, $shapeblock_allowed_html ); ?></div>
+					<?php echo wp_kses( $close_link, $shapeblock_allowed_html ); ?>
 					<div class="shapeblock-team-hover-content <?php echo esc_attr( $overlay4 ); ?>">
 						<div class="shapeblock-name-deg-wrap">
-							<?php echo $name_html; // phpcs:ignore ?>
+							<?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?>
 							<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
 						</div>
-						<?php echo ( $show_social && ! empty( $social_links ) ) ? $social_html : ''; // phpcs:ignore ?>
+						<?php echo wp_kses( ( $show_social && ! empty( $social_links ) ) ? $social_html : '', $shapeblock_allowed_html ); ?>
 					</div>
 				</div>
 			</div>
@@ -483,12 +516,12 @@ ob_start();
 			<div class="shapeblock-grid-item">
 				<div class="shapeblock-team-card skin5">
 					<div class="shapeblock-team-img-area">
-						<?php echo $open_link; // phpcs:ignore ?>
-						<?php echo $img_box_html; // phpcs:ignore ?>
-						<?php echo $close_link; // phpcs:ignore ?>
+						<?php echo wp_kses( $open_link, $shapeblock_allowed_html ); ?>
+						<?php echo wp_kses( $img_box_html, $shapeblock_allowed_html ); ?>
+						<?php echo wp_kses( $close_link, $shapeblock_allowed_html ); ?>
 						<div class="shapeblock-name-deg-wrap">
 							<div class="shapeblock-author-content">
-								<?php echo $name_html; // phpcs:ignore ?>
+								<?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?>
 								<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
 							</div>
 							<?php if ( $show_contact && ( $email || $phone ) ) : ?>
@@ -496,13 +529,13 @@ ob_start();
 									<div class="shapeblock-contact-inner">
 										<?php if ( $email ) : ?>
 											<div class="shapeblock-team-email shapeblock-contact-item">
-												<div class="shapeblock-contact-icon"><?php echo $icon_i( $attributes['teamEmailIcon'] ?? '', $svg_mail ); // phpcs:ignore ?></div>
+												<div class="shapeblock-contact-icon"><?php echo wp_kses( $icon_i( $attributes['teamEmailIcon'] ?? '', $svg_mail ), $shapeblock_allowed_html ); ?></div>
 												<?php echo esc_html( $email ); ?>
 											</div>
 										<?php endif; ?>
 										<?php if ( $phone ) : ?>
 											<div class="shapeblock-team-phone shapeblock-contact-item">
-												<div class="shapeblock-contact-icon"><?php echo $icon_i( $attributes['teamPhoneIcon'] ?? '', $svg_phone ); // phpcs:ignore ?></div>
+												<div class="shapeblock-contact-icon"><?php echo wp_kses( $icon_i( $attributes['teamPhoneIcon'] ?? '', $svg_phone ), $shapeblock_allowed_html ); ?></div>
 												<?php echo esc_html( $phone ); ?>
 											</div>
 										<?php endif; ?>
@@ -517,13 +550,13 @@ ob_start();
 			<div class="shapeblock-grid-item">
 				<div class="shapeblock-team-card">
 					<div class="shapeblock-team-img-area">
-						<?php echo $open_link; // phpcs:ignore ?>
-						<?php echo $img_box_html; // phpcs:ignore ?>
-						<?php echo $close_link; // phpcs:ignore ?>
-						<?php if ( 'inside' === $content_show ) { echo $build_name_wrap( 'inside', true, true ); } // phpcs:ignore ?>
+						<?php echo wp_kses( $open_link, $shapeblock_allowed_html ); ?>
+						<?php echo wp_kses( $img_box_html, $shapeblock_allowed_html ); ?>
+						<?php echo wp_kses( $close_link, $shapeblock_allowed_html ); ?>
+						<?php if ( 'inside' === $content_show ) { echo wp_kses( $build_name_wrap( 'inside', true, true ), $shapeblock_allowed_html ); } ?>
 					</div>
-					<?php if ( 'inside' !== $content_show ) { echo $build_name_wrap( '', true, true ); } // phpcs:ignore ?>
-					<?php echo $social_positioned; // phpcs:ignore ?>
+					<?php if ( 'inside' !== $content_show ) { echo wp_kses( $build_name_wrap( '', true, true ), $shapeblock_allowed_html ); } ?>
+					<?php echo wp_kses( $social_positioned, $shapeblock_allowed_html ); ?>
 				</div>
 			</div>
 		<?php endif; ?>
@@ -533,7 +566,7 @@ ob_start();
 				<div class="shapeblock-popup-content">
 					<span class="shapeblock-popup-close">&times;</span>
 					<div class="shapeblock-popup-header">
-						<?php if ( $name_html ) : ?><div class="shapeblock-popup-name"><?php echo $name_html; // phpcs:ignore ?></div><?php endif; ?>
+						<?php if ( $name_html ) : ?><div class="shapeblock-popup-name"><?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?></div><?php endif; ?>
 						<?php if ( $designation ) : ?><div class="shapeblock-popup-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
 					</div>
 					<div class="shapeblock-popup-details">
@@ -545,4 +578,5 @@ ob_start();
 	</div>
 </div>
 <?php
-echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Markup assembled from escaped parts above.
+
+} )( $attributes, $content, $block );

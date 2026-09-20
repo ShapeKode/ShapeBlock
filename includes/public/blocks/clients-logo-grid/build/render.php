@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Client Logo Grid block.
@@ -170,16 +169,16 @@ $H::add_custom_style( $style_handle, $selector, $responsive_css, [
 				$url   = ! empty( $image['url'] ) ? $image['url'] : '';
 				$alt   = ! empty( $image['alt'] ) ? $image['alt'] : '';
 
-				$link     = isset( $item['link'] ) ? $item['link'] : '';
-				$target   = ! empty( $item['linkNewTab'] ) ? ' target="_blank"' : '';
-				$rel      = ! empty( $item['linkNofollow'] ) ? ' rel="nofollow"' : '';
+				$link       = isset( $item['link'] ) ? $item['link'] : '';
+				$new_tab    = ! empty( $item['linkNewTab'] );
+				$nofollow   = ! empty( $item['linkNofollow'] );
 
 				$box_class = trim( 'shapeblock-logo-img ' . $gray_class . ( '' === $url ? ' is-placeholder' : '' ) );
 				?>
 				<div class="shapeblock-grid-item">
 					<div class="<?php echo esc_attr( $box_class ); ?>">
 						<?php if ( '' !== $link ) : ?>
-							<a href="<?php echo esc_url( $link ); ?>"<?php echo $target . $rel; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+							<a href="<?php echo esc_url( $link ); ?>"<?php echo $new_tab ? ' target="_blank"' : ''; ?><?php echo $nofollow ? ' rel="nofollow"' : ''; ?>>
 						<?php endif; ?>
 
 						<?php if ( '' !== $url ) : ?>
@@ -202,3 +201,4 @@ $H::add_custom_style( $style_handle, $selector, $responsive_css, [
 		</div>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

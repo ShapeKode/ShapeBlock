@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Social Icon block.
@@ -178,24 +177,24 @@ $H::add_custom_style( $style_handle, $selector, $extra_css, $sub );
 				$rel      = [];
 				if ( $external ) { $rel[] = 'noopener'; }
 				if ( $nofollow ) { $rel[] = 'nofollow'; }
-				$rel_attr = ! empty( $rel ) ? ' rel="' . esc_attr( implode( ' ', $rel ) ) . '"' : '';
 
 				// Per-item base colours (custom mode only).
-				$style = '';
-				$icon_style = '';
+				$style      = '';
+				$icon_color = '';
 				if ( 'custom' === $color_mode ) {
 					$bg = ! empty( $link['bgGradient'] ) ? $link['bgGradient'] : ( ! empty( $link['bgColor'] ) ? $link['bgColor'] : '' );
 					if ( '' !== $bg ) { $style .= 'background:' . $bg . ';'; }
 					if ( ! empty( $link['iconColor'] ) ) {
-						$style .= 'color:' . $link['iconColor'] . ';';
-						$icon_style = ' style="color:' . esc_attr( $link['iconColor'] ) . ';fill:' . esc_attr( $link['iconColor'] ) . ';"';
+						$style     .= 'color:' . $link['iconColor'] . ';';
+						$icon_color = $link['iconColor'];
 					}
 				}
 
-				echo '<a href="' . esc_url( $url ) . '" class="shapeblock-si-button shapeblock-si-item-' . esc_attr( $index ) . '" target="' . esc_attr( $target ) . '"' . $rel_attr // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<a href="' . esc_url( $url ) . '" class="shapeblock-si-button shapeblock-si-item-' . esc_attr( $index ) . '" target="' . esc_attr( $target ) . '"'
+					. ( ! empty( $rel ) ? ' rel="' . esc_attr( implode( ' ', $rel ) ) . '"' : '' )
 					. ' title="' . esc_attr( $title ) . '"' . ( '' !== $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>';
 				if ( ! empty( $icon ) && 'none' !== $icon ) {
-					echo '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"' . $icon_style . '></i>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"' . ( '' !== $icon_color ? ' style="color:' . esc_attr( $icon_color ) . ';fill:' . esc_attr( $icon_color ) . ';"' : '' ) . '></i>';
 				}
 				echo '</a>';
 			}
@@ -203,3 +202,4 @@ $H::add_custom_style( $style_handle, $selector, $extra_css, $sub );
 		</div>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

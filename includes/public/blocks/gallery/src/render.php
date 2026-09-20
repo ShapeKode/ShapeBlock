@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Simple Gallery block.
@@ -260,3 +259,4 @@ $popup_class = $popup_enabled ? 'shapeblock-popup-enabled' : '';
 		</div>
 	<?php endif; ?>
 </div>
+<?php } )( $attributes, $content, $block );

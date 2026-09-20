@@ -40,8 +40,7 @@ class Admin {
 
         // Load the app on the main page and every ShapeBlock submenu page.
         $our_pages = array_keys( \ShapeBlock\Main::get_admin_pages() );
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only admin page detection, no data is processed.
-        $current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        $current_page = \ShapeBlock\Main::get_current_page_slug();
         if ( ! in_array( $current_page, $our_pages, true ) ) {
             return;
         }

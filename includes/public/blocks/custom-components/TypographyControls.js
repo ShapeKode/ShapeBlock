@@ -47,11 +47,18 @@ const TypographyControls = ({ label, attributes, setAttributes, attributeKey, ne
 
     const _nextDefaultSize = nextDefaultSize || false;
 
+    // Google Fonts is an opt-in connection (ShapeBlock > Settings). While it is
+    // off the picker offers only locally available stacks and nothing here ever
+    // contacts fonts.googleapis.com.
+    const googleFontsAllowed = (typeof window !== 'undefined' && !!window.shapeblockGoogleFonts);
+
     // Build the Font Family options: web-safe stacks + the full Google Fonts
     // list (window.shapeblockFonts), falling back to a small bundled list.
-    const googleList = (typeof window !== 'undefined' && Array.isArray(window.shapeblockFonts) && window.shapeblockFonts.length)
-        ? window.shapeblockFonts
-        : SHAPEBLOCK_FALLBACK_GOOGLE;
+    const googleList = !googleFontsAllowed
+        ? []
+        : ((typeof window !== 'undefined' && Array.isArray(window.shapeblockFonts) && window.shapeblockFonts.length)
+            ? window.shapeblockFonts
+            : SHAPEBLOCK_FALLBACK_GOOGLE);
     const fontOptions = [
         ...SHAPEBLOCK_WEBSAFE_FONTS,
         ...googleList.map((f) => ({ label: f, value: f })),
@@ -71,6 +78,7 @@ const TypographyControls = ({ label, attributes, setAttributes, attributeKey, ne
     const shownFonts = filteredFonts.slice(0, 80);
 
     const loadFontPreview = (fam) => {
+        if (!googleFontsAllowed) return;
         if (!fam || fam.indexOf(',') !== -1 || typeof document === 'undefined') return;
         const slug = fam.toLowerCase().replace(/[^a-z0-9]+/g, '-');
         // Skip if this font is already loaded (full weights) or previewed — one
@@ -96,6 +104,7 @@ const TypographyControls = ({ label, attributes, setAttributes, attributeKey, ne
     // preview (inside the iframe) never sees the font and "nothing happens".
     useEffect(() => {
         const fam = typography.fontFamily;
+        if (!googleFontsAllowed) return;
         if (!fam || fam.indexOf(',') !== -1 || typeof document === 'undefined') {
             return; // empty or a web-safe stack — nothing to load.
         }

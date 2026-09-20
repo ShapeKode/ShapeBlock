@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Search block.
@@ -240,35 +239,56 @@ $render_icon = function ( $val, $fallback, $image = array(), $img_class = '' ) {
 	}
 	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : $fallback;
 };
-$action = esc_url( home_url( '/' ) );
+// Icon markup returned by $render_icon() above: an <img>, an icon-font <i>, or one of the static fallback SVGs.
+$icon_allowed_html = array(
+	'img'  => array(
+		'src'   => true,
+		'alt'   => true,
+		'class' => true,
+	),
+	'i'    => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+	'svg'  => array(
+		'viewbox'     => true,
+		'aria-hidden' => true,
+		'xmlns'       => true,
+	),
+	'path' => array(
+		'fill' => true,
+		'd'    => true,
+	),
+);
+$action = home_url( '/' );
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<?php if ( '2' === $style ) : ?>
 		<div class="shapeblock-search shapeblock-search-style-2">
-			<form role="search" method="get" class="shapeblock-search-form" action="<?php echo $action; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>">
+			<form role="search" method="get" class="shapeblock-search-form" action="<?php echo esc_url( $action ); ?>">
 				<input type="search" class="shapeblock-search-field" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="" name="s" />
 				<button type="submit" class="shapeblock-search-submit-btn" aria-label="<?php esc_attr_e( 'Submit Search', 'shapeblock' ); ?>">
-					<?php echo $render_icon( $open_icon, $svg_search, $open_icon_image, 'shapeblock-search-open-icon-img' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo wp_kses( $render_icon( $open_icon, $svg_search, $open_icon_image, 'shapeblock-search-open-icon-img' ), $icon_allowed_html ); ?>
 				</button>
 			</form>
 		</div>
 	<?php else : ?>
 		<div class="shapeblock-search shapeblock-search-style-1">
 			<a href="#" role="button" class="shapeblock-search-open-btn" aria-label="<?php esc_attr_e( 'Open Search', 'shapeblock' ); ?>">
-				<?php echo $render_icon( $open_icon, $svg_search, $open_icon_image, 'shapeblock-search-open-icon-img' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php echo wp_kses( $render_icon( $open_icon, $svg_search, $open_icon_image, 'shapeblock-search-open-icon-img' ), $icon_allowed_html ); ?>
 			</a>
 			<div class="shapeblock-search-lightbox">
 				<div class="shapeblock-search-overlay">
 					<a href="#" role="button" class="shapeblock-search-close-btn" aria-label="<?php esc_attr_e( 'Close Search', 'shapeblock' ); ?>">
-						<?php echo $render_icon( $close_icon, $svg_close, $close_icon_image, 'shapeblock-search-close-icon-img' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<?php echo wp_kses( $render_icon( $close_icon, $svg_close, $close_icon_image, 'shapeblock-search-close-icon-img' ), $icon_allowed_html ); ?>
 					</a>
 				</div>
 				<div class="shapeblock-search-content">
 					<div class="shapeblock-search-title"><?php echo esc_html( $title ); ?></div>
-					<form role="search" method="get" class="shapeblock-search-form" action="<?php echo $action; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>">
+					<form role="search" method="get" class="shapeblock-search-form" action="<?php echo esc_url( $action ); ?>">
 						<input type="search" class="shapeblock-search-field" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="" name="s" />
 						<button type="submit" class="shapeblock-search-submit" aria-label="<?php esc_attr_e( 'Submit Search', 'shapeblock' ); ?>">
-							<?php echo $svg_search; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<?php echo wp_kses( $svg_search, $icon_allowed_html ); ?>
 						</button>
 					</form>
 				</div>
@@ -276,3 +296,4 @@ $action = esc_url( home_url( '/' ) );
 		</div>
 	<?php endif; ?>
 </div>
+<?php } )( $attributes, $content, $block );

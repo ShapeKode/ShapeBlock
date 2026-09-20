@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Table block.
@@ -290,6 +289,44 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, $sub );
 // ---------------------------------------------------------------------------
 $default_tip_icon = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-3.6h-2c0-2 2.5-2.2 2.5-3.9A1.5 1.5 0 0012 8a1.6 1.6 0 00-1.6 1.5H8.4A3.6 3.6 0 0112 6a3.5 3.5 0 013.5 3.5c0 2-2.5 2.3-2.5 3.9z"/></svg>';
 
+// Allow-list covering every markup fragment this template assembles server-side:
+// - th/td open tags with the style/colspan/rowspan attributes built below (colspan/rowspan
+//   are always (int) cast, style values are already run through esc_attr() and, since 'style'
+//   is a filtered attribute, wp_kses() also runs them through safecss_filter_attr()).
+// - the icon-font <i> tag, the static fallback SVG above, and the tooltip <span> wrapper.
+$table_allowed_html = array(
+	'th'   => array(
+		'class'   => true,
+		'style'   => true,
+		'colspan' => true,
+		'rowspan' => true,
+	),
+	'td'   => array(
+		'class'   => true,
+		'style'   => true,
+		'colspan' => true,
+		'rowspan' => true,
+	),
+	'span' => array(
+		'class'         => true,
+		'style'         => true,
+		'data-placement' => true,
+	),
+	'i'    => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+	'svg'  => array(
+		'viewbox'     => true,
+		'aria-hidden' => true,
+		'xmlns'       => true,
+	),
+	'path' => array(
+		'fill' => true,
+		'd'    => true,
+	),
+);
+
 $render_icon = function ( $val ) {
 	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : '';
 };
@@ -325,7 +362,7 @@ $cell_attrs = function ( $item ) {
 	return $out;
 };
 
-$tooltip_html = function ( $item ) use ( $render_icon, $default_tip_icon, $tooltip_align ) {
+$tooltip_html = function ( $item ) use ( $render_icon, $default_tip_icon, $tooltip_align, $table_allowed_html ) {
 	if ( empty( $item['tooltip'] ) || '' === ( $item['tooltipDesc'] ?? '' ) ) {
 		return '';
 	}
@@ -334,7 +371,7 @@ $tooltip_html = function ( $item ) use ( $render_icon, $default_tip_icon, $toolt
 		$icon = $default_tip_icon;
 	}
 	return '<span class="shapeblock-tbl-tooltip" data-placement="' . esc_attr( $tooltip_align ) . '">'
-		. $icon // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		. wp_kses( $icon, $table_allowed_html )
 		. '<span class="shapeblock-tbl-tooltip-content">' . esc_html( $item['tooltipDesc'] ) . '</span>'
 		. '</span>';
 };
@@ -350,12 +387,12 @@ $tooltip_html = function ( $item ) use ( $render_icon, $default_tip_icon, $toolt
 					foreach ( $header as $item ) {
 						$style = $cell_style( $item );
 						$icon  = ( ! empty( $item['headerIcon'] ) ) ? $render_icon( $item['headIcon'] ?? '' ) : '';
-						echo '<th class="shapeblock-th"' . $cell_attrs( $item ) . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo wp_kses( '<th class="shapeblock-th"' . $cell_attrs( $item ) . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>', $table_allowed_html );
 						if ( '' !== $icon ) {
-							echo '<span class="shapeblock-header-icon">' . $icon . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							echo wp_kses( '<span class="shapeblock-header-icon">' . $icon . '</span>', $table_allowed_html );
 						}
 						echo wp_kses_post( $item['text'] ?? '' );
-						echo $tooltip_html( $item ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo wp_kses( $tooltip_html( $item ), $table_allowed_html );
 						echo '</th>';
 					}
 					?>
@@ -376,19 +413,19 @@ $tooltip_html = function ( $item ) use ( $render_icon, $default_tip_icon, $toolt
 						$style     = $cell_style( $item );
 						$icon_color = ( ! empty( $item['advance'] ) && ! empty( $item['iconColor'] ) ) ? ' style="color:' . esc_attr( $item['iconColor'] ) . '"' : '';
 
-						echo '<td class="shapeblock-td' . esc_attr( $flex ) . '"' . $cell_attrs( $item ) . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo wp_kses( '<td class="shapeblock-td' . esc_attr( $flex ) . '"' . $cell_attrs( $item ) . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>', $table_allowed_html );
 
 						if ( 'image' === $type && ! empty( $item['image']['url'] ) ) {
 							echo '<img src="' . esc_url( $item['image']['url'] ) . '" class="shapeblock-table-image" alt="' . esc_attr( $item['image']['alt'] ?? '' ) . '">';
 						} elseif ( 'icon' === $type ) {
 							$ic = $render_icon( $item['icon'] ?? '' );
 							if ( '' !== $ic ) {
-								echo '<span' . $icon_color . '>' . $ic . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								echo wp_kses( '<span' . $icon_color . '>' . $ic . '</span>', $table_allowed_html );
 							}
 						}
 
 						echo wp_kses_post( $item['text'] ?? '' );
-						echo $tooltip_html( $item ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo wp_kses( $tooltip_html( $item ), $table_allowed_html );
 						echo '</td>';
 					}
 					?>
@@ -402,9 +439,9 @@ $tooltip_html = function ( $item ) use ( $render_icon, $default_tip_icon, $toolt
 					<?php
 					foreach ( $footer as $item ) {
 						$style = $cell_style( $item );
-						echo '<th class="shapeblock-tf"' . $cell_attrs( $item ) . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo wp_kses( '<th class="shapeblock-tf"' . $cell_attrs( $item ) . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>', $table_allowed_html );
 						echo wp_kses_post( $item['text'] ?? '' );
-						echo $tooltip_html( $item ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo wp_kses( $tooltip_html( $item ), $table_allowed_html );
 						echo '</th>';
 					}
 					?>
@@ -414,3 +451,4 @@ $tooltip_html = function ( $item ) use ( $render_icon, $default_tip_icon, $toolt
 	</table>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

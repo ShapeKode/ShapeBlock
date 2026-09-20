@@ -6,7 +6,10 @@ namespace ShapeBlock\Extension\ThemeBuilder;
  *
  * CRUD for builder templates plus condition load/save and the metadata the
  * dashboard needs (registered types, condition rules, selectable objects).
- * Mirrors the conventions of \ShapeBlock\Admin\Api (shapeblock/v1 namespace, edit_posts cap).
+ * Mirrors the conventions of \ShapeBlock\Admin\Api (shapeblock/v1 namespace). Every
+ * route is gated on manage_options — the capability the Theme Builder dashboard
+ * itself requires — and the per-item routes additionally authorise the template
+ * they name.
  *
  * @package ShapeBlock
  */
@@ -29,13 +32,109 @@ class Builder_API {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 	}
 
+	/**
+	 * Gate for the collection and metadata routes.
+	 *
+	 * The Theme Builder dashboard is registered with `manage_options`, so the
+	 * REST API that backs it must not hand the same data to anyone who merely
+	 * holds `edit_posts`.
+	 *
+	 * @return bool
+	 */
 	public function permission() {
-		return current_user_can( 'edit_posts' );
+		return current_user_can( 'manage_options' );
+	}
+
+	/**
+	 * Gate for creating a builder template.
+	 *
+	 * @return bool
+	 */
+	public function permission_create() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+		$type = get_post_type_object( \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE );
+		return $type ? current_user_can( $type->cap->create_posts ) : false;
+	}
+
+	/**
+	 * Gate for reading or writing one specific builder template.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return bool
+	 */
+	public function permission_edit_item( $request ) {
+		return $this->permission_for_item( $request, 'edit_post' );
+	}
+
+	/**
+	 * Gate for trashing or deleting one specific builder template.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return bool
+	 */
+	public function permission_delete_item( $request ) {
+		return $this->permission_for_item( $request, 'delete_post' );
+	}
+
+	/**
+	 * Authorise a capability against the template the request names, not just
+	 * against the post type.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @param string           $cap     Meta capability to test.
+	 * @return bool
+	 */
+	private function permission_for_item( $request, $cap ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
+		$id   = (int) $request->get_param( 'id' );
+		$post = $id ? get_post( $id ) : null;
+
+		// Let the callback answer 404 for an id that is not a builder template;
+		// only an existing template is capability-checked here.
+		if ( ! $post || \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE !== $post->post_type ) {
+			return true;
+		}
+
+		return current_user_can( $cap, $id );
+	}
+
+	/**
+	 * Gate for the bulk routes: the most destructive capability the endpoint can
+	 * exercise, checked for every id in the request.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return bool
+	 */
+	public function permission_bulk( $request ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
+		$ids = $request->get_param( 'ids' );
+		if ( ! is_array( $ids ) ) {
+			return true; // The callback rejects a malformed payload with 400.
+		}
+
+		foreach ( $ids as $id ) {
+			$id   = (int) $id;
+			$post = $id ? get_post( $id ) : null;
+			if ( ! $post || \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE !== $post->post_type ) {
+				continue;
+			}
+			if ( ! current_user_can( 'delete_post', $id ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public function register_routes() {
-		$can_edit = array( $this, 'permission' );
-
 		// Metadata: registered template types + condition rules.
 		register_rest_route(
 			'shapeblock/v1',
@@ -43,7 +142,7 @@ class Builder_API {
 			array(
 				'methods'             => 'GET',
 				'callback'            => array( $this, 'get_meta' ),
-				'permission_callback' => $can_edit,
+				'permission_callback' => array( $this, 'permission' ),
 			)
 		);
 
@@ -54,7 +153,7 @@ class Builder_API {
 			array(
 				'methods'             => 'GET',
 				'callback'            => array( $this, 'get_objects' ),
-				'permission_callback' => $can_edit,
+				'permission_callback' => array( $this, 'permission' ),
 			)
 		);
 
@@ -66,12 +165,12 @@ class Builder_API {
 				array(
 					'methods'             => 'GET',
 					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => $can_edit,
+					'permission_callback' => array( $this, 'permission' ),
 				),
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'create_item' ),
-					'permission_callback' => $can_edit,
+					'permission_callback' => array( $this, 'permission_create' ),
 				),
 			)
 		);
@@ -84,12 +183,12 @@ class Builder_API {
 				array(
 					'methods'             => 'GET',
 					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => $can_edit,
+					'permission_callback' => array( $this, 'permission_edit_item' ),
 				),
 				array(
 					'methods'             => 'DELETE',
 					'callback'            => array( $this, 'delete_item' ),
-					'permission_callback' => $can_edit,
+					'permission_callback' => array( $this, 'permission_delete_item' ),
 				),
 			)
 		);
@@ -101,7 +200,7 @@ class Builder_API {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'restore_item' ),
-				'permission_callback' => $can_edit,
+				'permission_callback' => array( $this, 'permission_delete_item' ),
 			)
 		);
 
@@ -113,12 +212,12 @@ class Builder_API {
 				array(
 					'methods'             => 'GET',
 					'callback'            => array( $this, 'get_conditions' ),
-					'permission_callback' => $can_edit,
+					'permission_callback' => array( $this, 'permission_edit_item' ),
 				),
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( $this, 'save_conditions' ),
-					'permission_callback' => $can_edit,
+					'permission_callback' => array( $this, 'permission_edit_item' ),
 				),
 			)
 		);
@@ -129,7 +228,7 @@ class Builder_API {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'bulk_delete' ),
-				'permission_callback' => $can_edit,
+				'permission_callback' => array( $this, 'permission_bulk' ),
 			)
 		);
 
@@ -140,7 +239,7 @@ class Builder_API {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'bulk_restore' ),
-				'permission_callback' => $can_edit,
+				'permission_callback' => array( $this, 'permission_bulk' ),
 			)
 		);
 	}
@@ -210,7 +309,6 @@ class Builder_API {
 		);
 
 		if ( $type && \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::is_valid_type( $type ) ) {
-			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Filtering a small admin-only template post type by its type meta.
 			$args['meta_query'] = array(
 				array(
 					'key'   => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE,

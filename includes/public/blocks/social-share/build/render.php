@@ -2,8 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Local template/iteration variables.
+return ( function ( $attributes, $content, $block ) {
 
 /**
  * Server-side render for the Social Share block.
@@ -192,6 +191,22 @@ $share_url = function ( $platform ) use ( $current_url, $current_title, $current
 };
 
 $layout_class = 'shapeblock-social-layout-' . ( in_array( $layout, [ 'horizontal', 'vertical', 'grid' ], true ) ? $layout : 'horizontal' );
+// Icon markup is either the icon-font <i> tag (esc_attr'd class) or one of the static brand SVGs built above.
+$icon_allowed_html = array(
+	'i'    => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+	'svg'  => array(
+		'viewbox'     => true,
+		'aria-hidden' => true,
+		'xmlns'       => true,
+	),
+	'path' => array(
+		'fill' => true,
+		'd'    => true,
+	),
+);
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-social-share <?php echo esc_attr( $layout_class ); ?>">
@@ -211,11 +226,11 @@ $layout_class = 'shapeblock-social-layout-' . ( in_array( $layout, [ 'horizontal
 
 				if ( 'copy' === $platform ) {
 					echo '<a href="#" class="' . esc_attr( $btn_class ) . ' shapeblock-social-copy" data-url="' . esc_attr( $current_url ) . '" title="' . esc_attr__( 'Copy Link', 'shapeblock' ) . '">';
-					echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo wp_kses( $icon_html, $icon_allowed_html );
 					echo '</a>';
 				} else {
 					echo '<a href="' . esc_url( $share_url( $platform ) ) . '" class="' . esc_attr( $btn_class ) . '" target="' . esc_attr( $target ) . '" rel="noopener noreferrer" title="' . esc_attr( ucfirst( $platform ) ) . '">';
-					echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo wp_kses( $icon_html, $icon_allowed_html );
 					echo '</a>';
 				}
 			}
@@ -223,3 +238,4 @@ $layout_class = 'shapeblock-social-layout-' . ( in_array( $layout, [ 'horizontal
 		</div>
 	</div>
 </div>
+<?php } )( $attributes, $content, $block );

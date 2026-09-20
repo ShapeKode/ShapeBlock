@@ -21,7 +21,6 @@ class Main {
         add_action( 'admin_init', array( $this, 'register_settings' ) );
         add_action( 'admin_menu', array( $this, 'add_menu' ) );
         add_filter( 'plugin_action_links_' . SHAPEBLOCK_PLUGIN_BASE, array( $this, 'plugin_action_links' ), 10, 4 );
-        add_filter( 'upload_mimes', array( $this, 'allow_svg_upload' ) );
 
         $this->includes();
     }
@@ -58,6 +57,37 @@ class Main {
         );
     }
 
+    /**
+     * Which ShapeBlock admin page (if any) is currently being viewed.
+     *
+     * Reads the resolved admin screen instead of $_GET['page'] so page
+     * detection needs no nonce: get_current_screen() reflects WordPress's own
+     * routing of the request, not an unverified query argument. The hook
+     * suffixes below are exactly what add_menu_page()/add_submenu_page()
+     * produce for the slugs registered in add_menu() — 'shapeblock' is the
+     * top-level page, everything else is a submenu of it.
+     *
+     * @return string Page slug, or '' if the current screen is not one of ours.
+     */
+    public static function get_current_page_slug() {
+        if ( ! function_exists( 'get_current_screen' ) ) {
+            return '';
+        }
+        $screen = get_current_screen();
+        if ( ! $screen ) {
+            return '';
+        }
+        if ( 'toplevel_page_shapeblock' === $screen->id ) {
+            return 'shapeblock';
+        }
+        foreach ( array_keys( self::get_admin_pages() ) as $shapeblock_slug ) {
+            if ( 'shapeblock_page_' . $shapeblock_slug === $screen->id ) {
+                return $shapeblock_slug;
+            }
+        }
+        return '';
+    }
+
     public function add_menu() {
         add_menu_page(
             'ShapeBlock',
@@ -83,8 +113,7 @@ class Main {
 
     public function render_menu_page() {
         $pages = self::get_admin_pages();
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only admin page detection, no data is processed.
-        $page  = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        $page  = self::get_current_page_slug();
         $tab   = isset( $pages[ $page ] ) ? $pages[ $page ]['tab'] : 'blocks';
 
         echo '<div class="shapeblock-options-wrap">';
@@ -124,11 +153,5 @@ class Main {
 		return array_merge( $new_actions, $plugin_actions );
 
 	}
-    // Allow SVG upload
-    public function allow_svg_upload( $mimes ) {
-        $mimes['svg']  = 'image/svg+xml';
-        $mimes['svgz'] = 'image/svg+xml';
-        return $mimes;
-    }
 }
 
