@@ -352,17 +352,12 @@ $H::add_custom_style( $style_handle, $selector, $full_responsive_css, [
 	'.shapeblock-faq-item.active .shapeblock-faq-icon'           => $H::get_inline_styles( $icon_active_styles ),
 ] );
 
-// Default icons (used when no custom icon is selected). Plus = collapsed, minus = expanded.
-$default_icon_close = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"/></svg>'; // plus
-$default_icon_open  = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M5 11h14v2H5z"/></svg>'; // minus
-$svg_allowed_html    = array(
-	'svg'  => array(
-		'viewbox'     => true,
-		'aria-hidden' => true,
-		'xmlns'       => true,
-	),
-	'path' => array( 'd' => true ),
-);
+// The default plus/minus icons are written as literal markup at the point of
+// output below, not built here and escaped on the way out. wp_kses() lowercases
+// every attribute name, which turns SVG's case-sensitive viewBox into viewbox —
+// the browser then ignores it, the icon loses its intrinsic size and breaks the
+// question row's flex layout. A hard-coded constant has nothing to sanitise, so
+// there is nothing to gain by passing it through kses in the first place.
 
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
@@ -383,7 +378,7 @@ $svg_allowed_html    = array(
 						if ( ! empty( $icon_open ) && 'none' !== $icon_open ) {
 							echo '<i class="shapeblock-icon ' . esc_attr( $icon_open ) . '" aria-hidden="true"></i>';
 						} else {
-							echo wp_kses( $default_icon_open, $svg_allowed_html );
+							?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M5 11h14v2H5z"/></svg><?php
 						}
 						?>
 					</span>
@@ -392,7 +387,7 @@ $svg_allowed_html    = array(
 						if ( ! empty( $icon_close ) && 'none' !== $icon_close ) {
 							echo '<i class="shapeblock-icon ' . esc_attr( $icon_close ) . '" aria-hidden="true"></i>';
 						} else {
-							echo wp_kses( $default_icon_close, $svg_allowed_html );
+							?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"/></svg><?php
 						}
 						?>
 					</span>

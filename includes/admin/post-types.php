@@ -74,6 +74,7 @@ class SHAPEBLOCK_Post_Types {
         // WordPress core's, not this plugin's, so it is intentionally not
         // shapeblock-prefixed; renaming it (directly or via a variable) would
         // stop other plugins' the_content hooks from ever running here.
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Invoking WP core's own 'the_content' filter, not a hook this plugin defines.
         return '<div class="shapeblock-template-content">' . apply_filters( 'the_content', $post->post_content ) . '</div>';
     }
 }

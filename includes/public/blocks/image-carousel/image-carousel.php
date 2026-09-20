@@ -7,7 +7,7 @@ function shapeblock_create_block_image_carousel_block_init() {
 	wp_register_style(
 		'shapeblock-image-carousel-style',
 		plugins_url( 'build/style-index.css', __FILE__ ),
-		array( 'shapeblock-public-style', 'swiper' ),
+		array( 'shapeblock-public-style', 'shapeblock-swiper' ),
 		shapeblock_asset_version( __DIR__ . '/build/style-index.css' )
 	);
 
@@ -44,7 +44,7 @@ function shapeblock_image_carousel_editor_preview_script() {
 	wp_enqueue_script(
 		'shapeblock-image-carousel-editor-preview',
 		plugins_url( 'build/view.js', __FILE__ ),
-		array( 'swiper' ),
+		array( 'shapeblock-swiper' ),
 		shapeblock_asset_version( __DIR__ . '/build/view.js' ),
 		true
 	);

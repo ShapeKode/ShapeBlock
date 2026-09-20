@@ -309,6 +309,7 @@ class Builder_API {
 		);
 
 		if ( $type && \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::is_valid_type( $type ) ) {
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Filtering a small admin-only template post type by its type meta.
 			$args['meta_query'] = array(
 				array(
 					'key'   => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE,

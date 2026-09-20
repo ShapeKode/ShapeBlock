@@ -38,6 +38,7 @@ function shapeblock_uninstall_cleanup_site() {
 
 	// One `shapeblock_block_<id>` option per block (~30 today) — delete by
 	// pattern rather than a hard-coded id list.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Uninstall runs once, outside any cacheable request; no options API helper deletes by pattern.
 	$block_options = $wpdb->get_col(
 		$wpdb->prepare(
 			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",

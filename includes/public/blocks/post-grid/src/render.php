@@ -509,6 +509,7 @@ if ( ! empty( $attributes['posts'] ) && ! in_array( 'all', $attributes['posts'] 
 }
 
 if ( ! empty( $attributes['excludes'] ) && ! in_array( 'no-excludes', $attributes['excludes'] ) ) {
+    // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- The block's "exclude these posts" control is inherently an exclusion query; there is no WP_Query API to express "not these specific IDs" other than post__not_in, and the IDs come from the block's own editor-configured attribute, not request input.
     $args['post__not_in'] = array_map( 'intval', $attributes['excludes'] );
 }
 
@@ -530,6 +531,7 @@ if ( ! empty( $attributes['categories'] ) && ! in_array( 'all', $attributes['cat
 
 
 if($is_featured == true) {
+    // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- "Featured" filter is an editor-configured block option, not attacker input; a meta_query is required since core has no other query-by-meta API.
     $args['meta_query'] = array(
         array(
             'key'     => '_is_featured',

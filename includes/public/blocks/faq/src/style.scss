@@ -122,8 +122,17 @@
 		min-width: 0;
 	}
 
-	.shapeblock-faq-question {
-		flex-wrap: wrap;
+	/* The question row must stay on one line: the toggle icon belongs beside the
+	 * title, not under it. Narrow containers are handled by letting the title
+	 * shrink and wrap its own text, while the icon keeps its size. Allowing the
+	 * row itself to wrap drops the icon onto a line of its own. */
+	.shapeblock-faq-title {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	.shapeblock-faq-icon {
+		flex: 0 0 auto;
 	}
 
 	.shapeblock-faq-title,

@@ -95,22 +95,21 @@ function shapeblock_should_load_common_assets() {
 	return shapeblock_frontend_has_any_block();
 }
 
-add_action( 'enqueue_block_editor_assets', 'shapeblock_enqueue_block_styles' );
-add_action( 'enqueue_block_assets', 'shapeblock_enqueue_block_styles' );
-function shapeblock_enqueue_block_styles() {
-	if ( ! shapeblock_should_load_common_assets() ) {
-		return;
-	}
-
-    // if swier not existing
-	wp_enqueue_style( 'swiper', SHAPEBLOCK_PL_URL . 'assets/lib/swiper/swiper-bundle.min.css', array(), SHAPEBLOCK_VERSION, 'all' );
-	wp_enqueue_script( 'swiper', SHAPEBLOCK_PL_URL . 'assets/lib/swiper/swiper-bundle.min.js', array(),'12.0.3',false );
-
-	// enqueue bootstrap grid
-	wp_enqueue_style( 'shapeblock-bootstrap-grid', SHAPEBLOCK_PL_URL . 'assets/lib/bootstrap/bootstrap-grid.min.css', array(), SHAPEBLOCK_VERSION, 'all' );
-
-    // register plugin style if not registered
-	if (!wp_style_is('shapeblock-public-style', 'registered')) {
+/**
+ * Register the shared handles — always, on every request.
+ *
+ * Registering a handle only records it; nothing is printed and nothing is
+ * downloaded, so there is no cost to doing it unconditionally. It must NOT sit
+ * behind the load gate: every block stylesheet declares 'shapeblock-public-style'
+ * as a dependency (slider and image-carousel also declare 'shapeblock-swiper'),
+ * and WordPress silently drops a stylesheet whose dependency is unregistered.
+ * Gating registration therefore un-styles every block on any request where the
+ * gate happens not to fire, which is a far worse bug than loading one extra file.
+ *
+ * Only the enqueueing below is gated.
+ */
+function shapeblock_register_common_assets() {
+	if ( ! wp_style_is( 'shapeblock-public-style', 'registered' ) ) {
 		wp_register_style(
 			'shapeblock-public-style',
 			SHAPEBLOCK_PL_URL . 'includes/public/assets/css/public.css',
@@ -118,6 +117,33 @@ function shapeblock_enqueue_block_styles() {
 			SHAPEBLOCK_VERSION
 		);
 	}
+
+	if ( ! wp_style_is( 'shapeblock-swiper', 'registered' ) ) {
+		wp_register_style( 'shapeblock-swiper', SHAPEBLOCK_PL_URL . 'assets/lib/swiper/swiper-bundle.min.css', array(), SHAPEBLOCK_VERSION, 'all' );
+	}
+
+	if ( ! wp_script_is( 'shapeblock-swiper', 'registered' ) ) {
+		wp_register_script( 'shapeblock-swiper', SHAPEBLOCK_PL_URL . 'assets/lib/swiper/swiper-bundle.min.js', array(), '12.0.3', false );
+	}
+
+	if ( ! wp_style_is( 'shapeblock-bootstrap-grid', 'registered' ) ) {
+		wp_register_style( 'shapeblock-bootstrap-grid', SHAPEBLOCK_PL_URL . 'assets/lib/bootstrap/bootstrap-grid.min.css', array(), SHAPEBLOCK_VERSION, 'all' );
+	}
+}
+add_action( 'init', 'shapeblock_register_common_assets', 9 );
+
+add_action( 'enqueue_block_editor_assets', 'shapeblock_enqueue_block_styles' );
+add_action( 'enqueue_block_assets', 'shapeblock_enqueue_block_styles' );
+function shapeblock_enqueue_block_styles() {
+	shapeblock_register_common_assets();
+
+	if ( ! shapeblock_should_load_common_assets() ) {
+		return;
+	}
+
+	wp_enqueue_style( 'shapeblock-swiper' );
+	wp_enqueue_script( 'shapeblock-swiper' );
+	wp_enqueue_style( 'shapeblock-bootstrap-grid' );
 }
 
 /**
