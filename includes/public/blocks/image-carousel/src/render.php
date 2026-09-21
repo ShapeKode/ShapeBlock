@@ -223,12 +223,11 @@ $options = array(
 	),
 );
 
-$arrow_prev = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4-4.6-4.6z"/></svg>';
-$arrow_next = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M8.6 7.4 10 6l6 6-6 6-1.4-1.4 4.6-4.6z"/></svg>';
-$svg_allowed = array(
-	'svg'  => array( 'viewbox' => true, 'aria-hidden' => true, 'xmlns' => true ),
-	'path' => array( 'fill' => true, 'd' => true ),
-);
+// The prev/next arrows below are hard-coded SVG constants with no user input.
+// wp_kses() lowercases every attribute name, which turns the case-sensitive
+// viewBox into viewbox -- the browser then ignores it and the arrow loses its
+// intrinsic size. They are written as literal markup at their output points
+// instead of being passed through wp_kses().
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-image-carousel swiper" data-shapeblock-image-carousel="<?php echo esc_attr( wp_json_encode( $options ) ); ?>">
@@ -258,10 +257,10 @@ $svg_allowed = array(
 
 	<?php if ( ! empty( $attributes['showArrows'] ) ) : ?>
 		<button class="shapeblock-image-carousel-arrow shapeblock-image-carousel-prev" type="button" aria-label="<?php esc_attr_e( 'Previous image', 'shapeblock' ); ?>">
-			<?php echo wp_kses( $arrow_prev, $svg_allowed ); ?>
+			<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4-4.6-4.6z"/></svg>
 		</button>
 		<button class="shapeblock-image-carousel-arrow shapeblock-image-carousel-next" type="button" aria-label="<?php esc_attr_e( 'Next image', 'shapeblock' ); ?>">
-			<?php echo wp_kses( $arrow_next, $svg_allowed ); ?>
+			<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M8.6 7.4 10 6l6 6-6 6-1.4-1.4 4.6-4.6z"/></svg>
 		</button>
 	<?php endif; ?>
 </div>

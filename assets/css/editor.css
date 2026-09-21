@@ -43,3 +43,25 @@
 .block-editor-block-inspector__tabs button[data-active-item="true"] {
     background: #e9c7ff;
 }
+/* The inspector tab row was sized when every block had three tabs. Adding
+   "Advanced" as a fourth pushed it past the sidebar's fixed width, so the label
+   was clipped mid-word and the whole panel grew a horizontal scrollbar.
+   The room is there — it was going into the default 16px of padding on each
+   side of every tab. Trimming that and letting the tabs share the row fits all
+   four without shrinking the text. Scoped to .shapeblock-inspector-tabs, the
+   class the blocks already put on their own TabPanel, so core's and other
+   plugins' tab panels in the same sidebar are untouched. */
+.shapeblock-inspector-tabs .components-tab-panel__tabs {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.shapeblock-inspector-tabs .components-tab-panel__tabs-item {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-left: 6px;
+    padding-right: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

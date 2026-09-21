@@ -34,6 +34,64 @@ return array(
 		'viewScript' => 'file:./view.js',
 		'render' => 'file:./render.php',
 		'attributes' => array(
+			'advPadding' => array(
+				'type' => 'object',
+				'default' => array(
+					'top' => '',
+					'right' => '',
+					'bottom' => '',
+					'left' => ''
+				)
+			),
+			'advPaddingTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					'top' => '',
+					'right' => '',
+					'bottom' => '',
+					'left' => ''
+				)
+			),
+			'advPaddingMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					'top' => '',
+					'right' => '',
+					'bottom' => '',
+					'left' => ''
+				)
+			),
+			'advMargin' => array(
+				'type' => 'object',
+				'default' => array(
+					'top' => '',
+					'right' => '',
+					'bottom' => '',
+					'left' => ''
+				)
+			),
+			'advMarginTablet' => array(
+				'type' => 'object',
+				'default' => array(
+					'top' => '',
+					'right' => '',
+					'bottom' => '',
+					'left' => ''
+				)
+			),
+			'advMarginMobile' => array(
+				'type' => 'object',
+				'default' => array(
+					'top' => '',
+					'right' => '',
+					'bottom' => '',
+					'left' => ''
+				)
+			),
+			'advBgColor' => array(
+				'type' => 'string',
+				'default' => ''
+			),
 			'blockId' => array(
 				'type' => 'string',
 				'default' => ''

@@ -46,6 +46,7 @@ import ColorPopover from '../../custom-components/ColorPopover';
 import TypographyControls from '../../custom-components/TypographyControls';
 import BackgroundControl from '../../custom-components/BackgroundControl';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
+import AdvancedControls from '../../custom-components/AdvancedControls';
 
 import './editor.scss';
 
@@ -244,6 +245,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						{ name: 'settings', title: __('Settings', 'shapeblock') },
 						{ name: 'layout', title: __('Layout', 'shapeblock') },
 						{ name: 'style', title: __('Style', 'shapeblock') },
+						{ name: 'advanced', title: __('Advanced', 'shapeblock') },
 					]}
 				>
 					{(tab) => (
@@ -266,6 +268,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									</>
 								)}
 							</PanelBody>
+						) : tab.name === 'advanced' ? (
+							<AdvancedControls attributes={attributes} setAttributes={setAttributes} />
 						) : tab.name === 'layout' ? (
 							<PanelBody title={__('Heading', 'shapeblock')} initialOpen={true}>
 								<ToggleGroupControl label={__('Alignment', 'shapeblock')} value={attributes.align || ''} onChange={(v) => setAttributes({ align: v ?? '' })} isBlock isDeselectable __next40pxDefaultSize __nextHasNoMarginBottom>

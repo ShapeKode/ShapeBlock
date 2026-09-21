@@ -373,22 +373,19 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-button-subtext'                           => $H::get_inline_styles( $subtext_styles ),
 ] );
 
-// Default feature icon (checkmark) when none is selected.
-$default_feature_icon = '<svg class="feature-icon ' . esc_attr( $icon_style ) . '" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5L4 14.2l5 5 11-11-1.5-1.5z"/></svg>';
-// Icon markup used across this template: icon-font <i>, a plain <span>, or the static fallback checkmark SVG above.
+// The default feature icon (checkmark) below is a hard-coded SVG constant with no
+// user input (only its class attribute is dynamic, and that is esc_attr()'d inline
+// where it is echoed). wp_kses() lowercases every attribute name, which turns the
+// case-sensitive viewBox into viewbox -- the browser then ignores it and the icon
+// loses its intrinsic size. It is written as literal markup at its output point
+// instead of being passed through wp_kses().
+// Icon markup used elsewhere in this template: icon-font <i>, or a plain <span>.
 $icon_allowed_html = array(
 	'i'    => array(
 		'class'       => true,
 		'aria-hidden' => true,
 	),
 	'span' => array( 'class' => true ),
-	'svg'  => array(
-		'class'       => true,
-		'viewbox'     => true,
-		'aria-hidden' => true,
-		'xmlns'       => true,
-	),
-	'path' => array( 'd' => true ),
 );
 
 /** Renders the price markup honouring currency placement. */
@@ -472,7 +469,7 @@ if ( $is_featured ) {
 					if ( ! empty( $f_icon ) && 'none' !== $f_icon ) {
 						echo '<i class="shapeblock-icon ' . esc_attr( $f_icon ) . ' feature-icon ' . esc_attr( $icon_style ) . '" aria-hidden="true"></i>';
 					} else {
-						echo wp_kses( $default_feature_icon, $icon_allowed_html );
+						?><svg class="feature-icon <?php echo esc_attr( $icon_style ); ?>" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5L4 14.2l5 5 11-11-1.5-1.5z"/></svg><?php
 					}
 					?>
 					<span class="shapeblock-feature-text"><?php echo esc_html( isset( $feature['text'] ) ? $feature['text'] : '' ); ?></span>

@@ -224,40 +224,32 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-search-close-btn .shapeblock-search-close-icon-img' => $H::get_inline_styles( $close_img_size ),
 ] );
 
-// Icons / fallbacks.
-$svg_search = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M21 20l-5.6-5.6a7 7 0 10-1.4 1.4L20 21zM5 10.5a5.5 5.5 0 1111 0 5.5 5.5 0 01-11 0z"></path></svg>';
-$svg_close  = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>';
-/**
- * Output an icon: a custom uploaded image (SVG / PNG) takes precedence, then the
- * icon-font glyph, then the built-in SVG fallback. Keeps existing (font-glyph and
- * fallback) blocks rendering identically.
- */
-$render_icon = function ( $val, $fallback, $image = array(), $img_class = '' ) {
+// Icons.
+//
+// The built-in fallback SVGs are hard-coded constants with no user input. wp_kses()
+// lowercases every attribute name, which turns the case-sensitive viewBox into
+// viewbox -- the browser then ignores it and the icon loses its intrinsic size. They
+// are written as literal markup at their output points instead of being returned as
+// a string for wp_kses(); $render_icon() below only returns the genuinely dynamic
+// markup (uploaded image or icon-font glyph) and an empty string otherwise, so
+// callers can branch to the literal SVG when it returns ''.
+$render_icon = function ( $val, $image = array(), $img_class = '' ) {
 	if ( ! empty( $image ) && ! empty( $image['url'] ) ) {
 		$alt = ! empty( $image['alt'] ) ? $image['alt'] : '';
 		return '<img src="' . esc_url( $image['url'] ) . '" alt="' . esc_attr( $alt ) . '" class="' . esc_attr( $img_class ) . '" />';
 	}
-	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : $fallback;
+	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : '';
 };
-// Icon markup returned by $render_icon() above: an <img>, an icon-font <i>, or one of the static fallback SVGs.
+// Icon markup returned by $render_icon() above: an <img>, or an icon-font <i>.
 $icon_allowed_html = array(
-	'img'  => array(
+	'img' => array(
 		'src'   => true,
 		'alt'   => true,
 		'class' => true,
 	),
-	'i'    => array(
+	'i'   => array(
 		'class'       => true,
 		'aria-hidden' => true,
-	),
-	'svg'  => array(
-		'viewbox'     => true,
-		'aria-hidden' => true,
-		'xmlns'       => true,
-	),
-	'path' => array(
-		'fill' => true,
-		'd'    => true,
 	),
 );
 $action = home_url( '/' );
@@ -268,19 +260,40 @@ $action = home_url( '/' );
 			<form role="search" method="get" class="shapeblock-search-form" action="<?php echo esc_url( $action ); ?>">
 				<input type="search" class="shapeblock-search-field" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="" name="s" />
 				<button type="submit" class="shapeblock-search-submit-btn" aria-label="<?php esc_attr_e( 'Submit Search', 'shapeblock' ); ?>">
-					<?php echo wp_kses( $render_icon( $open_icon, $svg_search, $open_icon_image, 'shapeblock-search-open-icon-img' ), $icon_allowed_html ); ?>
+					<?php
+					$open_icon_html = $render_icon( $open_icon, $open_icon_image, 'shapeblock-search-open-icon-img' );
+					if ( '' !== $open_icon_html ) :
+						echo wp_kses( $open_icon_html, $icon_allowed_html );
+					else :
+						?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M21 20l-5.6-5.6a7 7 0 10-1.4 1.4L20 21zM5 10.5a5.5 5.5 0 1111 0 5.5 5.5 0 01-11 0z"></path></svg><?php
+					endif;
+					?>
 				</button>
 			</form>
 		</div>
 	<?php else : ?>
 		<div class="shapeblock-search shapeblock-search-style-1">
 			<a href="#" role="button" class="shapeblock-search-open-btn" aria-label="<?php esc_attr_e( 'Open Search', 'shapeblock' ); ?>">
-				<?php echo wp_kses( $render_icon( $open_icon, $svg_search, $open_icon_image, 'shapeblock-search-open-icon-img' ), $icon_allowed_html ); ?>
+				<?php
+				$open_icon_html = $render_icon( $open_icon, $open_icon_image, 'shapeblock-search-open-icon-img' );
+				if ( '' !== $open_icon_html ) :
+					echo wp_kses( $open_icon_html, $icon_allowed_html );
+				else :
+					?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M21 20l-5.6-5.6a7 7 0 10-1.4 1.4L20 21zM5 10.5a5.5 5.5 0 1111 0 5.5 5.5 0 01-11 0z"></path></svg><?php
+				endif;
+				?>
 			</a>
 			<div class="shapeblock-search-lightbox">
 				<div class="shapeblock-search-overlay">
 					<a href="#" role="button" class="shapeblock-search-close-btn" aria-label="<?php esc_attr_e( 'Close Search', 'shapeblock' ); ?>">
-						<?php echo wp_kses( $render_icon( $close_icon, $svg_close, $close_icon_image, 'shapeblock-search-close-icon-img' ), $icon_allowed_html ); ?>
+						<?php
+						$close_icon_html = $render_icon( $close_icon, $close_icon_image, 'shapeblock-search-close-icon-img' );
+						if ( '' !== $close_icon_html ) :
+							echo wp_kses( $close_icon_html, $icon_allowed_html );
+						else :
+							?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg><?php
+						endif;
+						?>
 					</a>
 				</div>
 				<div class="shapeblock-search-content">
@@ -288,7 +301,7 @@ $action = home_url( '/' );
 					<form role="search" method="get" class="shapeblock-search-form" action="<?php echo esc_url( $action ); ?>">
 						<input type="search" class="shapeblock-search-field" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="" name="s" />
 						<button type="submit" class="shapeblock-search-submit" aria-label="<?php esc_attr_e( 'Submit Search', 'shapeblock' ); ?>">
-							<?php echo wp_kses( $svg_search, $icon_allowed_html ); ?>
+							<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M21 20l-5.6-5.6a7 7 0 10-1.4 1.4L20 21zM5 10.5a5.5 5.5 0 1111 0 5.5 5.5 0 01-11 0z"></path></svg>
 						</button>
 					</form>
 				</div>

@@ -231,31 +231,12 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-read-more:hover'                                      => $H::get_inline_styles( $btn_hover ),
 ] );
 
-// Default icon when an item has type "icon" but no custom icon selected.
-$default_icon = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 21s-6.7-4.3-9.3-8.5C1 9.6 2 6 5.3 5.2 7.3 4.7 9 5.8 12 8.6c3-2.8 4.7-3.9 6.7-3.4C22 6 23 9.6 21.3 12.5 18.7 16.7 12 21 12 21z"/></svg>';
-// Button chevron icon.
-$chevron = '<svg class="shapeblock-read-more-icon" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-// Icon markup used across this template: icon-font <i>, or one of the static SVGs above.
-$icon_allowed_html = array(
-	'i'    => array(
-		'class'       => true,
-		'aria-hidden' => true,
-	),
-	'svg'  => array(
-		'class'       => true,
-		'viewbox'     => true,
-		'aria-hidden' => true,
-		'xmlns'       => true,
-	),
-	'path' => array(
-		'fill'             => true,
-		'd'                => true,
-		'stroke'           => true,
-		'stroke-width'     => true,
-		'stroke-linecap'   => true,
-		'stroke-linejoin'  => true,
-	),
-);
+// The default heart icon and the read-more chevron below are hard-coded SVG
+// constants with no user input. wp_kses() lowercases every attribute name, which
+// turns the case-sensitive viewBox into viewbox -- the browser then ignores it and
+// the icon loses its intrinsic size. They are written as literal markup at their
+// output points instead of being passed through wp_kses(); the icon-font <i> tag
+// stays escaped with esc_attr() as before.
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-tabs-wrapper" data-tab-direction="<?php echo esc_attr( $direction ); ?>" data-icon-position="<?php echo esc_attr( $icon_pos ); ?>">
@@ -272,7 +253,11 @@ $icon_allowed_html = array(
 					<?php
 					if ( 'icon' === $type ) {
 						echo '<span class="shapeblock-tab-icon">';
-						echo wp_kses( ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : $default_icon, $icon_allowed_html );
+						if ( ! empty( $icon ) && 'none' !== $icon ) {
+							echo '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>';
+						} else {
+							?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 21s-6.7-4.3-9.3-8.5C1 9.6 2 6 5.3 5.2 7.3 4.7 9 5.8 12 8.6c3-2.8 4.7-3.9 6.7-3.4C22 6 23 9.6 21.3 12.5 18.7 16.7 12 21 12 21z"/></svg><?php
+						}
 						echo '</span>';
 					} elseif ( 'image' === $type && ! empty( $img['url'] ) ) {
 						echo '<span class="shapeblock-tab-image"><img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $img['alt'] ?? $tab_title ) . '"></span>';
@@ -302,7 +287,7 @@ $icon_allowed_html = array(
 					<?php if ( '' !== $btn_text && '' !== $btn_url ) : ?>
 						<a class="shapeblock-read-more" href="<?php echo esc_url( $btn_url ); ?>" target="<?php echo esc_attr( $btn_target ); ?>">
 							<?php echo esc_html( $btn_text ); ?>
-							<?php echo wp_kses( $chevron, $icon_allowed_html ); ?>
+							<svg class="shapeblock-read-more-icon" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
 						</a>
 					<?php endif; ?>
 				</div>

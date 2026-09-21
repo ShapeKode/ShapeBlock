@@ -11,56 +11,85 @@ return ( function ( $attributes, $content, $block ) {
  * with any theme. $attributes, $content and $block come from register_block_type().
  */
 
-if ( ! function_exists( 'shapeblock_menu_icon_svg' ) ) {
+if ( ! function_exists( 'shapeblock_menu_icon_keys' ) ) {
 	/**
-	 * Return fixed inline SVG markup for a named menu icon ( '' if unknown ).
-	 * The markup is a hard-coded constant ( no user input ), so it is safe to echo.
+	 * The set of icon keys shapeblock_menu_echo_icon_svg() knows how to render.
 	 *
-	 * @param string $key Icon key.
-	 * @return string SVG markup.
+	 * @return string[] Valid icon keys.
 	 */
-	function shapeblock_menu_icon_svg( $key ) {
-		$open = '<svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"';
-		$line = ' fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
-		switch ( $key ) {
-			case 'caret':
-				return $open . ' fill="currentColor"><path d="M8 11 3.6 6.2h8.8z"/></svg>';
-			case 'chevron-down':
-				return $open . $line . '><path d="m4 6 4 4 4-4"/></svg>';
-			case 'arrow-down':
-				return $open . $line . '><path d="M8 3.5v9"/><path d="m4.5 9 3.5 3.5L11.5 9"/></svg>';
-			case 'plus':
-				return $open . $line . '><path d="M8 3.5v9"/><path d="M3.5 8h9"/></svg>';
-			case 'arrow-right':
-				return $open . $line . '><path d="M3.5 8h9"/><path d="M9 4.5 12.5 8 9 11.5"/></svg>';
-			case 'chevron-right':
-				return $open . $line . '><path d="m6 4 4 4-4 4"/></svg>';
-			case 'external':
-				return $open . $line . '><path d="M6.5 3.5H3.5v9h9v-3"/><path d="M9.5 3.5h3v3"/><path d="M12.5 3.5 7.5 8.5"/></svg>';
-			case 'star':
-				return $open . $line . '><path d="M8 2.5 9.7 6l3.8.5-2.8 2.7.7 3.8L8 11.7 4.6 13l.7-3.8L2.5 6.5 6.3 6z"/></svg>';
-			case 'heart':
-				return $open . $line . '><path d="M8 13.3S2.5 10 2.5 6.2A2.7 2.7 0 0 1 8 5a2.7 2.7 0 0 1 5.5 1.2C13.5 10 8 13.3 8 13.3z"/></svg>';
-			case 'check':
-				return $open . $line . '><path d="m3.5 8.5 3 3 6-7"/></svg>';
-			case 'home':
-				return $open . $line . '><path d="M3 8l5-4.5L13 8"/><path d="M4.5 7v6h7V7"/></svg>';
-			case 'user':
-				return $open . $line . '><circle cx="8" cy="6" r="2.5"/><path d="M3.5 13c0-2.4 2-4 4.5-4s4.5 1.6 4.5 4"/></svg>';
-			case 'cart':
-				return $open . $line . '><path d="M2.5 3h1.5l1.1 7h6.2l1.2-5H4.6"/><circle cx="6.5" cy="12.5" r="0.9"/><circle cx="11" cy="12.5" r="0.9"/></svg>';
-			case 'search':
-				return $open . $line . '><circle cx="7" cy="7" r="3.5"/><path d="m12.5 12.5-2.8-2.8"/></svg>';
-			case 'phone':
-				return $open . $line . '><path d="M4 3h2l1 3-1.5 1a7 7 0 0 0 3.5 3.5l1-1.5 3 1v2c0 .6-.5 1.1-1.1 1A9.4 9.4 0 0 1 3 4.1C2.9 3.5 3.4 3 4 3z"/></svg>';
-			case 'envelope':
-				return $open . $line . '><rect x="2.5" y="4" width="11" height="8" rx="1"/><path d="m3 4.5 5 4 5-4"/></svg>';
-			case 'close':
-				return $open . $line . '><path d="m4 4 8 8"/><path d="m12 4-8 8"/></svg>';
-		}
-		return '';
+	function shapeblock_menu_icon_keys() {
+		return array( 'caret', 'chevron-down', 'arrow-down', 'plus', 'arrow-right', 'chevron-right', 'external', 'star', 'heart', 'check', 'home', 'user', 'cart', 'search', 'phone', 'envelope', 'close' );
 	}
 }
+
+if ( ! function_exists( 'shapeblock_menu_echo_icon_svg' ) ) {
+	/**
+	 * Echo fixed inline SVG markup for a named menu icon (no-op if unknown).
+	 *
+	 * The markup is a hard-coded constant (no user input) and is written as
+	 * literal template markup -- never passed through wp_kses(), which
+	 * lowercases every attribute name and would turn the case-sensitive
+	 * viewBox into viewbox, making the browser ignore it.
+	 *
+	 * @param string $key Icon key.
+	 */
+	function shapeblock_menu_echo_icon_svg( $key ) {
+		switch ( $key ) {
+			case 'caret':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M8 11 3.6 6.2h8.8z"/></svg><?php
+				break;
+			case 'chevron-down':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg><?php
+				break;
+			case 'arrow-down':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3.5v9"/><path d="m4.5 9 3.5 3.5L11.5 9"/></svg><?php
+				break;
+			case 'plus':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3.5v9"/><path d="M3.5 8h9"/></svg><?php
+				break;
+			case 'arrow-right':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8h9"/><path d="M9 4.5 12.5 8 9 11.5"/></svg><?php
+				break;
+			case 'chevron-right':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 4 4 4-4 4"/></svg><?php
+				break;
+			case 'external':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3.5H3.5v9h9v-3"/><path d="M9.5 3.5h3v3"/><path d="M12.5 3.5 7.5 8.5"/></svg><?php
+				break;
+			case 'star':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5 9.7 6l3.8.5-2.8 2.7.7 3.8L8 11.7 4.6 13l.7-3.8L2.5 6.5 6.3 6z"/></svg><?php
+				break;
+			case 'heart':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13.3S2.5 10 2.5 6.2A2.7 2.7 0 0 1 8 5a2.7 2.7 0 0 1 5.5 1.2C13.5 10 8 13.3 8 13.3z"/></svg><?php
+				break;
+			case 'check':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 8.5 3 3 6-7"/></svg><?php
+				break;
+			case 'home':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l5-4.5L13 8"/><path d="M4.5 7v6h7V7"/></svg><?php
+				break;
+			case 'user':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="6" r="2.5"/><path d="M3.5 13c0-2.4 2-4 4.5-4s4.5 1.6 4.5 4"/></svg><?php
+				break;
+			case 'cart':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 3h1.5l1.1 7h6.2l1.2-5H4.6"/><circle cx="6.5" cy="12.5" r="0.9"/><circle cx="11" cy="12.5" r="0.9"/></svg><?php
+				break;
+			case 'search':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="3.5"/><path d="m12.5 12.5-2.8-2.8"/></svg><?php
+				break;
+			case 'phone':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3h2l1 3-1.5 1a7 7 0 0 0 3.5 3.5l1-1.5 3 1v2c0 .6-.5 1.1-1.1 1A9.4 9.4 0 0 1 3 4.1C2.9 3.5 3.4 3 4 3z"/></svg><?php
+				break;
+			case 'envelope':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="11" height="8" rx="1"/><path d="m3 4.5 5 4 5-4"/></svg><?php
+				break;
+			case 'close':
+				?><svg class="shapeblock-menu-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 8 8"/><path d="m12 4-8 8"/></svg><?php
+				break;
+		}
+	}
+}
+
 
 if ( ! function_exists( 'shapeblock_menu_len' ) ) {
 	/**
@@ -118,15 +147,20 @@ if ( ! function_exists( 'shapeblock_menu_paint' ) ) {
 
 if ( ! function_exists( 'shapeblock_menu_render_items' ) ) {
 	/**
-	 * Recursively render menu items to <li> markup.
+	 * Recursively echo menu items as <li> markup.
+	 *
+	 * Echoes directly (see the note on shapeblock_menu_echo_icon_svg() above)
+	 * instead of returning a string for a later, redundant wp_kses() pass -- that
+	 * pass would re-lowercase the icons' case-sensitive viewBox attribute. Every
+	 * other value below is escaped inline with esc_url()/esc_attr()/esc_html()/
+	 * wp_kses() at the point it is echoed.
 	 *
 	 * @param array  $items         Menu items ( label, url, description, newTab, icon, iconSide, children ).
 	 * @param string $dropdown_icon Dropdown-indicator choice ( caret|chevron|arrow|plus|none ).
-	 * @return string Escaped HTML.
 	 */
 	function shapeblock_menu_render_items( $items, $dropdown_icon = 'caret' ) {
 		if ( empty( $items ) || ! is_array( $items ) ) {
-			return '';
+			return;
 		}
 
 		// Resolve the dropdown-indicator SVG key ( '' means "no indicator" ).
@@ -136,10 +170,9 @@ if ( ! function_exists( 'shapeblock_menu_render_items' ) ) {
 			'plus'    => 'plus',
 			'caret'   => 'caret',
 		);
-		$dd_key = ( 'none' === $dropdown_icon ) ? '' : ( isset( $dd_map[ $dropdown_icon ] ) ? $dd_map[ $dropdown_icon ] : 'caret' );
-		$dd_mod = ( 'none' === $dropdown_icon ) ? 'none' : ( isset( $dd_map[ $dropdown_icon ] ) ? $dropdown_icon : 'caret' );
-
-		$html = '';
+		$dd_key      = ( 'none' === $dropdown_icon ) ? '' : ( isset( $dd_map[ $dropdown_icon ] ) ? $dd_map[ $dropdown_icon ] : 'caret' );
+		$dd_mod      = ( 'none' === $dropdown_icon ) ? 'none' : ( isset( $dd_map[ $dropdown_icon ] ) ? $dropdown_icon : 'caret' );
+		$dd_has_icon = ( '' !== $dd_key ) && in_array( $dd_key, shapeblock_menu_icon_keys(), true );
 
 		foreach ( $items as $item ) {
 			if ( ! is_array( $item ) ) {
@@ -174,54 +207,69 @@ if ( ! function_exists( 'shapeblock_menu_render_items' ) ) {
 				continue;
 			}
 
-			$has_children = ! empty( $children );
-			$rel          = $new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+			$has_children   = ! empty( $children );
+			$has_image_icon = ( 'image' === $icon_type && '' !== $icon_url );
+			$has_svg_icon   = ( 'icon' === $icon_type && '' !== $icon_name && in_array( $icon_name, shapeblock_menu_icon_keys(), true ) );
 
 			// Per-item icon markup: a built-in SVG icon or the user's uploaded image.
-			$icon_html = '';
-			if ( 'image' === $icon_type && '' !== $icon_url ) {
-				$icon_html = '<span class="shapeblock-menu-item-icon shapeblock-menu-item-icon--' . $icon_side . '" aria-hidden="true"><img class="shapeblock-menu-item-img" src="' . esc_url( $icon_url ) . '" alt="" /></span>';
-			} elseif ( 'icon' === $icon_type && '' !== $icon_name ) {
-				$svg = shapeblock_menu_icon_svg( $icon_name );
-				if ( '' !== $svg ) {
-					$icon_html = '<span class="shapeblock-menu-item-icon shapeblock-menu-item-icon--' . $icon_side . '" aria-hidden="true">' . $svg . '</span>';
+			$print_item_icon = function () use ( $has_image_icon, $has_svg_icon, $icon_url, $icon_name, $icon_side ) {
+				if ( $has_image_icon ) {
+					echo '<span class="shapeblock-menu-item-icon shapeblock-menu-item-icon--' . esc_attr( $icon_side ) . '" aria-hidden="true"><img class="shapeblock-menu-item-img" src="' . esc_url( $icon_url ) . '" alt="" /></span>';
+				} elseif ( $has_svg_icon ) {
+					echo '<span class="shapeblock-menu-item-icon shapeblock-menu-item-icon--' . esc_attr( $icon_side ) . '" aria-hidden="true">';
+					shapeblock_menu_echo_icon_svg( $icon_name );
+					echo '</span>';
 				}
-			}
+			};
 
 			// Labels may carry inline Bold / Italic formatting from the editor; allow only those tags.
-			$label_html = wp_kses(
-				(string) $label,
-				array(
-					'strong' => array(),
-					'b'      => array(),
-					'em'     => array(),
-					'i'      => array(),
-				)
-			);
-			$text  = '<span class="shapeblock-menu-text"><span class="shapeblock-menu-label">' . $label_html . '</span>';
-			if ( '' !== trim( $desc ) ) {
-				$text .= '<span class="shapeblock-menu-desc">' . esc_html( $desc ) . '</span>';
-			}
-			$text .= '</span>';
+			$print_text = function () use ( $label, $desc ) {
+				echo '<span class="shapeblock-menu-text"><span class="shapeblock-menu-label">' . wp_kses(
+					(string) $label,
+					array(
+						'strong' => array(),
+						'b'      => array(),
+						'em'     => array(),
+						'i'      => array(),
+					)
+				) . '</span>';
+				if ( '' !== trim( $desc ) ) {
+					echo '<span class="shapeblock-menu-desc">' . esc_html( $desc ) . '</span>';
+				}
+				echo '</span>';
+			};
 
-			$html .= '<li class="menu-item' . ( $has_children ? ' menu-item-has-children' : '' ) . '">';
-			$html .= '<a href="' . esc_url( $url ) . '"' . $rel . '>';
-			$html .= ( 'left' === $icon_side ) ? $icon_html . $text : $text . $icon_html;
+			echo '<li class="menu-item' . ( $has_children ? ' menu-item-has-children' : '' ) . '">';
+			echo '<a href="' . esc_url( $url ) . '"';
+			if ( $new_tab ) {
+				echo ' target="_blank" rel="noopener noreferrer"';
+			}
+			echo '>';
+			if ( 'left' === $icon_side ) {
+				$print_item_icon();
+				$print_text();
+			} else {
+				$print_text();
+				$print_item_icon();
+			}
 			// The dropdown arrow lives INSIDE the link so it sits inline with the label.
 			if ( $has_children ) {
-				$svg   = ( '' !== $dd_key ) ? shapeblock_menu_icon_svg( $dd_key ) : '';
-				$html .= '<span class="shapeblock-menu-sub-toggle shapeblock-menu-sub-toggle--' . sanitize_html_class( $dd_mod ) . '" aria-hidden="true">' . $svg . '</span>';
+				echo '<span class="shapeblock-menu-sub-toggle shapeblock-menu-sub-toggle--' . esc_attr( sanitize_html_class( $dd_mod ) ) . '" aria-hidden="true">';
+				if ( $dd_has_icon ) {
+					shapeblock_menu_echo_icon_svg( $dd_key );
+				}
+				echo '</span>';
 			}
-			$html .= '</a>';
+			echo '</a>';
 
 			if ( $has_children ) {
-				$html .= '<ul class="sub-menu">' . shapeblock_menu_render_items( $children, $dropdown_icon ) . '</ul>';
+				echo '<ul class="sub-menu">';
+				shapeblock_menu_render_items( $children, $dropdown_icon );
+				echo '</ul>';
 			}
 
-			$html .= '</li>';
+			echo '</li>';
 		}
-
-		return $html;
 	}
 }
 
@@ -256,9 +304,16 @@ $drawer_bg = ! empty( $attributes['drawerBg'] ) ? $attributes['drawerBg'] : '#ff
 
 $is_editor = ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || is_admin();
 
-$list = shapeblock_menu_render_items( $items, $dropdown_icon );
+// Rendered once here only to check whether any item actually produced markup
+// (some items are skipped -- see shapeblock_menu_render_items()); the captured
+// buffer itself is discarded and the items are rendered again, for real, at
+// their output point below, rather than echoing this buffered copy -- keeping
+// every echo of menu markup right next to the escaping/kses call that produced it.
+ob_start();
+shapeblock_menu_render_items( $items, $dropdown_icon );
+$list_is_empty = ( '' === trim( ob_get_clean() ) );
 
-if ( '' === $list ) {
+if ( $list_is_empty ) {
 	if ( $is_editor ) {
 		echo '<p class="shapeblock-menu-notice">' . esc_html__( 'Add menu items in the block settings.', 'shapeblock' ) . '</p>';
 	}
@@ -532,11 +587,11 @@ $toggle = $mobile_on
 	? '<button type="button" class="shapeblock-menu-toggle" aria-expanded="false" aria-label="' . esc_attr__( 'Toggle menu', 'shapeblock' ) . '"><span class="shapeblock-menu-toggle-bar"></span><span class="shapeblock-menu-toggle-bar"></span><span class="shapeblock-menu-toggle-bar"></span></button>'
 	: '';
 
-// Overlay backdrop + in-panel close button ( only used on mobile / off-canvas ).
+// Overlay backdrop ( only used on mobile / off-canvas ). The in-panel close button's
+// fallback icon is a hard-coded SVG constant -- see the note on
+// shapeblock_menu_echo_icon_svg() above -- so it is echoed directly below instead of
+// being built into this string.
 $overlay = $mobile_on ? '<div class="shapeblock-menu-overlay" aria-hidden="true"></div>' : '';
-$close   = $mobile_on
-	? '<button type="button" class="shapeblock-menu-close" aria-label="' . esc_attr__( 'Close menu', 'shapeblock' ) . '">' . shapeblock_menu_icon_svg( 'close' ) . '</button>'
-	: '';
 
 // The generated CSS is handed to the shared helper, which enqueues it (or returns it
 // with the block in the editor) instead of printing a <style> tag from here.
@@ -544,30 +599,16 @@ if ( '' !== $css ) {
 	\ShapeBlock\Frontend\Helper::add_css( 'shapeblock-menu-style', $css );
 }
 
-// Allow-list for the nav markup assembled above: $list is per-item escaped inside
-// shapeblock_menu_render_items() (esc_url/esc_html/wp_kses), $toggle/$overlay/$close are
-// fixed strings built from the hard-coded shapeblock_menu_icon_svg() output plus an
-// esc_attr__()'d aria-label.
+// Allow-list for $toggle/$overlay: fixed strings built from an esc_attr__()'d
+// aria-label. The menu items themselves are escaped inline inside
+// shapeblock_menu_render_items() (esc_url/esc_html/wp_kses) as they are echoed.
 $menu_allowed_html = array(
-	'li'     => array( 'class' => true ),
-	'ul'     => array( 'class' => true ),
-	'a'      => array(
-		'href'   => true,
-		'target' => true,
-		'rel'    => true,
-	),
 	'span'   => array(
-		'class'       => true,
-		'aria-hidden' => true,
+		'class' => true,
 	),
 	'div'    => array(
 		'class'       => true,
 		'aria-hidden' => true,
-	),
-	'img'    => array(
-		'class' => true,
-		'src'   => true,
-		'alt'   => true,
 	),
 	'button' => array(
 		'type'          => true,
@@ -575,50 +616,23 @@ $menu_allowed_html = array(
 		'aria-expanded' => true,
 		'aria-label'    => true,
 	),
-	'strong' => array(),
-	'b'      => array(),
-	'em'     => array(),
-	'i'      => array(),
-	'svg'    => array(
-		'class'       => true,
-		'viewbox'     => true,
-		'aria-hidden' => true,
-		'focusable'   => true,
-		'xmlns'       => true,
-		'fill'        => true,
-		'stroke'      => true,
-		'stroke-width'    => true,
-		'stroke-linecap'  => true,
-		'stroke-linejoin' => true,
-	),
-	'path'   => array(
-		'd'    => true,
-		'fill' => true,
-	),
-	'circle' => array(
-		'cx' => true,
-		'cy' => true,
-		'r'  => true,
-	),
-	'rect'   => array(
-		'x'      => true,
-		'y'      => true,
-		'width'  => true,
-		'height' => true,
-		'rx'     => true,
-	),
 );
 
-// $wrapper_attributes is built by core's get_block_wrapper_attributes(); $toggle/$overlay/
-// $close/$list are guarded by $menu_allowed_html above.
-printf(
-	'<nav %1$s>%3$s%4$s<div class="shapeblock-menu-panel">%6$s<ul class="shapeblock-menu-list">%2$s</ul></div></nav>',
-	wp_kses_post( $wrapper_attributes ),
-	wp_kses( $list, $menu_allowed_html ),
-	wp_kses( $toggle, $menu_allowed_html ),
-	wp_kses( $overlay, $menu_allowed_html ),
-	'', // Styles are enqueued above, never printed here.
-	wp_kses( $close, $menu_allowed_html )
-);
+// $wrapper_attributes is built by core's get_block_wrapper_attributes(); $toggle/
+// $overlay are guarded by $menu_allowed_html above. The menu items and the close
+// button's icon are echoed directly at their output point (see the notes above).
+echo '<nav ' . wp_kses_post( $wrapper_attributes ) . '>';
+echo wp_kses( $toggle, $menu_allowed_html );
+echo wp_kses( $overlay, $menu_allowed_html );
+echo '<div class="shapeblock-menu-panel">';
+if ( $mobile_on ) {
+	echo '<button type="button" class="shapeblock-menu-close" aria-label="' . esc_attr__( 'Close menu', 'shapeblock' ) . '">';
+	shapeblock_menu_echo_icon_svg( 'close' );
+	echo '</button>';
+}
+echo '<ul class="shapeblock-menu-list">';
+shapeblock_menu_render_items( $items, $dropdown_icon );
+echo '</ul>';
+echo '</div></nav>';
 
 } )( $attributes, $content, $block );

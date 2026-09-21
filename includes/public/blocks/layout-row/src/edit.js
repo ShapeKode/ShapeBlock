@@ -39,6 +39,7 @@ import BackgroundControl from '../../custom-components/BackgroundControl';
 import BorderControl from '../../custom-components/BorderControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
+import AdvancedControls from '../../custom-components/AdvancedControls';
 
 import { LAYOUT_PRESETS, presetTemplate, getPresetById } from './presets';
 import { buildRowEditorCss } from './style-utils';
@@ -686,10 +687,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         { name: 'settings', title: __('Settings', 'shapeblock') },
                         { name: 'layout', title: __('Layout', 'shapeblock') },
                         { name: 'style', title: __('Style', 'shapeblock') },
+                        { name: 'advanced', title: __('Advanced', 'shapeblock') },
                     ]}
                 >
                     {(tab) => (
                         tab.name === 'settings' ? settingsTab :
+                        tab.name === 'advanced' ? <AdvancedControls attributes={attributes} setAttributes={setAttributes} /> :
                         tab.name === 'layout' ? layoutTab :
                         styleTab
                     )}

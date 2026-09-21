@@ -172,25 +172,24 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-scroll-top:hover svg, ' . $selector . ' .shapeblock-scroll-top:hover svg path' => $H::get_inline_styles( $icon_svg_hover ),
 ] );
 
-$icon_html = ( ! empty( $icon ) && 'none' !== $icon )
-	? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>'
-	: '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M12 4l8 8-1.4 1.4L13 7.8V20h-2V7.8L5.4 13.4 4 12z"></path></svg>';
-
 $btn_classes = 'shapeblock-scroll-top';
 if ( $is_editor ) {
 	$btn_classes .= ' shapeblock-scroll-visible shapeblock-scroll-editor';
 }
 
-// Allowed markup for the icon output (icon font <i> or inline SVG fallback).
-$shapeblock_icon_allowed = array(
-	'i'    => array( 'class' => array(), 'aria-hidden' => array() ),
-	'svg'  => array( 'viewbox' => array(), 'aria-hidden' => array(), 'xmlns' => array() ),
-	'path' => array( 'fill' => array(), 'd' => array() ),
-);
+// The fallback arrow below is a hard-coded SVG constant with no user input. wp_kses()
+// lowercases every attribute name, which turns the case-sensitive viewBox into
+// viewbox -- the browser then ignores it and the arrow loses its intrinsic size. It
+// is written as literal markup at its output point instead of being passed through
+// wp_kses(); the icon-font <i> tag stays escaped with esc_attr() as before.
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="<?php echo esc_attr( $btn_classes ); ?>" role="button" tabindex="0" aria-label="<?php echo esc_attr__( 'Scroll to top', 'shapeblock' ); ?>" data-show-after="<?php echo esc_attr( $show_after ); ?>">
-		<?php echo wp_kses( $icon_html, $shapeblock_icon_allowed ); ?>
+		<?php if ( ! empty( $icon ) && 'none' !== $icon ) : ?>
+			<i class="shapeblock-icon <?php echo esc_attr( $icon ); ?>" aria-hidden="true"></i>
+		<?php else : ?>
+			<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M12 4l8 8-1.4 1.4L13 7.8V20h-2V7.8L5.4 13.4 4 12z"></path></svg>
+		<?php endif; ?>
 	</div>
 </div>
 <?php } )( $attributes, $content, $block );

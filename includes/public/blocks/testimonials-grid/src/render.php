@@ -232,9 +232,12 @@ $H::add_custom_style( $style_handle, $selector, $col_css . $resp_css, [
 // Markup helpers.
 // ---------------------------------------------------------------------------
 $placeholder = SHAPEBLOCK_PL_URL . 'includes/public/assets/img/placeholder.png';
-$svg_quote = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M9 7H5a2 2 0 00-2 2v4a2 2 0 002 2h2v-2H5V9h4V7zm10 0h-4a2 2 0 00-2 2v4a2 2 0 002 2h2v-2h-2V9h4V7z"/></svg>';
-$icon_i = function ( $val, $fallback ) {
-	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : $fallback;
+// $render_quote() below only calls $icon_i() once its own guard has confirmed
+// quoteIcon is set and isn't "none", so $icon_i() always takes the dynamic
+// icon-font branch here — there is no static SVG fallback to protect from
+// wp_kses() lowercasing a case-sensitive viewBox attribute.
+$icon_i = function ( $val ) {
+	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : '';
 };
 // Allow-list for the markup assembled by the $render_* closures below: every dynamic
 // value going into them is already run through esc_url()/esc_attr()/esc_html() at the
@@ -257,12 +260,6 @@ $testimonial_allowed_html = array(
 		'class'       => true,
 		'aria-hidden' => true,
 	),
-	'svg'  => array(
-		'viewbox'     => true,
-		'aria-hidden' => true,
-		'xmlns'       => true,
-	),
-	'path' => array( 'd' => true ),
 );
 
 $render_picture = function ( $item ) use ( $show_image, $placeholder ) {
@@ -294,9 +291,9 @@ $render_desig = function ( $item ) {
 $render_desc = function ( $item ) {
 	return ! empty( $item['description'] ) ? '<div class="shapeblock-description">' . esc_html( $item['description'] ) . '</div>' : '';
 };
-$render_quote = function ( $item ) use ( $icon_i, $svg_quote ) {
+$render_quote = function ( $item ) use ( $icon_i ) {
 	if ( empty( $item['quoteIcon'] ) || 'none' === $item['quoteIcon'] ) return '';
-	return '<div class="shapeblock-quote" aria-hidden="true">' . $icon_i( $item['quoteIcon'], $svg_quote ) . '</div>';
+	return '<div class="shapeblock-quote" aria-hidden="true">' . $icon_i( $item['quoteIcon'] ) . '</div>';
 };
 
 /** Render one testimonial's inner-wrap for the active skin. */

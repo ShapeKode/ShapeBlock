@@ -380,3 +380,91 @@ add_action( 'enqueue_block_editor_assets', function () use ( $shapeblock_blocks 
 		}
 	}
 } );
+
+/**
+ * CSS for the shared "Advanced" inspector tab.
+ *
+ * Every ShapeBlock block offers the same Advanced tab — responsive padding and
+ * margin plus a background colour — through the AdvancedControls component. The
+ * values live in attributes prefixed `adv`, declared in each block.json.
+ *
+ * Producing the CSS here rather than in each block's render.php keeps the
+ * feature in one place: a block does not have to know the tab exists, and there
+ * is only one implementation to fix. The hook is `render_block_data`, which runs
+ * just before a block renders, so Helper::add_css() sees the same request state
+ * it would have seen from inside render.php — that matters because it routes the
+ * sheet three different ways depending on whether this is the front end, the
+ * editor or a REST render.
+ *
+ * The block's own `blockId` attribute is already a unique class on its wrapper,
+ * so it doubles as the selector and nothing has to be parsed out of the markup.
+ * It is repeated to raise specificity: `column`, `layout-row` and `faq` write
+ * padding, margin or background onto their own wrapper from their own controls,
+ * and those rules are emitted after this one. Without the repetition the value
+ * an author typed into Advanced would silently lose to the block's default.
+ *
+ * @param array $parsed_block The block about to be rendered.
+ * @return array The block, unchanged.
+ */
+function shapeblock_advanced_block_css( $parsed_block ) {
+	if ( empty( $parsed_block['blockName'] ) || 0 !== strpos( $parsed_block['blockName'], 'shapeblock/' ) ) {
+		return $parsed_block;
+	}
+
+	$attrs = ( isset( $parsed_block['attrs'] ) && is_array( $parsed_block['attrs'] ) ) ? $parsed_block['attrs'] : [];
+
+	// Only the block's own generated class is accepted, so the selector can
+	// never carry anything an author typed.
+	$block_id = isset( $attrs['blockId'] ) ? preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $attrs['blockId'] ) : '';
+	if ( '' === $block_id ) {
+		return $parsed_block;
+	}
+
+	$responsive = [];
+
+	\ShapeBlock\Frontend\Helper::add_responsive_vars(
+		$attrs,
+		$responsive,
+		'advPadding',
+		'',
+		[
+			'top'    => 'padding-top',
+			'right'  => 'padding-right',
+			'bottom' => 'padding-bottom',
+			'left'   => 'padding-left',
+		],
+		true
+	);
+
+	\ShapeBlock\Frontend\Helper::add_responsive_vars(
+		$attrs,
+		$responsive,
+		'advMargin',
+		'',
+		[
+			'top'    => 'margin-top',
+			'right'  => 'margin-right',
+			'bottom' => 'margin-bottom',
+			'left'   => 'margin-left',
+		],
+		true
+	);
+
+	if ( ! empty( $attrs['advBgColor'] ) ) {
+		$responsive['desktop']['background-color'] = \ShapeBlock\Frontend\Helper::sanitize_css_color( $attrs['advBgColor'] );
+	}
+
+	if ( empty( $responsive ) ) {
+		return $parsed_block;
+	}
+
+	$selector = '.' . $block_id . '.' . $block_id . '.' . $block_id;
+	$css      = \ShapeBlock\Frontend\Helper::generate_responsive_css( $selector, $responsive );
+
+	if ( '' !== $css ) {
+		\ShapeBlock\Frontend\Helper::add_css( 'shapeblock-public-style', $css );
+	}
+
+	return $parsed_block;
+}
+add_filter( 'render_block_data', 'shapeblock_advanced_block_css' );

@@ -16,6 +16,13 @@
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php",
 	"attributes": {
+		"advPadding": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+		"advPaddingTablet": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+		"advPaddingMobile": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+		"advMargin": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+		"advMarginTablet": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+		"advMarginMobile": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+		"advBgColor": { "type": "string", "default": "" },
 		"blockId": { "type": "string", "default": "" },
 		"socialLinks": {
 			"type": "array",
@@ -40,7 +47,7 @@
 		"buttonBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"buttonBorderHover": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"buttonBoxShadow": { "type": "object", "default": { "x": 0, "y": 0, "b": 0, "s": 0, "c": "rgba(0, 0, 0, 0)" } },
-		"iconSize": { "type": "string", "default": "18" },
+		"iconSize": { "type": "string", "default": "14" },
 		"iconSizeTablet": { "type": "string", "default": "" },
 		"iconSizeMobile": { "type": "string", "default": "" },
 
@@ -48,7 +55,7 @@
 		"gBgGradient": { "type": "string", "default": "" },
 		"gHoverBgColor": { "type": "string", "default": "#1f2937" },
 		"gHoverBgGradient": { "type": "string", "default": "" },
-		"gIconColor": { "type": "string", "default": "#ffffff" },
+		"gIconColor": { "type": "string", "default": "" },
 		"gHoverIconColor": { "type": "string", "default": "#ffffff" },
 	"hideDesktop": { "type": "boolean", "default": false },
 	"hideTablet": { "type": "boolean", "default": false },

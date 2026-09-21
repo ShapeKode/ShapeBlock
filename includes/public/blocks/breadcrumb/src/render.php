@@ -17,22 +17,37 @@ $H = '\ShapeBlock\Frontend\Helper';
 
 if ( ! function_exists( 'shapeblock_breadcrumb_trail' ) ) {
 	/**
-	 * Build the breadcrumb trail HTML for the current query.
+	 * Echo the breadcrumb trail HTML for the current query.
+	 *
+	 * $render_separator and $render_home_icon are callables that echo their own
+	 * markup directly (icon-font <i> wrapped in wp_kses(), or a hard-coded fallback
+	 * SVG written as literal markup). Every other value inserted below is a post/
+	 * term title or permalink escaped inline with esc_html()/esc_url() at the point
+	 * it is echoed. Echoing progressively like this -- instead of building one big
+	 * string and running the whole thing through wp_kses() afterwards -- is what
+	 * keeps the fallback SVGs' case-sensitive viewBox attribute intact; wp_kses()
+	 * lowercases every attribute name, so passing an already-built SVG through it
+	 * would turn viewBox into viewbox and the browser would ignore it.
 	 */
-	function shapeblock_breadcrumb_trail( $separator, $home_title, $show_category_path, $home_icon_html ) {
+	function shapeblock_breadcrumb_trail( $render_separator, $home_title, $show_category_path, $render_home_icon, $has_home_icon ) {
 		$queried   = get_queried_object();
 		$object_id = get_queried_object_id();
 		$home_title = '' !== $home_title ? $home_title : 'Home';
 
-		$home_link = '<a href="' . esc_url( home_url( '/' ) ) . '">' . $home_icon_html . ( '' !== $home_icon_html ? ' ' : '' ) . '<span class="shapeblock-breadcrumb-home-text">' . esc_html( $home_title ) . '</span></a>';
-		$output    = $home_link;
+		echo '<a href="' . esc_url( home_url( '/' ) ) . '">';
+		if ( $has_home_icon ) {
+			$render_home_icon();
+			echo ' ';
+		}
+		echo '<span class="shapeblock-breadcrumb-home-text">' . esc_html( $home_title ) . '</span></a>';
 
 		if ( is_single() ) {
 			$post_type = get_post_type();
 			if ( 'post' !== $post_type ) {
 				$pt_obj = get_post_type_object( $post_type );
 				if ( $pt_obj && $pt_obj->has_archive ) {
-					$output .= $separator . '<a href="' . esc_url( get_post_type_archive_link( $post_type ) ) . '">' . esc_html( $pt_obj->labels->name ) . '</a>';
+					$render_separator();
+					echo '<a href="' . esc_url( get_post_type_archive_link( $post_type ) ) . '">' . esc_html( $pt_obj->labels->name ) . '</a>';
 				}
 				if ( $show_category_path ) {
 					foreach ( get_object_taxonomies( $post_type, 'objects' ) as $taxonomy ) {
@@ -43,10 +58,12 @@ if ( ! function_exists( 'shapeblock_breadcrumb_trail' ) ) {
 								if ( $main_term->parent ) {
 									foreach ( array_reverse( get_ancestors( $main_term->term_id, $taxonomy->name ) ) as $ancestor ) {
 										$at = get_term( $ancestor, $taxonomy->name );
-										$output .= $separator . '<a href="' . esc_url( get_term_link( $at ) ) . '">' . esc_html( $at->name ) . '</a>';
+										$render_separator();
+										echo '<a href="' . esc_url( get_term_link( $at ) ) . '">' . esc_html( $at->name ) . '</a>';
 									}
 								}
-								$output .= $separator . '<a href="' . esc_url( get_term_link( $main_term ) ) . '">' . esc_html( $main_term->name ) . '</a>';
+								$render_separator();
+								echo '<a href="' . esc_url( get_term_link( $main_term ) ) . '">' . esc_html( $main_term->name ) . '</a>';
 							}
 						}
 					}
@@ -59,41 +76,50 @@ if ( ! function_exists( 'shapeblock_breadcrumb_trail' ) ) {
 					foreach ( array_reverse( get_ancestors( $main->term_id, 'category' ) ) as $pid ) {
 						$pt = get_term( $pid, 'category' );
 						if ( $pt && ! is_wp_error( $pt ) ) {
-							$output .= $separator . '<a href="' . esc_url( get_term_link( $pt ) ) . '">' . esc_html( $pt->name ) . '</a>';
+							$render_separator();
+							echo '<a href="' . esc_url( get_term_link( $pt ) ) . '">' . esc_html( $pt->name ) . '</a>';
 						}
 					}
-					$output .= $separator . '<a href="' . esc_url( get_term_link( $main ) ) . '">' . esc_html( $main->name ) . '</a>';
+					$render_separator();
+					echo '<a href="' . esc_url( get_term_link( $main ) ) . '">' . esc_html( $main->name ) . '</a>';
 				}
 			}
-			$output .= $separator . '<span class="shapeblock-breadcrumb-text">' . esc_html( get_the_title() ) . '</span>';
+			$render_separator();
+			echo '<span class="shapeblock-breadcrumb-text">' . esc_html( get_the_title() ) . '</span>';
 		} elseif ( is_page() ) {
 			if ( $queried && ! empty( $queried->post_parent ) ) {
 				foreach ( array_reverse( get_post_ancestors( $queried->ID ) ) as $ancestor ) {
-					$output .= $separator . '<a href="' . esc_url( get_permalink( $ancestor ) ) . '">' . esc_html( get_the_title( $ancestor ) ) . '</a>';
+					$render_separator();
+					echo '<a href="' . esc_url( get_permalink( $ancestor ) ) . '">' . esc_html( get_the_title( $ancestor ) ) . '</a>';
 				}
 			}
-			$output .= $separator . '<span class="shapeblock-breadcrumb-text">' . esc_html( get_the_title() ) . '</span>';
+			$render_separator();
+			echo '<span class="shapeblock-breadcrumb-text">' . esc_html( get_the_title() ) . '</span>';
 		} elseif ( is_category() || is_tag() || is_tax() ) {
 			if ( $queried && ! is_wp_error( $queried ) ) {
 				if ( ! empty( $queried->parent ) ) {
 					foreach ( array_reverse( get_ancestors( $queried->term_id, $queried->taxonomy ) ) as $ancestor ) {
 						$at = get_term( $ancestor, $queried->taxonomy );
-						$output .= $separator . '<a href="' . esc_url( get_term_link( $at ) ) . '">' . esc_html( $at->name ) . '</a>';
+						$render_separator();
+						echo '<a href="' . esc_url( get_term_link( $at ) ) . '">' . esc_html( $at->name ) . '</a>';
 					}
 				}
-				$output .= $separator . '<span class="shapeblock-breadcrumb-text">' . esc_html( single_term_title( '', false ) ) . '</span>';
+				$render_separator();
+				echo '<span class="shapeblock-breadcrumb-text">' . esc_html( single_term_title( '', false ) ) . '</span>';
 			}
 		} elseif ( is_post_type_archive() ) {
-			$output .= $separator . '<span class="shapeblock-breadcrumb-text">' . esc_html( post_type_archive_title( '', false ) ) . '</span>';
+			$render_separator();
+			echo '<span class="shapeblock-breadcrumb-text">' . esc_html( post_type_archive_title( '', false ) ) . '</span>';
 		} elseif ( is_home() && ! is_front_page() ) {
-			$output .= $separator . '<span class="shapeblock-breadcrumb-text">' . esc_html( get_the_title( get_option( 'page_for_posts' ) ) ) . '</span>';
+			$render_separator();
+			echo '<span class="shapeblock-breadcrumb-text">' . esc_html( get_the_title( get_option( 'page_for_posts' ) ) ) . '</span>';
 		} elseif ( is_search() ) {
-			$output .= $separator . '<span class="shapeblock-breadcrumb-text">' . esc_html__( 'Search Results for:', 'shapeblock' ) . ' ' . esc_html( get_search_query() ) . '</span>';
+			$render_separator();
+			echo '<span class="shapeblock-breadcrumb-text">' . esc_html__( 'Search Results for:', 'shapeblock' ) . ' ' . esc_html( get_search_query() ) . '</span>';
 		} elseif ( is_404() ) {
-			$output .= $separator . '<span class="shapeblock-breadcrumb-text">' . esc_html__( '404 Not Found', 'shapeblock' ) . '</span>';
+			$render_separator();
+			echo '<span class="shapeblock-breadcrumb-text">' . esc_html__( '404 Not Found', 'shapeblock' ) . '</span>';
 		}
-
-		return $output;
 	}
 }
 
@@ -237,35 +263,40 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 // ---------------------------------------------------------------------------
 // Icons.
 // ---------------------------------------------------------------------------
-$home_icon_html = '';
-if ( $show_home_icon ) {
-	$home_icon_html = ( ! empty( $home_icon ) && 'none' !== $home_icon )
-		? '<i class="shapeblock-icon ' . esc_attr( $home_icon ) . ' shapeblock-breadcrumb-home-icon" aria-hidden="true"></i>'
-		: '<svg class="shapeblock-breadcrumb-home-icon" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M12 3 3 11h2v9h5v-6h4v6h5v-9h2z"></path></svg>';
-}
+// Allow-list for the dynamic icon-font <i> tag (esc_attr'd class). The static
+// home/separator fallback SVGs are written as literal markup by $render_home_icon
+// and $render_separator below and never passed through wp_kses() -- see the
+// comment on shapeblock_breadcrumb_trail() above.
+$icon_allowed_html = [
+	'i' => [ 'class' => true, 'aria-hidden' => true ],
+];
 
-if ( $show_sep_icon ) {
-	$separator = ( ! empty( $sep_icon ) && 'none' !== $sep_icon )
-		? '<i class="shapeblock-icon ' . esc_attr( $sep_icon ) . ' shapeblock-breadcrumb-separator" aria-hidden="true"></i>'
-		: '<svg class="shapeblock-breadcrumb-separator" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M8.6 5.4 7.2 6.8 12.4 12l-5.2 5.2 1.4 1.4L15.2 12z"></path></svg>';
-} else {
-	$separator = '<span class="shapeblock-breadcrumb-separator">/</span>';
-}
+$has_home_icon  = $show_home_icon;
+$render_home_icon = function () use ( $home_icon, $icon_allowed_html ) {
+	if ( ! empty( $home_icon ) && 'none' !== $home_icon ) {
+		echo wp_kses( '<i class="shapeblock-icon ' . esc_attr( $home_icon ) . ' shapeblock-breadcrumb-home-icon" aria-hidden="true"></i>', $icon_allowed_html );
+	} else {
+		?><svg class="shapeblock-breadcrumb-home-icon" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M12 3 3 11h2v9h5v-6h4v6h5v-9h2z"></path></svg><?php
+	}
+};
 
-$trail = shapeblock_breadcrumb_trail( $separator, $home_title, $show_cat, $home_icon_html );
-
-$allowed = array_merge(
-	wp_kses_allowed_html( 'post' ),
-	[
-		'svg'  => [ 'xmlns' => true, 'fill' => true, 'viewbox' => true, 'role' => true, 'aria-hidden' => true, 'focusable' => true, 'class' => true, 'width' => true, 'height' => true ],
-		'path' => [ 'd' => true, 'fill' => true ],
-		'i'    => [ 'class' => true, 'aria-hidden' => true ],
-	]
-);
+$render_separator = function () use ( $show_sep_icon, $sep_icon, $icon_allowed_html ) {
+	if ( ! $show_sep_icon ) {
+		echo '<span class="shapeblock-breadcrumb-separator">/</span>';
+		return;
+	}
+	if ( ! empty( $sep_icon ) && 'none' !== $sep_icon ) {
+		echo wp_kses( '<i class="shapeblock-icon ' . esc_attr( $sep_icon ) . ' shapeblock-breadcrumb-separator" aria-hidden="true"></i>', $icon_allowed_html );
+	} else {
+		?><svg class="shapeblock-breadcrumb-separator" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M8.6 5.4 7.2 6.8 12.4 12l-5.2 5.2 1.4 1.4L15.2 12z"></path></svg><?php
+	}
+};
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-breadcrumb">
-		<div class="shapeblock-breadcrumb-path"><?php echo wp_kses( $trail, $allowed ); ?></div>
+		<div class="shapeblock-breadcrumb-path">
+			<?php shapeblock_breadcrumb_trail( $render_separator, $home_title, $show_cat, $render_home_icon, $has_home_icon ); ?>
+		</div>
 	</div>
 </div>
 <?php } )( $attributes, $content, $block );

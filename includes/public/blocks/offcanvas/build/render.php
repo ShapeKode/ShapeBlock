@@ -153,21 +153,16 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 $render_icon = function ( $val ) {
 	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : '';
 };
-$default_close = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"></path></svg>';
-// Icon markup produced above: icon-font <i> (esc_attr'd class) or a static fallback SVG.
+// The default close icon below is a hard-coded SVG constant with no user input.
+// wp_kses() lowercases every attribute name, which turns the case-sensitive
+// viewBox into viewbox -- the browser then ignores it and the icon loses its
+// intrinsic size. It is written as literal markup at its output point instead of
+// being passed through wp_kses(); $render_icon()'s output (icon-font <i>, esc_attr'd
+// class) stays kses'd as before.
 $icon_allowed_html = array(
-	'i'    => array(
+	'i' => array(
 		'class'       => true,
 		'aria-hidden' => true,
-	),
-	'svg'  => array(
-		'viewbox'     => true,
-		'aria-hidden' => true,
-		'xmlns'       => true,
-	),
-	'path' => array(
-		'fill' => true,
-		'd'    => true,
 	),
 );
 
@@ -218,7 +213,11 @@ if ( $template && $template !== get_queried_object_id() ) {
 			<div class="shapeblock-offcanvas-panel">
 				<?php if ( 'classic' === $layout ) : ?>
 					<span class="shapeblock-offcanvas-close shapeblock-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0">
-						<?php echo wp_kses( ( '' !== $render_icon( $close_icon ) ) ? $render_icon( $close_icon ) : $default_close, $icon_allowed_html ); ?>
+						<?php if ( '' !== $render_icon( $close_icon ) ) : ?>
+							<?php echo wp_kses( $render_icon( $close_icon ), $icon_allowed_html ); ?>
+						<?php else : ?>
+							<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"></path></svg>
+						<?php endif; ?>
 					</span>
 				<?php else : ?>
 					<span class="shapeblock-offcanvas-close shapeblock-offcanvas-toggle shapeblock-modern-close" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0">

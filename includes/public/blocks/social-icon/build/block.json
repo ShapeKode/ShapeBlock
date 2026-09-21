@@ -28,6 +28,64 @@
   "editorScript": "file:./index.js",
   "render": "file:./render.php",
   "attributes": {
+    "advPadding": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advPaddingTablet": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advPaddingMobile": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advMargin": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advMarginTablet": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advMarginMobile": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advBgColor": {
+      "type": "string",
+      "default": ""
+    },
     "blockId": {
       "type": "string",
       "default": ""
@@ -153,7 +211,7 @@
     },
     "iconSize": {
       "type": "string",
-      "default": "18"
+      "default": "14"
     },
     "iconSizeTablet": {
       "type": "string",
@@ -181,7 +239,7 @@
     },
     "gIconColor": {
       "type": "string",
-      "default": "#ffffff"
+      "default": ""
     },
     "gHoverIconColor": {
       "type": "string",

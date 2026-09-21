@@ -287,13 +287,18 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, $sub );
 // ---------------------------------------------------------------------------
 // Per-cell helpers.
 // ---------------------------------------------------------------------------
-$default_tip_icon = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-3.6h-2c0-2 2.5-2.2 2.5-3.9A1.5 1.5 0 0012 8a1.6 1.6 0 00-1.6 1.5H8.4A3.6 3.6 0 0112 6a3.5 3.5 0 013.5 3.5c0 2-2.5 2.3-2.5 3.9z"/></svg>';
-
 // Allow-list covering every markup fragment this template assembles server-side:
 // - th/td open tags with the style/colspan/rowspan attributes built below (colspan/rowspan
 //   are always (int) cast, style values are already run through esc_attr() and, since 'style'
 //   is a filtered attribute, wp_kses() also runs them through safecss_filter_attr()).
-// - the icon-font <i> tag, the static fallback SVG above, and the tooltip <span> wrapper.
+// - the icon-font <i> tag and the tooltip <span> wrapper.
+//
+// The tooltip's fallback icon is a hard-coded SVG constant with no user input.
+// wp_kses() lowercases every attribute name, which turns the case-sensitive
+// viewBox into viewbox -- the browser then ignores it and the icon loses its
+// intrinsic size. $render_tooltip() below echoes it as literal markup at its
+// output point instead of returning it as part of a string that gets passed
+// through wp_kses().
 $table_allowed_html = array(
 	'th'   => array(
 		'class'   => true,
@@ -315,15 +320,6 @@ $table_allowed_html = array(
 	'i'    => array(
 		'class'       => true,
 		'aria-hidden' => true,
-	),
-	'svg'  => array(
-		'viewbox'     => true,
-		'aria-hidden' => true,
-		'xmlns'       => true,
-	),
-	'path' => array(
-		'fill' => true,
-		'd'    => true,
 	),
 );
 
@@ -362,18 +358,20 @@ $cell_attrs = function ( $item ) {
 	return $out;
 };
 
-$tooltip_html = function ( $item ) use ( $render_icon, $default_tip_icon, $tooltip_align, $table_allowed_html ) {
+// Echoes the tooltip markup directly (see the comment above $table_allowed_html)
+// instead of returning a string for a second, redundant wp_kses() pass.
+$render_tooltip = function ( $item ) use ( $render_icon, $tooltip_align, $table_allowed_html ) {
 	if ( empty( $item['tooltip'] ) || '' === ( $item['tooltipDesc'] ?? '' ) ) {
-		return '';
+		return;
 	}
 	$icon = $render_icon( $item['tooltipIcon'] ?? '' );
-	if ( '' === $icon ) {
-		$icon = $default_tip_icon;
+	echo '<span class="shapeblock-tbl-tooltip" data-placement="' . esc_attr( $tooltip_align ) . '">';
+	if ( '' !== $icon ) {
+		echo wp_kses( $icon, $table_allowed_html );
+	} else {
+		?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-3.6h-2c0-2 2.5-2.2 2.5-3.9A1.5 1.5 0 0012 8a1.6 1.6 0 00-1.6 1.5H8.4A3.6 3.6 0 0112 6a3.5 3.5 0 013.5 3.5c0 2-2.5 2.3-2.5 3.9z"/></svg><?php
 	}
-	return '<span class="shapeblock-tbl-tooltip" data-placement="' . esc_attr( $tooltip_align ) . '">'
-		. wp_kses( $icon, $table_allowed_html )
-		. '<span class="shapeblock-tbl-tooltip-content">' . esc_html( $item['tooltipDesc'] ) . '</span>'
-		. '</span>';
+	echo '<span class="shapeblock-tbl-tooltip-content">' . esc_html( $item['tooltipDesc'] ) . '</span></span>';
 };
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
@@ -392,7 +390,7 @@ $tooltip_html = function ( $item ) use ( $render_icon, $default_tip_icon, $toolt
 							echo wp_kses( '<span class="shapeblock-header-icon">' . $icon . '</span>', $table_allowed_html );
 						}
 						echo wp_kses_post( $item['text'] ?? '' );
-						echo wp_kses( $tooltip_html( $item ), $table_allowed_html );
+						$render_tooltip( $item );
 						echo '</th>';
 					}
 					?>
@@ -425,7 +423,7 @@ $tooltip_html = function ( $item ) use ( $render_icon, $default_tip_icon, $toolt
 						}
 
 						echo wp_kses_post( $item['text'] ?? '' );
-						echo wp_kses( $tooltip_html( $item ), $table_allowed_html );
+						$render_tooltip( $item );
 						echo '</td>';
 					}
 					?>
@@ -441,7 +439,7 @@ $tooltip_html = function ( $item ) use ( $render_icon, $default_tip_icon, $toolt
 						$style = $cell_style( $item );
 						echo wp_kses( '<th class="shapeblock-tf"' . $cell_attrs( $item ) . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>', $table_allowed_html );
 						echo wp_kses_post( $item['text'] ?? '' );
-						echo wp_kses( $tooltip_html( $item ), $table_allowed_html );
+						$render_tooltip( $item );
 						echo '</th>';
 					}
 					?>

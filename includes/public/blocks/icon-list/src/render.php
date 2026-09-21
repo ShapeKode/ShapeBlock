@@ -254,20 +254,11 @@ if ( '' !== $responsive_media ) {
 // ---------------------------------------------------------------------------
 // Markup.
 // ---------------------------------------------------------------------------
-$svg_star = '<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>';
-// Icon markup is either the icon-font <i> tag (esc_attr'd class) or the static fallback star SVG above.
-$icon_allowed_html = array(
-	'i'    => array(
-		'class'       => true,
-		'aria-hidden' => true,
-	),
-	'svg'  => array(
-		'viewbox'     => true,
-		'aria-hidden' => true,
-		'xmlns'       => true,
-	),
-	'path' => array( 'd' => true ),
-);
+// The star fallback below is a hard-coded SVG constant with no user input. wp_kses()
+// lowercases every attribute name, which turns the case-sensitive viewBox into
+// viewbox -- the browser then ignores it and the icon loses its intrinsic size. It
+// is written as literal markup at its output point instead of being passed through
+// wp_kses(); the icon-font <i> tag stays escaped with esc_attr() as before.
 ?>
 <ul <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<?php
@@ -278,7 +269,11 @@ $icon_allowed_html = array(
 		<li class="shapeblock-icon-list shapeblock-icon-list-dir-<?php echo esc_attr( $dir ); ?>">
 			<?php if ( $show_icon ) : ?>
 			<span class="shapeblock-icon-list-icon shapeblock-icon-list-type-icon">
-				<?php echo wp_kses( ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : $svg_star, $icon_allowed_html ); ?>
+				<?php if ( ! empty( $icon ) && 'none' !== $icon ) : ?>
+					<i class="shapeblock-icon <?php echo esc_attr( $icon ); ?>" aria-hidden="true"></i>
+				<?php else : ?>
+					<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+				<?php endif; ?>
 			</span>
 			<?php endif; ?>
 			<?php if ( '' !== $ttl ) : ?>
