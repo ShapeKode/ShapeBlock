@@ -261,7 +261,9 @@ printf(
     '<%1$s %2$s><div class="shapeblock-layout-row__inner">%3$s</div></%1$s>',
     tag_escape( $tag ),
     wp_kses_post( $wrapper_attrs ),
-    $content // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $content is the pre-rendered inner blocks HTML from render_block(), the standard WordPress core pattern for wrapper blocks (e.g. core/group); it cannot be escaped further without breaking nested block markup.
+    // The inner blocks, already rendered by WordPress, escaped against the
+    // shared template allowlist - see the note in the Column block.
+    wp_kses( $content, \ShapeBlock\Frontend\Helper::template_allowed_html() )
 );
 
 } )( $attributes, $content, $block );

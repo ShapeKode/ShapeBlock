@@ -1,0 +1,82 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "shapeblock/hover-box",
+	"version": "0.1.0",
+	"title": "Hover Box",
+	"category": "shapeblock",
+	"description": "An image or icon in a circle or square that reveals a title and description on hover.",
+	"keywords": [ "hover", "image", "icon", "overlay", "effect" ],
+	"example": {},
+	"supports": {
+		"html": false,
+		"align": [ "left", "center", "right", "wide", "full" ]
+	},
+	"textdomain": "shapeblock",
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"attributes": {
+		"advPadding": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+		"advPaddingTablet": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+		"advPaddingMobile": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+		"advMargin": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+		"advMarginTablet": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+		"advMarginMobile": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+		"advBgColor": { "type": "string", "default": "" },
+
+		"blockId": { "type": "string", "default": "" },
+
+		"mediaType": { "type": "string", "default": "image" },
+		"image": { "type": "object", "default": {} },
+		"icon": { "type": "string", "default": "shapeblock-icon-favorite" },
+		"title": { "type": "string", "default": "Hover over me" },
+		"desc": { "type": "string", "default": "A short line that appears when the pointer is over the box." },
+		"titleTag": { "type": "string", "default": "h3" },
+		"linkUrl": { "type": "string", "default": "" },
+		"linkNewTab": { "type": "boolean", "default": false },
+
+		"shape": { "type": "string", "default": "circle" },
+		"effect": { "type": "string", "default": "fade" },
+		"direction": { "type": "string", "default": "" },
+		"speed": { "type": "string", "default": "450" },
+		"boxAlign": { "type": "string", "default": "center" },
+
+		"boxSize": { "type": "string", "default": "240" },
+		"boxSizeTablet": { "type": "string", "default": "" },
+		"boxSizeMobile": { "type": "string", "default": "" },
+
+		"contentPadding": { "type": "object" },
+		"contentPaddingTablet": { "type": "object" },
+		"contentPaddingMobile": { "type": "object" },
+		"blockMargin": { "type": "object" },
+		"blockMarginTablet": { "type": "object" },
+		"blockMarginMobile": { "type": "object" },
+
+		"overlayColor": { "type": "string", "default": "rgba(89, 51, 255, 0.85)" },
+		"overlayGradient": { "type": "string", "default": "" },
+		"boxBgColor": { "type": "string", "default": "" },
+		"boxBgGradient": { "type": "string", "default": "" },
+		"boxBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
+		"boxRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
+		"boxShadow": { "type": "object", "default": { "x": 0, "y": 0, "b": 0, "s": 0, "c": "rgba(0, 0, 0, 0)" } },
+
+		"iconColor": { "type": "string", "default": "" },
+		"iconSize": { "type": "string", "default": "48" },
+		"iconSizeTablet": { "type": "string", "default": "" },
+		"iconSizeMobile": { "type": "string", "default": "" },
+
+		"titleColor": { "type": "string", "default": "#ffffff" },
+		"titleTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
+		"titleTypographyTablet": { "type": "object", "default": {} },
+		"titleTypographyMobile": { "type": "object", "default": {} },
+
+		"descColor": { "type": "string", "default": "#ffffff" },
+		"descTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
+		"descTypographyTablet": { "type": "object", "default": {} },
+		"descTypographyMobile": { "type": "object", "default": {} },
+
+		"hideDesktop": { "type": "boolean", "default": false },
+		"hideTablet": { "type": "boolean", "default": false },
+		"hideMobile": { "type": "boolean", "default": false }
+	}
+}

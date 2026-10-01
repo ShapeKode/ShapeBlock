@@ -134,7 +134,7 @@ return array(
 			),
 			'title' => array(
 				'type' => 'string',
-				'default' => 'Easy Block'
+				'default' => 'Happy Clients'
 			),
 			'titleTag' => array(
 				'type' => 'string',

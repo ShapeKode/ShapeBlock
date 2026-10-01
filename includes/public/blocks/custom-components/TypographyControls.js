@@ -43,6 +43,10 @@ import {
 
 const TypographyControls = ({ label, attributes, setAttributes, attributeKey, nextDefaultSize }) => {
     const [isVisible, setIsVisible] = useState(false);
+    // Popover needs a stable anchor element. Without one it falls back to a
+    // placeholder node and floating-ui keeps re-measuring against a moving
+    // reference, which makes the panel visibly jitter while it is open.
+    const [anchorEl, setAnchorEl] = useState(null);
     const typography = attributes[attributeKey] || {};
 
     const _nextDefaultSize = nextDefaultSize || false;
@@ -149,6 +153,7 @@ const TypographyControls = ({ label, attributes, setAttributes, attributeKey, ne
         <div className="shapeblock-typography-control" style={{ position: 'relative' }}>
             <Button
                 variant="secondary"
+                ref={setAnchorEl}
                 onClick={toggleVisible}
                 style={{ width: '100%', justifyContent: 'space-between', marginBottom: '15px', boxShadow: 'none' }}
             >
@@ -157,7 +162,12 @@ const TypographyControls = ({ label, attributes, setAttributes, attributeKey, ne
             </Button>
             {isVisible && (
                 <Popover
-                    position="bottom center"
+                    anchor={anchorEl}
+                    placement="left-start"
+                    offset={20}
+                    shift
+                    flip={false}
+                    resize={false}
                     onFocusOutside={() => setIsVisible(false)}
                 >
                     <div style={{ padding: '20px', width: '260px' }}>

@@ -233,6 +233,15 @@
       "type": "string",
       "default": ""
     },
+    "iconPadding": {
+      "type": "object"
+    },
+    "iconPaddingTablet": {
+      "type": "object"
+    },
+    "iconPaddingMobile": {
+      "type": "object"
+    },
     "iconBoxSizeTablet": {
       "type": "string",
       "default": ""

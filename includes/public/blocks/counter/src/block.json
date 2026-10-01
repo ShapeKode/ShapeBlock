@@ -34,7 +34,7 @@
 		"animationType": { "type": "string", "default": "counter" },
 		"iconEnable": { "type": "boolean", "default": false },
 		"icon": { "type": "string", "default": "" },
-		"title": { "type": "string", "default": "Easy Block" },
+		"title": { "type": "string", "default": "Happy Clients" },
 		"titleTag": { "type": "string", "default": "span" },
 
 		"titlePosition": { "type": "string", "default": "bottom" },

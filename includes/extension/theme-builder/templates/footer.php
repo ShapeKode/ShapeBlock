@@ -14,7 +14,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-echo \ShapeBlock\Extension\ThemeBuilder\Builder_Render::instance()->get_output( 'footer' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitised/escaped in render_post().
+/*
+ * The footer region is rendered block markup, escaped against the same allowlist
+ * the Templates shortcode uses.
+ */
+echo wp_kses(
+	\ShapeBlock\Extension\ThemeBuilder\Builder_Render::instance()->get_output( 'footer' ),
+	\ShapeBlock\Frontend\Helper::template_allowed_html()
+);
 ?>
 <?php wp_footer(); ?>
 </body>

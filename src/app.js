@@ -78,7 +78,7 @@ export default function ShapeBlockApp({ initialTab } = {}) {
                 <Layout style={{ minHeight: '100vh' }}>
                     <Sider theme="light" collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>
                         <div className="shapeblock-logo">
-                            <img src={shapeblock.shapeblockUrl + 'assets/images/icons/plugin-icon-200_200.png'} alt="shapeblock-logo" />
+                            <img src={shapeblock.shapeblockUrl + 'assets/images/icons/shapeblock-logo.png'} alt="shapeblock-logo" />
                         </div>
                         <Menu
                             theme="light"

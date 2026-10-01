@@ -53,6 +53,18 @@ class SHAPEBLOCK_Post_Types {
 
         register_post_type( 'shapeblock-template', $args );
     }
+    /**
+     * The HTML a rendered template is allowed to contain.
+     *
+     * Shared with the Offcanvas block and the Theme Builder templates, which
+     * print the same kind of content. See Helper::template_allowed_html().
+     *
+     * @return array Allowlist in wp_kses() form.
+     */
+    private static function allowed_html() {
+        return \ShapeBlock\Frontend\Helper::template_allowed_html();
+    }
+
     public function render_shortcode( $atts ) {
         $atts = shortcode_atts( array(
             'id' => 0,
@@ -68,15 +80,50 @@ class SHAPEBLOCK_Post_Types {
             return '';
         }
 
-        // Applying WordPress core's own 'the_content' filter chain (so other
-        // plugins' content filters, e.g. page builders, run on the template
-        // content the same as they would on a normal post) — the hook name is
-        // WordPress core's, not this plugin's, so it is intentionally not
-        // shapeblock-prefixed; renaming it (directly or via a variable) would
-        // stop other plugins' the_content hooks from ever running here.
-        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Invoking WP core's own 'the_content' filter, not a hook this plugin defines.
-        return '<div class="shapeblock-template-content">' . apply_filters( 'the_content', $post->post_content ) . '</div>';
+        // A template that renders itself would recurse until PHP gives up.
+        if ( isset( self::$rendering[ $id ] ) ) {
+            return '';
+        }
+        self::$rendering[ $id ] = true;
+
+        /*
+         * Rendered through core's own the_content(), inside a set-up post context.
+         * That runs the whole content pipeline — blocks, shortcodes, wpautop and
+         * every the_content filter another plugin has registered — which is what a
+         * page builder's markup needs, and it does it by calling the function
+         * WordPress provides instead of invoking a core hook name from here.
+         */
+        $previous = isset( $GLOBALS['post'] ) ? $GLOBALS['post'] : null;
+
+        $GLOBALS['post'] = $post;
+        setup_postdata( $post );
+
+        ob_start();
+        the_content();
+        $content = ob_get_clean();
+
+        wp_reset_postdata();
+        $GLOBALS['post'] = $previous;
+
+        if ( $previous instanceof \WP_Post ) {
+            setup_postdata( $previous );
+        }
+
+        unset( self::$rendering[ $id ] );
+
+        // A shortcode's return value is printed by WordPress, so it is escaped
+        // here against an allowlist rather than trusted. See allowed_html() for
+        // what the list covers and why.
+        return '<div class="shapeblock-template-content">' . wp_kses( $content, self::allowed_html() ) . '</div>';
     }
+
+    /**
+     * Templates currently being rendered, keyed by id, so a template that
+     * contains its own shortcode stops instead of recursing.
+     *
+     * @var array<int,bool>
+     */
+    private static $rendering = array();
 }
 
 SHAPEBLOCK_Post_Types::instance();

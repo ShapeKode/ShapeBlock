@@ -204,8 +204,12 @@ $pop_close = ! empty( $attributes['popupCloseColor'] ) ? [ 'color' => $attribute
 // these rules are emitted only when the matching per-device attribute is set,
 // so existing content renders identically.
 // ---------------------------------------------------------------------------
-$name_sel        = '.shapeblock-name, ' . $selector . ' .shapeblock-team-grid.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-name';
-$deg_sel         = '.shapeblock-designation, ' . $selector . ' .shapeblock-team-grid.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-designation';
+// `shapeblock-team-grid` and the skin name both sit on the block wrapper, which
+// $selector already matches -- so the second half of these has to join onto it
+// with no space. Written as a descendant it asks for a wrapper inside the
+// wrapper, matches nothing, and the skin 4 overlay silently keeps the defaults.
+$name_sel        = '.shapeblock-name, ' . $selector . '.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-name';
+$deg_sel         = '.shapeblock-designation, ' . $selector . '.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-designation';
 $cicon_glyph_sel = '.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon i, ' . $selector . ' .shapeblock-team-card.skin5 .shapeblock-contact-icon svg';
 $soc_sel         = '.shapeblock-team-social ul li a, ' . $selector . ' .shapeblock-team-social .shapeblock-team-social-hover a';
 
@@ -254,8 +258,8 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $name_sel
 	$pop_det  = $typo( $attributes[ 'popupDetailsTypography' . $suffix ] ?? [] );
 
 	return [
-		'.shapeblock-team-grid .shapeblock-team-card'                                                   => $card,
-		'.shapeblock-team-grid .shapeblock-team-card .shapeblock-name-deg-wrap'                              => $wrap,
+		'.shapeblock-team-card'                                                   => $card,
+		'.shapeblock-team-card .shapeblock-name-deg-wrap'                              => $wrap,
 		'.shapeblock-team-card .shapeblock-team-img-box'                                                => $img_box,
 		'.shapeblock-team-card .shapeblock-team-img-box img'                                            => $img_el,
 		'.shapeblock-team-card .shapeblock-team-img-area'                                               => $img_area,
@@ -279,8 +283,8 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $name_sel
 };
 $dev_data      = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
 $sub_selectors = [
-	'.shapeblock-team-grid .shapeblock-team-card',
-	'.shapeblock-team-grid .shapeblock-team-card .shapeblock-name-deg-wrap',
+	'.shapeblock-team-card',
+	'.shapeblock-team-card .shapeblock-name-deg-wrap',
 	'.shapeblock-team-card .shapeblock-team-img-box',
 	'.shapeblock-team-card .shapeblock-team-img-box img',
 	'.shapeblock-team-card .shapeblock-team-img-area',
@@ -315,19 +319,37 @@ foreach ( $sub_selectors as $sub_sel ) {
 }
 
 wp_enqueue_style( $style_handle );
+// Skin 4's overlay. `skin4` sits on the block wrapper, so the selector joins
+// onto $selector directly; going through the list below would put a space
+// between them and look for a skin4 element inside the wrapper instead.
+$ov_decls = $H::get_inline_styles( $ov );
+if ( $ov_decls ) {
+	$resp_css .= $selector . '.skin4 .shapeblock-team-hover-content,'
+		. $selector . '.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2{' . $ov_decls . '}';
+}
+$ov2_decls = $H::get_inline_styles( $ov2 );
+if ( $ov2_decls ) {
+	$resp_css .= $selector . '.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2{' . $ov2_decls . '}';
+}
+
 $H::add_custom_style( $style_handle, $selector, $resp_css, [
-	'.shapeblock-team-grid .shapeblock-team-card'                  => $H::get_inline_styles( $card ),
-	'.shapeblock-team-grid .shapeblock-team-card:hover'            => $H::get_inline_styles( $card_hover ),
-	'.shapeblock-team-grid .shapeblock-team-card .shapeblock-name-deg-wrap' => $H::get_inline_styles( array_merge( $area, $content_align ) ),
+	// The card is a child of the wrapper, and the wrapper is what $selector
+	// matches -- naming .shapeblock-team-grid again here looked for a second
+	// one inside it, so the card background, its hover and the name area were
+	// generated but never applied to anything.
+	'.shapeblock-team-card'                                        => $H::get_inline_styles( $card ),
+	'.shapeblock-team-card:hover'                                  => $H::get_inline_styles( $card_hover ),
+	'.shapeblock-team-card .shapeblock-name-deg-wrap'              => $H::get_inline_styles( array_merge( $area, $content_align ) ),
 	'.shapeblock-team-card .shapeblock-team-img-box'               => $H::get_inline_styles( $img_box ),
 	'.shapeblock-team-card .shapeblock-team-img-box img'           => $H::get_inline_styles( $img_el ),
 	'.shapeblock-team-card .shapeblock-team-img-area'              => $H::get_inline_styles( $img_area ),
 	'.shapeblock-team-card .shapeblock-team-img-area .shapeblock-image-below-bg' => $H::get_inline_styles( $below ),
 	'.shapeblock-team-card .shapeblock-image-overlay'              => $H::get_inline_styles( $overlay ),
-	'.shapeblock-team-grid.skin4 .shapeblock-team-hover-content, ' . $selector . ' .shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2' => $H::get_inline_styles( $ov ),
-	'.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2' => $H::get_inline_styles( $ov2 ),
-	'.shapeblock-name, ' . $selector . ' .shapeblock-team-grid.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-name' => $H::get_inline_styles( $name_styles ),
-	'.shapeblock-designation, ' . $selector . ' .shapeblock-team-grid.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-designation' => $H::get_inline_styles( $deg_styles ),
+	// The two skin 4 overlay rules are not here: their selector has to join
+	// onto the wrapper without a space, and this list always inserts one. They
+	// are written straight into $resp_css above instead.
+	'.shapeblock-name, ' . $selector . '.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-name' => $H::get_inline_styles( $name_styles ),
+	'.shapeblock-designation, ' . $selector . '.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-designation' => $H::get_inline_styles( $deg_styles ),
 	'.shapeblock-team-card.skin5 .shapeblock-author-contact'       => $H::get_inline_styles( $contact_wrap ),
 	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item' => $H::get_inline_styles( $contact_item ),
 	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item:hover' => $H::get_inline_styles( $contact_item_hover ),
@@ -390,6 +412,20 @@ $shapeblock_allowed_html = array(
 	'i'    => array(
 		'class'       => true,
 		'aria-hidden' => true,
+	),
+	// Without this the member photo never reaches the page: wp_kses() drops any
+	// tag the list does not name, so the <img> built below -- and the bundled
+	// placeholder that stands in for it -- was being removed after being built.
+	'img'  => array(
+		'class'    => true,
+		'src'      => true,
+		'srcset'   => true,
+		'sizes'    => true,
+		'alt'      => true,
+		'width'    => true,
+		'height'   => true,
+		'loading'  => true,
+		'decoding' => true,
 	),
 );
 

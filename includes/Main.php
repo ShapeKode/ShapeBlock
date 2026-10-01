@@ -88,14 +88,51 @@ class Main {
         return '';
     }
 
+    /**
+     * The admin menu icon, carried in the page rather than fetched.
+     *
+     * As a file URL the icon is downloaded once and then kept by the browser
+     * for a week, so a redrawn icon shipped with a plugin update stays unseen
+     * until that runs out -- and looks, from the outside, like the new file
+     * never arrived. WordPress accepts a data URI here, which travels with the
+     * admin page itself: replacing the plugin replaces the icon, with nothing
+     * to clear and no second request to make.
+     *
+     * @return string A data URI, or a Dashicon name if the file cannot be read.
+     */
+    private static function menu_icon() {
+        $file = SHAPEBLOCK_PL_PATH . 'assets/images/icons/plugin-icon-18_18.svg';
+
+        if ( ! is_readable( $file ) ) {
+            return 'dashicons-screenoptions';
+        }
+
+        // WP_Filesystem rather than file_get_contents(): the same read, through
+        // the API WordPress expects a plugin to use for local files.
+        global $wp_filesystem;
+
+        if ( ! $wp_filesystem ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            WP_Filesystem();
+        }
+
+        $svg = $wp_filesystem ? $wp_filesystem->get_contents( $file ) : '';
+
+        if ( ! $svg ) {
+            return 'dashicons-screenoptions';
+        }
+
+        return 'data:image/svg+xml;base64,' . base64_encode( $svg );
+    }
+
     public function add_menu() {
         add_menu_page(
-            'ShapeBlock',
-            'ShapeBlock',
+            'Shape Block',
+            'Shape Block',
             'manage_options',
             'shapeblock',
             array( $this, 'render_menu_page' ),
-            SHAPEBLOCK_PL_URL . 'assets/images/icons/plugin-icon-18_18.svg', // image icon
+            self::menu_icon(),
             26
         );
 

@@ -172,9 +172,13 @@ $dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobil
 $resp_css = '';
 foreach ( [ '.shapeblock-cnt-wrap', '.shapeblock-cnt-content', '.shapeblock-cnt-number-wrap', '.shapeblock-cnt-prefix', '.shapeblock-cnt-suffix', '.shapeblock-cnt-title', '.shapeblock-cnt-icon' ] as $sub_sel ) {
 	$rdata = [];
-	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
-		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
-			$rdata[ $device_key ] = $dev_data[ $suffix ][ $sub_sel ];
+	// The loop key is named $device, not $suffix: $suffix already holds the
+	// text the author typed after the number, and reusing the name left it set
+	// to "Mobile" by the time the markup was written -- so every counter
+	// printed "Mobile" after its number and nothing the author typed survived.
+	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $device => $device_key ) {
+		if ( ! empty( $dev_data[ $device ][ $sub_sel ] ) ) {
+			$rdata[ $device_key ] = $dev_data[ $device ][ $sub_sel ];
 		}
 	}
 	if ( ! empty( $rdata ) ) {

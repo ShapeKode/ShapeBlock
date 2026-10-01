@@ -131,6 +131,14 @@ class Builder_Render {
 			return false;
 		}
 
+		/*
+		 * The ids come back without any meta condition on the query, and the type
+		 * is matched in PHP afterwards. A meta_query would make the database JOIN
+		 * and filter on an unindexed meta value; here update_meta_cache() fetches
+		 * the meta for the whole (small, capped) set in one go and the comparison
+		 * costs nothing. It also keeps the query plain enough to stay fast on a
+		 * site with a lot of postmeta.
+		 */
 		$query = new \WP_Query(
 			array(
 				'post_type'      => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE,
@@ -140,17 +148,20 @@ class Builder_Render {
 				'order'          => 'DESC',
 				'no_found_rows'  => true,
 				'fields'         => 'ids',
-				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Filtering a small template post type by its type meta to resolve the active template.
-				'meta_query'     => array(
-					array(
-						'key'   => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE,
-						'value' => $type,
-					),
-				),
 			)
 		);
 
+		if ( empty( $query->posts ) ) {
+			return false;
+		}
+
+		update_meta_cache( 'post', $query->posts );
+
 		foreach ( $query->posts as $post_id ) {
+			if ( $type !== get_post_meta( $post_id, \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE, true ) ) {
+				continue;
+			}
+
 			$conditions = \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_post_conditions( $post_id );
 			if ( \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::matches_current_request( $conditions ) ) {
 				return (int) $post_id;
@@ -166,27 +177,42 @@ class Builder_Render {
 		}
 
 		// Render now (before wp_head) so block styles enqueue for the <head>.
-		$builder_header = $this->render_location( 'header' );
+		// Escaped here, once, against the same allowlist the Templates shortcode
+		// uses, so every consumer of $this->output gets escaped markup.
+		$builder_header = wp_kses( $this->render_location( 'header' ), \ShapeBlock\Frontend\Helper::template_allowed_html() );
 		$this->output['header'] = $builder_header;
 
-		// Capture the theme's own header.php (require_once, so core's own
-		// require_once no-ops it) and swap only its <header> region for the
-		// builder header. Keeping the rest of header.php preserves the theme's
-		// document opening AND its content wrapper divs (e.g. #page/.main-contain/
-		// .container/#content), which only close back in footer.php — discarding
-		// the whole file would leave the page body without its layout wrapper.
-		ob_start();
-		locate_template( array( 'header.php' ), true, true );
-		$theme_header = ob_get_clean();
-
-		if ( '' === $theme_header ) {
-			// Theme has no header.php (unusual for a classic theme) — fall back
-			// to our own complete document opening.
+		// Theme has no header.php (unusual for a classic theme) — fall back to
+		// our own complete document opening.
+		if ( '' === locate_template( array( 'header.php' ), false ) ) {
 			require SHAPEBLOCK_PL_PATH . 'includes/extension/theme-builder/templates/header.php';
 			return;
 		}
 
-		echo $this->replace_region( $theme_header, $builder_header, 'header' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Builder header is sanitised/escaped in render_post(); theme header.php is trusted template output.
+		/*
+		 * Run the theme's own header.php and swap only its <header> region for the
+		 * builder header. Keeping the rest of header.php preserves the theme's
+		 * document opening AND its content wrapper divs (e.g. #page/.main-contain/
+		 * .container/#content), which only close back in footer.php — discarding
+		 * the whole file would leave the page body without its layout wrapper.
+		 *
+		 * The swap happens in the output buffer's own callback, so the theme's
+		 * markup is transformed on its way out instead of being read into a
+		 * variable and echoed. That matters: a theme's header.php emits the
+		 * doctype, <head> and its enqueued <link>/<script> tags, and there is no
+		 * escaping function that can be applied to a document opening without
+		 * destroying it. This way nothing here echoes an unescaped string — the
+		 * theme prints its own template exactly as get_header() would, and the
+		 * only content this plugin contributes is $builder_header, escaped above.
+		 */
+		$builder = $builder_header;
+		ob_start(
+			function ( $theme_header ) use ( $builder ) {
+				return $this->replace_region( $theme_header, $builder, 'header' );
+			}
+		);
+		locate_template( array( 'header.php' ), true, true );
+		ob_end_flush();
 	}
 
 	public function maybe_override_footer() {
@@ -194,22 +220,28 @@ class Builder_Render {
 			return;
 		}
 
-		$builder_footer = $this->render_location( 'footer' );
+		// Escaped once, as the header is above.
+		$builder_footer = wp_kses( $this->render_location( 'footer' ), \ShapeBlock\Frontend\Helper::template_allowed_html() );
 		$this->output['footer'] = $builder_footer;
 
-		// Mirror the header handling: keep the theme's footer.php (its structural
-		// wrapper closes + the single wp_footer() + closing body/html tags) and
-		// swap only its <footer> region for the builder footer.
-		ob_start();
-		locate_template( array( 'footer.php' ), true, true );
-		$theme_footer = ob_get_clean();
-
-		if ( '' === $theme_footer ) {
+		if ( '' === locate_template( array( 'footer.php' ), false ) ) {
 			require SHAPEBLOCK_PL_PATH . 'includes/extension/theme-builder/templates/footer.php';
 			return;
 		}
 
-		echo $this->replace_region( $theme_footer, $builder_footer, 'footer' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Builder footer is sanitised/escaped in render_post(); theme footer.php is trusted template output.
+		/*
+		 * Mirror of the header: keep the theme's footer.php (its structural wrapper
+		 * closes, the single wp_footer() and the closing body/html tags) and swap
+		 * only its <footer> region, in the buffer callback for the same reason.
+		 */
+		$builder = $builder_footer;
+		ob_start(
+			function ( $theme_footer ) use ( $builder ) {
+				return $this->replace_region( $theme_footer, $builder, 'footer' );
+			}
+		);
+		locate_template( array( 'footer.php' ), true, true );
+		ob_end_flush();
 	}
 
 	/**

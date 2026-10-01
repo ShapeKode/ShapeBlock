@@ -122,6 +122,18 @@ body.toplevel_page_shapeblock #wpcontent {
 .ant-select input:focus {
   outline: none;
   box-shadow: none;
-}/*# sourceMappingURL=style.css.map *//* Remove the focus ring / outline "jump" on the template search fields ( AntD injects it at runtime, so !important is needed ). */
-.shapeblock-template-search-box .ant-input-affix-wrapper,.shapeblock-template-search-box .ant-input,.shapeblock-template-search-box .ant-input-search-button{outline:none !important;}
-.shapeblock-template-search-box .ant-input-affix-wrapper:focus,.shapeblock-template-search-box .ant-input-affix-wrapper-focused,.shapeblock-template-search-box .ant-input-affix-wrapper:focus-within,.shapeblock-template-search-box .ant-input-affix-wrapper:hover,.shapeblock-template-search-box .ant-input:focus,.shapeblock-template-search-box .ant-input-focused{box-shadow:none !important;border-color:#d9d9d9 !important;}
+}
+
+.shapeblock-template-search-box .ant-input-affix-wrapper,
+.shapeblock-template-search-box .ant-input,
+.shapeblock-template-search-box .ant-input-search-button {
+  outline: none !important;
+}
+.shapeblock-template-search-box .ant-input-affix-wrapper:focus, .shapeblock-template-search-box .ant-input-affix-wrapper-focused, .shapeblock-template-search-box .ant-input-affix-wrapper:focus-within, .shapeblock-template-search-box .ant-input-affix-wrapper:hover {
+  box-shadow: none !important;
+  border-color: #d9d9d9 !important;
+}
+.shapeblock-template-search-box .ant-input:focus, .shapeblock-template-search-box .ant-input-focused {
+  box-shadow: none !important;
+  border-color: #d9d9d9 !important;
+}

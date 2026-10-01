@@ -309,13 +309,39 @@ class Builder_API {
 		);
 
 		if ( $type && \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::is_valid_type( $type ) ) {
-			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Filtering a small admin-only template post type by its type meta.
-			$args['meta_query'] = array(
+			/*
+			 * Resolve which templates are of this type first, then page through
+			 * them by id. As in Builder_Render, this keeps the meta out of the
+			 * query: the type is read from the meta cache, primed for the whole
+			 * set in a single call. The post type holds a handful of templates and
+			 * this only runs on the plugin's own admin screen.
+			 */
+			$ids = get_posts(
 				array(
-					'key'   => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE,
-					'value' => $type,
-				),
+					'post_type'      => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE,
+					'post_status'    => $post_status,
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+					'no_found_rows'  => true,
+					'orderby'        => 'modified',
+					'order'          => 'DESC',
+				)
 			);
+
+			$matching = array();
+
+			if ( $ids ) {
+				update_meta_cache( 'post', $ids );
+
+				foreach ( $ids as $id ) {
+					if ( $type === get_post_meta( $id, \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE, true ) ) {
+						$matching[] = (int) $id;
+					}
+				}
+			}
+
+			// An empty post__in is ignored by WP_Query and would list everything.
+			$args['post__in'] = $matching ? $matching : array( 0 );
 		}
 
 		if ( '' !== $search ) {

@@ -114,8 +114,12 @@ if ( '' !== $u( 'iconBoxSize' ) ) { $b = $u( 'iconBoxSize' ); $icon_box['min-wid
 if ( ! empty( $attributes['iconAlignment'] ) ) $icon_box['justify-content'] = $attributes['iconAlignment'];
 $icon_box = array_merge( $icon_box, $shadow( $attributes['iconShadow'] ?? [] ), $dims( $attributes['iconRadius'] ?? [], 'radius' ) );
 if ( ! empty( $attributes['iconBorder'] ) ) $icon_box = array_merge( $icon_box, $H::border_to_css_props( $attributes['iconBorder'] ) );
+$icon_box = array_merge( $icon_box, $dims( $attributes['iconPadding'] ?? [], 'padding' ) );
 $icon_svg = ( '' !== $u( 'iconSize' ) ) ? [ 'width' => $u( 'iconSize' ), 'height' => $u( 'iconSize' ) ] : [];
 $icon_num = ( '' !== $u( 'iconSize' ) ) ? [ 'font-size' => $u( 'iconSize' ) ] : [];
+// A picture is sized by its width alone so that its proportions survive; giving
+// it the square the icons use would squash anything that is not square.
+$icon_img = ( '' !== $u( 'iconSize' ) ) ? [ 'width' => $u( 'iconSize' ), 'height' => 'auto' ] : [];
 
 // Title / description.
 $title_styles = $typo( $attributes['titleTypography'] ?? [] );
@@ -148,8 +152,10 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H ) {
 
 	$wrap_m   = $dims( $attributes[ 'feaBlockMargin' . $suffix ] ?? [], 'margin' );
 	$icon_box = ( '' !== $uu( 'iconBoxSize' ) ) ? [ 'min-width' => $uu( 'iconBoxSize' ), 'min-height' => $uu( 'iconBoxSize' ), 'line-height' => $uu( 'iconBoxSize' ) ] : [];
+	$icon_box = array_merge( $icon_box, $dims( $attributes[ 'iconPadding' . $suffix ] ?? [], 'padding' ) );
 	$icon_svg = ( '' !== $uu( 'iconSize' ) ) ? [ 'width' => $uu( 'iconSize' ), 'height' => $uu( 'iconSize' ) ] : [];
 	$icon_num = ( '' !== $uu( 'iconSize' ) ) ? [ 'font-size' => $uu( 'iconSize' ) ] : [];
+	$icon_img = ( '' !== $uu( 'iconSize' ) ) ? [ 'width' => $uu( 'iconSize' ), 'height' => 'auto' ] : [];
 	$title_r  = array_merge( $typo( $attributes[ 'titleTypography' . $suffix ] ?? [] ), $dims( $attributes[ 'titlePadding' . $suffix ] ?? [], 'padding' ) );
 	$desc_r   = $typo( $attributes[ 'descTypography' . $suffix ] ?? [] );
 
@@ -159,6 +165,7 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H ) {
 		' .shapeblock-icon-box'          => $H::get_inline_styles( $list ),
 		' .shapeblock-icon-box-icon'     => $H::get_inline_styles( $icon_box ),
 		' .shapeblock-icon-box-icon svg' => $H::get_inline_styles( $icon_svg ),
+		' .shapeblock-icon-box-img'      => $H::get_inline_styles( $icon_img ),
 		' .shapeblock-icon-box-number'   => $H::get_inline_styles( $icon_num ),
 		' .shapeblock-icon-box-title'    => $H::get_inline_styles( $title_r ),
 		' .shapeblock-icon-box-desc'     => $H::get_inline_styles( $desc_r ),
@@ -180,6 +187,7 @@ $H::add_custom_style( $style_handle, $selector, $extra_css, [
 	'.shapeblock-icon-box-icon svg, ' . $selector . ' .shapeblock-icon-box-icon svg path, ' . $selector . ' .shapeblock-icon-box-icon i, ' . $selector . ' .shapeblock-icon-box-number' => $H::get_inline_styles( $icon_color ),
 	'.shapeblock-icon-box-icon'                       => $H::get_inline_styles( $icon_box ),
 	'.shapeblock-icon-box-icon svg'                   => $H::get_inline_styles( $icon_svg ),
+	'.shapeblock-icon-box-img'                        => $H::get_inline_styles( $icon_img ),
 	'.shapeblock-icon-box-number'                     => $H::get_inline_styles( $icon_num ),
 	'.shapeblock-icon-box-title'                      => $H::get_inline_styles( $title_styles ),
 	'.shapeblock-icon-box-desc'                       => $H::get_inline_styles( $desc_styles ),

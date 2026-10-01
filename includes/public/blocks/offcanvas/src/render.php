@@ -225,7 +225,11 @@ if ( $template && $template !== get_queried_object_id() ) {
 					</span>
 				<?php endif; ?>
 				<div class="shapeblock-offcanvas-content">
-					<?php echo $content_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered template markup (do_blocks/wpautop/do_shortcode output), the same class of content WordPress core prints unescaped via the_content; the source template is an admin-authored ShapeBlock Template post, not third-party or visitor input. ?>
+					<?php
+					// Rendered template markup, escaped against the same allowlist the
+					// Templates shortcode uses.
+					echo wp_kses( $content_html, \ShapeBlock\Frontend\Helper::template_allowed_html() );
+					?>
 				</div>
 			</div>
 		</div>

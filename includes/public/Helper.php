@@ -595,4 +595,190 @@ class Helper {
 
 		return $embed_video;
 	}
+
+    /**
+     * The HTML a rendered template is allowed to contain.
+     *
+     * WordPress's post allowlist is the starting point — it already covers the
+     * ordinary tags, and class, id, style, data-* and the aria-* attributes on
+     * them. It has no SVG at all and no form controls, which the ShapeBlock
+     * blocks do emit: 16 of them draw inline SVG icons and the Search block
+     * renders a real search form. Those tags are added here with the attributes
+     * they actually use, so escaping the shortcode's output does not quietly
+     * delete half of it.
+     *
+     * iframe, picture/source and the remaining form controls are allowed too,
+     * because a template can hold any block a person puts in it, including
+     * core's Embed block.
+     *
+     * @return array Allowlist in wp_kses() form.
+     */
+    public static function template_allowed_html() {
+        $allowed = wp_kses_allowed_html( 'post' );
+
+        // Attributes every added tag gets. 'data-*' has to be named explicitly:
+        // kses only keeps data attributes on tags whose list contains that key.
+        $common = array(
+            'class'           => true,
+            'id'              => true,
+            'style'           => true,
+            'role'            => true,
+            'aria-hidden'     => true,
+            'aria-label'      => true,
+            'aria-labelledby' => true,
+            'aria-describedby' => true,
+            'data-*'          => true,
+        );
+
+        // Painting attributes shared by every SVG element.
+        $paint = array(
+            'fill'             => true,
+            'fill-rule'        => true,
+            'fill-opacity'     => true,
+            'clip-rule'        => true,
+            'clip-path'        => true,
+            'stroke'           => true,
+            'stroke-width'     => true,
+            'stroke-linecap'   => true,
+            'stroke-linejoin'  => true,
+            'stroke-dasharray' => true,
+            'stroke-opacity'   => true,
+            'opacity'          => true,
+            'transform'        => true,
+        );
+
+        $svg_elements = array(
+            // 'version' is here for core's Social Links block, whose icons carry
+            // it; without it every social icon loses its svg element.
+            'svg'            => array( 'viewbox' => true, 'xmlns' => true, 'xmlns:xlink' => true, 'version' => true, 'width' => true, 'height' => true, 'focusable' => true, 'preserveaspectratio' => true, 'x' => true, 'y' => true ),
+            'g'              => array(),
+            'path'           => array( 'd' => true ),
+            'circle'         => array( 'cx' => true, 'cy' => true, 'r' => true ),
+            'ellipse'        => array( 'cx' => true, 'cy' => true, 'rx' => true, 'ry' => true ),
+            'rect'           => array( 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true, 'ry' => true ),
+            'line'           => array( 'x1' => true, 'y1' => true, 'x2' => true, 'y2' => true ),
+            'polyline'       => array( 'points' => true ),
+            'polygon'        => array( 'points' => true ),
+            'defs'           => array(),
+            'use'            => array( 'href' => true, 'xlink:href' => true, 'x' => true, 'y' => true, 'width' => true, 'height' => true ),
+            'symbol'         => array( 'viewbox' => true ),
+            'title'          => array(),
+            'desc'           => array(),
+            'mask'           => array( 'maskunits' => true, 'x' => true, 'y' => true, 'width' => true, 'height' => true ),
+            'clippath'       => array( 'clippathunits' => true ),
+            'lineargradient' => array( 'x1' => true, 'y1' => true, 'x2' => true, 'y2' => true, 'gradientunits' => true, 'gradienttransform' => true ),
+            'radialgradient' => array( 'cx' => true, 'cy' => true, 'r' => true, 'fx' => true, 'fy' => true, 'gradientunits' => true ),
+            'stop'           => array( 'offset' => true, 'stop-color' => true, 'stop-opacity' => true ),
+            'text'           => array( 'x' => true, 'y' => true, 'dx' => true, 'dy' => true, 'text-anchor' => true, 'font-size' => true, 'font-family' => true, 'font-weight' => true ),
+            'tspan'          => array( 'x' => true, 'y' => true, 'dx' => true, 'dy' => true ),
+        );
+
+        foreach ( $svg_elements as $tag => $attrs ) {
+            $allowed[ $tag ] = array_merge( $common, $paint, $attrs );
+        }
+
+        $allowed['form'] = array_merge( $common, array(
+            'action'         => true,
+            'method'         => true,
+            'target'         => true,
+            'name'           => true,
+            'accept-charset' => true,
+            'enctype'        => true,
+            'novalidate'     => true,
+        ) );
+
+        $allowed['input'] = array_merge( $common, array(
+            'type'         => true,
+            'name'         => true,
+            'value'        => true,
+            'placeholder'  => true,
+            'required'     => true,
+            'disabled'     => true,
+            'readonly'     => true,
+            'checked'      => true,
+            'min'          => true,
+            'max'          => true,
+            'step'         => true,
+            'size'         => true,
+            'maxlength'    => true,
+            'pattern'      => true,
+            'autocomplete' => true,
+            'list'         => true,
+        ) );
+
+        $allowed['textarea'] = array_merge( $common, array(
+            'name'        => true,
+            'rows'        => true,
+            'cols'        => true,
+            'placeholder' => true,
+            'required'    => true,
+            'disabled'    => true,
+            'readonly'    => true,
+            'maxlength'   => true,
+        ) );
+
+        $allowed['select'] = array_merge( $common, array(
+            'name'     => true,
+            'multiple' => true,
+            'size'     => true,
+            'required' => true,
+            'disabled' => true,
+        ) );
+
+        $allowed['option']   = array_merge( $common, array( 'value' => true, 'selected' => true, 'disabled' => true, 'label' => true ) );
+        $allowed['optgroup'] = array_merge( $common, array( 'label' => true, 'disabled' => true ) );
+        $allowed['datalist'] = $common;
+
+        // No srcdoc: it would let a template carry a whole inline document.
+        $allowed['iframe'] = array_merge( $common, array(
+            'src'             => true,
+            'width'           => true,
+            'height'          => true,
+            'title'           => true,
+            'loading'         => true,
+            'allow'           => true,
+            'allowfullscreen' => true,
+            'frameborder'     => true,
+            'referrerpolicy'  => true,
+            'sandbox'         => true,
+            'name'            => true,
+        ) );
+
+        /*
+         * Attributes the blocks put on tags the post allowlist already knows,
+         * but which are not in its attribute lists. Rendering all 31 blocks and
+         * comparing the markup before and after escaping is what turned these
+         * up: the Progress block loses its ARIA range and every image loses
+         * decoding="async" without them.
+         */
+        $allowed['div']['aria-valuenow']  = true;
+        $allowed['div']['aria-valuemin']  = true;
+        $allowed['div']['aria-valuemax']  = true;
+        $allowed['div']['aria-valuetext'] = true;
+        $allowed['img']['decoding']       = true;
+        $allowed['img']['srcset']         = true;
+        $allowed['img']['sizes']          = true;
+        $allowed['img']['fetchpriority']  = true;
+
+        $allowed['picture'] = $common;
+        $allowed['source']  = array_merge( $common, array(
+            'src'    => true,
+            'srcset' => true,
+            'sizes'  => true,
+            'media'  => true,
+            'type'   => true,
+            'width'  => true,
+            'height' => true,
+        ) );
+
+        /**
+         * Filters the HTML a rendered ShapeBlock template may contain.
+         *
+         * A block from another plugin can emit a tag this list does not know
+         * about; this is where to add it rather than removing the escaping.
+         *
+         * @param array $allowed Allowlist in wp_kses() form.
+         */
+        return apply_filters( 'shapeblock_template_allowed_html', $allowed );
+    }
 }

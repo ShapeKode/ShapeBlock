@@ -240,6 +240,15 @@ return array(
 				'type' => 'string',
 				'default' => ''
 			),
+			'iconPadding' => array(
+				'type' => 'object'
+			),
+			'iconPaddingTablet' => array(
+				'type' => 'object'
+			),
+			'iconPaddingMobile' => array(
+				'type' => 'object'
+			),
 			'iconBoxSizeTablet' => array(
 				'type' => 'string',
 				'default' => ''

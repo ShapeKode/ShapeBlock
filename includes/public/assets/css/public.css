@@ -3575,10 +3575,13 @@
 .shapeblock-video-wrapper video {
   background-color: #000;
 }
+
+/* Images inside any ShapeBlock block stay inside their container.
+ * Without this an image field renders at its natural pixel size and spills out
+ * of the card. Blocks that want a fixed size use higher-specificity selectors
+ * (e.g. `.shapeblock-tstml-inner .shapeblock-picture img`), so they still win. */
 .shapeblock-block img,
 .shapeblock-menu img {
   max-width: 100%;
   height: auto;
 }
-
-/*# sourceMappingURL=public.css.map */

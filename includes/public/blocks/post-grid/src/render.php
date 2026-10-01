@@ -509,8 +509,40 @@ if ( ! empty( $attributes['posts'] ) && ! in_array( 'all', $attributes['posts'] 
 }
 
 if ( ! empty( $attributes['excludes'] ) && ! in_array( 'no-excludes', $attributes['excludes'] ) ) {
-    // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- The block's "exclude these posts" control is inherently an exclusion query; there is no WP_Query API to express "not these specific IDs" other than post__not_in, and the IDs come from the block's own editor-configured attribute, not request input.
-    $args['post__not_in'] = array_map( 'intval', $attributes['excludes'] );
+    $exclude_ids = array_map( 'intval', $attributes['excludes'] );
+
+    if ( ! empty( $args['post__in'] ) ) {
+        // The editor also picked specific posts, so the exclusion is just a
+        // subtraction from that list — no extra query needed.
+        $args['post__in'] = array_values( array_diff( $args['post__in'], $exclude_ids ) );
+    } else {
+        /*
+         * Turn "everything except these" into "exactly these". An exclusion in
+         * the query makes the database walk rows only to throw them away, which
+         * is why post__not_in is discouraged; resolving the ids first costs one
+         * extra query over a single indexed column and then the grid asks for a
+         * set it already knows.
+         */
+        $candidates = get_posts(
+            array(
+                'post_type'      => $args['post_type'],
+                'post_status'    => $args['post_status'],
+                'posts_per_page' => -1,
+                'fields'         => 'ids',
+                'no_found_rows'  => true,
+                'orderby'        => $args['orderby'],
+                'order'          => $args['order'],
+            )
+        );
+
+        $args['post__in'] = array_values( array_diff( array_map( 'intval', $candidates ), $exclude_ids ) );
+    }
+
+    // WP_Query ignores an empty post__in and would show everything; an
+    // impossible id shows nothing, which is what excluding everything means.
+    if ( empty( $args['post__in'] ) ) {
+        $args['post__in'] = array( 0 );
+    }
 }
 
 if ( ! empty( $attributes['categories'] ) && ! in_array( 'all', $attributes['categories'] ) ) {
@@ -531,14 +563,23 @@ if ( ! empty( $attributes['categories'] ) && ! in_array( 'all', $attributes['cat
 
 
 if($is_featured == true) {
-    // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- "Featured" filter is an editor-configured block option, not attacker input; a meta_query is required since core has no other query-by-meta API.
-    $args['meta_query'] = array(
-        array(
-            'key'     => '_is_featured',
-            'value'   => 'yes',
-            'compare' => '=',
-        ),
-    );
+    /*
+     * "Featured" is WordPress's own sticky flag — the one editors set with
+     * "Stick to the top of the blog". This used to filter on an _is_featured post
+     * meta key that nothing in the plugin ever wrote, so turning the option on
+     * returned nothing at all. Sticky posts are the feature editors actually
+     * have, and reading them needs no meta query.
+     */
+    $sticky = array_map( 'intval', (array) get_option( 'sticky_posts', array() ) );
+
+    if ( ! empty( $args['post__in'] ) ) {
+        $sticky = array_values( array_intersect( $args['post__in'], $sticky ) );
+    }
+
+    // WP_Query ignores an empty post__in, which would show everything; an
+    // impossible id shows nothing, which is what "no featured posts" means.
+    $args['post__in']            = $sticky ? $sticky : array( 0 );
+    $args['ignore_sticky_posts'] = true;
 }
 
 $query = new \WP_Query( $args );
@@ -557,7 +598,9 @@ if ( $query->have_posts() ) :
              <?php if ($pagination_type !== 'numeric') {
                  $data_attr = $attributes;
                  $data_attr['blockName'] = 'shapeblock/post-grid';
-                 echo 'data-attributes="' . esc_attr(json_encode($data_attr)) . '" data-query-args="' . esc_attr(json_encode($args)) . '"'; 
+                 // wp_json_encode() rather than json_encode(): it is the WordPress wrapper
+                 // and it fails cleanly instead of emitting invalid JSON.
+                 echo 'data-attributes="' . esc_attr(wp_json_encode($data_attr)) . '" data-query-args="' . esc_attr(wp_json_encode($args)) . '"'; 
              } ?>>
             <?php
             while ( $query->have_posts() ) : $query->the_post();

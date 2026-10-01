@@ -28,25 +28,22 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
  * Delete every option/transient ShapeBlock created on a single site.
  */
 function shapeblock_uninstall_cleanup_site() {
-	global $wpdb;
-
 	delete_option( 'shapeblock_version' );
 	delete_option( 'shapeblock_colors' );
 	delete_option( 'shapeblock_layout' );
 	delete_option( 'shapeblock_menu_last_items' );
 	delete_transient( 'shapeblock_menu_google_fonts' );
 
-	// One `shapeblock_block_<id>` option per block (~30 today) — delete by
-	// pattern rather than a hard-coded id list.
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Uninstall runs once, outside any cacheable request; no options API helper deletes by pattern.
-	$block_options = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
-			$wpdb->esc_like( 'shapeblock_block_' ) . '%'
-		)
-	);
-	foreach ( $block_options as $option_name ) {
-		delete_option( $option_name );
+	/*
+	 * One `shapeblock_block_<id>` option per block (~30 today). There is no
+	 * options API call that deletes by pattern, but the names can be found
+	 * without a query: wp_load_alloptions() reads the options cache WordPress
+	 * has already populated, so no direct SQL is needed here.
+	 */
+	foreach ( array_keys( wp_load_alloptions() ) as $option_name ) {
+		if ( 0 === strpos( $option_name, 'shapeblock_block_' ) ) {
+			delete_option( $option_name );
+		}
 	}
 }
 

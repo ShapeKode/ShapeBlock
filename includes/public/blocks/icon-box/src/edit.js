@@ -183,6 +183,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<PanelBody title={__('Icon', 'shapeblock')} initialOpen={false}>
 				{num(__('Size (px)', 'shapeblock'), 'iconSize', 200)}
 				{num(__('Box Size (px)', 'shapeblock'), 'iconBoxSize', 200)}
+				{respBox(__('Padding', 'shapeblock'), 'iconPadding')}
 			</PanelBody>
 			)}
 

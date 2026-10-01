@@ -100,6 +100,13 @@ class Blocks {
                 'status'      => 'enable',
             ],
             [
+                'title'       => 'Hover Box',
+                'id'          => 'hover-box',
+                'description' => 'An image or icon in a circle or square that reveals a title and description on hover.',
+                'iconClass'    => 'shapeblock-icon-iconbox',
+                'status'      => 'enable',
+            ],
+            [
                 'title'       => 'Icon Box',
                 'id'          => 'icon-box',
                 'description' => 'Icon boxes with the icon on top, then title and description.',
@@ -228,7 +235,7 @@ class Blocks {
         ];
 
         // Default-enabled IDs: any block we want available without the user toggling it on first.
-        $default_enabled = [ 'layout-row', 'column', 'post-grid', 'gallery', 'faq', 'pricing-table', 'button', 'icon', 'heading', 'team-grid', 'testimonials-grid', 'feature-list', 'icon-box', 'icon-list', 'counter', 'tab', 'countdown', 'table', 'social-share', 'social-icon', 'progress', 'clients-logo-grid', 'image-comparison', 'scroll-to-top', 'offcanvas', 'search', 'breadcrumb', 'menu', 'slider', 'image-carousel' ];
+        $default_enabled = [ 'layout-row', 'column', 'post-grid', 'gallery', 'faq', 'pricing-table', 'button', 'icon', 'heading', 'hover-box', 'team-grid', 'testimonials-grid', 'feature-list', 'icon-box', 'icon-list', 'counter', 'tab', 'countdown', 'table', 'social-share', 'social-icon', 'progress', 'clients-logo-grid', 'image-comparison', 'scroll-to-top', 'offcanvas', 'search', 'breadcrumb', 'menu', 'slider', 'image-carousel' ];
 
         // Merge status from DB
         foreach ($blocks as &$block) {

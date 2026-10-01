@@ -1,6 +1,20 @@
 // Step 1: Prefix
 $prefix: "shapeblock-"; // change this to your plugin prefix
 
+// Step 1b: Breakpoints
+// Bootstrap's own "sm" starts at 576px. The blocks need a step below that for
+// large phones, so it is moved down to 345px. This has to be set before the
+// variables are imported, or Bootstrap's default wins and the compiled file
+// stops matching the one this plugin ships.
+$grid-breakpoints: (
+    xs: 0,
+    sm: 345px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1400px
+);
+
 // Step 2: Import required SCSS from node_modules
 @import "../../../node_modules/bootstrap/scss/functions";
 @import "../../../node_modules/bootstrap/scss/variables";

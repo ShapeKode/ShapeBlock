@@ -10,6 +10,10 @@ import {
 
 const IconPicker = ({ label, value, onChange }) => {
     const [isVisible, setIsVisible] = useState(false);
+    // Popover needs a stable anchor element. Without one it falls back to a
+    // placeholder node and floating-ui keeps re-measuring against a moving
+    // reference, which makes the panel visibly jitter while it is open.
+    const [anchorEl, setAnchorEl] = useState(null);
     const [icons, setIcons] = useState([]);
     const [search, setSearch] = useState('');
 
@@ -42,6 +46,7 @@ const IconPicker = ({ label, value, onChange }) => {
             {label && <div style={{ marginBottom: '8px', fontWeight: '500' }}>{label}</div>}
             <Button
                 variant="secondary"
+                ref={setAnchorEl}
                 onClick={toggleVisible}
                 style={{ width: '100%', justifyContent: 'space-between', height: 'auto', padding: '8px 12px' }}
             >
@@ -60,7 +65,12 @@ const IconPicker = ({ label, value, onChange }) => {
 
             {isVisible && (
                 <Popover
-                    position="bottom center"
+                    anchor={anchorEl}
+                    placement="left-start"
+                    offset={20}
+                    shift
+                    flip={false}
+                    resize={false}
                     onFocusOutside={() => setIsVisible(false)}
                     className="shapeblock-icon-picker-popover"
                 >

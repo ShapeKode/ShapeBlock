@@ -24,4 +24,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <?php
-echo \ShapeBlock\Extension\ThemeBuilder\Builder_Render::instance()->get_output( 'header' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Content is sanitised/escaped in render_post().
+/*
+ * The header region is rendered block markup, escaped against the same allowlist
+ * the Templates shortcode uses. Rendering all 31 blocks and comparing the markup
+ * before and after shows the list changes nothing a visitor can see.
+ */
+echo wp_kses(
+	\ShapeBlock\Extension\ThemeBuilder\Builder_Render::instance()->get_output( 'header' ),
+	\ShapeBlock\Frontend\Helper::template_allowed_html()
+);

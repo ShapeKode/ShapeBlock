@@ -181,14 +181,12 @@
 .shapeblock-icon-box-icon.shapeblock-icon-box-type-image {
 	position: relative;
 }
-.shapeblock-icon-box-icon.shapeblock-icon-box-type-image img {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	height: 100%;
-	width: 100%;
-	transform: translate(-50%, -50%);
-	object-fit: cover;
+.shapeblock-icon-box-img {
+	display: block;
+	width: 40px;
+	height: auto;
+	max-width: 100%;
+	object-fit: contain;
 }
 
 /* --- Responsive defaults ------------------------------------------------

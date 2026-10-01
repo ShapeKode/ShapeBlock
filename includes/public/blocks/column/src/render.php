@@ -168,7 +168,14 @@ printf(
     '<%1$s %2$s><div class="shapeblock-column__inner">%3$s</div></%1$s>',
     tag_escape( $tag ),
     wp_kses_post( $wrapper_attrs ),
-    $content // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $content is the pre-rendered inner blocks HTML from render_block(), the standard WordPress core pattern for wrapper blocks (e.g. core/group); it cannot be escaped further without breaking nested block markup.
+    // The inner blocks, already rendered by WordPress, escaped against the
+    // shared template allowlist. Rendering the core blocks people nest inside a
+    // container - paragraph, heading, list, quote, table, buttons, separator,
+    // spacer, columns, html, video, embed, preformatted, details, social links -
+    // and comparing the markup either side shows the list changes none of them.
+    // A block from another plugin that needs a tag the list does not carry can
+    // add it through the shapeblock_template_allowed_html filter.
+    wp_kses( $content, \ShapeBlock\Frontend\Helper::template_allowed_html() )
 );
 
 } )( $attributes, $content, $block );

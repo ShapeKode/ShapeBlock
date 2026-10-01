@@ -143,3 +143,31 @@ body.toplevel_page_shapeblock #wpcontent {
         }
     }
 }
+
+// Remove the focus ring / outline "jump" on the template search fields. AntD sets
+// these at runtime from its own stylesheet, so !important is what it takes to win.
+.shapeblock-template-search-box {
+    .ant-input-affix-wrapper,
+    .ant-input,
+    .ant-input-search-button {
+        outline: none !important;
+    }
+
+    .ant-input-affix-wrapper {
+        &:focus,
+        &-focused,
+        &:focus-within,
+        &:hover {
+            box-shadow: none !important;
+            border-color: #d9d9d9 !important;
+        }
+    }
+
+    .ant-input {
+        &:focus,
+        &-focused {
+            box-shadow: none !important;
+            border-color: #d9d9d9 !important;
+        }
+    }
+}
