@@ -1,0 +1,403 @@
+@charset "UTF-8";
+/**
+ * Hover Box — front-end styles.
+ *
+ * The shape holds two layers on top of each other: the picture or icon, and an
+ * overlay carrying the title and description. Every effect is the same idea
+ * with different resting positions for those two layers, so each one below is
+ * a short pair of rules rather than a fresh piece of layout.
+ *
+ * Effects that can arrive from a side read their direction from a second class
+ * on the wrapper, which keeps the effect list short: "Slide" plus "From Left"
+ * rather than four separate slides.
+ *
+ * Sizes and colours are written per block by render.php. What is here is the
+ * behaviour that does not change between blocks.
+ */
+.shapeblock-hover-box-wrapper {
+  display: flex;
+}
+
+.shapeblock-hover-box-align-left {
+  justify-content: flex-start;
+}
+
+.shapeblock-hover-box-align-center {
+  justify-content: center;
+}
+
+.shapeblock-hover-box-align-right {
+  justify-content: flex-end;
+}
+
+.shapeblock-hover-box {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  max-width: 100%;
+  overflow: hidden;
+  background: #f4f2ff;
+}
+
+.shapeblock-hover-box-shape-circle .shapeblock-hover-box {
+  border-radius: 50%;
+}
+
+.shapeblock-hover-box-media {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.45s ease, opacity 0.45s ease, filter 0.45s ease;
+}
+
+.shapeblock-hover-box-img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  display: block;
+}
+
+.shapeblock-hover-box-media i {
+  font-size: 48px;
+  line-height: 1;
+  color: #5933ff;
+}
+
+.shapeblock-hover-box-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background: rgba(89, 51, 255, 0.85);
+  opacity: 0;
+  transition: opacity 0.45s ease, transform 0.45s ease, clip-path 0.45s ease;
+}
+
+.shapeblock-hover-box-title {
+  margin: 0;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.shapeblock-hover-box-desc {
+  margin: 8px 0 0;
+  color: #ffffff;
+  line-height: 1.5;
+}
+
+.shapeblock-hover-box-link {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+/* Everything below reacts to the pointer and to the keyboard, so a link inside
+   the box reveals the same overlay when it is tabbed to. */
+/*--------------------------------------------------------------
+# Fade — the overlay simply appears
+--------------------------------------------------------------*/
+.shapeblock-hover-box-effect-fade .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-fade .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay {
+  opacity: 1;
+}
+
+/*--------------------------------------------------------------
+# Slide — the overlay travels in from one side
+--------------------------------------------------------------*/
+.shapeblock-hover-box-effect-slide .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-push .shapeblock-hover-box-overlay {
+  opacity: 1;
+}
+
+.shapeblock-hover-box-effect-slide.shapeblock-hover-box-dir-top .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-push.shapeblock-hover-box-dir-top .shapeblock-hover-box-overlay {
+  transform: translateY(-100%);
+}
+
+.shapeblock-hover-box-effect-slide.shapeblock-hover-box-dir-bottom .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-push.shapeblock-hover-box-dir-bottom .shapeblock-hover-box-overlay {
+  transform: translateY(100%);
+}
+
+.shapeblock-hover-box-effect-slide.shapeblock-hover-box-dir-left .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-push.shapeblock-hover-box-dir-left .shapeblock-hover-box-overlay {
+  transform: translateX(-100%);
+}
+
+.shapeblock-hover-box-effect-slide.shapeblock-hover-box-dir-right .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-push.shapeblock-hover-box-dir-right .shapeblock-hover-box-overlay {
+  transform: translateX(100%);
+}
+
+.shapeblock-hover-box-effect-slide .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-slide .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-push .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-push .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay {
+  transform: translate(0, 0);
+}
+
+/*--------------------------------------------------------------
+# Push — as Slide, but the picture leaves the other way
+--------------------------------------------------------------*/
+.shapeblock-hover-box-effect-push.shapeblock-hover-box-dir-top .shapeblock-hover-box:hover .shapeblock-hover-box-media,
+.shapeblock-hover-box-effect-push.shapeblock-hover-box-dir-top .shapeblock-hover-box:focus-within .shapeblock-hover-box-media {
+  transform: translateY(100%);
+}
+
+.shapeblock-hover-box-effect-push.shapeblock-hover-box-dir-bottom .shapeblock-hover-box:hover .shapeblock-hover-box-media,
+.shapeblock-hover-box-effect-push.shapeblock-hover-box-dir-bottom .shapeblock-hover-box:focus-within .shapeblock-hover-box-media {
+  transform: translateY(-100%);
+}
+
+.shapeblock-hover-box-effect-push.shapeblock-hover-box-dir-left .shapeblock-hover-box:hover .shapeblock-hover-box-media,
+.shapeblock-hover-box-effect-push.shapeblock-hover-box-dir-left .shapeblock-hover-box:focus-within .shapeblock-hover-box-media {
+  transform: translateX(100%);
+}
+
+.shapeblock-hover-box-effect-push.shapeblock-hover-box-dir-right .shapeblock-hover-box:hover .shapeblock-hover-box-media,
+.shapeblock-hover-box-effect-push.shapeblock-hover-box-dir-right .shapeblock-hover-box:focus-within .shapeblock-hover-box-media {
+  transform: translateX(-100%);
+}
+
+/*--------------------------------------------------------------
+# Hinge — the overlay swings in on one edge
+--------------------------------------------------------------*/
+.shapeblock-hover-box-effect-hinge .shapeblock-hover-box {
+  perspective: 900px;
+}
+
+.shapeblock-hover-box-effect-hinge .shapeblock-hover-box-overlay {
+  opacity: 1;
+}
+
+.shapeblock-hover-box-effect-hinge.shapeblock-hover-box-dir-top .shapeblock-hover-box-overlay {
+  transform-origin: top center;
+  transform: rotateX(-100deg);
+}
+
+.shapeblock-hover-box-effect-hinge.shapeblock-hover-box-dir-bottom .shapeblock-hover-box-overlay {
+  transform-origin: bottom center;
+  transform: rotateX(100deg);
+}
+
+.shapeblock-hover-box-effect-hinge.shapeblock-hover-box-dir-left .shapeblock-hover-box-overlay {
+  transform-origin: center left;
+  transform: rotateY(100deg);
+}
+
+.shapeblock-hover-box-effect-hinge.shapeblock-hover-box-dir-right .shapeblock-hover-box-overlay {
+  transform-origin: center right;
+  transform: rotateY(-100deg);
+}
+
+.shapeblock-hover-box-effect-hinge .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-hinge .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay {
+  transform: rotateX(0) rotateY(0);
+}
+
+/*--------------------------------------------------------------
+# Shutter — the overlay grows out of one edge
+--------------------------------------------------------------*/
+.shapeblock-hover-box-effect-shutter .shapeblock-hover-box-overlay {
+  opacity: 1;
+}
+
+.shapeblock-hover-box-effect-shutter.shapeblock-hover-box-dir-top .shapeblock-hover-box-overlay {
+  transform-origin: top center;
+  transform: scaleY(0);
+}
+
+.shapeblock-hover-box-effect-shutter.shapeblock-hover-box-dir-bottom .shapeblock-hover-box-overlay {
+  transform-origin: bottom center;
+  transform: scaleY(0);
+}
+
+.shapeblock-hover-box-effect-shutter.shapeblock-hover-box-dir-left .shapeblock-hover-box-overlay {
+  transform-origin: center left;
+  transform: scaleX(0);
+}
+
+.shapeblock-hover-box-effect-shutter.shapeblock-hover-box-dir-right .shapeblock-hover-box-overlay {
+  transform-origin: center right;
+  transform: scaleX(0);
+}
+
+.shapeblock-hover-box-effect-shutter .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-shutter .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay {
+  transform: scale(1);
+}
+
+/*--------------------------------------------------------------
+# Zoom — the picture leaves as the overlay settles
+--------------------------------------------------------------*/
+.shapeblock-hover-box-effect-zoom.shapeblock-hover-box-dir-up .shapeblock-hover-box-overlay {
+  transform: scale(0.6);
+}
+
+.shapeblock-hover-box-effect-zoom.shapeblock-hover-box-dir-up .shapeblock-hover-box:hover .shapeblock-hover-box-media,
+.shapeblock-hover-box-effect-zoom.shapeblock-hover-box-dir-up .shapeblock-hover-box:focus-within .shapeblock-hover-box-media {
+  transform: scale(1.5);
+  opacity: 0;
+}
+
+.shapeblock-hover-box-effect-zoom.shapeblock-hover-box-dir-down .shapeblock-hover-box-overlay {
+  transform: scale(1.5);
+}
+
+.shapeblock-hover-box-effect-zoom.shapeblock-hover-box-dir-down .shapeblock-hover-box:hover .shapeblock-hover-box-media,
+.shapeblock-hover-box-effect-zoom.shapeblock-hover-box-dir-down .shapeblock-hover-box:focus-within .shapeblock-hover-box-media {
+  transform: scale(0.6);
+  opacity: 0;
+}
+
+.shapeblock-hover-box-effect-zoom .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-zoom .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/*--------------------------------------------------------------
+# Flip — the shape turns over to show its other side
+--------------------------------------------------------------*/
+.shapeblock-hover-box-effect-flip .shapeblock-hover-box {
+  perspective: 1000px;
+  background: none;
+  overflow: visible;
+}
+
+.shapeblock-hover-box-effect-flip .shapeblock-hover-box-media,
+.shapeblock-hover-box-effect-flip .shapeblock-hover-box-overlay {
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.shapeblock-hover-box-effect-flip.shapeblock-hover-box-shape-circle .shapeblock-hover-box-media,
+.shapeblock-hover-box-effect-flip.shapeblock-hover-box-shape-circle .shapeblock-hover-box-overlay {
+  border-radius: 50%;
+}
+
+.shapeblock-hover-box-effect-flip .shapeblock-hover-box-overlay {
+  opacity: 1;
+}
+
+.shapeblock-hover-box-effect-flip.shapeblock-hover-box-dir-horizontal .shapeblock-hover-box-overlay {
+  transform: rotateY(180deg);
+}
+
+.shapeblock-hover-box-effect-flip.shapeblock-hover-box-dir-horizontal .shapeblock-hover-box:hover .shapeblock-hover-box-media,
+.shapeblock-hover-box-effect-flip.shapeblock-hover-box-dir-horizontal .shapeblock-hover-box:focus-within .shapeblock-hover-box-media {
+  transform: rotateY(180deg);
+}
+
+.shapeblock-hover-box-effect-flip.shapeblock-hover-box-dir-horizontal .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-flip.shapeblock-hover-box-dir-horizontal .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay {
+  transform: rotateY(360deg);
+}
+
+.shapeblock-hover-box-effect-flip.shapeblock-hover-box-dir-vertical .shapeblock-hover-box-overlay {
+  transform: rotateX(180deg);
+}
+
+.shapeblock-hover-box-effect-flip.shapeblock-hover-box-dir-vertical .shapeblock-hover-box:hover .shapeblock-hover-box-media,
+.shapeblock-hover-box-effect-flip.shapeblock-hover-box-dir-vertical .shapeblock-hover-box:focus-within .shapeblock-hover-box-media {
+  transform: rotateX(180deg);
+}
+
+.shapeblock-hover-box-effect-flip.shapeblock-hover-box-dir-vertical .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-flip.shapeblock-hover-box-dir-vertical .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay {
+  transform: rotateX(360deg);
+}
+
+/*--------------------------------------------------------------
+# Spin — the picture turns away and the overlay turns in
+--------------------------------------------------------------*/
+.shapeblock-hover-box-effect-spin .shapeblock-hover-box-overlay {
+  transform: rotate(-180deg) scale(0.5);
+}
+
+.shapeblock-hover-box-effect-spin .shapeblock-hover-box:hover .shapeblock-hover-box-media,
+.shapeblock-hover-box-effect-spin .shapeblock-hover-box:focus-within .shapeblock-hover-box-media {
+  transform: rotate(180deg) scale(0.5);
+  opacity: 0;
+}
+
+.shapeblock-hover-box-effect-spin .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-spin .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay {
+  opacity: 1;
+  transform: rotate(0) scale(1);
+}
+
+/*--------------------------------------------------------------
+# Blur — the picture goes soft behind the overlay
+--------------------------------------------------------------*/
+.shapeblock-hover-box-effect-blur .shapeblock-hover-box:hover .shapeblock-hover-box-media,
+.shapeblock-hover-box-effect-blur .shapeblock-hover-box:focus-within .shapeblock-hover-box-media {
+  filter: blur(6px);
+  transform: scale(1.12);
+}
+
+.shapeblock-hover-box-effect-blur .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-blur .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay {
+  opacity: 1;
+}
+
+/*--------------------------------------------------------------
+# Greyscale — the picture loses its colour behind the overlay
+--------------------------------------------------------------*/
+.shapeblock-hover-box-effect-grayscale .shapeblock-hover-box:hover .shapeblock-hover-box-media,
+.shapeblock-hover-box-effect-grayscale .shapeblock-hover-box:focus-within .shapeblock-hover-box-media {
+  filter: grayscale(100%);
+  transform: scale(1.08);
+}
+
+.shapeblock-hover-box-effect-grayscale .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-grayscale .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay {
+  opacity: 1;
+}
+
+/*--------------------------------------------------------------
+# Circle — the overlay opens out of the middle
+--------------------------------------------------------------*/
+.shapeblock-hover-box-effect-circle .shapeblock-hover-box-overlay {
+  opacity: 1;
+  clip-path: circle(0% at 50% 50%);
+}
+
+.shapeblock-hover-box-effect-circle .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-circle .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay {
+  clip-path: circle(75% at 50% 50%);
+}
+
+/*--------------------------------------------------------------
+# Curtain — the overlay opens from the middle outwards
+--------------------------------------------------------------*/
+.shapeblock-hover-box-effect-curtain .shapeblock-hover-box-overlay {
+  opacity: 1;
+  transform-origin: center center;
+  transform: scaleY(0);
+}
+
+.shapeblock-hover-box-effect-curtain .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
+.shapeblock-hover-box-effect-curtain .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay {
+  transform: scaleY(1);
+}
+
+/*--------------------------------------------------------------
+# Reduced motion
+--------------------------------------------------------------*/
+/* Someone whose system asks for less movement still gets the overlay, without
+   the travel. */
+@media (prefers-reduced-motion: reduce) {
+  .shapeblock-hover-box-media,
+  .shapeblock-hover-box-overlay {
+    transition-duration: 0.01ms;
+  }
+}

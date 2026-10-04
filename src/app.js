@@ -64,10 +64,40 @@ export default function ShapeBlockApp({ initialTab } = {}) {
     const [current, setCurrent] = useState(initialKey);
     const [collapsed, setCollapsed] = useState(false);
 
+    // Tab => admin submenu page slug (mirrors Main::get_admin_pages()).
+    const tabPages = {
+        'blocks': 'shapeblock',
+        'theme-builder': 'shapeblock-theme-builder',
+        'templates': 'shapeblock-templates',
+        'settings': 'shapeblock-settings',
+    };
+
     const changeMenu = (e) => {
         setCurrent(e.key);
+        const page = tabPages[e.key];
+        if (!page) {
+            return;
+        }
+
+        // Point the URL at the tab's own submenu page so a reload or a copied
+        // link opens the same tab.
         if (window.history && window.history.replaceState) {
-            window.history.replaceState(null, '', `#${e.key}`);
+            window.history.replaceState(null, '', `admin.php?page=${page}`);
+        }
+
+        // Move the WordPress sidebar highlight to the matching submenu item.
+        const submenu = document.querySelector('#toplevel_page_shapeblock .wp-submenu');
+        if (submenu) {
+            submenu.querySelectorAll('li.current, a.current').forEach((el) => el.classList.remove('current'));
+            const link = submenu.querySelector(`a[href="admin.php?page=${page}"]`);
+            if (link) {
+                link.classList.add('current');
+                link.setAttribute('aria-current', 'page');
+                link.closest('li').classList.add('current');
+            }
+            submenu.querySelectorAll('a[aria-current]').forEach((el) => {
+                if (el !== link) el.removeAttribute('aria-current');
+            });
         }
     }
 

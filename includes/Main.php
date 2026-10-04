@@ -62,10 +62,7 @@ class Main {
      *
      * Reads the resolved admin screen instead of $_GET['page'] so page
      * detection needs no nonce: get_current_screen() reflects WordPress's own
-     * routing of the request, not an unverified query argument. The hook
-     * suffixes below are exactly what add_menu_page()/add_submenu_page()
-     * produce for the slugs registered in add_menu() — 'shapeblock' is the
-     * top-level page, everything else is a submenu of it.
+     * routing of the request, not an unverified query argument.
      *
      * @return string Page slug, or '' if the current screen is not one of ours.
      */
@@ -77,16 +74,20 @@ class Main {
         if ( ! $screen ) {
             return '';
         }
-        if ( 'toplevel_page_shapeblock' === $screen->id ) {
-            return 'shapeblock';
-        }
-        foreach ( array_keys( self::get_admin_pages() ) as $shapeblock_slug ) {
-            if ( 'shapeblock_page_' . $shapeblock_slug === $screen->id ) {
-                return $shapeblock_slug;
-            }
-        }
-        return '';
+        return isset( self::$page_hooks[ $screen->id ] ) ? self::$page_hooks[ $screen->id ] : '';
     }
+
+    /**
+     * Hook suffix => page slug, recorded in add_menu() from the values
+     * add_menu_page()/add_submenu_page() actually return.
+     *
+     * A submenu's suffix is built from the parent's sanitized menu TITLE
+     * ("Shape Block" => "shape-block_page_…"), not the parent slug, so it
+     * must be recorded rather than rebuilt by hand.
+     *
+     * @var array<string,string>
+     */
+    private static $page_hooks = array();
 
     /**
      * The admin menu icon, carried in the page rather than fetched.
@@ -126,7 +127,7 @@ class Main {
     }
 
     public function add_menu() {
-        add_menu_page(
+        $hook = add_menu_page(
             'Shape Block',
             'Shape Block',
             'manage_options',
@@ -135,9 +136,12 @@ class Main {
             self::menu_icon(),
             26
         );
+        if ( $hook ) {
+            self::$page_hooks[ $hook ] = 'shapeblock';
+        }
 
         foreach ( self::get_admin_pages() as $slug => $page ) {
-            add_submenu_page(
+            $hook = add_submenu_page(
                 'shapeblock',
                 'ShapeBlock - ' . $page['label'],
                 $page['label'],
@@ -145,6 +149,9 @@ class Main {
                 $slug,
                 array( $this, 'render_menu_page' )
             );
+            if ( $hook ) {
+                self::$page_hooks[ $hook ] = $slug;
+            }
         }
     }
 
