@@ -1,8 +1,7 @@
 /**
  * Table block — front-end + shared styles.
  *
- * Ported from the Elementor "Table" widget stylesheet
- * (easy-elements/widgets/table/css/table.scss). Classes use the "shapeblock-"
+ * Classes use the "shapeblock-"
  * prefix and everything is scoped under `.shapeblock-table-block-wrap`. The original
  * relied on Bootstrap's `.table` base styles, so the base table rules are
  * reproduced here so the block is self-contained.

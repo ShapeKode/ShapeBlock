@@ -8,7 +8,8 @@ function shapeblock_create_block_post_grid_block_init() {
 	wp_register_style(
 		'shapeblock-post-grid-style',
 		plugins_url( 'build/style-index.css', __FILE__ ),
-		array('shapeblock-public-style'),
+		// The grid markup uses the prefixed Bootstrap row/col classes.
+		array( 'shapeblock-public-style', 'shapeblock-bootstrap-grid' ),
 		shapeblock_asset_version( __DIR__ . '/build/style-index.css' )
 	);
 

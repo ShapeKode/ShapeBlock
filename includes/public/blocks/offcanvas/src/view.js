@@ -1,9 +1,7 @@
 /**
  * Offcanvas — front-end behaviour.
  *
- * Ported from the Elementor widget's jQuery script
- * (easy-elements/widgets/offcanvas/js/offcanvas.js). Rewritten as scoped,
- * dependency-free JS.
+ * Scoped, dependency-free JS.
  */
 (function () {
 	'use strict';

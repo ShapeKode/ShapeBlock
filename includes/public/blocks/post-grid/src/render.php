@@ -12,16 +12,19 @@ return ( function ( $attributes, $content, $block ) {
 $per_page = isset($attributes['perPage']) ? (int) $attributes['perPage'] : 6;
 $per_page = max( 1, min( 100, $per_page ) );
 $order = isset($attributes['order']) ? $attributes['order'] : 'ASC';
-$orderby = isset($attributes['orderby']) ? $attributes['orderby'] : 'date';
+$orderby = isset($attributes['orderby']) && in_array( $attributes['orderby'], array( 'date', 'title', 'modified', 'rand', 'menu_order', 'comment_count', 'ID', 'author', 'name' ), true ) ? $attributes['orderby'] : 'date';
 $offset = isset($attributes['offset']) ? $attributes['offset'] : '';
 $columns = isset($attributes['columns']) ? $attributes['columns'] : 3;
-$style = isset($attributes['gridStyle']) ? $attributes['gridStyle'] : 'default';
+$style = isset($attributes['gridStyle']) && in_array( $attributes['gridStyle'], array( 'default', '1' ), true ) ? $attributes['gridStyle'] : 'default';
 $thumbnail_size = isset($attributes['thumbnailSize']) ? $attributes['thumbnailSize'] : 'large';
 $is_featured = !empty($attributes['isFeatured']) ? true : false;
 $pagination = !empty($attributes['pagination']) ? true : false;
 $pagination_type = isset($attributes['paginationType']) ? $attributes['paginationType'] : 'numeric';
 $ignore_stikcy_posts = !empty($attributes['ignoreStikcyPosts']) ? 1 : 0;
-$unique_id    = !empty($attributes['blockId']) ? $attributes['blockId'] : 'shapeblock-' . substr(md5(serialize($attributes)), 0, 6);
+$unique_id    = !empty($attributes['blockId']) ? sanitize_html_class( (string) $attributes['blockId'] ) : '';
+if ( '' === $unique_id ) {
+	$unique_id = 'shapeblock-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+}
 $page_key = 'paged_' . $unique_id;
 
 if ( ! isset( $paged ) ) {
@@ -44,7 +47,7 @@ $show_meta = !empty($attributes['showMeta']) ? true : false;
 $allowed_metas = isset($attributes['allowedMetas']) ? $attributes['allowedMetas'] : [];
 $meta_position = isset($attributes['metaPosition']) ? $attributes['metaPosition'] : '';
 $author_prefix = isset($attributes['authorPrefix']) ? $attributes['authorPrefix'] : 'by';
-$title_tag = isset($attributes['titleTag']) ? $attributes['titleTag'] : 'h3';
+$title_tag = isset($attributes['titleTag']) && in_array( $attributes['titleTag'], array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span', 'div' ), true ) ? $attributes['titleTag'] : 'h3';
 $show_excerpt = !empty($attributes['showExcerpt']) ? 'yes' : 'no';
 $show_read_more = !empty($attributes['showReadMore']) ? 'yes' : 'no';
 $read_more_text = isset($attributes['readMoreText']) ? $attributes['readMoreText'] : 'Read More';
@@ -444,8 +447,7 @@ if ( ! empty( $t_border_radius['bottom'] ) ) $thumbnail_border_radius_styles['bo
 if ( ! empty( $t_border_radius['left'] ) ) $thumbnail_border_radius_styles['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $t_border_radius['left'] );
 
 $style_handle = 'shapeblock-post-grid-style';
-$unique_id    = $attributes['blockId'];
-$selector     = '.shapeblock-post-grid-block-wrap.' . $unique_id;
+$selector    = '.shapeblock-post-grid-block-wrap.' . $unique_id;
 
 $full_responsive_css = "";
 $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector, $wrap_responsive);
@@ -636,7 +638,7 @@ if ( $query->have_posts() ) :
     wp_reset_postdata();
 else:
     ?>
-    <div <?php echo esc_attr(get_block_wrapper_attributes()); ?>>
+    <div <?php echo wp_kses_post( get_block_wrapper_attributes() ); ?>>
         <p><?php esc_html_e('No posts found.', 'shapeblock'); ?></p>
     </div>
     <?php

@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
 import { ServerSideRender } from '@wordpress/server-side-render';
 import {
 	useBlockProps,
@@ -49,6 +50,12 @@ const ICON_ALIGN_LEFT = <ASVG><rect x="3" y="7" width="8" height="8" rx="1.5" />
 const ICON_ALIGN_CENTER = <ASVG><rect x="8" y="3" width="8" height="8" rx="1.5" /><rect x="5" y="14" width="14" height="2" /><rect x="7" y="18" width="10" height="2" /></ASVG>;
 const ICON_ALIGN_RIGHT = <ASVG><rect x="13" y="7" width="8" height="8" rx="1.5" /><rect x="3" y="8" width="8" height="2" /><rect x="5" y="12" width="6" height="2" /></ASVG>;
 // Vertical alignment (used when icon is on the left / right of the text).
+const TSVG = (path) => (
+	<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d={path} fill="currentColor" /></svg>
+);
+const ICON_TEXT_LEFT = TSVG('M4 19h16v-2H4v2zm0-6h10v-2H4v2zm0-8v2h16V5H4z');
+const ICON_TEXT_CENTER = TSVG('M4 19h16v-2H4v2zm3-6h10v-2H7v2zM4 5v2h16V5H4z');
+const ICON_TEXT_RIGHT = TSVG('M4 19h16v-2H4v2zm6-6h10v-2H10v2zM4 5v2h16V5H4z');
 const ICON_VTOP = <ASVG><rect x="3" y="4" width="18" height="2" /><rect x="8" y="8" width="8" height="11" rx="1.5" /></ASVG>;
 const ICON_VMID = <ASVG><rect x="3" y="11" width="18" height="2" /><rect x="8" y="5" width="8" height="14" rx="1.5" /></ASVG>;
 const ICON_VBOT = <ASVG><rect x="3" y="18" width="18" height="2" /><rect x="8" y="5" width="8" height="11" rx="1.5" /></ASVG>;
@@ -160,13 +167,32 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		<>
 			<PanelBody title={__('Icon Box', 'shapeblock')} initialOpen={true}>
 				{showIcon !== false && (
-				<ToggleGroupControl label={__('Alignment', 'shapeblock')} value={attributes.boxAlign} onChange={(v) => setAttributes({ boxAlign: v })} isBlock __next40pxDefaultSize __nextHasNoMarginBottom>
-					<ToggleGroupControlOptionIcon value="left" icon={ICON_ALIGN_LEFT} label={__('Icon Left', 'shapeblock')} />
-					<ToggleGroupControlOptionIcon value="center" icon={ICON_ALIGN_CENTER} label={__('Icon Top', 'shapeblock')} />
-					<ToggleGroupControlOptionIcon value="right" icon={ICON_ALIGN_RIGHT} label={__('Icon Right', 'shapeblock')} />
-				</ToggleGroupControl>
+					<ResponsiveWrapper label={__('Icon Position', 'shapeblock')}>
+						{(d) => {
+							const k = getKey('boxAlign', d);
+							return (
+								<ToggleGroupControl value={attributes[k] || (d === 'desktop' ? 'center' : undefined)} onChange={(v) => setAttributes({ [k]: v || '' })} isBlock isDeselectable={d !== 'desktop'} __next40pxDefaultSize __nextHasNoMarginBottom>
+									<ToggleGroupControlOptionIcon value="left" icon={ICON_ALIGN_LEFT} label={__('Icon Left', 'shapeblock')} />
+									<ToggleGroupControlOptionIcon value="center" icon={ICON_ALIGN_CENTER} label={__('Icon Top', 'shapeblock')} />
+									<ToggleGroupControlOptionIcon value="right" icon={ICON_ALIGN_RIGHT} label={__('Icon Right', 'shapeblock')} />
+								</ToggleGroupControl>
+							);
+						}}
+					</ResponsiveWrapper>
 				)}
-				{showIcon !== false && (attributes.boxAlign === 'left' || attributes.boxAlign === 'right') && (
+				<ResponsiveWrapper label={__('Content Alignment', 'shapeblock')}>
+					{(d) => {
+						const k = getKey('contentAlign', d);
+						return (
+							<ToggleGroupControl value={attributes[k] || undefined} onChange={(v) => setAttributes({ [k]: v || '' })} isBlock isDeselectable __next40pxDefaultSize __nextHasNoMarginBottom>
+								<ToggleGroupControlOptionIcon value="left" icon={ICON_TEXT_LEFT} label={__('Left', 'shapeblock')} />
+								<ToggleGroupControlOptionIcon value="center" icon={ICON_TEXT_CENTER} label={__('Center', 'shapeblock')} />
+								<ToggleGroupControlOptionIcon value="right" icon={ICON_TEXT_RIGHT} label={__('Right', 'shapeblock')} />
+							</ToggleGroupControl>
+						);
+					}}
+				</ResponsiveWrapper>
+				{showIcon !== false && (attributes.boxAlign === 'left' || attributes.boxAlign === 'right' || attributes.boxAlignTablet === 'left' || attributes.boxAlignTablet === 'right' || attributes.boxAlignMobile === 'left' || attributes.boxAlignMobile === 'right') && (
 					<ToggleGroupControl label={__('Vertical Alignment', 'shapeblock')} value={attributes.boxVAlign} onChange={(v) => setAttributes({ boxVAlign: v })} isBlock __next40pxDefaultSize __nextHasNoMarginBottom>
 						<ToggleGroupControlOptionIcon value="flex-start" icon={ICON_VTOP} label={__('Top', 'shapeblock')} />
 						<ToggleGroupControlOptionIcon value="center" icon={ICON_VMID} label={__('Middle', 'shapeblock')} />
@@ -174,7 +200,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					</ToggleGroupControl>
 				)}
 				{num(__('Gap (px)', 'shapeblock'), 'feaMiddleGap')}
-				{num(__('Space Between (px)', 'shapeblock'), 'feaItemGap')}
 				{respBox(__('Padding', 'shapeblock'), 'feaListPadding')}
 				{respBox(__('Margin', 'shapeblock'), 'feaBlockMargin')}
 			</PanelBody>
@@ -224,12 +249,23 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		</>
 	);
 
+	// The editor's preview device, so the toolbar edits that device's content alignment.
+	const device = useSelect((select) => {
+		const editor = select('core/editor');
+		if (editor && typeof editor.getDeviceType === 'function') return editor.getDeviceType();
+		const editPost = select('core/edit-post');
+		if (editPost && typeof editPost.__experimentalGetPreviewDeviceType === 'function') return editPost.__experimentalGetPreviewDeviceType();
+		return 'Desktop';
+	}, []);
+	const dev = device ? device.toLowerCase() : 'desktop';
+	const alignKey = getKey('contentAlign', dev);
+
 	return (
 		<div {...useBlockProps()}>
 			<BlockControls>
 				<AlignmentControl
-					value={attributes.boxAlign}
-					onChange={(value) => setAttributes({ boxAlign: value || 'center' })}
+					value={attributes[alignKey] || undefined}
+					onChange={(value) => setAttributes({ [alignKey]: value || '' })}
 				/>
 				<ToolbarDropdownMenu
 					icon="heading"

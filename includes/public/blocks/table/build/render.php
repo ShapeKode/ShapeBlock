@@ -7,15 +7,14 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Table block.
  *
- * Mirrors the markup of the Elementor "Table" widget
- * (easy-elements/widgets/table). Element classes use the "shapeblock-" prefix.
+ * Element classes use the "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-table-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-table-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $header = isset( $attributes['tableHeader'] ) && is_array( $attributes['tableHeader'] ) ? $attributes['tableHeader'] : [];
 $body   = isset( $attributes['tableBody'] ) && is_array( $attributes['tableBody'] ) ? $attributes['tableBody'] : [];
@@ -332,14 +331,14 @@ $cell_style = function ( $item ) use ( $H ) {
 	$adv = ! empty( $item['advance'] );
 	$styles = [];
 	if ( $adv ) {
-		if ( ! empty( $item['width'] ) ) $styles[] = 'width:' . $item['width'];
-		if ( empty( $item['dataFlex'] ) && ! empty( $item['align'] ) ) $styles[] = 'text-align:' . $item['align'];
-		if ( ! empty( $item['verticalAlign'] ) ) $styles[] = 'vertical-align:' . $item['verticalAlign'];
-		if ( ! empty( $item['decoration'] ) ) $styles[] = 'text-decoration:' . $item['decoration'];
-		if ( ! empty( $item['bgColor'] ) ) $styles[] = 'background-color:' . $item['bgColor'];
-		if ( ! empty( $item['textColor'] ) ) $styles[] = 'color:' . $item['textColor'];
+		if ( ! empty( $item['width'] ) ) $styles[] = 'width:' . $H::ensure_unit( $item['width'] );
+		if ( empty( $item['dataFlex'] ) && ! empty( $item['align'] ) && in_array( $item['align'], array( 'left', 'center', 'right', 'justify', 'start', 'end' ), true ) ) $styles[] = 'text-align:' . $item['align'];
+		if ( ! empty( $item['verticalAlign'] ) && in_array( $item['verticalAlign'], array( 'top', 'middle', 'bottom', 'baseline' ), true ) ) $styles[] = 'vertical-align:' . $item['verticalAlign'];
+		if ( ! empty( $item['decoration'] ) && in_array( $item['decoration'], array( 'none', 'underline', 'overline', 'line-through' ), true ) ) $styles[] = 'text-decoration:' . $item['decoration'];
+		if ( '' !== $H::sanitize_css_value( $item['bgColor'] ?? '' ) ) $styles[] = 'background-color:' . $H::sanitize_css_value( $item['bgColor'] );
+		if ( '' !== $H::sanitize_css_value( $item['textColor'] ?? '' ) ) $styles[] = 'color:' . $H::sanitize_css_value( $item['textColor'] );
 		if ( ! empty( $item['dataFlex'] ) ) {
-			if ( ! empty( $item['flexAlign'] ) ) $styles[] = 'justify-content:' . $item['flexAlign'];
+			if ( ! empty( $item['flexAlign'] ) && in_array( $item['flexAlign'], array( 'flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly', 'start', 'end', 'left', 'right' ), true ) ) $styles[] = 'justify-content:' . $item['flexAlign'];
 			if ( '' !== ( $item['flexGap'] ?? '' ) ) $styles[] = 'gap:' . $H::ensure_unit( $item['flexGap'] );
 		}
 	}
@@ -409,7 +408,8 @@ $render_tooltip = function ( $item ) use ( $render_icon, $tooltip_align, $table_
 						$type      = isset( $item['type'] ) ? $item['type'] : 'icon';
 						$flex      = ! empty( $item['dataFlex'] ) ? ' shapeblock-data-flex' : '';
 						$style     = $cell_style( $item );
-						$icon_color = ( ! empty( $item['advance'] ) && ! empty( $item['iconColor'] ) ) ? ' style="color:' . esc_attr( $item['iconColor'] ) . '"' : '';
+						$icon_color_val = ! empty( $item['advance'] ) ? $H::sanitize_css_value( $item['iconColor'] ?? '' ) : '';
+						$icon_color     = '' !== $icon_color_val ? ' style="color:' . esc_attr( $icon_color_val ) . '"' : '';
 
 						echo wp_kses( '<td class="shapeblock-td' . esc_attr( $flex ) . '"' . $cell_attrs( $item ) . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>', $table_allowed_html );
 

@@ -7,16 +7,14 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the FAQ Accordion block.
  *
- * Mirrors the markup produced by the Elementor "Accordion" widget
- * (easy-elements/widgets/faq/faq.php) so the shared CSS/JS apply identically
- * on the front end. Element classes use this plugin's own "shapeblock-" prefix.
+ * Element classes use this plugin's own "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
 $faq_items = isset( $attributes['faqItems'] ) && is_array( $attributes['faqItems'] ) ? $attributes['faqItems'] : [];
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-faq-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-faq-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $allowed_tags = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p' ];
 $title_tag    = isset( $attributes['titleTag'] ) && in_array( $attributes['titleTag'], $allowed_tags, true ) ? $attributes['titleTag'] : 'h4';

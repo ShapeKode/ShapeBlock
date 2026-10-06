@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { __, _n, sprintf } from '@wordpress/i18n';
+import { createInterpolateElement } from '@wordpress/element';
 import { Row, Col, Button, InputNumber, notification, Checkbox, Radio, Upload, Alert, Divider, Space, Tag } from 'antd';
 import { DownloadOutlined, UploadOutlined, InboxOutlined } from '@ant-design/icons';
 
@@ -7,18 +9,17 @@ import { DownloadOutlined, UploadOutlined, InboxOutlined } from '@ant-design/ico
 const LAYOUT_DEFAULTS = (typeof shapeblock !== 'undefined' && shapeblock.layoutDefaults) || { container_width: '1200px', google_fonts: 0 };
 
 // The three sections an export file can carry. Values match the REST `include` param.
-const SECTIONS = [
-    { value: 'settings', label: 'Settings (colors, container width, block on/off)' },
-    { value: 'templates', label: 'Custom Templates' },
-    { value: 'builder', label: 'Theme Builder Templates' },
+// Labels are built in a function so they are translated after locale data loads.
+const getSections = () => [
+    { value: 'settings', label: __( 'Settings (colors, container width, block on/off)', 'shapeblock' ) },
+    { value: 'templates', label: __( 'Custom Templates', 'shapeblock' ) },
+    { value: 'builder', label: __( 'Theme Builder Templates', 'shapeblock' ) },
 ];
 
-const ALL_SECTIONS = SECTIONS.map((s) => s.value);
+const ALL_SECTIONS = ['settings', 'templates', 'builder'];
 
-// Export files this plugin can read. Easy Elements For Gutenberg is the former
-// name of this plugin and ships the same blocks, so its files import here after
-// a block-namespace rewrite handled server side.
-const ACCEPTED_FORMATS = ['shapeblock-export', 'easy-elements-for-gutenberg-export'];
+// Export files this plugin can read.
+const ACCEPTED_FORMATS = ['shapeblock-export'];
 
 // Strip the unit suffix for the numeric input. Sanitize on save adds "px" back.
 const parseContainerWidth = (value) => {
@@ -38,13 +39,26 @@ const todayStamp = () => {
 const describeFile = (data) => {
     if (!data || typeof data !== 'object') return [];
     const parts = [];
-    if (data.settings) parts.push('Settings');
-    if (Array.isArray(data.templates)) parts.push(`${data.templates.length} Custom Template${data.templates.length === 1 ? '' : 's'}`);
-    if (Array.isArray(data.builder_templates)) parts.push(`${data.builder_templates.length} Theme Builder Template${data.builder_templates.length === 1 ? '' : 's'}`);
+    if (data.settings) parts.push(__( 'Settings', 'shapeblock' ));
+    if (Array.isArray(data.templates)) {
+        parts.push(sprintf(
+            /* translators: %d: number of custom templates in the export file. */
+            _n( '%d Custom Template', '%d Custom Templates', data.templates.length, 'shapeblock' ),
+            data.templates.length
+        ));
+    }
+    if (Array.isArray(data.builder_templates)) {
+        parts.push(sprintf(
+            /* translators: %d: number of theme builder templates in the export file. */
+            _n( '%d Theme Builder Template', '%d Theme Builder Templates', data.builder_templates.length, 'shapeblock' ),
+            data.builder_templates.length
+        ));
+    }
     return parts;
 };
 
 export default function Settings() {
+    const SECTIONS = getSections();
     const [saving, setSaving] = useState(false);
 
     const initialContainerWidth = parseContainerWidth(
@@ -100,20 +114,20 @@ export default function Settings() {
                 if (layoutOk) {
                     shapeblock.layout = res.layout || { container_width: containerWidthValue, google_fonts: googleFonts ? 1 : 0 };
                     notification.success({
-                        message: 'Settings Saved',
-                        description: 'Your settings have been updated.',
+                        message: __( 'Settings saved', 'shapeblock' ),
+                        description: __( 'Your settings have been updated.', 'shapeblock' ),
                         duration: 2,
                     });
                 } else {
                     notification.error({
-                        message: 'Save Failed',
-                        description: 'Could not save container width. Please try again.',
+                        message: __( 'Save failed', 'shapeblock' ),
+                        description: __( 'Could not save container width. Please try again.', 'shapeblock' ),
                         duration: 2,
                     });
                 }
             })
             .catch(() => {
-                notification.error({ message: 'Save Failed', description: 'Could not save container width. Please try again.', duration: 2 });
+                notification.error({ message: __( 'Save failed', 'shapeblock' ), description: __( 'Could not save container width. Please try again.', 'shapeblock' ), duration: 2 });
             })
             .finally(() => setSaving(false));
     };
@@ -129,7 +143,7 @@ export default function Settings() {
 
     const handleExport = () => {
         if (!exportSections.length) {
-            notification.warning({ message: 'Nothing Selected', description: 'Choose at least one section to export.', duration: 2 });
+            notification.warning({ message: __( 'Nothing selected', 'shapeblock' ), description: __( 'Choose at least one section to export.', 'shapeblock' ), duration: 2 });
             return;
         }
 
@@ -153,10 +167,10 @@ export default function Settings() {
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
 
-                notification.success({ message: 'Export Ready', description: 'The export file has been downloaded.', duration: 2 });
+                notification.success({ message: __( 'Export ready', 'shapeblock' ), description: __( 'The export file has been downloaded.', 'shapeblock' ), duration: 2 });
             })
             .catch(() => {
-                notification.error({ message: 'Export Failed', description: 'Could not build the export file. Please try again.', duration: 3 });
+                notification.error({ message: __( 'Export failed', 'shapeblock' ), description: __( 'Could not build the export file. Please try again.', 'shapeblock' ), duration: 3 });
             })
             .finally(() => setExporting(false));
     };
@@ -174,11 +188,11 @@ export default function Settings() {
             try {
                 parsed = JSON.parse(reader.result);
             } catch (e) {
-                setImportError('That file is not valid JSON.');
+                setImportError(__( 'That file is not valid JSON.', 'shapeblock' ));
                 return;
             }
             if (!parsed || !ACCEPTED_FORMATS.includes(parsed.format)) {
-                setImportError('That file is not a ShapeBlock or Easy Elements export file.');
+                setImportError(__( 'That file is not a ShapeBlock export file.', 'shapeblock' ));
                 return;
             }
             setImportFile({ name: file.name, data: parsed });
@@ -189,7 +203,7 @@ export default function Settings() {
                 return Array.isArray(parsed.builder_templates) && parsed.builder_templates.length > 0;
             }));
         };
-        reader.onerror = () => setImportError('The file could not be read.');
+        reader.onerror = () => setImportError(__( 'The file could not be read.', 'shapeblock' ));
         reader.readAsText(file);
 
         // Returning false keeps antd from uploading the file itself.
@@ -199,7 +213,7 @@ export default function Settings() {
     const handleImport = () => {
         if (!importFile) return;
         if (!importSections.length) {
-            notification.warning({ message: 'Nothing Selected', description: 'Choose at least one section to import.', duration: 2 });
+            notification.warning({ message: __( 'Nothing selected', 'shapeblock' ), description: __( 'Choose at least one section to import.', 'shapeblock' ), duration: 2 });
             return;
         }
 
@@ -213,8 +227,8 @@ export default function Settings() {
             .then((res) => {
                 if (!res || res.status !== 'success') {
                     notification.error({
-                        message: 'Import Failed',
-                        description: (res && res.message) || 'The file could not be imported.',
+                        message: __( 'Import failed', 'shapeblock' ),
+                        description: (res && res.message) || __( 'The file could not be imported.', 'shapeblock' ),
                         duration: 4,
                     });
                     return;
@@ -237,22 +251,33 @@ export default function Settings() {
 
                 const r = res.imported || {};
                 const lines = [];
-                if (res.migrated) {
-                    lines.push('Blocks retargeted from Easy Elements to ShapeBlock');
-                }
                 if (importSections.includes('settings')) {
-                    lines.push('Settings restored');
+                    lines.push(__( 'Settings restored', 'shapeblock' ));
                 }
                 if (importSections.includes('templates') && r.templates) {
-                    lines.push(`Custom Templates: ${r.templates.imported} imported, ${r.templates.skipped} skipped`);
+                    lines.push(sprintf(
+                        /* translators: 1: number of custom templates imported, 2: number of custom templates skipped. */
+                        __( 'Custom Templates: %1$d imported, %2$d skipped', 'shapeblock' ),
+                        r.templates.imported,
+                        r.templates.skipped
+                    ));
                 }
                 if (importSections.includes('builder') && r.builder_templates) {
-                    lines.push(`Theme Builder: ${r.builder_templates.imported} imported, ${r.builder_templates.skipped} skipped`);
+                    lines.push(sprintf(
+                        /* translators: 1: number of theme builder templates imported, 2: number of theme builder templates skipped. */
+                        __( 'Theme Builder: %1$d imported, %2$d skipped', 'shapeblock' ),
+                        r.builder_templates.imported,
+                        r.builder_templates.skipped
+                    ));
                 }
 
                 notification.success({
-                    message: 'Import Complete',
-                    description: `${lines.join('. ')}. Reload the page to see everything.`,
+                    message: __( 'Import complete', 'shapeblock' ),
+                    description: sprintf(
+                        /* translators: %s: summary of what was imported. */
+                        __( '%s. Reload the page to see everything.', 'shapeblock' ),
+                        lines.join('. ')
+                    ),
                     duration: 5,
                 });
 
@@ -260,7 +285,7 @@ export default function Settings() {
                 setImportError('');
             })
             .catch(() => {
-                notification.error({ message: 'Import Failed', description: 'The file could not be imported. Please try again.', duration: 4 });
+                notification.error({ message: __( 'Import failed', 'shapeblock' ), description: __( 'The file could not be imported. Please try again.', 'shapeblock' ), duration: 4 });
             })
             .finally(() => setImporting(false));
     };
@@ -269,19 +294,24 @@ export default function Settings() {
 
     return (
         <div className="shapeblock-options-content">
-            <h1 className="shapeblock-options-title">Settings</h1>
+            <h1 className="shapeblock-options-title">{ __( 'Settings', 'shapeblock' ) }</h1>
 
-            <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 0 }}>Content Container</h2>
+            <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 0 }}>{ __( 'Content Container', 'shapeblock' ) }</h2>
             <p style={{ marginTop: 0, color: '#555' }}>
-                Sets the boxed content max-width used by the shapeblock Row block. Stored as
-                the CSS variable <code>--shapeblock-layout-row-max-width</code> on <code>:root</code>.
+                { createInterpolateElement(
+                    __( 'Sets the boxed content max-width used by the shapeblock Row block. Stored as the CSS variable <varcode /> on <rootcode />.', 'shapeblock' ),
+                    {
+                        varcode: <code>--shapeblock-layout-row-max-width</code>,
+                        rootcode: <code>:root</code>,
+                    }
+                ) }
             </p>
 
             <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
                 <Col xs={24} sm={12} md={8}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: '#f7f8fb', borderRadius: 8 }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
-                            <strong>Container Width</strong>
+                            <strong>{ __( 'Container Width', 'shapeblock' ) }</strong>
                             <InputNumber
                                 min={200}
                                 max={3000}
@@ -296,43 +326,41 @@ export default function Settings() {
                 </Col>
             </Row>
 
-            <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 32 }}>Google Fonts</h2>
+            <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 32 }}>{ __( 'Google Fonts', 'shapeblock' ) }</h2>
             <p style={{ marginTop: 0, color: '#555' }}>
-                Off by default. While this is off ShapeBlock never contacts Google: the font
-                pickers offer only the fonts already available on the visitor&rsquo;s device, and no
-                request is made to fonts.google.com or fonts.googleapis.com.
+                { __( 'Off by default. While this is off ShapeBlock never contacts Google: the font pickers offer only the fonts already available on the visitor’s device, and no request is made to fonts.google.com or fonts.googleapis.com.', 'shapeblock' ) }
             </p>
             <p style={{ marginTop: 0, color: '#555' }}>
-                Turning it on lets the editor download the Google Fonts list and lets the front end
-                load the font files you choose from Google&rsquo;s servers. Your visitors&rsquo; IP
-                addresses are then sent to Google &mdash; see Google&rsquo;s{' '}
-                <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer noopener">terms of service</a>{' '}
-                and{' '}
-                <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer noopener">privacy policy</a>.
+                { createInterpolateElement(
+                    __( 'Turning it on lets the editor download the Google Fonts list and lets the front end load the font files you choose from Google’s servers. Your visitors’ IP addresses are then sent to Google — see Google’s <termsLink>terms of service</termsLink> and <privacyLink>privacy policy</privacyLink>.', 'shapeblock' ),
+                    {
+                        termsLink: <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer noopener" />,
+                        privacyLink: <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer noopener" />,
+                    }
+                ) }
             </p>
 
             <Checkbox checked={googleFonts} onChange={(e) => setGoogleFonts(e.target.checked)}>
-                Allow ShapeBlock to connect to Google Fonts
+                { __( 'Allow ShapeBlock to connect to Google Fonts', 'shapeblock' ) }
             </Checkbox>
 
             <div style={{ marginTop: 24, display: 'flex', gap: 8 }}>
-                <Button type="primary" onClick={handleSave} loading={saving}>Save Changes</Button>
-                <Button onClick={handleReset} disabled={saving}>Reset to Defaults</Button>
+                <Button type="primary" onClick={handleSave} loading={saving}>{ __( 'Save Changes', 'shapeblock' ) }</Button>
+                <Button onClick={handleReset} disabled={saving}>{ __( 'Reset to Defaults', 'shapeblock' ) }</Button>
             </div>
 
             <Divider style={{ margin: '32px 0 24px' }} />
 
-            <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 0 }}>Export &amp; Import</h2>
+            <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 0 }}>{ __( 'Export & Import', 'shapeblock' ) }</h2>
             <p style={{ marginTop: 0, color: '#555' }}>
-                Move your ShapeBlock setup between sites. The export file is plain JSON holding your
-                settings, custom templates and theme builder templates.
+                { __( 'Move your ShapeBlock setup between sites. The export file is plain JSON holding your settings, custom templates and theme builder templates.', 'shapeblock' ) }
             </p>
 
             <Row gutter={[24, 24]} style={{ marginTop: 16 }}>
                 <Col xs={24} lg={12}>
                     <div style={{ padding: 20, background: '#f7f8fb', borderRadius: 8, height: '100%' }}>
-                        <h3 style={{ fontSize: 16, fontWeight: 600, marginTop: 0 }}>Export</h3>
-                        <p style={{ color: '#555', marginTop: 0 }}>Choose what to include, then download the file.</p>
+                        <h3 style={{ fontSize: 16, fontWeight: 600, marginTop: 0 }}>{ __( 'Export', 'shapeblock' ) }</h3>
+                        <p style={{ color: '#555', marginTop: 0 }}>{ __( 'Choose what to include, then download the file.', 'shapeblock' ) }</p>
 
                         <Checkbox.Group
                             value={exportSections}
@@ -349,7 +377,7 @@ export default function Settings() {
                                 loading={exporting}
                                 disabled={!exportSections.length}
                             >
-                                Export
+                                { __( 'Export', 'shapeblock' ) }
                             </Button>
                         </div>
                     </div>
@@ -357,8 +385,8 @@ export default function Settings() {
 
                 <Col xs={24} lg={12}>
                     <div style={{ padding: 20, background: '#f7f8fb', borderRadius: 8, height: '100%' }}>
-                        <h3 style={{ fontSize: 16, fontWeight: 600, marginTop: 0 }}>Import</h3>
-                        <p style={{ color: '#555', marginTop: 0 }}>Upload a ShapeBlock or Easy Elements For Gutenberg export file.</p>
+                        <h3 style={{ fontSize: 16, fontWeight: 600, marginTop: 0 }}>{ __( 'Import', 'shapeblock' ) }</h3>
+                        <p style={{ color: '#555', marginTop: 0 }}>{ __( 'Upload a ShapeBlock export file.', 'shapeblock' ) }</p>
 
                         <Upload.Dragger
                             accept=".json,application/json"
@@ -370,7 +398,7 @@ export default function Settings() {
                             <p className="ant-upload-drag-icon" style={{ marginBottom: 4 }}>
                                 <InboxOutlined />
                             </p>
-                            <p className="ant-upload-text">Click or drag a .json file here</p>
+                            <p className="ant-upload-text">{ __( 'Click or drag a .json file here', 'shapeblock' ) }</p>
                         </Upload.Dragger>
 
                         {importError && (
@@ -387,13 +415,13 @@ export default function Settings() {
                                         <Space size={[4, 4]} wrap>
                                             {fileSummary.length
                                                 ? fileSummary.map((part) => <Tag key={part}>{part}</Tag>)
-                                                : <span>This file is empty.</span>}
+                                                : <span>{ __( 'This file is empty.', 'shapeblock' ) }</span>}
                                         </Space>
                                     }
                                 />
 
                                 <div style={{ marginTop: 16 }}>
-                                    <strong style={{ display: 'block', marginBottom: 8 }}>Import</strong>
+                                    <strong style={{ display: 'block', marginBottom: 8 }}>{ __( 'Import', 'shapeblock' ) }</strong>
                                     <Checkbox.Group
                                         value={importSections}
                                         onChange={setImportSections}
@@ -403,10 +431,10 @@ export default function Settings() {
                                 </div>
 
                                 <div style={{ marginTop: 16 }}>
-                                    <strong style={{ display: 'block', marginBottom: 8 }}>If a template with the same name exists</strong>
+                                    <strong style={{ display: 'block', marginBottom: 8 }}>{ __( 'If a template with the same name exists', 'shapeblock' ) }</strong>
                                     <Radio.Group value={onDuplicate} onChange={(e) => setOnDuplicate(e.target.value)}>
-                                        <Radio value="create">Import anyway</Radio>
-                                        <Radio value="skip">Skip it</Radio>
+                                        <Radio value="create">{ __( 'Import anyway', 'shapeblock' ) }</Radio>
+                                        <Radio value="skip">{ __( 'Skip it', 'shapeblock' ) }</Radio>
                                     </Radio.Group>
                                 </div>
 
@@ -414,7 +442,7 @@ export default function Settings() {
                                     type="warning"
                                     showIcon
                                     style={{ marginTop: 16 }}
-                                    message="Importing settings overwrites your current colors, container width and block on/off states."
+                                    message={ __( 'Importing settings overwrites your current colors, container width and block on/off states.', 'shapeblock' ) }
                                 />
 
                                 <div style={{ marginTop: 16 }}>
@@ -425,7 +453,7 @@ export default function Settings() {
                                         loading={importing}
                                         disabled={!importSections.length}
                                     >
-                                        Import
+                                        { __( 'Import', 'shapeblock' ) }
                                     </Button>
                                 </div>
                             </div>

@@ -114,20 +114,25 @@ function shapeblock_register_common_assets() {
 			'shapeblock-public-style',
 			SHAPEBLOCK_PL_URL . 'includes/public/assets/css/public.css',
 			array(),
-			SHAPEBLOCK_VERSION
+			// File time, not the plugin version: every edit gets a new URL, so
+			// browsers and the host's CDN cannot keep serving the old copy.
+			shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/css/public.css' )
 		);
 	}
 
 	if ( ! wp_style_is( 'shapeblock-swiper', 'registered' ) ) {
-		wp_register_style( 'shapeblock-swiper', SHAPEBLOCK_PL_URL . 'assets/lib/swiper/swiper-bundle.min.css', array(), SHAPEBLOCK_VERSION, 'all' );
+		wp_register_style( 'shapeblock-swiper', SHAPEBLOCK_PL_URL . 'assets/lib/swiper/swiper-bundle.css', array(), shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'assets/lib/swiper/swiper-bundle.css' ), 'all' );
 	}
 
 	if ( ! wp_script_is( 'shapeblock-swiper', 'registered' ) ) {
-		wp_register_script( 'shapeblock-swiper', SHAPEBLOCK_PL_URL . 'assets/lib/swiper/swiper-bundle.min.js', array(), '12.0.3', false );
+		// Deferred, like the block view scripts that use it, so it never blocks
+		// the first paint. WordPress drops the defer by itself wherever a
+		// blocking script depends on it.
+		wp_register_script( 'shapeblock-swiper', SHAPEBLOCK_PL_URL . 'assets/lib/swiper/swiper-bundle.js', array(), '12.0.3', array( 'strategy' => 'defer' ) );
 	}
 
 	if ( ! wp_style_is( 'shapeblock-bootstrap-grid', 'registered' ) ) {
-		wp_register_style( 'shapeblock-bootstrap-grid', SHAPEBLOCK_PL_URL . 'assets/lib/bootstrap/bootstrap-grid.min.css', array(), SHAPEBLOCK_VERSION, 'all' );
+		wp_register_style( 'shapeblock-bootstrap-grid', SHAPEBLOCK_PL_URL . 'assets/lib/bootstrap/bootstrap-grid.css', array(), shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'assets/lib/bootstrap/bootstrap-grid.css' ), 'all' );
 	}
 }
 add_action( 'init', 'shapeblock_register_common_assets', 9 );
@@ -141,9 +146,89 @@ function shapeblock_enqueue_block_styles() {
 		return;
 	}
 
-	wp_enqueue_style( 'shapeblock-swiper' );
-	wp_enqueue_script( 'shapeblock-swiper' );
-	wp_enqueue_style( 'shapeblock-bootstrap-grid' );
+	// Swiper (~150 KB) is only needed by the Slider and Image Carousel blocks.
+	// On the front end those blocks pull it in themselves, as a dependency of
+	// their own style and view script (shapeblock_add_swiper_dependency()), so
+	// it loads only on pages that contain one. The editor canvas keeps it,
+	// because a slider can be inserted there at any moment.
+	// The Bootstrap grid (~125 KB) is the same story: only the Post Grid block's
+	// markup uses its classes, so on the front end it is a dependency of that
+	// block's stylesheet and nothing else.
+	if ( is_admin() ) {
+		wp_enqueue_style( 'shapeblock-swiper' );
+		wp_enqueue_script( 'shapeblock-swiper' );
+		wp_enqueue_style( 'shapeblock-bootstrap-grid' );
+	}
+}
+
+/**
+ * Let WordPress print small ShapeBlock stylesheets inline.
+ *
+ * wp_maybe_inline_styles() (wp_head / wp_footer, priority 1) swaps a
+ * stylesheet's <link> for an inline style element -- up to 20 KB in total, smallest
+ * first -- but only for styles that declare the file's 'path'. Without it every
+ * block stylesheet costs its own render-blocking request.
+ *
+ * @return void
+ */
+function shapeblock_add_style_paths() {
+	$styles = wp_styles();
+	foreach ( $styles->registered as $handle => $style ) {
+		if ( 0 !== strpos( $handle, 'shapeblock-' ) || ! is_string( $style->src ) || isset( $style->extra['path'] ) ) {
+			continue;
+		}
+		if ( 0 !== strpos( $style->src, SHAPEBLOCK_PL_URL ) ) {
+			continue;
+		}
+		$path = SHAPEBLOCK_PL_PATH . substr( strtok( $style->src, '?' ), strlen( SHAPEBLOCK_PL_URL ) );
+		if ( is_readable( $path ) ) {
+			$styles->add_data( $handle, 'path', $path );
+		}
+	}
+}
+add_action( 'wp_head', 'shapeblock_add_style_paths', 0 );
+add_action( 'wp_footer', 'shapeblock_add_style_paths', 0 );
+
+/**
+ * Let a little more small CSS be printed inline.
+ *
+ * WordPress inlines stylesheets smallest-first until they add up to 20 KB. The
+ * shared ShapeBlock stylesheet alone is ~15 KB, so a page with a menu or a
+ * slider still had its next block stylesheet as a separate render-blocking
+ * request. A bit more room removes that request; the extra bytes travel with
+ * the HTML, which is compressed.
+ *
+ * @param int $limit Size limit in bytes.
+ * @return int
+ */
+function shapeblock_inline_styles_limit( $limit ) {
+	// Only a page that actually uses ShapeBlock blocks gets the larger budget;
+	// every other page keeps WordPress's own limit.
+	if ( is_admin() || ! shapeblock_should_load_common_assets() ) {
+		return $limit;
+	}
+	return max( (int) $limit, 64000 );
+}
+add_filter( 'styles_inline_size_limit', 'shapeblock_inline_styles_limit' );
+
+/**
+ * Make Swiper a dependency of a block's front-end view script, so the library
+ * is printed only when that block renders, and always before the script that
+ * calls `new Swiper()`.
+ *
+ * @param WP_Block_Type|false $block_type Result of register_block_type().
+ * @return void
+ */
+function shapeblock_add_swiper_dependency( $block_type ) {
+	if ( ! $block_type instanceof WP_Block_Type ) {
+		return;
+	}
+	foreach ( (array) $block_type->view_script_handles as $handle ) {
+		$script = wp_scripts()->query( $handle, 'registered' );
+		if ( $script && ! in_array( 'shapeblock-swiper', $script->deps, true ) ) {
+			$script->deps[] = 'shapeblock-swiper';
+		}
+	}
 }
 
 /**
@@ -226,7 +311,7 @@ function shapeblock_expose_google_fonts_editor() {
 		'shapeblock-editor-fonts',
 		SHAPEBLOCK_PL_URL . 'includes/public/assets/js/editor-fonts.js',
 		array( 'wp-data' ),
-		SHAPEBLOCK_VERSION,
+		shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/js/editor-fonts.js' ),
 		true
 	);
 
@@ -293,18 +378,28 @@ function shapeblock_render_block_load_fonts( $content, $block ) {
 }
 add_filter( 'render_block', 'shapeblock_render_block_load_fonts', 10, 2 );
 
-$shapeblock_blocks_instance = \ShapeBlock\Admin\Blocks::instance();
-$shapeblock_blocks = $shapeblock_blocks_instance->get_blocks();
-
-foreach ($shapeblock_blocks as $shapeblock_block) {
-	if ($shapeblock_block['status'] == 'disable') {
-		continue;
-	}
-	$shapeblock_file = __DIR__ . '/' . $shapeblock_block['id'] . '/' . $shapeblock_block['id'] . '.php';
-	if (file_exists($shapeblock_file)) {
-		require_once $shapeblock_file;
+/**
+ * Load the files of every enabled block.
+ *
+ * Runs on `init` rather than while the plugin file loads: the block list
+ * carries translated titles, and translations may not be loaded before `init`.
+ * Every block file only adds its own hooks (on `init` or later), so loading
+ * them at the start of `init` is early enough.
+ *
+ * @return void
+ */
+function shapeblock_load_block_files() {
+	foreach ( \ShapeBlock\Admin\Blocks::instance()->get_blocks() as $shapeblock_block ) {
+		if ( 'disable' === $shapeblock_block['status'] ) {
+			continue;
+		}
+		$shapeblock_file = __DIR__ . '/' . $shapeblock_block['id'] . '/' . $shapeblock_block['id'] . '.php';
+		if ( file_exists( $shapeblock_file ) ) {
+			require_once $shapeblock_file;
+		}
 	}
 }
+add_action( 'init', 'shapeblock_load_block_files', 1 );
 
 /**
  * Reliably load each block's front-end stylesheet in the <head> whenever the current page
@@ -317,10 +412,12 @@ foreach ($shapeblock_blocks as $shapeblock_block) {
  * the style is in the <head>. wp_style_is() keeps it safe for any block that does not follow the
  * handle pattern, and has_block() means nothing loads on pages without the block.
  */
-add_action( 'wp_enqueue_scripts', function () use ( $shapeblock_blocks ) {
+add_action( 'wp_enqueue_scripts', function () {
 	if ( is_admin() || ! function_exists( 'has_block' ) ) {
 		return;
 	}
+
+	$shapeblock_blocks = \ShapeBlock\Admin\Blocks::instance()->get_blocks();
 
 	// Theme Builder header/footer templates are separate posts, so has_block()
 	// against the main query never sees their blocks and the header/footer would
@@ -369,8 +466,8 @@ add_action( 'wp_enqueue_scripts', function () use ( $shapeblock_blocks ) {
  * the styles must be present in the editor for those interactions to be visible. Loading them all here
  * guarantees that regardless of the per-block editor-style dependency chain.
  */
-add_action( 'enqueue_block_editor_assets', function () use ( $shapeblock_blocks ) {
-	foreach ( $shapeblock_blocks as $shapeblock_block ) {
+add_action( 'enqueue_block_editor_assets', function () {
+	foreach ( \ShapeBlock\Admin\Blocks::instance()->get_blocks() as $shapeblock_block ) {
 		if ( 'disable' === $shapeblock_block['status'] ) {
 			continue;
 		}
@@ -454,6 +551,13 @@ function shapeblock_advanced_block_css( $parsed_block ) {
 		$responsive['desktop']['background-color'] = \ShapeBlock\Frontend\Helper::sanitize_css_color( $attrs['advBgColor'] );
 	}
 
+	// A gradient sits on top of the colour (they are separate properties), so
+	// either or both can be set. The value is checked again when the CSS is
+	// generated, which refuses anything that is not a plain gradient.
+	if ( ! empty( $attrs['advBgGradient'] ) && is_string( $attrs['advBgGradient'] ) ) {
+		$responsive['desktop']['background-image'] = $attrs['advBgGradient'];
+	}
+
 	if ( empty( $responsive ) ) {
 		return $parsed_block;
 	}
@@ -468,3 +572,116 @@ function shapeblock_advanced_block_css( $parsed_block ) {
 	return $parsed_block;
 }
 add_filter( 'render_block_data', 'shapeblock_advanced_block_css' );
+
+/**
+ * Keep a block's `blockId` a plain CSS class name.
+ *
+ * Every ShapeBlock block builds its CSS selector from `blockId`, and it is a
+ * free-text attribute in the saved post. Reducing it to letters, digits, `_`
+ * and `-` before any render.php runs means no selector can be broken out of,
+ * whatever the stored value is. An id with nothing usable left is dropped so
+ * the block falls back to the one it generates itself.
+ *
+ * @param array $parsed_block The block about to render.
+ * @return array
+ */
+function shapeblock_sanitize_block_id( $parsed_block ) {
+	if ( empty( $parsed_block['blockName'] ) || 0 !== strpos( $parsed_block['blockName'], 'shapeblock/' ) ) {
+		return $parsed_block;
+	}
+
+	if ( isset( $parsed_block['attrs']['blockId'] ) ) {
+		$clean = is_scalar( $parsed_block['attrs']['blockId'] ) ? preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $parsed_block['attrs']['blockId'] ) : '';
+		if ( '' === $clean ) {
+			unset( $parsed_block['attrs']['blockId'] );
+		} else {
+			$parsed_block['attrs']['blockId'] = $clean;
+		}
+	}
+
+	return $parsed_block;
+}
+add_filter( 'render_block_data', 'shapeblock_sanitize_block_id', 1 );
+
+/**
+ * Give ShapeBlock's blocks their own inserter category.
+ *
+ * Every block.json says `"category": "shapeblock"`. WordPress only lists a
+ * block under a category it knows about, so the category is declared here, on
+ * the server, rather than by a script that has to load first.
+ *
+ * @param array $categories Existing block categories.
+ * @return array
+ */
+function shapeblock_register_block_category( $categories ) {
+	foreach ( $categories as $category ) {
+		if ( isset( $category['slug'] ) && 'shapeblock' === $category['slug'] ) {
+			return $categories;
+		}
+	}
+
+	array_unshift(
+		$categories,
+		array(
+			'slug'  => 'shapeblock',
+			'title' => __( 'ShapeBlock', 'shapeblock' ),
+			'icon'  => null,
+		)
+	);
+
+	return $categories;
+}
+add_filter( 'block_categories_all', 'shapeblock_register_block_category' );
+
+
+/**
+ * Make the editor preview as forgiving as the front end.
+ *
+ * The block editor draws every ShapeBlock block by asking the REST route
+ * /wp/v2/block-renderer/shapeblock/<name> for its HTML. That route rejects the
+ * whole request when a single attribute has a value of the wrong kind -- a
+ * null or an empty string where an object belongs, a value left over from an
+ * older version -- and the editor then shows "Error loading block: [object
+ * Object]" instead of the block. On the front end WordPress simply drops such
+ * a value and uses the attribute's default, so the page still renders.
+ *
+ * This does the same for the preview: attributes that do not fit the block's
+ * own definition are left out of the request, so the block renders with its
+ * defaults for those and the rest of what the author set is kept.
+ *
+ * @param mixed           $result  Response so far; null lets the request continue.
+ * @param WP_REST_Server  $server  Server.
+ * @param WP_REST_Request $request Request.
+ * @return mixed
+ */
+function shapeblock_clean_renderer_attributes( $result, $server, $request ) {
+	if ( null !== $result || ! $request instanceof WP_REST_Request ) {
+		return $result;
+	}
+
+	if ( ! preg_match( '#^/wp/v2/block-renderer/(shapeblock/[a-z0-9-]+)$#', (string) $request->get_route(), $matches ) ) {
+		return $result;
+	}
+
+	$block_type = WP_Block_Type_Registry::get_instance()->get_registered( $matches[1] );
+	$attributes = $request->get_param( 'attributes' );
+	if ( ! $block_type || ! is_array( $attributes ) ) {
+		return $result;
+	}
+
+	foreach ( $attributes as $name => $value ) {
+		// Not an attribute this block defines (an old one, for instance).
+		if ( ! isset( $block_type->attributes[ $name ] ) ) {
+			unset( $attributes[ $name ] );
+			continue;
+		}
+		if ( is_wp_error( rest_validate_value_from_schema( $value, $block_type->attributes[ $name ], (string) $name ) ) ) {
+			unset( $attributes[ $name ] );
+		}
+	}
+
+	$request->set_param( 'attributes', $attributes );
+
+	return $result;
+}
+add_filter( 'rest_pre_dispatch', 'shapeblock_clean_renderer_attributes', 10, 3 );

@@ -199,7 +199,7 @@ class Builder_Render {
 		 * The swap happens in the output buffer's own callback, so the theme's
 		 * markup is transformed on its way out instead of being read into a
 		 * variable and echoed. That matters: a theme's header.php emits the
-		 * doctype, <head> and its enqueued <link>/<script> tags, and there is no
+		 * doctype, <head> and its enqueued link and script tags, and there is no
 		 * escaping function that can be applied to a document opening without
 		 * destroying it. This way nothing here echoes an unescaped string — the
 		 * theme prints its own template exactly as get_header() would, and the
@@ -341,10 +341,32 @@ class Builder_Render {
 	 */
 	public function shortcode( $atts ) {
 		$atts = shortcode_atts( array( 'id' => 0 ), $atts, 'shapeblock_builder' );
-		$id   = (int) $atts['id'];
+		$id   = absint( $atts['id'] );
 		if ( ! $id ) {
 			return '';
 		}
-		return $this->render_post( $id );
+
+		// A template that is still a draft, private or trashed must not reach
+		// a visitor just because someone knows its id.
+		if ( 'publish' !== get_post_status( $id ) ) {
+			return '';
+		}
+
+		// A template that contains its own shortcode would recurse until PHP stops it.
+		if ( isset( self::$rendering[ $id ] ) ) {
+			return '';
+		}
+		self::$rendering[ $id ] = true;
+		$html                   = $this->render_post( $id );
+		unset( self::$rendering[ $id ] );
+
+		return $html;
 	}
+
+	/**
+	 * Builder templates currently being rendered by the shortcode, keyed by id.
+	 *
+	 * @var array<int,bool>
+	 */
+	private static $rendering = array();
 }

@@ -230,33 +230,42 @@ export const buildRowEditorCss = (attrs, colCount = 0, innerBlocks = []) => {
     return css;
 };
 
+// The column's width for one device, exactly as column/src/render.php writes it:
+// !important, under a 0,4,0 selector (see buildColumnEditorCss). The row's
+// mobile stacking rule is `flex:1 1 100% !important` at the same depth, so a
+// plain `.<blockId>{flex:…}` lost to it here in the canvas -- every column went
+// full width on the Mobile preview and a Row direction looked like it did
+// nothing, while the front end (which already used !important) was right.
+const collectColumnWidth = (attrs, suffix) => {
+    const k = (base) => attrs[suffix === '' ? base : `${base}${suffix}`];
+    const decls = {};
+    const widthType = attrs.widthType || 'percentage';
+    let w = k('width');
+    w = w == null ? '' : String(w).trim();
+
+    if (widthType === 'percentage' && w) {
+        if (!isNaN(Number(w))) w = `${w}%`;
+        const wNum = parseFloat(w);
+        const calc = `calc(${w} - (var(--bp-cols, 1) - 1) * var(--bp-gap, 0px) * ${wNum} / 100)`;
+        decls['flex'] = `0 1 ${calc} !important`;
+        decls['max-width'] = `${calc} !important`;
+    } else if (widthType === 'custom' && w) {
+        decls['width'] = `${w} !important`;
+        decls['flex'] = '0 0 auto !important';
+    } else if (widthType === 'flex') {
+        const grow = k('flexGrow');
+        const basis = k('flexBasis');
+        if (grow !== '' && grow != null) decls['flex-grow'] = `${parseFloat(grow)} !important`;
+        if (basis) decls['flex-basis'] = `${basis} !important`;
+    }
+    return decls;
+};
+
 const collectColumnDevice = (attrs, suffix) => {
     const k = (base) => attrs[suffix === '' ? base : `${base}${suffix}`];
     const decls = {};
 
-    const widthType = attrs.widthType || 'percentage';
-    let w = k('width');
-    // "50" means 50% for a percentage column — the calc() below needs the unit.
-    if (widthType === 'percentage' && w !== '' && w != null && !isNaN(Number(w))) {
-        w = `${w}%`;
-    }
-    // Subtract this column's share of the row gap so columns total exactly 100% of
-    // the row regardless of gap. Vars are set by the parent row (see buildRowEditorCss).
-    //   calc(W% - (cols - 1) * gap * W / 100)
-    if (widthType === 'percentage' && w) {
-        const wNum = parseFloat(w);
-        const calc = `calc(${w} - (var(--bp-cols, 1) - 1) * var(--bp-gap, 0px) * ${wNum} / 100)`;
-        decls['flex'] = `0 1 ${calc}`;
-        decls['max-width'] = calc;
-    }
-    if (widthType === 'flex') {
-        const grow = k('flexGrow');
-        const basis = k('flexBasis');
-        if (grow !== '' && grow != null) decls['flex-grow'] = grow;
-        if (basis) decls['flex-basis'] = basis;
-    }
-    if (widthType === 'custom' && w) decls['width'] = w;
-
+    // Width lives in collectColumnWidth() so it can be written like the front end.
     if (k('minHeight')) decls['min-height'] = k('minHeight');
 
     Object.assign(decls, boxToCss(k('padding'), 'padding'));
@@ -290,6 +299,15 @@ export const buildColumnEditorCss = (attrs) => {
     if (t) css += `${BREAKPOINTS.tablet}{${sel}{${t}}}`;
     const m = renderDecls(mobile);
     if (m) css += `${BREAKPOINTS.mobile}{${sel}{${m}}}`;
+
+    // Width -- same selector and !important as render.php's $width_selector.
+    const widthSel = `.shapeblock-layout-row > .shapeblock-layout-row__inner > .shapeblock-column${sel}`;
+    const wd = renderDecls(collectColumnWidth(attrs, ''));
+    if (wd) css += `${widthSel}{${wd}}`;
+    const wt = renderDecls(collectColumnWidth(attrs, 'Tablet'));
+    if (wt) css += `${BREAKPOINTS.tablet}{${widthSel}{${wt}}}`;
+    const wm = renderDecls(collectColumnWidth(attrs, 'Mobile'));
+    if (wm) css += `${BREAKPOINTS.mobile}{${widthSel}{${wm}}}`;
 
     // Content flexbox — the inner wrapper is a flex container (matches render.php).
     const innerSel = `${sel} > .shapeblock-column__inner`;

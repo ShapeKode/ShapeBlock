@@ -7,15 +7,14 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Image Comparison block.
  *
- * Mirrors the markup of the Elementor "Image Comparison" widget
- * (easy-elements/widgets/image-comparison). Element classes use the "shapeblock-" prefix.
+ * Element classes use the "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-cmp-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-cmp-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $before = isset( $attributes['beforeImage'] ) && is_array( $attributes['beforeImage'] ) ? $attributes['beforeImage'] : [];
 $after  = isset( $attributes['afterImage'] ) && is_array( $attributes['afterImage'] ) ? $attributes['afterImage'] : [];

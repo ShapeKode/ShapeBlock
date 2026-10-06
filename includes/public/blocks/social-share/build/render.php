@@ -7,8 +7,7 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Social Share block.
  *
- * Mirrors the markup of the Elementor "Social Share" widget
- * (easy-elements/widgets/social-share). Element classes use the "shapeblock-" prefix.
+ * Element classes use the "shapeblock-" prefix.
  * Brand icons are inline SVG so they render identically in the editor and on the
  * front end without depending on an icon font.
  *
@@ -17,7 +16,7 @@ return ( function ( $attributes, $content, $block ) {
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-soc-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-soc-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $platforms = isset( $attributes['platforms'] ) && is_array( $attributes['platforms'] ) ? $attributes['platforms'] : [];
 $layout    = isset( $attributes['layout'] ) ? $attributes['layout'] : 'horizontal';

@@ -23,6 +23,7 @@
 		"advMarginTablet": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"advMarginMobile": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"advBgColor": { "type": "string", "default": "" },
+		"advBgGradient": { "type": "string", "default": "" },
 		"blockId": { "type": "string", "default": "" },
 		"socialLinks": {
 			"type": "array",

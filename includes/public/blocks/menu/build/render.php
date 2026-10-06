@@ -185,7 +185,7 @@ if ( ! function_exists( 'shapeblock_menu_render_items' ) ) {
 			// changed slug is always reflected — instead of the stale URL saved when it was picked.
 			$obj_id = isset( $item['objectId'] ) ? absint( $item['objectId'] ) : 0;
 			if ( $obj_id ) {
-				$perma = get_permalink( $obj_id );
+				$perma = ( 'publish' === get_post_status( $obj_id ) || current_user_can( 'read_post', $obj_id ) ) ? get_permalink( $obj_id ) : false;
 				if ( $perma ) {
 					$url = $perma;
 				}
@@ -511,14 +511,17 @@ if ( $mobile_on ) {
 	// box so the auto margins can push it; it stays inside $drawer so the rule is
 	// scoped exactly like the rest of the overlay CSS ( "always" = every screen,
 	// "mobile" = only below the breakpoint ).
-	$toggle_align = isset( $attributes['toggleAlign'] ) ? $attributes['toggleAlign'] : 'left';
-	if ( 'center' === $toggle_align ) {
-		$toggle_margin = 'margin-left:auto;margin-right:auto;';
-	} elseif ( 'right' === $toggle_align ) {
-		$toggle_margin = 'margin-left:auto;margin-right:0;';
-	} else {
-		$toggle_margin = 'margin-left:0;margin-right:auto;';
-	}
+	$toggle_margin_for = function ( $align ) {
+		if ( 'center' === $align ) {
+			return 'margin-left:auto;margin-right:auto;';
+		}
+		if ( 'right' === $align ) {
+			return 'margin-left:auto;margin-right:0;';
+		}
+		return 'margin-left:0;margin-right:auto;';
+	};
+	$toggle_align  = isset( $attributes['toggleAlign'] ) ? $attributes['toggleAlign'] : 'left';
+	$toggle_margin = $toggle_margin_for( $toggle_align );
 
 	// The rules that make the menu an off-canvas drawer.
 	$drawer  = '';
@@ -570,6 +573,17 @@ if ( $mobile_on ) {
 		$css .= $selector . ' .shapeblock-menu-overlay{display:none;}';
 		$css .= '@media (max-width:' . (int) $breakpoint . 'px){' . $drawer . '}';
 	}
+
+	// Per-device hamburger alignment ( Tablet <= 1024px, Mobile <= 767px ). Printed
+	// after the drawer rules so it wins over the desktop value at the same
+	// specificity; an empty value inherits the next larger screen. Above the
+	// overlay breakpoint the button is hidden, so these rules are harmless there.
+	foreach ( array( 'toggleAlignTablet' => 1024, 'toggleAlignMobile' => 767 ) as $ta_key => $ta_max ) {
+		$ta_val = isset( $attributes[ $ta_key ] ) ? $attributes[ $ta_key ] : '';
+		if ( in_array( $ta_val, array( 'left', 'center', 'right' ), true ) ) {
+			$css .= '@media (max-width:' . (int) $ta_max . 'px){' . $selector . ' .shapeblock-menu-toggle{' . $toggle_margin_for( $ta_val ) . '}}';
+		}
+	}
 }
 
 $wrapper_attributes = get_block_wrapper_attributes(
@@ -594,7 +608,7 @@ $toggle = $mobile_on
 $overlay = $mobile_on ? '<div class="shapeblock-menu-overlay" aria-hidden="true"></div>' : '';
 
 // The generated CSS is handed to the shared helper, which enqueues it (or returns it
-// with the block in the editor) instead of printing a <style> tag from here.
+// with the block in the editor) instead of printing a style element tag from here.
 if ( '' !== $css ) {
 	\ShapeBlock\Frontend\Helper::add_css( 'shapeblock-menu-style', $css );
 }

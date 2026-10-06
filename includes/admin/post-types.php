@@ -20,19 +20,19 @@ class SHAPEBLOCK_Post_Types {
 
     public function register_post_types() {
         $labels = array(
-            'name'                  => 'Templates',
-            'singular_name'         => 'Template',
-            'menu_name'             => 'Templates',
-            'name_admin_bar'        => 'Template',
-            'add_new'               => 'Add New',
-            'add_new_item'          => 'Add New Template',
-            'new_item'              => 'New Template',
-            'edit_item'             => 'Edit Template',
-            'view_item'             => 'View Template',
-            'all_items'             => 'All Templates',
-            'search_items'          => 'Search Templates',
-            'not_found'             => 'No templates found.',
-            'not_found_in_trash'    => 'No templates found in Trash.',
+            'name'                  => __( 'Templates', 'shapeblock' ),
+            'singular_name'         => __( 'Template', 'shapeblock' ),
+            'menu_name'             => __( 'Templates', 'shapeblock' ),
+            'name_admin_bar'        => __( 'Template', 'shapeblock' ),
+            'add_new'               => __( 'Add New', 'shapeblock' ),
+            'add_new_item'          => __( 'Add New Template', 'shapeblock' ),
+            'new_item'              => __( 'New Template', 'shapeblock' ),
+            'edit_item'             => __( 'Edit Template', 'shapeblock' ),
+            'view_item'             => __( 'View Template', 'shapeblock' ),
+            'all_items'             => __( 'All Templates', 'shapeblock' ),
+            'search_items'          => __( 'Search Templates', 'shapeblock' ),
+            'not_found'             => __( 'No templates found.', 'shapeblock' ),
+            'not_found_in_trash'    => __( 'No templates found in Trash.', 'shapeblock' ),
         );
 
         $args = array(
@@ -43,7 +43,22 @@ class SHAPEBLOCK_Post_Types {
             'show_in_menu'       => false,
             'query_var'          => true,
             'rewrite'            => array( 'slug' => 'shapeblock-template' ),
-            'capability_type'    => 'post',
+            // Templates are managed from the ShapeBlock dashboard by administrators
+            // only, the same rule the REST routes apply.
+            'capabilities'       => array(
+                'edit_posts'             => 'manage_options',
+                'edit_others_posts'      => 'manage_options',
+                'edit_private_posts'     => 'manage_options',
+                'edit_published_posts'   => 'manage_options',
+                'publish_posts'          => 'manage_options',
+                'read_private_posts'     => 'manage_options',
+                'delete_posts'           => 'manage_options',
+                'delete_others_posts'    => 'manage_options',
+                'delete_private_posts'   => 'manage_options',
+                'delete_published_posts' => 'manage_options',
+                'create_posts'           => 'manage_options',
+            ),
+            'map_meta_cap'       => true,
             'has_archive'        => false,
             'hierarchical'       => false,
             'supports'           => array( 'title', 'editor', 'author' ),

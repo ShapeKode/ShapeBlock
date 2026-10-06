@@ -16,7 +16,7 @@ return ( function ( $attributes, $content, $block ) {
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-slider-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-slider-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $slides = isset( $attributes['slides'] ) && is_array( $attributes['slides'] ) ? $attributes['slides'] : array();
 

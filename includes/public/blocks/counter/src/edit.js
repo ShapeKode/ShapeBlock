@@ -30,6 +30,12 @@ const ALIGN3 = [
 	{ label: __('End', 'shapeblock'), value: 'flex-end' },
 ];
 
+const ALIGN_V = [
+	{ label: __('Top', 'shapeblock'), value: 'flex-start' },
+	{ label: __('Middle', 'shapeblock'), value: 'center' },
+	{ label: __('Bottom', 'shapeblock'), value: 'flex-end' },
+];
+
 // Map a base attribute name to its per-device key (desktop uses the base name).
 const getKey = (base, device) =>
 	device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
@@ -55,7 +61,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const dev = device ? device.toLowerCase() : 'desktop';
 	const alignKey = dev === 'desktop' ? 'wrapAlign' : `wrapAlign${dev.charAt(0).toUpperCase() + dev.slice(1)}`;
 	// wrapAlign stores CSS align-items values; map them to/from AlignmentControl's left/center/right.
-	const STORED_TO_ALIGN = { start: 'left', center: 'center', end: 'right' };
+	const STORED_TO_ALIGN = { start: 'left', center: 'center', end: 'right', 'flex-start': 'left', 'flex-end': 'right' };
 	const ALIGN_TO_STORED = { left: 'start', center: 'center', right: 'end' };
 
 	// Editor preview: mirror the front-end counter. The animation lives in
@@ -358,8 +364,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				/>
 			)}
 			{iconEnable && respNum(__('Icon Gap (px)', 'shapeblock'), 'iconGap')}
-			{respAlign(__('Box Align (align-items)', 'shapeblock'), 'wrapAlign', [{ label: __('Default', 'shapeblock'), value: '' }, { label: __('Start', 'shapeblock'), value: 'start' }, { label: __('Center', 'shapeblock'), value: 'center' }, { label: __('End', 'shapeblock'), value: 'end' }])}
-			<SelectControl label={__('Box Justify (justify-content)', 'shapeblock')} value={attributes.wrapJustify} options={[{ label: __('Default', 'shapeblock'), value: '' }, { label: __('Start', 'shapeblock'), value: 'flex-start' }, { label: __('Center', 'shapeblock'), value: 'center' }, { label: __('End', 'shapeblock'), value: 'flex-end' }, { label: __('Space Between', 'shapeblock'), value: 'space-between' }]} onChange={(v) => setAttributes({ wrapJustify: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+			{iconEnable && (attributes.iconPosition === 'left' || attributes.iconPosition === 'right') && (
+				<SelectControl
+					label={__('Icon Vertical Align', 'shapeblock')}
+					value={attributes.iconVerticalAlign}
+					options={[{ label: __('Default', 'shapeblock'), value: '' }, ...ALIGN_V]}
+					onChange={(v) => setAttributes({ iconVerticalAlign: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+			)}
+			<Divider />
+			{respAlign(__('Alignment', 'shapeblock'), 'wrapAlign', [{ label: __('Default', 'shapeblock'), value: '' }, { label: __('Left', 'shapeblock'), value: 'start' }, { label: __('Center', 'shapeblock'), value: 'center' }, { label: __('Right', 'shapeblock'), value: 'end' }])}
 		</PanelBody>
 	);
 

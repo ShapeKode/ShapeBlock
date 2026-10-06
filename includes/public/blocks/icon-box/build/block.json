@@ -86,6 +86,10 @@
       "type": "string",
       "default": ""
     },
+    "advBgGradient": {
+      "type": "string",
+      "default": ""
+    },
     "blockId": {
       "type": "string",
       "default": ""
@@ -143,18 +147,6 @@
       "default": ""
     },
     "listBgGradient": {
-      "type": "string",
-      "default": ""
-    },
-    "feaItemGap": {
-      "type": "string",
-      "default": ""
-    },
-    "feaItemGapTablet": {
-      "type": "string",
-      "default": ""
-    },
-    "feaItemGapMobile": {
       "type": "string",
       "default": ""
     },
@@ -349,6 +341,26 @@
     "hideMobile": {
       "type": "boolean",
       "default": false
+    },
+    "boxAlignTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "boxAlignMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "contentAlign": {
+      "type": "string",
+      "default": ""
+    },
+    "contentAlignTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "contentAlignMobile": {
+      "type": "string",
+      "default": ""
     }
   }
 }

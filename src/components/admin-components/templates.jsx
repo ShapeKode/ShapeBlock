@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import {
     Table, Button, Input, Space, Modal, Form,
     notification, Popconfirm, Tag, Select, Segmented
@@ -63,7 +64,7 @@ export default function Templates() {
                 }));
             })
             .catch(() => {
-                notification.error({ message: 'Failed to load templates' });
+                notification.error({ message: __( 'Failed to load templates', 'shapeblock' ) });
             })
             .finally(() => setLoading(false));
     }, []);
@@ -117,7 +118,7 @@ export default function Templates() {
                 .then(data => {
                     if (data.id) {
                         notification.success({
-                            message: 'Template Created — opening editor…',
+                            message: __( 'Template created. Opening editor…', 'shapeblock' ),
                             duration: 2,
                         });
                         setModalOpen(false);
@@ -129,11 +130,11 @@ export default function Templates() {
                             refetch();
                         }
                     } else {
-                        notification.error({ message: data.message || 'Operation failed' });
+                        notification.error({ message: data.message || __( 'Operation failed', 'shapeblock' ) });
                     }
                 })
                 .catch(() => {
-                    notification.error({ message: 'Request failed' });
+                    notification.error({ message: __( 'Request failed', 'shapeblock' ) });
                 })
                 .finally(() => setSubmitting(false));
         });
@@ -150,7 +151,7 @@ export default function Templates() {
             .then(data => {
                 if (data.status === 'success') {
                     notification.success({
-                        message: force ? 'Template Permanently Deleted' : 'Template Moved to Trash',
+                        message: force ? __( 'Template permanently deleted', 'shapeblock' ) : __( 'Template moved to Trash', 'shapeblock' ),
                         duration: 2,
                     });
                     setSelectedRowKeys(prev => prev.filter(k => k !== id));
@@ -158,7 +159,7 @@ export default function Templates() {
                 }
             })
             .catch(() => {
-                notification.error({ message: 'Delete failed' });
+                notification.error({ message: __( 'Delete failed', 'shapeblock' ) });
             });
     };
 
@@ -170,13 +171,13 @@ export default function Templates() {
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'success') {
-                    notification.success({ message: 'Template Restored', duration: 2 });
+                    notification.success({ message: __( 'Template restored', 'shapeblock' ), duration: 2 });
                     setSelectedRowKeys(prev => prev.filter(k => k !== id));
                     refetch();
                 }
             })
             .catch(() => {
-                notification.error({ message: 'Restore failed' });
+                notification.error({ message: __( 'Restore failed', 'shapeblock' ) });
             });
     };
 
@@ -192,13 +193,35 @@ export default function Templates() {
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'success') {
-                    const labels = {
-                        trash: 'moved to trash',
-                        restore: 'restored',
-                        delete: 'permanently deleted',
-                    };
+                    const count = data.deleted.length;
+                    let message;
+                    if (action === 'trash') {
+                        message = sprintf(
+                            /* translators: %d: number of templates. */
+                            _n( '%d template moved to Trash', '%d templates moved to Trash', count, 'shapeblock' ),
+                            count
+                        );
+                    } else if (action === 'restore') {
+                        message = sprintf(
+                            /* translators: %d: number of templates. */
+                            _n( '%d template restored', '%d templates restored', count, 'shapeblock' ),
+                            count
+                        );
+                    } else if (action === 'delete') {
+                        message = sprintf(
+                            /* translators: %d: number of templates. */
+                            _n( '%d template permanently deleted', '%d templates permanently deleted', count, 'shapeblock' ),
+                            count
+                        );
+                    } else {
+                        message = sprintf(
+                            /* translators: %d: number of templates. */
+                            _n( '%d template updated', '%d templates updated', count, 'shapeblock' ),
+                            count
+                        );
+                    }
                     notification.success({
-                        message: `${data.deleted.length} template(s) ${labels[action] || 'updated'}`,
+                        message,
                         duration: 2,
                     });
                     setSelectedRowKeys([]);
@@ -206,13 +229,13 @@ export default function Templates() {
                 }
             })
             .catch(() => {
-                notification.error({ message: 'Bulk action failed' });
+                notification.error({ message: __( 'Bulk action failed', 'shapeblock' ) });
             });
     };
 
     const handleBulkAction = (action) => {
         if (selectedRowKeys.length === 0) {
-            notification.warning({ message: 'No templates selected' });
+            notification.warning({ message: __( 'No templates selected', 'shapeblock' ) });
             return;
         }
 
@@ -222,9 +245,13 @@ export default function Templates() {
             runBulk('restore');
         } else if (action === 'delete') {
             Modal.confirm({
-                title: `Permanently delete ${selectedRowKeys.length} template(s)?`,
-                content: 'This action cannot be undone.',
-                okText: 'Delete Permanently',
+                title: sprintf(
+                    /* translators: %d: number of templates. */
+                    _n( 'Permanently delete %d template?', 'Permanently delete %d templates?', selectedRowKeys.length, 'shapeblock' ),
+                    selectedRowKeys.length
+                ),
+                content: __( 'This action cannot be undone.', 'shapeblock' ),
+                okText: __( 'Delete Permanently', 'shapeblock' ),
                 okType: 'danger',
                 onOk: () => runBulk('delete'),
             });
@@ -233,14 +260,14 @@ export default function Templates() {
 
     const baseColumns = [
         {
-            title: 'Title',
+            title: __( 'Title', 'shapeblock' ),
             dataIndex: 'title',
             key: 'title',
             sorter: true,
             sortOrder: sorter.field === 'title' ? sorter.order : null,
         },
         {
-            title: 'Author',
+            title: __( 'Author', 'shapeblock' ),
             dataIndex: 'author',
             key: 'author',
             width: 150,
@@ -248,7 +275,7 @@ export default function Templates() {
     ];
 
     const shortcodeColumn = {
-        title: 'Shortcode',
+        title: __( 'Shortcode', 'shapeblock' ),
         key: 'shortcode',
         width: 280,
         render: (_, record) => {
@@ -264,6 +291,7 @@ export default function Templates() {
                     <Button
                         size="medium"
                         icon={<CopyOutlined />}
+                        aria-label={ __( 'Copy shortcode', 'shapeblock' ) }
                         onClick={() => {
                             const textarea = document.createElement('textarea');
                             textarea.value = shortcode;
@@ -273,7 +301,7 @@ export default function Templates() {
                             textarea.select();
                             document.execCommand('copy');
                             document.body.removeChild(textarea);
-                            notification.success({ message: 'Shortcode copied!', duration: 1.5 });
+                            notification.success({ message: __( 'Shortcode copied', 'shapeblock' ), duration: 1.5 });
                         }}
                     />
                 </Space.Compact>
@@ -282,7 +310,7 @@ export default function Templates() {
     };
 
     const dateColumn = {
-        title: 'Date',
+        title: __( 'Date', 'shapeblock' ),
         dataIndex: 'date',
         key: 'date',
         sorter: true,
@@ -295,7 +323,7 @@ export default function Templates() {
     };
 
     const activeActionsColumn = {
-        title: 'Actions',
+        title: __( 'Actions', 'shapeblock' ),
         key: 'actions',
         width: 150,
         render: (_, record) => (
@@ -306,18 +334,19 @@ export default function Templates() {
                     icon={<EditOutlined />}
                     href={record.editUrl}
                 >
-                    Edit
+                    { __( 'Edit', 'shapeblock' ) }
                 </Button>
                 <Popconfirm
-                    title="Move this template to Trash?"
+                    title={ __( 'Move this template to Trash?', 'shapeblock' ) }
                     onConfirm={() => handleDelete(record.id, false)}
-                    okText="Yes"
-                    cancelText="No"
+                    okText={ __( 'Yes', 'shapeblock' ) }
+                    cancelText={ __( 'No', 'shapeblock' ) }
                 >
                     <Button
                         danger
                         size="small"
                         icon={<DeleteOutlined />}
+                        aria-label={ __( 'Move to Trash', 'shapeblock' ) }
                     />
                 </Popconfirm>
             </Space>
@@ -325,7 +354,7 @@ export default function Templates() {
     };
 
     const trashActionsColumn = {
-        title: 'Actions',
+        title: __( 'Actions', 'shapeblock' ),
         key: 'actions',
         width: 200,
         render: (_, record) => (
@@ -335,21 +364,21 @@ export default function Templates() {
                     icon={<UndoOutlined />}
                     onClick={() => handleRestore(record.id)}
                 >
-                    Restore
+                    { __( 'Restore', 'shapeblock' ) }
                 </Button>
                 <Popconfirm
-                    title="Permanently delete this template? This cannot be undone."
+                    title={ __( 'Permanently delete this template? This cannot be undone.', 'shapeblock' ) }
                     onConfirm={() => handleDelete(record.id, true)}
-                    okText="Delete"
+                    okText={ __( 'Delete', 'shapeblock' ) }
                     okButtonProps={{ danger: true }}
-                    cancelText="No"
+                    cancelText={ __( 'No', 'shapeblock' ) }
                 >
                     <Button
                         danger
                         size="small"
                         icon={<DeleteOutlined />}
                     >
-                        Delete
+                        { __( 'Delete', 'shapeblock' ) }
                     </Button>
                 </Popconfirm>
             </Space>
@@ -362,13 +391,13 @@ export default function Templates() {
 
     const bulkOptions = isTrashView
         ? [
-            { value: '', label: 'Bulk Actions' },
-            { value: 'restore', label: 'Restore' },
-            { value: 'delete', label: 'Delete Permanently' },
+            { value: '', label: __( 'Bulk Actions', 'shapeblock' ) },
+            { value: 'restore', label: __( 'Restore', 'shapeblock' ) },
+            { value: 'delete', label: __( 'Delete Permanently', 'shapeblock' ) },
         ]
         : [
-            { value: '', label: 'Bulk Actions' },
-            { value: 'trash', label: 'Move to Trash' },
+            { value: '', label: __( 'Bulk Actions', 'shapeblock' ) },
+            { value: 'trash', label: __( 'Move to Trash', 'shapeblock' ) },
         ];
 
     const rowSelection = {
@@ -385,7 +414,7 @@ export default function Templates() {
                 marginBottom: 16,
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <h1 className="shapeblock-options-title" style={{ margin: 0 }}>Templates</h1>
+                    <h1 className="shapeblock-options-title" style={{ margin: 0 }}>{ __( 'Templates', 'shapeblock' ) }</h1>
                 </div>
                 {!isTrashView && (
                     <Button
@@ -393,7 +422,7 @@ export default function Templates() {
                         icon={<PlusOutlined />}
                         onClick={openAddModal}
                     >
-                        Add New
+                        { __( 'Add New', 'shapeblock' ) }
                     </Button>
                 )}
             </div>
@@ -403,8 +432,17 @@ export default function Templates() {
                     value={viewStatus}
                     onChange={handleViewChange}
                     options={[
-                        { value: 'publish', label: 'Active' },
-                        { value: 'trash', label: `Trash${trashCount ? ` (${trashCount})` : ''}` },
+                        { value: 'publish', label: __( 'Active', 'shapeblock' ) },
+                        {
+                            value: 'trash',
+                            label: trashCount
+                                ? sprintf(
+                                    /* translators: %d: number of trashed templates. */
+                                    __( 'Trash (%d)', 'shapeblock' ),
+                                    trashCount
+                                )
+                                : __( 'Trash', 'shapeblock' ),
+                        },
                     ]}
                 />
             </div>
@@ -424,12 +462,18 @@ export default function Templates() {
                         value=""
                     />
                     {selectedRowKeys.length > 0 && (
-                        <Tag>{selectedRowKeys.length} selected</Tag>
+                        <Tag>
+                            {sprintf(
+                                /* translators: %d: number of selected templates. */
+                                __( '%d selected', 'shapeblock' ),
+                                selectedRowKeys.length
+                            )}
+                        </Tag>
                     )}
                 </Space>
                 <Space>
                     <Search
-                        placeholder="Search templates..."
+                        placeholder={ __( 'Search templates...', 'shapeblock' ) }
                         allowClear
                         value={search}
                         onSearch={handleSearch}
@@ -449,6 +493,7 @@ export default function Templates() {
                     />
                     <Button
                         icon={<ReloadOutlined />}
+                        aria-label={ __( 'Reload', 'shapeblock' ) }
                         onClick={() => {
                             setSearch('');
                             fetchTemplates(1, pagination.pageSize, '', sorter.field, orderParam(), viewStatus);
@@ -468,7 +513,13 @@ export default function Templates() {
                     pageSize: pagination.pageSize,
                     total: pagination.total,
                     showSizeChanger: true,
-                    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                    showTotal: (total, range) => sprintf(
+                        /* translators: 1: first item number on the page, 2: last item number on the page, 3: total number of items. */
+                        __( '%1$d-%2$d of %3$d items', 'shapeblock' ),
+                        range[0],
+                        range[1],
+                        total
+                    ),
                     pageSizeOptions: ['5', '10', '20', '50'],
                 }}
                 onChange={handleTableChange}
@@ -476,7 +527,7 @@ export default function Templates() {
             />
 
             <Modal
-                title="Add New Template"
+                title={ __( 'Add New Template', 'shapeblock' ) }
                 open={modalOpen}
                 onOk={handleSubmit}
                 onCancel={() => {
@@ -484,15 +535,15 @@ export default function Templates() {
                     form.resetFields();
                 }}
                 confirmLoading={submitting}
-                okText="Create"
+                okText={ __( 'Create', 'shapeblock' ) }
             >
                 <Form form={form} layout="vertical">
                     <Form.Item
                         name="title"
-                        label="Template Name"
-                        rules={[{ required: true, message: 'Please enter a template name' }]}
+                        label={ __( 'Template Name', 'shapeblock' ) }
+                        rules={[{ required: true, message: __( 'Please enter a template name', 'shapeblock' ) }]}
                     >
-                        <Input placeholder="Enter template name" />
+                        <Input placeholder={ __( 'Enter template name', 'shapeblock' ) } />
                     </Form.Item>
                 </Form>
             </Modal>

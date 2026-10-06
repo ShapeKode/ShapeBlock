@@ -162,6 +162,22 @@ class Theme_Builder {
 				'rest_base'           => 'shapeblock-builder',
 				'supports'            => array( 'title', 'editor', 'custom-fields', 'revisions' ),
 				'menu_icon'           => 'dashicons-layout',
+				// Builder templates are site-wide layout, managed from the dashboard
+				// by administrators only -- not by every role that can write posts.
+				'capabilities'        => array(
+					'edit_posts'             => 'manage_options',
+					'edit_others_posts'      => 'manage_options',
+					'edit_private_posts'     => 'manage_options',
+					'edit_published_posts'   => 'manage_options',
+					'publish_posts'          => 'manage_options',
+					'read_private_posts'     => 'manage_options',
+					'delete_posts'           => 'manage_options',
+					'delete_others_posts'    => 'manage_options',
+					'delete_private_posts'   => 'manage_options',
+					'delete_published_posts' => 'manage_options',
+					'create_posts'           => 'manage_options',
+				),
+				'map_meta_cap'        => true,
 			)
 		);
 	}

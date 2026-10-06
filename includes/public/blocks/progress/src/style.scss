@@ -1,8 +1,7 @@
 /**
  * Progress Bar block — front-end + shared styles.
  *
- * Ported from the Elementor "Progress Bar" widget stylesheet
- * (easy-elements/widgets/progress/css/progress.scss). The reference CSS targeted
+ * The reference CSS targeted
  * `.rt-progress-bar` while the markup used the block's own class (a mismatch that
  * left the base rules inert); here the classes use the "shapeblock-" prefix and match
  * the markup, scoped under `.shapeblock-progress-bar-block-wrap`.

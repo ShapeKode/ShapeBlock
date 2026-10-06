@@ -7,13 +7,12 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Icon Box block.
  *
- * Mirrors the markup of the Elementor "Icon Box" widget
- * (easy-elements/widgets/icon-box). Element classes use the "shapeblock-" prefix.
+ * Element classes use the "shapeblock-" prefix.
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-icon-box-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-icon-box-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $view       = isset( $attributes['iconView'] ) ? $attributes['iconView'] : 'stracked';
 $shape      = isset( $attributes['iconShape'] ) ? $attributes['iconShape'] : 'rounded';
@@ -30,6 +29,44 @@ $desc = isset( $attributes['desc'] ) ? $attributes['desc'] : '';
 
 // Alignment: left = icon left, right = icon right, center = icon on top.
 $align = ( isset( $attributes['boxAlign'] ) && in_array( $attributes['boxAlign'], [ 'left', 'center', 'right' ], true ) ) ? $attributes['boxAlign'] : 'center';
+
+// Icon position (boxAlign) and content alignment (contentAlign), each with its own
+// Tablet / Mobile value. An empty value inherits the next larger screen; an empty
+// content alignment follows the icon position (top = centred, left = left, right = right).
+$sides      = [ 'left', 'center', 'right' ];
+$pos_eff    = [ '' => $align ];
+$ca_eff     = [ '' => ( isset( $attributes['contentAlign'] ) && in_array( $attributes['contentAlign'], $sides, true ) ) ? $attributes['contentAlign'] : '' ];
+$layout_own = [ '' => true ];
+$prev       = '';
+foreach ( [ 'Tablet', 'Mobile' ] as $dev_suffix ) {
+	$p_own = isset( $attributes[ 'boxAlign' . $dev_suffix ] ) && in_array( $attributes[ 'boxAlign' . $dev_suffix ], $sides, true );
+	$c_own = isset( $attributes[ 'contentAlign' . $dev_suffix ] ) && in_array( $attributes[ 'contentAlign' . $dev_suffix ], $sides, true );
+	$pos_eff[ $dev_suffix ]    = $p_own ? $attributes[ 'boxAlign' . $dev_suffix ] : $pos_eff[ $prev ];
+	$ca_eff[ $dev_suffix ]     = $c_own ? $attributes[ 'contentAlign' . $dev_suffix ] : $ca_eff[ $prev ];
+	$layout_own[ $dev_suffix ] = $p_own || $c_own;
+	$prev = $dev_suffix;
+}
+$v_align = ( isset( $attributes['boxVAlign'] ) && in_array( $attributes['boxVAlign'], [ 'flex-start', 'center', 'flex-end' ], true ) ) ? $attributes['boxVAlign'] : 'flex-start';
+// The declarations for one icon position + content alignment. In a column (icon on
+// top) the content moves with align-items; in a row it moves with justify-content,
+// mirrored for the icon-on-the-right row, which runs right to left.
+$layout_css = function ( $pos, $ca ) use ( $v_align ) {
+	$dirs = [ 'left' => 'row', 'center' => 'column', 'right' => 'row-reverse' ];
+	$flex = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end' ];
+	$text = '' !== $ca ? $ca : $pos;
+	$out  = [ 'flex-direction' => $dirs[ $pos ], 'text-align' => $text ];
+	if ( 'center' === $pos ) {
+		$out['align-items'] = $flex[ $text ];
+	} else {
+		$main = $flex[ $text ];
+		if ( 'right' === $pos && 'center' !== $text ) {
+			$main = 'flex-start' === $main ? 'flex-end' : 'flex-start';
+		}
+		$out['justify-content'] = $main;
+		$out['align-items']     = $v_align;
+	}
+	return $out;
+};
 
 $wrap_classes = [
 	'shapeblock-block', 'shapeblock-icon-box-block-wrap', $unique_id, 'shapeblock-icon-box-wrapper',
@@ -97,12 +134,9 @@ $u = function ( $key ) use ( $attributes, $H ) {
 $list = $bg( 'listBgColor', 'listBgGradient' );
 if ( ! empty( $attributes['feaListBorder'] ) ) $list = array_merge( $list, $H::border_to_css_props( $attributes['feaListBorder'] ) );
 $list = array_merge( $list, $dims( $attributes['feaListBorderRadius'] ?? [], 'radius' ), $dims( $attributes['feaListPadding'] ?? [], 'padding' ) );
-if ( '' !== $u( 'feaItemGap' ) ) $list['margin-bottom'] = $u( 'feaItemGap' );
 if ( '' !== $u( 'feaMiddleGap' ) ) $list['gap'] = $u( 'feaMiddleGap' );
-// Vertical alignment only applies when the icon sits left / right of the text.
-if ( in_array( $align, [ 'left', 'right' ], true ) && ! empty( $attributes['boxVAlign'] ) ) {
-	$list['align-items'] = $attributes['boxVAlign'];
-}
+// Icon position, content alignment and (for a row) vertical alignment.
+$list = array_merge( $list, $layout_css( $pos_eff[''], $ca_eff[''] ) );
 
 $extra_css = '';
 
@@ -117,6 +151,7 @@ if ( ! empty( $attributes['iconBorder'] ) ) $icon_box = array_merge( $icon_box, 
 $icon_box = array_merge( $icon_box, $dims( $attributes['iconPadding'] ?? [], 'padding' ) );
 $icon_svg = ( '' !== $u( 'iconSize' ) ) ? [ 'width' => $u( 'iconSize' ), 'height' => $u( 'iconSize' ) ] : [];
 $icon_num = ( '' !== $u( 'iconSize' ) ) ? [ 'font-size' => $u( 'iconSize' ) ] : [];
+$icon_i   = $icon_num; // the icon-font glyph is sized by font-size, like the number
 // A picture is sized by its width alone so that its proportions survive; giving
 // it the square the icons use would squash anything that is not square.
 $icon_img = ( '' !== $u( 'iconSize' ) ) ? [ 'width' => $u( 'iconSize' ), 'height' => 'auto' ] : [];
@@ -138,7 +173,7 @@ if ( $block_margin_decls ) {
 // ---------------------------------------------------------------------------
 // Responsive (tablet / mobile) â€” padding, margin and typography only.
 // ---------------------------------------------------------------------------
-$resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H ) {
+$resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $layout_css, $pos_eff, $ca_eff, $layout_own ) {
 	// ensure_unit helper for a per-device (suffixed) attribute.
 	$uu = function ( $key ) use ( $attributes, $H, $suffix ) {
 		$k = $key . $suffix;
@@ -147,14 +182,19 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H ) {
 
 	// List item â€” padding + gaps.
 	$list = $dims( $attributes[ 'feaListPadding' . $suffix ] ?? [], 'padding' );
-	if ( '' !== $uu( 'feaItemGap' ) )   $list['margin-bottom'] = $uu( 'feaItemGap' );
 	if ( '' !== $uu( 'feaMiddleGap' ) ) $list['gap']           = $uu( 'feaMiddleGap' );
+
+	// Icon position / content alignment for this device, only when it sets its own.
+	if ( ! empty( $layout_own[ $suffix ] ) ) {
+		$list = array_merge( $list, $layout_css( $pos_eff[ $suffix ], $ca_eff[ $suffix ] ) );
+	}
 
 	$wrap_m   = $dims( $attributes[ 'feaBlockMargin' . $suffix ] ?? [], 'margin' );
 	$icon_box = ( '' !== $uu( 'iconBoxSize' ) ) ? [ 'min-width' => $uu( 'iconBoxSize' ), 'min-height' => $uu( 'iconBoxSize' ), 'line-height' => $uu( 'iconBoxSize' ) ] : [];
 	$icon_box = array_merge( $icon_box, $dims( $attributes[ 'iconPadding' . $suffix ] ?? [], 'padding' ) );
 	$icon_svg = ( '' !== $uu( 'iconSize' ) ) ? [ 'width' => $uu( 'iconSize' ), 'height' => $uu( 'iconSize' ) ] : [];
 	$icon_num = ( '' !== $uu( 'iconSize' ) ) ? [ 'font-size' => $uu( 'iconSize' ) ] : [];
+	$icon_i   = $icon_num;
 	$icon_img = ( '' !== $uu( 'iconSize' ) ) ? [ 'width' => $uu( 'iconSize' ), 'height' => 'auto' ] : [];
 	$title_r  = array_merge( $typo( $attributes[ 'titleTypography' . $suffix ] ?? [] ), $dims( $attributes[ 'titlePadding' . $suffix ] ?? [], 'padding' ) );
 	$desc_r   = $typo( $attributes[ 'descTypography' . $suffix ] ?? [] );
@@ -167,6 +207,7 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H ) {
 		' .shapeblock-icon-box-icon svg' => $H::get_inline_styles( $icon_svg ),
 		' .shapeblock-icon-box-img'      => $H::get_inline_styles( $icon_img ),
 		' .shapeblock-icon-box-number'   => $H::get_inline_styles( $icon_num ),
+		' .shapeblock-icon-box-icon i'   => $H::get_inline_styles( $icon_i ),
 		' .shapeblock-icon-box-title'    => $H::get_inline_styles( $title_r ),
 		' .shapeblock-icon-box-desc'     => $H::get_inline_styles( $desc_r ),
 	];
@@ -189,6 +230,7 @@ $H::add_custom_style( $style_handle, $selector, $extra_css, [
 	'.shapeblock-icon-box-icon svg'                   => $H::get_inline_styles( $icon_svg ),
 	'.shapeblock-icon-box-img'                        => $H::get_inline_styles( $icon_img ),
 	'.shapeblock-icon-box-number'                     => $H::get_inline_styles( $icon_num ),
+	'.shapeblock-icon-box-icon i'                     => $H::get_inline_styles( $icon_i ),
 	'.shapeblock-icon-box-title'                      => $H::get_inline_styles( $title_styles ),
 	'.shapeblock-icon-box-desc'                       => $H::get_inline_styles( $desc_styles ),
 ] );
@@ -241,7 +283,7 @@ if ( '' !== $responsive_media ) {
 					<?php printf( '<%1$s class="shapeblock-icon-box-title">%2$s</%1$s>', tag_escape( $title_tag ), wp_kses_post( $ttl ) ); ?>
 				<?php endif; ?>
 				<?php if ( '' !== $desc ) : ?>
-					<p class="shapeblock-icon-box-desc"><?php echo esc_html( $desc ); ?></p>
+					<p class="shapeblock-icon-box-desc"><?php echo wp_kses( nl2br( $desc ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></p>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>

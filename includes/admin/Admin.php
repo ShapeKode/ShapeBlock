@@ -23,20 +23,10 @@ class Admin {
 
         $asset_file = include SHAPEBLOCK_PL_PATH . 'build/index.asset.php';
 
+        // No match(): the plugin supports PHP 7.4.
         $deps = array_map(function($dep) {
-            return match($dep) {
-                'react', 'react-dom', 'react-jsx-runtime' => 'wp-element',
-                'wp-scripts' => 'wp-scripts',
-                default => $dep,
-            };
+            return in_array( $dep, array( 'react', 'react-dom', 'react-jsx-runtime' ), true ) ? 'wp-element' : $dep;
         }, $asset_file['dependencies']);
-
-        wp_enqueue_style(
-            'shapeblock-admin-css',
-            SHAPEBLOCK_PL_URL . 'build/style-index.css',
-            [],
-            $asset_file['version']
-        );
 
         // Load the app on the main page and every ShapeBlock submenu page.
         $our_pages = array_keys( \ShapeBlock\Main::get_admin_pages() );
@@ -45,7 +35,14 @@ class Admin {
             return;
         }
 
-        wp_enqueue_style( 'shapeblock-admin-icons', SHAPEBLOCK_PL_URL . 'includes/admin/assets/icons/css/shapeblock-icon.css', array(), SHAPEBLOCK_VERSION );
+        wp_enqueue_style(
+            'shapeblock-admin-css',
+            SHAPEBLOCK_PL_URL . 'build/style-index.css',
+            [],
+            $asset_file['version']
+        );
+
+        wp_enqueue_style( 'shapeblock-admin-icons', SHAPEBLOCK_PL_URL . 'includes/admin/assets/icons/css/shapeblock-icon.css', array(), \shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/admin/assets/icons/css/shapeblock-icon.css' ) );
 
         wp_enqueue_script(
             'shapeblock-admin-js',
@@ -54,8 +51,8 @@ class Admin {
             $asset_file['version'],
             true
         );
+        wp_set_script_translations( 'shapeblock-admin-js', 'shapeblock', SHAPEBLOCK_PL_PATH . 'languages' );
 
-        
         $blocks = \ShapeBlock\Admin\Blocks::instance()->get_blocks();
 
         $template_count = wp_count_posts( 'shapeblock-template' );
@@ -68,7 +65,6 @@ class Admin {
             'nonce' => wp_create_nonce('wp_rest'),
             'blocks' => $blocks,
             'shapeblockUrl' => SHAPEBLOCK_PL_URL,
-            'shapeblockPath' => SHAPEBLOCK_PL_PATH,
             'templateCount' => $total_templates,
             'colors' => \ShapeBlock\Admin\Api::get_saved_colors(),
             'colorDefaults' => \ShapeBlock\Admin\Api::get_color_defaults(),

@@ -15,7 +15,7 @@ return ( function ( $attributes, $content, $block ) {
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-hover-box-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-hover-box-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $allowed_tags = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span' ];
 $title_tag    = isset( $attributes['titleTag'] ) && in_array( $attributes['titleTag'], $allowed_tags, true ) ? $attributes['titleTag'] : 'h3';
@@ -259,7 +259,7 @@ $new_tab  = ! empty( $attributes['linkNewTab'] );
 				<?php printf( '<%1$s class="shapeblock-hover-box-title">%2$s</%1$s>', tag_escape( $title_tag ), esc_html( $ttl ) ); ?>
 			<?php endif; ?>
 			<?php if ( '' !== $desc ) : ?>
-				<p class="shapeblock-hover-box-desc"><?php echo esc_html( $desc ); ?></p>
+				<p class="shapeblock-hover-box-desc"><?php echo wp_kses( nl2br( $desc ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></p>
 			<?php endif; ?>
 		</div>
 		<?php if ( '' !== $link_url ) : ?>

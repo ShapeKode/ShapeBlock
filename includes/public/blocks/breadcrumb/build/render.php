@@ -7,8 +7,7 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Breadcrumb block.
  *
- * Mirrors the markup of the Elementor "Breadcrumb" widget
- * (easy-elements/widgets/breadcrumb). Element classes use the "shapeblock-" prefix.
+ * Element classes use the "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
@@ -123,7 +122,7 @@ if ( ! function_exists( 'shapeblock_breadcrumb_trail' ) ) {
 	}
 }
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-bc-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-bc-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $show_home_icon = ! empty( $attributes['showHomeIcon'] );
 $home_icon      = isset( $attributes['homeIcon'] ) ? $attributes['homeIcon'] : '';

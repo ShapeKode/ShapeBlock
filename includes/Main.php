@@ -41,6 +41,7 @@ class Main {
         require_once SHAPEBLOCK_PL_PATH . 'includes/admin/post-types.php';
         require_once SHAPEBLOCK_PL_PATH . 'includes/public/scripts.php';
         require_once SHAPEBLOCK_PL_PATH . 'includes/public/responsive-visibility.php';
+        require_once SHAPEBLOCK_PL_PATH . 'includes/public/responsive-spacing.php';
         require_once SHAPEBLOCK_PL_PATH . 'includes/public/blocks/blocks.php';
     }
 
@@ -50,10 +51,10 @@ class Main {
      */
     public static function get_admin_pages() {
         return array(
-            'shapeblock' => array( 'tab' => 'blocks',        'label' => 'Blocks Settings' ),
-            'shapeblock-theme-builder'          => array( 'tab' => 'theme-builder', 'label' => 'Theme Builder' ),
-            'shapeblock-templates'              => array( 'tab' => 'templates',     'label' => 'Custom Templates' ),
-            'shapeblock-settings'               => array( 'tab' => 'settings',      'label' => 'Settings' ),
+            'shapeblock' => array( 'tab' => 'blocks',        'label' => esc_html__( 'Blocks Settings', 'shapeblock' ) ),
+            'shapeblock-theme-builder'          => array( 'tab' => 'theme-builder', 'label' => esc_html__( 'Theme Builder', 'shapeblock' ) ),
+            'shapeblock-templates'              => array( 'tab' => 'templates',     'label' => esc_html__( 'Custom Templates', 'shapeblock' ) ),
+            'shapeblock-settings'               => array( 'tab' => 'settings',      'label' => esc_html__( 'Settings', 'shapeblock' ) ),
         );
     }
 
@@ -82,7 +83,7 @@ class Main {
      * add_menu_page()/add_submenu_page() actually return.
      *
      * A submenu's suffix is built from the parent's sanitized menu TITLE
-     * ("Shape Block" => "shape-block_page_…"), not the parent slug, so it
+     * ("ShapeBlock" => "shapeblock_page_…"), not the parent slug, so it
      * must be recorded rather than rebuilt by hand.
      *
      * @var array<string,string>
@@ -128,8 +129,8 @@ class Main {
 
     public function add_menu() {
         $hook = add_menu_page(
-            'Shape Block',
-            'Shape Block',
+            'ShapeBlock',
+            'ShapeBlock',
             'manage_options',
             'shapeblock',
             array( $this, 'render_menu_page' ),
@@ -143,7 +144,7 @@ class Main {
         foreach ( self::get_admin_pages() as $slug => $page ) {
             $hook = add_submenu_page(
                 'shapeblock',
-                'ShapeBlock - ' . $page['label'],
+                'ShapeBlock - ' . $page['label'], // Label is already escaped.
                 $page['label'],
                 'manage_options',
                 $slug,
@@ -162,12 +163,6 @@ class Main {
 
         echo '<div class="shapeblock-options-wrap">';
         echo '<div id="shapeblock-dashboard" data-initial-tab="' . esc_attr( $tab ) . '"></div>';
-        echo '</div>';
-    }
-
-    public function render_blocks_page() {
-        echo '<div class="shapeblock-options-wrap">';
-        echo '<div id="shapeblock-blocks">ShapeBlock Blocks</div>';
         echo '</div>';
     }
 
@@ -191,8 +186,7 @@ class Main {
     public function plugin_action_links( $plugin_actions, $plugin_file, $plugin_data, $context ) {
 
 		$new_actions = array();
-		/* translators: 1: Settings Text */
-		$new_actions['shapeblock_plugin_actions_setting'] = sprintf( __( '<a href="%s" target="_self">Settings</a>', 'shapeblock' ), esc_url( admin_url( 'admin.php?page=shapeblock' ) ) );
+		$new_actions['shapeblock_plugin_actions_setting'] = '<a href="' . esc_url( admin_url( 'admin.php?page=shapeblock' ) ) . '">' . esc_html__( 'Settings', 'shapeblock' ) . '</a>';
 
 		return array_merge( $new_actions, $plugin_actions );
 

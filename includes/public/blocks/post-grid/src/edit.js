@@ -405,7 +405,7 @@ export default function Edit({ attributes, setAttributes }) {
 						<ToggleControl
 							label={__('Show Date Badge', 'shapeblock')}
 							checked={attributes.showDateOnTop}
-							onChange={(value) => { setAttributes({ showDateOnTop: value }); console.log(value); }}
+							onChange={(value) => setAttributes({ showDateOnTop: value })}
 							__nextHasNoMarginBottom={true}
 						/>
 					</>

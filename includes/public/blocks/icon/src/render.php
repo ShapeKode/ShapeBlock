@@ -8,7 +8,7 @@ return ( function ( $attributes, $content, $block ) {
  * Server-side render for the Icon block.
  *
  * A single icon (optionally linked) with color, size, background, border,
- * rotation and hover states — a simple counterpart to Elementor's Icon widget.
+ * rotation and hover states.
  * Element classes use this plugin's "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
@@ -16,7 +16,7 @@ return ( function ( $attributes, $content, $block ) {
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-icon-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-icon-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $icon        = isset( $attributes['icon'] ) ? $attributes['icon'] : '';
 $url         = isset( $attributes['iconUrl'] ) ? trim( $attributes['iconUrl'] ) : '';

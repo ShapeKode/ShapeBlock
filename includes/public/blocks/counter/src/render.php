@@ -7,13 +7,12 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Counter block.
  *
- * Mirrors the markup of the Elementor "Counter" widget
- * (easy-elements/widgets/counter). Element classes use the "shapeblock-" prefix.
+ * Element classes use the "shapeblock-" prefix.
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-cnt-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-cnt-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $number    = isset( $attributes['number'] ) && '' !== $attributes['number'] ? $attributes['number'] : '0';
 $start     = isset( $attributes['startNumber'] ) && '' !== $attributes['startNumber'] ? $attributes['startNumber'] : '0';
@@ -88,15 +87,67 @@ $u = function ( $key ) use ( $attributes, $H ) {
 	return ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? $H::ensure_unit( $attributes[ $key ] ) : '';
 };
 
-// Wrap (align/justify/gap).
-$wrap = [];
-if ( ! empty( $attributes['wrapAlign'] ) ) $wrap['align-items'] = $attributes['wrapAlign'];
-if ( ! empty( $attributes['wrapJustify'] ) ) $wrap['justify-content'] = $attributes['wrapJustify'];
+// Alignment (wrapAlign: start | center | end) lines up the icon, the number
+// and the title together. Which CSS property moves things sideways depends on
+// the layout: in a column (icon top/bottom/off) it is align-items, in a row
+// (icon left/right) it is justify-content -- reversed for row-reverse.
+$icon_row  = $icon_on && in_array( $icon_pos, [ 'left', 'right' ], true );
+$title_col = in_array( $title_pos, [ 'top', 'bottom' ], true );
+$align_css = function ( $align ) use ( $icon_row, $icon_pos, $title_col ) {
+	$flex = [ 'start' => 'flex-start', 'center' => 'center', 'end' => 'flex-end' ];
+	$text = [ 'start' => 'left', 'center' => 'center', 'end' => 'right' ];
+	$legacy = [ 'flex-start' => 'start', 'flex-end' => 'end', 'left' => 'start', 'right' => 'end' ];
+	if ( isset( $legacy[ $align ] ) ) {
+		$align = $legacy[ $align ];
+	}
+	if ( ! isset( $flex[ $align ] ) ) {
+		return [ [], [] ];
+	}
+	$wrap = [ 'text-align' => $text[ $align ] ];
+	if ( $icon_row ) {
+		$main = $flex[ $align ];
+		if ( 'right' === $icon_pos && 'center' !== $align ) {
+			$main = 'start' === $align ? 'flex-end' : 'flex-start';
+		}
+		$wrap['justify-content'] = $main;
+	} else {
+		$wrap['align-items'] = $flex[ $align ];
+	}
+	$content = $title_col ? [ 'align-items' => $flex[ $align ] ] : [];
+	return [ $wrap, $content ];
+};
+// Title Text Alignment also moves the title box itself, which is only as wide
+// as its text -- text-align alone had nothing to move it within.
+$title_align_css = function ( $align ) use ( $title_col ) {
+	if ( '' === (string) $align ) {
+		return [];
+	}
+	$out = [ 'text-align' => $align ];
+	if ( $title_col ) {
+		$self = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end', 'justify' => 'stretch' ];
+		if ( isset( $self[ $align ] ) ) $out['align-self'] = $self[ $align ];
+	}
+	return $out;
+};
+// ...and for that the content column must span the block, not just hug the
+// widest of number and title.
+$title_content_css = function ( $align ) use ( $icon_row ) {
+	if ( '' === (string) $align ) {
+		return [];
+	}
+	return $icon_row ? [ 'flex-grow' => '1' ] : [ 'align-self' => 'stretch' ];
+};
+
+// Wrap (align/gap).
+list( $wrap, $content ) = $align_css( $attributes['wrapAlign'] ?? '' );
+// Legacy "Box Justify" -- no longer offered, still honoured for saved blocks.
+if ( ! empty( $attributes['wrapJustify'] ) && ! isset( $wrap['justify-content'] ) ) $wrap['justify-content'] = $attributes['wrapJustify'];
+if ( $icon_row && ! empty( $attributes['iconVerticalAlign'] ) ) $wrap['align-items'] = $attributes['iconVerticalAlign'];
 if ( $icon_on && '' !== $u( 'iconGap' ) ) $wrap['gap'] = $u( 'iconGap' );
 
-$content = [];
 if ( '' !== $u( 'contentGap' ) ) $content['gap'] = $u( 'contentGap' );
 if ( ! empty( $attributes['contentVerticalAlign'] ) ) $content['align-items'] = $attributes['contentVerticalAlign'];
+$content = array_merge( $content, $title_content_css( $attributes['titleAlign'] ?? '' ) );
 
 $number_wrap = [];
 if ( '' !== $u( 'subPreGap' ) ) $number_wrap['gap'] = $u( 'subPreGap' );
@@ -119,7 +170,7 @@ $suffix_styles = array_merge( $suffix_styles, $tshadow( $attributes['suffixTextS
 // Title.
 $title_styles = $typo( $attributes['titleTypography'] ?? [] );
 if ( ! empty( $attributes['titleColor'] ) ) $title_styles['color'] = $attributes['titleColor'];
-if ( ! empty( $attributes['titleAlign'] ) ) $title_styles['text-align'] = $attributes['titleAlign'];
+$title_styles = array_merge( $title_styles, $title_align_css( $attributes['titleAlign'] ?? '' ) );
 $title_styles = array_merge( $title_styles, $tshadow( $attributes['titleTextShadow'] ?? [] ) );
 
 // Icon.
@@ -137,14 +188,13 @@ $icon_i = ( '' !== $u( 'iconSize' ) ) ? [ 'font-size' => $u( 'iconSize' ) ] : []
 // above is unchanged; these rules are emitted only when the matching per-device
 // attribute is set, so existing content renders identically.
 // ---------------------------------------------------------------------------
-$build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $u, $icon_on ) {
-	$wrap = [];
-	if ( ! empty( $attributes[ 'wrapAlign' . $suffix ] ) ) $wrap['align-items'] = $attributes[ 'wrapAlign' . $suffix ];
+$build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $u, $icon_on, $align_css, $title_align_css, $title_content_css ) {
+	list( $wrap, $content ) = $align_css( $attributes[ 'wrapAlign' . $suffix ] ?? '' );
 	if ( $icon_on && '' !== $u( 'iconGap' . $suffix ) ) $wrap['gap'] = $u( 'iconGap' . $suffix );
 
-	$content = [];
 	if ( '' !== $u( 'contentGap' . $suffix ) ) $content['gap'] = $u( 'contentGap' . $suffix );
 	if ( ! empty( $attributes[ 'contentVerticalAlign' . $suffix ] ) ) $content['align-items'] = $attributes[ 'contentVerticalAlign' . $suffix ];
+	$content = array_merge( $content, $title_content_css( $attributes[ 'titleAlign' . $suffix ] ?? '' ) );
 
 	$number = $typo( $attributes[ 'numberTypography' . $suffix ] ?? [] );
 	if ( '' !== $u( 'numberStrokeWidth' . $suffix ) ) $number['-webkit-text-stroke-width'] = $u( 'numberStrokeWidth' . $suffix );
@@ -154,7 +204,7 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $u, $icon_on 
 	$suffix_s = $typo( $attributes[ 'suffixTypography' . $suffix ] ?? [] );
 
 	$title = $typo( $attributes[ 'titleTypography' . $suffix ] ?? [] );
-	if ( ! empty( $attributes[ 'titleAlign' . $suffix ] ) ) $title['text-align'] = $attributes[ 'titleAlign' . $suffix ];
+	$title = array_merge( $title, $title_align_css( $attributes[ 'titleAlign' . $suffix ] ?? '' ) );
 
 	$icon = $dims( $attributes[ 'iconPadding' . $suffix ] ?? [], 'padding' );
 

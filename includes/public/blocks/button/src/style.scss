@@ -1,8 +1,7 @@
 /**
  * Button — front-end + editor styles.
  *
- * Structure ported from the Elementor widget
- * (easy-elements/widgets/button/css/button.scss). Element classes use this
+ * Element classes use this
  * plugin's own "shapeblock-" prefix and preset CSS variables.
  */
 
@@ -79,7 +78,6 @@
 
 	&:hover {
 		text-decoration: none;
-		transform: translateY(-1px);
 	}
 }
 
@@ -210,5 +208,57 @@
 	.shapeblock-button-block-wrap .shapeblock-button {
 		max-width: 100%;
 		white-space: normal;
+	}
+}
+
+/* Block "Align center": the wrapper stays full width, so centre the inline button in it. */
+.wp-block-shapeblock-button.aligncenter,
+.shapeblock-button-block-wrap.aligncenter {
+	text-align: center;
+}
+
+/* Hover gradient: a gradient cannot transition, so the hover one sits in
+ * ::after and fades in over the normal background. */
+.shapeblock-button.shapeblock-button-has-hover-gradient {
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		background: var(--shapeblock-button-hover-gradient);
+		opacity: 0;
+		transition: opacity 0.4s ease;
+		pointer-events: none;
+		z-index: 0;
+	}
+
+	&:hover::after,
+	&:focus-visible::after {
+		opacity: 1;
+	}
+
+	> * {
+		position: relative;
+		z-index: 1;
+	}
+}
+
+/* Gradient border: a ring cut out of the gradient with a mask, drawn on top
+ * so a hover fill never hides it. */
+.shapeblock-button.shapeblock-button-has-border-gradient {
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		padding: var(--shapeblock-button-border-width, 2px);
+		border-radius: inherit;
+		background: var(--shapeblock-button-border-gradient);
+		-webkit-mask:
+			linear-gradient(#fff 0 0) content-box,
+			linear-gradient(#fff 0 0);
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+		pointer-events: none;
+		z-index: 2;
 	}
 }

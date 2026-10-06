@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
 import {
     Modal, Button, Select, Space, Empty, notification, Spin, Typography
 } from 'antd';
@@ -14,7 +15,7 @@ const { Text } = Typography;
 function useRuleCatalog() {
     return useMemo(() => {
         const rules = (typeof shapeblock !== 'undefined' && shapeblock.builderRules) || {};
-        const groupLabels = { general: 'General', specific: 'Specific' };
+        const groupLabels = { general: __( 'General', 'shapeblock' ), specific: __( 'Specific', 'shapeblock' ) };
         const groupedOptions = [];
         const defs = {};
 
@@ -62,7 +63,7 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
                 setObjectCache((prev) => ({ ...prev, [objectType]: data.objects || [] }));
             })
             .catch(() => {
-                notification.error({ message: 'Failed to load items' });
+                notification.error({ message: __( 'Failed to load items', 'shapeblock' ) });
             })
             .finally(() => {
                 setObjectLoading((prev) => ({ ...prev, [objectType]: false }));
@@ -97,7 +98,7 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
                 });
             })
             .catch(() => {
-                notification.error({ message: 'Failed to load conditions' });
+                notification.error({ message: __( 'Failed to load conditions', 'shapeblock' ) });
             })
             .finally(() => setLoading(false));
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -146,31 +147,36 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
             .then((res) => res.json())
             .then((data) => {
                 if (data.status === 'success') {
-                    notification.success({ message: 'Conditions saved', duration: 2 });
+                    notification.success({ message: __( 'Conditions saved', 'shapeblock' ), duration: 2 });
                     onSaved && onSaved(data);
                     onClose();
                 } else {
-                    notification.error({ message: data.message || 'Save failed' });
+                    notification.error({ message: data.message || __( 'Save failed', 'shapeblock' ) });
                 }
             })
-            .catch(() => notification.error({ message: 'Save failed' }))
+            .catch(() => notification.error({ message: __( 'Save failed', 'shapeblock' ) }))
             .finally(() => setSaving(false));
     };
 
     return (
         <Modal
-            title={item ? `Display Conditions — ${item.title}` : 'Display Conditions'}
+            title={item
+                ? sprintf(
+                    /* translators: %s: template title. */
+                    __( 'Display Conditions — %s', 'shapeblock' ),
+                    item.title
+                )
+                : __( 'Display Conditions', 'shapeblock' )}
             open={open}
             onCancel={onClose}
             onOk={handleSave}
             confirmLoading={saving}
-            okText="Save Conditions"
+            okText={ __( 'Save Conditions', 'shapeblock' ) }
             width={680}
             destroyOnHidden
         >
             <Text type="secondary" style={{ display: 'block', marginBottom: 16 }}>
-                Choose where this template should appear. Include rules add locations;
-                exclude rules remove them (exclude always wins).
+                { __( 'Choose where this template should appear. Include rules add locations; exclude rules remove them (exclude always wins).', 'shapeblock' ) }
             </Text>
 
             {loading ? (
@@ -178,7 +184,7 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
             ) : (
                 <Space direction="vertical" style={{ width: '100%' }} size={12}>
                     {rows.length === 0 && (
-                        <Empty description="No conditions — this template will not display" />
+                        <Empty description={ __( 'No conditions — this template will not display', 'shapeblock' ) } />
                     )}
 
                     {rows.map((row) => {
@@ -195,14 +201,14 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
                                     value={row.type}
                                     onChange={(val) => updateRow(row.key, { type: val })}
                                     options={[
-                                        { value: 'include', label: 'Include' },
-                                        { value: 'exclude', label: 'Exclude' },
+                                        { value: 'include', label: __( 'Include', 'shapeblock' ) },
+                                        { value: 'exclude', label: __( 'Exclude', 'shapeblock' ) },
                                     ]}
                                 />
                                 <Select
                                     style={{ flex: '0 0 190px' }}
                                     value={row.rule || undefined}
-                                    placeholder="Select rule"
+                                    placeholder={ __( 'Select rule', 'shapeblock' ) }
                                     onChange={(val) => onRuleChange(row.key, val)}
                                     options={groupedOptions}
                                 />
@@ -211,7 +217,7 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
                                         mode="multiple"
                                         style={{ flex: '1 1 auto', minWidth: 0 }}
                                         value={row.ids}
-                                        placeholder="Select items"
+                                        placeholder={ __( 'Select items', 'shapeblock' ) }
                                         onChange={(val) => updateRow(row.key, { ids: val })}
                                         loading={!!objectLoading[objectType]}
                                         options={objectCache[objectType] || []}
@@ -228,13 +234,14 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
                                     icon={<DeleteOutlined />}
                                     onClick={() => removeRow(row.key)}
                                     style={{ flex: '0 0 auto' }}
+                                    aria-label={ __( 'Remove condition', 'shapeblock' ) }
                                 />
                             </div>
                         );
                     })}
 
                     <Button type="dashed" icon={<PlusOutlined />} onClick={addRow} block>
-                        Add Condition
+                        { __( 'Add Condition', 'shapeblock' ) }
                     </Button>
                 </Space>
             )}

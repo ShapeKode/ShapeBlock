@@ -23,7 +23,7 @@ THE SOFTWARE.
 ---
 
 This is the upstream license for Bootstrap's grid component
-(https://getbootstrap.com), bundled in this directory as bootstrap-grid.css /
-bootstrap-grid.min.css and their source .scss, recompiled with the
+(https://getbootstrap.com), bundled in this directory as bootstrap-grid.css and its
+source .scss, recompiled with the
 "shapeblock-" class/variable prefix. It is not part of ShapeBlock's own
 GPLv2-or-later source and is reproduced here to satisfy its own license terms.

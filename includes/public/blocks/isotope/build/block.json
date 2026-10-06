@@ -1,0 +1,516 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "shapeblock/isotope",
+  "version": "0.1.0",
+  "title": "Isotope Filter",
+  "category": "shapeblock",
+  "description": "A filterable grid: category buttons on top, and under each category a list of items with icon, title and description.",
+  "keywords": [
+    "isotope",
+    "filter",
+    "portfolio",
+    "grid",
+    "category",
+    "services"
+  ],
+  "example": {},
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "textdomain": "shapeblock",
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php",
+  "attributes": {
+    "advPadding": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advPaddingTablet": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advPaddingMobile": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advMargin": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advMarginTablet": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advMarginMobile": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "advBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "categories": {
+      "type": "array",
+      "default": [
+        {
+          "name": "Design",
+          "items": [
+            {
+              "icon": "shapeblock-icon-gui",
+              "title": "UI Design",
+              "desc": "Clean, modern interfaces that are easy to use."
+            },
+            {
+              "icon": "shapeblock-icon-image",
+              "title": "Branding",
+              "desc": "Logos and visual identities that people remember."
+            }
+          ]
+        },
+        {
+          "name": "Development",
+          "items": [
+            {
+              "icon": "shapeblock-icon-data-base",
+              "title": "Web Development",
+              "desc": "Fast, secure sites built to grow with you."
+            },
+            {
+              "icon": "shapeblock-icon-chart-treemap",
+              "title": "Integrations",
+              "desc": "Connect your tools so your data flows."
+            }
+          ]
+        },
+        {
+          "name": "Marketing",
+          "items": [
+            {
+              "icon": "shapeblock-icon-chat",
+              "title": "Content",
+              "desc": "Stories and posts that bring readers in."
+            },
+            {
+              "icon": "shapeblock-icon-earth-americas",
+              "title": "SEO",
+              "desc": "Be found by the people who are looking for you."
+            }
+          ]
+        }
+      ]
+    },
+    "showAll": {
+      "type": "boolean",
+      "default": true
+    },
+    "allLabel": {
+      "type": "string",
+      "default": "All"
+    },
+    "defaultFilter": {
+      "type": "string",
+      "default": "all"
+    },
+    "showIcon": {
+      "type": "boolean",
+      "default": true
+    },
+    "titleTag": {
+      "type": "string",
+      "default": "h3"
+    },
+    "filterAlign": {
+      "type": "string",
+      "default": "center"
+    },
+    "filterAlignTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "filterAlignMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "columns": {
+      "type": "string",
+      "default": "3"
+    },
+    "columnsTablet": {
+      "type": "string",
+      "default": "2"
+    },
+    "columnsMobile": {
+      "type": "string",
+      "default": "1"
+    },
+    "gap": {
+      "type": "string",
+      "default": "24"
+    },
+    "gapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "gapMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "equalHeight": {
+      "type": "boolean",
+      "default": true
+    },
+    "cardAlign": {
+      "type": "string",
+      "default": "left"
+    },
+    "cardAlignTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "cardAlignMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "iconPosition": {
+      "type": "string",
+      "default": "top"
+    },
+    "animationType": {
+      "type": "string",
+      "default": "scale"
+    },
+    "animationDuration": {
+      "type": "string",
+      "default": "400"
+    },
+    "filterGap": {
+      "type": "string",
+      "default": "10"
+    },
+    "filterGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "filterGapMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "filterSpace": {
+      "type": "string",
+      "default": "40"
+    },
+    "filterSpaceTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "filterSpaceMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "filterPadding": {
+      "type": "object"
+    },
+    "filterPaddingTablet": {
+      "type": "object"
+    },
+    "filterPaddingMobile": {
+      "type": "object"
+    },
+    "filterTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "filterTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "filterTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "filterColor": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBg": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBorder": {
+      "type": "object",
+      "default": {
+        "width": 0,
+        "color": "",
+        "style": "solid"
+      }
+    },
+    "filterRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "filterColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBgHover": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBorderColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "filterColorActive": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBgActive": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBorderColorActive": {
+      "type": "string",
+      "default": ""
+    },
+    "cardBg": {
+      "type": "string",
+      "default": ""
+    },
+    "cardBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "cardBorder": {
+      "type": "object",
+      "default": {
+        "width": 0,
+        "color": "",
+        "style": "solid"
+      }
+    },
+    "cardRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "cardPadding": {
+      "type": "object"
+    },
+    "cardPaddingTablet": {
+      "type": "object"
+    },
+    "cardPaddingMobile": {
+      "type": "object"
+    },
+    "cardShadow": {
+      "type": "object",
+      "default": {
+        "x": 0,
+        "y": 0,
+        "b": 0,
+        "s": 0,
+        "c": ""
+      }
+    },
+    "cardBgHover": {
+      "type": "string",
+      "default": ""
+    },
+    "cardBgGradientHover": {
+      "type": "string",
+      "default": ""
+    },
+    "cardBorderColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "cardShadowHover": {
+      "type": "object",
+      "default": {
+        "x": 0,
+        "y": 0,
+        "b": 0,
+        "s": 0,
+        "c": ""
+      }
+    },
+    "iconColor": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBg": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSize": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSizeMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxSize": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBoxSizeMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "iconRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "iconSpace": {
+      "type": "string",
+      "default": ""
+    },
+    "titleColor": {
+      "type": "string",
+      "default": ""
+    },
+    "titleColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "titleTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "titleTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "titleTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "descColor": {
+      "type": "string",
+      "default": ""
+    },
+    "descTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "descTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "descTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "textGap": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBgGradientHover": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBgGradientActive": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBgGradient": {
+      "type": "string",
+      "default": ""
+    }
+  }
+}

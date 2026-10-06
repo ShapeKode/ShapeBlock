@@ -166,6 +166,18 @@ function shapeblock_menu_last_permission() {
 }
 
 /**
+ * Who may overwrite the "last used menu" value.
+ *
+ * It is one site-wide option, so replacing it needs the same capability as
+ * editing a navigation menu, not just the right to write a post.
+ *
+ * @return bool
+ */
+function shapeblock_menu_last_write_permission() {
+	return current_user_can( 'edit_theme_options' );
+}
+
+/**
  * REST: remember the most recently edited menu, and hand it back so a freshly inserted
  * block can auto-restore it ( the way a brand-new menu comes pre-filled by default ).
  */
@@ -182,7 +194,7 @@ function shapeblock_menu_register_last_route() {
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => 'shapeblock_menu_save_last',
-				'permission_callback' => 'shapeblock_menu_last_permission',
+				'permission_callback' => 'shapeblock_menu_last_write_permission',
 				'args'                => array(
 					'items' => array(
 						'type'     => 'array',

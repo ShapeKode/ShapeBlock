@@ -16,7 +16,7 @@ function shapeblock_enqueue_block_scripts() {
 		return;
 	}
 
-	wp_enqueue_style( 'shapeblock-public-style', SHAPEBLOCK_PL_URL . 'includes/public/assets/css/public.css', array(), SHAPEBLOCK_VERSION );
+	wp_enqueue_style( 'shapeblock-public-style', SHAPEBLOCK_PL_URL . 'includes/public/assets/css/public.css', array(), shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/css/public.css' ) );
 
 	// Styling for the "ShapeBlock Menu" core-Navigation variation ( .shapeblock-nav ). Versioned by
 	// file modified time so CSS tweaks always bust the browser cache.
@@ -27,6 +27,8 @@ function shapeblock_enqueue_block_scripts() {
 		array(),
 		file_exists( $nav_var_file ) ? filemtime( $nav_var_file ) : SHAPEBLOCK_VERSION
 	);
+	// Small enough for WordPress to print inline -- see shapeblock_add_style_paths().
+	wp_style_add_data( 'shapeblock-nav-variation', 'path', $nav_var_file );
 
 	$colors  = \ShapeBlock\Admin\Api::get_saved_colors();
 	$css_map = array(
@@ -42,7 +44,10 @@ function shapeblock_enqueue_block_scripts() {
 	$declarations = '';
 	foreach ( $css_map as $key => $var ) {
 		if ( ! empty( $colors[ $key ] ) ) {
-			$declarations .= $var . ':' . esc_attr( $colors[ $key ] ) . ';';
+			$color = \ShapeBlock\Frontend\Helper::sanitize_css_value( $colors[ $key ] );
+			if ( '' !== $color ) {
+				$declarations .= $var . ':' . $color . ';';
+			}
 		}
 	}
 
@@ -51,7 +56,7 @@ function shapeblock_enqueue_block_scripts() {
 	// here on :root applies plugin-wide unless an individual Row overrides it.
 	$layout = \ShapeBlock\Admin\Api::get_saved_layout();
 	if ( ! empty( $layout['container_width'] ) ) {
-		$declarations .= '--shapeblock-layout-row-max-width:' . esc_attr( $layout['container_width'] ) . ';';
+		$declarations .= '--shapeblock-layout-row-max-width:' . \ShapeBlock\Frontend\Helper::ensure_unit( $layout['container_width'] ) . ';';
 	}
 
 	if ( $declarations !== '' ) {

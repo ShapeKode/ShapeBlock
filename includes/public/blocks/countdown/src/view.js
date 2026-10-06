@@ -1,9 +1,7 @@
 /**
  * Countdown — front-end behaviour.
  *
- * Ported from the Elementor widget script
- * (easy-elements/widgets/countdown/js/countdown.js). Rewritten as scoped,
- * dependency-free JS so it runs on any front-end page and supports multiple
+ * Scoped, dependency-free JS so it runs on any front-end page and supports multiple
  * countdown instances per page.
  */
 (function () {

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { __ } from '@wordpress/i18n';
 import {
     Breadcrumb, Layout, Menu, theme, ConfigProvider, App
 } from 'antd';
-import Dashboard from './components/admin-components/dashboard';
 import Blocks from './components/admin-components/blocks';
 import Templates from './components/admin-components/templates';
 import ThemeBuilder from './components/admin-components/theme-builder';
@@ -14,28 +14,28 @@ import './editor';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-const items = [
+const getMenuItems = () => [
     {
         key: 'blocks',
-        label: 'Blocks Settings',
+        label: __( 'Blocks Settings', 'shapeblock' ),
         icon: <BlockOutlined />
     },
     {
         key: 'theme-builder',
-        label: 'Theme Builder',
+        label: __( 'Theme Builder', 'shapeblock' ),
         icon: <LayoutOutlined />
     },
     {
         key: 'templates',
-        label: 'Custom Templates',
+        label: __( 'Custom Templates', 'shapeblock' ),
         icon: <PicRightOutlined />
     },
     {
         key: 'settings',
-        label: 'Settings',
+        label: __( 'Settings', 'shapeblock' ),
         icon: <SettingOutlined />
     }
-]
+];
 
 const ThemeData = {
     borderRadius: 2,
@@ -108,13 +108,13 @@ export default function ShapeBlockApp({ initialTab } = {}) {
                 <Layout style={{ minHeight: '100vh' }}>
                     <Sider theme="light" collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>
                         <div className="shapeblock-logo">
-                            <img src={shapeblock.shapeblockUrl + 'assets/images/icons/shapeblock-logo.png'} alt="shapeblock-logo" />
+                            <img src={shapeblock.shapeblockUrl + 'assets/images/icons/shapeblock-logo.png'} alt={ __( 'ShapeBlock logo', 'shapeblock' ) } />
                         </div>
                         <Menu
                             theme="light"
                             mode="inline"
                             selectedKeys={[current]}
-                            items={items}
+                            items={getMenuItems()}
                             onClick={changeMenu}
                         />
                     </Sider>

@@ -1,8 +1,7 @@
 /**
  * Social Share — front-end behaviour (copy link).
  *
- * Ported from the inline jQuery in the Elementor "Social Share" widget.
- * Rewritten as scoped, dependency-free JS.
+ * Scoped, dependency-free JS.
  */
 (function () {
 	'use strict';

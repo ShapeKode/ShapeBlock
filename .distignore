@@ -14,21 +14,15 @@
 node_modules
 vendor
 
-# Uncompiled sources — build/ is what WordPress loads.
-# NOTE: the "menu" block has no src/ at all; build/render.php there is
-# the only copy and must never be caught by a blanket src/ rule.
-src
-includes/public/blocks/*/src
-
-# Shared editor-only source components (bundled into each block's
-# build/index.js by webpack at compile time; nothing loads this at
-# runtime).
-includes/public/blocks/custom-components
+# Sources SHIP. src/, includes/public/blocks/*/src, the shared
+# includes/public/blocks/custom-components and package.json (the build
+# tools) are the human-readable source of every build/ file. readme.txt
+# ("Source code and build process") promises they are inside the plugin,
+# and WP.org guideline 4 needs them there - there is no public repo link
+# to point to instead. Never add them back to this list.
 
 # Build/dev tooling and metadata
-package.json
 package-lock.json
-includes/public/blocks/*/package.json
 composer.json
 composer.lock
 webpack.config.js

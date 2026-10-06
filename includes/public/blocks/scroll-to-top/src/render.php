@@ -7,15 +7,14 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Scroll Top block.
  *
- * Mirrors the markup of the Elementor "Scroll Top" widget
- * (easy-elements/widgets/scroll-to-top). Element classes use the "shapeblock-" prefix.
+ * Element classes use the "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-stt-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-stt-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $icon       = isset( $attributes['scrollIcon'] ) ? $attributes['scrollIcon'] : '';
 $position   = ( isset( $attributes['position'] ) && 'left' === $attributes['position'] ) ? 'left' : 'right';

@@ -7,14 +7,13 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Team Member block.
  *
- * Mirrors the markup of the Elementor "Team Grid" widget
- * (easy-elements/widgets/team-grid) — 5 skins, social icons, contact info and
+ * 5 skins, social icons, contact info and
  * an optional popup. Element classes use this plugin's "shapeblock-" prefix.
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id  = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-team-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id  = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-team-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 $popup_id   = $unique_id . '-popup';
 
 $skin       = isset( $attributes['teamSkin'] ) ? $attributes['teamSkin'] : 'default';
@@ -29,7 +28,10 @@ $details    = isset( $attributes['details'] ) ? $attributes['details'] : '';
 $action     = isset( $attributes['actionType'] ) ? $attributes['actionType'] : 'link';
 $link       = isset( $attributes['linkUrl'] ) ? $attributes['linkUrl'] : '';
 $target     = ! empty( $attributes['linkTarget'] ) ? ' target="_blank"' : '';
-$nofollow   = ! empty( $attributes['linkNofollow'] ) ? ' rel="nofollow"' : '';
+$rel_parts = array();
+if ( ! empty( $attributes['linkTarget'] ) ) { $rel_parts[] = 'noopener'; $rel_parts[] = 'noreferrer'; }
+if ( ! empty( $attributes['linkNofollow'] ) ) { $rel_parts[] = 'nofollow'; }
+$nofollow   = ! empty( $rel_parts ) ? ' rel="' . esc_attr( implode( ' ', $rel_parts ) ) . '"' : '';
 $content_show = isset( $attributes['contentShow'] ) ? $attributes['contentShow'] : 'inside';
 $show_social  = ! empty( $attributes['showSocialIcon'] );
 $social_pos   = isset( $attributes['socialIconPosition'] ) ? $attributes['socialIconPosition'] : 'default';
@@ -490,7 +492,7 @@ ob_start();
 	<div class="shapeblock-image-overlay"></div>
 	<?php if ( in_array( $skin, [ 'skin3', 'skin5' ], true ) && $details ) : ?>
 		<div class="shapeblock-image-content <?php echo 'skin5' === $skin ? 'has-description' : ''; ?>">
-			<div class="shapeblock-description"><?php echo nl2br( esc_html( $details ) ); ?></div>
+			<div class="shapeblock-description"><?php echo wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></div>
 		</div>
 	<?php endif; ?>
 </div>
@@ -504,7 +506,7 @@ $build_name_wrap = function ( $extra_class = '', $with_details = true, $with_soc
 	<div class="shapeblock-name-deg-wrap <?php echo esc_attr( $extra_class ); ?>">
 		<?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?>
 		<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
-		<?php if ( $with_details && $details ) : ?><div class="shapeblock-team-description"><?php echo nl2br( esc_html( $details ) ); ?></div><?php endif; ?>
+		<?php if ( $with_details && $details ) : ?><div class="shapeblock-team-description"><?php echo wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></div><?php endif; ?>
 		<?php if ( $with_social && $has_social && 'default' === $social_pos ) : ?>
 			<?php $render_social(); ?>
 		<?php endif; ?>
@@ -648,7 +650,7 @@ $build_name_wrap = function ( $extra_class = '', $with_details = true, $with_soc
 						<?php if ( $designation ) : ?><div class="shapeblock-popup-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
 					</div>
 					<div class="shapeblock-popup-details">
-						<?php echo $details ? nl2br( esc_html( $details ) ) : '<p>' . esc_html__( 'No additional details available.', 'shapeblock' ) . '</p>'; ?>
+						<?php echo $details ? wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ) : '<p>' . esc_html__( 'No additional details available.', 'shapeblock' ) . '</p>'; ?>
 					</div>
 				</div>
 			</div>

@@ -7,16 +7,12 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Simple Gallery block.
  *
- * Mirrors the markup produced by the Elementor "Simple Gallery" widget
- * (easy-elements/widgets/gallery/gallery.php) so the shared CSS/JS apply
- * identically on the front end.
- *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
 $images = isset( $attributes['galleryImages'] ) && is_array( $attributes['galleryImages'] ) ? $attributes['galleryImages'] : [];
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-gallery-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-gallery-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $show_caption     = ! empty( $attributes['showCaption'] );
 $caption_source   = isset( $attributes['captionSource'] ) ? $attributes['captionSource'] : 'media';

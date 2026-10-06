@@ -7,13 +7,12 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Icon List block.
  *
- * Mirrors the markup of the Elementor "Icon List" widget
- * (easy-elements/widgets/icon-list). Element classes use the "shapeblock-" prefix.
+ * Element classes use the "shapeblock-" prefix.
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-icon-list-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-icon-list-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $features   = isset( $attributes['features'] ) && is_array( $attributes['features'] ) ? $attributes['features'] : [];
 $dir        = ( isset( $attributes['feaDir'] ) && 'right' === $attributes['feaDir'] ) ? 'right' : 'left';

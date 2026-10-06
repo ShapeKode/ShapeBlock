@@ -7,15 +7,14 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Social Icon block.
  *
- * Mirrors the markup of the Elementor "Social Icon" widget
- * (easy-elements/widgets/social-icon). Element classes use the "shapeblock-" prefix.
+ * Element classes use the "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-si-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-si-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $links      = isset( $attributes['socialLinks'] ) && is_array( $attributes['socialLinks'] ) ? $attributes['socialLinks'] : [];
 // Must match the block.json default, or a block saved without the attribute
@@ -55,6 +54,9 @@ $shadow = function ( $obj ) use ( $H ) {
 	if ( 0 === $x && 0 === $y && 0 === $b && 0 === $s && $transparent ) return [];
 	return [ 'box-shadow' => $H::box_shadow_to_css( $obj ) ];
 };
+$css_val = function ( $value ) use ( $H ) {
+	return $H::sanitize_css_value( $value );
+};
 $u = function ( $key ) use ( $attributes, $H ) {
 	return ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? $H::ensure_unit( $attributes[ $key ] ) : '';
 };
@@ -92,8 +94,8 @@ if ( 'global' === $color_mode ) {
 		$sub['.shapeblock-si-button svg'] = $H::get_inline_styles( array_merge( $icon_svg, [ 'fill' => $attributes['gIconColor'] ] ) );
 	}
 	if ( ! empty( $attributes['gHoverIconColor'] ) ) {
-		$sub['.shapeblock-si-button:hover i']   = 'color:' . $attributes['gHoverIconColor'];
-		$sub['.shapeblock-si-button:hover svg'] = 'fill:' . $attributes['gHoverIconColor'];
+		$sub['.shapeblock-si-button:hover i']   = $H::get_inline_styles( [ 'color' => $attributes['gHoverIconColor'] ] );
+		$sub['.shapeblock-si-button:hover svg'] = $H::get_inline_styles( [ 'fill' => $attributes['gHoverIconColor'] ] );
 	}
 }
 
@@ -102,8 +104,8 @@ $extra_css = '';
 if ( 'custom' === $color_mode ) {
 	foreach ( $links as $index => $link ) {
 		$item_sel = $selector . ' .shapeblock-si-item-' . $index;
-		$hbg = ! empty( $link['hoverBgGradient'] ) ? $link['hoverBgGradient'] : ( ! empty( $link['hoverBgColor'] ) ? $link['hoverBgColor'] : '' );
-		$hic = ! empty( $link['hoverIconColor'] ) ? $link['hoverIconColor'] : '';
+		$hbg = $css_val( ! empty( $link['hoverBgGradient'] ) ? $link['hoverBgGradient'] : ( ! empty( $link['hoverBgColor'] ) ? $link['hoverBgColor'] : '' ) );
+		$hic = ! empty( $link['hoverIconColor'] ) ? $css_val( $link['hoverIconColor'] ) : '';
 		if ( '' !== $hbg ) {
 			$extra_css .= $item_sel . ':hover{background:' . $hbg . '!important;}';
 		}
@@ -175,18 +177,19 @@ $H::add_custom_style( $style_handle, $selector, $extra_css, $sub );
 				$nofollow = ! empty( $link['nofollow'] );
 				$target   = $external ? '_blank' : '_self';
 				$rel      = [];
-				if ( $external ) { $rel[] = 'noopener'; }
+				if ( $external ) { $rel[] = 'noopener'; $rel[] = 'noreferrer'; }
 				if ( $nofollow ) { $rel[] = 'nofollow'; }
 
 				// Per-item base colours (custom mode only).
 				$style      = '';
 				$icon_color = '';
 				if ( 'custom' === $color_mode ) {
-					$bg = ! empty( $link['bgGradient'] ) ? $link['bgGradient'] : ( ! empty( $link['bgColor'] ) ? $link['bgColor'] : '' );
+					$bg = $css_val( ! empty( $link['bgGradient'] ) ? $link['bgGradient'] : ( ! empty( $link['bgColor'] ) ? $link['bgColor'] : '' ) );
 					if ( '' !== $bg ) { $style .= 'background:' . $bg . ';'; }
-					if ( ! empty( $link['iconColor'] ) ) {
-						$style     .= 'color:' . $link['iconColor'] . ';';
-						$icon_color = $link['iconColor'];
+					$ic = ! empty( $link['iconColor'] ) ? $css_val( $link['iconColor'] ) : '';
+					if ( '' !== $ic ) {
+						$style     .= 'color:' . $ic . ';';
+						$icon_color = $ic;
 					}
 				}
 

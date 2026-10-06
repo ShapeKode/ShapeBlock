@@ -66,13 +66,34 @@
 					return false;
 				}
 				var editor = select( 'core/block-editor' );
-				if ( ! editor || 'function' !== typeof editor.getBlocks ) {
+				if ( ! editor ) {
+					return false;
+				}
+				// getBlocks() stops at "controlled" inner blocks -- the post's own
+				// content inside the template's Post Content block, template parts,
+				// synced patterns -- so on a block-theme page it never saw the
+				// post's blocks at all and duplicates kept their copied id. The
+				// clientId list includes them, in document order.
+				if ( 'function' === typeof editor.getClientIdsWithDescendants ) {
+					var ids = editor.getClientIdsWithDescendants();
+					for ( var j = 0; j < ids.length; j++ ) {
+						if ( ids[ j ] === props.clientId ) {
+							// Reached ourselves first — we are the original, keep the id.
+							return false;
+						}
+						var attrs = editor.getBlockAttributes( ids[ j ] );
+						if ( attrs && attrs.blockId === blockId ) {
+							return true;
+						}
+					}
+					return false;
+				}
+				if ( 'function' !== typeof editor.getBlocks ) {
 					return false;
 				}
 				var all = flatten( editor.getBlocks(), [] );
 				for ( var i = 0; i < all.length; i++ ) {
 					if ( all[ i ].clientId === props.clientId ) {
-						// Reached ourselves first — we are the original, keep the id.
 						return false;
 					}
 					if ( all[ i ].attributes && all[ i ].attributes.blockId === blockId ) {

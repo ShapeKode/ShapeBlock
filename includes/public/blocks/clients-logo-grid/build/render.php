@@ -7,15 +7,14 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Client Logo Grid block.
  *
- * Mirrors the markup of the Elementor "Client Logo Grid" widget
- * (easy-elements/widgets/clients-logo-grid). Element classes use the "shapeblock-" prefix.
+ * Element classes use the "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-clg-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-clg-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $logos = isset( $attributes['logos'] ) && is_array( $attributes['logos'] ) ? $attributes['logos'] : [];
 $swap  = ! empty( $attributes['hoverSwap'] );
@@ -178,7 +177,7 @@ $H::add_custom_style( $style_handle, $selector, $responsive_css, [
 				<div class="shapeblock-grid-item">
 					<div class="<?php echo esc_attr( $box_class ); ?>">
 						<?php if ( '' !== $link ) : ?>
-							<a href="<?php echo esc_url( $link ); ?>"<?php echo $new_tab ? ' target="_blank"' : ''; ?><?php echo $nofollow ? ' rel="nofollow"' : ''; ?>>
+							<a href="<?php echo esc_url( $link ); ?>"<?php echo $new_tab ? ' target="_blank"' : ''; ?><?php echo ( $new_tab || $nofollow ) ? ' rel="' . esc_attr( trim( ( $new_tab ? 'noopener noreferrer ' : '' ) . ( $nofollow ? 'nofollow' : '' ) ) ) . '"' : ''; ?>>
 						<?php endif; ?>
 
 						<?php if ( '' !== $url ) : ?>

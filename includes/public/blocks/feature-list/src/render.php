@@ -7,13 +7,12 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Feature List block.
  *
- * Mirrors the markup of the Elementor "Feature List" widget
- * (easy-elements/widgets/feature-list). Element classes use the "shapeblock-" prefix.
+ * Element classes use the "shapeblock-" prefix.
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-fea-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-fea-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $features   = isset( $attributes['features'] ) && is_array( $attributes['features'] ) ? $attributes['features'] : [];
 $dir        = ( isset( $attributes['feaDir'] ) && 'right' === $attributes['feaDir'] ) ? 'right' : 'left';
@@ -274,7 +273,7 @@ if ( '' !== $responsive_media ) {
 						<?php printf( '<%1$s class="shapeblock-fea-list-title">%2$s</%1$s>', tag_escape( $title_tag ), wp_kses_post( $ttl ) ); ?>
 					<?php endif; ?>
 					<?php if ( '' !== $desc ) : ?>
-						<p class="shapeblock-fea-list-desc"><?php echo esc_html( $desc ); ?></p>
+						<p class="shapeblock-fea-list-desc"><?php echo wp_kses( nl2br( $desc ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></p>
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>

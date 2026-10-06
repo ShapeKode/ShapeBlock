@@ -67,6 +67,8 @@
 		"toggleBorderColor": { "type": "string", "default": "" },
 		"toggleBorderColorHover": { "type": "string", "default": "" },
 		"toggleAlign": { "type": "string", "default": "left" },
+		"toggleAlignTablet": { "type": "string", "default": "" },
+		"toggleAlignMobile": { "type": "string", "default": "" },
 		"closeColor": { "type": "string", "default": "" },
 		"closeColorHover": { "type": "string", "default": "" },
 		"closeBg": { "type": "string", "default": "" },

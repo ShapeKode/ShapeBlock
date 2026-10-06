@@ -5,7 +5,7 @@
 	"version": "0.1.0",
 	"title": "Icon",
 	"category": "shapeblock",
-	"description": "A single icon with color, size, background, border, rotation and link — like Elementor's Icon widget.",
+	"description": "A single icon with color, size, background, border, rotation and link.",
 	"keywords": [ "icon", "svg", "glyph", "symbol" ],
 	"example": {},
 	"supports": {
@@ -23,6 +23,7 @@
 		"advMarginTablet": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"advMarginMobile": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"advBgColor": { "type": "string", "default": "" },
+		"advBgGradient": { "type": "string", "default": "" },
 		"blockId": { "type": "string", "default": "" },
 
 		"icon": { "type": "string", "default": "shapeblock-icon-favorite" },

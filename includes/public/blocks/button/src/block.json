@@ -23,6 +23,7 @@
 		"advMarginTablet": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"advMarginMobile": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"advBgColor": { "type": "string", "default": "" },
+		"advBgGradient": { "type": "string", "default": "" },
 		"blockId": { "type": "string", "default": "" },
 
 		"buttonText": { "type": "string", "default": "Click Here" },
@@ -41,6 +42,9 @@
 		"buttonAlignment": { "type": "string", "default": "center" },
 		"buttonAlignmentTablet": { "type": "string", "default": "" },
 		"buttonAlignmentMobile": { "type": "string", "default": "" },
+		"buttonPosition": { "type": "string", "default": "" },
+		"buttonPositionTablet": { "type": "string", "default": "" },
+		"buttonPositionMobile": { "type": "string", "default": "" },
 
 		"showGradient": { "type": "boolean", "default": false },
 		"gradient1": { "type": "string", "default": "#4750CC" },
@@ -49,6 +53,10 @@
 		"borderGradientButton": { "type": "boolean", "default": false },
 		"borderGradientColor1": { "type": "string", "default": "#A53E1B" },
 		"borderGradientColor2": { "type": "string", "default": "#173998" },
+		"bgGradient": { "type": "string", "default": "" },
+		"bgGradientHover": { "type": "string", "default": "" },
+		"borderGradient": { "type": "string", "default": "" },
+		"borderGradientWidth": { "type": "string", "default": "2" },
 
 		"buttonTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
 		"buttonTypographyTablet": { "type": "object", "default": {} },

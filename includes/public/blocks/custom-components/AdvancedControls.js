@@ -6,7 +6,7 @@ import {
 } from '@wordpress/components';
 
 import ResponsiveWrapper from './ResponsiveWrapper';
-import ColorPopover from './ColorPopover';
+import BackgroundControl from './BackgroundControl';
 
 /**
  * The "Advanced" inspector tab shared by every ShapeBlock block.
@@ -71,10 +71,12 @@ const AdvancedControls = ( { attributes, setAttributes } ) => (
         </PanelBody>
 
         <PanelBody title={ __( 'Background', 'shapeblock' ) } initialOpen={ false }>
-            <ColorPopover
-                label={ __( 'Background Color', 'shapeblock' ) }
-                color={ attributes.advBgColor }
-                onChange={ ( v ) => setAttributes( { advBgColor: v } ) }
+            <BackgroundControl
+                label={ __( 'Background', 'shapeblock' ) }
+                colorValue={ attributes.advBgColor }
+                gradientValue={ attributes.advBgGradient }
+                onColorChange={ ( v ) => setAttributes( { advBgColor: v && typeof v === 'object' ? v.hex : v || '' } ) }
+                onGradientChange={ ( v ) => setAttributes( { advBgGradient: v || '' } ) }
             />
         </PanelBody>
     </>

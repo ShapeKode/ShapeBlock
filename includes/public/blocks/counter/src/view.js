@@ -1,9 +1,7 @@
 /**
  * Counter — front-end animation (count up + odometer).
  *
- * Behaviour ported from the Elementor widget script
- * (easy-elements/widgets/counter/js/counter.js). Rewritten as scoped,
- * dependency-free JS (the Elementor version used jQuery + frontend hooks).
+ * Scoped, dependency-free JS.
  */
 (function () {
 	'use strict';

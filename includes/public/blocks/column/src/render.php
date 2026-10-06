@@ -15,6 +15,8 @@ $custom_class = isset( $attributes['customClass'] ) ? trim( (string) $attributes
 $unique_id    = ! empty( $attributes['blockId'] )
     ? sanitize_html_class( $attributes['blockId'] )
     : 'shapeblock-col-' . wp_rand( 100, 99999 );
+// A copied column that still carries the original's id gets its own.
+$unique_id = \ShapeBlock\Frontend\Helper::unique_block_id( $unique_id );
 
 $selector = '.' . $unique_id;
 

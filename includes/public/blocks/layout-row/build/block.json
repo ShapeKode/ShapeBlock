@@ -92,6 +92,10 @@
       "type": "string",
       "default": ""
     },
+    "advBgGradient": {
+      "type": "string",
+      "default": ""
+    },
     "blockId": {
       "type": "string",
       "default": ""

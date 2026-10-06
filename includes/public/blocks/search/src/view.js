@@ -1,9 +1,7 @@
 /**
  * Search — front-end behaviour (popup lightbox).
  *
- * Ported from the Elementor widget's jQuery script
- * (easy-elements/widgets/search/js/search.js). Rewritten as scoped,
- * dependency-free JS.
+ * Scoped, dependency-free JS.
  */
 (function () {
 	'use strict';

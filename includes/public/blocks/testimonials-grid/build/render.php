@@ -7,14 +7,13 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Testimonials Grid block.
  *
- * Mirrors the markup of the Elementor "Testimonials Grid" widget
- * (easy-elements/widgets/testimonials-grid) — 6 skins, ratings, quote icons,
+ * 6 skins, ratings, quote icons,
  * logos and a view-all reveal. Element classes use this plugin's "shapeblock-" prefix.
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-tstml-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-tstml-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $skin        = isset( $attributes['testimonialsSkin'] ) ? preg_replace( '/[^a-z0-9_-]/i', '', (string) $attributes['testimonialsSkin'] ) : 'default';
 if ( '' === $skin ) { $skin = 'default'; }
@@ -261,6 +260,9 @@ $testimonial_allowed_html = array(
 		'aria-hidden' => true,
 	),
 );
+// The description may carry line breaks and basic emphasis (it is already limited to
+// that set where it is inserted); keep them through this outer pass too.
+$testimonial_allowed_html = array_merge( \ShapeBlock\Frontend\Helper::inline_allowed_html(), $testimonial_allowed_html );
 
 $render_picture = function ( $item ) use ( $show_image, $placeholder ) {
 	if ( ! $show_image ) return '';
@@ -289,7 +291,7 @@ $render_desig = function ( $item ) {
 	return ! empty( $item['designation'] ) ? '<em class="shapeblock-designation">' . esc_html( $item['designation'] ) . '</em>' : '';
 };
 $render_desc = function ( $item ) {
-	return ! empty( $item['description'] ) ? '<div class="shapeblock-description">' . esc_html( $item['description'] ) . '</div>' : '';
+	return ! empty( $item['description'] ) ? '<div class="shapeblock-description">' . wp_kses( nl2br( $item['description'] ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ) . '</div>' : '';
 };
 $render_quote = function ( $item ) use ( $icon_i ) {
 	if ( empty( $item['quoteIcon'] ) || 'none' === $item['quoteIcon'] ) return '';

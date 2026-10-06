@@ -534,6 +534,19 @@
 			var device      = deviceState[0];
 			var setDevice   = deviceState[1];
 
+			// Follow the editor's own preview device, so the switcher here always
+			// shows ( and edits ) the device the canvas is displaying.
+			var editorDevice = wp.data.useSelect( function ( select ) {
+				var ed = select( 'core/editor' );
+				if ( ed && ed.getDeviceType ) { return ed.getDeviceType(); }
+				var ep = select( 'core/edit-post' );
+				if ( ep && ep.__experimentalGetPreviewDeviceType ) { return ep.__experimentalGetPreviewDeviceType(); }
+				return 'Desktop';
+			}, [] );
+			useEffect( function () {
+				if ( editorDevice ) { setDevice( String( editorDevice ).toLowerCase() ); }
+			}, [ editorDevice ] );
+
 			// Editor-only: which colour state ( text / hover / active ) is being edited.
 			var colorStateState = useState( 'text' );
 			var colorState      = colorStateState[0];
@@ -581,7 +594,29 @@
 			var mobileMode = attributes.mobileMode || ( false === attributes.mobileEnable ? 'off' : 'mobile' );
 			var edBreak    = attributes.mobileBreakpoint || 782;
 			var edDevW     = ( 'mobile' === device ) ? 360 : ( ( 'tablet' === device ) ? 780 : 9999 );
-			var showDrawer = ( 'always' === mobileMode ) || ( 'mobile' === mobileMode && edDevW <= edBreak );
+
+			// The real width of the editor canvas. The front end switches to the
+			// hamburger with a media query on the viewport; the editor canvas is an
+			// iframe whose width follows the Mobile/Tablet preview and the resize
+			// handles, so read that instead of guessing from the device buttons --
+			// which only ever reflected this block's own spacing-control switcher.
+			var blockRef      = useRef( null );
+			var canvasWState  = useState( 0 );
+			var canvasW       = canvasWState[0];
+			var setCanvasW    = canvasWState[1];
+			useEffect( function () {
+				var node = blockRef.current;
+				var win  = node && node.ownerDocument ? node.ownerDocument.defaultView : null;
+				if ( ! win ) { return; }
+				function measure() { setCanvasW( win.innerWidth || 0 ); }
+				measure();
+				win.addEventListener( 'resize', measure );
+				return function () { win.removeEventListener( 'resize', measure ); };
+			}, [] );
+
+			// The width being previewed: the measured canvas when known, else the switcher's device.
+			var edPrevW    = canvasW > 0 ? canvasW : edDevW;
+			var showDrawer = ( 'always' === mobileMode ) || ( 'mobile' === mobileMode && edPrevW <= edBreak );
 
 
 			function clone() { return JSON.parse( JSON.stringify( items ) ); }
@@ -903,6 +938,15 @@
 			// ---- Inspector: Layout & Style ----
 			// ---- Style tab: separate collapsible panels ----
 			var useIconGroups = ToggleGroupControl && ToggleGroupOption;
+
+			// Hamburger alignment for the device picked in the switcher.
+			var toggleAlignKey = ( 'tablet' === device ) ? 'toggleAlignTablet' : ( 'mobile' === device ? 'toggleAlignMobile' : 'toggleAlign' );
+			function setToggleAlign( v ) {
+				var patch = {};
+				patch[ toggleAlignKey ] = v || ( 'toggleAlign' === toggleAlignKey ? 'left' : '' );
+				setAttributes( patch );
+			}
+
 			var orientationCtrl = useIconGroups ? el( ToggleGroupControl, {
 				label: __( 'Orientation', TD ),
 				value: 'vertical' === attributes.layout ? 'vertical' : 'horizontal',
@@ -1175,21 +1219,41 @@
 					onChange: function ( v ) { setAttributes( { drawerWidth: v || 320 } ); }
 				} ) : null,
 				// Where the hamburger sits once the overlay is on.
-				( 'off' !== mobileMode ) ? ( useIconGroups ? el( ToggleGroupControl, {
-					label: __( 'Hamburger Alignment', TD ),
-					value: attributes.toggleAlign || 'left',
-					isBlock: true,
-					onChange: function ( v ) { setAttributes( { toggleAlign: v || 'left' } ); }
-				},
-					el( ToggleGroupOption, { value: 'left', icon: SHAPEBLOCK_UI_ICONS.alignLeft, label: __( 'Left', TD ) } ),
-					el( ToggleGroupOption, { value: 'center', icon: SHAPEBLOCK_UI_ICONS.alignCenter, label: __( 'Center', TD ) } ),
-					el( ToggleGroupOption, { value: 'right', icon: SHAPEBLOCK_UI_ICONS.alignRight, label: __( 'Right', TD ) } )
-				) : el( SelectControl, {
-					label: __( 'Hamburger Alignment', TD ),
-					value: attributes.toggleAlign || 'left',
-					options: [ { label: __( 'Left', TD ), value: 'left' }, { label: __( 'Center', TD ), value: 'center' }, { label: __( 'Right', TD ), value: 'right' } ],
-					onChange: function ( v ) { setAttributes( { toggleAlign: v || 'left' } ); }
-				} ) ) : null,
+				// Per device: toggleAlign ( desktop ), toggleAlignTablet, toggleAlignMobile.
+				// Tablet / Mobile left empty inherit the next larger screen.
+				( 'off' !== mobileMode ) ? el( 'div', { className: 'shapeblock-menu-toggle-align' },
+					el( 'div', { className: 'shapeblock-menu-linkfield-label', style: { marginTop: '4px' } }, __( 'Hamburger Alignment', TD ) ),
+					el( 'div', { className: 'shapeblock-menu-devices' },
+						[ [ 'desktop', 'dashicons-desktop', __( 'Desktop', TD ) ], [ 'tablet', 'dashicons-tablet', __( 'Tablet', TD ) ], [ 'mobile', 'dashicons-smartphone', __( 'Mobile', TD ) ] ].map( function ( d ) {
+							return el( Button, {
+								key: d[0],
+								label: d[2],
+								showTooltip: true,
+								isPressed: device === d[0],
+								onClick: function () { setDevice( d[0] ); shapeblockSetPreview( d[0] ); }
+							}, el( 'span', { className: 'dashicons ' + d[1] } ) );
+						} )
+					),
+					useIconGroups ? el( ToggleGroupControl, {
+						label: __( 'Hamburger Alignment', TD ),
+						hideLabelFromVision: true,
+						value: attributes[ toggleAlignKey ] || ( 'desktop' === device ? 'left' : undefined ),
+						isBlock: true,
+						isDeselectable: 'desktop' !== device,
+						onChange: function ( v ) { setToggleAlign( v ); }
+					},
+						el( ToggleGroupOption, { value: 'left', icon: SHAPEBLOCK_UI_ICONS.alignLeft, label: __( 'Left', TD ) } ),
+						el( ToggleGroupOption, { value: 'center', icon: SHAPEBLOCK_UI_ICONS.alignCenter, label: __( 'Center', TD ) } ),
+						el( ToggleGroupOption, { value: 'right', icon: SHAPEBLOCK_UI_ICONS.alignRight, label: __( 'Right', TD ) } )
+					) : el( SelectControl, {
+						label: __( 'Hamburger Alignment', TD ),
+						hideLabelFromVision: true,
+						value: attributes[ toggleAlignKey ] || ( 'desktop' === device ? 'left' : '' ),
+						options: ( 'desktop' === device ? [] : [ { label: __( 'Inherit', TD ), value: '' } ] ).concat( [ { label: __( 'Left', TD ), value: 'left' }, { label: __( 'Center', TD ), value: 'center' }, { label: __( 'Right', TD ), value: 'right' } ] ),
+						onChange: function ( v ) { setToggleAlign( v ); }
+					} ),
+					( 'desktop' !== device && ! attributes[ toggleAlignKey ] ) ? el( 'p', { className: 'components-base-control__help', style: { marginTop: '4px' } }, __( 'Inherits from the larger screen.', TD ) ) : null
+				) : null,
 				( 'off' !== mobileMode ) ? colorRow( __( 'Drawer Background', TD ), attributes.drawerBg, function ( v ) { setAttributes( { drawerBg: v } ); } ) : null,
 
 				// Button skin. The outer tabs pick which button is being styled and the inner
@@ -1456,7 +1520,10 @@
 				var edW    = ( attributes.drawerWidth || 320 ) + 'px';
 				var edBg   = attributes.drawerBg || '#ffffff';
 				// Mirrors the front end: display:flex so the auto margins can place it.
+				// The alignment for the width the canvas is showing ( same cascade as render.php ).
 				var edTAlign = attributes.toggleAlign || 'left';
+				if ( edPrevW <= 1024 && attributes.toggleAlignTablet ) { edTAlign = attributes.toggleAlignTablet; }
+				if ( edPrevW <= 767 && attributes.toggleAlignMobile ) { edTAlign = attributes.toggleAlignMobile; }
 				var edTMargin = 'center' === edTAlign
 					? 'margin-left:auto;margin-right:auto;'
 					: ( 'right' === edTAlign ? 'margin-left:auto;margin-right:0;' : 'margin-left:0;margin-right:auto;' );
@@ -1539,7 +1606,7 @@
 				el( 'div', { className: 'shapeblock-menu-panel' }, previewClose, el( 'ul', { className: 'shapeblock-menu-list' }, lis ) )
 			);
 
-			var blockProps = useBlockProps();
+			var blockProps = useBlockProps( { ref: blockRef } );
 			var activeNode = nodeByPath( items, activePath );
 
 			return el(

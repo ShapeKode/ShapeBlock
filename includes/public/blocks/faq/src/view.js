@@ -1,10 +1,7 @@
 /**
  * FAQ Accordion — front-end behaviour.
  *
- * Behaviour ported from the Elementor widget script
- * (easy-elements/widgets/faq/js/faq.js). Rewritten as scoped, dependency-free
- * JS so it runs on any front-end page (the Elementor version hooked into
- * `elementor/frontend/init` and used jQuery slideUp/slideDown).
+ * Scoped, dependency-free JS that runs on any front-end page.
  */
 (function () {
 	'use strict';

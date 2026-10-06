@@ -24,6 +24,7 @@
 		"advMarginTablet": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"advMarginMobile": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"advBgColor": { "type": "string", "default": "" },
+		"advBgGradient": { "type": "string", "default": "" },
 		"blockId": { "type": "string", "default": "" },
 		"teamSkin": { "type": "string", "default": "default" },
 		"skin4HoverOverlay": { "type": "string", "default": "overlay1" },

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import {
     Table, Button, Input, Space, Modal, Form, Select,
     notification, Popconfirm, Tag, Segmented, Tooltip
@@ -65,7 +66,7 @@ export default function ThemeBuilder() {
                     pageSize: data.per_page || pageSize,
                 }));
             })
-            .catch(() => notification.error({ message: 'Failed to load templates' }))
+            .catch(() => notification.error({ message: __( 'Failed to load templates', 'shapeblock' ) }))
             .finally(() => setLoading(false));
     }, []);
 
@@ -111,7 +112,7 @@ export default function ThemeBuilder() {
                 .then((res) => res.json())
                 .then((data) => {
                     if (data.id) {
-                        notification.success({ message: 'Template created', duration: 2 });
+                        notification.success({ message: __( 'Template created', 'shapeblock' ), duration: 2 });
                         setAddOpen(false);
                         form.resetFields();
                         // Jump straight into the block editor for the new template.
@@ -121,10 +122,10 @@ export default function ThemeBuilder() {
                         }
                         refresh();
                     } else {
-                        notification.error({ message: data.message || 'Create failed' });
+                        notification.error({ message: data.message || __( 'Create failed', 'shapeblock' ) });
                     }
                 })
-                .catch(() => notification.error({ message: 'Request failed' }))
+                .catch(() => notification.error({ message: __( 'Request failed', 'shapeblock' ) }))
                 .finally(() => setSubmitting(false));
         });
     };
@@ -138,12 +139,12 @@ export default function ThemeBuilder() {
             .then((res) => res.json())
             .then((data) => {
                 if (data.status === 'success') {
-                    notification.success({ message: 'Template moved to Trash', duration: 2 });
+                    notification.success({ message: __( 'Template moved to Trash', 'shapeblock' ), duration: 2 });
                     setSelectedRowKeys((prev) => prev.filter((k) => k !== id));
                     refresh();
                 }
             })
-            .catch(() => notification.error({ message: 'Delete failed' }));
+            .catch(() => notification.error({ message: __( 'Delete failed', 'shapeblock' ) }));
     };
 
     // Permanently delete a trashed template.
@@ -156,12 +157,12 @@ export default function ThemeBuilder() {
             .then((res) => res.json())
             .then((data) => {
                 if (data.status === 'success') {
-                    notification.success({ message: 'Template permanently deleted', duration: 2 });
+                    notification.success({ message: __( 'Template permanently deleted', 'shapeblock' ), duration: 2 });
                     setSelectedRowKeys((prev) => prev.filter((k) => k !== id));
                     refresh();
                 }
             })
-            .catch(() => notification.error({ message: 'Delete failed' }));
+            .catch(() => notification.error({ message: __( 'Delete failed', 'shapeblock' ) }));
     };
 
     // Restore a trashed template.
@@ -173,23 +174,27 @@ export default function ThemeBuilder() {
             .then((res) => res.json())
             .then((data) => {
                 if (data.status === 'success') {
-                    notification.success({ message: 'Template restored', duration: 2 });
+                    notification.success({ message: __( 'Template restored', 'shapeblock' ), duration: 2 });
                     setSelectedRowKeys((prev) => prev.filter((k) => k !== id));
                     refresh();
                 }
             })
-            .catch(() => notification.error({ message: 'Restore failed' }));
+            .catch(() => notification.error({ message: __( 'Restore failed', 'shapeblock' ) }));
     };
 
     const handleBulkTrash = () => {
         if (selectedRowKeys.length === 0) {
-            notification.warning({ message: 'No templates selected' });
+            notification.warning({ message: __( 'No templates selected', 'shapeblock' ) });
             return;
         }
         Modal.confirm({
-            title: `Move ${selectedRowKeys.length} template(s) to Trash?`,
-            content: 'You can restore them from the Trash later.',
-            okText: 'Move to Trash',
+            title: sprintf(
+                /* translators: %d: number of templates. */
+                _n( 'Move %d template to Trash?', 'Move %d templates to Trash?', selectedRowKeys.length, 'shapeblock' ),
+                selectedRowKeys.length
+            ),
+            content: __( 'You can restore them from the Trash later.', 'shapeblock' ),
+            okText: __( 'Move to Trash', 'shapeblock' ),
             okType: 'danger',
             onOk: () => {
                 fetch(`${shapeblock.rest_url}builder/bulk-delete`, {
@@ -201,27 +206,35 @@ export default function ThemeBuilder() {
                     .then((data) => {
                         if (data.status === 'success') {
                             notification.success({
-                                message: `${data.deleted.length} template(s) moved to Trash`,
+                                message: sprintf(
+                                    /* translators: %d: number of templates. */
+                                    _n( '%d template moved to Trash', '%d templates moved to Trash', data.deleted.length, 'shapeblock' ),
+                                    data.deleted.length
+                                ),
                                 duration: 2,
                             });
                             setSelectedRowKeys([]);
                             fetchItems(1, pagination.pageSize, search, typeFilter, statusView);
                         }
                     })
-                    .catch(() => notification.error({ message: 'Bulk delete failed' }));
+                    .catch(() => notification.error({ message: __( 'Bulk delete failed', 'shapeblock' ) }));
             },
         });
     };
 
     const handleBulkPermanentDelete = () => {
         if (selectedRowKeys.length === 0) {
-            notification.warning({ message: 'No templates selected' });
+            notification.warning({ message: __( 'No templates selected', 'shapeblock' ) });
             return;
         }
         Modal.confirm({
-            title: `Permanently delete ${selectedRowKeys.length} template(s)?`,
-            content: 'This action cannot be undone.',
-            okText: 'Delete Permanently',
+            title: sprintf(
+                /* translators: %d: number of templates. */
+                _n( 'Permanently delete %d template?', 'Permanently delete %d templates?', selectedRowKeys.length, 'shapeblock' ),
+                selectedRowKeys.length
+            ),
+            content: __( 'This action cannot be undone.', 'shapeblock' ),
+            okText: __( 'Delete Permanently', 'shapeblock' ),
             okType: 'danger',
             onOk: () => {
                 fetch(`${shapeblock.rest_url}builder/bulk-delete`, {
@@ -233,21 +246,25 @@ export default function ThemeBuilder() {
                     .then((data) => {
                         if (data.status === 'success') {
                             notification.success({
-                                message: `${data.deleted.length} template(s) permanently deleted`,
+                                message: sprintf(
+                                    /* translators: %d: number of templates. */
+                                    _n( '%d template permanently deleted', '%d templates permanently deleted', data.deleted.length, 'shapeblock' ),
+                                    data.deleted.length
+                                ),
                                 duration: 2,
                             });
                             setSelectedRowKeys([]);
                             fetchItems(1, pagination.pageSize, search, typeFilter, statusView);
                         }
                     })
-                    .catch(() => notification.error({ message: 'Bulk delete failed' }));
+                    .catch(() => notification.error({ message: __( 'Bulk delete failed', 'shapeblock' ) }));
             },
         });
     };
 
     const handleBulkRestore = () => {
         if (selectedRowKeys.length === 0) {
-            notification.warning({ message: 'No templates selected' });
+            notification.warning({ message: __( 'No templates selected', 'shapeblock' ) });
             return;
         }
         fetch(`${shapeblock.rest_url}builder/bulk-restore`, {
@@ -259,14 +276,18 @@ export default function ThemeBuilder() {
             .then((data) => {
                 if (data.status === 'success') {
                     notification.success({
-                        message: `${data.restored.length} template(s) restored`,
+                        message: sprintf(
+                                /* translators: %d: number of templates. */
+                                _n( '%d template restored', '%d templates restored', data.restored.length, 'shapeblock' ),
+                                data.restored.length
+                            ),
                         duration: 2,
                     });
                     setSelectedRowKeys([]);
                     fetchItems(1, pagination.pageSize, search, typeFilter, statusView);
                 }
             })
-            .catch(() => notification.error({ message: 'Bulk restore failed' }));
+            .catch(() => notification.error({ message: __( 'Bulk restore failed', 'shapeblock' ) }));
     };
 
     const onConditionsSaved = (data) => {
@@ -279,7 +300,7 @@ export default function ThemeBuilder() {
     };
 
     const typeFilterOptions = useMemo(() => ([
-        { label: 'All', value: '' },
+        { label: __( 'All', 'shapeblock' ), value: '' },
         ...builderTypes.map((t) => ({ label: t.plural || t.label, value: t.slug })),
     ]), [builderTypes]);
 
@@ -294,7 +315,7 @@ export default function ThemeBuilder() {
         const sc = shortcodeFor(record);
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(sc).then(
-                () => notification.success({ message: 'Shortcode copied', duration: 2 }),
+                () => notification.success({ message: __( 'Shortcode copied', 'shapeblock' ), duration: 2 }),
                 () => notification.info({ message: sc })
             );
         } else {
@@ -304,24 +325,24 @@ export default function ThemeBuilder() {
 
     const columns = [
         {
-            title: 'Title',
+            title: __( 'Title', 'shapeblock' ),
             dataIndex: 'title',
             key: 'title',
             render: (title, record) => (
                 isTrashView
-                    ? <span style={{ fontWeight: 600 }}>{title || '(no title)'}</span>
-                    : <a href={record.editUrl} style={{ fontWeight: 600 }}>{title || '(no title)'}</a>
+                    ? <span style={{ fontWeight: 600 }}>{title || __( '(no title)', 'shapeblock' )}</span>
+                    : <a href={record.editUrl} style={{ fontWeight: 600 }}>{title || __( '(no title)', 'shapeblock' )}</a>
             ),
         },
         {
-            title: 'Type',
+            title: __( 'Type', 'shapeblock' ),
             dataIndex: 'typeLabel',
             key: 'type',
             width: 120,
             render: (label, record) => <Tag color="purple">{label || record.type}</Tag>,
         },
         {
-            title: 'Display Conditions',
+            title: __( 'Display Conditions', 'shapeblock' ),
             dataIndex: 'conditionsSummary',
             key: 'conditions',
             render: (summary, record) => (
@@ -330,11 +351,12 @@ export default function ThemeBuilder() {
                     <Space size={4}>
                         <Tag color="blue" style={{ fontFamily: 'monospace' }}>{shortcodeFor(record)}</Tag>
                         {!isTrashView && (
-                            <Tooltip title="Copy shortcode">
+                            <Tooltip title={ __( 'Copy shortcode', 'shapeblock' ) }>
                                 <Button
                                     size="small"
                                     type="text"
                                     icon={<CopyOutlined />}
+                                    aria-label={ __( 'Copy shortcode', 'shapeblock' ) }
                                     onClick={() => copyShortcode(record)}
                                 />
                             </Tooltip>
@@ -342,13 +364,14 @@ export default function ThemeBuilder() {
                     </Space>
                 ) : (
                     <Space size={4}>
-                        <Tag color="default">{summary || 'Entire Site'}</Tag>
+                        <Tag color="default">{summary || __( 'Entire Site', 'shapeblock' )}</Tag>
                         {!isTrashView && (
-                            <Tooltip title="Edit conditions">
+                            <Tooltip title={ __( 'Edit conditions', 'shapeblock' ) }>
                                 <Button
                                     size="small"
                                     type="text"
                                     icon={<FilterOutlined />}
+                                    aria-label={ __( 'Edit conditions', 'shapeblock' ) }
                                     onClick={() => setConditionsItem(record)}
                                 />
                             </Tooltip>
@@ -358,7 +381,7 @@ export default function ThemeBuilder() {
             ),
         },
         {
-            title: 'Modified',
+            title: __( 'Modified', 'shapeblock' ),
             dataIndex: 'modified',
             key: 'modified',
             width: 170,
@@ -368,55 +391,55 @@ export default function ThemeBuilder() {
             }),
         },
         {
-            title: 'Actions',
+            title: __( 'Actions', 'shapeblock' ),
             key: 'actions',
             width: isTrashView ? 210 : 160,
             render: (_, record) => (
                 isTrashView ? (
                     <Space>
                         <Popconfirm
-                            title="Restore this template?"
+                            title={ __( 'Restore this template?', 'shapeblock' ) }
                             onConfirm={() => handleRestore(record.id)}
-                            okText="Yes"
-                            cancelText="No"
+                            okText={ __( 'Yes', 'shapeblock' ) }
+                            cancelText={ __( 'No', 'shapeblock' ) }
                         >
                             <Button type="primary" size="small" icon={<UndoOutlined />}>
-                                Restore
+                                { __( 'Restore', 'shapeblock' ) }
                             </Button>
                         </Popconfirm>
                         <Popconfirm
-                            title="Delete permanently? This cannot be undone."
+                            title={ __( 'Delete permanently? This cannot be undone.', 'shapeblock' ) }
                             onConfirm={() => handlePermanentDelete(record.id)}
-                            okText="Delete"
+                            okText={ __( 'Delete', 'shapeblock' ) }
                             okButtonProps={{ danger: true }}
-                            cancelText="Cancel"
+                            cancelText={ __( 'Cancel', 'shapeblock' ) }
                         >
                             <Button danger size="small" icon={<DeleteOutlined />}>
-                                Delete
+                                { __( 'Delete', 'shapeblock' ) }
                             </Button>
                         </Popconfirm>
                     </Space>
                 ) : (
                     <Space>
                         <Button type="primary" size="small" icon={<EditOutlined />} href={record.editUrl}>
-                            Edit
+                            { __( 'Edit', 'shapeblock' ) }
                         </Button>
                         {shortcodeTypes.includes(record.type) ? (
-                            <Tooltip title="Copy shortcode">
-                                <Button size="small" icon={<CopyOutlined />} onClick={() => copyShortcode(record)} />
+                            <Tooltip title={ __( 'Copy shortcode', 'shapeblock' ) }>
+                                <Button size="small" icon={<CopyOutlined />} aria-label={ __( 'Copy shortcode', 'shapeblock' ) } onClick={() => copyShortcode(record)} />
                             </Tooltip>
                         ) : (
-                            <Tooltip title="Edit conditions">
-                                <Button size="small" icon={<FilterOutlined />} onClick={() => setConditionsItem(record)} />
+                            <Tooltip title={ __( 'Edit conditions', 'shapeblock' ) }>
+                                <Button size="small" icon={<FilterOutlined />} aria-label={ __( 'Edit conditions', 'shapeblock' ) } onClick={() => setConditionsItem(record)} />
                             </Tooltip>
                         )}
                         <Popconfirm
-                            title="Move this template to Trash?"
+                            title={ __( 'Move this template to Trash?', 'shapeblock' ) }
                             onConfirm={() => handleTrash(record.id)}
-                            okText="Yes"
-                            cancelText="No"
+                            okText={ __( 'Yes', 'shapeblock' ) }
+                            cancelText={ __( 'No', 'shapeblock' ) }
                         >
-                            <Button danger size="small" icon={<DeleteOutlined />} />
+                            <Button danger size="small" icon={<DeleteOutlined />} aria-label={ __( 'Move to Trash', 'shapeblock' ) } />
                         </Popconfirm>
                     </Space>
                 )
@@ -427,22 +450,27 @@ export default function ThemeBuilder() {
     return (
         <div className="shapeblock-options-content">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <h1 className="shapeblock-options-title" style={{ margin: 0 }}>Theme Builder</h1>
-                <Button type="primary" icon={<PlusOutlined />} onClick={openAdd}>Add New</Button>
+                <h1 className="shapeblock-options-title" style={{ margin: 0 }}>{ __( 'Theme Builder', 'shapeblock' ) }</h1>
+                <Button type="primary" icon={<PlusOutlined />} onClick={openAdd}>{ __( 'Add New', 'shapeblock' ) }</Button>
             </div>
 
             <p style={{ color: '#666', marginTop: 0, marginBottom: 16 }}>
-                Build custom headers and footers and control exactly where they appear.
-                More template types are coming soon.
+                { __( 'Build custom headers and footers and control exactly where they appear.', 'shapeblock' ) }
             </p>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, gap: 12, flexWrap: 'wrap' }}>
                 <Space wrap>
                     <Segmented
                         options={[
-                            { label: 'Active', value: 'publish' },
+                            { label: __( 'Active', 'shapeblock' ), value: 'publish' },
                             {
-                                label: trashCount > 0 ? `Trash (${trashCount})` : 'Trash',
+                                label: trashCount > 0
+                                    ? sprintf(
+                                        /* translators: %d: number of trashed templates. */
+                                        __( 'Trash (%d)', 'shapeblock' ),
+                                        trashCount
+                                    )
+                                    : __( 'Trash', 'shapeblock' ),
                                 value: 'trash',
                             },
                         ]}
@@ -457,22 +485,30 @@ export default function ThemeBuilder() {
                     {isTrashView ? (
                         <>
                             <Button disabled={selectedRowKeys.length === 0} icon={<UndoOutlined />} onClick={handleBulkRestore}>
-                                Restore Selected
+                                { __( 'Restore Selected', 'shapeblock' ) }
                             </Button>
                             <Button danger disabled={selectedRowKeys.length === 0} onClick={handleBulkPermanentDelete}>
-                                Delete Permanently
+                                { __( 'Delete Permanently', 'shapeblock' ) }
                             </Button>
                         </>
                     ) : (
                         <Button danger disabled={selectedRowKeys.length === 0} onClick={handleBulkTrash}>
-                            Delete Selected
+                            { __( 'Delete Selected', 'shapeblock' ) }
                         </Button>
                     )}
-                    {selectedRowKeys.length > 0 && <Tag>{selectedRowKeys.length} selected</Tag>}
+                    {selectedRowKeys.length > 0 && (
+                        <Tag>
+                            {sprintf(
+                                /* translators: %d: number of selected templates. */
+                                __( '%d selected', 'shapeblock' ),
+                                selectedRowKeys.length
+                            )}
+                        </Tag>
+                    )}
                 </Space>
                 <Space>
                     <Search
-                        placeholder="Search templates..."
+                        placeholder={ __( 'Search templates...', 'shapeblock' ) }
                         allowClear
                         className='shapeblock-template-search-box'
                         onSearch={handleSearch}
@@ -486,7 +522,7 @@ export default function ThemeBuilder() {
                         style={{ width: 250 }}
                         prefix={<SearchOutlined />}
                     />
-                    <Button icon={<ReloadOutlined />} onClick={() => { setSearch(''); fetchItems(1, pagination.pageSize, '', typeFilter, statusView); }} />
+                    <Button icon={<ReloadOutlined />} aria-label={ __( 'Reload', 'shapeblock' ) } onClick={() => { setSearch(''); fetchItems(1, pagination.pageSize, '', typeFilter, statusView); }} />
                 </Space>
             </div>
 
@@ -501,7 +537,13 @@ export default function ThemeBuilder() {
                     pageSize: pagination.pageSize,
                     total: pagination.total,
                     showSizeChanger: true,
-                    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                    showTotal: (total, range) => sprintf(
+                        /* translators: 1: first item number on the page, 2: last item number on the page, 3: total number of items. */
+                        __( '%1$d-%2$d of %3$d items', 'shapeblock' ),
+                        range[0],
+                        range[1],
+                        total
+                    ),
                     pageSizeOptions: ['5', '10', '20', '50'],
                 }}
                 onChange={handleTableChange}
@@ -509,28 +551,28 @@ export default function ThemeBuilder() {
             />
 
             <Modal
-                title="Add New Template"
+                title={ __( 'Add New Template', 'shapeblock' ) }
                 open={addOpen}
                 onOk={handleCreate}
                 onCancel={() => { setAddOpen(false); form.resetFields(); }}
                 confirmLoading={submitting}
-                okText="Create & Edit"
+                okText={ __( 'Create & Edit', 'shapeblock' ) }
             >
                 <Form form={form} layout="vertical">
                     <Form.Item
                         name="title"
-                        label="Template Name"
-                        rules={[{ required: true, message: 'Please enter a name' }]}
+                        label={ __( 'Template Name', 'shapeblock' ) }
+                        rules={[{ required: true, message: __( 'Please enter a name', 'shapeblock' ) }]}
                     >
-                        <Input placeholder="e.g. Main Header" />
+                        <Input placeholder={ __( 'e.g. Main Header', 'shapeblock' ) } />
                     </Form.Item>
                     <Form.Item
                         name="type"
-                        label="Template Type"
-                        rules={[{ required: true, message: 'Please choose a type' }]}
+                        label={ __( 'Template Type', 'shapeblock' ) }
+                        rules={[{ required: true, message: __( 'Please choose a type', 'shapeblock' ) }]}
                     >
                         <Select
-                            placeholder="Select type"
+                            placeholder={ __( 'Select type', 'shapeblock' ) }
                             options={builderTypes.map((t) => ({
                                 value: t.slug,
                                 label: t.label,

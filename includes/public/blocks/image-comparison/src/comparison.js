@@ -1,8 +1,7 @@
 /**
  * Shared before/after comparison slider logic (dependency-free).
  *
- * Ported from the Elementor widget's jQuery `eel_comparison` plugin
- * (easy-elements/widgets/image-comparison/js/event.move.js), rewritten as
+ * , rewritten as
  * vanilla JS so it runs on the front end and inside the editor preview without
  * jQuery / jquery.event.move.
  */

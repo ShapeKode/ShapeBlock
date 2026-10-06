@@ -1,9 +1,7 @@
 /**
  * Table — front-end behaviour (tooltips).
  *
- * Ported from the Elementor widget script
- * (easy-elements/widgets/table/js/table.js). Rewritten as scoped,
- * dependency-free JS (the original relied on jQuery / Bootstrap tooltips).
+ * Scoped, dependency-free JS.
  */
 (function () {
 	'use strict';

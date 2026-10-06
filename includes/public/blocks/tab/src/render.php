@@ -7,15 +7,14 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Tabs block.
  *
- * Mirrors the markup of the Elementor "Tabs" widget
- * (easy-elements/widgets/tab). Element classes use this plugin's "shapeblock-" prefix.
+ * Element classes use this plugin's "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-tab-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-tab-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $tabs      = isset( $attributes['tabs'] ) && is_array( $attributes['tabs'] ) ? $attributes['tabs'] : [];
 $allowed   = [ 'left', 'top', 'right' ];
@@ -285,7 +284,7 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 						<div class="shapeblock-content-description"><?php echo wp_kses_post( wpautop( $description ) ); ?></div>
 					<?php endif; ?>
 					<?php if ( '' !== $btn_text && '' !== $btn_url ) : ?>
-						<a class="shapeblock-read-more" href="<?php echo esc_url( $btn_url ); ?>" target="<?php echo esc_attr( $btn_target ); ?>">
+						<a class="shapeblock-read-more" href="<?php echo esc_url( $btn_url ); ?>" target="<?php echo esc_attr( $btn_target ); ?>"<?php echo '_blank' === $btn_target ? ' rel="noopener noreferrer"' : ''; ?>>
 							<?php echo esc_html( $btn_text ); ?>
 							<svg class="shapeblock-read-more-icon" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
 						</a>

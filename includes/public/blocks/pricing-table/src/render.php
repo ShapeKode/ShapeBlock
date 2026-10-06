@@ -7,16 +7,14 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Pricing Table block.
  *
- * Mirrors the markup produced by the Elementor "Pricing Table" widget
- * (easy-elements/widgets/pricing-table/pricing.php) so the shared CSS applies
- * identically on the front end. Element classes use this plugin's "shapeblock-" prefix.
+ * Element classes use this plugin's "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-pricing-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-pricing-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $skin_style   = isset( $attributes['skinStyle'] ) ? $attributes['skinStyle'] : 'skin1';
 $title        = isset( $attributes['title'] ) ? $attributes['title'] : '';
@@ -413,7 +411,7 @@ $render_button = function () use ( $attributes, $H, $icon_allowed_html ) {
 	$icon_html  = ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';
 	?>
 	<div class="shapeblock-btn-part">
-		<a href="<?php echo esc_url( $url ); ?>"<?php echo $new_tab ? ' target="_blank"' : ''; ?><?php echo $nofollow ? ' rel="nofollow"' : ''; ?> class="shapeblock-button <?php echo esc_attr( $full_width ); ?>">
+		<a href="<?php echo esc_url( $url ); ?>"<?php echo $new_tab ? ' target="_blank"' : ''; ?><?php echo ( $new_tab || $nofollow ) ? ' rel="' . esc_attr( trim( ( $new_tab ? 'noopener noreferrer ' : '' ) . ( $nofollow ? 'nofollow' : '' ) ) ) . '"' : ''; ?> class="shapeblock-button <?php echo esc_attr( $full_width ); ?>">
 			<?php if ( 'before' === $icon_pos && $icon_html ) : ?>
 				<span class="shapeblock-icon shapeblock-icon-before"><?php echo wp_kses( $icon_html, $icon_allowed_html ); ?></span>
 			<?php endif; ?>

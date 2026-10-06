@@ -1,9 +1,7 @@
 /**
  * Scroll Top — front-end behaviour.
  *
- * Ported from the Elementor widget's jQuery script
- * (easy-elements/widgets/scroll-to-top/js/scroll.js). Rewritten as scoped,
- * dependency-free JS. Supports Lenis smooth scrolling when present.
+ * Scoped, dependency-free JS. Supports Lenis smooth scrolling when present.
  */
 (function () {
 	'use strict';

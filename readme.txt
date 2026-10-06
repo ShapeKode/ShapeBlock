@@ -1,18 +1,18 @@
 === ShapeBlock ===
 Contributors: shapekode22
 Tags: blocks, gutenberg, block editor, carousel, slider
-Requires at least: 6.3
+Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A library of 31 Gutenberg blocks - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls.
+A library of 32 Gutenberg blocks - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls.
 
 == Description ==
 
-ShapeBlock is a block library for the WordPress block editor. It adds 31 blocks for the things a page usually needs - sliders and carousels, post and team grids, tabs and accordions, pricing tables, counters and countdowns, navigation, search and more.
+ShapeBlock is a block library for the WordPress block editor. It adds 32 blocks for the things a page usually needs - sliders and carousels, post and team grids, tabs and accordions, pricing tables, counters and countdowns, navigation, search and more.
 
 Every block is built the same way: a Settings tab for content, a Layout tab for structure, and a Style tab for colours, typography, borders, spacing and shadows. Sizes, spacing and layout values can be set separately for desktop, tablet and mobile.
 
@@ -33,22 +33,23 @@ Every block is built the same way: a Settings tab for content, a Layout tab for 
 13. Icon List - A list of items, each with its own icon.
 14. Image Carousel - Several images at once, with centred slides and continuous scrolling.
 15. Image Comparison - A before / after image slider with a draggable handle.
-16. Menu - Display a WordPress navigation menu with layout, alignment and colours.
-17. Offcanvas - Slide-in panels for menus, sidebars or extra content.
-18. Post Grid - Show posts in grid layouts, with pagination and optional video.
-19. Pricing Table - Pricing plans with features, badges and a call to action.
-20. Progress Bar - Animated progress and skill bars.
-21. Row - A responsive row that holds Column blocks.
-22. Scroll Top - A back-to-top button.
-23. Search - A site search field you can place anywhere.
-24. Simple Gallery - An image gallery with spacing and column controls.
-25. Slider - A full-width image slider with arrows, dots and autoplay.
-26. Social Icon - A row of linked social icons with global or per-icon colours.
-27. Social Share - Share buttons for the current page.
-28. Table - Build a table with styled headers, rows and cells.
-29. Tabs - Tabbed content with icons and several tab styles.
-30. Team Member - Present team members with photo, role and social links.
-31. Testimonial - Client feedback with photo, rating and company logo.
+16. Isotope Filter - A filterable grid: category buttons with an icon, title and description under each category.
+17. Menu - Display a WordPress navigation menu with layout, alignment and colours.
+18. Offcanvas - Slide-in panels for menus, sidebars or extra content.
+19. Post Grid - Show posts in grid layouts, with pagination and optional video.
+20. Pricing Table - Pricing plans with features, badges and a call to action.
+21. Progress Bar - Animated progress and skill bars.
+22. Row - A responsive row that holds Column blocks.
+23. Scroll Top - A back-to-top button.
+24. Search - A site search field you can place anywhere.
+25. Simple Gallery - An image gallery with spacing and column controls.
+26. Slider - A full-width image slider with arrows, dots and autoplay.
+27. Social Icon - A row of linked social icons with global or per-icon colours.
+28. Social Share - Share buttons for the current page.
+29. Table - Build a table with styled headers, rows and cells.
+30. Tabs - Tabbed content with icons and several tab styles.
+31. Team Member - Present team members with photo, role and social links.
+32. Testimonial - Client feedback with photo, rating and company logo.
 
 = No external connections by default =
 
@@ -70,9 +71,11 @@ The blocks are native block-editor blocks with live previews in the canvas, no p
 
 == External services ==
 
-ShapeBlock works without any external service. The two connections below are the
-only ones it can make, and each one is described with exactly what is sent and
-when.
+ShapeBlock works without any external service. The only connections it can make
+are the two described first below (Google Fonts, which is off by default, and
+video embeds); the share and profile links after them are ordinary links that
+open only when a visitor clicks them. Each one is described with exactly what is
+sent and when.
 
 = Google Fonts (optional, off by default) =
 
@@ -177,14 +180,15 @@ Where the source is:
 * The admin stylesheet: `assets/css/style.scss`, which compiles to
   `assets/css/style.css`.
 * The shared front-end stylesheet: `includes/public/assets/css/public.scss`
-  (with the `_animate.scss` and `_shapeblock-icon.scss` partials beside it),
+  (with the `_shapeblock-icon.scss` partial beside it),
   which compiles to `includes/public/assets/css/public.css`.
-* The icon font in `includes/admin/assets/icons/font/` is generated from
+* The block icon font in `includes/public/assets/font/` is generated from
   `includes/public/assets/icon/config.json`, which is the Fontello project file
   for it - open it at https://fontello.com to rebuild or change the glyph set.
+  The dashboard icon font in `includes/admin/assets/icons/font/` is a separate
+  Fontello export, shipped as the readable font and stylesheet files it consists of.
 * The prefixed Bootstrap grid: `assets/lib/bootstrap/bootstrap-grid.scss`, which
-  compiles to `bootstrap-grid.css` and `bootstrap-grid.min.css` in the same
-  folder.
+  compiles to `bootstrap-grid.css` in the same folder.
 * The Menu block's `includes/public/blocks/menu/build/index.js` and `view.js` are
   written by hand against the `wp.*` globals and are not generated by any build
   step, which is why that block has no `src/` folder. The files in it are the
@@ -217,14 +221,15 @@ Each block's own `style.scss` and `editor.scss` are compiled by that block's
 
 == Credits ==
 
-ShapeBlock's own code is GPLv2-or-later, as stated above. It bundles two
-third-party front-end libraries, each under its own MIT license, with the
-upstream license text shipped alongside the library files:
+ShapeBlock's own code is GPLv2-or-later, as stated above. It bundles three
+third-party libraries, each under its own MIT license, with the upstream
+license text shipped alongside:
 
 * Swiper 12.0.3 (https://swiperjs.com, https://github.com/nolimits4web/swiper),
   Copyright (c) 2014-2025 Vladimir Kharlampidi - `assets/lib/swiper/LICENSE`.
-  `assets/lib/swiper/swiper-bundle.min.js` and `swiper-bundle.min.css` are the
-  unmodified `dist` files from the upstream 12.0.3 release, and each carries the
+  `assets/lib/swiper/swiper-bundle.js` and `swiper-bundle.css` are the
+  unmodified, unminified `dist` files from the upstream 12.0.3 release (the npm
+  package `swiper@12.0.3`), and each carries the
   library name, version and homepage in its own header comment. They are used as
   published; this plugin does not build them.
 * Bootstrap 5.3 grid component (https://getbootstrap.com,
@@ -234,15 +239,31 @@ upstream license text shipped alongside the library files:
   breakpoint by `assets/lib/bootstrap/bootstrap-grid.scss` - see "Source code and
   build process" above.
 
-Both licenses are compatible with the GPLv2-or-later this plugin is
+* Ant Design 6 (https://ant.design, https://github.com/ant-design/ant-design)
+  and Ant Design Icons (https://github.com/ant-design/ant-design-icons),
+  Copyright (c) 2015-present Ant UED - `assets/lib/antd/LICENSE` and
+  `assets/lib/antd/ICONS-LICENSE`. They are compiled into the dashboard screens
+  only (`build/index.js`, built from `src/` with `npm run build`; see "Source code
+  and build process" above) and are never loaded on the front end. Their own
+  dependencies (about 60 small packages such as `@ant-design/cssinjs`, `dayjs`,
+  `clsx` and `@babel/runtime`) are also MIT-licensed.
+
+All of these licenses are compatible with the GPLv2-or-later this plugin is
 distributed under.
 
-The bundled icon font (`includes/public/assets/icon/`) is built with Fontello
-from 81 glyphs original to this plugin, plus 3 glyphs from other icon sets,
-each under the SIL Open Font License 1.1 (GPL-compatible):
+The two bundled icon fonts (`includes/public/assets/font/` for the blocks,
+`includes/admin/assets/icons/font/` for the dashboard) are generated with
+Fontello (https://fontello.com). Their custom glyphs are drawings supplied by the
+plugin author and are released under the same GPLv2-or-later license as the
+plugin; the Fontello project file for the block font, which lists every glyph and
+its source, is `includes/public/assets/icon/config.json`. The block font also
+contains 3 glyphs from other icon sets, each under the SIL Open Font License 1.1
+(GPL-compatible):
 
 * `map-o` and `h-sigh` — Font Awesome 4.7 (https://fontawesome.com/v4/license/).
 * `move` — Elusive Icons (https://github.com/aristath/elusive-iconfont).
+
+The SIL Open Font License 1.1 text is published at https://openfontlicense.org.
 
 == Installation ==
 
@@ -257,7 +278,7 @@ each under the SIL Open Font License 1.1 (GPL-compatible):
 
 Yes. ShapeBlock is designed to work with any properly coded WordPress theme, block themes included. The blocks inherit your theme's typography and can be restyled from the block settings.
 
-= Do I have to use all 31 blocks? =
+= Do I have to use all 32 blocks? =
 
 No. Open the ShapeBlock settings screen and switch off any block you do not need. A block that is off is not registered and its assets are not loaded.
 

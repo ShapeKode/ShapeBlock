@@ -28,13 +28,12 @@
 	var PanelBody                  = wp.components.PanelBody;
 	var ToggleControl              = wp.components.ToggleControl;
 
-	var TD     = 'shapeblock';
 	var PREFIX = 'shapeblock-hide-';
 
 	var CONTROLS = [
-		{ device: 'desktop', label: __( 'Hide on Desktop', TD ) },
-		{ device: 'tablet', label: __( 'Hide on Tablet', TD ) },
-		{ device: 'mobile', label: __( 'Hide on Mobile', TD ) }
+		{ device: 'desktop', label: __( 'Hide on Desktop', 'shapeblock' ) },
+		{ device: 'tablet', label: __( 'Hide on Tablet', 'shapeblock' ) },
+		{ device: 'mobile', label: __( 'Hide on Mobile', 'shapeblock' ) }
 	];
 
 	// Row and Column render the same three toggles themselves.
@@ -68,7 +67,7 @@
 			return el( Fragment, {},
 				el( BlockEdit, props ),
 				el( InspectorControls, {},
-					el( PanelBody, { title: __( 'Responsive', TD ), initialOpen: false },
+					el( PanelBody, { title: __( 'Responsive', 'shapeblock' ), initialOpen: false },
 						CONTROLS.map( function ( c ) {
 							var cls = PREFIX + c.device;
 							return el( ToggleControl, {

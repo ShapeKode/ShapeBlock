@@ -7,16 +7,14 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Button block.
  *
- * Mirrors the markup produced by the Elementor "Button" widget
- * (easy-elements/widgets/button/button.php) so the shared CSS applies
- * identically on the front end. Element classes use this plugin's "shapeblock-" prefix.
+ * Element classes use this plugin's "shapeblock-" prefix.
  *
  * $attributes, $content and $block are provided by register_block_type().
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-button-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-button-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $text          = isset( $attributes['buttonText'] ) ? $attributes['buttonText'] : '';
 $url           = ! empty( $attributes['buttonUrl'] ) ? $attributes['buttonUrl'] : '#';
@@ -25,8 +23,15 @@ $nofollow      = ! empty( $attributes['buttonNofollow'] );
 $button_type   = isset( $attributes['buttonType'] ) ? $attributes['buttonType'] : 'primary';
 $icon          = isset( $attributes['buttonIcon'] ) ? $attributes['buttonIcon'] : '';
 $icon_position = isset( $attributes['iconPosition'] ) ? $attributes['iconPosition'] : 'after';
-$show_gradient = ! empty( $attributes['showGradient'] );
-$border_grad   = ! empty( $attributes['borderGradientButton'] );
+// Full gradient strings from the Background (Normal / Hover) and Border
+// Gradient controls. The older fixed three-colour gradient (showGradient,
+// gradient1-3) and two-colour border (borderGradientColor1-2) still render for
+// buttons saved before, until the editor carries them over on next edit.
+$bg_gradient       = isset( $attributes['bgGradient'] ) ? (string) $attributes['bgGradient'] : '';
+$bg_gradient_hover = isset( $attributes['bgGradientHover'] ) ? (string) $attributes['bgGradientHover'] : '';
+$border_gradient   = isset( $attributes['borderGradient'] ) ? (string) $attributes['borderGradient'] : '';
+$show_gradient     = ! empty( $attributes['showGradient'] ) && '' === $bg_gradient && '' === $bg_gradient_hover;
+$border_grad       = ! empty( $attributes['borderGradientButton'] );
 
 $target   = $is_external ? '_blank' : '_self';
 $rel      = [];
@@ -46,7 +51,10 @@ if ( $show_gradient ) {
 	$button_classes[] = 'shapeblock-button-gradient';
 }
 if ( $border_grad ) {
-	$button_classes[] = 'shapeblock-button-border-gradient';
+	$button_classes[] = '' !== $border_gradient ? 'shapeblock-button-has-border-gradient' : 'shapeblock-button-border-gradient';
+}
+if ( '' !== $bg_gradient_hover ) {
+	$button_classes[] = 'shapeblock-button-has-hover-gradient';
 }
 
 $block_wrap_attr = get_block_wrapper_attributes( array(
@@ -129,6 +137,24 @@ if ( ! empty( $attributes['textColorHover'] ) ) $button_hover['color'] = $attrib
 if ( ! empty( $attributes['bgColorHover'] ) ) $button_hover['background-color'] = $attributes['bgColorHover'];
 if ( ! empty( $attributes['buttonBorderHover'] ) ) $button_hover = array_merge( $button_hover, $H::border_to_css_props( $attributes['buttonBorderHover'] ) );
 
+// Gradient background. The normal one is the button's own background-image;
+// the hover one sits in ::after and fades in (a gradient cannot transition).
+if ( '' !== $bg_gradient ) {
+	$button_styles['background-image'] = $bg_gradient;
+	// A plain hover colour would otherwise stay hidden under the gradient.
+	if ( '' === $bg_gradient_hover && ! empty( $attributes['bgColorHover'] ) ) {
+		$button_hover['background-image'] = 'none';
+	}
+}
+if ( '' !== $bg_gradient_hover ) {
+	$button_styles['--shapeblock-button-hover-gradient'] = $bg_gradient_hover;
+}
+if ( $border_grad && '' !== $border_gradient ) {
+	$button_styles['--shapeblock-button-border-gradient'] = $border_gradient;
+	$bw = isset( $attributes['borderGradientWidth'] ) && '' !== $attributes['borderGradientWidth'] ? $attributes['borderGradientWidth'] : '2';
+	$button_styles['--shapeblock-button-border-width'] = $H::ensure_unit( $bw );
+}
+
 // Gradient CSS variables.
 $gradient_vars = [];
 if ( $show_gradient ) {
@@ -137,7 +163,7 @@ if ( $show_gradient ) {
 	if ( ! empty( $attributes['gradient3'] ) ) $gradient_vars['--shapeblock-gradient-3'] = $attributes['gradient3'];
 }
 $border_gradient_vars = [];
-if ( $border_grad ) {
+if ( $border_grad && '' === $border_gradient ) {
 	if ( ! empty( $attributes['borderGradientColor1'] ) ) $border_gradient_vars['--shapeblock-border-gradient-1'] = $attributes['borderGradientColor1'];
 	if ( ! empty( $attributes['borderGradientColor2'] ) ) $border_gradient_vars['--shapeblock-border-gradient-2'] = $attributes['borderGradientColor2'];
 }
@@ -232,6 +258,18 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H ) {
 };
 $dev_data     = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
 $resp_css     = '';
+
+// Button position in its row: text-align on the wrapper (the button is inline-flex).
+$position_data = [];
+foreach ( [ '' => 'desktop', 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+	$pos = $attributes[ 'buttonPosition' . $suffix ] ?? '';
+	if ( in_array( $pos, [ 'left', 'center', 'right' ], true ) ) {
+		$position_data[ $device_key ] = [ 'text-align' => $pos ];
+	}
+}
+if ( ! empty( $position_data ) ) {
+	$resp_css .= $H::generate_responsive_css( $selector, $position_data );
+}
 foreach ( [ '.shapeblock-button', '.shapeblock-button i', '.shapeblock-button svg', '.shapeblock-button .shapeblock-button-icon-before', '.shapeblock-button .shapeblock-button-icon-after' ] as $sub_sel ) {
 	$rdata = [];
 	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {

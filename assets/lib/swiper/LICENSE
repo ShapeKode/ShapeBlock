@@ -23,6 +23,6 @@ THE SOFTWARE.
 ---
 
 This is the upstream license for Swiper (https://swiperjs.com), bundled in
-this directory as swiper-bundle.min.js / swiper-bundle.min.css, version 12.0.3.
+this directory as swiper-bundle.js / swiper-bundle.css, version 12.0.3.
 It is not part of ShapeBlock's own GPLv2-or-later source and is reproduced here
 to satisfy its own license terms.

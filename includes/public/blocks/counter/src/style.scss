@@ -1,8 +1,7 @@
 /**
  * Counter — front-end + editor styles.
  *
- * Structure ported from the Elementor widget
- * (easy-elements/widgets/counter/css/counter.scss). Element classes use this
+ * Element classes use this
  * plugin's own "shapeblock-" prefix and preset CSS variables.
  */
 
@@ -79,6 +78,14 @@
 .shapeblock-cnt-content {
 	display: flex;
 	flex-direction: column;
+	/* Keep the number lined up with the title, following the block's alignment. */
+	align-items: center;
+}
+.shapeblock-cnt-icon-pos-left .shapeblock-cnt-content {
+	align-items: flex-start;
+}
+.shapeblock-cnt-icon-pos-right .shapeblock-cnt-content {
+	align-items: flex-end;
 }
 .shapeblock-cnt-title-pos-top .shapeblock-cnt-content {
 	flex-direction: column-reverse;

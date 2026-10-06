@@ -16,7 +16,7 @@ return ( function ( $attributes, $content, $block ) {
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-image-carousel-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-image-carousel-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $carousel_images = isset( $attributes['images'] ) && is_array( $attributes['images'] ) ? $attributes['images'] : array();
 

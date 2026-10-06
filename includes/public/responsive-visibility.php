@@ -164,9 +164,10 @@ function shapeblock_visibility_editor_script() {
 		'shapeblock-responsive-visibility',
 		SHAPEBLOCK_PL_URL . 'includes/public/assets/js/responsive-visibility.js',
 		array( 'wp-blocks', 'wp-hooks', 'wp-compose', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n' ),
-		SHAPEBLOCK_VERSION,
+		shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/js/responsive-visibility.js' ),
 		true
 	);
+	wp_set_script_translations( 'shapeblock-responsive-visibility', 'shapeblock', SHAPEBLOCK_PL_PATH . 'languages' );
 }
 add_action( 'enqueue_block_editor_assets', 'shapeblock_visibility_editor_script', 1 );
 
@@ -179,7 +180,7 @@ function shapeblock_unique_block_id_editor_script() {
 		'shapeblock-unique-block-id',
 		SHAPEBLOCK_PL_URL . 'includes/public/assets/js/unique-block-id.js',
 		array( 'wp-blocks', 'wp-hooks', 'wp-compose', 'wp-element', 'wp-data', 'wp-block-editor' ),
-		SHAPEBLOCK_VERSION,
+		shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/js/unique-block-id.js' ),
 		true
 	);
 }

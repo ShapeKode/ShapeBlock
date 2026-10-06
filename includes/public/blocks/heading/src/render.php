@@ -7,15 +7,12 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Heading block.
  *
- * Mirrors the markup of the Elementor "Heading" widget
- * (easy-elements/widgets/heading) so the shared CSS applies on the front end.
- * Element classes use this plugin's "shapeblock-" prefix. Animation features that
- * required external JS in the Elementor widget are intentionally omitted.
+ * Element classes use this plugin's "shapeblock-" prefix.
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-heading-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-heading-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $allowed_tags = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span' ];
 $tag          = isset( $attributes['titleTag'] ) && in_array( $attributes['titleTag'], $allowed_tags, true ) ? $attributes['titleTag'] : 'h2';
@@ -24,7 +21,10 @@ $title_raw   = isset( $attributes['title'] ) ? $attributes['title'] : '';
 
 $link        = isset( $attributes['linkUrl'] ) ? $attributes['linkUrl'] : '';
 $target      = ! empty( $attributes['linkTarget'] ) ? ' target="_blank"' : '';
-$nofollow    = ! empty( $attributes['linkNofollow'] ) ? ' rel="nofollow"' : '';
+$rel_parts = array();
+if ( ! empty( $attributes['linkTarget'] ) ) { $rel_parts[] = 'noopener'; $rel_parts[] = 'noreferrer'; }
+if ( ! empty( $attributes['linkNofollow'] ) ) { $rel_parts[] = 'nofollow'; }
+$nofollow    = ! empty( $rel_parts ) ? ' rel="' . esc_attr( implode( ' ', $rel_parts ) ) . '"' : '';
 
 // Highlight: {{text}} -> <span>text</span>.
 $title = preg_replace_callback( '/\{\{(.*?)\}\}/', function ( $m ) {

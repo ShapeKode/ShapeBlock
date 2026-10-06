@@ -1,9 +1,7 @@
 /**
  * Team Member — front-end popup.
  *
- * Behaviour ported from the Elementor widget script
- * (easy-elements/widgets/team-grid/js/team.js). Rewritten as dependency-free JS
- * (the Elementor version used jQuery + `elementor/frontend/init`).
+ * Dependency-free JS.
  */
 (function () {
 	'use strict';

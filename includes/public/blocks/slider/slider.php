@@ -19,10 +19,15 @@ function shapeblock_create_block_slider_block_init() {
 		shapeblock_asset_version( __DIR__ . '/build/index.css' )
 	);
 
-	register_block_type( __DIR__ . '/build', array(
+	$block_type = register_block_type( __DIR__ . '/build', array(
 		'style'        => 'shapeblock-slider-style',
 		'editor_style' => 'shapeblock-slider-editor-style',
 	) );
+
+	// Swiper loads only with this block - see blocks.php.
+	if ( function_exists( 'shapeblock_add_swiper_dependency' ) ) {
+		shapeblock_add_swiper_dependency( $block_type );
+	}
 }
 add_action( 'init', 'shapeblock_create_block_slider_block_init' );
 

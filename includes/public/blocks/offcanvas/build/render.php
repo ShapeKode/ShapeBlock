@@ -7,8 +7,7 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Offcanvas block.
  *
- * Mirrors the markup of the Elementor "Offcanvas" widget
- * (easy-elements/widgets/offcanvas). Element classes use the "shapeblock-" prefix.
+ * Element classes use the "shapeblock-" prefix.
  * The panel content is a selected "shapeblock-template" post rendered through the
  * the_content filter (so inner blocks/shortcodes run).
  *
@@ -17,7 +16,7 @@ return ( function ( $attributes, $content, $block ) {
 
 $H = '\ShapeBlock\Frontend\Helper';
 
-$unique_id  = ! empty( $attributes['blockId'] ) ? $attributes['blockId'] : 'shapeblock-oc-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id  = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-oc-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 $panel_id   = $unique_id . '-panel';
 
 $layout     = ( isset( $attributes['offcanvasLayout'] ) && 'modern' === $attributes['offcanvasLayout'] ) ? 'modern' : 'classic';
@@ -169,21 +168,23 @@ $icon_allowed_html = array(
 // Panel content from the selected template.
 //
 // IMPORTANT: do NOT run `apply_filters( 'the_content', ... )` here. Page builders
-// such as Elementor hook into `the_content` and re-inject the *current* page's
+// hook into `the_content` and re-inject the *current* page's
 // builder markup whenever it fires — so re-running it inside this block pulls the
 // page's containers into the offcanvas panel. Instead we run the block / shortcode
 // / paragraph transforms directly, which renders the template without triggering
 // those builder hooks (and avoids infinite recursion if a template references this
 // block).
 $content_html = '';
-if ( $template && $template !== get_queried_object_id() ) {
+if ( $template && $template !== get_queried_object_id() && empty( \ShapeBlock\Frontend\Helper::$rendering_templates[ $template ] ) ) {
 	$tpl_post = get_post( $template );
 	if ( $tpl_post && 'shapeblock-template' === $tpl_post->post_type && 'publish' === $tpl_post->post_status ) {
+		\ShapeBlock\Frontend\Helper::$rendering_templates[ $template ] = true;
 		$tpl_content  = do_blocks( $tpl_post->post_content );
 		$tpl_content  = wptexturize( $tpl_content );
 		$tpl_content  = convert_smilies( $tpl_content );
 		$tpl_content  = wpautop( $tpl_content );
 		$content_html = do_shortcode( $tpl_content );
+		unset( \ShapeBlock\Frontend\Helper::$rendering_templates[ $template ] );
 	}
 }
 ?>

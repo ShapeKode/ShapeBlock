@@ -1,10 +1,7 @@
 /**
  * Simple Gallery — front-end lightbox.
  *
- * Behaviour ported from the Elementor widget script
- * (easy-elements/widgets/gallery/js/simple-gallery.js). Rewritten as scoped,
- * dependency-free JS so it runs on any front-end page where the block appears
- * (the Elementor version hooked into `elementor/frontend/init`).
+ * Scoped, dependency-free JS that runs on any front-end page where the block appears.
  */
 (function () {
 	'use strict';

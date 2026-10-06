@@ -77,6 +77,67 @@ class Helper {
 	}
 
 	/**
+	 * The inline HTML a description or short text may contain: line breaks and
+	 * basic emphasis, links, and nothing that can run code or change the layout.
+	 * Used with wp_kses() so what an author types (a <br>, some <strong>) is
+	 * shown as formatting instead of as visible tags.
+	 *
+	 * @return array Allowlist in wp_kses() form.
+	 */
+	public static function inline_allowed_html() {
+		return array(
+			'br'     => array(),
+			'strong' => array(),
+			'b'      => array(),
+			'em'     => array(),
+			'i'      => array(),
+			'u'      => array(),
+			's'      => array(),
+			'small'  => array(),
+			'mark'   => array(),
+			'code'   => array(),
+			'sup'    => array(),
+			'sub'    => array(),
+			'span'   => array( 'class' => true ),
+			'a'      => array(
+				'href'   => true,
+				'title'  => true,
+				'target' => true,
+				'rel'    => true,
+			),
+		);
+	}
+
+	/**
+	 * Block ids already printed on this request.
+	 *
+	 * @var array<string,int>
+	 */
+	private static $used_block_ids = [];
+
+	/**
+	 * A block id that no other block on this page has used yet.
+	 *
+	 * A duplicated or copy-pasted block keeps the original's blockId, so both
+	 * answered to the same `.<id>` selector and a border or shadow set on one
+	 * appeared on every copy. The editor now hands copies a fresh id, but pages
+	 * saved before still hold the shared one; this gives every repeat a suffix so
+	 * its markup and its CSS stay paired with each other only.
+	 *
+	 * @param string $id Sanitised block id.
+	 * @return string
+	 */
+	public static function unique_block_id( $id ) {
+		$id = (string) $id;
+		if ( ! isset( self::$used_block_ids[ $id ] ) ) {
+			self::$used_block_ids[ $id ] = 1;
+			return $id;
+		}
+		$n = ++self::$used_block_ids[ $id ];
+		return $id . '-' . $n;
+	}
+
+	/**
 	 * Normalise a stored length.
 	 *
 	 * A bare number gains "px". Anything else has to *prove* it is a length —
@@ -137,7 +198,7 @@ class Helper {
 	 *
 	 * Block attributes are stored as free text, so a value can carry anything a
 	 * user (or an imported template) put there. A value that could terminate the
-	 * declaration, the rule or the <style> element, open a comment, or invoke a
+	 * declaration, the rule or the style element element, open a comment, or invoke a
 	 * script URL is rejected outright rather than escaped — there is no escaping
 	 * that makes arbitrary text safe inside a stylesheet.
 	 *
@@ -311,7 +372,7 @@ class Helper {
 
 	/**
 	 * Route a finished stylesheet fragment to the page without ever printing a
-	 * hand-built <style> tag.
+	 * hand-built style element tag.
 	 *
 	 * Three cases, because a block's render.php can run at three very different
 	 * points in the request:
@@ -363,6 +424,14 @@ class Helper {
 	private static $pending_css = [];
 
 	/**
+	 * Templates being rendered right now, keyed by post id, so a template that
+	 * contains a block pointing back at itself stops instead of recursing.
+	 *
+	 * @var array<int,bool>
+	 */
+	public static $rendering_templates = [];
+
+	/**
 	 * Hold CSS until the block it belongs to returns its markup.
 	 *
 	 * @param string $css Generated CSS.
@@ -378,10 +447,11 @@ class Helper {
 	/**
 	 * Prepend any CSS the block just generated to its own markup.
 	 *
-	 * The style element is built here and returned — never echoed — and its
-	 * content cannot escape it: a <style> element is raw text, so the only
-	 * sequence that can end it early is "</style", and wp_strip_all_tags() has
-	 * already removed every "<" from the sheet.
+	 * The CSS goes through WordPress's own inline-style API: it is attached to a
+	 * throw-away handle with wp_add_inline_style() and printed by
+	 * wp_print_styles(), so the style element is built by core, not written
+	 * out by hand here. wp_strip_all_tags() has already removed every "<" from
+	 * the sheet, so nothing in it can close the element early.
 	 *
 	 * @param string $content Block markup.
 	 * @return string
@@ -391,11 +461,25 @@ class Helper {
 			return $content;
 		}
 
-		$css                = implode( '', self::$pending_css );
-		self::$pending_css  = [];
-		$css                = str_ireplace( [ '</style', '<!--', '-->' ], '', $css );
+		$css               = implode( '', self::$pending_css );
+		self::$pending_css = [];
+		$css               = str_replace( [ '<!--', '-->' ], '', $css );
 
-		return '<style>' . $css . '</style>' . $content;
+		// One handle per piece of CSS: core prints a handle only once.
+		static $count = 0;
+		++$count;
+		$handle = 'shapeblock-block-css-' . $count;
+
+		wp_register_style( $handle, false, [], SHAPEBLOCK_VERSION );
+		wp_add_inline_style( $handle, $css );
+
+		ob_start();
+		wp_print_styles( $handle );
+		$tag = (string) ob_get_clean();
+
+		wp_deregister_style( $handle );
+
+		return $tag . $content;
 	}
 
 	/**
@@ -566,7 +650,13 @@ class Helper {
 				return '';
 			}
 
-			$embed_video = wp_oembed_get( $video_url, ['height' => $height, 'width' => $width, 'mute' => $mute, 'autoplay' => $autoplay, 'controls' => $controls] );
+			// oEmbed is a remote request; keep the result for a day instead of repeating it on every page view.
+			$embed_key   = 'shapeblock_oembed_' . md5( wp_json_encode( array( $video_url, $height, $width, $mute, $autoplay, $controls ) ) );
+			$embed_video = get_transient( $embed_key );
+			if ( false === $embed_video ) {
+				$embed_video = (string) wp_oembed_get( $video_url, ['height' => $height, 'width' => $width, 'mute' => $mute, 'autoplay' => $autoplay, 'controls' => $controls] );
+				set_transient( $embed_key, $embed_video, '' === $embed_video ? HOUR_IN_SECONDS : DAY_IN_SECONDS );
+			}
 
 			if( $embed_video ) {
 
@@ -577,7 +667,7 @@ class Helper {
 					$mute_param = 'muted=' . $mute;
 				}
 
-				$params = '&referrerpolicy="strict-origin-when-cross-origin&autoplay=' . $autoplay . '&' . $mute_param . '&controls=' . $controls;
+				$params = '&referrerpolicy=strict-origin-when-cross-origin&autoplay=' . $autoplay . '&' . $mute_param . '&controls=' . $controls;
 
 				$embed_video = preg_replace(
 					'/src="([^"]+)"/',

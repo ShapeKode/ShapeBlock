@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
 import BlockItem from './blockItem';
 import { Row, Space, Button, notification, Input, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
@@ -48,8 +49,8 @@ export default function Blocks() {
                         ));
                     }
                     notification.success({
-                        message: 'Block Status Updated',
-                        description: 'Block status has been updated successfully.',
+                        message: __( 'Block status updated', 'shapeblock' ),
+                        description: __( 'Block status has been updated successfully.', 'shapeblock' ),
                         duration: 2,
                     });
                 } else {
@@ -59,8 +60,8 @@ export default function Blocks() {
                         block.id === blockId ? { ...block, status: currentStatus } : block
                     ));
                     notification.error({
-                        message: 'Block Status Update Failed',
-                        description: 'Block status update failed. Please try again.',
+                        message: __( 'Block status update failed', 'shapeblock' ),
+                        description: __( 'Block status update failed. Please try again.', 'shapeblock' ),
                         duration: 2,
                     });
                 }
@@ -104,8 +105,8 @@ export default function Blocks() {
             .then(data => {
                 if (data.status === 'success') {
                     notification.success({
-                        message: newStatus === 'enable' ? 'All Blocks Activated' : 'All Blocks Deactivated',
-                        description: 'Block statuses have been updated successfully.',
+                        message: newStatus === 'enable' ? __( 'All blocks activated', 'shapeblock' ) : __( 'All blocks deactivated', 'shapeblock' ),
+                        description: __( 'Block statuses have been updated successfully.', 'shapeblock' ),
                         duration: 2,
                     });
                 } else {
@@ -113,8 +114,8 @@ export default function Blocks() {
                     // Revert on API failure signal
                     setBlocks(previousBlocks);
                     notification.error({
-                        message: 'Bulk Update Failed',
-                        description: 'Updating all blocks failed. Please try again.',
+                        message: __( 'Bulk update failed', 'shapeblock' ),
+                        description: __( 'Updating all blocks failed. Please try again.', 'shapeblock' ),
                         duration: 2,
                     });
                 }
@@ -124,8 +125,8 @@ export default function Blocks() {
                 // Revert on Network Error
                 setBlocks(previousBlocks);
                 notification.error({
-                    message: 'Bulk Update Failed',
-                    description: 'Updating all blocks failed. Please try again.',
+                    message: __( 'Bulk update failed', 'shapeblock' ),
+                    description: __( 'Updating all blocks failed. Please try again.', 'shapeblock' ),
                     duration: 2,
                 });
             })
@@ -159,7 +160,7 @@ export default function Blocks() {
     return (
         <div className='shapeblock-options-content'>
             <div className="shapeblock-options-content-header">
-                <h1 className='shapeblock-options-title'>Blocks</h1>
+                <h1 className='shapeblock-options-title'>{ __( 'Blocks', 'shapeblock' ) }</h1>
                 <div
                     className="shapeblock-blocks-toolbar"
                     style={{
@@ -174,7 +175,7 @@ export default function Blocks() {
                     {/* search + sort — left side */}
                     <Space className="shapeblock-blocks-filters">
                         <Input
-                            placeholder="Search blocks..."
+                            placeholder={ __( 'Search blocks...', 'shapeblock' ) }
                             allowClear
                             prefix={<SearchOutlined />}
                             value={search}
@@ -186,11 +187,11 @@ export default function Blocks() {
                             onChange={(v) => setSort(v)}
                             style={{ width: 170 }}
                             options={[
-                                { value: 'default', label: 'Sort: Default' },
-                                { value: 'az', label: 'Name (A–Z)' },
-                                { value: 'za', label: 'Name (Z–A)' },
-                                { value: 'active', label: 'Active first' },
-                                { value: 'inactive', label: 'Inactive first' },
+                                { value: 'default', label: __( 'Sort: Default', 'shapeblock' ) },
+                                { value: 'az', label: __( 'Name (A–Z)', 'shapeblock' ) },
+                                { value: 'za', label: __( 'Name (Z–A)', 'shapeblock' ) },
+                                { value: 'active', label: __( 'Active first', 'shapeblock' ) },
+                                { value: 'inactive', label: __( 'Inactive first', 'shapeblock' ) },
                             ]}
                         />
                     </Space>
@@ -202,7 +203,7 @@ export default function Blocks() {
                             disabled={blocks.every(block => block.status === 'enable')}
                             onClick={() => updateAllBlockStatus('enable')}
                         >
-                            Activate All
+                            { __( 'Activate All', 'shapeblock' ) }
                         </Button>
                         <Button
                             danger
@@ -210,14 +211,20 @@ export default function Blocks() {
                             disabled={blocks.every(block => block.status === 'disable')}
                             onClick={() => updateAllBlockStatus('disable')}
                         >
-                            Deactivate All
+                            { __( 'Deactivate All', 'shapeblock' ) }
                         </Button>
                     </Space>
                 </div>
             </div>
             {sortedBlocks.length === 0 && (
                 <p style={{ padding: '24px 4px', color: '#888' }}>
-                    No blocks found{term ? ` for “${search.trim()}”` : ''}.
+                    { term
+                        ? sprintf(
+                            /* translators: %s: search term entered by the user. */
+                            __( 'No blocks found for “%s”.', 'shapeblock' ),
+                            search.trim()
+                        )
+                        : __( 'No blocks found.', 'shapeblock' ) }
                 </p>
             )}
             <Row gutter={[16, 16]} justify="flex-start">

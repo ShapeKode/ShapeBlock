@@ -17,6 +17,8 @@ $custom_class  = isset( $attributes['customClass'] ) ? trim( (string) $attribute
 $unique_id     = ! empty( $attributes['blockId'] )
     ? sanitize_html_class( $attributes['blockId'] )
     : 'shapeblock-layout-row-' . wp_rand( 100, 99999 );
+// A copied row that still carries the original's id gets its own.
+$unique_id = \ShapeBlock\Frontend\Helper::unique_block_id( $unique_id );
 
 $selector = '.' . $unique_id;
 
@@ -171,18 +173,22 @@ foreach ( [
     }
 
     $rules = '';
+    // Position among the row's rendered children. A column is matched by its
+    // place, not its blockId: a copied column that still carries the original's
+    // id is printed under a fresh one (Helper::unique_block_id()), which an
+    // id-based rule written here would no longer reach.
+    $position = 0;
 
     foreach ( $inner_blocks as $inner ) {
-        if ( empty( $inner['blockName'] ) || 'shapeblock/column' !== $inner['blockName'] ) {
+        if ( empty( $inner['blockName'] ) ) {
+            continue;
+        }
+        $position++;
+        if ( 'shapeblock/column' !== $inner['blockName'] ) {
             continue;
         }
 
         $col_attrs = isset( $inner['attrs'] ) && is_array( $inner['attrs'] ) ? $inner['attrs'] : [];
-        $col_id    = isset( $col_attrs['blockId'] ) ? sanitize_html_class( $col_attrs['blockId'] ) : '';
-
-        if ( '' === $col_id ) {
-            continue;
-        }
 
         // The column speaks for itself on this device.
         $own_width = trim( (string) ( $col_attrs[ 'width' . $suffix ] ?? '' ) );
@@ -192,7 +198,7 @@ foreach ( [
             continue;
         }
 
-        $rules .= '.shapeblock-layout-row' . $selector . ' > .shapeblock-layout-row__inner > .shapeblock-column.' . $col_id
+        $rules .= '.shapeblock-layout-row' . $selector . ' > .shapeblock-layout-row__inner > .shapeblock-column:nth-child(' . $position . ')'
             . '{flex:0 1 ' . $basis . ' !important;max-width:' . $basis . ' !important;}';
     }
 
@@ -209,9 +215,27 @@ if ( $content_width === 'boxed' ) {
     \ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'maxWidth', '--shapeblock-layout-row-max-width' );
 }
 
+// Margin gets its own, stronger rule. A row placed straight in the page content
+// sits in WordPress's constrained layout, which prints
+//   :root :where(.is-layout-constrained) > * { margin-block: 1.5rem 0 }
+// at the same specificity as `.<blockId>` and later in the page -- so it won and
+// the row's margin (bottom above all) was reset to 0 on the front end, while the
+// editor canvas, which has different rules, showed it. Doubling the class
+// outweighs it without !important.
+$row_margin = [ 'desktop' => [], 'tablet' => [], 'mobile' => [] ];
+foreach ( $row_responsive as $device => $decls ) {
+    foreach ( $decls as $prop => $val ) {
+        if ( 0 === strpos( $prop, 'margin-' ) ) {
+            $row_margin[ $device ][ $prop ] = $val;
+            unset( $row_responsive[ $device ][ $prop ] );
+        }
+    }
+}
+
 // Compile CSS.
 $style_handle = 'shapeblock-layout-row-style';
 $css  = \ShapeBlock\Frontend\Helper::generate_responsive_css( $selector, $row_responsive );
+$css .= \ShapeBlock\Frontend\Helper::generate_responsive_css( $selector . $selector, $row_margin );
 $css .= $per_device_css;
 
 wp_enqueue_style( $style_handle );

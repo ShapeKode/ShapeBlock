@@ -10,6 +10,8 @@ import {
     ToggleControl
 } from '@wordpress/components';
 
+const DEFAULT_SHADOW_COLOR = 'rgba(0,0,0,0.3)';
+
 const BoxShadowControls = ({ label, value, onChange }) => {
 
     const shadowValue = {
@@ -37,6 +39,14 @@ const BoxShadowControls = ({ label, value, onChange }) => {
 
     const updateShadow = (newPart) => {
         const nextValue = { ...shadowValue, ...newPart };
+        // The colour starts out transparent, so moving only the offset / blur /
+        // spread sliders used to produce a shadow nobody could see. Give it a
+        // visible default the moment it has a size and no colour of its own.
+        const hasSize = [nextValue.x, nextValue.y, nextValue.b, nextValue.s].some((v) => Number(v) !== 0);
+        const isClear = !nextValue.c || String(nextValue.c).replace(/\s/g, '') === 'rgba(0,0,0,0)';
+        if (!('c' in newPart) && hasSize && isClear) {
+            nextValue.c = DEFAULT_SHADOW_COLOR;
+        }
         onChange(nextValue);
     };
 

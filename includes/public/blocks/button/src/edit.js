@@ -10,10 +10,12 @@ import {
 	TextControl,
 	BoxControl,
 	TabPanel,
+	GradientPicker,
 	__experimentalDivider as Divider,
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
 import BorderControl from '../../custom-components/BorderControl';
@@ -27,6 +29,27 @@ const ALIGN_OPTIONS = [
 	{ label: __('Left', 'shapeblock'), value: 'flex-start' },
 	{ label: __('Center', 'shapeblock'), value: 'center' },
 	{ label: __('Right', 'shapeblock'), value: 'flex-end' },
+];
+
+const STATE_TABS = [
+	{ name: 'normal', title: __('Normal', 'shapeblock'), className: 'shapeblock-tab-normal' },
+	{ name: 'hover', title: __('Hover', 'shapeblock'), className: 'shapeblock-tab-hover' },
+];
+
+// Where the button sits in its row (text-align on the block wrapper).
+const POSITION_OPTIONS = [
+	{ label: __('Default', 'shapeblock'), value: '' },
+	{ label: __('Left', 'shapeblock'), value: 'left' },
+	{ label: __('Center', 'shapeblock'), value: 'center' },
+	{ label: __('Right', 'shapeblock'), value: 'right' },
+];
+
+const DEFAULT_BORDER_GRADIENT = 'linear-gradient(90deg, #a53e1b 0%, #173998 100%)';
+const BORDER_GRADIENT_PRESETS = [
+	{ name: __('Sunset', 'shapeblock'), slug: 'sunset', gradient: 'linear-gradient(90deg, #a53e1b 0%, #173998 100%)' },
+	{ name: __('Candy', 'shapeblock'), slug: 'candy', gradient: 'linear-gradient(68.75deg, #4750cc 9.78%, #ef5ce8 58.79%, #efc7ae 92.67%)' },
+	{ name: __('Ocean', 'shapeblock'), slug: 'ocean', gradient: 'linear-gradient(135deg, #2b5876 0%, #4e4376 100%)' },
+	{ name: __('Peach', 'shapeblock'), slug: 'peach', gradient: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)' },
 ];
 
 // Map a base attribute name to its per-device key (desktop uses the base name).
@@ -53,8 +76,31 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		}
 	}, [blockId, clientId, setAttributes]);
 
+	// Carry the old fixed three-colour gradient and two-colour border gradient
+	// over to the full gradient strings the controls now edit, so a button
+	// saved before looks the same and stays editable.
+	useEffect(() => {
+		const next = {};
+		const { gradient1, gradient2, gradient3, bgGradient, bgGradientHover } = attributes;
+		if (showGradient && !bgGradient && !bgGradientHover) {
+			const stops = `${gradient1 || '#4750cc'} 9.78%, ${gradient2 || '#ef5ce8'} 58.79%, ${gradient3 || '#efc7ae'} 92.67%`;
+			next.bgGradient = `linear-gradient(68.75deg, ${stops})`;
+			next.bgGradientHover = `linear-gradient(-68.75deg, ${stops})`;
+			next.showGradient = false;
+		}
+		if (borderGradientButton && !attributes.borderGradient) {
+			const grad = `linear-gradient(90deg, ${attributes.borderGradientColor1 || '#a53e1b'} 0%, ${attributes.borderGradientColor2 || '#173998'} 100%)`;
+			next.borderGradient = grad;
+			// The old border style also filled the button with it on hover.
+			if (!attributes.bgGradientHover && !next.bgGradientHover && !attributes.bgColorHover) next.bgGradientHover = grad;
+			if (!attributes.textColorHover) next.textColorHover = '#ffffff';
+		}
+		if (Object.keys(next).length) setAttributes(next);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	// Current preview device, so the toolbar alignment edits the matching
-	// per-device attribute (buttonAlignment / buttonAlignmentTablet / buttonAlignmentMobile).
+	// per-device attribute (buttonPosition / buttonPositionTablet / buttonPositionMobile).
 	const device = useSelect((select) => {
 		const editor = select('core/editor');
 		if (editor && typeof editor.getDeviceType === 'function') return editor.getDeviceType();
@@ -63,18 +109,25 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		return 'Desktop';
 	}, []);
 	const dev = device ? device.toLowerCase() : 'desktop';
-	const alignKey = dev === 'desktop' ? 'buttonAlignment' : `buttonAlignment${dev.charAt(0).toUpperCase() + dev.slice(1)}`;
-
-	// buttonAlignment stores CSS flex values (used as justify-content in render.php).
-	// AlignmentControl works in left/center/right, so map both directions.
-	const FLEX_TO_ALIGN = { 'flex-start': 'left', center: 'center', 'flex-end': 'right' };
-	const ALIGN_TO_FLEX = { left: 'flex-start', center: 'center', right: 'flex-end' };
+	// The toolbar moves the whole button within its row. Content Alignment
+	// (buttonAlignment, justify-content inside the button) stays in the sidebar.
+	const alignKey = getKey('buttonPosition', dev);
 
 	const color = (label, key) => (
 		<ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
 	);
 	const typo = (label, key) => (
 		<TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />
+	);
+	// Solid colour or gradient (linear/radial, any angle, any number of stops).
+	const background = (label, colorKey, gradKey) => (
+		<BackgroundControl
+			label={label}
+			colorValue={attributes[colorKey]}
+			gradientValue={attributes[gradKey]}
+			onColorChange={(v) => setAttributes({ [colorKey]: v && typeof v === 'object' ? v.hex : v || '' })}
+			onGradientChange={(v) => setAttributes({ [gradKey]: v || '' })}
+		/>
 	);
 	const border = (label, key) => (
 		<BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
@@ -183,6 +236,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<Divider />
 				</>
 			)}
+			{respAlign(__('Button Alignment', 'shapeblock'), 'buttonPosition', POSITION_OPTIONS)}
 			{respNum(__('Minimum Width (px)', 'shapeblock'), 'minWidth')}
 			{respAlign(__('Content Alignment', 'shapeblock'), 'buttonAlignment', ALIGN_OPTIONS)}
 			<Divider />
@@ -198,50 +252,82 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<PanelBody title={__('Button', 'shapeblock')} initialOpen={true}>
 				{respTypo(__('Typography', 'shapeblock'), 'buttonTypography')}
 				<Divider />
-				{color(__('Text Color', 'shapeblock'), 'textColor')}
-				{color(__('Background', 'shapeblock'), 'bgColor')}
-				{border(__('Border', 'shapeblock'), 'buttonBorder')}
-				{shadow(__('Box Shadow', 'shapeblock'), 'buttonBoxShadow')}
-				<Divider />
-				{color(__('Text Color (Hover)', 'shapeblock'), 'textColorHover')}
-				{color(__('Background (Hover)', 'shapeblock'), 'bgColorHover')}
-				{border(__('Border (Hover)', 'shapeblock'), 'buttonBorderHover')}
+				<TabPanel className="shapeblock-tab-panel" activeClass="is-active" tabs={STATE_TABS}>
+					{(tab) =>
+						tab.name === 'hover' ? (
+							<>
+								{color(__('Text Color', 'shapeblock'), 'textColorHover')}
+								{background(__('Background', 'shapeblock'), 'bgColorHover', 'bgGradientHover')}
+								{border(__('Border', 'shapeblock'), 'buttonBorderHover')}
+							</>
+						) : (
+							<>
+								{color(__('Text Color', 'shapeblock'), 'textColor')}
+								{background(__('Background', 'shapeblock'), 'bgColor', 'bgGradient')}
+								{border(__('Border', 'shapeblock'), 'buttonBorder')}
+								{shadow(__('Box Shadow', 'shapeblock'), 'buttonBoxShadow')}
+							</>
+						)
+					}
+				</TabPanel>
 				<Divider />
 				{box(__('Border Radius', 'shapeblock'), 'buttonBorderRadius')}
 			</PanelBody>
 
-			<PanelBody title={__('Gradient', 'shapeblock')} initialOpen={false}>
-				<ToggleControl label={__('Gradient Button', 'shapeblock')} checked={showGradient} onChange={(v) => setAttributes({ showGradient: v })} __nextHasNoMarginBottom />
-				{showGradient && (
-					<>
-						{color(__('Gradient 1', 'shapeblock'), 'gradient1')}
-						{color(__('Gradient 2', 'shapeblock'), 'gradient2')}
-						{color(__('Gradient 3', 'shapeblock'), 'gradient3')}
-					</>
-				)}
-				<Divider />
-				<ToggleControl label={__('Border Gradient Button', 'shapeblock')} checked={borderGradientButton} onChange={(v) => setAttributes({ borderGradientButton: v })} __nextHasNoMarginBottom />
+			<PanelBody title={__('Border Gradient', 'shapeblock')} initialOpen={false}>
+				<p className="components-base-control__help" style={{ marginTop: 0 }}>
+					{__('For a gradient fill, pick the Gradient tab in Background (Normal / Hover) above.', 'shapeblock')}
+				</p>
+				<ToggleControl
+					label={__('Gradient Border', 'shapeblock')}
+					checked={borderGradientButton}
+					onChange={(v) =>
+						setAttributes({
+							borderGradientButton: v,
+							...(v && !attributes.borderGradient ? { borderGradient: DEFAULT_BORDER_GRADIENT } : {}),
+						})
+					}
+					__nextHasNoMarginBottom
+				/>
 				{borderGradientButton && (
 					<>
-						{color(__('Border Gradient 1', 'shapeblock'), 'borderGradientColor1')}
-						{color(__('Border Gradient 2', 'shapeblock'), 'borderGradientColor2')}
+						<div style={{ marginTop: 16 }}>
+							<GradientPicker
+								value={attributes.borderGradient || DEFAULT_BORDER_GRADIENT}
+								onChange={(v) => setAttributes({ borderGradient: v || '' })}
+								gradients={BORDER_GRADIENT_PRESETS}
+								clearable={false}
+							/>
+						</div>
+						{num(__('Border Width (px)', 'shapeblock'), 'borderGradientWidth')}
 					</>
 				)}
 			</PanelBody>
 
 			{hasIcon && (
 				<PanelBody title={__('Icon', 'shapeblock')} initialOpen={false}>
-					{color(__('Color', 'shapeblock'), 'iconColor')}
-					{color(__('Background', 'shapeblock'), 'iconBg')}
 					{respNum(__('Size (px)', 'shapeblock'), 'iconSize')}
 					{respNum(__('Box Width (px)', 'shapeblock'), 'iconBoxWidth')}
 					{respNum(__('Box Height (px)', 'shapeblock'), 'iconBoxHeight')}
 					{box(__('Box Border Radius', 'shapeblock'), 'iconBoxBorderRadius')}
-					{num(__('Rotation (deg)', 'shapeblock'), 'iconRotation')}
 					<Divider />
-					{color(__('Color (Hover)', 'shapeblock'), 'iconColorHover')}
-					{color(__('Background (Hover)', 'shapeblock'), 'iconBgHover')}
-					{num(__('Rotation Hover (deg)', 'shapeblock'), 'iconRotationHover')}
+					<TabPanel className="shapeblock-tab-panel" activeClass="is-active" tabs={STATE_TABS}>
+						{(tab) =>
+							tab.name === 'hover' ? (
+								<>
+									{color(__('Color', 'shapeblock'), 'iconColorHover')}
+									{color(__('Background', 'shapeblock'), 'iconBgHover')}
+									{num(__('Rotation (deg)', 'shapeblock'), 'iconRotationHover')}
+								</>
+							) : (
+								<>
+									{color(__('Color', 'shapeblock'), 'iconColor')}
+									{color(__('Background', 'shapeblock'), 'iconBg')}
+									{num(__('Rotation (deg)', 'shapeblock'), 'iconRotation')}
+								</>
+							)
+						}
+					</TabPanel>
 				</PanelBody>
 			)}
 		</>
@@ -251,10 +337,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		<div {...useBlockProps()}>
 			<BlockControls>
 				<AlignmentControl
-					value={FLEX_TO_ALIGN[attributes[alignKey]]}
-					onChange={(value) =>
-						setAttributes({ [alignKey]: value ? ALIGN_TO_FLEX[value] : (dev === 'desktop' ? 'center' : '') })
-					}
+					value={attributes[alignKey] || undefined}
+					onChange={(value) => {
+						const next = { [alignKey]: value || '' };
+						// A left/right/center block align floats or shrinks the wrapper to
+						// the button's width, leaving no room to move the button in.
+						if (['left', 'right', 'center'].includes(attributes.align)) {
+							next.align = undefined;
+						}
+						setAttributes(next);
+					}}
 				/>
 			</BlockControls>
 			<InspectorControls>

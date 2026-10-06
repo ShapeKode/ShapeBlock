@@ -232,21 +232,18 @@ class Api {
 
     /**
      * Export formats this plugin can read, mapped to the block namespace the
-     * file's template content uses. ShapeBlock is the renamed successor of
-     * Easy Elements For Gutenberg and ships the same 28 blocks, so its files
-     * import here after a namespace rewrite.
+     * file's template content uses.
      *
      * @return array<string,string>
      */
     private function compatible_formats() {
         return array(
-            'shapeblock-export'                  => 'shapeblock',
-            'easy-elements-for-gutenberg-export' => 'easy-elements-for-gutenberg',
+            'shapeblock-export' => 'shapeblock',
         );
     }
 
     /**
-     * Retarget block delimiters written by a sibling plugin at this plugin's
+     * Retarget block delimiters written with another block namespace at this plugin's
      * namespace. Only the two exact comment openers are replaced, so attribute
      * JSON and inner markup are untouched.
      *
@@ -474,7 +471,6 @@ class Api {
         return rest_ensure_response( array(
             'status'   => 'success',
             'imported' => $result,
-            'migrated' => $namespace !== self::BLOCK_NAMESPACE,
             'colors'   => self::get_saved_colors(),
             'layout'   => self::get_saved_layout(),
             'blocks'   => $this->get_block_status_map(),
@@ -713,7 +709,7 @@ class Api {
         $defaults = self::get_color_defaults();
 
         if ( ! is_array( $input ) ) {
-            return new \WP_Error( 'invalid_payload', 'Colors payload must be an object.', array( 'status' => 400 ) );
+            return new \WP_Error( 'invalid_payload', __( 'Colors payload must be an object.', 'shapeblock' ), array( 'status' => 400 ) );
         }
 
         $clean = array();
@@ -782,7 +778,7 @@ class Api {
         $defaults = self::get_layout_defaults();
 
         if ( ! is_array( $input ) ) {
-            return new \WP_Error( 'invalid_payload', 'Layout payload must be an object.', array( 'status' => 400 ) );
+            return new \WP_Error( 'invalid_payload', __( 'Layout payload must be an object.', 'shapeblock' ), array( 'status' => 400 ) );
         }
 
         $clean = array();
@@ -816,11 +812,16 @@ class Api {
 
         // Only allow the two valid statuses, same rule as update_all_block_status().
         if ( ! in_array( $status, array( 'enable', 'disable' ), true ) ) {
-            return new \WP_Error( 'invalid_status', 'Invalid status value.', array( 'status' => 400 ) );
+            return new \WP_Error( 'invalid_status', __( 'Invalid status value.', 'shapeblock' ), array( 'status' => 400 ) );
         }
 
         if ( '' === $block_id ) {
-            return new \WP_Error( 'invalid_block_id', 'No block provided.', array( 'status' => 400 ) );
+            return new \WP_Error( 'invalid_block_id', __( 'No block provided.', 'shapeblock' ), array( 'status' => 400 ) );
+        }
+
+        // Only a block ShapeBlock actually ships can be switched.
+        if ( ! array_key_exists( $block_id, $this->get_block_status_map() ) ) {
+            return new \WP_Error( 'invalid_block_id', __( 'Unknown block.', 'shapeblock' ), array( 'status' => 400 ) );
         }
 
         // Update the block status in the database
@@ -837,16 +838,19 @@ class Api {
 
         // Only allow the two valid statuses.
         if ( ! in_array( $status, array( 'enable', 'disable' ), true ) ) {
-            return new \WP_Error( 'invalid_status', 'Invalid status value.', array( 'status' => 400 ) );
+            return new \WP_Error( 'invalid_status', __( 'Invalid status value.', 'shapeblock' ), array( 'status' => 400 ) );
         }
 
         if ( ! is_array( $block_ids ) || empty( $block_ids ) ) {
-            return new \WP_Error( 'invalid_block_ids', 'No blocks provided.', array( 'status' => 400 ) );
+            return new \WP_Error( 'invalid_block_ids', __( 'No blocks provided.', 'shapeblock' ), array( 'status' => 400 ) );
         }
 
+        $known   = array_keys( $this->get_block_status_map() );
         $updated = array();
         foreach ( $block_ids as $block_id ) {
-            $block_id = sanitize_text_field( $block_id );
+            if ( ! is_string( $block_id ) || ! in_array( $block_id, $known, true ) ) {
+                continue;
+            }
             update_option( 'shapeblock_block_' . $block_id, $status );
             $updated[ $block_id ] = get_option( 'shapeblock_block_' . $block_id );
         }
@@ -918,7 +922,7 @@ class Api {
         $post = get_post( $id );
 
         if ( ! $post || $post->post_type !== 'shapeblock-template' ) {
-            return new \WP_Error( 'not_found', 'Template not found', array( 'status' => 404 ) );
+            return new \WP_Error( 'not_found', __( 'Template not found', 'shapeblock' ), array( 'status' => 404 ) );
         }
 
         return rest_ensure_response( $this->format_template( $post ) );
@@ -928,7 +932,7 @@ class Api {
         $title = sanitize_text_field( $request->get_param('title') );
 
         if ( empty( $title ) ) {
-            return new \WP_Error( 'missing_title', 'Template title is required', array( 'status' => 400 ) );
+            return new \WP_Error( 'missing_title', __( 'Template title is required', 'shapeblock' ), array( 'status' => 400 ) );
         }
 
         $post_id = wp_insert_post( array(
@@ -951,7 +955,7 @@ class Api {
         $post  = get_post( $id );
 
         if ( ! $post || $post->post_type !== 'shapeblock-template' ) {
-            return new \WP_Error( 'not_found', 'Template not found', array( 'status' => 404 ) );
+            return new \WP_Error( 'not_found', __( 'Template not found', 'shapeblock' ), array( 'status' => 404 ) );
         }
 
         $update_args = array( 'ID' => $id );
@@ -981,7 +985,7 @@ class Api {
         $post = get_post( $id );
 
         if ( ! $post || $post->post_type !== 'shapeblock-template' ) {
-            return new \WP_Error( 'not_found', 'Template not found', array( 'status' => 404 ) );
+            return new \WP_Error( 'not_found', __( 'Template not found', 'shapeblock' ), array( 'status' => 404 ) );
         }
 
         // Permanently delete only when explicitly forced (from the Trash view);
@@ -1001,7 +1005,7 @@ class Api {
         $post = get_post( $id );
 
         if ( ! $post || $post->post_type !== 'shapeblock-template' ) {
-            return new \WP_Error( 'not_found', 'Template not found', array( 'status' => 404 ) );
+            return new \WP_Error( 'not_found', __( 'Template not found', 'shapeblock' ), array( 'status' => 404 ) );
         }
 
         wp_untrash_post( $id );
@@ -1021,7 +1025,7 @@ class Api {
         }
 
         if ( ! is_array( $ids ) || empty( $ids ) ) {
-            return new \WP_Error( 'missing_ids', 'Template IDs are required', array( 'status' => 400 ) );
+            return new \WP_Error( 'missing_ids', __( 'Template IDs are required', 'shapeblock' ), array( 'status' => 400 ) );
         }
 
         $deleted = array();
