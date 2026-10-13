@@ -2,13 +2,14 @@ import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import {
     RangeControl,
-    ColorPicker,
     BaseControl,
     Popover,
     Button,
     Icon,
     ToggleControl
 } from '@wordpress/components';
+
+import ColorField from './ColorField';
 
 const DEFAULT_SHADOW_COLOR = 'rgba(0,0,0,0.3)';
 
@@ -58,10 +59,9 @@ const BoxShadowControls = ({ label, value, onChange }) => {
     return (
         <div className="shapeblock-box-shadow-control" style={{ position: 'relative' }}>
             <Button
-                variant="secondary"
                 ref={setAnchorEl}
                 onClick={toggleVisible}
-                style={{ width: '100%', justifyContent: 'space-between', marginBottom: '15px', boxShadow: 'none' }}
+                style={{ width: '100%', boxSizing: 'border-box', height: 'auto', minHeight: '40px', justifyContent: 'space-between', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '2px', background: 'transparent', marginBottom: '15px' }}
             >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <div style={{
@@ -120,11 +120,7 @@ const BoxShadowControls = ({ label, value, onChange }) => {
                             __nextHasNoMarginBottom={true}
                         />
                         <BaseControl label={__('Shadow Color', 'shapeblock')} __nextHasNoMarginBottom={true}>
-                            <ColorPicker
-                                color={c}
-                                onChange={handleColorChange}
-                                enableAlpha
-                            />
+                            <ColorField value={c} onChange={handleColorChange} />
                         </BaseControl>
                         <Button
                             variant="secondary"

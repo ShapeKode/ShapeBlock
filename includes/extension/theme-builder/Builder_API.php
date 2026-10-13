@@ -135,17 +135,6 @@ class Builder_API {
 	}
 
 	public function register_routes() {
-		// Metadata: registered template types + condition rules.
-		register_rest_route(
-			'shapeblock/v1',
-			'/builder/meta',
-			array(
-				'methods'             => 'GET',
-				'callback'            => array( $this, 'get_meta' ),
-				'permission_callback' => array( $this, 'permission' ),
-			)
-		);
-
 		// Selectable objects for object-bound condition rules (pages, posts).
 		register_rest_route(
 			'shapeblock/v1',
@@ -175,21 +164,14 @@ class Builder_API {
 			)
 		);
 
-		// Single item: get + delete.
+		// Single item: delete.
 		register_rest_route(
 			'shapeblock/v1',
 			'/builder/(?P<id>\d+)',
 			array(
-				array(
-					'methods'             => 'GET',
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'permission_edit_item' ),
-				),
-				array(
-					'methods'             => 'DELETE',
-					'callback'            => array( $this, 'delete_item' ),
-					'permission_callback' => array( $this, 'permission_delete_item' ),
-				),
+				'methods'             => 'DELETE',
+				'callback'            => array( $this, 'delete_item' ),
+				'permission_callback' => array( $this, 'permission_delete_item' ),
 			)
 		);
 
@@ -244,15 +226,6 @@ class Builder_API {
 		);
 	}
 
-	public function get_meta() {
-		return rest_ensure_response(
-			array(
-				'types' => array_values( \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_template_types() ),
-				'rules' => \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::get_rules(),
-			)
-		);
-	}
-
 	/**
 	 * Return selectable objects for a given object type (page|post).
 	 */
@@ -292,7 +265,7 @@ class Builder_API {
 		$type     = sanitize_key( (string) $request->get_param( 'type' ) );
 		$page     = max( 1, (int) $request->get_param( 'page' ) );
 		$per_page = (int) $request->get_param( 'per_page' );
-		$per_page = $per_page > 0 ? $per_page : 10;
+		$per_page = $per_page > 0 ? min( 100, $per_page ) : 10;
 		$search   = sanitize_text_field( (string) $request->get_param( 'search' ) );
 
 		// 'trash' lists trashed templates; anything else lists active (published) ones.
@@ -358,7 +331,6 @@ class Builder_API {
 			array(
 				'items'      => $items,
 				'total'      => (int) $query->found_posts,
-				'pages'      => (int) $query->max_num_pages,
 				'page'       => $page,
 				'per_page'   => $per_page,
 				'trashTotal' => $this->count_by_status( 'trash' ),
@@ -375,14 +347,6 @@ class Builder_API {
 	private function count_by_status( $status ) {
 		$counts = wp_count_posts( \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE );
 		return isset( $counts->$status ) ? (int) $counts->$status : 0;
-	}
-
-	public function get_item( $request ) {
-		$post = $this->get_builder_post( $request );
-		if ( is_wp_error( $post ) ) {
-			return $post;
-		}
-		return rest_ensure_response( $this->format_item( $post ) );
 	}
 
 	public function create_item( $request ) {
@@ -433,11 +397,11 @@ class Builder_API {
 		$force = rest_sanitize_boolean( $request->get_param( 'force' ) );
 		if ( $force || 'trash' === $post->post_status ) {
 			wp_delete_post( $post->ID, true );
-			return rest_ensure_response( array( 'status' => 'success', 'action' => 'deleted', 'id' => $post->ID ) );
+		} else {
+			wp_trash_post( $post->ID );
 		}
 
-		wp_trash_post( $post->ID );
-		return rest_ensure_response( array( 'status' => 'success', 'action' => 'trashed', 'id' => $post->ID ) );
+		return rest_ensure_response( array( 'status' => 'success' ) );
 	}
 
 	public function restore_item( $request ) {
@@ -455,7 +419,7 @@ class Builder_API {
 			wp_update_post( array( 'ID' => $post->ID, 'post_status' => 'publish' ) );
 		}
 
-		return rest_ensure_response( array( 'status' => 'success', 'action' => 'restored', 'id' => $post->ID ) );
+		return rest_ensure_response( array( 'status' => 'success' ) );
 	}
 
 	public function bulk_delete( $request ) {
@@ -514,7 +478,6 @@ class Builder_API {
 		return rest_ensure_response(
 			array(
 				'conditions' => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_post_conditions( $post->ID ),
-				'rules'      => \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::get_rules(),
 			)
 		);
 	}
@@ -530,9 +493,8 @@ class Builder_API {
 
 		return rest_ensure_response(
 			array(
-				'status'     => 'success',
-				'conditions' => $clean,
-				'summary'    => \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::summarize( $clean ),
+				'status'  => 'success',
+				'summary' => \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::summarize( $clean ),
 			)
 		);
 	}
@@ -556,19 +518,14 @@ class Builder_API {
 	private function format_item( $post ) {
 		$type       = \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_post_type_slug( $post->ID );
 		$conditions = \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_post_conditions( $post->ID );
-		$author     = get_userdata( $post->post_author );
 
 		return array(
 			'id'                => $post->ID,
 			'title'             => $post->post_title,
 			'type'              => $type,
 			'typeLabel'         => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_type_label( $type ),
-			'conditions'        => $conditions,
 			'conditionsSummary' => \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::summarize( $conditions ),
-			'date'              => $post->post_date,
 			'modified'          => $post->post_modified,
-			'author'            => $author ? $author->display_name : '',
-			'status'            => $post->post_status,
 			'editUrl'           => admin_url( 'post.php?post=' . $post->ID . '&action=edit' ),
 		);
 	}

@@ -14,8 +14,8 @@ $H = '\ShapeBlock\Frontend\Helper';
 
 $unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-icon-box-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
-$view       = isset( $attributes['iconView'] ) ? $attributes['iconView'] : 'stracked';
-$shape      = isset( $attributes['iconShape'] ) ? $attributes['iconShape'] : 'rounded';
+$view       = isset( $attributes['iconView'] ) ? sanitize_html_class( (string) $attributes['iconView'], 'stracked' ) : 'stracked';
+$shape      = isset( $attributes['iconShape'] ) ? sanitize_html_class( (string) $attributes['iconShape'], 'rounded' ) : 'rounded';
 $allowed    = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span' ];
 $title_tag  = isset( $attributes['titleTag'] ) && in_array( $attributes['titleTag'], $allowed, true ) ? $attributes['titleTag'] : 'h3';
 
@@ -133,7 +133,13 @@ $u = function ( $key ) use ( $attributes, $H ) {
 // List item.
 $list = $bg( 'listBgColor', 'listBgGradient' );
 if ( ! empty( $attributes['feaListBorder'] ) ) $list = array_merge( $list, $H::border_to_css_props( $attributes['feaListBorder'] ) );
-$list = array_merge( $list, $dims( $attributes['feaListBorderRadius'] ?? [], 'radius' ), $dims( $attributes['feaListPadding'] ?? [], 'padding' ) );
+$list = array_merge( $list, $dims( $attributes['feaListBorderRadius'] ?? [], 'radius' ), $dims( $attributes['feaListPadding'] ?? [], 'padding' ), $shadow( $attributes['boxShadow'] ?? [] ) );
+
+// The box on hover: background, border colour, shadow.
+$list_hover = array_merge( $bg( 'listBgColorHover', 'listBgGradientHover' ), $shadow( $attributes['boxShadowHover'] ?? [] ) );
+if ( ! empty( $attributes['feaListBorderColorHover'] ) ) {
+	$list_hover['border-color'] = $attributes['feaListBorderColorHover'];
+}
 if ( '' !== $u( 'feaMiddleGap' ) ) $list['gap'] = $u( 'feaMiddleGap' );
 // Icon position, content alignment and (for a row) vertical alignment.
 $list = array_merge( $list, $layout_css( $pos_eff[''], $ca_eff[''] ) );
@@ -145,7 +151,6 @@ $icon_color = [];
 if ( ! empty( $attributes['iconColor'] ) ) { $icon_color['color'] = $attributes['iconColor']; $icon_color['fill'] = $attributes['iconColor']; }
 $icon_box = $bg( 'iconBgColor', 'iconBgGradient' );
 if ( '' !== $u( 'iconBoxSize' ) ) { $b = $u( 'iconBoxSize' ); $icon_box['min-width'] = $b; $icon_box['min-height'] = $b; $icon_box['line-height'] = $b; }
-if ( ! empty( $attributes['iconAlignment'] ) ) $icon_box['justify-content'] = $attributes['iconAlignment'];
 $icon_box = array_merge( $icon_box, $shadow( $attributes['iconShadow'] ?? [] ), $dims( $attributes['iconRadius'] ?? [], 'radius' ) );
 if ( ! empty( $attributes['iconBorder'] ) ) $icon_box = array_merge( $icon_box, $H::border_to_css_props( $attributes['iconBorder'] ) );
 $icon_box = array_merge( $icon_box, $dims( $attributes['iconPadding'] ?? [], 'padding' ) );
@@ -163,6 +168,34 @@ $title_styles = array_merge( $title_styles, $dims( $attributes['titlePadding'] ?
 $desc_styles = $typo( $attributes['descTypography'] ?? [] );
 if ( ! empty( $attributes['descColor'] ) ) $desc_styles['color'] = $attributes['descColor'];
 
+// Button: shown when switched on and given a label, an icon, or both. "button"
+// draws a box, "text" a plain link; the icon goes before or after the label,
+// or stands alone (an icon-only button, named for screen readers below).
+$btn_text      = trim( (string) ( $attributes['buttonText'] ?? '' ) );
+$btn_style     = isset( $attributes['buttonStyle'] ) && 'text' === $attributes['buttonStyle'] ? 'text' : 'button';
+$btn_icon      = ! empty( $attributes['buttonIcon'] ) && 'none' !== $attributes['buttonIcon'] ? (string) $attributes['buttonIcon'] : '';
+$btn_on        = ! empty( $attributes['showButton'] ) && ( '' !== $btn_text || '' !== $btn_icon );
+$btn_icon_pos  = isset( $attributes['buttonIconPosition'] ) && 'before' === $attributes['buttonIconPosition'] ? 'before' : 'after';
+// An icon-only button is a square of its own size (no padding), so a large
+// enough radius turns it into a circle.
+$btn_icon_only = 'button' === $btn_style && '' === $btn_text;
+$btn_styles    = array_merge( $typo( $attributes['btnTypography'] ?? [] ), $dims( $attributes['btnRadius'] ?? [], 'radius' ) );
+if ( 'button' === $btn_style ) {
+	$btn_styles = array_merge( $btn_styles, $btn_icon_only ? [] : $dims( $attributes['btnPadding'] ?? [], 'padding' ), $bg( 'btnBg', 'btnBgGradient' ) );
+	if ( ! empty( $attributes['btnBorder'] ) ) $btn_styles = array_merge( $btn_styles, $H::border_to_css_props( $attributes['btnBorder'] ) );
+}
+if ( ! empty( $attributes['btnColor'] ) ) $btn_styles['color'] = $attributes['btnColor'];
+if ( '' !== $u( 'btnIconGap' ) ) $btn_styles['gap'] = $u( 'btnIconGap' );
+if ( $btn_icon_only && '' !== $u( 'btnIconBoxSize' ) ) { $btn_styles['width'] = $u( 'btnIconBoxSize' ); $btn_styles['height'] = $u( 'btnIconBoxSize' ); }
+$btn_hover = [];
+if ( ! empty( $attributes['btnColorHover'] ) ) $btn_hover['color'] = $attributes['btnColorHover'];
+if ( 'button' === $btn_style ) {
+	$btn_hover = array_merge( $btn_hover, $bg( 'btnBgHover', 'btnBgHoverGradient' ) );
+	if ( ! empty( $attributes['btnBorderColorHover'] ) ) $btn_hover['border-color'] = $attributes['btnBorderColorHover'];
+}
+$btn_wrap = '' !== $u( 'btnSpacing' ) ? [ 'margin-top' => $u( 'btnSpacing' ) ] : [];
+$btn_icon_css = '' !== $u( 'btnIconSize' ) ? [ 'font-size' => $u( 'btnIconSize' ) ] : [];
+
 // Block wrapper margin (desktop).
 $block_margin = $dims( $attributes['feaBlockMargin'] ?? [], 'margin' );
 $block_margin_decls = $H::get_inline_styles( $block_margin );
@@ -171,16 +204,16 @@ if ( $block_margin_decls ) {
 }
 
 // ---------------------------------------------------------------------------
-// Responsive (tablet / mobile) â€” padding, margin and typography only.
+// Responsive (tablet / mobile) - padding, margin and typography only.
 // ---------------------------------------------------------------------------
-$resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $layout_css, $pos_eff, $ca_eff, $layout_own ) {
+$resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $layout_css, $pos_eff, $ca_eff, $layout_own, $btn_icon_only ) {
 	// ensure_unit helper for a per-device (suffixed) attribute.
 	$uu = function ( $key ) use ( $attributes, $H, $suffix ) {
 		$k = $key . $suffix;
 		return ( isset( $attributes[ $k ] ) && '' !== $attributes[ $k ] ) ? $H::ensure_unit( $attributes[ $k ] ) : '';
 	};
 
-	// List item â€” padding + gaps.
+	// List item - padding + gaps.
 	$list = $dims( $attributes[ 'feaListPadding' . $suffix ] ?? [], 'padding' );
 	if ( '' !== $uu( 'feaMiddleGap' ) ) $list['gap']           = $uu( 'feaMiddleGap' );
 
@@ -198,6 +231,7 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $la
 	$icon_img = ( '' !== $uu( 'iconSize' ) ) ? [ 'width' => $uu( 'iconSize' ), 'height' => 'auto' ] : [];
 	$title_r  = array_merge( $typo( $attributes[ 'titleTypography' . $suffix ] ?? [] ), $dims( $attributes[ 'titlePadding' . $suffix ] ?? [], 'padding' ) );
 	$desc_r   = $typo( $attributes[ 'descTypography' . $suffix ] ?? [] );
+	$btn_r    = array_merge( $typo( $attributes[ 'btnTypography' . $suffix ] ?? [] ), $btn_icon_only ? [] : $dims( $attributes[ 'btnPadding' . $suffix ] ?? [], 'padding' ) );
 
 	$css   = '';
 	$rules = [
@@ -210,6 +244,7 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $la
 		' .shapeblock-icon-box-icon i'   => $H::get_inline_styles( $icon_i ),
 		' .shapeblock-icon-box-title'    => $H::get_inline_styles( $title_r ),
 		' .shapeblock-icon-box-desc'     => $H::get_inline_styles( $desc_r ),
+		' .shapeblock-icon-box-btn'      => $H::get_inline_styles( $btn_r ),
 	];
 	foreach ( $rules as $sub => $decls ) {
 		if ( $decls ) {
@@ -225,6 +260,7 @@ $mobile_css = $resp( 'Mobile' );
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $extra_css, [
 	'.shapeblock-icon-box'                            => $H::get_inline_styles( $list ),
+	'.shapeblock-icon-box:hover'                      => $H::get_inline_styles( $list_hover ),
 	'.shapeblock-icon-box-icon svg, ' . $selector . ' .shapeblock-icon-box-icon svg path, ' . $selector . ' .shapeblock-icon-box-icon i, ' . $selector . ' .shapeblock-icon-box-number' => $H::get_inline_styles( $icon_color ),
 	'.shapeblock-icon-box-icon'                       => $H::get_inline_styles( $icon_box ),
 	'.shapeblock-icon-box-icon svg'                   => $H::get_inline_styles( $icon_svg ),
@@ -233,10 +269,14 @@ $H::add_custom_style( $style_handle, $selector, $extra_css, [
 	'.shapeblock-icon-box-icon i'                     => $H::get_inline_styles( $icon_i ),
 	'.shapeblock-icon-box-title'                      => $H::get_inline_styles( $title_styles ),
 	'.shapeblock-icon-box-desc'                       => $H::get_inline_styles( $desc_styles ),
+	'.shapeblock-icon-box-btn-wrap'                   => $H::get_inline_styles( $btn_wrap ),
+	'.shapeblock-icon-box-btn'                        => $H::get_inline_styles( $btn_styles ),
+	'.shapeblock-icon-box-btn:hover'                  => $H::get_inline_styles( $btn_hover ),
+	'.shapeblock-icon-box-btn i'                      => $H::get_inline_styles( $btn_icon_css ),
 ] );
 
 // Responsive media queries are printed AFTER the desktop rules so they win at
-// their breakpoints (media queries add no specificity â€” source order decides).
+// their breakpoints (media queries add no specificity - source order decides).
 $responsive_media = '';
 if ( '' !== $tablet_css ) $responsive_media .= '@media (max-width:1024px){' . $tablet_css . '}';
 if ( '' !== $mobile_css ) $responsive_media .= '@media (max-width:767px){' . $mobile_css . '}';
@@ -258,10 +298,10 @@ if ( '' !== $responsive_media ) {
 	$show_icon = ! ( isset( $attributes['showIcon'] ) && false === $attributes['showIcon'] );
 	$has_icon = $show_icon && (
 		( 'image' === $type && ! empty( $img['url'] ) )
-		|| ( 'icon' === $type )
+		|| ( 'icon' === $type && 'none' !== $icon )
 		|| ( 'number' === $type && '' !== $num ) );
 	?>
-	<div class="shapeblock-icon-box shapeblock-icon-box-align-<?php echo esc_attr( $align ); ?>">
+	<div class="<?php echo esc_attr( 'shapeblock-icon-box shapeblock-icon-box-align-' . $align . ( ! empty( $attributes['boxHoverLift'] ) ? ' is-hover-lift' : '' ) ); ?>">
 		<?php if ( $has_icon ) : ?>
 			<div class="shapeblock-icon-box-icon shapeblock-icon-box-type-<?php echo esc_attr( $type ); ?>">
 				<?php
@@ -269,7 +309,10 @@ if ( '' !== $responsive_media ) {
 					echo '<img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $img['alt'] ?? $ttl ) . '" class="shapeblock-icon-box-img">';
 				} elseif ( 'number' === $type ) {
 					echo '<span class="shapeblock-icon-box-number">' . esc_html( $num ) . '</span>';
-				} elseif ( ! empty( $icon ) && 'none' !== $icon ) {
+				} elseif ( 'none' === $icon ) {
+					// "Remove icon" was chosen: nothing is drawn.
+					echo '';
+				} elseif ( ! empty( $icon ) ) {
 					echo '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>';
 				} else {
 					?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg><?php
@@ -277,13 +320,27 @@ if ( '' !== $responsive_media ) {
 				?>
 			</div>
 		<?php endif; ?>
-		<?php if ( '' !== $ttl || '' !== $desc ) : ?>
+		<?php if ( '' !== $ttl || '' !== $desc || $btn_on ) : ?>
 			<div class="shapeblock-icon-box-info">
 				<?php if ( '' !== $ttl ) : ?>
 					<?php printf( '<%1$s class="shapeblock-icon-box-title">%2$s</%1$s>', tag_escape( $title_tag ), wp_kses_post( $ttl ) ); ?>
 				<?php endif; ?>
 				<?php if ( '' !== $desc ) : ?>
 					<p class="shapeblock-icon-box-desc"><?php echo wp_kses( nl2br( $desc ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></p>
+				<?php endif; ?>
+				<?php if ( $btn_on ) : ?>
+					<?php
+					$btn_url = isset( $attributes['buttonUrl'] ) ? esc_url_raw( (string) $attributes['buttonUrl'] ) : '';
+					$btn_tag = '' !== $btn_url ? 'a' : 'span';
+					$btn_rel = trim( ( ! empty( $attributes['buttonNewTab'] ) ? 'noopener noreferrer ' : '' ) . ( ! empty( $attributes['buttonNofollow'] ) ? 'nofollow' : '' ) );
+					?>
+					<div class="shapeblock-icon-box-btn-wrap">
+						<<?php echo tag_escape( $btn_tag ); ?> class="<?php echo esc_attr( 'shapeblock-icon-box-btn is-style-' . $btn_style . ( '' === $btn_text ? ' is-icon-only' : '' ) ); ?>"<?php if ( 'a' === $btn_tag ) : ?> href="<?php echo esc_url( $btn_url ); ?>"<?php echo ! empty( $attributes['buttonNewTab'] ) ? ' target="_blank"' : ''; ?><?php echo '' !== $btn_rel ? ' rel="' . esc_attr( $btn_rel ) . '"' : ''; ?><?php endif; ?><?php if ( '' === $btn_text ) : ?> aria-label="<?php echo esc_attr( '' !== wp_strip_all_tags( $ttl ) ? wp_strip_all_tags( $ttl ) : __( 'Learn more', 'shapeblock' ) ); ?>"<?php endif; ?>>
+							<?php if ( '' !== $btn_icon && ( 'before' === $btn_icon_pos || '' === $btn_text ) ) : ?><i class="<?php echo esc_attr( 'shapeblock-icon ' . $btn_icon ); ?>" aria-hidden="true"></i><?php endif; ?>
+							<?php if ( '' !== $btn_text ) : ?><span class="shapeblock-icon-box-btn-text"><?php echo esc_html( $btn_text ); ?></span><?php endif; ?>
+							<?php if ( '' !== $btn_icon && 'after' === $btn_icon_pos && '' !== $btn_text ) : ?><i class="<?php echo esc_attr( 'shapeblock-icon ' . $btn_icon ); ?>" aria-hidden="true"></i><?php endif; ?>
+						</<?php echo tag_escape( $btn_tag ); ?>>
+					</div>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>

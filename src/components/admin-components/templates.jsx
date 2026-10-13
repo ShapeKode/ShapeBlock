@@ -26,7 +26,6 @@ export default function Templates() {
     const [modalOpen, setModalOpen] = useState(false);
     const [form] = Form.useForm();
     const [submitting, setSubmitting] = useState(false);
-    const [templateCount, setTemplateCount] = useState(Number(shapeblock.templateCount) || 0);
     const [trashCount, setTrashCount] = useState(0);
     const [viewStatus, setViewStatus] = useState('publish');
 
@@ -54,7 +53,6 @@ export default function Templates() {
             .then(res => res.json())
             .then(data => {
                 setTemplates(data.templates || []);
-                setTemplateCount(data.active_count || 0);
                 setTrashCount(data.trash_count || 0);
                 setPagination(prev => ({
                     ...prev,
@@ -412,6 +410,8 @@ export default function Templates() {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 marginBottom: 16,
+                gap: 12,
+                flexWrap: 'wrap',
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <h1 className="shapeblock-options-title" style={{ margin: 0 }}>{ __( 'Templates', 'shapeblock' ) }</h1>
@@ -453,8 +453,9 @@ export default function Templates() {
                 alignItems: 'center',
                 marginBottom: 16,
                 gap: 12,
+                flexWrap: 'wrap',
             }}>
-                <Space>
+                <Space wrap>
                     <Select
                         style={{ width: 180 }}
                         options={bulkOptions}
@@ -471,7 +472,7 @@ export default function Templates() {
                         </Tag>
                     )}
                 </Space>
-                <Space>
+                <Space wrap>
                     <Search
                         placeholder={ __( 'Search templates...', 'shapeblock' ) }
                         allowClear
@@ -487,7 +488,7 @@ export default function Templates() {
                                 300
                             );
                         }}
-                        style={{ width: 250 }}
+                        style={{ width: 250, maxWidth: '100%' }}
                         prefix={<SearchOutlined />}
                         className='shapeblock-template-search-box'
                     />
@@ -508,6 +509,7 @@ export default function Templates() {
                 dataSource={templates}
                 loading={loading}
                 rowSelection={rowSelection}
+                scroll={{ x: 'max-content' }}
                 pagination={{
                     current: pagination.current,
                     pageSize: pagination.pageSize,

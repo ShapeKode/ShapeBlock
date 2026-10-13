@@ -86,13 +86,15 @@ $logo_box = [];
 if ( '' !== $u( 'itemWidth' ) ) $logo_box['max-width'] = $u( 'itemWidth' );
 if ( '' !== $u( 'itemHeight' ) ) $logo_box['height'] = $u( 'itemHeight' );
 $logo_box = array_merge( $logo_box, $dims( $attributes['itemPadding'] ?? [], 'padding' ), $dims( $attributes['itemRadius'] ?? [], 'radius' ), $shadow( $attributes['itemBoxShadow'] ?? [] ) );
-if ( ! empty( $attributes['itemBg'] ) ) $logo_box['background-color'] = $attributes['itemBg'];
+if ( ! empty( $attributes['itemBgGradient'] ) ) $logo_box['background'] = $attributes['itemBgGradient'];
+elseif ( ! empty( $attributes['itemBg'] ) ) $logo_box['background-color'] = $attributes['itemBg'];
 if ( ! empty( $attributes['itemBorder'] ) ) $logo_box = array_merge( $logo_box, $H::border_to_css_props( $attributes['itemBorder'] ) );
 if ( '' !== $u( 'transition' ) ) $logo_box['transition'] = 'all ' . ( (float) $attributes['transition'] ) . 's ease';
 
 // Logo box (hover).
 $logo_hover = $shadow( $attributes['itemHoverBoxShadow'] ?? [] );
-if ( ! empty( $attributes['itemHoverBg'] ) ) $logo_hover['background-color'] = $attributes['itemHoverBg'];
+if ( ! empty( $attributes['itemHoverBgGradient'] ) ) $logo_hover['background'] = $attributes['itemHoverBgGradient'];
+elseif ( ! empty( $attributes['itemHoverBg'] ) ) $logo_hover[ ! empty( $attributes['itemBgGradient'] ) ? 'background' : 'background-color' ] = $attributes['itemHoverBg'];
 if ( ! empty( $attributes['itemHoverBorder'] ) ) $logo_hover = array_merge( $logo_hover, $H::border_to_css_props( $attributes['itemHoverBorder'] ) );
 
 // Image.
@@ -167,6 +169,9 @@ $H::add_custom_style( $style_handle, $selector, $responsive_css, [
 				$image = isset( $item['image'] ) && is_array( $item['image'] ) ? $item['image'] : [];
 				$url   = ! empty( $image['url'] ) ? $image['url'] : '';
 				$alt   = ! empty( $image['alt'] ) ? $image['alt'] : '';
+				// The image shown on hover with the swap effect; the logo itself if none.
+				$hover_image = isset( $item['hoverImage'] ) && is_array( $item['hoverImage'] ) ? $item['hoverImage'] : [];
+				$hover_url   = ! empty( $hover_image['url'] ) ? $hover_image['url'] : $url;
 
 				$link       = isset( $item['link'] ) ? $item['link'] : '';
 				$new_tab    = ! empty( $item['linkNewTab'] );
@@ -182,7 +187,7 @@ $H::add_custom_style( $style_handle, $selector, $responsive_css, [
 
 						<?php if ( '' !== $url ) : ?>
 							<?php if ( $swap ) : ?>
-								<img class="shapeblock-grid-img shapeblock-logo-img-hover" src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async">
+								<img class="shapeblock-grid-img shapeblock-logo-img-hover" src="<?php echo esc_url( $hover_url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async">
 								<img class="shapeblock-grid-img shapeblock-logo-img-normal" src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async">
 							<?php else : ?>
 								<img class="shapeblock-grid-img" src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async">

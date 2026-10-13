@@ -1,0 +1,220 @@
+/**
+ * Sticky Stack - front end and editor.
+ *
+ * Every per-device value arrives as a CSS variable on the wrapper (see
+ * render.php), so this file holds one rule per thing and the variables carry
+ * the numbers. The defaults below are what a block looks like before anything
+ * is set.
+ */
+.shapeblock-ss {
+	--ss-top: 90px;
+	--ss-step: 18px;
+	--ss-gap: 40px;
+	--ss-minh: 0px;
+	--ss-colgap: 40px;
+	--ss-cols: minmax(0, 46fr) minmax(0, 54fr);
+	--ss-co: 0;
+	--ss-mo: 1;
+	--ss-ta: left;
+	--ss-items: flex-start;
+	--ss-valign: center;
+	--ss-fit: cover;
+	--ss-scale: 0.04;
+	--ss-dim: 0.1;
+	--ss-textgap: 12px;
+	--ss-pointsgap: 8px;
+	--ss-bullet: #a216ff;
+
+	position: relative;
+
+	.shapeblock-ss-list {
+		display: block;
+	}
+
+	/* The card: sticks, and the next one slides over it. */
+	.shapeblock-ss-card {
+		position: sticky;
+		top: calc(var(--ss-top) + var(--i, 0) * var(--ss-step));
+		z-index: calc(var(--i, 0) + 1);
+		display: grid;
+		grid-template-columns: var(--ss-cols);
+		column-gap: var(--ss-colgap);
+		row-gap: var(--ss-colgap);
+		align-items: var(--ss-valign);
+		min-height: var(--ss-minh);
+		margin-bottom: var(--ss-gap);
+		padding: 36px;
+		box-sizing: border-box;
+		overflow: hidden;
+		background: #fff;
+		border: 1px solid rgba(0, 0, 0, 0.08);
+		border-radius: 22px;
+		box-shadow: 0 24px 60px -28px rgba(30, 20, 60, 0.35);
+		transform-origin: 50% 0;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		&:not(.has-media) {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	/* Depth: --ss-d (0 to 1) is written by view.js as the next card arrives. */
+	&[data-depth="1"] .shapeblock-ss-card {
+		transform: scale(calc(1 - var(--ss-d, 0) * var(--ss-scale)));
+		filter: brightness(calc(1 - var(--ss-d, 0) * var(--ss-dim)));
+	}
+
+	.shapeblock-ss-content {
+		display: flex;
+		flex-direction: column;
+		align-items: var(--ss-items);
+		gap: var(--ss-textgap);
+		min-width: 0;
+		order: var(--ss-co);
+		text-align: var(--ss-ta);
+	}
+
+	.shapeblock-ss-media {
+		min-width: 0;
+		order: var(--ss-mo);
+
+		img {
+			display: block;
+			width: 100%;
+			height: var(--ss-img-h, auto);
+			aspect-ratio: 4 / 3;
+			object-fit: var(--ss-fit);
+			border-radius: 16px;
+		}
+	}
+
+	.shapeblock-ss-head {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.shapeblock-ss-badge {
+		display: inline-grid;
+		place-items: center;
+		min-width: 40px;
+		height: 40px;
+		padding: 0 10px;
+		box-sizing: border-box;
+		border-radius: 12px;
+		background: linear-gradient(135deg, #6d28ff, #ff4fd8);
+		color: #fff;
+		font-size: 13px;
+		font-weight: 800;
+		letter-spacing: 0.02em;
+	}
+
+	.shapeblock-ss-icon {
+		display: inline-grid;
+		place-items: center;
+
+		i {
+			font-size: 22px;
+			line-height: 1;
+			color: #a216ff;
+		}
+	}
+
+	.shapeblock-ss-title {
+		margin: 0;
+		font-size: clamp(21px, 2.6vw, 28px);
+		line-height: 1.2;
+	}
+
+	.shapeblock-ss-desc {
+		margin: 0;
+		opacity: 0.8;
+	}
+
+	.shapeblock-ss-points {
+		display: grid;
+		gap: var(--ss-pointsgap);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		li {
+			position: relative;
+			margin: 0;
+			padding-left: 24px;
+			text-align: left;
+
+			&::before {
+				content: "";
+				position: absolute;
+				left: 0;
+				top: 0.35em;
+				width: 14px;
+				height: 14px;
+				box-sizing: border-box;
+				border: 1.5px solid var(--ss-bullet);
+				border-radius: 50%;
+				opacity: 0.9;
+			}
+
+			&::after {
+				content: "";
+				position: absolute;
+				left: 4.5px;
+				top: calc(0.35em + 3.5px);
+				width: 5px;
+				height: 3px;
+				border-left: 1.5px solid var(--ss-bullet);
+				border-bottom: 1.5px solid var(--ss-bullet);
+				transform: rotate(-45deg);
+			}
+		}
+	}
+
+	.shapeblock-ss-btn {
+		display: inline-flex;
+		align-items: center;
+		padding: 12px 22px;
+		border: 1.5px solid transparent;
+		border-radius: 12px;
+		background: #a216ff;
+		color: #fff;
+		font-weight: 600;
+		line-height: 1.2;
+		text-decoration: none;
+		transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+
+		&:hover {
+			transform: translateY(-1px);
+		}
+	}
+
+	/* Stacking switched off on the devices the author chose. */
+	@media (max-width: 1024px) {
+		&[data-stack="desktop"] .shapeblock-ss-card {
+			position: relative;
+			top: auto;
+			transform: none;
+			filter: none;
+		}
+	}
+
+	@media (max-width: 767px) {
+		&[data-stack="desktop-tablet"] .shapeblock-ss-card {
+			position: relative;
+			top: auto;
+			transform: none;
+			filter: none;
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.shapeblock-ss[data-depth="1"] .shapeblock-ss-card {
+		transform: none;
+		filter: none;
+	}
+}

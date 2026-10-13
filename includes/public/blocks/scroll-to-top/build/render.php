@@ -71,7 +71,11 @@ $shadow = function ( $obj ) use ( $H ) {
 
 // Button (normal).
 $btn = [];
-if ( ! empty( $attributes['bgColor'] ) ) $btn['background-color'] = $attributes['bgColor'];
+if ( ! empty( $attributes['bgGradient'] ) ) {
+	$btn['background'] = $attributes['bgGradient'];
+} elseif ( ! empty( $attributes['bgColor'] ) ) {
+	$btn['background-color'] = $attributes['bgColor'];
+}
 if ( ! empty( $attributes['color'] ) ) $btn['color'] = $attributes['color'];
 if ( ! empty( $attributes['buttonSize'] ) ) {
 	$size = $H::ensure_unit( $attributes['buttonSize'] );
@@ -103,7 +107,13 @@ if ( ! $is_editor ) {
 
 // Button (hover).
 $btn_hover = [];
-if ( ! empty( $attributes['bgColorHover'] ) ) $btn_hover['background-color'] = $attributes['bgColorHover'];
+// A flat hover colour replaces a normal-state gradient, so it is written as
+// the shorthand then; otherwise it stays background-color as before.
+if ( ! empty( $attributes['bgGradientHover'] ) ) {
+	$btn_hover['background'] = $attributes['bgGradientHover'];
+} elseif ( ! empty( $attributes['bgColorHover'] ) ) {
+	$btn_hover[ ! empty( $attributes['bgGradient'] ) ? 'background' : 'background-color' ] = $attributes['bgColorHover'];
+}
 if ( ! empty( $attributes['colorHover'] ) ) $btn_hover['color'] = $attributes['colorHover'];
 
 // Icon size.

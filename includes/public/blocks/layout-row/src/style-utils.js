@@ -87,14 +87,18 @@ const collectDevice = (attrs, suffix) => {
     if (k('alignItems')) decls['align-items'] = k('alignItems');
     if (k('alignContent')) decls['align-content'] = k('alignContent');
     if (k('flexWrap')) decls['flex-wrap'] = k('flexWrap');
-    if (k('gap')) decls['gap'] = k('gap');
-    if (k('rowGap')) decls['row-gap'] = k('rowGap');
-    if (k('columnGap')) decls['column-gap'] = k('columnGap');
+    // A bare number is invalid CSS here (`gap:30`), as on the front end, where
+    // render.php gives it px; ensureUnit() does the same for the canvas.
+    if (k('gap')) decls['gap'] = ensureUnit(k('gap'));
+    if (k('rowGap')) decls['row-gap'] = ensureUnit(k('rowGap'));
+    if (k('columnGap')) decls['column-gap'] = ensureUnit(k('columnGap'));
     if (k('minHeight')) decls['min-height'] = k('minHeight');
     // Boxed max-width is applied to the inner via a CSS variable in style.scss — see
     // render.php for the same approach. Setting `max-width` on the wrapper would
     // constrain the wrong element and not match the frontend.
     if (k('maxWidth')) decls['--shapeblock-layout-row-max-width'] = k('maxWidth');
+    // Custom width: the whole Row, as render.php writes it.
+    if (attrs.contentWidth === 'custom' && k('customWidth')) decls['--shapeblock-layout-row-width'] = ensureUnit(k('customWidth'));
 
     Object.assign(decls, boxToCss(k('padding'), 'padding'));
     Object.assign(decls, boxToCss(k('margin'), 'margin'));
@@ -132,8 +136,8 @@ const collectDevice = (attrs, suffix) => {
     return decls;
 };
 
-// CSS custom props consumed by columns to compute width = calc(W% - share-of-gap).
-// `colCount` should be the actual inner-block count (passed from edit.js useSelect).
+// The gap, as a custom property consumed by columns to compute
+// width = calc(W% - gap * (100 - W) / 100).
 const pickColGap = (attrs, suffix) => {
     const k = (base) => attrs[suffix === '' ? base : `${base}${suffix}`];
     return k('columnGap') || k('gap') || '';
@@ -141,7 +145,7 @@ const pickColGap = (attrs, suffix) => {
 
 // Basis one column takes when the row is asked for N columns per line:
 // 100/N of the row, minus the share of the gap that column gives up.
-export const columnsPerRowBasis = (count) => {
+const columnsPerRowBasis = (count) => {
     const n = parseInt(count, 10);
     if (!n || n < 1) return '';
     const pct = (100 / n).toFixed(4).replace(/\.?0+$/, '');
@@ -189,7 +193,7 @@ const columnsPerRowCss = (attrs, innerBlocks, sel) => {
         .join('');
 };
 
-export const buildRowEditorCss = (attrs, colCount = 0, innerBlocks = []) => {
+export const buildRowEditorCss = (attrs, innerBlocks = []) => {
     if (!attrs.blockId) return '';
     const sel = `.${attrs.blockId}`;
 
@@ -197,7 +201,6 @@ export const buildRowEditorCss = (attrs, colCount = 0, innerBlocks = []) => {
     const tablet = collectDevice(attrs, 'Tablet');
     const mobile = collectDevice(attrs, 'Mobile');
 
-    if (colCount > 0) desktop['--bp-cols'] = colCount;
     const gD = pickColGap(attrs, '');
     const gT = pickColGap(attrs, 'Tablet');
     const gM = pickColGap(attrs, 'Mobile');
@@ -212,13 +215,34 @@ export const buildRowEditorCss = (attrs, colCount = 0, innerBlocks = []) => {
     if (basisT) desktop['--bp-col-tablet'] = basisT;
     if (basisM) desktop['--bp-col-mobile'] = basisM;
 
+    // Margin gets its own, stronger rule, as in render.php: the Row's reset
+    // (.shapeblock-block.shapeblock-layout-row { margin-block: 0 }) outranks
+    // a single class, which kept the Margin setting from showing here.
+    const marginSel = `.shapeblock-block.shapeblock-layout-row${sel}`;
+    const marginOf = (decls) => {
+        const out = {};
+        Object.keys(decls).forEach((prop) => {
+            if (prop.indexOf('margin-') === 0) {
+                out[prop] = decls[prop];
+                delete decls[prop];
+            }
+        });
+        return out;
+    };
+
     let css = '';
-    const d = renderDecls(desktop);
-    if (d) css += `${sel}{${d}}`;
-    const t = renderDecls(tablet);
-    if (t) css += `${BREAKPOINTS.tablet}{${sel}{${t}}}`;
-    const m = renderDecls(mobile);
-    if (m) css += `${BREAKPOINTS.mobile}{${sel}{${m}}}`;
+    [
+        ['', desktop],
+        [BREAKPOINTS.tablet, tablet],
+        [BREAKPOINTS.mobile, mobile],
+    ].forEach(([query, decls]) => {
+        const margin = renderDecls(marginOf(decls));
+        const rest = renderDecls(decls);
+        let rules = '';
+        if (rest) rules += `${sel}{${rest}}`;
+        if (margin) rules += `${marginSel}{${margin}}`;
+        if (rules) css += query ? `${query}{${rules}}` : rules;
+    });
 
     css += columnsPerRowCss(attrs, innerBlocks, sel);
 
@@ -246,7 +270,8 @@ const collectColumnWidth = (attrs, suffix) => {
     if (widthType === 'percentage' && w) {
         if (!isNaN(Number(w))) w = `${w}%`;
         const wNum = parseFloat(w);
-        const calc = `calc(${w} - (var(--bp-cols, 1) - 1) * var(--bp-gap, 0px) * ${wNum} / 100)`;
+        // As column/src/render.php: the column's share of the gap depends only on its own width.
+        const calc = `calc(${w} - var(--bp-gap, 0px) * ${Math.max(0, 100 - wNum)} / 100)`;
         decls['flex'] = `0 1 ${calc} !important`;
         decls['max-width'] = `${calc} !important`;
     } else if (widthType === 'custom' && w) {

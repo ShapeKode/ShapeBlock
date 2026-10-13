@@ -158,7 +158,7 @@ if ( ! function_exists( 'shapeblock_menu_render_items' ) ) {
 	 * @param array  $items         Menu items ( label, url, description, newTab, icon, iconSide, children ).
 	 * @param string $dropdown_icon Dropdown-indicator choice ( caret|chevron|arrow|plus|none ).
 	 */
-	function shapeblock_menu_render_items( $items, $dropdown_icon = 'caret' ) {
+	function shapeblock_menu_render_items( $items, $dropdown_icon = 'caret', $attributes = array(), $depth = 0 ) {
 		if ( empty( $items ) || ! is_array( $items ) ) {
 			return;
 		}
@@ -208,6 +208,22 @@ if ( ! function_exists( 'shapeblock_menu_render_items' ) ) {
 			}
 
 			$has_children   = ! empty( $children );
+
+			/**
+			 * Filter: a dropdown an add-on gives this menu item ( a mega menu, for one ). It is
+			 * placed in the item like a sub-menu, with the same arrow, so it opens and closes
+			 * the same way.
+			 *
+			 * @param array $dropdown   { class, style, html } ( html: '' by default ).
+			 * @param array $item       The menu item.
+			 * @param int   $depth      0 for a top-level item.
+			 * @param array $attributes The Menu block's attributes.
+			 */
+			$extra        = apply_filters( 'shapeblock_menu_item_dropdown', array( 'class' => '', 'style' => '', 'html' => '' ), $item, $depth, $attributes );
+			$extra_html   = ( is_array( $extra ) && isset( $extra['html'] ) ) ? (string) $extra['html'] : '';
+			$extra_class  = ( is_array( $extra ) && isset( $extra['class'] ) ) ? implode( ' ', array_filter( array_map( 'sanitize_html_class', explode( ' ', (string) $extra['class'] ) ) ) ) : '';
+			$extra_style  = ( is_array( $extra ) && isset( $extra['style'] ) ) ? (string) $extra['style'] : '';
+			$has_dropdown = $has_children || '' !== $extra_html;
 			$has_image_icon = ( 'image' === $icon_type && '' !== $icon_url );
 			$has_svg_icon   = ( 'icon' === $icon_type && '' !== $icon_name && in_array( $icon_name, shapeblock_menu_icon_keys(), true ) );
 
@@ -239,8 +255,9 @@ if ( ! function_exists( 'shapeblock_menu_render_items' ) ) {
 				echo '</span>';
 			};
 
-			echo '<li class="menu-item' . ( $has_children ? ' menu-item-has-children' : '' ) . '">';
-			echo '<a href="' . esc_url( $url ) . '"';
+			$is_current = shapeblock_menu_is_current_url( $url );
+			echo '<li class="menu-item' . ( $has_dropdown ? ' menu-item-has-children' : '' ) . ( $is_current ? ' current-menu-item' : '' ) . ( '' !== $extra_class ? ' ' . esc_attr( $extra_class ) : '' ) . '"' . ( '' !== $extra_style ? ' style="' . esc_attr( $extra_style ) . '"' : '' ) . '>';
+			echo '<a href="' . esc_url( $url ) . '"' . ( $is_current ? ' aria-current="page"' : '' );
 			if ( $new_tab ) {
 				echo ' target="_blank" rel="noopener noreferrer"';
 			}
@@ -253,7 +270,7 @@ if ( ! function_exists( 'shapeblock_menu_render_items' ) ) {
 				$print_item_icon();
 			}
 			// The dropdown arrow lives INSIDE the link so it sits inline with the label.
-			if ( $has_children ) {
+			if ( $has_dropdown ) {
 				echo '<span class="shapeblock-menu-sub-toggle shapeblock-menu-sub-toggle--' . esc_attr( sanitize_html_class( $dd_mod ) ) . '" aria-hidden="true">';
 				if ( $dd_has_icon ) {
 					shapeblock_menu_echo_icon_svg( $dd_key );
@@ -264,8 +281,11 @@ if ( ! function_exists( 'shapeblock_menu_render_items' ) ) {
 
 			if ( $has_children ) {
 				echo '<ul class="sub-menu">';
-				shapeblock_menu_render_items( $children, $dropdown_icon );
+				shapeblock_menu_render_items( $children, $dropdown_icon, $attributes, $depth + 1 );
 				echo '</ul>';
+			}
+			if ( '' !== $extra_html ) {
+				echo wp_kses( $extra_html, \ShapeBlock\Frontend\Helper::template_allowed_html() );
 			}
 
 			echo '</li>';
@@ -300,7 +320,8 @@ $drawer_width = isset( $attributes['drawerWidth'] ) ? absint( $attributes['drawe
 if ( $drawer_width < 200 || $drawer_width > 600 ) {
 	$drawer_width = 320;
 }
-$drawer_bg = ! empty( $attributes['drawerBg'] ) ? $attributes['drawerBg'] : '#ffffff';
+// A drawer gradient wins over the flat colour.
+$drawer_bg = ! empty( $attributes['drawerBgGradient'] ) ? $attributes['drawerBgGradient'] : ( ! empty( $attributes['drawerBg'] ) ? $attributes['drawerBg'] : '#ffffff' );
 
 $is_editor = ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || is_admin();
 
@@ -310,7 +331,7 @@ $is_editor = ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || is_admin();
 // their output point below, rather than echoing this buffered copy -- keeping
 // every echo of menu markup right next to the escaping/kses call that produced it.
 ob_start();
-shapeblock_menu_render_items( $items, $dropdown_icon );
+shapeblock_menu_render_items( $items, $dropdown_icon, $attributes );
 $list_is_empty = ( '' === trim( ob_get_clean() ) );
 
 if ( $list_is_empty ) {
@@ -450,8 +471,8 @@ if ( ! empty( $attributes['toggleColor'] ) ) {
 $toggle_sel   = $selector . ' .shapeblock-menu-toggle';
 $toggle_hover = $toggle_sel . ':hover,' . $toggle_sel . ':focus';
 
-if ( ! empty( $attributes['toggleBg'] ) ) {
-	$css .= $toggle_sel . '{background:' . shapeblock_menu_paint( $attributes['toggleBg'] ) . ';}';
+if ( ! empty( $attributes['toggleBgGradient'] ) || ! empty( $attributes['toggleBg'] ) ) {
+	$css .= $toggle_sel . '{background:' . shapeblock_menu_paint( ! empty( $attributes['toggleBgGradient'] ) ? $attributes['toggleBgGradient'] : $attributes['toggleBg'] ) . ';}';
 }
 if ( ! empty( $attributes['toggleBorderColor'] ) ) {
 	$css .= $toggle_sel . '{border-color:' . shapeblock_menu_paint( $attributes['toggleBorderColor'] ) . ';}';
@@ -460,8 +481,8 @@ if ( ! empty( $attributes['toggleBorderColor'] ) ) {
 if ( ! empty( $attributes['toggleColorHover'] ) ) {
 	$css .= $toggle_hover . '{color:' . shapeblock_menu_paint( $attributes['toggleColorHover'] ) . ';}';
 }
-if ( ! empty( $attributes['toggleBgHover'] ) ) {
-	$css .= $toggle_hover . '{background:' . shapeblock_menu_paint( $attributes['toggleBgHover'] ) . ';}';
+if ( ! empty( $attributes['toggleBgHoverGradient'] ) || ! empty( $attributes['toggleBgHover'] ) ) {
+	$css .= $toggle_hover . '{background:' . shapeblock_menu_paint( ! empty( $attributes['toggleBgHoverGradient'] ) ? $attributes['toggleBgHoverGradient'] : $attributes['toggleBgHover'] ) . ';}';
 }
 if ( ! empty( $attributes['toggleBorderColorHover'] ) ) {
 	$css .= $toggle_hover . '{border-color:' . shapeblock_menu_paint( $attributes['toggleBorderColorHover'] ) . ';}';
@@ -477,8 +498,8 @@ $close_color = '' !== $attributes['closeColor'] ? $attributes['closeColor'] : $a
 if ( ! empty( $close_color ) ) {
 	$css .= $close_sel . '{color:' . shapeblock_menu_paint( $close_color ) . ';}';
 }
-if ( ! empty( $attributes['closeBg'] ) ) {
-	$css .= $close_sel . '{background:' . shapeblock_menu_paint( $attributes['closeBg'] ) . ';}';
+if ( ! empty( $attributes['closeBgGradient'] ) || ! empty( $attributes['closeBg'] ) ) {
+	$css .= $close_sel . '{background:' . shapeblock_menu_paint( ! empty( $attributes['closeBgGradient'] ) ? $attributes['closeBgGradient'] : $attributes['closeBg'] ) . ';}';
 }
 if ( ! empty( $attributes['closeBorderColor'] ) ) {
 	$css .= $close_sel . '{border-color:' . shapeblock_menu_paint( $attributes['closeBorderColor'] ) . ';}';
@@ -486,8 +507,8 @@ if ( ! empty( $attributes['closeBorderColor'] ) ) {
 if ( ! empty( $attributes['closeColorHover'] ) ) {
 	$css .= $close_hover . '{color:' . shapeblock_menu_paint( $attributes['closeColorHover'] ) . ';}';
 }
-if ( ! empty( $attributes['closeBgHover'] ) ) {
-	$css .= $close_hover . '{background:' . shapeblock_menu_paint( $attributes['closeBgHover'] ) . ';}';
+if ( ! empty( $attributes['closeBgHoverGradient'] ) || ! empty( $attributes['closeBgHover'] ) ) {
+	$css .= $close_hover . '{background:' . shapeblock_menu_paint( ! empty( $attributes['closeBgHoverGradient'] ) ? $attributes['closeBgHoverGradient'] : $attributes['closeBgHover'] ) . ';}';
 }
 if ( ! empty( $attributes['closeBorderColorHover'] ) ) {
 	$css .= $close_hover . '{border-color:' . shapeblock_menu_paint( $attributes['closeBorderColorHover'] ) . ';}';
@@ -529,12 +550,14 @@ if ( $mobile_on ) {
 	$drawer .= $selector . ' .shapeblock-menu-close{display:flex;}';
 	$drawer .= $selector . ' .shapeblock-menu-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,0.5);opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0.3s ease;z-index:9998;}';
 	$drawer .= $selector . '.is-open .shapeblock-menu-overlay{opacity:1;visibility:visible;}';
-	$drawer .= $selector . ' .shapeblock-menu-panel{display:block;position:fixed;top:0;bottom:0;' . $side . ':0;width:' . $w_css . ';max-width:85vw;background:' . $bg_css . ';transform:translateX(' . $off . ');transition:transform 0.3s ease;z-index:9999;overflow-y:auto;padding:56px 22px 28px;}';
-	$drawer .= $selector . '.is-open .shapeblock-menu-panel{transform:translateX(0);}';
+	// border-box: the drawer is exactly the width set. Hidden while closed, so its
+	// links are not reached with the Tab key when it is off screen.
+	$drawer .= $selector . ' .shapeblock-menu-panel{display:block;box-sizing:border-box;position:fixed;top:0;bottom:0;' . $side . ':0;width:' . $w_css . ';max-width:85vw;background:' . $bg_css . ';transform:translateX(' . $off . ');visibility:hidden;transition:transform 0.3s ease,visibility 0.3s ease;z-index:9999;overflow-y:auto;padding:56px 22px 28px;}';
+	$drawer .= $selector . '.is-open .shapeblock-menu-panel{transform:translateX(0);visibility:visible;}';
 	$drawer .= $selector . ' .shapeblock-menu-list{flex-direction:column;align-items:stretch;width:100%;' . ( $has_any_gap ? '' : 'gap:6px;' ) . '}';
 	$drawer .= $selector . ' .shapeblock-menu-list li{position:relative;width:100%;}';
 	// Every item ( link + sub-items ) fills the row, so the label sits left and the arrow far right.
-	$drawer .= $selector . ' .shapeblock-menu-list a{display:flex;align-items:center;width:100%;padding:12px 14px;}';
+	$drawer .= $selector . ' .shapeblock-menu-list a{display:flex;align-items:center;box-sizing:border-box;width:100%;padding:12px 14px;}';
 	$drawer .= $selector . ' .shapeblock-menu-list .shapeblock-menu-sub-toggle{flex:0 0 auto;margin-left:auto;}';
 	// Sub-menus drop down as an indented accordion inside the drawer ( no side fly-out ).
 	$drawer .= $selector . ' .shapeblock-menu-list .sub-menu{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border-radius:0;min-width:0;width:100%;padding:0 0 0 14px;max-height:0;overflow:hidden;transition:max-height 0.35s ease;}';
@@ -645,7 +668,7 @@ if ( $mobile_on ) {
 	echo '</button>';
 }
 echo '<ul class="shapeblock-menu-list">';
-shapeblock_menu_render_items( $items, $dropdown_icon );
+shapeblock_menu_render_items( $items, $dropdown_icon, $attributes );
 echo '</ul>';
 echo '</div></nav>';
 

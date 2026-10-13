@@ -1,5 +1,3 @@
-import { __ } from '@wordpress/i18n';
-
 /**
  * Layout presets define column counts and width distribution (in %).
  * Each id is stored as the Row's `preset` attribute.
@@ -27,6 +25,3 @@ export const presetTemplate = (id) => {
         { width: `${parseFloat(w).toFixed(2)}%` },
     ]);
 };
-
-export const presetOptions = () =>
-    LAYOUT_PRESETS.map((p) => ({ label: p.label, value: p.id }));

@@ -1,0 +1,591 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "shapeblock/sticky-stack",
+	"version": "1.0.0",
+	"title": "Sticky Stack",
+	"category": "shapeblock",
+	"description": "Cards that stick to the top as you scroll and stack over one another, each with a number, title, text, points, image and button.",
+	"keywords": [
+		"sticky",
+		"stack",
+		"stacking cards",
+		"scroll",
+		"features",
+		"steps",
+		"process"
+	],
+	"example": {},
+	"supports": {
+		"html": false,
+		"align": [
+			"wide",
+			"full"
+		]
+	},
+	"textdomain": "shapeblock",
+	"editorScript": "file:./index.js",
+	"viewScript": "file:./view.js",
+	"render": "file:./render.php",
+	"attributes": {
+		"advPadding": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advPaddingTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advPaddingMobile": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMargin": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMarginTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMarginMobile": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advBgColor": {
+			"type": "string",
+			"default": ""
+		},
+		"advBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"blockId": {
+			"type": "string",
+			"default": ""
+		},
+		"cards": {
+			"type": "array",
+			"default": [
+				{
+					"number": "01",
+					"icon": "",
+					"title": "One layout, three values",
+					"desc": "Set a value for desktop, tablet and mobile. Change one device and the others stay exactly as they were.",
+					"points": "Tablet up to 1024px, mobile up to 767px\nAn empty device inherits the larger one",
+					"imageId": 0,
+					"imageUrl": "",
+					"imageAlt": "",
+					"btnText": "",
+					"btnUrl": "",
+					"btnNewTab": false,
+					"badgeBg": "",
+					"badgeBgGradient": ""
+				},
+				{
+					"number": "02",
+					"icon": "",
+					"title": "Color and gradient, everywhere",
+					"desc": "Every background option pairs a solid color with a gradient, in Normal and Hover.",
+					"points": "The same control in every block\nWorks on buttons, icons, cards and sections",
+					"imageId": 0,
+					"imageUrl": "",
+					"imageAlt": "",
+					"btnText": "",
+					"btnUrl": "",
+					"btnNewTab": false,
+					"badgeBg": "",
+					"badgeBgGradient": ""
+				},
+				{
+					"number": "03",
+					"icon": "",
+					"title": "An Advanced tab on every block",
+					"desc": "Padding and margin per device, plus a background color or gradient.",
+					"points": "Responsive padding and margin\nScoped to that block only",
+					"imageId": 0,
+					"imageUrl": "",
+					"imageAlt": "",
+					"btnText": "",
+					"btnUrl": "",
+					"btnNewTab": false,
+					"badgeBg": "",
+					"badgeBgGradient": ""
+				}
+			]
+		},
+		"showNumber": {
+			"type": "boolean",
+			"default": true
+		},
+		"showIcon": {
+			"type": "boolean",
+			"default": true
+		},
+		"showPoints": {
+			"type": "boolean",
+			"default": true
+		},
+		"showImage": {
+			"type": "boolean",
+			"default": true
+		},
+		"showButton": {
+			"type": "boolean",
+			"default": true
+		},
+		"titleTag": {
+			"type": "string",
+			"default": "h3"
+		},
+		"stackOn": {
+			"type": "string",
+			"default": "desktop-tablet"
+		},
+		"stickyTop": {
+			"type": "string",
+			"default": "90px"
+		},
+		"stickyTopTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"stickyTopMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"stepOffset": {
+			"type": "string",
+			"default": "18px"
+		},
+		"stepOffsetTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"stepOffsetMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"cardGap": {
+			"type": "string",
+			"default": "40px"
+		},
+		"cardGapTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"cardGapMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"cardMinHeight": {
+			"type": "string",
+			"default": "300px"
+		},
+		"cardMinHeightTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"cardMinHeightMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"depthEffect": {
+			"type": "boolean",
+			"default": true
+		},
+		"depthScale": {
+			"type": "string",
+			"default": "4"
+		},
+		"depthDim": {
+			"type": "string",
+			"default": "10"
+		},
+		"mediaPosition": {
+			"type": "string",
+			"default": "right"
+		},
+		"mediaPositionTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"mediaPositionMobile": {
+			"type": "string",
+			"default": "bottom"
+		},
+		"contentWidth": {
+			"type": "string",
+			"default": "46"
+		},
+		"columnGap": {
+			"type": "string",
+			"default": "40"
+		},
+		"columnGapTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"columnGapMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"contentAlign": {
+			"type": "string",
+			"default": "left"
+		},
+		"contentAlignTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"contentAlignMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"verticalAlign": {
+			"type": "string",
+			"default": "center"
+		},
+		"textGap": {
+			"type": "string",
+			"default": "12"
+		},
+		"cardPadding": {
+			"type": "object",
+			"default": {
+				"top": "36",
+				"right": "36",
+				"bottom": "36",
+				"left": "36"
+			}
+		},
+		"cardPaddingTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"cardPaddingMobile": {
+			"type": "object",
+			"default": {
+				"top": "22",
+				"right": "22",
+				"bottom": "22",
+				"left": "22"
+			}
+		},
+		"imageFit": {
+			"type": "string",
+			"default": "cover"
+		},
+		"imageHeight": {
+			"type": "string",
+			"default": ""
+		},
+		"imageHeightTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"imageHeightMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"cardBg": {
+			"type": "string",
+			"default": ""
+		},
+		"cardBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"cardBorder": {
+			"type": "object",
+			"default": {
+				"width": 0,
+				"color": "",
+				"style": "solid"
+			}
+		},
+		"cardShadow": {
+			"type": "object",
+			"default": {
+				"x": 0,
+				"y": 0,
+				"b": 0,
+				"s": 0,
+				"c": ""
+			}
+		},
+		"cardRadius": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"badgeColor": {
+			"type": "string",
+			"default": ""
+		},
+		"badgeBg": {
+			"type": "string",
+			"default": ""
+		},
+		"badgeBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"badgeSize": {
+			"type": "string",
+			"default": "40"
+		},
+		"badgeRadius": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"badgeTypography": {
+			"type": "object",
+			"default": {
+				"fontFamily": "",
+				"fontSize": "",
+				"fontWeight": "",
+				"fontStyle": "",
+				"textTransform": "",
+				"lineHeight": "",
+				"letterSpacing": ""
+			}
+		},
+		"badgeTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"badgeTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"iconColor": {
+			"type": "string",
+			"default": ""
+		},
+		"iconSize": {
+			"type": "string",
+			"default": "22"
+		},
+		"titleColor": {
+			"type": "string",
+			"default": ""
+		},
+		"titleTypography": {
+			"type": "object",
+			"default": {
+				"fontFamily": "",
+				"fontSize": "",
+				"fontWeight": "",
+				"fontStyle": "",
+				"textTransform": "",
+				"lineHeight": "",
+				"letterSpacing": ""
+			}
+		},
+		"titleTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"titleTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"descColor": {
+			"type": "string",
+			"default": ""
+		},
+		"descTypography": {
+			"type": "object",
+			"default": {
+				"fontFamily": "",
+				"fontSize": "",
+				"fontWeight": "",
+				"fontStyle": "",
+				"textTransform": "",
+				"lineHeight": "",
+				"letterSpacing": ""
+			}
+		},
+		"descTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"descTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"pointsColor": {
+			"type": "string",
+			"default": ""
+		},
+		"pointsBulletColor": {
+			"type": "string",
+			"default": ""
+		},
+		"pointsGap": {
+			"type": "string",
+			"default": "8"
+		},
+		"pointsTypography": {
+			"type": "object",
+			"default": {
+				"fontFamily": "",
+				"fontSize": "",
+				"fontWeight": "",
+				"fontStyle": "",
+				"textTransform": "",
+				"lineHeight": "",
+				"letterSpacing": ""
+			}
+		},
+		"pointsTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"pointsTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"btnColor": {
+			"type": "string",
+			"default": ""
+		},
+		"btnBg": {
+			"type": "string",
+			"default": ""
+		},
+		"btnBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"btnBorder": {
+			"type": "object",
+			"default": {
+				"width": 0,
+				"color": "",
+				"style": "solid"
+			}
+		},
+		"btnColorHover": {
+			"type": "string",
+			"default": ""
+		},
+		"btnBgHover": {
+			"type": "string",
+			"default": ""
+		},
+		"btnBgGradientHover": {
+			"type": "string",
+			"default": ""
+		},
+		"btnBorderColorHover": {
+			"type": "string",
+			"default": ""
+		},
+		"btnRadius": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"btnPadding": {
+			"type": "object",
+			"default": {}
+		},
+		"btnPaddingTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"btnPaddingMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"btnTypography": {
+			"type": "object",
+			"default": {
+				"fontFamily": "",
+				"fontSize": "",
+				"fontWeight": "",
+				"fontStyle": "",
+				"textTransform": "",
+				"lineHeight": "",
+				"letterSpacing": ""
+			}
+		},
+		"btnTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"btnTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"imageRadius": {
+			"type": "object",
+			"default": {
+				"top": "16",
+				"right": "16",
+				"bottom": "16",
+				"left": "16"
+			}
+		},
+		"imageShadow": {
+			"type": "object",
+			"default": {
+				"x": 0,
+				"y": 0,
+				"b": 0,
+				"s": 0,
+				"c": ""
+			}
+		}
+	}
+}

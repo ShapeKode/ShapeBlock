@@ -77,6 +77,24 @@ $dims = function ( $obj, $prop ) use ( $H ) {
 	return $out;
 };
 
+/** Helper: one background setting - the gradient wins (as `background`), else the colour under $prop. */
+$bg = function ( $key, $prop ) use ( $attributes ) {
+	if ( ! empty( $attributes[ $key . 'Gradient' ] ) ) {
+		return [ 'background' => $attributes[ $key . 'Gradient' ] ];
+	}
+	return ! empty( $attributes[ $key ] ) ? [ $prop => $attributes[ $key ] ] : [];
+};
+
+/** Helper: property for a normal/hover/active colour group - the shorthand once any state uses a gradient. */
+$bg_prop = function ( $key ) use ( $attributes ) {
+	foreach ( [ '', 'Hover', 'Active' ] as $state ) {
+		if ( ! empty( $attributes[ $key . $state . 'Gradient' ] ) ) {
+			return 'background';
+		}
+	}
+	return 'background-color';
+};
+
 // ---- Accordion (gap) + question layout (icon position) --------------------
 $accordion_styles = [];
 if ( ! empty( $attributes['itemsGap'] ) ) {
@@ -99,10 +117,7 @@ $question_layout_styles = [
 ];
 
 // ---- Item: normal / hover / active ----------------------------------------
-$item_styles = [];
-if ( ! empty( $attributes['itemBackgroundColor'] ) ) {
-	$item_styles['background'] = $attributes['itemBackgroundColor'];
-}
+$item_styles = $bg( 'itemBackgroundColor', 'background' );
 $item_styles = array_merge( $item_styles, $dims( $attributes['itemBorderRadius'] ?? [], 'radius' ) );
 $item_styles = array_merge( $item_styles, $dims( $attributes['itemPadding'] ?? [], 'padding' ) );
 if ( ! empty( $attributes['itemBorder'] ) ) {
@@ -112,10 +127,7 @@ if ( ! empty( $attributes['itemBoxShadow'] ) ) {
 	$item_styles['box-shadow'] = $H::box_shadow_to_css( $attributes['itemBoxShadow'] );
 }
 
-$item_hover_styles = [];
-if ( ! empty( $attributes['itemBackgroundColorHover'] ) ) {
-	$item_hover_styles['background'] = $attributes['itemBackgroundColorHover'];
-}
+$item_hover_styles = $bg( 'itemBackgroundColorHover', 'background' );
 if ( ! empty( $attributes['itemBorderHover'] ) ) {
 	$item_hover_styles = array_merge( $item_hover_styles, $H::border_to_css_props( $attributes['itemBorderHover'] ) );
 }
@@ -123,10 +135,7 @@ if ( ! empty( $attributes['itemBoxShadowHover'] ) ) {
 	$item_hover_styles['box-shadow'] = $H::box_shadow_to_css( $attributes['itemBoxShadowHover'] );
 }
 
-$item_active_styles = [];
-if ( ! empty( $attributes['itemBackgroundColorActive'] ) ) {
-	$item_active_styles['background'] = $attributes['itemBackgroundColorActive'];
-}
+$item_active_styles = $bg( 'itemBackgroundColorActive', 'background' );
 if ( ! empty( $attributes['itemBorderActive'] ) ) {
 	$item_active_styles = array_merge( $item_active_styles, $H::border_to_css_props( $attributes['itemBorderActive'] ) );
 }
@@ -160,10 +169,8 @@ if ( ! empty( $attributes['titleColorActive'] ) ) {
 }
 
 // ---- Question (bar) normal / hover / active -------------------------------
-$question_styles = [];
-if ( ! empty( $attributes['titleBgColor'] ) ) {
-	$question_styles['background-color'] = $attributes['titleBgColor'];
-}
+$title_bg_prop   = $bg_prop( 'titleBgColor' );
+$question_styles = $bg( 'titleBgColor', $title_bg_prop );
 $question_styles = array_merge( $question_styles, $dims( $attributes['questionPadding'] ?? [], 'padding' ) );
 $question_styles = array_merge( $question_styles, $dims( $attributes['questionBorderRadius'] ?? [], 'radius' ) );
 if ( ! empty( $attributes['titleBorder'] ) ) {
@@ -174,10 +181,7 @@ if ( ! empty( $attributes['titleBoxShadow'] ) ) {
 }
 $question_styles = array_merge( $question_layout_styles, $question_styles );
 
-$question_hover_styles = [];
-if ( ! empty( $attributes['titleBgColorHover'] ) ) {
-	$question_hover_styles['background-color'] = $attributes['titleBgColorHover'];
-}
+$question_hover_styles = $bg( 'titleBgColorHover', $title_bg_prop );
 if ( ! empty( $attributes['titleBorderColorHover'] ) ) {
 	$question_hover_styles['border-color'] = $attributes['titleBorderColorHover'];
 }
@@ -185,10 +189,7 @@ if ( ! empty( $attributes['titleBoxShadowHover'] ) ) {
 	$question_hover_styles['box-shadow'] = $H::box_shadow_to_css( $attributes['titleBoxShadowHover'] );
 }
 
-$question_active_styles = [];
-if ( ! empty( $attributes['titleBgColorActive'] ) ) {
-	$question_active_styles['background-color'] = $attributes['titleBgColorActive'];
-}
+$question_active_styles = $bg( 'titleBgColorActive', $title_bg_prop );
 if ( ! empty( $attributes['titleBorderColorActive'] ) ) {
 	$question_active_styles['border-color'] = $attributes['titleBorderColorActive'];
 }
@@ -211,9 +212,8 @@ $H::add_responsive_vars( $attributes, $answer_responsive, 'descriptionTypography
 if ( ! empty( $attributes['descriptionColor'] ) ) {
 	$answer_responsive['desktop']['color'] = $attributes['descriptionColor'];
 }
-if ( ! empty( $attributes['descriptionBgColor'] ) ) {
-	$answer_responsive['desktop']['background-color'] = $attributes['descriptionBgColor'];
-}
+$desc_bg_prop                 = $bg_prop( 'descriptionBgColor' );
+$answer_responsive['desktop'] = array_merge( $answer_responsive['desktop'], $bg( 'descriptionBgColor', $desc_bg_prop ) );
 $answer_responsive['desktop'] = array_merge( $answer_responsive['desktop'], $dims( $attributes['answerPadding'] ?? [], 'padding' ) );
 $answer_responsive['tablet']  = array_merge( $answer_responsive['tablet'], $dims( $attributes['answerPaddingTablet'] ?? [], 'padding' ) );
 $answer_responsive['mobile']  = array_merge( $answer_responsive['mobile'], $dims( $attributes['answerPaddingMobile'] ?? [], 'padding' ) );
@@ -226,9 +226,7 @@ $answer_hover_styles = [];
 if ( ! empty( $attributes['descriptionColorHover'] ) ) {
 	$answer_hover_styles['color'] = $attributes['descriptionColorHover'];
 }
-if ( ! empty( $attributes['descriptionBgColorHover'] ) ) {
-	$answer_hover_styles['background-color'] = $attributes['descriptionBgColorHover'];
-}
+$answer_hover_styles = array_merge( $answer_hover_styles, $bg( 'descriptionBgColorHover', $desc_bg_prop ) );
 if ( ! empty( $attributes['descriptionBorderColorHover'] ) ) {
 	$answer_hover_styles['border-color'] = $attributes['descriptionBorderColorHover'];
 }
@@ -237,9 +235,7 @@ $answer_active_styles = [];
 if ( ! empty( $attributes['descriptionColorActive'] ) ) {
 	$answer_active_styles['color'] = $attributes['descriptionColorActive'];
 }
-if ( ! empty( $attributes['descriptionBgColorActive'] ) ) {
-	$answer_active_styles['background-color'] = $attributes['descriptionBgColorActive'];
-}
+$answer_active_styles = array_merge( $answer_active_styles, $bg( 'descriptionBgColorActive', $desc_bg_prop ) );
 if ( ! empty( $attributes['descriptionBorderColorActive'] ) ) {
 	$answer_active_styles['border-color'] = $attributes['descriptionBorderColorActive'];
 }
@@ -250,9 +246,7 @@ if ( ! empty( $attributes['iconColor'] ) ) {
 	$icon_styles['color'] = $attributes['iconColor'];
 	$icon_styles['fill']  = $attributes['iconColor'];
 }
-if ( ! empty( $attributes['iconBgColor'] ) ) {
-	$icon_styles['background'] = $attributes['iconBgColor'];
-}
+$icon_styles = array_merge( $icon_styles, $bg( 'iconBgColor', 'background' ) );
 if ( ! empty( $attributes['iconSize'] ) ) {
 	$icon_styles['font-size'] = $H::ensure_unit( $attributes['iconSize'] );
 }
@@ -277,9 +271,7 @@ if ( ! empty( $attributes['iconColorHover'] ) ) {
 	$icon_hover_styles['color'] = $attributes['iconColorHover'];
 	$icon_hover_styles['fill']  = $attributes['iconColorHover'];
 }
-if ( ! empty( $attributes['iconBgColorHover'] ) ) {
-	$icon_hover_styles['background'] = $attributes['iconBgColorHover'];
-}
+$icon_hover_styles = array_merge( $icon_hover_styles, $bg( 'iconBgColorHover', 'background' ) );
 if ( ! empty( $attributes['iconBorderColorHover'] ) ) {
 	$icon_hover_styles['border-color'] = $attributes['iconBorderColorHover'];
 }
@@ -289,9 +281,7 @@ if ( ! empty( $attributes['iconColorActive'] ) ) {
 	$icon_active_styles['color'] = $attributes['iconColorActive'];
 	$icon_active_styles['fill']  = $attributes['iconColorActive'];
 }
-if ( ! empty( $attributes['iconBgColorActive'] ) ) {
-	$icon_active_styles['background'] = $attributes['iconBgColorActive'];
-}
+$icon_active_styles = array_merge( $icon_active_styles, $bg( 'iconBgColorActive', 'background' ) );
 if ( ! empty( $attributes['iconBorderColorActive'] ) ) {
 	$icon_active_styles['border-color'] = $attributes['iconBorderColorActive'];
 }
@@ -362,13 +352,15 @@ $H::add_custom_style( $style_handle, $selector, $full_responsive_css, [
 	<div class="shapeblock-faq-accordion <?php echo esc_attr( $open_all_class ); ?> <?php echo esc_attr( $sticky_class ); ?>">
 		<?php
 		foreach ( $faq_items as $item ) :
-			$title       = isset( $item['title'] ) ? $item['title'] : '';
-			$description = isset( $item['description'] ) ? $item['description'] : '';
-			$is_active   = ! empty( $item['active'] ) ? 'active' : '';
+			$title       = isset( $item['title'] ) && is_scalar( $item['title'] ) ? (string) $item['title'] : '';
+			$description = isset( $item['description'] ) && is_scalar( $item['description'] ) ? (string) $item['description'] : '';
+			// "Open all" shows every answer, so every item is in its open (active)
+			// state and the Active style settings apply to it - as in the editor.
+			$is_active   = ( $open_all || ! empty( $item['active'] ) ) ? 'active' : '';
 			?>
 			<div class="shapeblock-faq-item <?php echo esc_attr( $is_active ); ?>">
 				<div class="shapeblock-faq-question">
-					<<?php echo esc_html( $title_tag ); ?> class="shapeblock-faq-title" tabindex="0">
+					<<?php echo esc_html( $title_tag ); ?> class="shapeblock-faq-title"<?php if ( ! $open_all ) : ?> role="button" tabindex="0" aria-expanded="<?php echo $is_active ? 'true' : 'false'; ?>"<?php endif; ?>>
 						<?php echo wp_kses_post( $title ); ?>
 					</<?php echo esc_html( $title_tag ); ?>>
 					<span class="shapeblock-faq-icon shapeblock-faq-icon-open">

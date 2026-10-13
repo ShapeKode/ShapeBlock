@@ -2,29 +2,10 @@
     max-width: var(--shapeblock-layout-row-max-width, 1200px) !important;
 }
 
-.shapeblock-social-icon-item-header,
-.shapeblock-info-box-item-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.shapeblock-border-control button.components-button.is-secondary {
+.shapeblock-border-control button.components-button.is-secondary,
+.shapeblock-border-control button.components-button.is-secondary:hover {
     border: none !important;
     box-shadow: none;
-
-    &:hover {
-        border: none !important;
-        box-shadow: none;
-    }
-}
-
-.shapeblock-info-box-image-control {
-    margin-bottom: 10px;
-}
-
-.block-editor-block-inspector__tabs {
-    background: #d8c7f02e;
 }
 
 .components-toggle-group-control {
@@ -40,9 +21,6 @@
     border-radius: 5px !important;
 }
 
-.block-editor-block-inspector__tabs button[data-active-item="true"] {
-    background: #e9c7ff;
-}
 /* The inspector tab row was sized when every block had three tabs. Adding
    "Advanced" as a fourth pushed it past the sidebar's fixed width, so the label
    was clipped mid-word and the whole panel grew a horizontal scrollbar.
@@ -58,6 +36,7 @@
 
 .shapeblock-inspector-tabs .components-tab-panel__tabs-item {
     flex: 1 1 auto;
+    justify-content: center;
     min-width: 0;
     padding-left: 6px;
     padding-right: 6px;

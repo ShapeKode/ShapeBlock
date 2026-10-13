@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/feature-list",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"title": "Features List",
 	"category": "shapeblock",
 	"description": "A vertical list of items with icon, number or image, title, description and optional connector.",

@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/isotope",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "title": "Isotope Filter",
   "category": "shapeblock",
   "description": "A filterable grid: category buttons on top, and under each category a list of items with icon, title and description.",
@@ -97,51 +97,200 @@
       "type": "array",
       "default": [
         {
-          "name": "Design",
+          "name": "Layout",
           "items": [
             {
+              "icon": "shapeblock-icon-open-panel-top",
+              "title": "Row",
+              "desc": "A responsive row that holds columns, with boxed or full width."
+            },
+            {
+              "icon": "shapeblock-icon-open-panel-left",
+              "title": "Column",
+              "desc": "A column inside a Row, with its own width on every device."
+            },
+            {
+              "icon": "shapeblock-icon-carousel-vertical",
+              "title": "Sticky Stack",
+              "desc": "Cards that stick as you scroll and stack over one another."
+            }
+          ]
+        },
+        {
+          "name": "Content",
+          "items": [
+            {
+              "icon": "shapeblock-icon-font",
+              "title": "Heading",
+              "desc": "Headings with highlight, separator and gradient text."
+            },
+            {
+              "icon": "shapeblock-icon-button",
+              "title": "Button",
+              "desc": "A flexible button with icon, gradient and hover styles."
+            },
+            {
+              "icon": "shapeblock-icon-favorite",
+              "title": "Icon",
+              "desc": "A single icon with color, size, border, rotation and link."
+            },
+            {
               "icon": "shapeblock-icon-gui",
-              "title": "UI Design",
-              "desc": "Clean, modern interfaces that are easy to use."
+              "title": "Icon Box",
+              "desc": "An icon, title and text together, with full style controls."
+            },
+            {
+              "icon": "shapeblock-icon-doc-text",
+              "title": "Icon List",
+              "desc": "A list of rows, each with its own icon and text, plus spacing and colors."
+            },
+            {
+              "icon": "shapeblock-icon-check-empty",
+              "title": "Feature List",
+              "desc": "A list of features with an icon, number or image and a title."
+            },
+            {
+              "icon": "shapeblock-icon-caret-down",
+              "title": "Accordion",
+              "desc": "Collapsible question and answer sections with FAQ schema."
+            },
+            {
+              "icon": "shapeblock-icon-wikis",
+              "title": "Tabs",
+              "desc": "Tabbed content with icon or image titles and a button per panel."
+            },
+            {
+              "icon": "shapeblock-icon-data-base",
+              "title": "Table",
+              "desc": "A data table with header, body and footer cells and styling."
+            },
+            {
+              "icon": "shapeblock-icon-thumbnail-1",
+              "title": "Hover Box",
+              "desc": "An image or icon that reveals a title and text on hover."
+            }
+          ]
+        },
+        {
+          "name": "Media",
+          "items": [
+            {
+              "icon": "shapeblock-icon-carousel-horizontal",
+              "title": "Slider",
+              "desc": "A full-width image slider with arrows, dots and autoplay."
+            },
+            {
+              "icon": "shapeblock-icon-image-copy",
+              "title": "Image Carousel",
+              "desc": "Several images at once, with centered slides and smooth scrolling."
             },
             {
               "icon": "shapeblock-icon-image",
-              "title": "Branding",
-              "desc": "Logos and visual identities that people remember."
+              "title": "Simple Gallery",
+              "desc": "A responsive image gallery with a lightbox and column controls."
+            },
+            {
+              "icon": "shapeblock-icon-thumbnail-2",
+              "title": "Image Comparison",
+              "desc": "A before and after image slider with a draggable handle."
+            },
+            {
+              "icon": "shapeblock-icon-tags",
+              "title": "Client Logo",
+              "desc": "A responsive grid of client logos with links and hover effects."
             }
           ]
         },
         {
-          "name": "Development",
+          "name": "Showcase",
           "items": [
             {
-              "icon": "shapeblock-icon-data-base",
-              "title": "Web Development",
-              "desc": "Fast, secure sites built to grow with you."
+              "icon": "shapeblock-icon-user-avatar-filled",
+              "title": "Team Member",
+              "desc": "Team cards with photo, role, social links and a popup."
+            },
+            {
+              "icon": "shapeblock-icon-chat",
+              "title": "Testimonial",
+              "desc": "Client feedback with photo, rating, quote icon and company logo."
+            },
+            {
+              "icon": "shapeblock-icon-credit-card-alt",
+              "title": "Pricing Table",
+              "desc": "Pricing plans with features, a featured ribbon and a call to action."
             },
             {
               "icon": "shapeblock-icon-chart-treemap",
-              "title": "Integrations",
-              "desc": "Connect your tools so your data flows."
+              "title": "Counter",
+              "desc": "Animated number counters with prefix, suffix, icon and odometer."
+            },
+            {
+              "icon": "shapeblock-icon-direction-straight-right",
+              "title": "Progress Bar",
+              "desc": "Animated progress and skill bars with a title and percentage."
+            },
+            {
+              "icon": "shapeblock-icon-categories",
+              "title": "Isotope Filter",
+              "desc": "A filterable grid with category buttons and items under each."
             }
           ]
         },
         {
-          "name": "Marketing",
+          "name": "Posts & site",
           "items": [
             {
-              "icon": "shapeblock-icon-chat",
-              "title": "Content",
-              "desc": "Stories and posts that bring readers in."
+              "icon": "shapeblock-icon-notebook",
+              "title": "Post Grid",
+              "desc": "Show posts in grid layouts, with pagination and optional video."
+            },
+            {
+              "icon": "shapeblock-icon-map",
+              "title": "Menu",
+              "desc": "Show a WordPress menu with layout, colors and a mobile menu."
             },
             {
               "icon": "shapeblock-icon-earth-americas",
-              "title": "SEO",
-              "desc": "Be found by the people who are looking for you."
+              "title": "Search",
+              "desc": "A site search with a popup lightbox or an inline field."
+            },
+            {
+              "icon": "shapeblock-icon-direction-straight",
+              "title": "Breadcrumb",
+              "desc": "A dynamic breadcrumb trail that shows where visitors are."
+            },
+            {
+              "icon": "shapeblock-icon-arrow-right",
+              "title": "Offcanvas",
+              "desc": "A button that slides in a panel holding any template you pick."
+            },
+            {
+              "icon": "shapeblock-icon-arrow-up",
+              "title": "Scroll to Top",
+              "desc": "A floating back-to-top button that appears after scrolling."
+            },
+            {
+              "icon": "shapeblock-icon-time",
+              "title": "Countdown",
+              "desc": "A countdown to a date and time with your own labels and styling."
+            },
+            {
+              "icon": "shapeblock-icon-share-2",
+              "title": "Social Share",
+              "desc": "Buttons for sharing the current page on social networks."
+            },
+            {
+              "icon": "shapeblock-icon-thumbs-up",
+              "title": "Social Icon",
+              "desc": "A row of linked social icons with per-icon colors and hover."
             }
           ]
         }
       ]
+    },
+    "showFilters": {
+      "type": "boolean",
+      "default": true
     },
     "showAll": {
       "type": "boolean",
@@ -509,6 +658,265 @@
       "default": ""
     },
     "iconBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "loadMore": {
+      "type": "boolean",
+      "default": true
+    },
+    "initialItems": {
+      "type": "string",
+      "default": "12"
+    },
+    "loadMoreStep": {
+      "type": "string",
+      "default": "12"
+    },
+    "loadMoreText": {
+      "type": "string",
+      "default": ""
+    },
+    "loadMoreAlign": {
+      "type": "string",
+      "default": "center"
+    },
+    "loadMoreAlignTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "loadMoreAlignMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "loadMoreSpace": {
+      "type": "string",
+      "default": "40"
+    },
+    "loadMoreSpaceTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "loadMoreSpaceMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "loadMorePadding": {
+      "type": "object",
+      "default": {}
+    },
+    "loadMorePaddingTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "loadMorePaddingMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "loadMoreTypography": {
+      "type": "object",
+      "default": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textTransform": "",
+        "lineHeight": "",
+        "letterSpacing": ""
+      }
+    },
+    "loadMoreTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "loadMoreTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "loadMoreColor": {
+      "type": "string",
+      "default": ""
+    },
+    "loadMoreBg": {
+      "type": "string",
+      "default": ""
+    },
+    "loadMoreBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "loadMoreBorder": {
+      "type": "object",
+      "default": {
+        "width": 0,
+        "color": "",
+        "style": "solid"
+      }
+    },
+    "loadMoreColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "loadMoreBgHover": {
+      "type": "string",
+      "default": ""
+    },
+    "loadMoreBgGradientHover": {
+      "type": "string",
+      "default": ""
+    },
+    "loadMoreBorderColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "loadMoreRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "badgePosition": {
+      "type": "string",
+      "default": "top-right"
+    },
+    "badgeStyle": {
+      "type": "string",
+      "default": "pill"
+    },
+    "badgeTop": {
+      "type": "string",
+      "default": ""
+    },
+    "badgeSide": {
+      "type": "string",
+      "default": ""
+    },
+    "badgeTypography": {
+      "type": "object",
+      "default": {}
+    },
+    "badgeTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "badgeTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "badgeColor": {
+      "type": "string",
+      "default": ""
+    },
+    "badgeBg": {
+      "type": "string",
+      "default": ""
+    },
+    "badgePadding": {
+      "type": "object",
+      "default": {}
+    },
+    "badgePaddingTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "badgePaddingMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "badgeRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "showSearch": {
+      "type": "boolean",
+      "default": false
+    },
+    "searchPlaceholder": {
+      "type": "string",
+      "default": ""
+    },
+    "noResultsText": {
+      "type": "string",
+      "default": ""
+    },
+    "searchWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "searchWidthTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "searchWidthMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "searchTypography": {
+      "type": "object",
+      "default": {}
+    },
+    "searchColor": {
+      "type": "string",
+      "default": ""
+    },
+    "searchPlaceholderColor": {
+      "type": "string",
+      "default": ""
+    },
+    "searchIconColor": {
+      "type": "string",
+      "default": ""
+    },
+    "searchBg": {
+      "type": "string",
+      "default": ""
+    },
+    "searchBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "searchBorder": {
+      "type": "object",
+      "default": {}
+    },
+    "searchBorderColorFocus": {
+      "type": "string",
+      "default": ""
+    },
+    "searchRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "noResultsColor": {
+      "type": "string",
+      "default": ""
+    },
+    "showSeparator": {
+      "type": "boolean",
+      "default": true
+    },
+    "separatorStyle": {
+      "type": "string",
+      "default": "solid"
+    },
+    "separatorColor": {
+      "type": "string",
+      "default": ""
+    },
+    "separatorWidth": {
       "type": "string",
       "default": ""
     }

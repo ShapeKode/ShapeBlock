@@ -7,7 +7,8 @@
  */
 .shapeblock-image-comparison-block-wrap {
 	.shapeblock-comparison-container {
-		box-sizing: content-box;
+		/* A border sits inside the width, so the box never grows past 100%. */
+		box-sizing: border-box;
 		z-index: 1;
 		overflow: hidden;
 		position: relative;
@@ -21,6 +22,8 @@
 
 		img {
 			width: 100%;
+			height: 100%;
+			object-fit: cover;
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -35,90 +38,368 @@
 		z-index: 10;
 	}
 
-	/* Handle */
+	/* Handle ---------------------------------------------------------------
+	 * One look per style (is-handle-*), all drawn from these properties, which
+	 * the block's settings replace: line / border colour, icon colour, knob
+	 * size, line width. A knob fill the user picks is --shapeblock-cmp-bg-set;
+	 * without one each style has its own.
+	 */
+	.shapeblock-comparison {
+		--shapeblock-cmp-color: #fff;
+		--shapeblock-cmp-icon: var(--shapeblock-cmp-color);
+		--shapeblock-cmp-size: 44px;
+		--shapeblock-cmp-line: 3px;
+		--shapeblock-cmp-border: var(--shapeblock-cmp-line);
+		--shapeblock-cmp-shadow: 0 0 12px rgba(51, 51, 51, 0.5);
+	}
+
+	.shapeblock-comparison.no-shadow {
+		--shapeblock-cmp-shadow: none;
+	}
+
 	.shapeblock-comparison-handle {
-		height: 38px;
-		width: 38px;
 		position: absolute;
-		left: 50%;
 		top: 50%;
-		margin-left: -22px;
-		margin-top: -22px;
-		border: 3px solid #fff;
-		border-radius: 1000px;
-		box-shadow: 0px 0px 12px rgba(51, 51, 51, 0.5);
+		left: 50%;
 		z-index: 40;
-		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		width: var(--shapeblock-cmp-size);
+		height: var(--shapeblock-cmp-size);
+		margin-top: calc(var(--shapeblock-cmp-size) / -2);
+		margin-left: calc(var(--shapeblock-cmp-size) / -2);
+		border: var(--shapeblock-cmp-border) solid var(--shapeblock-cmp-color);
+		border-radius: 50%;
+		background: var(--shapeblock-cmp-bg-set, transparent);
+		box-shadow: var(--shapeblock-cmp-shadow);
+		color: var(--shapeblock-cmp-icon);
+		cursor: ew-resize;
 		touch-action: none;
+		transition: transform 0.2s ease;
+
+		&:hover,
+		&:focus-visible {
+			transform: scale(1.08);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--shapeblock-cmp-color);
+			outline-offset: 3px;
+		}
+
+		/* The line, from the knob's edge to the image's edge. */
+		&::before,
+		&::after {
+			content: "";
+			position: absolute;
+			z-index: -1;
+			display: block;
+			background: var(--shapeblock-cmp-color);
+			box-shadow: var(--shapeblock-cmp-shadow);
+		}
 	}
 
-	.shapeblock-comparison-handle:before,
-	.shapeblock-comparison-handle:after {
-		content: ' ';
-		display: block;
-		background: #fff;
-		position: absolute;
-		z-index: 30;
-		box-shadow: 0px 0px 12px rgba(51, 51, 51, 0.5);
+	.shapeblock-comparison-vertical .shapeblock-comparison-handle {
+		cursor: ns-resize;
 	}
 
-	/* Horizontal lines */
-	.shapeblock-comparison-horizontal .shapeblock-comparison-handle:before,
-	.shapeblock-comparison-horizontal .shapeblock-comparison-handle:after {
-		width: 3px;
-		height: 9999px;
-		left: 50%;
-		margin-left: -1.5px;
-	}
-	.shapeblock-comparison-horizontal .shapeblock-comparison-handle:before {
-		bottom: 50%;
-		margin-bottom: 22px;
-		box-shadow: 0 3px 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
-	}
-	.shapeblock-comparison-horizontal .shapeblock-comparison-handle:after {
-		top: 50%;
-		margin-top: 22px;
-		box-shadow: 0 -3px 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
+	/* Diagonal: dragged across the line (which runs top left to bottom right). */
+	.shapeblock-comparison-diagonal .shapeblock-comparison-handle {
+		cursor: nesw-resize;
 	}
 
-	/* Vertical lines */
-	.shapeblock-comparison-vertical .shapeblock-comparison-handle:before,
-	.shapeblock-comparison-vertical .shapeblock-comparison-handle:after {
-		width: 9999px;
-		height: 3px;
-		top: 50%;
-		margin-top: -1.5px;
-	}
-	.shapeblock-comparison-vertical .shapeblock-comparison-handle:before {
-		left: 50%;
-		margin-left: 22px;
-		box-shadow: 3px 0 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
-	}
-	.shapeblock-comparison-vertical .shapeblock-comparison-handle:after {
-		right: 50%;
-		margin-right: 22px;
-		box-shadow: -3px 0 0 #fff, 0px 0px 12px rgba(51, 51, 51, 0.5);
+	.shapeblock-comparison-horizontal .shapeblock-comparison-handle {
+		&::before,
+		&::after {
+			left: 50%;
+			width: var(--shapeblock-cmp-line);
+			height: 9999px;
+			margin-left: calc(var(--shapeblock-cmp-line) / -2);
+		}
+
+		&::before {
+			bottom: calc(100% + var(--shapeblock-cmp-border));
+		}
+
+		&::after {
+			top: calc(100% + var(--shapeblock-cmp-border));
+		}
 	}
 
-	/* Arrows */
+	.shapeblock-comparison-vertical .shapeblock-comparison-handle {
+		&::before,
+		&::after {
+			top: 50%;
+			width: 9999px;
+			height: var(--shapeblock-cmp-line);
+			margin-top: calc(var(--shapeblock-cmp-line) / -2);
+		}
+
+		&::before {
+			right: calc(100% + var(--shapeblock-cmp-border));
+		}
+
+		&::after {
+			left: calc(100% + var(--shapeblock-cmp-border));
+		}
+	}
+
+	/* Icon in the knob; turned for a vertical slider. */
+	.shapeblock-comparison-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		line-height: 0;
+		pointer-events: none;
+
+		svg {
+			display: block;
+			width: calc(var(--shapeblock-cmp-size) * 0.5);
+			height: calc(var(--shapeblock-cmp-size) * 0.5);
+			fill: none;
+			stroke: currentColor;
+			stroke-width: 2.5;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+	}
+
+	.shapeblock-comparison-vertical .shapeblock-comparison-icon {
+		transform: rotate(90deg);
+	}
+
 	.shapeblock-comparison-left-arrow,
 	.shapeblock-comparison-right-arrow {
 		width: 0;
 		height: 0;
-		border: 6px inset transparent;
+		border: 6px solid transparent;
+	}
+
+	.shapeblock-comparison-left-arrow {
+		border-right-color: currentColor;
+		border-left-width: 0;
+	}
+
+	.shapeblock-comparison-right-arrow {
+		border-left-color: currentColor;
+		border-right-width: 0;
+	}
+
+	/* Styles. Circle (an outlined ring) is the base above. */
+	.is-handle-filled {
+		--shapeblock-cmp-icon: #1d2939;
+
+		.shapeblock-comparison-handle {
+			background: var(--shapeblock-cmp-bg-set, var(--shapeblock-cmp-color));
+		}
+	}
+
+	.is-handle-square .shapeblock-comparison-handle {
+		border-radius: calc(var(--shapeblock-cmp-size) * 0.22);
+	}
+
+	/* Pill: a capsule along the line, filled. */
+	.is-handle-pill {
+		--shapeblock-cmp-icon: #1d2939;
+
+		.shapeblock-comparison-handle {
+			background: var(--shapeblock-cmp-bg-set, var(--shapeblock-cmp-color));
+			border-radius: 999px;
+		}
+
+		.shapeblock-comparison-icon {
+			gap: 3px;
+		}
+	}
+
+	.is-handle-pill.shapeblock-comparison-horizontal .shapeblock-comparison-handle {
+		width: calc(var(--shapeblock-cmp-size) * 0.72);
+		height: calc(var(--shapeblock-cmp-size) * 1.45);
+		margin-top: calc(var(--shapeblock-cmp-size) * -0.725);
+		margin-left: calc(var(--shapeblock-cmp-size) * -0.36);
+	}
+
+	.is-handle-pill.shapeblock-comparison-vertical .shapeblock-comparison-handle {
+		width: calc(var(--shapeblock-cmp-size) * 1.45);
+		height: calc(var(--shapeblock-cmp-size) * 0.72);
+		margin-top: calc(var(--shapeblock-cmp-size) * -0.36);
+		margin-left: calc(var(--shapeblock-cmp-size) * -0.725);
+	}
+
+	.is-handle-pill .shapeblock-comparison-icon svg {
+		width: calc(var(--shapeblock-cmp-size) * 0.42);
+		height: calc(var(--shapeblock-cmp-size) * 0.42);
+	}
+
+	/* Glass: a frosted knob that shows the picture through it. */
+	.is-handle-glass {
+		--shapeblock-cmp-border: 1px;
+
+		.shapeblock-comparison-handle {
+			background: var(--shapeblock-cmp-bg-set, rgba(255, 255, 255, 0.22));
+			-webkit-backdrop-filter: blur(8px);
+			backdrop-filter: blur(8px);
+		}
+	}
+
+	/* Line: no knob, only a short grip on the line. */
+	.is-handle-line {
+		--shapeblock-cmp-border: 0px;
+
+		.shapeblock-comparison-handle {
+			border-radius: 999px;
+			background: var(--shapeblock-cmp-bg-set, var(--shapeblock-cmp-color));
+		}
+
+		.shapeblock-comparison-icon {
+			display: none;
+		}
+	}
+
+	.is-handle-line.shapeblock-comparison-horizontal .shapeblock-comparison-handle {
+		width: calc(var(--shapeblock-cmp-line) * 3);
+		height: var(--shapeblock-cmp-size);
+		margin-left: calc(var(--shapeblock-cmp-line) * -1.5);
+	}
+
+	.is-handle-line.shapeblock-comparison-vertical .shapeblock-comparison-handle {
+		width: var(--shapeblock-cmp-size);
+		height: calc(var(--shapeblock-cmp-line) * 3);
+		margin-top: calc(var(--shapeblock-cmp-line) * -1.5);
+	}
+
+	/* Diagonal: the knob is dragged sideways; its own line is replaced by one
+	 * running parallel to the box's top-left to bottom-right diagonal; comparison.js
+	 * sizes and turns it, and turns the knob with it. */
+	.shapeblock-comparison-diagonal .shapeblock-comparison-handle {
+		&::before,
+		&::after {
+			display: none;
+		}
+	}
+
+	/* Centred on the knob and cut open where the knob is, so the line stops at
+	 * its edge as it does for the other directions. */
+	.shapeblock-comparison-divider {
+		--shapeblock-cmp-hole: calc(50% - var(--shapeblock-cmp-size) / 2);
 		position: absolute;
 		top: 50%;
-		margin-top: -6px;
-	}
-	.shapeblock-comparison-left-arrow {
-		border-right: 6px solid #fff;
 		left: 50%;
-		margin-left: -17px;
+		z-index: 39;
+		width: var(--shapeblock-cmp-line);
+		height: 141%;
+		background: var(--shapeblock-cmp-color);
+		box-shadow: var(--shapeblock-cmp-shadow);
+		pointer-events: none;
+		-webkit-mask: linear-gradient(#000 0 0) top / 100% var(--shapeblock-cmp-hole) no-repeat, linear-gradient(#000 0 0) bottom / 100% var(--shapeblock-cmp-hole) no-repeat;
+		mask: linear-gradient(#000 0 0) top / 100% var(--shapeblock-cmp-hole) no-repeat, linear-gradient(#000 0 0) bottom / 100% var(--shapeblock-cmp-hole) no-repeat;
 	}
-	.shapeblock-comparison-right-arrow {
-		border-left: 6px solid #fff;
-		right: 50%;
-		margin-right: -17px;
+
+	.is-handle-pill .shapeblock-comparison-divider {
+		--shapeblock-cmp-hole: calc(50% - var(--shapeblock-cmp-size) * 0.725);
+	}
+
+	.is-handle-line .shapeblock-comparison-divider {
+		-webkit-mask: none;
+		mask: none;
+	}
+
+	/* Diagonal labels: Before bottom left, After top right - each in its own picture's corner. */
+	.shapeblock-comparison-diagonal .shapeblock-comparison-overlay {
+		align-items: flex-end;
+		justify-content: flex-start;
+
+		&.is-after {
+			align-items: flex-start;
+			justify-content: flex-end;
+		}
+	}
+
+	/* Before / After labels. Each overlay covers the image box and is cut
+	 * with its own picture (comparison.js), so a label never shows over the
+	 * other one. Horizontal: Before on the left, After on the right; vertical:
+	 * Before on top, After below. labels-start / -center / -end places them
+	 * along the other axis. */
+	.shapeblock-comparison-overlay {
+		position: absolute;
+		inset: 0;
+		z-index: 30;
+		box-sizing: border-box;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		padding: var(--shapeblock-cmp-label-offset, 16px);
+		pointer-events: none;
+	}
+
+	.shapeblock-comparison-horizontal {
+		.shapeblock-comparison-overlay.is-after {
+			justify-content: flex-end;
+		}
+
+		&.labels-start .shapeblock-comparison-overlay {
+			align-items: flex-start;
+		}
+
+		&.labels-end .shapeblock-comparison-overlay {
+			align-items: flex-end;
+		}
+	}
+
+	.shapeblock-comparison-vertical {
+		.shapeblock-comparison-overlay {
+			align-items: flex-start;
+			justify-content: center;
+		}
+
+		.shapeblock-comparison-overlay.is-after {
+			align-items: flex-end;
+		}
+
+		&.labels-start .shapeblock-comparison-overlay {
+			justify-content: flex-start;
+		}
+
+		&.labels-end .shapeblock-comparison-overlay {
+			justify-content: flex-end;
+		}
+	}
+
+	.shapeblock-comparison-label {
+		box-sizing: border-box;
+		display: inline-block;
+		max-width: 100%;
+		padding: 6px 14px;
+		border-radius: 4px;
+		background: rgba(0, 0, 0, 0.55);
+		color: #fff;
+		font-size: 13px;
+		font-weight: 600;
+		line-height: 1.3;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		white-space: nowrap;
+		transition: opacity 0.25s ease;
+	}
+
+	/* Shown only while the pointer is over the images (or the handle has focus). */
+	.labels-on-hover .shapeblock-comparison-label {
+		opacity: 0;
+	}
+
+	.labels-on-hover .shapeblock-comparison-container:hover .shapeblock-comparison-label,
+	.labels-on-hover .shapeblock-comparison-container:focus-within .shapeblock-comparison-label {
+		opacity: 1;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.shapeblock-comparison-handle,
+		.shapeblock-comparison-label {
+			transition: none;
+		}
 	}
 
 	@media (max-width: 767px) {

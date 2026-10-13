@@ -10,18 +10,6 @@
     --shapeblock-preset-hover-transition: 0.4s ease;
 }
 
-.shapeblock-text-left {
-    justify-content: flex-start;
-}
-
-.shapeblock-text-center {
-    justify-content: center;
-}
-
-.shapeblock-text-right {
-    justify-content: flex-end;
-}
-
 .shapeblock-block {
     color: var(--shapeblock-preset-color-contrast-2);
 
@@ -42,7 +30,6 @@
     }
 }
 
-.shapeblock-post-categories,
 .shapeblock-post-metas {
     margin: 20px 0 5px;
     padding: 0;
@@ -82,100 +69,7 @@
     }
 }
 
-.shapeblock-post-categories {
-    margin: 0;
-    gap: 5px;
-    display: flex;
-
-    .shapeblock-cat-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: var(--shapeblock-preset-color-primary);
-        margin-right: 6px;
-    }
-
-    .bldpost-meta {
-        text-transform: uppercase;
-
-        a {
-            text-decoration: none;
-        }
-    }
-
-    &.shapeblock-post-categories-style-1 {
-        margin-left: 12px;
-        margin-top: 12px;
-
-        .bldpost-meta {
-            background: var(--shapeblock-preset-color-white);
-            color: var(--shapeblock-preset-color-contrast-1);
-            padding: 8px 8px 7px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            line-height: 1;
-            flex-wrap: wrap;
-            gap: 1px;
-        }
-    }
-
-    &.shapeblock-post-categories-style-2 {
-        .bldpost-meta {
-            font-size: 0.875rem;
-            background: var(--shapeblock-preset-color-primary);
-            color: var(--shapeblock-preset-color-white);
-            display: inline-block;
-            max-width: -moz-max-content;
-            max-width: max-content;
-            padding: 8px 16px;
-            border-radius: 30px;
-            margin: 3px 2px 3px;
-            line-height: 1;
-            text-transform: capitalize;
-
-            a {
-                color: currentColor;
-
-                &:hover {
-                    color: var(--shapeblock-preset-color-tertiary) !important;
-                }
-            }
-
-            .shapeblock-cat-dot {
-                display: none;
-            }
-        }
-    }
-
-    &.shapeblock-post-categories-style-3 {
-        .bldpost-meta {
-            font-size: 0.875rem;
-            padding: 0;
-            margin: 3px 2px 3px;
-            line-height: 1;
-            text-transform: capitalize;
-
-            a {
-                color: currentColor;
-
-                &:hover {
-                    color: var(--shapeblock-preset-color-primary) !important;
-                }
-            }
-
-            .shapeblock-cat-dot {
-                display: none;
-            }
-        }
-    }
-}
-
 .shapeblock-post-metas {
-    &.shapeblock-upper-metas {
-        margin-top: 0px !important;
-    }
-
     &.shapeblock-post-metas-style-1 {
         .bldpost-meta {
             position: relative;
@@ -226,10 +120,6 @@
         .bldpost-meta {
             position: relative;
 
-            .shapeblock-meta-cat {
-                //color: var(--shapeblock-preset-color-primary);
-            }
-
             &:not(:first-child) {
                 &::before {
                     content: "|";
@@ -247,12 +137,12 @@
     }
 
     &.shapeblock-post-meta-position-up_title {
-        margin-top: 0 !important;
+        margin-top: 0;
         margin-bottom: 8px;
     }
 
     &.shapeblock-post-meta-position-below_title {
-        margin: 12px 0 0 !important;
+        margin: 12px 0 0;
     }
 }
 
@@ -279,18 +169,8 @@
         }
     }
 
-    .nav-btn {
-        transition: var(--shapeblock-preset-hover-transition);
-    }
-    .swiper-button-next:after, .swiper-button-prev:after {
-        font-size: 16px;
-    }
-
 }
 
-.shapeblock-video-wrapper video {
-    background-color: #000;
-}
 /* Images inside any ShapeBlock block stay inside their container.
  * Without this an image field renders at its natural pixel size and spills out
  * of the card. Blocks that want a fixed size use higher-specificity selectors
@@ -299,4 +179,18 @@
 .shapeblock-menu img {
     max-width: 100%;
     height: auto;
+}
+
+/* The Theme Builder footer sits flush against the content above it. */
+.shapeblock-builder-footer {
+    margin-top: 0;
+}
+
+/* A Wide block straight in a Theme Builder template (a header, a footer ...)
+ * is as wide as the theme's wide width and centred, as in its editor; other
+ * blocks stay full width. */
+[class*="shapeblock-builder-"] > .alignwide {
+    max-width: var(--wp--style--global--wide-size, 1200px);
+    margin-left: auto;
+    margin-right: auto;
 }

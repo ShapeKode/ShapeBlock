@@ -58,7 +58,7 @@ add_filter( 'register_block_type_args', 'shapeblock_register_visibility_attribut
 /**
  * Append the visibility classes to the block's outer element.
  *
- * Uses the HTML API when available so only the first tag is touched and the
+ * Uses the HTML API so only the first tag is touched and the
  * class is never duplicated ( Row and Column already print their own ).
  *
  * @param string $content Rendered block HTML.
@@ -84,32 +84,14 @@ function shapeblock_render_block_visibility( $content, $block ) {
 		return $content;
 	}
 
-	if ( class_exists( 'WP_HTML_Tag_Processor' ) ) {
-		$tags = new WP_HTML_Tag_Processor( $content );
-		if ( ! $tags->next_tag() ) {
-			return $content;
-		}
-		foreach ( $classes as $class ) {
-			$tags->add_class( $class ); // Idempotent — a class already present is not repeated.
-		}
-		return $tags->get_updated_html();
-	}
-
-	// WordPress < 6.2 fallback: add to the first opening tag only.
-	$needed = array();
-	foreach ( $classes as $class ) {
-		if ( false === strpos( $content, $class ) ) {
-			$needed[] = $class;
-		}
-	}
-	if ( empty( $needed ) ) {
+	$tags = new WP_HTML_Tag_Processor( $content );
+	if ( ! $tags->next_tag() ) {
 		return $content;
 	}
-	$added = implode( ' ', $needed );
-	if ( preg_match( '/^(\s*<[a-zA-Z][^>]*?\sclass=")/', $content, $m ) ) {
-		return preg_replace( '/^(\s*<[a-zA-Z][^>]*?\sclass=")/', '$1' . $added . ' ', $content, 1 );
+	foreach ( $classes as $class ) {
+		$tags->add_class( $class ); // Idempotent — a class already present is not repeated.
 	}
-	return preg_replace( '/^(\s*<[a-zA-Z][a-zA-Z0-9-]*)/', '$1 class="' . $added . '"', $content, 1 );
+	return $tags->get_updated_html();
 }
 add_filter( 'render_block', 'shapeblock_render_block_visibility', 20, 2 );
 
@@ -139,7 +121,7 @@ function shapeblock_visibility_editor_preview_css() {
 	// enqueue_block_assets fires on every wp-admin screen, not only the block
 	// editor, so is_admin() alone is not enough — see blocks.php's
 	// shapeblock_is_block_editor_screen().
-	if ( ! function_exists( 'shapeblock_is_block_editor_screen' ) || ! shapeblock_is_block_editor_screen() ) {
+	if ( ! shapeblock_is_block_editor_screen() ) {
 		return;
 	}
 	wp_register_style( 'shapeblock-visibility-editor', false, array(), SHAPEBLOCK_VERSION );

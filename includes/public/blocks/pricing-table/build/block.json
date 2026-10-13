@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/pricing-table",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "title": "Pricing Table",
   "category": "shapeblock",
   "description": "A configurable pricing table with features list, featured ribbon and call-to-action button.",
@@ -93,10 +93,6 @@
     "blockId": {
       "type": "string",
       "default": ""
-    },
-    "skinStyle": {
-      "type": "string",
-      "default": "skin1"
     },
     "title": {
       "type": "string",
@@ -208,6 +204,10 @@
       "default": ""
     },
     "featureIconBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "featureIconBgGradient": {
       "type": "string",
       "default": ""
     },
@@ -346,6 +346,10 @@
       "default": {}
     },
     "titleBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "titleBgGradient": {
       "type": "string",
       "default": ""
     },
@@ -689,6 +693,10 @@
       "type": "string",
       "default": ""
     },
+    "ribbonBgGradient": {
+      "type": "string",
+      "default": ""
+    },
     "ribbonTypography": {
       "type": "object",
       "default": {
@@ -739,11 +747,19 @@
       "type": "string",
       "default": ""
     },
+    "buttonBgGradient": {
+      "type": "string",
+      "default": ""
+    },
     "buttonTextColorHover": {
       "type": "string",
       "default": ""
     },
     "buttonBgColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonBgGradientHover": {
       "type": "string",
       "default": ""
     },

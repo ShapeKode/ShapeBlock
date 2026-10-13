@@ -9,7 +9,7 @@ $tag          = isset( $attributes['htmlTag'] ) && in_array( $attributes['htmlTa
     ? $attributes['htmlTag']
     : 'div';
 
-$content_width = isset( $attributes['contentWidth'] ) ? $attributes['contentWidth'] : 'boxed';
+$content_width = isset( $attributes['contentWidth'] ) && in_array( $attributes['contentWidth'], [ 'boxed', 'full', 'custom' ], true ) ? $attributes['contentWidth'] : 'boxed';
 $vertical      = isset( $attributes['verticalAlign'] ) ? $attributes['verticalAlign'] : '';
 $equal_height  = ! empty( $attributes['equalHeight'] );
 $stretch       = ! empty( $attributes['stretchColumns'] );
@@ -23,6 +23,17 @@ $unique_id = \ShapeBlock\Frontend\Helper::unique_block_id( $unique_id );
 $selector = '.' . $unique_id;
 
 $row_responsive = [ 'desktop' => [], 'tablet' => [], 'mobile' => [] ];
+
+// A gap of a bare number gets px - including 0, which would otherwise count as
+// "not set": the row kept its default 20px gap while the columns, sized for no
+// gap, overflowed it (and a unitless 0 inside their calc() is invalid CSS).
+foreach ( [ 'gap', 'rowGap', 'columnGap' ] as $gap_key ) {
+    foreach ( [ '', 'Tablet', 'Mobile' ] as $gap_sfx ) {
+        if ( isset( $attributes[ $gap_key . $gap_sfx ] ) && is_numeric( $attributes[ $gap_key . $gap_sfx ] ) ) {
+            $attributes[ $gap_key . $gap_sfx ] = ( 0 + $attributes[ $gap_key . $gap_sfx ] ) . 'px';
+        }
+    }
+}
 
 // Flexbox controls (D/T/M).
 \ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'flexDirection',  'flex-direction' );
@@ -102,22 +113,17 @@ if ( $attributes['zIndex'] !== '' && $attributes['zIndex'] !== null ) {
 // Sticky positioning - apply when isSticky is enabled.
 if ( ! empty( $attributes['isSticky'] ) ) {
     $row_responsive['desktop']['position'] = 'sticky';
-    $row_responsive['desktop']['z-index'] = 'auto';
+    // The Z-Index setting still applies to a sticky row.
+    $row_responsive['desktop']['z-index'] = ( isset( $attributes['zIndex'] ) && '' !== trim( (string) $attributes['zIndex'] ) ) ? (int) $attributes['zIndex'] : 'auto';
     $row_responsive['desktop']['width'] = '100%';
 
     $sticky_top = isset( $attributes['stickyTop'] ) ? trim( (string) $attributes['stickyTop'] ) : '0px';
     $row_responsive['desktop']['top'] = \ShapeBlock\Frontend\Helper::ensure_unit( $sticky_top );
 }
 
-// CSS custom props for the column-width calc — columns read these via cascade and
-// compute their own width as `calc(W% - (cols-1) * gap * W / 100)` so non-zero gap
-// never pushes the row to overflow. See column/src/render.php.
-$col_count = ( isset( $block ) && isset( $block->parsed_block['innerBlocks'] ) )
-    ? count( $block->parsed_block['innerBlocks'] )
-    : 0;
-if ( $col_count > 0 ) {
-    $row_responsive['desktop']['--bp-cols'] = $col_count;
-}
+// The gap, as a custom property for the column-width calc: columns read it via
+// cascade and compute their own width as `calc(W% - gap * (100 - W) / 100)`, so
+// a non-zero gap never pushes the row to overflow. See column/src/render.php.
 foreach ( [ '' => 'desktop', 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $sfx => $dev ) {
     // Prefer explicit columnGap, fall back to the gap shorthand.
     foreach ( [ 'columnGap', 'gap' ] as $base ) {
@@ -207,6 +213,46 @@ foreach ( [
     }
 }
 
+// Direction "column": the columns are stacked, so the row-of-columns widths
+// (a flex basis and max-width of e.g. 33%) would leave each one a third wide
+// and give it a third of the height. Each stacked column takes the full width
+// instead - unless it has a width of its own for that device.
+$dir_desktop = (string) ( $attributes['flexDirection'] ?? '' );
+$dir_tablet  = (string) ( $attributes['flexDirectionTablet'] ?? '' );
+$dir_mobile  = (string) ( $attributes['flexDirectionMobile'] ?? '' );
+$dir_tablet  = '' !== $dir_tablet ? $dir_tablet : $dir_desktop;
+$dir_mobile  = '' !== $dir_mobile ? $dir_mobile : $dir_tablet;
+foreach ( [
+    ''       => [ '', $dir_desktop ],
+    'Tablet' => [ '@media (max-width: 1024px)', $dir_tablet ],
+    'Mobile' => [ '@media (max-width: 767px)', $dir_mobile ],
+] as $suffix => $device ) {
+    list( $query, $dir ) = $device;
+    if ( 0 !== strpos( $dir, 'column' ) ) {
+        continue;
+    }
+    $rules    = '';
+    $position = 0;
+    foreach ( $inner_blocks as $inner ) {
+        if ( empty( $inner['blockName'] ) ) {
+            continue;
+        }
+        $position++;
+        if ( 'shapeblock/column' !== $inner['blockName'] ) {
+            continue;
+        }
+        $col_attrs = isset( $inner['attrs'] ) && is_array( $inner['attrs'] ) ? $inner['attrs'] : [];
+        if ( '' !== trim( (string) ( $col_attrs[ 'width' . $suffix ] ?? '' ) ) ) {
+            continue;
+        }
+        $rules .= '.shapeblock-layout-row' . $selector . ' > .shapeblock-layout-row__inner > .shapeblock-column.shapeblock-column:nth-child(' . $position . ')'
+            . '{flex:0 0 auto !important;max-width:100% !important;width:100%;}';
+    }
+    if ( '' !== $rules ) {
+        $per_device_css .= '' === $query ? $rules : $query . '{' . $rules . '}';
+    }
+}
+
 // Max-width for boxed mode. Write the CSS variable on the row wrapper — the SCSS
 // in style.scss already reads it on the inner via var(--shapeblock-layout-row-max-width).
 // Setting it as a direct max-width inline would lose a specificity fight with the
@@ -215,13 +261,19 @@ if ( $content_width === 'boxed' ) {
     \ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'maxWidth', '--shapeblock-layout-row-max-width' );
 }
 
+// Custom width: the width of the whole Row, per device, read by style.scss.
+if ( $content_width === 'custom' ) {
+    \ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $row_responsive, 'customWidth', '--shapeblock-layout-row-width' );
+}
+
 // Margin gets its own, stronger rule. A row placed straight in the page content
 // sits in WordPress's constrained layout, which prints
 //   :root :where(.is-layout-constrained) > * { margin-block: 1.5rem 0 }
 // at the same specificity as `.<blockId>` and later in the page -- so it won and
-// the row's margin (bottom above all) was reset to 0 on the front end, while the
-// editor canvas, which has different rules, showed it. Doubling the class
-// outweighs it without !important.
+// the row's margin (bottom above all) was reset to 0 on the front end. The Row's
+// own reset in style.scss has two classes as well, so the margin rule has three:
+// it wins whatever order a cache or minify plugin prints the stylesheets in,
+// without !important.
 $row_margin = [ 'desktop' => [], 'tablet' => [], 'mobile' => [] ];
 foreach ( $row_responsive as $device => $decls ) {
     foreach ( $decls as $prop => $val ) {
@@ -235,7 +287,7 @@ foreach ( $row_responsive as $device => $decls ) {
 // Compile CSS.
 $style_handle = 'shapeblock-layout-row-style';
 $css  = \ShapeBlock\Frontend\Helper::generate_responsive_css( $selector, $row_responsive );
-$css .= \ShapeBlock\Frontend\Helper::generate_responsive_css( $selector . $selector, $row_margin );
+$css .= \ShapeBlock\Frontend\Helper::generate_responsive_css( '.shapeblock-block.shapeblock-layout-row' . $selector, $row_margin );
 $css .= $per_device_css;
 
 wp_enqueue_style( $style_handle );
@@ -268,10 +320,18 @@ if ( $custom_class ) {
 // the same element, and style.scss keys off [style*="position:sticky"].
 $sticky_styles = '';
 if ( ! empty( $attributes['isSticky'] ) ) {
-    $sticky_styles  = 'position:sticky;z-index:auto;';
+    $sticky_z       = ( isset( $attributes['zIndex'] ) && '' !== trim( (string) $attributes['zIndex'] ) ) ? (int) $attributes['zIndex'] : 'auto';
+    $sticky_styles  = 'position:sticky;z-index:' . $sticky_z . ';';
     $sticky_styles .= 'top:' . \ShapeBlock\Frontend\Helper::ensure_unit(
         ! empty( $attributes['stickyTop'] ) ? (string) $attributes['stickyTop'] : '0px'
     ) . ';';
+}
+
+// Wide / Full width come from the theme's layout (theme.json). A theme without
+// theme.json gives them no size, so the Row sizes itself there (style.scss).
+$align = isset( $attributes['align'] ) && in_array( $attributes['align'], [ 'wide', 'full' ], true ) ? $attributes['align'] : '';
+if ( '' !== $align && ! wp_theme_has_theme_json() ) {
+    $classes[] = 'has-align-fallback';
 }
 
 $wrapper_args = [ 'class' => implode( ' ', $classes ) ];
@@ -287,7 +347,8 @@ printf(
     wp_kses_post( $wrapper_attrs ),
     // The inner blocks, already rendered by WordPress, escaped against the
     // shared template allowlist - see the note in the Column block.
-    wp_kses( $content, \ShapeBlock\Frontend\Helper::template_allowed_html() )
+    // Any CSS the inner blocks carry in their markup is kept (see move_block_css()).
+    wp_kses( \ShapeBlock\Frontend\Helper::move_block_css( $content, $style_handle ), \ShapeBlock\Frontend\Helper::template_allowed_html() )
 );
 
 } )( $attributes, $content, $block );

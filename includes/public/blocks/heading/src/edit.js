@@ -48,8 +48,6 @@ import BackgroundControl from '../../custom-components/BackgroundControl';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import AdvancedControls from '../../custom-components/AdvancedControls';
 
-import './editor.scss';
-
 // Map a base attribute name to its per-device key (desktop uses the base name).
 const getKey = (base, device) =>
 	device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
@@ -178,7 +176,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	if (attributes.highlightColor) hlStyle.color = attributes.highlightColor;
 	const hlBg = attributes.highlightBgGradient || attributes.highlightBgColor;
 	if (hlBg) hlStyle.background = hlBg;
-	Object.assign(hlStyle, dimStyles(attributes.highlightPadding, 'padding'), dimStyles(attributes.highlightMargin, 'margin'));
+	Object.assign(hlStyle, dimStyles(attributes.highlightPadding, 'padding'), dimStyles(attributes.highlightMargin, 'margin'), dimStyles(attributes.highlightBorderRadius, 'radius'));
 	// Tablet / Mobile preview, mirroring the media queries render.php prints.
 	// The desktop values are applied as inline styles on the elements below, and
 	// an inline style beats a stylesheet — hence !important here. This only ever
@@ -250,7 +248,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				>
 					{(tab) => (
 						tab.name === 'settings' ? (
-							<PanelBody title={__('Heading', 'shapeblock')} initialOpen={true}>
+							<PanelBody title={__('Content', 'shapeblock')} initialOpen={true}>
 								<SelectControl
 									label={__('HTML Tag', 'shapeblock')}
 									value={titleTag}
@@ -271,23 +269,21 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						) : tab.name === 'advanced' ? (
 							<AdvancedControls attributes={attributes} setAttributes={setAttributes} />
 						) : tab.name === 'layout' ? (
-							<PanelBody title={__('Heading', 'shapeblock')} initialOpen={true}>
+							<PanelBody title={__('Alignment', 'shapeblock')} initialOpen={true}>
 								<ToggleGroupControl label={__('Alignment', 'shapeblock')} value={attributes.align || ''} onChange={(v) => setAttributes({ align: v ?? '' })} isBlock isDeselectable __next40pxDefaultSize __nextHasNoMarginBottom>
 									<ToggleGroupControlOptionIcon value="left" icon="editor-alignleft" label={__('Left', 'shapeblock')} />
 									<ToggleGroupControlOptionIcon value="center" icon="editor-aligncenter" label={__('Center', 'shapeblock')} />
 									<ToggleGroupControlOptionIcon value="right" icon="editor-alignright" label={__('Right', 'shapeblock')} />
 									<ToggleGroupControlOptionIcon value="justify" icon="editor-justify" label={__('Justify', 'shapeblock')} />
 								</ToggleGroupControl>
-								{respBox(__('Title Margin', 'shapeblock'), 'titleMargin')}
-								{respBox(__('Title Padding', 'shapeblock'), 'titlePadding')}
-								{respBox(__('Highlight Margin', 'shapeblock'), 'highlightMargin')}
-								{respBox(__('Highlight Padding', 'shapeblock'), 'highlightPadding')}
 							</PanelBody>
 						) : (
 							<>
 								<PanelBody title={__('Heading', 'shapeblock')} initialOpen={true}>
 									{color(__('Color', 'shapeblock'), 'titleColor')}
 									{respTypo(__('Typography', 'shapeblock'), 'titleTypography')}
+									{respBox(__('Title Margin', 'shapeblock'), 'titleMargin')}
+									{respBox(__('Title Padding', 'shapeblock'), 'titlePadding')}
 								</PanelBody>
 
 								<PanelBody title={__('Highlight', 'shapeblock')} initialOpen={false}>
@@ -297,6 +293,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									{color(__('Color', 'shapeblock'), 'highlightColor')}
 									{bg(__('Background', 'shapeblock'), 'highlightBgColor', 'highlightBgGradient')}
 									{respTypo(__('Typography', 'shapeblock'), 'highlightTypography')}
+									{respBox(__('Highlight Margin', 'shapeblock'), 'highlightMargin')}
+									{respBox(__('Highlight Padding', 'shapeblock'), 'highlightPadding')}
+									{box(__('Highlight Border Radius', 'shapeblock'), 'highlightBorderRadius')}
 								</PanelBody>
 							</>
 						)

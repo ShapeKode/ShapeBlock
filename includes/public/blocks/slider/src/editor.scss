@@ -1,5 +1,3 @@
-@use 'style';
-
 /**
  * Editor-only styles for the Slider block.
  */
@@ -39,17 +37,5 @@
 		justify-content: space-between;
 		align-items: center;
 		margin-bottom: 8px;
-	}
-}
-
-// Settings / Layout / Style tabs — evenly spaced across the inspector.
-.shapeblock-inspector-tabs {
-	.components-tab-panel__tabs {
-		display: flex;
-	}
-
-	.components-tab-panel__tabs-item {
-		flex: 1;
-		justify-content: center;
 	}
 }

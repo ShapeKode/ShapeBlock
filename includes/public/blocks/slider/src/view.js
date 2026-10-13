@@ -11,7 +11,7 @@
 	function readOptions(el) {
 		try {
 			return JSON.parse(el.dataset.shapeblockSlider || '{}');
-		} catch (e) {
+		} catch {
 			return {};
 		}
 	}

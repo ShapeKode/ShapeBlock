@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/testimonials-grid",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"title": "Testimonial",
 	"category": "shapeblock",
 	"description": "A grid of testimonials with three styles, ratings, quote icons and logos.",
@@ -53,7 +53,6 @@
 					"designation": "Developer, ShapeBlock Inc",
 					"description": "This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.",
 					"quoteIcon": "",
-					"showQuoteIconSkin1": false,
 					"rating": "5",
 					"logo": {}
 				},
@@ -63,7 +62,6 @@
 					"designation": "Developer, ShapeBlock Inc",
 					"description": "This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.",
 					"quoteIcon": "",
-					"showQuoteIconSkin1": false,
 					"rating": "5",
 					"logo": {}
 				},
@@ -73,7 +71,6 @@
 					"designation": "Developer, ShapeBlock Inc",
 					"description": "This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.",
 					"quoteIcon": "",
-					"showQuoteIconSkin1": false,
 					"rating": "5",
 					"logo": {}
 				},
@@ -83,7 +80,6 @@
 					"designation": "Developer, ShapeBlock Inc",
 					"description": "This service exceeded all my expectations. The team was professional, fast, and truly cared about delivering a top-notch experience from start to finish.",
 					"quoteIcon": "",
-					"showQuoteIconSkin1": false,
 					"rating": "5",
 					"logo": {}
 				}
@@ -329,18 +325,6 @@
 			"default": ""
 		},
 		"authorMetaAlignmentMobile": {
-			"type": "string",
-			"default": ""
-		},
-		"authorMetaAlignmentStyle4": {
-			"type": "string",
-			"default": "left"
-		},
-		"authorMetaAlignmentStyle4Tablet": {
-			"type": "string",
-			"default": ""
-		},
-		"authorMetaAlignmentStyle4Mobile": {
 			"type": "string",
 			"default": ""
 		},

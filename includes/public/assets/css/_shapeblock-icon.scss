@@ -1,26 +1,12 @@
 @font-face {
   font-family: 'shapeblock-icon';
-  src: url('../font/shapeblock-icon.eot?83516218');
-  src: url('../font/shapeblock-icon.eot?83516218#iefix') format('embedded-opentype'),
-    url('../font/shapeblock-icon.woff2?83516218') format('woff2'),
-    url('../font/shapeblock-icon.woff?83516218') format('woff'),
-    url('../font/shapeblock-icon.ttf?83516218') format('truetype'),
-    url('../font/shapeblock-icon.svg?83516218#shapeblock-icon') format('svg');
+  src: url('../font/shapeblock-icon.woff2?83516218') format('woff2'),
+    url('../font/shapeblock-icon.woff?83516218') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
-/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
-/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
-/*
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  @font-face {
-    font-family: 'shapeblock-icon';
-    src: url('../font/shapeblock-icon.svg?83516218#shapeblock-icon') format('svg');
-  }
-}
-*/
 [class^="shapeblock-icon-"]:before,
 [class*=" shapeblock-icon-"]:before {
   font-family: "shapeblock-icon";

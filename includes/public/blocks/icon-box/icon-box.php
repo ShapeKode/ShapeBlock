@@ -11,6 +11,7 @@ function shapeblock_create_block_icon_box_block_init() {
 		shapeblock_asset_version( __DIR__ . '/build/style-index.css' )
 	);
 
+	// Editor-only CSS: the SpacingControl inspector styles bundled by edit.js.
 	wp_register_style(
 		'shapeblock-icon-box-editor-style',
 		plugins_url( 'build/index.css', __FILE__ ),

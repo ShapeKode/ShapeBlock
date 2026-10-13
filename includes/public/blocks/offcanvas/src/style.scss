@@ -12,11 +12,6 @@
 	display: flex;
 	align-items: center;
 
-	svg {
-		width: 20px;
-		height: 20px;
-	}
-
 	.shapeblock-icon-text {
 		margin-right: 6px;
 		font-style: normal;
@@ -82,6 +77,11 @@
 	}
 }
 
+/* The width setting is the whole panel, padding included. */
+.shapeblock-offcanvas {
+	box-sizing: border-box;
+}
+
 /* Panel — classic (side) */
 .shapeblock-offcanvas:not(.modern) {
 	position: fixed;
@@ -102,8 +102,13 @@
 		transform: translateX(-100%);
 	}
 
+	/* Hidden while closed, so its links are not reached with the Tab key. */
+	visibility: hidden;
+	transition: transform 0.3s ease, visibility 0.3s ease;
+
 	&.shapeblock-active {
 		transform: translateX(0);
+		visibility: visible;
 	}
 }
 
@@ -124,6 +129,35 @@
 	&.shapeblock-active {
 		visibility: visible;
 		opacity: 1;
+	}
+
+	/* Full screen by default. With a width set the panel is centred, or sits
+	   against the side it slides in from. */
+	margin: 0 auto;
+	max-width: 100%;
+
+	&.shapeblock-oc-from-left {
+		margin-left: 0;
+	}
+	&.shapeblock-oc-from-right {
+		margin-right: 0;
+	}
+
+	/* Open position: slide the fullscreen panel in from one side. */
+	&.shapeblock-oc-from-left {
+		transform: translateX(-100%);
+	}
+	&.shapeblock-oc-from-right {
+		transform: translateX(100%);
+	}
+	&.shapeblock-oc-from-top {
+		transform: translateY(-100%);
+	}
+	&.shapeblock-oc-from-bottom {
+		transform: translateY(100%);
+	}
+	&.shapeblock-active[class*='shapeblock-oc-from-'] {
+		transform: none;
 	}
 
 	.shapeblock-offcanvas-panel {
@@ -159,7 +193,10 @@
 	transition: opacity 0.3s ease;
 	cursor: pointer;
 }
-body.shapeblock-offcanvas-active .shapeblock-offcanvas-overlay {
+/* Only the overlay that belongs to the open panel - with several Offcanvas
+   blocks on a page, showing all of them put another block's overlay on top,
+   and a click on it opened that other panel. */
+.shapeblock-offcanvas-overlay.shapeblock-active {
 	opacity: 1;
 	visibility: visible;
 }

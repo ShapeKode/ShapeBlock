@@ -39,14 +39,6 @@ import BorderControl from '../../custom-components/BorderControl';
 import IconPicker from '../../custom-components/IconPicker';
 import AdvancedControls from '../../custom-components/AdvancedControls';
 /**
- * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
- * Those files can contain any CSS code that gets applied to the editor.
- *
- * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
- */
-import './editor.scss';
-
-/**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
  *
@@ -54,11 +46,10 @@ import './editor.scss';
  *
  * @return {Element} Element to render.
  */
-import { useState, useEffect } from '@wordpress/element';
-import { ServerSideRender } from '@wordpress/server-side-render';
-import metadata from './block.json';
+import { useEffect } from '@wordpress/element';
+import ServerSideRender from '../../custom-components/ServerRender';
 
-export default function Edit({ attributes, setAttributes }) {
+export default function Edit({ attributes, setAttributes, clientId }) {
 
 	const paginationOptions = applyFilters(
 		'shapeblock.post-grid.pagination_options',
@@ -68,10 +59,13 @@ export default function Edit({ attributes, setAttributes }) {
 		{ attributes, setAttributes }
 	);
 
+	// A block id once, kept after that: it scopes the CSS and names the page
+	// parameter (?paged_<id>), so changing it would break saved page links.
 	useEffect(() => {
-		const id = 'shapeblock-' + Math.random().toString(36).substr(2, 5);
-		setAttributes({ blockId: id });
-	}, []);
+		if (!attributes.blockId) {
+			setAttributes({ blockId: 'shapeblock-' + clientId.slice(0, 6) });
+		}
+	}, [attributes.blockId, clientId, setAttributes]);
 
 
 	const getAttrKey = (base, device) => {
@@ -110,29 +104,21 @@ export default function Edit({ attributes, setAttributes }) {
 
 	const imageSizeOptions = useSelect((select) => {
 		const blockEditorStore = select('core/block-editor');
-		const editorStore = select('core'); // Testing 'core' store as well
-
 		const blockEditorSettings = blockEditorStore && typeof blockEditorStore.getSettings === 'function' ? blockEditorStore.getSettings() : null;
-		const coreSettings = editorStore && typeof editorStore.getSettings === 'function' ? editorStore.getSettings() : null;
-
-		const sizes = blockEditorSettings?.imageSizes || coreSettings?.imageSizes;
-
-		let options = [];
+		const sizes = blockEditorSettings?.imageSizes;
 
 		if (sizes && Array.isArray(sizes)) {
-			options = sizes.map((size) => ({
+			return sizes.map((size) => ({
 				label: size.name,
 				value: size.slug,
 			}));
-		} else {
-			options = [
-				{ label: __('Large', 'shapeblock'), value: 'large' },
-				{ label: __('Medium', 'shapeblock'), value: 'medium' },
-				{ label: __('Thumbnail', 'shapeblock'), value: 'thumbnail' },
-			];
 		}
 
-		return options;
+		return [
+			{ label: __('Large', 'shapeblock'), value: 'large' },
+			{ label: __('Medium', 'shapeblock'), value: 'medium' },
+			{ label: __('Thumbnail', 'shapeblock'), value: 'thumbnail' },
+		];
 	}, []);
 
 	const posts = useSelect(
@@ -165,7 +151,7 @@ export default function Edit({ attributes, setAttributes }) {
 	const settingsTab = (
 		<>
 			{/* {query panel group} */}
-			<PanelBody title={__('Query', 'shapeblock')} initialOpen={false}>
+			<PanelBody title={__('Query', 'shapeblock')} initialOpen={true}>
 				<NumberControl
 					label={__('Per Page', 'shapeblock')}
 					value={attributes.perPage}
@@ -238,71 +224,17 @@ export default function Edit({ attributes, setAttributes }) {
 					__nextHasNoMarginBottom={true}
 				/>
 				<ToggleControl
-					label={__('Is Featured', 'shapeblock')}
+					label={__('Only Featured (Sticky) Posts', 'shapeblock')}
+					help={__('Shows only the posts marked "Stick to the top of the blog".', 'shapeblock')}
 					checked={attributes.isFeatured}
 					onChange={(value) => setAttributes({ isFeatured: value })}
 					__nextHasNoMarginBottom={true}
 				/>
 			</PanelBody>
 
-			<PanelBody title={__('Video', 'shapeblock')} initialOpen={false}>
-				<ToggleControl
-					label={__('Show Video', 'shapeblock')}
-					checked={attributes.showVideo}
-					onChange={(value) => setAttributes({ showVideo: value })}
-				/>
-
-				{attributes.showVideo && (
-					<>
-						<ToggleControl
-							label={__('Autoplay', 'shapeblock')}
-							checked={attributes.videoAutoplay}
-							onChange={(value) => setAttributes({ videoAutoplay: value })}
-						/>
-						<ToggleControl
-							label={__('Mute', 'shapeblock')}
-							checked={attributes.videoMute}
-							onChange={(value) => setAttributes({ videoMute: value })}
-						/>
-						<ResponsiveWrapper label={__('Video Height', 'shapeblock')}>
-							{(device) => (
-								<RangeControlWithUnit
-									attributes={attributes}
-									setAttributes={setAttributes}
-									attributeKey={getAttrKey('videoHeight', device)}
-									units={['px', '%', 'em', 'rem', 'vw', 'vh']}
-									min={0}
-									max={1080}
-									step={1}
-								/>
-							)}
-						</ResponsiveWrapper>
-						<ResponsiveWrapper label={__('Video Width', 'shapeblock')}>
-							{(device) => (
-								<RangeControlWithUnit
-									attributes={attributes}
-									setAttributes={setAttributes}
-									attributeKey={getAttrKey('videoWidth', device)}
-									units={['px', '%', 'em', 'rem', 'vw', 'vh']}
-									min={0}
-									max={1080}
-									step={1}
-								/>
-							)}
-						</ResponsiveWrapper>
-						<ToggleControl
-							label={__('Show Controls', 'shapeblock')}
-							checked={attributes.videoControls}
-							onChange={(value) => setAttributes({ videoControls: value })}
-						/>
-					</>
-				)}
-
-			</PanelBody>
-
 			<PanelBody title={__('Title', 'shapeblock')} initialOpen={false}>
 				<SelectControl
-					label={__('Title Tag', 'shapeblock')}
+					label={__('Title HTML Tag', 'shapeblock')}
 					value={attributes.titleTag}
 					onChange={(value) => setAttributes({ titleTag: value })}
 					options={[
@@ -316,7 +248,7 @@ export default function Edit({ attributes, setAttributes }) {
 					__nextHasNoMarginBottom={true}
 				/>
 				<NumberControl
-					label={__('Title Trim', 'shapeblock')}
+					label={__('Title Length (words)', 'shapeblock')}
 					value={attributes.titleTrim}
 					onChange={(value) => setAttributes({ titleTrim: value })}
 					__next40pxDefaultSize={true}
@@ -326,14 +258,14 @@ export default function Edit({ attributes, setAttributes }) {
 
 			<PanelBody title={__('Excerpt', 'shapeblock')} initialOpen={false}>
 				<ToggleControl
-					label={__('Show / Hide', 'shapeblock')}
+					label={__('Show Excerpt', 'shapeblock')}
 					checked={attributes.showExcerpt}
 					onChange={(value) => setAttributes({ showExcerpt: value })}
 					__nextHasNoMarginBottom={true}
 				/>
 				{attributes.showExcerpt && (
 					<NumberControl
-						label={__('Excerpt Trim', 'shapeblock')}
+						label={__('Excerpt Length (words)', 'shapeblock')}
 						value={attributes.excerptTrim}
 						onChange={(value) => setAttributes({ excerptTrim: value })}
 						__next40pxDefaultSize={true}
@@ -344,7 +276,7 @@ export default function Edit({ attributes, setAttributes }) {
 
 			<PanelBody title={__('Meta', 'shapeblock')} initialOpen={false}>
 				<ToggleControl
-					label={__('Show / Hide', 'shapeblock')}
+					label={__('Show Meta', 'shapeblock')}
 					checked={attributes.showMeta}
 					onChange={(value) => setAttributes({ showMeta: value })}
 					__nextHasNoMarginBottom={true}
@@ -352,7 +284,8 @@ export default function Edit({ attributes, setAttributes }) {
 				{attributes.showMeta && (
 					<>
 						<SelectControl
-							label={__('Meta', 'shapeblock')}
+							label={__('Items to Show', 'shapeblock')}
+								help={__('Hold Ctrl (Cmd on Mac) to pick more than one.', 'shapeblock')}
 							value={attributes.allowedMetas}
 							onChange={(value) => setAttributes({ allowedMetas: value })}
 							multiple={true}
@@ -382,22 +315,9 @@ export default function Edit({ attributes, setAttributes }) {
 							onChange={(value) => setAttributes({ metaPosition: value })}
 							options={[
 								{ label: __('Default', 'shapeblock'), value: '' },
-								{ label: __('Up Title', 'shapeblock'), value: 'up_title' },
+								{ label: __('Above Title', 'shapeblock'), value: 'up_title' },
 								{ label: __('Below Title', 'shapeblock'), value: 'below_title' },
 								{ label: __('Below Content', 'shapeblock'), value: 'below_content' },
-							]}
-							__next40pxDefaultSize={true}
-							__nextHasNoMarginBottom={true}
-						/>
-						<SelectControl
-							label={__('Style', 'shapeblock')}
-							value={attributes.metaStyle}
-							onChange={(value) => setAttributes({ metaStyle: value })}
-							options={[
-								{ label: __('Default', 'shapeblock'), value: 'default' },
-								{ label: __('Style 1', 'shapeblock'), value: '1' },
-								{ label: __('Style 2', 'shapeblock'), value: '2' },
-								{ label: __('Style 3', 'shapeblock'), value: '3' }
 							]}
 							__next40pxDefaultSize={true}
 							__nextHasNoMarginBottom={true}
@@ -414,22 +334,29 @@ export default function Edit({ attributes, setAttributes }) {
 
 			<PanelBody title={__('Button', 'shapeblock')} initialOpen={false}>
 				<ToggleControl
-					label={__('Show / Hide', 'shapeblock')}
+					label={__('Show Button', 'shapeblock')}
 					checked={attributes.showReadMore}
 					onChange={(value) => setAttributes({ showReadMore: value })}
 					__nextHasNoMarginBottom={true}
 				/>
 				{attributes.showReadMore && (
 					<>
+						<ToggleControl
+							label={__('Keep the button at the bottom of the card', 'shapeblock')}
+							help={__('Lines the buttons up across a row when excerpts differ in length. For the Default card style.', 'shapeblock')}
+							checked={!!attributes.buttonAtBottom}
+							onChange={(value) => setAttributes({ buttonAtBottom: value })}
+							__nextHasNoMarginBottom={true}
+						/>
 						<TextControl
-							label={__('Text', 'shapeblock')}
+							label={__('Button Text', 'shapeblock')}
 							value={attributes.readMoreText}
 							onChange={(value) => setAttributes({ readMoreText: value })}
 							__next40pxDefaultSize={true}
 							__nextHasNoMarginBottom={true}
 						/>
 						<IconPicker
-							label={__('Icon', 'shapeblock')}
+							label={__('Button Icon', 'shapeblock')}
 							value={attributes.readMoreIcon}
 							onChange={(value) => setAttributes({ readMoreIcon: value })}
 						/>
@@ -467,12 +394,45 @@ export default function Edit({ attributes, setAttributes }) {
 		</>
 	);
 
-	// --- Tab 2: Layout (columns / alignment / gap / geometry / image size) ----
+	// The gutter is a step on a fixed scale (render.php: 0 / 0.25 / 0.5 / 1 / 1.5 / 3rem).
+	const GAP_STEPS = [
+		{ label: __('None', 'shapeblock'), value: '0' },
+		{ label: __('Extra Small (4px)', 'shapeblock'), value: '1' },
+		{ label: __('Small (8px)', 'shapeblock'), value: '2' },
+		{ label: __('Medium (16px)', 'shapeblock'), value: '3' },
+		{ label: __('Large (24px)', 'shapeblock'), value: '4' },
+		{ label: __('Extra Large (48px)', 'shapeblock'), value: '5' },
+	];
+	const gapSelect = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => (
+				<SelectControl
+					value={String(attributes[getAttrKey(base, device)] ?? '')}
+					onChange={(value) => setAttributes({ [getAttrKey(base, device)]: value })}
+					options={GAP_STEPS}
+					__next40pxDefaultSize={true}
+					__nextHasNoMarginBottom={true}
+				/>
+			)}
+		</ResponsiveWrapper>
+	);
+	const respBox = (label, base) => (
+		<ResponsiveWrapper label={label}>
+			{(device) => (
+				<BoxControl
+					values={attributes[getAttrKey(base, device)]}
+					onChange={(value) => setAttributes({ [getAttrKey(base, device)]: value })}
+				/>
+			)}
+		</ResponsiveWrapper>
+	);
+
+	// --- Tab 2: Layout (grid / alignment / image) ------------------------------
 	const layoutTab = (
 		<>
-			<PanelBody title={__('Preset', 'shapeblock')} initialOpen={false}>
+			<PanelBody title={__('Grid', 'shapeblock')} initialOpen={true}>
 				<SelectControl
-					label={__('Layout', 'shapeblock')}
+					label={__('Card Style', 'shapeblock')}
 					value={attributes.gridStyle}
 					options={[
 						{ label: __('Default', 'shapeblock'), value: 'default' },
@@ -482,11 +442,7 @@ export default function Edit({ attributes, setAttributes }) {
 					__next40pxDefaultSize
 					__nextHasNoMarginBottom
 				/>
-			</PanelBody>
-
-			{ /* content panel group */}
-			<PanelBody title={__('Content', 'shapeblock')} initialOpen={false}>
-
+				<Divider />
 				<ResponsiveWrapper label={__('Columns', 'shapeblock')}>
 					{(device) => (
 						<SelectControl
@@ -494,10 +450,11 @@ export default function Edit({ attributes, setAttributes }) {
 							onChange={(value) => setAttributes({ [getAttrKey('columns', device)]: value })}
 							options={[
 								{ label: __('1 Column', 'shapeblock'), value: '1' },
-								{ label: __('2 Column', 'shapeblock'), value: '2' },
-								{ label: __('3 Column', 'shapeblock'), value: '3' },
-								{ label: __('4 Column', 'shapeblock'), value: '4' },
-								{ label: __('6 Column', 'shapeblock'), value: '6' },
+								{ label: __('2 Columns', 'shapeblock'), value: '2' },
+								{ label: __('3 Columns', 'shapeblock'), value: '3' },
+								{ label: __('4 Columns', 'shapeblock'), value: '4' },
+								{ label: __('5 Columns', 'shapeblock'), value: '5' },
+								{ label: __('6 Columns', 'shapeblock'), value: '6' },
 							]}
 							__next40pxDefaultSize={true}
 							__nextHasNoMarginBottom={true}
@@ -505,30 +462,13 @@ export default function Edit({ attributes, setAttributes }) {
 					)}
 				</ResponsiveWrapper>
 				<Divider />
-				<ResponsiveWrapper label={__('Text Align', 'shapeblock')}>
-					{(device) => (
-						<TextAlignControl
-							attributes={attributes}
-							setAttributes={setAttributes}
-							attributeKey={getAttrKey('contentTextAlign', device)}
-						/>
-					)}
-				</ResponsiveWrapper>
-				<Divider />
-				<ResponsiveWrapper label={__('Padding', 'shapeblock')}>
-					{(device) => (
-						<BoxControl
-							values={attributes[getAttrKey('contentPadding', device)]}
-							onChange={(value) => setAttributes({ [getAttrKey('contentPadding', device)]: value })}
-						/>
-					)}
-				</ResponsiveWrapper>
-
+				{gapSelect(__('Space Between Columns', 'shapeblock'), 'itemGap')}
+				{gapSelect(__('Space Between Rows', 'shapeblock'), 'itemRowGap')}
 			</PanelBody>
 
-			<PanelBody title={__('Thumbnail', 'shapeblock')} initialOpen={false}>
+			<PanelBody title={__('Image', 'shapeblock')} initialOpen={false}>
 				<SelectControl
-					label={__('Size', 'shapeblock')}
+					label={__('Image Size', 'shapeblock')}
 					value={attributes.thumbnailSize}
 					onChange={(value) => setAttributes({ thumbnailSize: value })}
 					options={imageSizeOptions}
@@ -548,60 +488,6 @@ export default function Edit({ attributes, setAttributes }) {
 						/>
 					)}
 				</ResponsiveWrapper>
-				<SelectControl
-					label={__('Animation', 'shapeblock')}
-					value={attributes.animStyle}
-					onChange={(value) => setAttributes({ animStyle: value })}
-					options={[
-						{ label: __('None', 'shapeblock'), value: 'none' },
-						{ label: __('Left Right', 'shapeblock'), value: 'left_right' },
-						{ label: __('Top Bottom', 'shapeblock'), value: 'top_bottom' }
-					]}
-					__next40pxDefaultSize={true}
-					__nextHasNoMarginBottom={true}
-				/>
-			</PanelBody>
-
-			<PanelBody title={__('Item', 'shapeblock')} initialOpen={false}>
-				<ResponsiveWrapper label={__('Item Gap', 'shapeblock')}>
-					{(device) => (
-						<NumberControl
-							value={attributes[getAttrKey('itemGap', device)]}
-							onChange={(value) => setAttributes({ [getAttrKey('itemGap', device)]: value })}
-							__next40pxDefaultSize={true}
-							__nextHasNoMarginBottom={true}
-							max={5}
-						/>
-					)}
-				</ResponsiveWrapper>
-				<ResponsiveWrapper label={__('Item Row Gap', 'shapeblock')}>
-					{(device) => (
-						<NumberControl
-							value={attributes[getAttrKey('itemRowGap', device)]}
-							onChange={(value) => setAttributes({ [getAttrKey('itemRowGap', device)]: value })}
-							__next40pxDefaultSize={true}
-							__nextHasNoMarginBottom={true}
-							max={5}
-						/>
-					)}
-				</ResponsiveWrapper>
-				<Divider />
-				<ResponsiveWrapper label={__('Padding', 'shapeblock')}>
-					{(device) => (
-						<BoxControl
-							values={attributes[getAttrKey('itemPadding', device)]}
-							onChange={(value) => setAttributes({ [getAttrKey('itemPadding', device)]: value })}
-						/>
-					)}
-				</ResponsiveWrapper>
-				<ResponsiveWrapper label={__('Margin', 'shapeblock')}>
-					{(device) => (
-						<BoxControl
-							values={attributes[getAttrKey('itemMargin', device)]}
-							onChange={(value) => setAttributes({ [getAttrKey('itemMargin', device)]: value })}
-						/>
-					)}
-				</ResponsiveWrapper>
 			</PanelBody>
 		</>
 	);
@@ -609,7 +495,7 @@ export default function Edit({ attributes, setAttributes }) {
 	// --- Tab 3: Style (colors / typography / background / border / hover) -----
 	const styleTab = (
 		<>
-			<PanelBody title={__('Item', 'shapeblock')} initialOpen={false}>
+			<PanelBody title={__('Card', 'shapeblock')} initialOpen={true}>
 				<TabPanel
 					className="shapeblock-tab-panel"
 					activeClass="is-active"
@@ -632,6 +518,26 @@ export default function Edit({ attributes, setAttributes }) {
 									}}
 									onGradientChange={(value) => setAttributes({ [isHover ? 'itemBackgroundGradientHover' : 'itemBackgroundGradient']: value })}
 								/>
+								{isHover && (
+									<>
+										<ColorPopover
+											label={__('Border Color', 'shapeblock')}
+											color={attributes.itemBorderColorHover}
+											onChange={(value) => setAttributes({ itemBorderColorHover: value || '' })}
+										/>
+										<BoxShadowControl
+											label={__('Box Shadow', 'shapeblock')}
+											value={attributes.itemBoxShadowHover}
+											onChange={(value) => setAttributes({ itemBoxShadowHover: value })}
+										/>
+										<ToggleControl
+											label={__('Lift the card on hover', 'shapeblock')}
+											checked={!!attributes.itemHoverLift}
+											onChange={(value) => setAttributes({ itemHoverLift: value })}
+											__nextHasNoMarginBottom={true}
+										/>
+									</>
+								)}
 								{!isHover && (
 									<BackgroundControl
 										label={__('Overlay', 'shapeblock')}
@@ -639,9 +545,9 @@ export default function Edit({ attributes, setAttributes }) {
 										gradientValue={attributes.itemOverlayBackgroundGradient}
 										onColorChange={(value) => {
 											const hex = (value && typeof value === 'object') ? value.hex : value;
-											setAttributes({ itemOverlayBackgroundColorHover: hex });
+											setAttributes({ itemOverlayBackgroundColor: hex });
 										}}
-										onGradientChange={(value) => setAttributes({ itemOverlayBackgroundGradientHover: value })}
+										onGradientChange={(value) => setAttributes({ itemOverlayBackgroundGradient: value })}
 									/>
 								)}
 							</div>
@@ -662,9 +568,48 @@ export default function Edit({ attributes, setAttributes }) {
 				/>
 				<Divider />
 				<BoxControl
-					label={__('Border Radious', 'shapeblock')}
+					label={__('Border Radius', 'shapeblock')}
 					values={attributes.itemBorderRadius}
 					onChange={(nextValues) => setAttributes({ itemBorderRadius: nextValues })}
+				/>
+				<Divider />
+				{respBox(__('Padding', 'shapeblock'), 'itemPadding')}
+				{respBox(__('Margin', 'shapeblock'), 'itemMargin')}
+			</PanelBody>
+
+			<PanelBody title={__('Content Area', 'shapeblock')} initialOpen={false}>
+				<p className="components-base-control__help">{__('The part of the card under the image: meta, title, excerpt and button.', 'shapeblock')}</p>
+				<ResponsiveWrapper label={__('Text Align', 'shapeblock')}>
+					{(device) => (
+						<TextAlignControl
+							attributes={attributes}
+							setAttributes={setAttributes}
+							attributeKey={getAttrKey('contentTextAlign', device)}
+						/>
+					)}
+				</ResponsiveWrapper>
+				<Divider />
+				{respBox(__('Padding', 'shapeblock'), 'contentPadding')}
+			</PanelBody>
+
+			<PanelBody title={__('Thumbnail', 'shapeblock')} initialOpen={false}>
+				<SelectControl
+					label={__('Hover Animation', 'shapeblock')}
+					value={attributes.animStyle}
+					onChange={(value) => setAttributes({ animStyle: value })}
+					options={[
+						{ label: __('None', 'shapeblock'), value: 'none' },
+						{ label: __('Left Right', 'shapeblock'), value: 'left_right' },
+						{ label: __('Top Bottom', 'shapeblock'), value: 'top_bottom' },
+						{ label: __('Zoom', 'shapeblock'), value: 'zoom' }
+					]}
+					__next40pxDefaultSize={true}
+					__nextHasNoMarginBottom={true}
+				/>
+				<BoxControl
+					label={__('Border Radius', 'shapeblock')}
+					values={attributes.thumbnailBorderRadius}
+					onChange={(value) => setAttributes({ thumbnailBorderRadius: value })}
 				/>
 			</PanelBody>
 			<PanelBody title={__('Title', 'shapeblock')} initialOpen={false}>
@@ -685,7 +630,6 @@ export default function Edit({ attributes, setAttributes }) {
 									color={isHover ?
 										attributes.itemTitleColorHover
 										: attributes.itemTitleColor}
-									defaultColor={isHover ? '' : ''}
 									onChange={(value) => {
 										const hex = (value && typeof value === 'object') ? value.hex : value;
 										setAttributes({ [isHover ? 'itemTitleColorHover' : 'itemTitleColor']: hex });
@@ -740,7 +684,6 @@ export default function Edit({ attributes, setAttributes }) {
 				<ColorPopover
 					label={__('Color', 'shapeblock')}
 					color={attributes.itemExcerptColor}
-					defaultColor={''}
 					onChange={(value) => {
 						const hex = (value && typeof value === 'object') ? value.hex : value;
 						setAttributes({ itemExcerptColor: hex });
@@ -791,17 +734,31 @@ export default function Edit({ attributes, setAttributes }) {
 				<ColorPopover
 					label={__('Color', 'shapeblock')}
 					color={attributes.topDateColor}
-					defaultColor={attributes.topDateColor}
-					onChange={(value) => setAttributes({ topDateColor: value })}
+					onChange={(value) => setAttributes({ topDateColor: value || '' })}
 				/>
-				<ColorPopover
-					label={__('Background Color', 'shapeblock')}
-					color={attributes.topDateBackgroundColor}
-					defaultColor={attributes.topDateBackgroundColor}
-					onChange={(value) => setAttributes({ topDateBackgroundColor: value })}
+				<BackgroundControl
+					label={__('Background', 'shapeblock')}
+					colorValue={attributes.topDateBackgroundColor}
+					gradientValue={attributes.topDateBackgroundGradient}
+					onColorChange={(value) => setAttributes({ topDateBackgroundColor: (value && typeof value === 'object') ? value.hex : value })}
+					onGradientChange={(value) => setAttributes({ topDateBackgroundGradient: value || '' })}
 				/>
 			</PanelBody>
 			<PanelBody title={__('Meta', 'shapeblock')} initialOpen={false}>
+				<SelectControl
+					label={__('Meta Style', 'shapeblock')}
+					value={attributes.metaStyle}
+					onChange={(value) => setAttributes({ metaStyle: value })}
+					options={[
+						{ label: __('Default', 'shapeblock'), value: 'default' },
+						{ label: __('Style 1', 'shapeblock'), value: '1' },
+						{ label: __('Style 2', 'shapeblock'), value: '2' },
+						{ label: __('Style 3', 'shapeblock'), value: '3' }
+					]}
+					__next40pxDefaultSize={true}
+					__nextHasNoMarginBottom={true}
+				/>
+				<Divider />
 				<Heading>{__('Text', 'shapeblock')}</Heading>
 				<TabPanel
 					className="shapeblock-tab-panel"
@@ -818,7 +775,6 @@ export default function Edit({ attributes, setAttributes }) {
 								<ColorPopover
 									label={__('Color', 'shapeblock')}
 									color={isHover ? attributes.metaColorHover : attributes.metaColor}
-									defaultColor={isHover ? attributes.metaColorHover : attributes.metaColor}
 									onChange={(value) => setAttributes({ [isHover ? 'metaColorHover' : 'metaColor']: value })}
 								/>
 							</div>
@@ -842,7 +798,6 @@ export default function Edit({ attributes, setAttributes }) {
 								<ColorPopover
 									label={__('Color', 'shapeblock')}
 									color={isHover ? attributes.metaIconColorHover : attributes.metaIconColor}
-									defaultColor={isHover ? attributes.metaIconColorHover : attributes.metaIconColor}
 									onChange={(value) => setAttributes({ [isHover ? 'metaIconColorHover' : 'metaIconColor']: value })}
 								/>
 							</div>
@@ -891,7 +846,6 @@ export default function Edit({ attributes, setAttributes }) {
 									color={isHover ?
 										attributes.readMoreColorHover
 										: attributes.readMoreColor}
-									defaultColor={isHover ? '' : ''}
 									onChange={(value) => {
 										const hex = (value && typeof value === 'object') ? value.hex : value;
 										setAttributes({ [isHover ? 'readMoreColorHover' : 'readMoreColor']: hex });
@@ -960,35 +914,19 @@ export default function Edit({ attributes, setAttributes }) {
 								<ColorPopover
 									label={__('Color', 'shapeblock')}
 									color={isHover ? attributes.paginationColorHover : attributes.paginationColor}
-									defaultColor={isHover ? 'var(--shapeblock-preset-color-white)' : 'var(--shapeblock-preset-color-contrast-2)'}
 									onChange={(value) => setAttributes({ [isHover ? 'paginationColorHover' : 'paginationColor']: value })}
 								/>
-								<ColorPopover
-									label={__('Background Color', 'shapeblock')}
-									color={isHover ? attributes.paginationBackgroundColorHover : attributes.paginationBackgroundColor}
-									defaultColor={isHover ? 'var(--shapeblock-preset-color-primary)' : 'var(--shapeblock-preset-color-tertiary)'}
-									onChange={(value) => setAttributes({ [isHover ? 'paginationBackgroundColorHover' : 'paginationBackgroundColor']: value })}
+								<BackgroundControl
+									label={__('Background', 'shapeblock')}
+									colorValue={isHover ? attributes.paginationBackgroundColorHover : attributes.paginationBackgroundColor}
+									gradientValue={isHover ? attributes.paginationBackgroundGradientHover : attributes.paginationBackgroundGradient}
+									onColorChange={(value) => setAttributes({ [isHover ? 'paginationBackgroundColorHover' : 'paginationBackgroundColor']: (value && typeof value === 'object') ? value.hex : value })}
+									onGradientChange={(value) => setAttributes({ [isHover ? 'paginationBackgroundGradientHover' : 'paginationBackgroundGradient']: value || '' })}
 								/>
 							</div>
 						);
 					}}
 				</TabPanel>
-
-				{attributes.paginationType == 'load_more' && (
-					<ResponsiveWrapper label={__('Button Width (%)', 'shapeblock')}>
-						{(device) => (
-							<RangeControlWithUnit
-								attributes={attributes}
-								setAttributes={setAttributes}
-								attributeKey={getAttrKey('paginationBtnWidth', device)}
-								units={['px', '%', 'em', 'rem', 'vw', 'vh']}
-								min={0}
-								max={500}
-								step={1}
-							/>
-						)}
-					</ResponsiveWrapper>
-				)}
 
 				<BorderControl
 					label={__('Border', 'shapeblock')}
@@ -1010,65 +948,6 @@ export default function Edit({ attributes, setAttributes }) {
 
 			</PanelBody>
 
-			<PanelBody title={__('Thumbnail', 'shapeblock')} initialOpen={false}>
-				<BoxControl
-					label={__('Border Radius', 'shapeblock')}
-					values={attributes.thumbnailBorderRadius}
-					onChange={(value) => setAttributes({ thumbnailBorderRadius: value })}
-				/>
-			</PanelBody>
-
-			{attributes.gridStyle == '2' && (
-
-				<PanelBody title={__('Category', 'shapeblock')} initialOpen={false}>
-					<TabPanel
-						className="shapeblock-tab-panel"
-						activeClass="is-active"
-						tabs={[
-							{ name: 'normal', title: __('Normal', 'shapeblock'), className: 'shapeblock-tab-normal' },
-							{ name: 'hover', title: __('Hover', 'shapeblock'), className: 'shapeblock-tab-hover' },
-						]}
-					>
-						{(tab) => {
-							const isHover = tab.name === 'hover';
-							return (
-								<div style={{ marginTop: '15px' }}>
-									<ColorPopover
-										label={__('Color', 'shapeblock')}
-										color={isHover ? attributes.categoryColorHover : attributes.categoryColor}
-										defaultColor={''}
-										onChange={(value) => {
-											const hex = (value && typeof value === 'object') ? value.hex : value;
-											setAttributes({ [isHover ? 'categoryColorHover' : 'categoryColor']: hex });
-										}}
-									/>
-									<ColorPopover
-										label={__('Background Color', 'shapeblock')}
-										color={isHover ? attributes.categoryBackgroundColorHover : attributes.categoryBackgroundColor}
-										defaultColor={''}
-										onChange={(value) => {
-											const hex = (value && typeof value === 'object') ? value.hex : value;
-											setAttributes({ [isHover ? 'categoryBackgroundColorHover' : 'categoryBackgroundColor']: hex });
-										}}
-									/>
-								</div>
-							);
-						}}
-					</TabPanel>
-					<Divider />
-					<BoxControl
-						label={__('Padding', 'shapeblock')}
-						values={attributes.categoryPadding}
-						onChange={(value) => setAttributes({ categoryPadding: value })}
-					/>
-					<Divider />
-					<BoxControl
-						label={__('Margin', 'shapeblock')}
-						values={attributes.categoryMargin}
-						onChange={(value) => setAttributes({ categoryMargin: value })}
-					/>
-				</PanelBody>
-			)}
 		</>
 	);
 

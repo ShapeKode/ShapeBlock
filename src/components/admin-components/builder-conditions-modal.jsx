@@ -12,39 +12,64 @@ const { Text } = Typography;
  *  - grouped options for the rule <Select>
  *  - a slug => def lookup (label, needsObject, objectType)
  */
-function useRuleCatalog() {
-    return useMemo(() => {
-        const rules = (typeof shapeblock !== 'undefined' && shapeblock.builderRules) || {};
-        const groupLabels = { general: __( 'General', 'shapeblock' ), specific: __( 'Specific', 'shapeblock' ) };
-        const groupedOptions = [];
-        const defs = {};
+function ruleCatalog() {
+    const rules = (typeof shapeblock !== 'undefined' && shapeblock.builderRules) || {};
+    const groupLabels = { general: __( 'General', 'shapeblock' ), specific: __( 'Specific', 'shapeblock' ) };
+    const groupedOptions = [];
+    const defs = {};
 
-        Object.keys(rules).forEach((groupKey) => {
-            const group = rules[groupKey] || {};
-            const options = Object.keys(group).map((slug) => {
-                defs[slug] = { ...group[slug], slug };
-                return { value: slug, label: group[slug].label };
-            });
-            if (options.length) {
-                groupedOptions.push({
-                    label: groupLabels[groupKey] || groupKey,
-                    options,
-                });
-            }
+    Object.keys(rules).forEach((groupKey) => {
+        const group = rules[groupKey] || {};
+        const options = Object.keys(group).map((slug) => {
+            defs[slug] = { ...group[slug], slug };
+            return { value: slug, label: group[slug].label };
         });
+        if (options.length) {
+            groupedOptions.push({
+                label: groupLabels[groupKey] || groupKey,
+                options,
+            });
+        }
+    });
 
-        return { groupedOptions, defs };
-    }, []);
+    return { groupedOptions, defs };
+}
+
+function useRuleCatalog() {
+    return useMemo(ruleCatalog, []);
 }
 
 let rowSeq = 0;
 const nextKey = () => `row-${++rowSeq}`;
 
-export default function BuilderConditionsModal({ open, item, onClose, onSaved }) {
+/** One "Include, Entire Site" row: what a new template starts with. */
+export const defaultConditionRows = () => [{ key: nextKey(), type: 'include', rule: 'entire_site', ids: [] }];
+
+/**
+ * The rows as the REST API takes them. A row whose rule needs objects (pages,
+ * posts) but has none chosen is left out.
+ *
+ * @param {Array} rows Editor rows.
+ * @return {Array} Conditions.
+ */
+export function conditionsPayload(rows) {
+    const { defs } = ruleCatalog();
+    return rows
+        .filter((r) => r.rule)
+        .filter((r) => {
+            const def = defs[r.rule];
+            return !(def && def.needsObject) || (r.ids && r.ids.length);
+        })
+        .map((r) => ({ type: r.type, rule: r.rule, ids: r.ids || [] }));
+}
+
+/**
+ * The condition rows editor: include / exclude, rule, objects for rules that
+ * need them, and a button to add a row. Used by the Display Conditions dialog
+ * and by the Add New Template dialog.
+ */
+export function ConditionRows({ rows, setRows }) {
     const { groupedOptions, defs } = useRuleCatalog();
-    const [rows, setRows] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [saving, setSaving] = useState(false);
     // Cache of selectable objects per objectType: { page: [...], post: [...] }
     const [objectCache, setObjectCache] = useState({});
     const [objectLoading, setObjectLoading] = useState({});
@@ -70,42 +95,19 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
             });
     }, [objectCache, objectLoading]);
 
-    // Load existing conditions when the modal opens for an item.
+    // Object lists for rows that already use an object-bound rule.
     useEffect(() => {
-        if (!open || !item) {
-            return;
-        }
-        setLoading(true);
-        fetch(`${shapeblock.rest_url}builder/${item.id}/conditions`, {
-            headers: { 'X-WP-Nonce': shapeblock.nonce },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                const loaded = (data.conditions || []).map((c) => ({
-                    key: nextKey(),
-                    type: c.type || 'include',
-                    rule: c.rule || '',
-                    ids: c.ids || [],
-                }));
-                setRows(loaded.length ? loaded : [{ key: nextKey(), type: 'include', rule: 'entire_site', ids: [] }]);
-
-                // Preload object lists referenced by existing object-bound rows.
-                loaded.forEach((row) => {
-                    const def = defs[row.rule];
-                    if (def && def.needsObject) {
-                        loadObjects(def.objectType);
-                    }
-                });
-            })
-            .catch(() => {
-                notification.error({ message: __( 'Failed to load conditions', 'shapeblock' ) });
-            })
-            .finally(() => setLoading(false));
+        rows.forEach((row) => {
+            const def = defs[row.rule];
+            if (def && def.needsObject) {
+                loadObjects(def.objectType);
+            }
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [open, item]);
+    }, [rows.length]);
 
     const addRow = () => {
-        setRows((prev) => [...prev, { key: nextKey(), type: 'include', rule: 'entire_site', ids: [] }]);
+        setRows((prev) => [...prev, ...defaultConditionRows()]);
     };
 
     const removeRow = (key) => {
@@ -125,16 +127,105 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
         }
     };
 
-    const handleSave = () => {
-        // Drop incomplete object-bound rows (rule needs objects but none chosen).
-        const payload = rows
-            .filter((r) => r.rule)
-            .filter((r) => {
-                const def = defs[r.rule];
-                return !(def && def.needsObject) || (r.ids && r.ids.length);
-            })
-            .map((r) => ({ type: r.type, rule: r.rule, ids: r.ids || [] }));
+    return (
+        <Space direction="vertical" style={{ width: '100%' }} size={12}>
+            {rows.length === 0 && (
+                <Empty description={ __( 'No conditions — this template will not display', 'shapeblock' ) } />
+            )}
 
+            {rows.map((row) => {
+                const def = defs[row.rule];
+                const needsObject = def && def.needsObject;
+                const objectType = def && def.objectType;
+                return (
+                    <div
+                        key={row.key}
+                        style={{ display: 'flex', gap: 8, alignItems: 'center', width: '100%', flexWrap: 'nowrap' }}
+                    >
+                        <Select
+                            style={{ flex: '0 0 120px' }}
+                            value={row.type}
+                            onChange={(val) => updateRow(row.key, { type: val })}
+                            options={[
+                                { value: 'include', label: __( 'Include', 'shapeblock' ) },
+                                { value: 'exclude', label: __( 'Exclude', 'shapeblock' ) },
+                            ]}
+                        />
+                        <Select
+                            style={{ flex: '0 0 190px' }}
+                            value={row.rule || undefined}
+                            placeholder={ __( 'Select rule', 'shapeblock' ) }
+                            showSearch
+                            optionFilterProp="label"
+                            onChange={(val) => onRuleChange(row.key, val)}
+                            options={groupedOptions}
+                        />
+                        {needsObject ? (
+                            <Select
+                                mode="multiple"
+                                style={{ flex: '1 1 auto', minWidth: 0 }}
+                                value={row.ids}
+                                placeholder={ __( 'Select items', 'shapeblock' ) }
+                                onChange={(val) => updateRow(row.key, { ids: val })}
+                                loading={!!objectLoading[objectType]}
+                                options={objectCache[objectType] || []}
+                                showSearch
+                                optionFilterProp="label"
+                                maxTagCount="responsive"
+                            />
+                        ) : (
+                            <span style={{ flex: '1 1 auto' }} />
+                        )}
+                        <Button
+                            danger
+                            type="text"
+                            icon={<DeleteOutlined />}
+                            onClick={() => removeRow(row.key)}
+                            style={{ flex: '0 0 auto' }}
+                            aria-label={ __( 'Remove condition', 'shapeblock' ) }
+                        />
+                    </div>
+                );
+            })}
+
+            <Button type="dashed" icon={<PlusOutlined />} onClick={addRow} block>
+                { __( 'Add Condition', 'shapeblock' ) }
+            </Button>
+        </Space>
+    );
+}
+
+export default function BuilderConditionsModal({ open, item, onClose, onSaved }) {
+    const [rows, setRows] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
+
+    // Load existing conditions when the modal opens for an item.
+    useEffect(() => {
+        if (!open || !item) {
+            return;
+        }
+        setLoading(true);
+        fetch(`${shapeblock.rest_url}builder/${item.id}/conditions`, {
+            headers: { 'X-WP-Nonce': shapeblock.nonce },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                const loaded = (data.conditions || []).map((c) => ({
+                    key: nextKey(),
+                    type: c.type || 'include',
+                    rule: c.rule || '',
+                    ids: c.ids || [],
+                }));
+                setRows(loaded.length ? loaded : defaultConditionRows());
+            })
+            .catch(() => {
+                notification.error({ message: __( 'Failed to load conditions', 'shapeblock' ) });
+            })
+            .finally(() => setLoading(false));
+    }, [open, item]);
+
+    const handleSave = () => {
         setSaving(true);
         fetch(`${shapeblock.rest_url}builder/${item.id}/conditions`, {
             method: 'POST',
@@ -142,7 +233,7 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
                 'Content-Type': 'application/json',
                 'X-WP-Nonce': shapeblock.nonce,
             },
-            body: JSON.stringify({ conditions: payload }),
+            body: JSON.stringify({ conditions: conditionsPayload(rows) }),
         })
             .then((res) => res.json())
             .then((data) => {
@@ -182,68 +273,7 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
             {loading ? (
                 <div style={{ textAlign: 'center', padding: 40 }}><Spin /></div>
             ) : (
-                <Space direction="vertical" style={{ width: '100%' }} size={12}>
-                    {rows.length === 0 && (
-                        <Empty description={ __( 'No conditions — this template will not display', 'shapeblock' ) } />
-                    )}
-
-                    {rows.map((row) => {
-                        const def = defs[row.rule];
-                        const needsObject = def && def.needsObject;
-                        const objectType = def && def.objectType;
-                        return (
-                            <div
-                                key={row.key}
-                                style={{ display: 'flex', gap: 8, alignItems: 'center', width: '100%', flexWrap: 'nowrap' }}
-                            >
-                                <Select
-                                    style={{ flex: '0 0 120px' }}
-                                    value={row.type}
-                                    onChange={(val) => updateRow(row.key, { type: val })}
-                                    options={[
-                                        { value: 'include', label: __( 'Include', 'shapeblock' ) },
-                                        { value: 'exclude', label: __( 'Exclude', 'shapeblock' ) },
-                                    ]}
-                                />
-                                <Select
-                                    style={{ flex: '0 0 190px' }}
-                                    value={row.rule || undefined}
-                                    placeholder={ __( 'Select rule', 'shapeblock' ) }
-                                    onChange={(val) => onRuleChange(row.key, val)}
-                                    options={groupedOptions}
-                                />
-                                {needsObject ? (
-                                    <Select
-                                        mode="multiple"
-                                        style={{ flex: '1 1 auto', minWidth: 0 }}
-                                        value={row.ids}
-                                        placeholder={ __( 'Select items', 'shapeblock' ) }
-                                        onChange={(val) => updateRow(row.key, { ids: val })}
-                                        loading={!!objectLoading[objectType]}
-                                        options={objectCache[objectType] || []}
-                                        showSearch
-                                        optionFilterProp="label"
-                                        maxTagCount="responsive"
-                                    />
-                                ) : (
-                                    <span style={{ flex: '1 1 auto' }} />
-                                )}
-                                <Button
-                                    danger
-                                    type="text"
-                                    icon={<DeleteOutlined />}
-                                    onClick={() => removeRow(row.key)}
-                                    style={{ flex: '0 0 auto' }}
-                                    aria-label={ __( 'Remove condition', 'shapeblock' ) }
-                                />
-                            </div>
-                        );
-                    })}
-
-                    <Button type="dashed" icon={<PlusOutlined />} onClick={addRow} block>
-                        { __( 'Add Condition', 'shapeblock' ) }
-                    </Button>
-                </Space>
+                <ConditionRows rows={rows} setRows={setRows} />
             )}
         </Modal>
     );

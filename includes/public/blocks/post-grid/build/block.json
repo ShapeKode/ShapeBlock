@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/post-grid",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "title": "Post Grid",
   "category": "shapeblock",
   "description": "Post Grid Block",
@@ -19,7 +19,6 @@
   },
   "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
-  "viewScript": "file:./view.js",
   "render": "file:./render.php",
   "attributes": {
     "advPadding": {
@@ -120,37 +119,13 @@
       "type": "string",
       "default": ""
     },
-    "showVideo": {
-      "type": "boolean",
-      "default": true
-    },
-    "videoAutoplay": {
-      "type": "boolean",
-      "default": false
-    },
-    "videoMute": {
-      "type": "boolean",
-      "default": true
-    },
-    "videoHeight": {
-      "type": "string",
-      "default": "312px"
-    },
-    "videoWidth": {
-      "type": "string",
-      "default": "100%"
-    },
-    "videoControls": {
-      "type": "boolean",
-      "default": false
-    },
     "perPage": {
       "type": "string",
       "default": "6"
     },
     "order": {
       "type": "string",
-      "default": "ASC"
+      "default": "DESC"
     },
     "orderby": {
       "type": "string",
@@ -182,6 +157,12 @@
       "type": "object"
     },
     "itemMargin": {
+      "type": "object"
+    },
+    "itemMarginTablet": {
+      "type": "object"
+    },
+    "itemMarginMobile": {
       "type": "object"
     },
     "itemBorderRadius": {
@@ -224,6 +205,12 @@
       }
     },
     "contentPadding": {
+      "type": "object"
+    },
+    "contentPaddingTablet": {
+      "type": "object"
+    },
+    "contentPaddingMobile": {
       "type": "object"
     },
     "readMorePadding": {
@@ -271,19 +258,29 @@
       "type": "string",
       "default": ""
     },
+    "itemBorderColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "itemBoxShadowHover": {
+      "type": "object",
+      "default": {
+        "x": 0,
+        "y": 0,
+        "b": 0,
+        "s": 0,
+        "c": ""
+      }
+    },
+    "itemHoverLift": {
+      "type": "boolean",
+      "default": false
+    },
     "itemOverlayBackgroundColor": {
       "type": "string",
       "default": ""
     },
-    "itemOverlayBackgroundColorHover": {
-      "type": "string",
-      "default": "var(--shapeblock-preset-color-primary)"
-    },
     "itemOverlayBackgroundGradient": {
-      "type": "string",
-      "default": ""
-    },
-    "itemOverlayBackgroundGradientHover": {
       "type": "string",
       "default": ""
     },
@@ -409,6 +406,10 @@
       "type": "boolean",
       "default": true
     },
+    "buttonAtBottom": {
+      "type": "boolean",
+      "default": false
+    },
     "readMoreText": {
       "type": "string",
       "default": "Read More"
@@ -429,6 +430,10 @@
       "type": "string",
       "default": ""
     },
+    "topDateBackgroundGradient": {
+      "type": "string",
+      "default": ""
+    },
     "topDateColor": {
       "type": "string",
       "default": "#ffffff"
@@ -445,25 +450,9 @@
       "type": "string",
       "default": ""
     },
-    "thumbAnim": {
-      "type": "boolean",
-      "default": true
-    },
     "paginationType": {
       "type": "string",
       "default": "numeric"
-    },
-    "paginationBtnWidth": {
-      "type": "string",
-      "default": ""
-    },
-    "paginationBtnWidthTablet": {
-      "type": "string",
-      "default": ""
-    },
-    "paginationBtnWidthMobile": {
-      "type": "string",
-      "default": ""
     },
     "paginationBtnBorder": {
       "type": "object",
@@ -493,9 +482,17 @@
       "type": "string",
       "default": "var(--shapeblock-preset-color-tertiary)"
     },
+    "paginationBackgroundGradient": {
+      "type": "string",
+      "default": ""
+    },
     "paginationBackgroundColorHover": {
       "type": "string",
       "default": "var(--shapeblock-preset-color-primary)"
+    },
+    "paginationBackgroundGradientHover": {
+      "type": "string",
+      "default": ""
     },
     "paginationTypography": {
       "type": "object",
@@ -671,28 +668,6 @@
         "bottom": "",
         "left": ""
       }
-    },
-    "categoryColor": {
-      "type": "string",
-      "default": ""
-    },
-    "categoryColorHover": {
-      "type": "string",
-      "default": ""
-    },
-    "categoryBackgroundColor": {
-      "type": "string",
-      "default": ""
-    },
-    "categoryBackgroundColorHover": {
-      "type": "string",
-      "default": ""
-    },
-    "categoryPadding": {
-      "type": "object"
-    },
-    "categoryMargin": {
-      "type": "object"
     },
     "hideDesktop": {
       "type": "boolean",

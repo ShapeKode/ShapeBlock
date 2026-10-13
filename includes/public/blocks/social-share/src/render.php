@@ -86,7 +86,9 @@ if ( '' !== $u( 'buttonSize' ) ) { $button['width'] = $u( 'buttonSize' ); $butto
 $button = array_merge( $button, $dims( $attributes['buttonRadius'] ?? [] ), $shadow( $attributes['buttonBoxShadow'] ?? [] ) );
 if ( ! empty( $attributes['buttonBorder'] ) ) $button = array_merge( $button, $H::border_to_css_props( $attributes['buttonBorder'] ) );
 
-$button_spacing = ( '' !== $u( 'buttonSpacing' ) ) ? [ 'margin' => '0 ' . $u( 'buttonSpacing' ) ] : [];
+// Button Spacing is the gap between the buttons, in every layout (a side margin
+// only spaced a horizontal row, and doubled the space there).
+$button_spacing = ( '' !== $u( 'buttonSpacing' ) ) ? [ 'gap' => $u( 'buttonSpacing' ) ] : [];
 
 $icon_i   = [];
 $icon_svg = [];
@@ -105,13 +107,14 @@ $build_dev = function ( $suffix ) use ( $attributes, $H ) {
 
 	$btn = [];
 	if ( '' !== $dev_u( 'buttonSize' ) ) { $btn['width'] = $dev_u( 'buttonSize' ); $btn['height'] = $dev_u( 'buttonSize' ); }
-	if ( '' !== $dev_u( 'buttonSpacing' ) ) { $btn['margin'] = '0 ' . $dev_u( 'buttonSpacing' ); }
+	$gap = '' !== $dev_u( 'buttonSpacing' ) ? [ 'gap' => $dev_u( 'buttonSpacing' ) ] : [];
 
 	$i   = [];
 	$svg = [];
 	if ( '' !== $dev_u( 'iconSize' ) ) { $i['font-size'] = $dev_u( 'iconSize' ); $svg['width'] = $dev_u( 'iconSize' ); $svg['height'] = $dev_u( 'iconSize' ); }
 
 	return [
+		'.shapeblock-social-buttons'    => $gap,
 		'.shapeblock-social-button'     => $btn,
 		'.shapeblock-social-button i'   => $i,
 		'.shapeblock-social-button svg' => $svg,
@@ -119,7 +122,7 @@ $build_dev = function ( $suffix ) use ( $attributes, $H ) {
 };
 $dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
 $resp_css = '';
-foreach ( [ '.shapeblock-social-button', '.shapeblock-social-button i', '.shapeblock-social-button svg' ] as $sub_sel ) {
+foreach ( [ '.shapeblock-social-buttons', '.shapeblock-social-button', '.shapeblock-social-button i', '.shapeblock-social-button svg' ] as $sub_sel ) {
 	$rdata = [];
 	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
 		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
@@ -133,7 +136,8 @@ foreach ( [ '.shapeblock-social-button', '.shapeblock-social-button i', '.shapeb
 
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $resp_css, [
-	'.shapeblock-social-button'           => $H::get_inline_styles( array_merge( $button, $button_spacing ) ),
+	'.shapeblock-social-buttons'          => $H::get_inline_styles( $button_spacing ),
+	'.shapeblock-social-button'           => $H::get_inline_styles( $button ),
 	'.shapeblock-social-button i'         => $H::get_inline_styles( $icon_i ),
 	'.shapeblock-social-button svg'       => $H::get_inline_styles( $icon_svg ),
 	'.shapeblock-social-button svg path'  => ! empty( $attributes['iconColor'] ) ? 'fill:' . $attributes['iconColor'] : '',

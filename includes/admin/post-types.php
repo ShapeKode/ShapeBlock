@@ -16,6 +16,33 @@ class SHAPEBLOCK_Post_Types {
     public function __construct() {
         add_action( 'init', array( $this, 'register_post_types' ) );
         add_shortcode( 'shapeblock_template', array( $this, 'render_shortcode' ) );
+        add_filter( 'rest_pre_dispatch', array( $this, 'guard_template_rest' ), 10, 3 );
+    }
+
+    /**
+     * Templates and Theme Builder templates are in the REST API only for the
+     * block editor. Core lets anyone read a published post of a REST-enabled
+     * type, so visitors could list them (popups for logged-in users only, menu
+     * panels, ...). Reading them needs a user who can write posts.
+     *
+     * @param mixed            $result  Response to replace the request with, or null.
+     * @param \WP_REST_Server  $server  Server.
+     * @param \WP_REST_Request $request Request.
+     * @return mixed
+     */
+    public function guard_template_rest( $result, $server, $request ) {
+        if ( null !== $result || current_user_can( 'edit_posts' ) ) {
+            return $result;
+        }
+        $route = (string) $request->get_route();
+        if ( preg_match( '#^/wp/v2/(?:shapeblock-templates|shapeblock-builder)(?:/|$)#', $route ) ) {
+            return new \WP_Error(
+                'rest_forbidden',
+                __( 'Sorry, you are not allowed to view these templates.', 'shapeblock' ),
+                array( 'status' => rest_authorization_required_code() )
+            );
+        }
+        return $result;
     }
 
     public function register_post_types() {
@@ -128,8 +155,12 @@ class SHAPEBLOCK_Post_Types {
 
         // A shortcode's return value is printed by WordPress, so it is escaped
         // here against an allowlist rather than trusted. See allowed_html() for
-        // what the list covers and why.
-        return '<div class="shapeblock-template-content">' . wp_kses( $content, self::allowed_html() ) . '</div>';
+        // what the list covers and why. CSS that blocks or shortcodes inside the
+        // template print as a style element is loaded as a stylesheet first, so
+        // the allowlist does not leave it on the page as text.
+        wp_register_style( 'shapeblock-builder-inline', false, array(), SHAPEBLOCK_VERSION );
+        wp_enqueue_style( 'shapeblock-builder-inline' );
+        return wp_kses( \ShapeBlock\Frontend\Helper::move_block_css( $content, 'shapeblock-builder-inline' ), self::allowed_html() );
     }
 
     /**

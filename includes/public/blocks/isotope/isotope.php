@@ -36,7 +36,7 @@ function shapeblock_isotope_editor_preview_script() {
 	// enqueue_block_assets fires on every wp-admin screen, not only the block
 	// editor, so is_admin() alone is not enough - see blocks.php's
 	// shapeblock_is_block_editor_screen().
-	if ( ! function_exists( 'shapeblock_is_block_editor_screen' ) || ! shapeblock_is_block_editor_screen() ) {
+	if ( ! shapeblock_is_block_editor_screen() ) {
 		return;
 	}
 

@@ -12,17 +12,8 @@ function shapeblock_create_block_image_comparison_block_init() {
 		shapeblock_asset_version( __DIR__ . '/build/style-index.css' )
 	);
 
-	// Editor-only styles. Compiled from src/editor.scss.
-	wp_register_style(
-		'shapeblock-image-comparison-editor-style',
-		plugins_url( 'build/index.css', __FILE__ ),
-		array( 'shapeblock-image-comparison-style' ),
-		shapeblock_asset_version( __DIR__ . '/build/index.css' )
-	);
-
 	register_block_type( __DIR__ . '/build', array(
-		'style'        => 'shapeblock-image-comparison-style',
-		'editor_style' => 'shapeblock-image-comparison-editor-style',
+		'style' => 'shapeblock-image-comparison-style',
 	) );
 }
 add_action( 'init', 'shapeblock_create_block_image_comparison_block_init' );

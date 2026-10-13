@@ -71,7 +71,11 @@ $u = function ( $key ) use ( $attributes, $H ) {
 
 // ---- Tab title (li) normal --------------------------------------------------
 $title_li = [];
-if ( ! empty( $attributes['titleBgColor'] ) ) $title_li['background-color'] = $attributes['titleBgColor'];
+if ( ! empty( $attributes['titleBgColorGradient'] ) ) {
+	$title_li['background'] = $attributes['titleBgColorGradient'];
+} elseif ( ! empty( $attributes['titleBgColor'] ) ) {
+	$title_li['background-color'] = $attributes['titleBgColor'];
+}
 $title_li = array_merge( $title_li, $dims( $attributes['titleBorderRadius'] ?? [], 'radius' ), $dims( $attributes['titlePadding'] ?? [], 'padding' ), $dims( $attributes['titleMargin'] ?? [], 'margin' ) );
 if ( ! empty( $attributes['titleBorder'] ) ) $title_li = array_merge( $title_li, $H::border_to_css_props( $attributes['titleBorder'] ) );
 
@@ -83,11 +87,21 @@ if ( ! empty( $attributes['titleColor'] ) ) $title_text['color'] = $attributes['
 $icon_color = [];
 if ( ! empty( $attributes['tabIconColor'] ) ) { $icon_color['color'] = $attributes['tabIconColor']; $icon_color['fill'] = $attributes['tabIconColor']; }
 $icon_box = [];
-if ( ! empty( $attributes['tabIconBgColor'] ) ) $icon_box['background-color'] = $attributes['tabIconBgColor'];
+if ( ! empty( $attributes['tabIconBgColorGradient'] ) ) {
+	$icon_box['background'] = $attributes['tabIconBgColorGradient'];
+} elseif ( ! empty( $attributes['tabIconBgColor'] ) ) {
+	$icon_box['background-color'] = $attributes['tabIconBgColor'];
+}
 
 // Active / hover states.
 $title_li_active = [];
-if ( ! empty( $attributes['titleActiveBgColor'] ) ) $title_li_active['background-color'] = $attributes['titleActiveBgColor'];
+// A flat colour here replaces a normal-state gradient, so it is written as
+// the shorthand then; otherwise it stays background-color as before.
+if ( ! empty( $attributes['titleActiveBgColorGradient'] ) ) {
+	$title_li_active['background'] = $attributes['titleActiveBgColorGradient'];
+} elseif ( ! empty( $attributes['titleActiveBgColor'] ) ) {
+	$title_li_active[ ! empty( $attributes['titleBgColorGradient'] ) ? 'background' : 'background-color' ] = $attributes['titleActiveBgColor'];
+}
 if ( ! empty( $attributes['titleActiveBorderColor'] ) ) $title_li_active['border-color'] = $attributes['titleActiveBorderColor'];
 $title_text_active = [];
 if ( ! empty( $attributes['titleActiveColor'] ) ) $title_text_active['color'] = $attributes['titleActiveColor'];
@@ -99,7 +113,11 @@ if ( ! empty( $attributes['navBorder'] ) ) $nav = array_merge( $nav, $H::border_
 
 // ---- Content area -----------------------------------------------------------
 $content = [];
-if ( ! empty( $attributes['contentBgColor'] ) ) $content['background-color'] = $attributes['contentBgColor'];
+if ( ! empty( $attributes['contentBgColorGradient'] ) ) {
+	$content['background'] = $attributes['contentBgColorGradient'];
+} elseif ( ! empty( $attributes['contentBgColor'] ) ) {
+	$content['background-color'] = $attributes['contentBgColor'];
+}
 $content = array_merge( $content, $dims( $attributes['contentBorderRadius'] ?? [], 'radius' ), $dims( $attributes['contentPadding'] ?? [], 'padding' ), $dims( $attributes['contentMargin'] ?? [], 'margin' ) );
 if ( ! empty( $attributes['contentBorder'] ) ) $content = array_merge( $content, $H::border_to_css_props( $attributes['contentBorder'] ) );
 
@@ -119,13 +137,23 @@ $desc_wrap = $dims( $attributes['descMargin'] ?? [], 'margin' );
 // ---- Button -----------------------------------------------------------------
 $btn = $typo( $attributes['btnTypography'] ?? [] );
 if ( ! empty( $attributes['btnColor'] ) ) $btn['color'] = $attributes['btnColor'];
-if ( ! empty( $attributes['btnBgColor'] ) ) $btn['background-color'] = $attributes['btnBgColor'];
+if ( ! empty( $attributes['btnBgColorGradient'] ) ) {
+	$btn['background'] = $attributes['btnBgColorGradient'];
+} elseif ( ! empty( $attributes['btnBgColor'] ) ) {
+	$btn['background-color'] = $attributes['btnBgColor'];
+}
 $btn = array_merge( $btn, $dims( $attributes['btnBorderRadius'] ?? [], 'radius' ), $dims( $attributes['btnPadding'] ?? [], 'padding' ), $dims( $attributes['btnMargin'] ?? [], 'margin' ) );
 if ( ! empty( $attributes['btnBorder'] ) ) $btn = array_merge( $btn, $H::border_to_css_props( $attributes['btnBorder'] ) );
 
 $btn_hover = [];
 if ( ! empty( $attributes['btnHoverColor'] ) ) $btn_hover['color'] = $attributes['btnHoverColor'];
-if ( ! empty( $attributes['btnHoverBgColor'] ) ) $btn_hover['background-color'] = $attributes['btnHoverBgColor'];
+// A flat colour here replaces a normal-state gradient, so it is written as
+// the shorthand then; otherwise it stays background-color as before.
+if ( ! empty( $attributes['btnHoverBgColorGradient'] ) ) {
+	$btn_hover['background'] = $attributes['btnHoverBgColorGradient'];
+} elseif ( ! empty( $attributes['btnHoverBgColor'] ) ) {
+	$btn_hover[ ! empty( $attributes['btnBgColorGradient'] ) ? 'background' : 'background-color' ] = $attributes['btnHoverBgColor'];
+}
 if ( ! empty( $attributes['btnHoverBorderColor'] ) ) $btn_hover['border-color'] = $attributes['btnHoverBorderColor'];
 
 // ---------------------------------------------------------------------------

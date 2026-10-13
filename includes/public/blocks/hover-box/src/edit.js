@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -81,7 +81,7 @@ const EFFECTS = [
 	},
 	{ label: __('Spin', 'shapeblock'), value: 'spin', dirs: [] },
 	{ label: __('Blur', 'shapeblock'), value: 'blur', dirs: [] },
-	{ label: __('Greyscale', 'shapeblock'), value: 'grayscale', dirs: [] },
+	{ label: __('Grayscale', 'shapeblock'), value: 'grayscale', dirs: [] },
 	{ label: __('Circle Open', 'shapeblock'), value: 'circle', dirs: [] },
 	{ label: __('Curtain', 'shapeblock'), value: 'curtain', dirs: [] },
 ];
@@ -102,10 +102,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const bg = (label, colorKey, gradKey) => (
 		<BackgroundControl
 			label={label}
-			color={attributes[colorKey]}
-			gradient={attributes[gradKey]}
-			onChangeColor={(v) => setAttributes({ [colorKey]: v })}
-			onChangeGradient={(v) => setAttributes({ [gradKey]: v })}
+			colorValue={attributes[colorKey]}
+			gradientValue={attributes[gradKey]}
+			onColorChange={(v) => setAttributes({ [colorKey]: v && typeof v === 'object' ? v.hex : v || '' })}
+			onGradientChange={(v) => setAttributes({ [gradKey]: v || '' })}
 		/>
 	);
 	const border = (label, key) => <BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
@@ -206,17 +206,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			</PanelBody>
 
 			<PanelBody title={__('Hover', 'shapeblock')} initialOpen={true}>
-				<ToggleGroupControl
-					label={__('Shape', 'shapeblock')}
-					value={attributes.shape}
-					onChange={(v) => setAttributes({ shape: v })}
-					isBlock
-					__next40pxDefaultSize
-					__nextHasNoMarginBottom
-				>
-					<ToggleGroupControlOptionIcon value="circle" icon={ICON_CIRCLE} label={__('Circle', 'shapeblock')} />
-					<ToggleGroupControlOptionIcon value="square" icon={ICON_SQUARE} label={__('Square', 'shapeblock')} />
-				</ToggleGroupControl>
 				<SelectControl
 					label={__('Effect', 'shapeblock')}
 					value={attributes.effect}
@@ -277,7 +266,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// --- Tab 2: Layout --------------------------------------------------------
 	const layoutTab = (
 		<>
-			<PanelBody title={__('Box', 'shapeblock')} initialOpen={true}>
+			<PanelBody title={__('Box Size', 'shapeblock')} initialOpen={true}>
 				<ToggleGroupControl
 					label={__('Alignment', 'shapeblock')}
 					value={attributes.boxAlign}
@@ -293,14 +282,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				{num(__('Size (px)', 'shapeblock'), 'boxSize', 600, 60)}
 				{respBox(__('Margin', 'shapeblock'), 'blockMargin')}
 			</PanelBody>
-
-			<PanelBody title={__('Overlay', 'shapeblock')} initialOpen={false}>
-				{respBox(__('Padding', 'shapeblock'), 'contentPadding')}
-			</PanelBody>
-
-			<PanelBody title={__('Icon', 'shapeblock')} initialOpen={false}>
-				{num(__('Size (px)', 'shapeblock'), 'iconSize', 200, 8)}
-			</PanelBody>
 		</>
 	);
 
@@ -308,17 +289,30 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const styleTab = (
 		<>
 			<PanelBody title={__('Box', 'shapeblock')} initialOpen={true}>
+				<ToggleGroupControl
+					label={__('Shape', 'shapeblock')}
+					value={attributes.shape}
+					onChange={(v) => setAttributes({ shape: v })}
+					isBlock
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				>
+					<ToggleGroupControlOptionIcon value="circle" icon={ICON_CIRCLE} label={__('Circle', 'shapeblock')} />
+					<ToggleGroupControlOptionIcon value="square" icon={ICON_SQUARE} label={__('Square', 'shapeblock')} />
+				</ToggleGroupControl>
 				{bg(__('Background', 'shapeblock'), 'boxBgColor', 'boxBgGradient')}
 				{border(__('Border', 'shapeblock'), 'boxBorder')}
-				{box(__('Border Radius', 'shapeblock'), 'boxRadius')}
+				{attributes.shape === 'square' && box(__('Border Radius', 'shapeblock'), 'boxRadius')}
 				{shadow(__('Box Shadow', 'shapeblock'), 'boxShadow')}
 			</PanelBody>
 
 			<PanelBody title={__('Overlay', 'shapeblock')} initialOpen={false}>
 				{bg(__('Background', 'shapeblock'), 'overlayColor', 'overlayGradient')}
+				{respBox(__('Padding', 'shapeblock'), 'contentPadding')}
 			</PanelBody>
 
 			<PanelBody title={__('Icon', 'shapeblock')} initialOpen={false}>
+				{num(__('Size (px)', 'shapeblock'), 'iconSize', 200, 8)}
 				{color(__('Color', 'shapeblock'), 'iconColor')}
 			</PanelBody>
 

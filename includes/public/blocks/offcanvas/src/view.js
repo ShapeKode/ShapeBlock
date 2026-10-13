@@ -9,8 +9,33 @@
 	var ACTIVE = 'shapeblock-active';
 	var BODY_ACTIVE = 'shapeblock-offcanvas-active';
 
+	// The overlay(s) that open and close this panel.
+	function overlaysFor(panel) {
+		if (!panel.id) {
+			return [];
+		}
+		return Array.prototype.filter.call(document.querySelectorAll('.shapeblock-offcanvas-overlay'), function (el) {
+			return el.getAttribute('data-target') === '#' + panel.id;
+		});
+	}
+
+	function setOverlay(panel, on) {
+		overlaysFor(panel).forEach(function (el) {
+			el.classList.toggle(ACTIVE, on);
+		});
+		// Screen readers: the opener reports whether its panel is open.
+		if (panel.id) {
+			Array.prototype.forEach.call(document.querySelectorAll('.shapeblock-offcanvas-wrapper > .shapeblock-offcanvas-toggle'), function (el) {
+				if (el.getAttribute('data-target') === '#' + panel.id) {
+					el.setAttribute('aria-expanded', on ? 'true' : 'false');
+				}
+			});
+		}
+	}
+
 	function closePanel(panel) {
 		panel.classList.remove(ACTIVE);
+		setOverlay(panel, false);
 		if (!document.querySelector('.shapeblock-offcanvas.' + ACTIVE)) {
 			document.body.classList.remove(BODY_ACTIVE);
 		}
@@ -20,10 +45,11 @@
 		// Close any other open panels first.
 		Array.prototype.forEach.call(document.querySelectorAll('.shapeblock-offcanvas.' + ACTIVE), function (other) {
 			if (other !== panel) {
-				other.classList.remove(ACTIVE);
+				closePanel(other);
 			}
 		});
 		panel.classList.add(ACTIVE);
+		setOverlay(panel, true);
 		document.body.classList.add(BODY_ACTIVE);
 	}
 
@@ -67,6 +93,11 @@
 		});
 
 		document.addEventListener('keydown', function (e) {
+			// The opener and close buttons are focusable: Enter and Space work them.
+			if ((e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') && e.target.closest && e.target.closest('.shapeblock-offcanvas-toggle[role="button"]')) {
+				onToggleClick(e);
+				return;
+			}
 			if (e.key === 'Escape') {
 				Array.prototype.forEach.call(document.querySelectorAll('.shapeblock-offcanvas.' + ACTIVE), closePanel);
 			}

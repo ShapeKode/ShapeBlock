@@ -27,12 +27,10 @@
 	var BlockControls     = wp.blockEditor.BlockControls;
 	var ToolbarGroup      = wp.components.ToolbarGroup;
 	var ToolbarButton     = wp.components.ToolbarButton;
-	var Popover           = wp.components.Popover;
 	var useBlockProps      = wp.blockEditor.useBlockProps;
 	var RichText          = wp.blockEditor.RichText;
 	var MediaUpload       = wp.blockEditor.MediaUpload;
 	var MediaUploadCheck  = wp.blockEditor.MediaUploadCheck;
-	var PanelColorSettings = wp.blockEditor.PanelColorSettings;
 	var ColorPalette      = wp.blockEditor.ColorPalette || wp.components.ColorPalette;
 	// Combined solid-colour + gradient picker ( experimental in wp.blockEditor ).
 	var ColorGradientControl = ( wp.blockEditor && ( wp.blockEditor.__experimentalColorGradientControl || wp.blockEditor.ColorGradientControl ) ) || null;
@@ -68,6 +66,15 @@
 		alignRight: shapeblockSvgEl( [ 'M10 7h10', 'M4 12h16', 'M10 17h10' ] )
 	};
 	var RangeControl      = wp.components.RangeControl;
+
+	// A post or menu-item title from the REST API, as plain text. A post with no
+	// title returns { rendered: '' }, which must never reach the screen as an object.
+	function shapeblockTitleText( title ) {
+		var text = ( 'string' === typeof title ) ? title : ( title && 'string' === typeof title.rendered ? title.rendered : '' );
+		var box  = document.createElement( 'textarea' );
+		box.innerHTML = text;
+		return box.value;
+	}
 	var Button            = wp.components.Button;
 	var Dropdown          = wp.components.Dropdown;
 	var Spinner           = wp.components.Spinner;
@@ -125,14 +132,6 @@
 		if ( 'plus' === v ) { return 'plus'; }
 		if ( 'none' === v ) { return ''; }
 		return 'caret';
-	}
-	// Map a per-item icon choice to an SVG key ( '' = no icon ).
-	function shapeblockItemKey( v ) {
-		if ( 'arrow' === v ) { return 'arrow-right'; }
-		if ( 'chevron' === v ) { return 'chevron-right'; }
-		if ( 'plus' === v ) { return 'plus'; }
-		if ( 'external' === v ) { return 'external'; }
-		return '';
 	}
 
 	var TD = 'shapeblock';
@@ -289,7 +288,7 @@
 						return {
 							id: r.id || 0,
 							type: r.subtype || r.type || 'page',
-							title: ( r.title && ( r.title.rendered || r.title ) ) || r.url || r.link || '',
+							title: shapeblockTitleText( r.title ) || r.url || r.link || '',
 							url: r.url || r.link || '',
 							subtype: r.subtype || 'page'
 						};
@@ -338,7 +337,7 @@
 					if ( page.slug && /[?&](page_id|p)=/.test( url ) ) {
 						try { url = new URL( page.link ).origin + '/' + page.slug + '/'; } catch ( e ) {}
 					}
-					props.onPick( { url: url, title: ( page.title && ( page.title.rendered || page.title ) ) || t, id: page.id, type: 'page' } );
+					props.onPick( { url: url, title: shapeblockTitleText( page.title ) || t, id: page.id, type: 'page' } );
 				} )
 				.catch( function () { setCreating( false ); } );
 		}
@@ -547,6 +546,13 @@
 				if ( editorDevice ) { setDevice( String( editorDevice ).toLowerCase() ); }
 			}, [ editorDevice ] );
 
+			// A stable id for the front-end markup and its scoped CSS ( read by render.php ).
+			useEffect( function () {
+				if ( ! attributes.blockId && props.clientId ) {
+					setAttributes( { blockId: 'shapeblock-menu-' + String( props.clientId ).slice( 0, 6 ) } );
+				}
+			}, [ attributes.blockId, props.clientId ] );
+
 			// Editor-only: which colour state ( text / hover / active ) is being edited.
 			var colorStateState = useState( 'text' );
 			var colorState      = colorStateState[0];
@@ -670,7 +676,7 @@
 						var byId = {}, roots = [];
 						list.forEach( function ( mi ) {
 							byId[ mi.id ] = {
-								label: ( mi.title && mi.title.rendered ) ? mi.title.rendered : '',
+								label: shapeblockTitleText( mi.title ),
 								url: mi.url || '#',
 								description: mi.description || '',
 								newTab: '_blank' === mi.target,
@@ -695,7 +701,6 @@
 			// Strip HTML tags for plain-text contexts ( inspector text fields, panel titles ).
 			function shapeblockStripTags( s ) { return String( s == null ? '' : s ).replace( /<[^>]*>/g, '' ); }
 
-			function addItem() { var n = clone(); n.push( blankItem() ); commit( n ); }
 			function addLinkItem( v ) {
 				v = v || {};
 				var n = clone();
@@ -707,24 +712,6 @@
 				n.push( it );
 				commit( n );
 			}
-			function updateItem( i, patch ) { var n = clone(); n[ i ] = Object.assign( {}, n[ i ], patch ); commit( n ); }
-			function removeItem( i ) { var n = clone(); n.splice( i, 1 ); commit( n ); }
-			function moveItem( i, dir ) { var n = clone(); var j = i + dir; if ( j < 0 || j >= n.length ) { return; } var t = n[ i ]; n[ i ] = n[ j ]; n[ j ] = t; commit( n ); }
-			function addChild( i ) { var n = clone(); if ( ! Array.isArray( n[ i ].children ) ) { n[ i ].children = []; } n[ i ].children.push( blankChild() ); commit( n ); }
-			function addChildLink( i, v ) {
-				v = v || {};
-				var n = clone();
-				if ( ! Array.isArray( n[ i ].children ) ) { n[ i ].children = []; }
-				var c = blankChild();
-				if ( v.url ) { c.url = v.url; }
-				if ( v.title ) { c.label = v.title; }
-				c.objectId = v.id || 0;
-				c.objectType = v.type || '';
-				n[ i ].children.push( c );
-				commit( n );
-			}
-			function updateChild( i, ci, patch ) { var n = clone(); n[ i ].children[ ci ] = Object.assign( {}, n[ i ].children[ ci ], patch ); commit( n ); }
-			function removeChild( i, ci ) { var n = clone(); n[ i ].children.splice( ci, 1 ); commit( n ); }
 
 			// ---- Path-based tree operations ( unlimited nesting: [2] = 3rd item, [2,0] = its 1st child, [2,0,1] = a grandchild ) ----
 			// Return the node object at `path` ( or null if the path no longer resolves ).
@@ -1006,7 +993,7 @@
 
 			var layoutPanel = el(
 				PanelBody,
-				{ title: __( 'Layout', TD ), initialOpen: true },
+				{ title: __( 'Menu Layout', TD ), initialOpen: true },
 				orientationCtrl,
 				justifyCtrl,
 				el( 'div', { className: 'shapeblock-menu-linkfield-label', style: { marginTop: '4px' } }, __( 'Item Gap', TD ) ),
@@ -1164,6 +1151,8 @@
 			var mobilePanel = el(
 				PanelBody,
 				{ title: __( 'Mobile Colors', TD ), initialOpen: false },
+				( 'off' !== mobileMode ) ? shapeblockColorLabel( __( 'Drawer Background', TD ) ) : null,
+				( 'off' !== mobileMode ) ? shapeblockBgPicker( 'drawerBg', 'drawerBgGradient' ) : null,
 				shapeblockColorLabel( __( 'Item Text', TD ) ),
 				shapeblockToggleGroup( {
 					value: mTextState,
@@ -1180,10 +1169,10 @@
 				shapeblockBgPicker( mBgKey, mBgGradKey )
 			);
 
-			// ---- Inspector: Responsive ----
-			var responsivePanel = el(
+			// ---- Settings tab: when the hamburger / drawer replaces the full menu ----
+			var mobileMenuPanel = el(
 				PanelBody,
-				{ title: __( 'Responsive', TD ), initialOpen: false },
+				{ title: __( 'Mobile Menu', TD ), initialOpen: false },
 				shapeblockToggleGroup( {
 					label: __( 'Overlay Visibility', TD ),
 					help: __( 'Off: full menu always. Mobile: hamburger below the breakpoint. Always: hamburger on every screen.', TD ),
@@ -1203,25 +1192,31 @@
 					max: 1200,
 					step: 1,
 					onChange: function ( v ) { setAttributes( { mobileBreakpoint: v || 782 } ); }
-				} ) : null,
-				( 'off' !== mobileMode ) ? shapeblockToggleGroup( {
+				} ) : null
+			);
+
+			// ---- Layout tab: drawer side / width and hamburger position ( only while the overlay is on ) ----
+			var responsivePanel = ( 'off' !== mobileMode ) ? el(
+				PanelBody,
+				{ title: __( 'Responsive', TD ), initialOpen: false },
+				shapeblockToggleGroup( {
 					label: __( 'Drawer opens from', TD ),
 					value: 'left' === attributes.drawerSide ? 'left' : 'right',
 					options: [ { label: __( 'Right', TD ), value: 'right' }, { label: __( 'Left', TD ), value: 'left' } ],
 					onChange: function ( v ) { setAttributes( { drawerSide: v } ); }
-				} ) : null,
-				( 'off' !== mobileMode ) ? el( RangeControl, {
+				} ),
+				el( RangeControl, {
 					label: __( 'Drawer width (px)', TD ),
 					value: attributes.drawerWidth || 320,
 					min: 240,
 					max: 480,
 					step: 1,
 					onChange: function ( v ) { setAttributes( { drawerWidth: v || 320 } ); }
-				} ) : null,
+				} ),
 				// Where the hamburger sits once the overlay is on.
 				// Per device: toggleAlign ( desktop ), toggleAlignTablet, toggleAlignMobile.
 				// Tablet / Mobile left empty inherit the next larger screen.
-				( 'off' !== mobileMode ) ? el( 'div', { className: 'shapeblock-menu-toggle-align' },
+				el( 'div', { className: 'shapeblock-menu-toggle-align' },
 					el( 'div', { className: 'shapeblock-menu-linkfield-label', style: { marginTop: '4px' } }, __( 'Hamburger Alignment', TD ) ),
 					el( 'div', { className: 'shapeblock-menu-devices' },
 						[ [ 'desktop', 'dashicons-desktop', __( 'Desktop', TD ) ], [ 'tablet', 'dashicons-tablet', __( 'Tablet', TD ) ], [ 'mobile', 'dashicons-smartphone', __( 'Mobile', TD ) ] ].map( function ( d ) {
@@ -1253,16 +1248,18 @@
 						onChange: function ( v ) { setToggleAlign( v ); }
 					} ),
 					( 'desktop' !== device && ! attributes[ toggleAlignKey ] ) ? el( 'p', { className: 'components-base-control__help', style: { marginTop: '4px' } }, __( 'Inherits from the larger screen.', TD ) ) : null
-				) : null,
-				( 'off' !== mobileMode ) ? colorRow( __( 'Drawer Background', TD ), attributes.drawerBg, function ( v ) { setAttributes( { drawerBg: v } ); } ) : null,
+				)
+			) : null;
 
-				// Button skin. The outer tabs pick which button is being styled and the inner
-				// tabs pick the state, so the hamburger and the drawer close button each keep
-				// their own six colours. Left empty a colour falls back to the stylesheet
-				// ( transparent background, currentColor border ).
-				( 'off' !== mobileMode ) ? el( 'div', { className: 'shapeblock-menu-toggle-colors', style: { marginTop: '12px' } },
-					el( 'p', { className: 'shapeblock-menu-section-label', style: { margin: '0 0 6px', fontWeight: 600 } }, __( 'Buttons', TD ) ),
-					el( TabPanel, {
+			// ---- Style tab: button skin ( only while the overlay is on ) ----
+			// The outer tabs pick which button is being styled and the inner
+			// tabs pick the state, so the hamburger and the drawer close button each keep
+			// their own six colours. Left empty a colour falls back to the stylesheet
+			// ( transparent background, currentColor border ).
+			var buttonsPanel = ( 'off' !== mobileMode ) ? el(
+				PanelBody,
+				{ title: __( 'Hamburger & Close Buttons', TD ), initialOpen: false },
+				el( TabPanel, {
 						className: 'shapeblock-menu-button-tabs shapeblock-inspector-tabs',
 						activeClass: 'is-active',
 						tabs: [
@@ -1291,15 +1288,15 @@
 							};
 							return el( 'div', { style: { marginTop: '12px' } },
 								row( __( 'Icon Color', TD ), 'Color' ),
-								row( __( 'Background', TD ), 'Bg' ),
+								shapeblockColorLabel( __( 'Background', TD ) ),
+								shapeblockBgPicker( prefix + 'Bg' + ( isHover ? 'Hover' : '' ), prefix + 'Bg' + ( isHover ? 'Hover' : '' ) + 'Gradient' ),
 								row( __( 'Border Color', TD ), 'BorderColor' ),
 								( 'close' === prefix && ! isHover ) ? el( 'p', { className: 'shapeblock-menu-section-label', style: { margin: '4px 0 0', opacity: 0.7 } },
 									__( 'Leave Icon Color empty to follow the hamburger.', TD ) ) : null
 							);
 						} );
 					} )
-				) : null
-			);
+			) : null;
 
 			// ---- Live preview (links do NOT navigate in the editor) ----
 			// Recursive canvas renderer. `path` locates the node in the tree ( [i], [i,ci], [i,ci,gci] … ),
@@ -1353,6 +1350,16 @@
 					return el( AddMenuSearch, { onPick: function ( v ) { addChildLinkAt( path, v ); c.onClose(); } } );
 				}
 
+				/**
+				 * Filter: a dropdown an add-on gives this item ( a mega menu, for one ). Its content is
+				 * placed in the item like a sub-menu, so it opens and closes the same way.
+				 *
+				 * @param {Object} extra   { className, style, content } for the item ( content: null by default ).
+				 * @param {Object} context { item, path, attributes, setAttributes }.
+				 */
+				var extra    = wp.hooks.applyFilters( 'shapeblock.menu.itemDropdown', { className: '', style: undefined, content: null }, { item: node, path: path, attributes: attributes, setAttributes: setAttributes } ) || {};
+				var hasDrop  = !! ( kids.length || extra.content );
+
 				// The caret shows only when this node actually has a dropdown. It doubles as a button that
 				// opens the popover to add more sub-items. ( The first sub-item is added from the Inspector. )
 				var subToggle = null;
@@ -1389,6 +1396,19 @@
 
 				var hasLeafAdd = ( ! kids.length && subToggle );
 
+				// An add-on's dropdown shows the same caret ( in the drawer it toggles the dropdown ).
+				if ( extra.content && ! kids.length ) {
+					var xp = showDrawer
+						? { type: 'button', className: 'shapeblock-menu-sub-toggle shapeblock-menu-sub-trigger shapeblock-menu-sub-toggle--' + ( 'none' === ddVal ? 'none' : ddVal ), 'aria-label': __( 'Toggle sub-menu', TD ), onClick: function () { toggleSubOpen( key ); } }
+						: { className: 'shapeblock-menu-sub-toggle shapeblock-menu-sub-toggle--' + ( 'none' === ddVal ? 'none' : ddVal ), 'aria-hidden': 'true' };
+					if ( ddKey ) { xp.dangerouslySetInnerHTML = { __html: SHAPEBLOCK_SVG[ ddKey ] }; }
+					subToggle = el( showDrawer ? 'button' : 'span', xp );
+				}
+
+				// While the block is selected, the dropdown of the focused item ( and of the items above
+				// it ) stays open, so its sub-items can be seen and edited in either open mode.
+				var keepOpen = !! ( props.isSelected && hasDrop && activePath && path.length <= activePath.length && path.every( function ( v, pi ) { return activePath[ pi ] === v; } ) );
+
 				// Children ( recurse ) + a trailing "+" to add another sub-item at this level.
 				var subMenuEl = null;
 				if ( kids.length ) {
@@ -1407,8 +1427,9 @@
 
 				return el(
 					'li',
-					{ key: key, className: 'menu-item' + ( kids.length ? ' menu-item-has-children' : '' ) + ( hasLeafAdd ? ' shapeblock-menu-has-add' : '' ) + ( showDrawer && kids.length && openSubs[ key ] ? ' is-sub-open' : '' ) },
-					el( 'a', { href: node.url || '#', onClick: function ( e ) { e.preventDefault(); } },
+					{ key: key, className: 'menu-item' + ( hasDrop ? ' menu-item-has-children' : '' ) + ( hasLeafAdd ? ' shapeblock-menu-has-add' : '' ) + ( ( showDrawer && hasDrop && openSubs[ key ] ) || keepOpen ? ' is-sub-open' : '' ) + ( extra.className ? ' ' + extra.className : '' ), style: extra.style },
+					// A click anywhere on the item ( its arrow too ) makes it the focused item, so its own dropdown opens.
+					el( 'a', { href: node.url || '#', onClick: function ( e ) { e.preventDefault(); setActivePath( path ); } },
 						'left' === itSide ? iconEl : null,
 						textEl,
 						'right' === itSide ? iconEl : null,
@@ -1416,7 +1437,8 @@
 						// the item's background pill and picks up the exact same styling.
 						subToggle
 					),
-					subMenuEl
+					subMenuEl,
+					extra.content || null
 				);
 			}
 
@@ -1518,7 +1540,7 @@
 				var edSide = 'left' === attributes.drawerSide ? 'left' : 'right';
 				var edOff  = 'left' === edSide ? '-100%' : '100%';
 				var edW    = ( attributes.drawerWidth || 320 ) + 'px';
-				var edBg   = attributes.drawerBg || '#ffffff';
+				var edBg   = attributes.drawerBgGradient || attributes.drawerBg || '#ffffff';
 				// Mirrors the front end: display:flex so the auto margins can place it.
 				// The alignment for the width the canvas is showing ( same cascade as render.php ).
 				var edTAlign = attributes.toggleAlign || 'left';
@@ -1534,10 +1556,10 @@
 				var edTgl    = edSel + ' .shapeblock-menu-toggle';
 				var edTglHov = edTgl + ':hover,' + edTgl + ':focus';
 				if ( attributes.toggleColor ) { edCss += edTgl + '{color:' + attributes.toggleColor + ';}'; }
-				if ( attributes.toggleBg ) { edCss += edTgl + '{background:' + attributes.toggleBg + ';}'; }
+				if ( attributes.toggleBgGradient || attributes.toggleBg ) { edCss += edTgl + '{background:' + ( attributes.toggleBgGradient || attributes.toggleBg ) + ';}'; }
 				if ( attributes.toggleBorderColor ) { edCss += edTgl + '{border-color:' + attributes.toggleBorderColor + ';}'; }
 				if ( attributes.toggleColorHover ) { edCss += edTglHov + '{color:' + attributes.toggleColorHover + ';}'; }
-				if ( attributes.toggleBgHover ) { edCss += edTglHov + '{background:' + attributes.toggleBgHover + ';}'; }
+				if ( attributes.toggleBgHoverGradient || attributes.toggleBgHover ) { edCss += edTglHov + '{background:' + ( attributes.toggleBgHoverGradient || attributes.toggleBgHover ) + ';}'; }
 				if ( attributes.toggleBorderColorHover ) { edCss += edTglHov + '{border-color:' + attributes.toggleBorderColorHover + ';}'; }
 
 				// Close button skin — closeColor falls back to toggleColor, matching render.php.
@@ -1545,10 +1567,10 @@
 				var edClsHov = edCls + ':hover,' + edCls + ':focus';
 				var edClsCol = attributes.closeColor || attributes.toggleColor;
 				if ( edClsCol ) { edCss += edCls + '{color:' + edClsCol + ';}'; }
-				if ( attributes.closeBg ) { edCss += edCls + '{background:' + attributes.closeBg + ';}'; }
+				if ( attributes.closeBgGradient || attributes.closeBg ) { edCss += edCls + '{background:' + ( attributes.closeBgGradient || attributes.closeBg ) + ';}'; }
 				if ( attributes.closeBorderColor ) { edCss += edCls + '{border-color:' + attributes.closeBorderColor + ';}'; }
 				if ( attributes.closeColorHover ) { edCss += edClsHov + '{color:' + attributes.closeColorHover + ';}'; }
-				if ( attributes.closeBgHover ) { edCss += edClsHov + '{background:' + attributes.closeBgHover + ';}'; }
+				if ( attributes.closeBgHoverGradient || attributes.closeBgHover ) { edCss += edClsHov + '{background:' + ( attributes.closeBgHoverGradient || attributes.closeBgHover ) + ';}'; }
 				if ( attributes.closeBorderColorHover ) { edCss += edClsHov + '{border-color:' + attributes.closeBorderColorHover + ';}'; }
 				edCss += edSel + ' .shapeblock-menu-overlay{display:block;position:fixed;inset:0;background:rgba(0,0,0,0.5);opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0.3s ease;z-index:9998;}';
 				edCss += edSel + '.is-open .shapeblock-menu-overlay{opacity:1;visibility:visible;}';
@@ -1608,6 +1630,8 @@
 
 			var blockProps = useBlockProps( { ref: blockRef } );
 			var activeNode = nodeByPath( items, activePath );
+			// What add-ons get for the focused item: the item, where it sits, and the block's attributes.
+			var itemContext = { item: activeNode, path: activePath, attributes: attributes, setAttributes: setAttributes };
 
 			return el(
 				Fragment,
@@ -1637,8 +1661,32 @@
 									}
 								} );
 							}
+						} ),
+						// Add a dropdown item under the focused menu item.
+						el( Dropdown, {
+							popoverProps: { placement: 'bottom-start', className: 'shapeblock-menu-add-pop' },
+							renderToggle: function ( t ) {
+								return el( ToolbarButton, {
+									icon: plusIcon,
+									title: activeNode ? __( 'Add sub-menu item', TD ) : __( 'Click a menu item to add a sub-menu item', TD ),
+									isActive: t.isOpen,
+									'aria-expanded': t.isOpen,
+									disabled: ! activeNode,
+									onClick: t.onToggle
+								} );
+							},
+							renderContent: function ( c ) {
+								return el( AddMenuSearch, { onPick: function ( v ) { addChildLinkAt( activePath, v ); c.onClose(); } } );
+							}
 						} )
-					)
+					),
+					/**
+					 * Filter: more toolbar controls for the focused menu item.
+					 *
+					 * @param {?Element} controls    Controls to add ( null by default ).
+					 * @param {Object}   itemContext { item, path, attributes, setAttributes }.
+					 */
+					wp.hooks.applyFilters( 'shapeblock.menu.itemToolbar', null, itemContext )
 				),
 				// Settings / Layout / Style — the same three tabs every ShapeBlock block uses.
 				el( InspectorControls, {},
@@ -1651,13 +1699,13 @@
 						]
 					}, function ( tab ) {
 						if ( 'settings' === tab.name ) {
-							return el( Fragment, {}, wpMenuPicker, itemEditors, addItemEl, dropdownPanel );
+							return el( Fragment, {}, wpMenuPicker, itemEditors, addItemEl, dropdownPanel, mobileMenuPanel );
 						}
 						if ( 'layout' === tab.name ) {
 							return el( Fragment, {}, layoutPanel, responsivePanel );
 						}
-						// Style tab: colours + typography.
-						return el( Fragment, {}, colorsPanel, dropdownColorsPanel, mobilePanel, typographyPanel );
+						// Style tab: colours, button skin + typography.
+						return el( Fragment, {}, colorsPanel, dropdownColorsPanel, mobilePanel, buttonsPanel, typographyPanel );
 					} )
 				),
 				el( 'div', blockProps, preview )

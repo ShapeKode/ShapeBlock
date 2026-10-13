@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/slider",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"title": "Slider",
 	"category": "shapeblock",
 	"description": "An image slider.",
@@ -58,13 +58,16 @@
 
 		"arrowColor": { "type": "string", "default": "" },
 		"arrowBgColor": { "type": "string", "default": "" },
+		"arrowBgGradient": { "type": "string", "default": "" },
 		"arrowSize": { "type": "string", "default": "" },
 		"arrowSizeTablet": { "type": "string", "default": "" },
 		"arrowSizeMobile": { "type": "string", "default": "" },
 		"arrowRadius": { "type": "object" },
 
 		"dotColor": { "type": "string", "default": "" },
+		"dotGradient": { "type": "string", "default": "" },
 		"dotActiveColor": { "type": "string", "default": "" },
+		"dotActiveGradient": { "type": "string", "default": "" },
 		"dotSize": { "type": "string", "default": "" }
 	}
 }

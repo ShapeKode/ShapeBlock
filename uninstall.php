@@ -3,7 +3,6 @@
  * Uninstall routine — runs once when the plugin is deleted from the Plugins screen.
  *
  * Removes every option and transient ShapeBlock creates:
- * - shapeblock_version
  * - shapeblock_colors
  * - shapeblock_layout
  * - shapeblock_menu_last_items
@@ -28,7 +27,6 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
  * Delete every option/transient ShapeBlock created on a single site.
  */
 function shapeblock_uninstall_cleanup_site() {
-	delete_option( 'shapeblock_version' );
 	delete_option( 'shapeblock_colors' );
 	delete_option( 'shapeblock_layout' );
 	delete_option( 'shapeblock_menu_last_items' );

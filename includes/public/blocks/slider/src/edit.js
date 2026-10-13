@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -141,6 +141,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	};
 
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
+	const bg = (label, c, g) => (
+		<BackgroundControl
+			label={label}
+			colorValue={attributes[c]}
+			gradientValue={attributes[g]}
+			onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })}
+			onGradientChange={(v) => setAttributes({ [g]: v || '' })}
+		/>
+	);
 	const box = (label, key) => <BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const num = (label, key, help) => (
 		<TextControl label={label} help={help} type="number" value={attributes[key]}
@@ -261,7 +270,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			{showArrows && (
 				<PanelBody title={__('Arrows', 'shapeblock')} initialOpen={false}>
 					{color(__('Icon Color', 'shapeblock'), 'arrowColor')}
-					{color(__('Background', 'shapeblock'), 'arrowBgColor')}
+					{bg(__('Background', 'shapeblock'), 'arrowBgColor', 'arrowBgGradient')}
 					{respNum(__('Size (px)', 'shapeblock'), 'arrowSize')}
 					{box(__('Border Radius', 'shapeblock'), 'arrowRadius')}
 				</PanelBody>
@@ -269,8 +278,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 			{showDots && (
 				<PanelBody title={__('Dots', 'shapeblock')} initialOpen={false}>
-					{color(__('Color', 'shapeblock'), 'dotColor')}
-					{color(__('Active Color', 'shapeblock'), 'dotActiveColor')}
+					{bg(__('Color', 'shapeblock'), 'dotColor', 'dotGradient')}
+					{bg(__('Active Color', 'shapeblock'), 'dotActiveColor', 'dotActiveGradient')}
 					{num(__('Size (px)', 'shapeblock'), 'dotSize')}
 				</PanelBody>
 			)}

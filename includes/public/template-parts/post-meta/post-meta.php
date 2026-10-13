@@ -3,7 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 $shapeblock_allowed_metas = isset($attributes['allowedMetas']) ? $attributes['allowedMetas'] : [];
 $shapeblock_meta_html = '';
-// $shapeblock_meta_position = isset($attributes['metaPosition']) ? $attributes['metaPosition'] : 'up_title';
 
 if(empty($shapeblock_allowed_metas)) {
     return;
@@ -21,7 +20,7 @@ if ( in_array( 'author', $shapeblock_allowed_metas ) ) {
 
             $shapeblock_author_icon = '<img src="'. esc_url( $shapeblock_avatar_url )  .'">';
         }
-        $shapeblock_meta_html .= '<span class="bldpost-meta">' . $shapeblock_author_icon . '<a href="' . esc_url(get_author_posts_url(get_the_author_meta('ID'))) . '">' . esc_html( $attributes['authorPrefix'] ) . ' ' . esc_html( get_the_author() ) . '</a></span>';
+        $shapeblock_meta_html .= '<span class="bldpost-meta">' . $shapeblock_author_icon . '<a href="' . esc_url(get_author_posts_url(get_the_author_meta('ID'))) . '">' . esc_html( $author_prefix ) . ' ' . esc_html( get_the_author() ) . '</a></span>';
 }
 
 $shapeblock_date_html = '';
@@ -33,9 +32,6 @@ if ( in_array( 'date', $shapeblock_allowed_metas ) && empty($attributes['showDat
     }
     if(in_array($meta_style, ['2', '3'])) {
         $shapeblock_date = \ShapeBlock\Frontend\Helper::shapeblock_time_ago();
-    }
-    if(isset($modified_date) && $modified_date == false) {
-        $shapeblock_date = get_the_date();
     }
     $shapeblock_date_html = '<span class="bldpost-meta">' . $shapeblock_date_icon . esc_html( $shapeblock_date ) . '</span>';
 }

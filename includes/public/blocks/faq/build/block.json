@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/faq",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "title": "Accordion",
   "category": "shapeblock",
   "description": "An FAQ accordion with collapsible questions and custom icons.",
@@ -151,6 +151,18 @@
       "type": "string",
       "default": ""
     },
+    "itemBackgroundColorGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "itemBackgroundColorHoverGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "itemBackgroundColorActiveGradient": {
+      "type": "string",
+      "default": ""
+    },
     "itemBorder": {
       "type": "object",
       "default": {
@@ -279,6 +291,18 @@
       "type": "string",
       "default": ""
     },
+    "titleBgColorGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "titleBgColorHoverGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "titleBgColorActiveGradient": {
+      "type": "string",
+      "default": ""
+    },
     "titleBorder": {
       "type": "object",
       "default": {
@@ -387,6 +411,18 @@
       "type": "string",
       "default": ""
     },
+    "descriptionBgColorGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "descriptionBgColorHoverGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "descriptionBgColorActiveGradient": {
+      "type": "string",
+      "default": ""
+    },
     "descriptionBorder": {
       "type": "object",
       "default": {
@@ -442,6 +478,18 @@
       "default": ""
     },
     "iconBgColorActive": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBgColorGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBgColorHoverGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "iconBgColorActiveGradient": {
       "type": "string",
       "default": ""
     },

@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -52,8 +52,8 @@ const PLATFORM_OPTIONS = [
 	{ label: 'Reddit', value: 'reddit' },
 	{ label: 'Discord', value: 'discord' },
 	{ label: 'Spotify', value: 'spotify' },
-	{ label: 'Email', value: 'email' },
-	{ label: 'Copy Link', value: 'copy' },
+	{ label: __('Email', 'shapeblock'), value: 'email' },
+	{ label: __('Copy Link', 'shapeblock'), value: 'copy' },
 ];
 
 export default function Edit({ attributes, setAttributes, clientId }) {
@@ -133,7 +133,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	// --- Tab 2: Layout (arrangement, size & spacing) --------------------------
 	const layoutTab = (
-		<PanelBody title={__('Direction', 'shapeblock')} initialOpen={true}>
+		<PanelBody title={__('Layout & Size', 'shapeblock')} initialOpen={true}>
 			<SelectControl
 				label={__('Layout', 'shapeblock')}
 				value={layout}
@@ -147,7 +147,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				__nextHasNoMarginBottom
 			/>
 			<Divider />
-			{respNum(__('Icon Size (px)', 'shapeblock'), 'iconSize')}
 			{respNum(__('Button Size (px)', 'shapeblock'), 'buttonSize')}
 			{respNum(__('Button Spacing (px)', 'shapeblock'), 'buttonSpacing')}
 		</PanelBody>
@@ -164,6 +163,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				onGradientChange={(v) => setAttributes({ iconBgGradient: v || '' })}
 			/>
 			<ColorPopover label={__('Icon Color', 'shapeblock')} color={attributes.iconColor} onChange={(v) => setAttributes({ iconColor: v })} />
+			{respNum(__('Icon Size (px)', 'shapeblock'), 'iconSize')}
 			<Divider />
 			<BoxControl label={__('Border Radius', 'shapeblock')} values={attributes.buttonRadius} onChange={(v) => setAttributes({ buttonRadius: v })} />
 			<BorderControl label={__('Border', 'shapeblock')} value={attributes.buttonBorder} onChange={(v) => setAttributes({ buttonBorder: v })} />

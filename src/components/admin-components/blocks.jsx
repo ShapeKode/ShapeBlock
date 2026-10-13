@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import BlockItem from './blockItem';
-import { Row, Space, Button, notification, Input, Select } from 'antd';
+import { Space, Button, notification, Input, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+
+// The tabs above the list, in order (Blocks::get_categories()). A tab shows
+// only when a block is in it; a block with no category is under All only.
+const CATEGORIES = Object.entries(shapeblock.blockCategories || {}).map(([value, label]) => ({ value, label }));
 
 export default function Blocks() {
     const [blocks, setBlocks] = useState(shapeblock.blocks);
     const [bulkLoading, setBulkLoading] = useState(false);
     const [search, setSearch] = useState('');
     const [sort, setSort] = useState('default'); // 'default' | 'az' | 'za' | 'active' | 'inactive'
+    const [category, setCategory] = useState('');
 
     // update by ajax
     const updateBlockStatus = (blockId, currentStatus) => { // Accept currentStatus to calculate new one locally
@@ -20,10 +25,8 @@ export default function Blocks() {
         ));
 
         const data = {
-            action: 'shapeblock_update_block_status',
             blockId: blockId,
-            status: newStatus,
-            nonce: shapeblock.nonce
+            status: newStatus
         };
 
         fetch(shapeblock.rest_url + 'update-block-status', {
@@ -87,10 +90,8 @@ export default function Blocks() {
         setBulkLoading(true);
 
         const data = {
-            action: 'shapeblock_update_all_block_status',
             blockIds: blockIds,
-            status: newStatus,
-            nonce: shapeblock.nonce
+            status: newStatus
         };
 
         fetch(shapeblock.rest_url + 'update-all-block-status', {
@@ -138,6 +139,7 @@ export default function Blocks() {
     // Apply the search term (title + description).
     const term = search.trim().toLowerCase();
     const filteredBlocks = blocks.filter(block => {
+        if (category && block.category !== category) return false;
         if (term) {
             const haystack = `${block.title || ''} ${block.description || ''}`.toLowerCase();
             if (!haystack.includes(term)) return false;
@@ -147,7 +149,16 @@ export default function Blocks() {
 
     // Apply the active sort option (non-mutating copy).
     const sortedBlocks = [...filteredBlocks];
-    if (sort === 'az') {
+    if (sort === 'default') {
+        // Grouped by tab, in the tabs' order, and A-Z within a tab, so an
+        // add-on's blocks sit among the blocks of their kind rather than all
+        // at the end. Blocks with no tab come last.
+        const rank = (block) => {
+            const i = CATEGORIES.findIndex((c) => c.value === block.category);
+            return i < 0 ? CATEGORIES.length : i;
+        };
+        sortedBlocks.sort((a, b) => rank(a) - rank(b) || (a.title || '').localeCompare(b.title || ''));
+    } else if (sort === 'az') {
         sortedBlocks.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
     } else if (sort === 'za') {
         sortedBlocks.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
@@ -161,6 +172,23 @@ export default function Blocks() {
         <div className='shapeblock-options-content'>
             <div className="shapeblock-options-content-header">
                 <h1 className='shapeblock-options-title'>{ __( 'Blocks', 'shapeblock' ) }</h1>
+                <div className="shapeblock-blocks-tabs" role="tablist" aria-label={ __( 'Block categories', 'shapeblock' ) }>
+                    {[{ value: '', label: __( 'All', 'shapeblock' ) }, ...CATEGORIES.filter((c) => blocks.some((b) => b.category === c.value))].map((c) => (
+                        <button
+                            key={c.value || 'all'}
+                            type="button"
+                            role="tab"
+                            aria-selected={category === c.value}
+                            className={`shapeblock-blocks-tab${category === c.value ? ' is-active' : ''}`}
+                            onClick={() => setCategory(c.value)}
+                        >
+                            {c.label}
+                            <span className="shapeblock-blocks-tab-count">
+                                {c.value ? blocks.filter((b) => b.category === c.value).length : blocks.length}
+                            </span>
+                        </button>
+                    ))}
+                </div>
                 <div
                     className="shapeblock-blocks-toolbar"
                     style={{
@@ -173,16 +201,18 @@ export default function Blocks() {
                     }}
                 >
                     {/* search + sort — left side */}
-                    <Space className="shapeblock-blocks-filters">
+                    <Space wrap className="shapeblock-blocks-filters">
                         <Input
+                            size="large"
                             placeholder={ __( 'Search blocks...', 'shapeblock' ) }
                             allowClear
                             prefix={<SearchOutlined />}
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            style={{ width: 240 }}
+                            style={{ width: 240, maxWidth: '100%' }}
                         />
                         <Select
+                            size="large"
                             value={sort}
                             onChange={(v) => setSort(v)}
                             style={{ width: 170 }}
@@ -196,8 +226,9 @@ export default function Blocks() {
                         />
                     </Space>
                     {/* activate / deactivate all — right side */}
-                    <Space className="shapeblock-blocks-actions">
+                    <Space wrap className="shapeblock-blocks-actions">
                         <Button
+                            size="large"
                             type="primary"
                             loading={bulkLoading}
                             disabled={blocks.every(block => block.status === 'enable')}
@@ -206,6 +237,7 @@ export default function Blocks() {
                             { __( 'Activate All', 'shapeblock' ) }
                         </Button>
                         <Button
+                            size="large"
                             danger
                             loading={bulkLoading}
                             disabled={blocks.every(block => block.status === 'disable')}
@@ -227,14 +259,15 @@ export default function Blocks() {
                         : __( 'No blocks found.', 'shapeblock' ) }
                 </p>
             )}
-            <Row gutter={[16, 16]} justify="flex-start">
+            <div className="shapeblock-blocks-grid">
                 {sortedBlocks.map((block) => (
 
                     <BlockItem
                         key={block.id}
                         title={block.title}
-                        id={block.id}
                         description={block.description}
+                        badge={block.badge}
+                        badgeType={block.badgeType}
                         icon={block.iconClass}
                         onChangeHandler={() => updateBlockStatus(block.id, block.status)}
                         status={block.status}
@@ -242,7 +275,15 @@ export default function Blocks() {
 
                 ))
                 }
-            </Row>
+            </div>
+            {shapeblock.upgradeUrl && (
+                <p className="shapeblock-blocks-more">
+                    { __( 'Need more blocks?', 'shapeblock' ) }{' '}
+                    <a href={shapeblock.upgradeUrl} target="_blank" rel="noopener noreferrer">
+                        { __( 'See ShapeBlock Pro', 'shapeblock' ) }
+                    </a>
+                </p>
+            )}
         </div>
     );
 }

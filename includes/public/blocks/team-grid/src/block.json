@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/team-grid",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"title": "Team Member",
 	"category": "shapeblock",
 	"description": "A team member card with 5 skins, social icons, contact info and an optional popup.",
@@ -83,6 +83,7 @@
 		"imagePaddingMobile": { "type": "object" },
 		"imageStyleRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"imageBelowBg": { "type": "string", "default": "" },
+		"imageBelowBgGradient": { "type": "string", "default": "" },
 		"imageBelowHeight": { "type": "string", "default": "" },
 		"imageBelowHeightTablet": { "type": "string", "default": "" },
 		"imageBelowHeightMobile": { "type": "string", "default": "" },
@@ -90,6 +91,7 @@
 		"imageBelowRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 
 		"areaBgColor": { "type": "string", "default": "" },
+		"areaBgGradient": { "type": "string", "default": "" },
 		"wrapPadding": { "type": "object" },
 		"wrapPaddingTablet": { "type": "object" },
 		"wrapPaddingMobile": { "type": "object" },
@@ -164,8 +166,10 @@
 
 		"sIconColor": { "type": "string", "default": "" },
 		"sIconBgColor": { "type": "string", "default": "" },
+		"sIconBgGradient": { "type": "string", "default": "" },
 		"sIconHoverColor": { "type": "string", "default": "" },
 		"sIconHoverBgColor": { "type": "string", "default": "" },
+		"sIconHoverBgGradient": { "type": "string", "default": "" },
 		"sIconTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
 		"sIconTypographyTablet": { "type": "object", "default": {} },
 		"sIconTypographyMobile": { "type": "object", "default": {} },
@@ -186,6 +190,7 @@
 		"socialBoxShadow": { "type": "object", "default": { "x": 0, "y": 0, "b": 0, "s": 0, "c": "rgba(0, 0, 0, 0)" } },
 
 		"popupBgColor": { "type": "string", "default": "" },
+		"popupBgGradient": { "type": "string", "default": "" },
 		"popupNameColor": { "type": "string", "default": "" },
 		"popupNameTypography": { "type": "object", "default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" } },
 		"popupNameTypographyTablet": { "type": "object", "default": {} },

@@ -20,7 +20,7 @@ $header = isset( $attributes['tableHeader'] ) && is_array( $attributes['tableHea
 $body   = isset( $attributes['tableBody'] ) && is_array( $attributes['tableBody'] ) ? $attributes['tableBody'] : [];
 $footer = isset( $attributes['tableFooter'] ) && is_array( $attributes['tableFooter'] ) ? $attributes['tableFooter'] : [];
 
-$tooltip_align = isset( $attributes['tooltipAlign'] ) ? $attributes['tooltipAlign'] : 'top';
+$tooltip_align = isset( $attributes['tooltipAlign'] ) ? sanitize_html_class( (string) $attributes['tooltipAlign'], 'top' ) : 'top';
 
 $block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'shapeblock-block shapeblock-table-block-wrap ' . $unique_id ) );
 if ( empty( $block_wrap_attr ) ) {
@@ -80,7 +80,11 @@ $tbody_border = ! empty( $attributes['tableBorder'] ) ? $H::border_to_css_props(
 $head = [];
 if ( ! empty( $attributes['headerAlign'] ) ) $head['text-align'] = $attributes['headerAlign'];
 if ( ! empty( $attributes['headerTextColor'] ) ) $head['color'] = $attributes['headerTextColor'];
-if ( ! empty( $attributes['headerBgColor'] ) ) $head['background-color'] = $attributes['headerBgColor'];
+if ( ! empty( $attributes['headerBgColorGradient'] ) ) {
+	$head['background'] = $attributes['headerBgColorGradient'];
+} elseif ( ! empty( $attributes['headerBgColor'] ) ) {
+	$head['background-color'] = $attributes['headerBgColor'];
+}
 $head = array_merge( $head, $typo( $attributes['headerTypography'] ?? [] ) );
 $head_th = array_merge( $dims( $attributes['theadRadius'] ?? [], 'radius' ), $dims( $attributes['theadPadding'] ?? [], 'padding' ) );
 if ( ! empty( $attributes['headBorder'] ) ) $head_th = array_merge( $head_th, $H::border_to_css_props( $attributes['headBorder'] ) );
@@ -88,26 +92,31 @@ $head_icon = [];
 if ( ! empty( $attributes['headerIconColor'] ) ) $head_icon['color'] = $attributes['headerIconColor'];
 if ( '' !== $u( 'headerIconSize' ) ) $head_icon['font-size'] = $u( 'headerIconSize' );
 $head_icon = array_merge( $head_icon, $dims( $attributes['headerIconMargin'] ?? [], 'margin' ) );
-$head_icon_svg = [];
-if ( ! empty( $attributes['headerIconColor'] ) ) $head_icon_svg['fill'] = $attributes['headerIconColor'];
-if ( '' !== $u( 'headerIconSize' ) ) { $head_icon_svg['width'] = $u( 'headerIconSize' ); $head_icon_svg['height'] = $u( 'headerIconSize' ); }
 $head_icon_wrap = ( '' !== $u( 'headerIconYPos' ) ) ? [ 'top' => $u( 'headerIconYPos' ) ] : [];
 
 // Body.
 $bd = [];
 if ( ! empty( $attributes['bodyAlign'] ) ) $bd['text-align'] = $attributes['bodyAlign'];
 if ( ! empty( $attributes['bodyTextColor'] ) ) $bd['color'] = $attributes['bodyTextColor'];
-if ( ! empty( $attributes['bodyBgColor'] ) ) $bd['background-color'] = $attributes['bodyBgColor'];
+if ( ! empty( $attributes['bodyBgColorGradient'] ) ) {
+	$bd['background'] = $attributes['bodyBgColorGradient'];
+} elseif ( ! empty( $attributes['bodyBgColor'] ) ) {
+	$bd['background-color'] = $attributes['bodyBgColor'];
+}
 $bd = array_merge( $bd, $typo( $attributes['bodyTypography'] ?? [] ) );
-$bd_striped = ( ! empty( $attributes['stripedBg'] ) && ! empty( $attributes['stripedBgColor'] ) ) ? [ 'background-color' => $attributes['stripedBgColor'] ] : [];
+$bd_striped = [];
+if ( ! empty( $attributes['stripedBg'] ) ) {
+	if ( ! empty( $attributes['stripedBgColorGradient'] ) ) {
+		$bd_striped['background'] = $attributes['stripedBgColorGradient'];
+	} elseif ( ! empty( $attributes['stripedBgColor'] ) ) {
+		$bd_striped['background-color'] = $attributes['stripedBgColor'];
+	}
+}
 $bd_icon = [];
 if ( ! empty( $attributes['bodyIconColor'] ) ) $bd_icon['color'] = $attributes['bodyIconColor'];
 if ( '' !== $u( 'bodyIconSize' ) ) $bd_icon['font-size'] = $u( 'bodyIconSize' );
 $bd_icon = array_merge( $bd_icon, $dims( $attributes['bodyIconGap'] ?? [], 'padding' ) );
-$bd_icon_svg = [];
-if ( ! empty( $attributes['bodyIconColor'] ) ) $bd_icon_svg['fill'] = $attributes['bodyIconColor'];
-if ( '' !== $u( 'bodyIconSize' ) ) { $bd_icon_svg['width'] = $u( 'bodyIconSize' ); $bd_icon_svg['height'] = $u( 'bodyIconSize' ); }
-$bd_td = array_merge( $dims( $attributes['tbodyRadius'] ?? [], 'radius' ), $dims( $attributes['tbodyPadding'] ?? [], 'padding' ), $dims( $attributes['tbodyMargin'] ?? [], 'margin' ) );
+$bd_td = array_merge( $valign_cells, $dims( $attributes['tbodyRadius'] ?? [], 'radius' ), $dims( $attributes['tbodyPadding'] ?? [], 'padding' ) );
 if ( ! empty( $attributes['bodyBorder'] ) ) $bd_td = array_merge( $bd_td, $H::border_to_css_props( $attributes['bodyBorder'] ) );
 $tip_icon = [];
 if ( ! empty( $attributes['tooltipIconColor'] ) ) $tip_icon['color'] = $attributes['tooltipIconColor'];
@@ -123,13 +132,16 @@ $img = array_merge( $img, $dims( $attributes['imgRadius'] ?? [], 'radius' ) );
 $ft = [];
 if ( ! empty( $attributes['footerAlign'] ) ) $ft['text-align'] = $attributes['footerAlign'];
 if ( ! empty( $attributes['footerTextColor'] ) ) $ft['color'] = $attributes['footerTextColor'];
-if ( ! empty( $attributes['footerBgColor'] ) ) $ft['background-color'] = $attributes['footerBgColor'];
+if ( ! empty( $attributes['footerBgColorGradient'] ) ) {
+	$ft['background'] = $attributes['footerBgColorGradient'];
+} elseif ( ! empty( $attributes['footerBgColor'] ) ) {
+	$ft['background-color'] = $attributes['footerBgColor'];
+}
 $ft = array_merge( $ft, $typo( $attributes['footerTypography'] ?? [] ) );
 $ft_th = array_merge( $dims( $attributes['tfootRadius'] ?? [], 'radius' ), $dims( $attributes['tfootPadding'] ?? [], 'padding' ) );
 if ( ! empty( $attributes['footBorder'] ) ) $ft_th = array_merge( $ft_th, $H::border_to_css_props( $attributes['footBorder'] ) );
 
 $sub = [
-	'.shapeblock-table-body td, ' . $selector . ' .shapeblock-table-body th' => $H::get_inline_styles( $valign_cells ),
 	'.shapeblock-table'                          => $H::get_inline_styles( $table_box ),
 	'.shapeblock-table-header th, ' . $selector . ' .shapeblock-table-body td' => $H::get_inline_styles( $cell_padding ),
 	'.shapeblock-table-body'                     => $H::get_inline_styles( array_merge( $tbody_border, $bd ) ),
@@ -138,14 +150,12 @@ $sub = [
 	'.shapeblock-table-header th'                => $H::get_inline_styles( $head_th ),
 	'.shapeblock-header-icon'                    => $H::get_inline_styles( $head_icon_wrap ),
 	'.shapeblock-header-icon i'                  => $H::get_inline_styles( $head_icon ),
-	'.shapeblock-header-icon svg'                => $H::get_inline_styles( $head_icon_svg ),
 
 	'.shapeblock-table-body tr:nth-of-type(2n)'  => $H::get_inline_styles( $bd_striped ),
 	'.shapeblock-table-body td i'                => $H::get_inline_styles( $bd_icon ),
-	'.shapeblock-table-body td svg'              => $H::get_inline_styles( $bd_icon_svg ),
 	'.shapeblock-table-body td'                  => $H::get_inline_styles( $bd_td ),
-	'.shapeblock-tbl-tooltip i'                  => $H::get_inline_styles( $tip_icon ),
-	'.shapeblock-tbl-tooltip svg'                => $H::get_inline_styles( $tip_icon_svg ),
+	'.shapeblock-table .shapeblock-tbl-tooltip i'   => $H::get_inline_styles( $tip_icon ),
+	'.shapeblock-table .shapeblock-tbl-tooltip svg' => $H::get_inline_styles( $tip_icon_svg ),
 	'.shapeblock-table-image'                    => $H::get_inline_styles( $img ),
 
 	'.shapeblock-table-footer'                   => $H::get_inline_styles( $ft ),
@@ -174,8 +184,6 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $selector
 	$head_th = $dims( $attributes[ 'theadPadding' . $suffix ] ?? [], 'padding' );
 	$head_icon = [];
 	if ( '' !== $uu( 'headerIconSize' . $suffix ) ) $head_icon['font-size'] = $uu( 'headerIconSize' . $suffix );
-	$head_icon_svg = [];
-	if ( '' !== $uu( 'headerIconSize' . $suffix ) ) { $head_icon_svg['width'] = $uu( 'headerIconSize' . $suffix ); $head_icon_svg['height'] = $uu( 'headerIconSize' . $suffix ); }
 
 	// Body.
 	$bd = [];
@@ -184,9 +192,7 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $selector
 	$bd_icon = [];
 	if ( '' !== $uu( 'bodyIconSize' . $suffix ) ) $bd_icon['font-size'] = $uu( 'bodyIconSize' . $suffix );
 	$bd_icon = array_merge( $bd_icon, $dims( $attributes[ 'bodyIconGap' . $suffix ] ?? [], 'padding' ) );
-	$bd_icon_svg = [];
-	if ( '' !== $uu( 'bodyIconSize' . $suffix ) ) { $bd_icon_svg['width'] = $uu( 'bodyIconSize' . $suffix ); $bd_icon_svg['height'] = $uu( 'bodyIconSize' . $suffix ); }
-	$bd_td = array_merge( $dims( $attributes[ 'tbodyPadding' . $suffix ] ?? [], 'padding' ), $dims( $attributes[ 'tbodyMargin' . $suffix ] ?? [], 'margin' ) );
+	$bd_td = array_merge( $valign, $dims( $attributes[ 'tbodyPadding' . $suffix ] ?? [], 'padding' ) );
 	$tip_icon = [];
 	if ( '' !== $uu( 'tooltipIconSize' . $suffix ) ) $tip_icon['font-size'] = $uu( 'tooltipIconSize' . $suffix );
 	$tip_icon_svg = [];
@@ -200,19 +206,16 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $selector
 	$ft_th = $dims( $attributes[ 'tfootPadding' . $suffix ] ?? [], 'padding' );
 
 	return [
-		'.shapeblock-table-body td, ' . $selector . ' .shapeblock-table-body th'   => $valign,
 		'.shapeblock-table'                                                   => $table_box,
 		'.shapeblock-table-header th, ' . $selector . ' .shapeblock-table-body td' => $cell_padding,
 		'.shapeblock-table-body'                                              => $bd,
 		'.shapeblock-table-header'                                            => $head,
 		'.shapeblock-table-header th'                                         => $head_th,
 		'.shapeblock-header-icon i'                                           => $head_icon,
-		'.shapeblock-header-icon svg'                                         => $head_icon_svg,
 		'.shapeblock-table-body td i'                                         => $bd_icon,
-		'.shapeblock-table-body td svg'                                       => $bd_icon_svg,
 		'.shapeblock-table-body td'                                           => $bd_td,
-		'.shapeblock-tbl-tooltip i'                                           => $tip_icon,
-		'.shapeblock-tbl-tooltip svg'                                         => $tip_icon_svg,
+		'.shapeblock-table .shapeblock-tbl-tooltip i'                         => $tip_icon,
+		'.shapeblock-table .shapeblock-tbl-tooltip svg'                       => $tip_icon_svg,
 		'.shapeblock-table-image'                                             => $img,
 		'.shapeblock-table-footer'                                            => $ft,
 		'.shapeblock-table-footer th'                                         => $ft_th,
@@ -335,7 +338,12 @@ $cell_style = function ( $item ) use ( $H ) {
 		if ( empty( $item['dataFlex'] ) && ! empty( $item['align'] ) && in_array( $item['align'], array( 'left', 'center', 'right', 'justify', 'start', 'end' ), true ) ) $styles[] = 'text-align:' . $item['align'];
 		if ( ! empty( $item['verticalAlign'] ) && in_array( $item['verticalAlign'], array( 'top', 'middle', 'bottom', 'baseline' ), true ) ) $styles[] = 'vertical-align:' . $item['verticalAlign'];
 		if ( ! empty( $item['decoration'] ) && in_array( $item['decoration'], array( 'none', 'underline', 'overline', 'line-through' ), true ) ) $styles[] = 'text-decoration:' . $item['decoration'];
-		if ( '' !== $H::sanitize_css_value( $item['bgColor'] ?? '' ) ) $styles[] = 'background-color:' . $H::sanitize_css_value( $item['bgColor'] );
+		// A cell gradient wins over its flat colour.
+		if ( '' !== $H::sanitize_css_value( $item['bgGradient'] ?? '' ) ) {
+			$styles[] = 'background:' . $H::sanitize_css_value( $item['bgGradient'] );
+		} elseif ( '' !== $H::sanitize_css_value( $item['bgColor'] ?? '' ) ) {
+			$styles[] = 'background-color:' . $H::sanitize_css_value( $item['bgColor'] );
+		}
 		if ( '' !== $H::sanitize_css_value( $item['textColor'] ?? '' ) ) $styles[] = 'color:' . $H::sanitize_css_value( $item['textColor'] );
 		if ( ! empty( $item['dataFlex'] ) ) {
 			if ( ! empty( $item['flexAlign'] ) && in_array( $item['flexAlign'], array( 'flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly', 'start', 'end', 'left', 'right' ), true ) ) $styles[] = 'justify-content:' . $item['flexAlign'];

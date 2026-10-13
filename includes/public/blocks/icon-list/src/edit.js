@@ -1,22 +1,18 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import { useEffect, useState, useRef } from '@wordpress/element';
+import ServerSideRender from '../../custom-components/ServerRender';
+import useInlineText from '../../custom-components/useInlineText';
 import {
 	useBlockProps,
 	InspectorControls,
 	BlockControls,
 	AlignmentControl,
-	MediaUpload,
-	MediaUploadCheck,
 } from '@wordpress/block-editor';
 import {
 	PanelBody,
-	SelectControl,
 	ToggleControl,
 	TextControl,
-	TextareaControl,
 	RangeControl,
-	BoxControl,
 	Button,
 	ToolbarDropdownMenu,
 	TabPanel,
@@ -26,16 +22,13 @@ import {
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
-import BorderControl from '../../custom-components/BorderControl';
-import BackgroundControl from '../../custom-components/BackgroundControl';
-import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
-import SpacingControl from '../../custom-components/SpacingControl';
 import AdvancedControls from '../../custom-components/AdvancedControls';
 
-// Desktop keeps the base key; tablet / mobile append a suffix (e.g. titlePaddingTablet).
+// Desktop keeps the base key; tablet / mobile append a suffix (e.g. iconSizeTablet).
 const getKey = (base, device) =>
 	device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
 
@@ -72,7 +65,7 @@ const ICON_ALIGN_CENTER = <MSVG><rect x="3" y="5" width="18" height="2" /><rect 
 const ICON_ALIGN_RIGHT = <MSVG><rect x="3" y="5" width="18" height="2" /><rect x="9" y="11" width="12" height="2" /><rect x="5" y="17" width="16" height="2" /></MSVG>;
 
 export default function Edit({ attributes, setAttributes, clientId }) {
-	const { blockId, features, feaDir, iconView, feaConnector, layout, listAlign, divider, feaVerticalAlign, iconHAlign, showIcon } = attributes;
+	const { blockId, features, feaDir, layout, listAlign, divider, feaVerticalAlign, showIcon } = attributes;
 
 	useEffect(() => {
 		if (!blockId) {
@@ -105,21 +98,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	};
 
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const typo = (label, key) => <TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />;
-	const border = (label, key) => <BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const shadow = (label, key) => <BoxShadowControls label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const box = (label, key) => <BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	// Responsive spacing (padding / margin) - clean 4-side control per device.
-	const respBox = (label, base) => (
-		<ResponsiveWrapper label={label}>
-			{(device) => (
-				<SpacingControl
-					values={attributes[getKey(base, device)]}
-					onChange={(v) => setAttributes({ [getKey(base, device)]: v })}
-				/>
-			)}
-		</ResponsiveWrapper>
-	);
 	// Responsive typography - one typography object per device.
 	const respTypo = (label, base) => (
 		<ResponsiveWrapper label={label}>
@@ -146,13 +124,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			}}
 		</ResponsiveWrapper>
 	);
-	const bg = (label, c, g) => (
-		<BackgroundControl label={label} colorValue={attributes[c]} gradientValue={attributes[g]} onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })} onGradientChange={(v) => setAttributes({ [g]: v || '' })} />
-	);
 
 	// --- Tab 1: Settings (content & behaviour) --------------------------------
 	const settingsTab = (
-		<PanelBody title={__('List Settings', 'shapeblock')} initialOpen={true}>
+		<PanelBody title={__('Add List', 'shapeblock')} initialOpen={true}>
 			{items.map((item, index) => (
 				<div className="shapeblock-icon-list-repeater-item" key={index}>
 					<div className="shapeblock-icon-list-repeater-head">
@@ -191,7 +166,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// --- Tab 2: Layout (size & spacing) ---------------------------------------
 	const layoutTab = (
 		<>
-			<PanelBody title={__('List', 'shapeblock')} initialOpen={true}>
+			<PanelBody title={__('List Layout', 'shapeblock')} initialOpen={true}>
 				<div className="shapeblock-caps-label">
 					<ToggleGroupControl label={__('Layout', 'shapeblock')} value={layout || 'default'} onChange={(v) => setAttributes({ layout: v })} isBlock __next40pxDefaultSize __nextHasNoMarginBottom>
 						<ToggleGroupControlOptionIcon value="default" icon={ICON_LAYOUT_DEFAULT} label={__('Default', 'shapeblock')} />
@@ -209,20 +184,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			</PanelBody>
 
 			{showIcon !== false && (
-			<PanelBody title={__('Icon', 'shapeblock')} initialOpen={false}>
+			<PanelBody title={__('Icon Position', 'shapeblock')} initialOpen={false}>
 				<div className="shapeblock-caps-label">
 					<ToggleGroupControl label={__('Icon Position', 'shapeblock')} value={feaDir} onChange={(v) => setAttributes({ feaDir: v })} isBlock __next40pxDefaultSize __nextHasNoMarginBottom>
 						<ToggleGroupControlOptionIcon value="left" icon={ICON_DIR_LEFT} label={__('Left', 'shapeblock')} />
 						<ToggleGroupControlOptionIcon value="right" icon={ICON_DIR_RIGHT} label={__('Right', 'shapeblock')} />
-					</ToggleGroupControl>
-				</div>
-				{num(__('Size (px)', 'shapeblock'), 'iconSize', 200)}
-				{num(__('Gap (px)', 'shapeblock'), 'feaMiddleGap')}
-				<div className="shapeblock-caps-label">
-					<ToggleGroupControl label={__('Horizontal Alignment', 'shapeblock')} value={iconHAlign || 'left'} onChange={(v) => setAttributes({ iconHAlign: v })} isBlock __next40pxDefaultSize __nextHasNoMarginBottom>
-						<ToggleGroupControlOptionIcon value="left" icon={ICON_ALIGN_LEFT} label={__('Left', 'shapeblock')} />
-						<ToggleGroupControlOptionIcon value="center" icon={ICON_ALIGN_CENTER} label={__('Center', 'shapeblock')} />
-						<ToggleGroupControlOptionIcon value="right" icon={ICON_ALIGN_RIGHT} label={__('Right', 'shapeblock')} />
 					</ToggleGroupControl>
 				</div>
 				<div className="shapeblock-caps-label">
@@ -243,11 +209,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		<>
 			<PanelBody title={__('List', 'shapeblock')} initialOpen={true}>
 				<ToggleControl label={__('Divider', 'shapeblock')} checked={!!divider} onChange={(v) => setAttributes({ divider: v })} __nextHasNoMarginBottom />
-				{divider && color(__('Divider Color', 'shapeblock'), 'dividerColor')}
+				{divider && (
+					<BackgroundControl label={__('Divider Color', 'shapeblock')} colorValue={attributes.dividerColor} gradientValue={attributes.dividerColorGradient} onColorChange={(v) => setAttributes({ dividerColor: v && typeof v === 'object' ? v.hex : v || '' })} onGradientChange={(v) => setAttributes({ dividerColorGradient: v || '' })} />
+				)}
 			</PanelBody>
 
 			{showIcon !== false && (
 			<PanelBody title={__('Icon', 'shapeblock')} initialOpen={false}>
+				{num(__('Size (px)', 'shapeblock'), 'iconSize', 200)}
+				{num(__('Gap (px)', 'shapeblock'), 'feaMiddleGap')}
 				{color(__('Color', 'shapeblock'), 'iconColor')}
 				{color(__('Hover Color', 'shapeblock'), 'iconColorHover')}
 			</PanelBody>
@@ -259,6 +229,28 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			</PanelBody>
 		</>
 	);
+
+	// Each item's text is typed right on the preview; its row tells which item.
+	// Enter adds an item below, with the same icon, ready to type over.
+	const focusItem = useRef(null);
+	const inlineRef = useInlineText([
+		{
+			selector: '.shapeblock-icon-list-title',
+			getIndex: (el) => {
+				const row = el.closest('li');
+				return row ? Array.prototype.indexOf.call(row.parentElement.children, row) : 0;
+			},
+			save: (i, v) => updateItem(i, 'title', v),
+			onEnter: (i, v) => {
+				const next = items.map((it, idx) => (idx === i ? { ...it, title: v } : it));
+				const title = __('List item', 'shapeblock');
+				next.splice(i + 1, 0, { icon: (items[i] && items[i].icon) || '', title });
+				focusItem.current = { index: i + 1, text: title };
+				setAttributes({ features: next });
+			},
+			focus: focusItem,
+		},
+	]);
 
 	return (
 		<div {...useBlockProps()}>
@@ -298,7 +290,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</TabPanel>
 			</InspectorControls>
 
-			<ServerSideRender block="shapeblock/icon-list" attributes={attributes} httpMethod="POST" />
+			<div ref={inlineRef}>
+				<ServerSideRender block="shapeblock/icon-list" attributes={attributes} httpMethod="POST" />
+			</div>
 		</div>
 	);
 }

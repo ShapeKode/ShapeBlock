@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/table",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "title": "Table",
   "category": "shapeblock",
   "description": "A data table with header, body and footer cells — icons, images, tooltips, colspan/rowspan and full styling.",
@@ -234,6 +234,10 @@
       "type": "string",
       "default": ""
     },
+    "headerBgColorGradient": {
+      "type": "string",
+      "default": ""
+    },
     "headerTypography": {
       "type": "object",
       "default": {
@@ -323,6 +327,10 @@
       "type": "string",
       "default": ""
     },
+    "bodyBgColorGradient": {
+      "type": "string",
+      "default": ""
+    },
     "bodyTypography": {
       "type": "object",
       "default": {
@@ -348,6 +356,10 @@
       "default": false
     },
     "stripedBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "stripedBgColorGradient": {
       "type": "string",
       "default": ""
     },
@@ -392,15 +404,6 @@
       "type": "object"
     },
     "tbodyPaddingMobile": {
-      "type": "object"
-    },
-    "tbodyMargin": {
-      "type": "object"
-    },
-    "tbodyMarginTablet": {
-      "type": "object"
-    },
-    "tbodyMarginMobile": {
       "type": "object"
     },
     "bodyBorder": {
@@ -480,6 +483,10 @@
       "default": ""
     },
     "footerBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "footerBgColorGradient": {
       "type": "string",
       "default": ""
     },

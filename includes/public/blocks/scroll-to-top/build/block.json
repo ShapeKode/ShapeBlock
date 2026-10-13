@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/scroll-to-top",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "title": "Scroll Top",
   "category": "shapeblock",
   "description": "A floating scroll-to-top button that appears after scrolling and smoothly returns to the top.",
@@ -146,11 +146,19 @@
       "type": "string",
       "default": ""
     },
+    "bgGradient": {
+      "type": "string",
+      "default": ""
+    },
     "colorHover": {
       "type": "string",
       "default": ""
     },
     "bgColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "bgGradientHover": {
       "type": "string",
       "default": ""
     },

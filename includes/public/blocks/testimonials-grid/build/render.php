@@ -7,8 +7,8 @@ return ( function ( $attributes, $content, $block ) {
 /**
  * Server-side render for the Testimonials Grid block.
  *
- * 6 skins, ratings, quote icons,
- * logos and a view-all reveal. Element classes use this plugin's "shapeblock-" prefix.
+ * 3 styles, ratings, quote icons and logos. Element classes use this plugin's
+ * "shapeblock-" prefix.
  */
 
 $H = '\ShapeBlock\Frontend\Helper';
@@ -87,9 +87,9 @@ $u = function ( $key ) use ( $attributes, $H ) {
 	return ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? $H::ensure_unit( $attributes[ $key ] ) : '';
 };
 
-// Columns (responsive) — not applied on default/skin4 (full-width).
+// Columns (responsive) — not applied on default (full-width).
 $col_css = '';
-if ( ! in_array( $skin, [ 'default', 'skin4' ], true ) ) {
+if ( 'default' !== $skin ) {
 	$c_d = isset( $attributes['columns'] ) ? (int) $attributes['columns'] : 3;
 	$c_t = isset( $attributes['columnsTablet'] ) && '' !== $attributes['columnsTablet'] ? (int) $attributes['columnsTablet'] : $c_d;
 	$c_m = isset( $attributes['columnsMobile'] ) && '' !== $attributes['columnsMobile'] ? (int) $attributes['columnsMobile'] : 2;
@@ -138,9 +138,9 @@ if ( '' !== $u( 'authorImageSize' ) ) { $img_styles['width'] = $u( 'authorImageS
 $img_styles = array_merge( $img_styles, $dims( $attributes['authorImageBorderRadius'] ?? [], 'radius' ) );
 $logo_styles = ( '' !== $u( 'logoHeight' ) ) ? [ 'height' => $u( 'logoHeight' ), 'width' => 'auto' ] : [];
 
-$quote_styles = [];
-if ( ! empty( $attributes['quoteIconColor'] ) ) $quote_styles['fill'] = $attributes['quoteIconColor'];
-$quote_size = ( '' !== $u( 'quoteIconSize' ) ) ? [ 'width' => $u( 'quoteIconSize' ), 'height' => $u( 'quoteIconSize' ) ] : [];
+$quote_icon = [];
+if ( ! empty( $attributes['quoteIconColor'] ) ) $quote_icon['color'] = $attributes['quoteIconColor'];
+if ( '' !== $u( 'quoteIconSize' ) ) $quote_icon['font-size'] = $u( 'quoteIconSize' );
 
 // ---------------------------------------------------------------------------
 // Responsive (Tablet / Mobile) overrides. The desktop CSS above is unchanged;
@@ -155,20 +155,36 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $selector
 
 	// Inner padding + wrapper gap.
 	$inner = $dims( $attributes[ 'itemInnerPadding' . $suffix ] ?? [], 'padding' );
-	if ( isset( $attributes[ 'wrapperGap' . $suffix ] ) && '' !== $attributes[ 'wrapperGap' . $suffix ] ) $inner['gap'] = $H::ensure_unit( $attributes[ 'wrapperGap' . $suffix ] );
+	if ( isset( $attributes[ 'wrapperGap' . $suffix ] ) && '' !== $attributes[ 'wrapperGap' . $suffix ] ) {
+		$inner['gap'] = $H::ensure_unit( $attributes[ 'wrapperGap' . $suffix ] );
+		// The phone layout stacks the card as a plain block, where a gap does
+		// nothing; a column flexbox stacks it the same way and honours the gap.
+		if ( 'Mobile' === $suffix ) {
+			$inner['display']        = 'flex';
+			$inner['flex-direction'] = 'column';
+		}
+	}
 	$out[ $selector . ' .shapeblock-tstml-inner' ] = $inner;
 
 	// Content alignment (mirrors the desktop compound selector).
 	$align = [];
 	if ( ! empty( $attributes[ 'testimonialsAlignment' . $suffix ] ) ) $align['text-align'] = $attributes[ 'testimonialsAlignment' . $suffix ];
-	$out[ $selector . ' .shapeblock-tstml-inner, ' . $selector . ' .shapeblock-tstml-inner .eel-description' ] = $align;
+	$out[ $selector . ' .shapeblock-tstml-inner, ' . $selector . ' .shapeblock-tstml-inner .shapeblock-description' ] = $align;
 
 	// Name typography.
 	$out[ $selector . ' .shapeblock-tstml-inner .shapeblock-name' ] = $typo( $attributes[ 'nameTypography' . $suffix ] ?? [] );
 
 	// Name margin + author-meta alignment.
 	$awrap = $dims( $attributes[ 'nameMargin' . $suffix ] ?? [], 'margin' );
-	if ( ! empty( $attributes[ 'authorMetaAlignment' . $suffix ] ) ) $awrap['align-items'] = $attributes[ 'authorMetaAlignment' . $suffix ];
+	if ( ! empty( $attributes[ 'authorMetaAlignment' . $suffix ] ) ) {
+		$awrap['align-items'] = $attributes[ 'authorMetaAlignment' . $suffix ];
+		// Same on phones: the author row is a block there, so it becomes a column
+		// flexbox for the alignment to apply.
+		if ( 'Mobile' === $suffix ) {
+			$awrap['display']        = 'flex';
+			$awrap['flex-direction'] = 'column';
+		}
+	}
 	$out[ $selector . ' .shapeblock-tstml-inner .shapeblock-author-wrap' ] = $awrap;
 
 	// Designation typography.
@@ -180,11 +196,6 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $selector
 	if ( isset( $attributes[ 'minHeight' . $suffix ] ) && '' !== $attributes[ 'minHeight' . $suffix ] ) $desc['min-height'] = $H::ensure_unit( $attributes[ 'minHeight' . $suffix ] );
 	if ( isset( $attributes[ 'maxWidth' . $suffix ] ) && '' !== $attributes[ 'maxWidth' . $suffix ] ) $desc['max-width'] = $H::ensure_unit( $attributes[ 'maxWidth' . $suffix ] );
 	$out[ $selector . ' .shapeblock-tstml-inner .shapeblock-description' ] = $desc;
-
-	// Skin 4 author alignment.
-	$s4 = [];
-	if ( ! empty( $attributes[ 'authorMetaAlignmentStyle4' . $suffix ] ) ) $s4['text-align'] = $attributes[ 'authorMetaAlignmentStyle4' . $suffix ];
-	$out[ $selector . ' .shapeblock-tstml-inner.skin4 .shapeblock-author' ] = $s4;
 
 	// Author info gap.
 	$out[ $selector . ' .shapeblock-author-wrap .shapeblock-picture' ] = $dims( $attributes[ 'authorMetaGap' . $suffix ] ?? [], 'margin' );
@@ -214,7 +225,7 @@ wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $col_css . $resp_css, [
 	'.shapeblock-grid-item'                          => $H::get_inline_styles( $item_pad ),
 	'.shapeblock-tstml-inner'                        => $H::get_inline_styles( $inner ),
-	'.shapeblock-tstml-inner, ' . $selector . ' .shapeblock-tstml-inner .eel-description' => $H::get_inline_styles( $align_styles ),
+	'.shapeblock-tstml-inner, ' . $selector . ' .shapeblock-tstml-inner .shapeblock-description' => $H::get_inline_styles( $align_styles ),
 	'.shapeblock-tstml-inner .shapeblock-name'            => $H::get_inline_styles( $name_styles ),
 	'.shapeblock-tstml-inner .shapeblock-author-wrap'     => $H::get_inline_styles( array_merge( $name_margin, $author_wrap ) ),
 	'.shapeblock-tstml-inner .shapeblock-designation'     => $H::get_inline_styles( $deg_styles ),
@@ -223,8 +234,7 @@ $H::add_custom_style( $style_handle, $selector, $col_css . $resp_css, [
 	'.shapeblock-author-wrap .shapeblock-picture'         => $H::get_inline_styles( $picture_margin ),
 	'.shapeblock-author-wrap .shapeblock-picture img, ' . $selector . ' .shapeblock-picture img' => $H::get_inline_styles( $img_styles ),
 	'.shapeblock-company-logo img'                   => $H::get_inline_styles( $logo_styles ),
-	'.shapeblock-quote svg, ' . $selector . ' .shapeblock-quote svg path' => $H::get_inline_styles( $quote_styles ),
-	'.shapeblock-quote svg'                          => $H::get_inline_styles( $quote_size ),
+	'.shapeblock-quote i'                            => $H::get_inline_styles( $quote_icon ),
 ] );
 
 // ---------------------------------------------------------------------------
@@ -277,7 +287,13 @@ $render_logo = function ( $item ) {
 $render_rating = function ( $item ) use ( $show_rating ) {
 	if ( ! $show_rating || empty( $item['rating'] ) ) return '';
 	$r = (int) $item['rating'];
-	$out = '<div class="shapeblock-rating" aria-label="Rating: ' . esc_attr( $r ) . ' out of 5">';
+	$out = '<div class="shapeblock-rating" role="img" aria-label="' . esc_attr(
+		sprintf(
+			/* translators: %s: star rating, for example 4.5. */
+			__( 'Rating: %s out of 5', 'shapeblock' ),
+			$r
+		)
+	) . '">';
 	for ( $i = 1; $i <= 5; $i++ ) {
 		$out .= '<span class="star' . ( $i <= $r ? ' filled' : '' ) . '">' . ( $i <= $r ? '★' : '☆' ) . '</span>';
 	}

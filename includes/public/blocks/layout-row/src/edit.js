@@ -22,7 +22,6 @@ import {
     Button,
     TabPanel,
     __experimentalUnitControl as UnitControl,
-    __experimentalNumberControl as NumberControl,
     __experimentalToggleGroupControl as ToggleGroupControl,
     __experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon,
 } from '@wordpress/components';
@@ -100,7 +99,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         : 'div';
 
     const editorCss = useMemo(
-        () => buildRowEditorCss(attributes, innerBlocks.length, innerBlocks),
+        () => buildRowEditorCss(attributes, innerBlocks),
         [attributes, innerBlocks]
     );
 
@@ -161,7 +160,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             });
 
             replaceInnerBlocks(clientId, merged, false);
-            setAttributes({ preset: newPresetId, columns: widths.length });
+            setAttributes({ preset: newPresetId });
         },
         [clientId, innerBlocks, replaceInnerBlocks, setAttributes]
     );
@@ -175,7 +174,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             createBlock('shapeblock/column', { width: evenWidth }),
         ];
         replaceInnerBlocks(clientId, next, false);
-        setAttributes({ columns: count, preset: '' });
+        setAttributes({ preset: '' });
     }, [clientId, innerBlocks, replaceInnerBlocks, updateBlockAttributes, setAttributes]);
 
     const removeLastColumn = useCallback(() => {
@@ -184,7 +183,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         const evenWidth = `${(100 / remaining.length).toFixed(2)}%`;
         remaining.forEach((b) => updateBlockAttributes(b.clientId, { width: evenWidth }));
         replaceInnerBlocks(clientId, remaining, false);
-        setAttributes({ columns: remaining.length, preset: '' });
+        setAttributes({ preset: '' });
     }, [clientId, innerBlocks, replaceInnerBlocks, updateBlockAttributes, setAttributes]);
 
     // --- Tab 1: Settings (content / behavior) ---------------------------------
@@ -217,7 +216,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 />
             </PanelBody>
 
-            <PanelBody title={__('Position & Z-Index', 'shapeblock')} initialOpen={false}>
+            <PanelBody title={__('Sticky', 'shapeblock')} initialOpen={false}>
                 <ToggleControl
                     label={__('Make Sticky', 'shapeblock')}
                     checked={attributes.isSticky}
@@ -235,71 +234,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         />
                     </>
                 )}
-
-                <Divider />
-                <SelectControl
-                    label={__('Position', 'shapeblock')}
-                    value={attributes.position}
-                    options={[
-                        { label: __('Default', 'shapeblock'), value: '' },
-                        { label: 'static', value: 'static' },
-                        { label: 'relative', value: 'relative' },
-                        { label: 'absolute', value: 'absolute' },
-                        { label: 'fixed', value: 'fixed' },
-                    ]}
-                    onChange={(v) => setAttributes({ position: v })}
-                    __next40pxDefaultSize
-                    __nextHasNoMarginBottom
-                />
-
-                <Divider />
-                <SelectControl
-                    label={__('Overflow', 'shapeblock')}
-                    value={attributes.overflow}
-                    options={[
-                        { label: __('Default', 'shapeblock'), value: '' },
-                        { label: 'visible', value: 'visible' },
-                        { label: 'hidden', value: 'hidden' },
-                        { label: 'auto', value: 'auto' },
-                        { label: 'scroll', value: 'scroll' },
-                    ]}
-                    onChange={(v) => setAttributes({ overflow: v })}
-                    __next40pxDefaultSize
-                    __nextHasNoMarginBottom
-                />
-                <Divider />
-                <TextControl
-                    label={__('Z-Index', 'shapeblock')}
-                    value={attributes.zIndex}
-                    onChange={(v) => setAttributes({ zIndex: v })}
-                    type="number"
-                    __next40pxDefaultSize
-                    __nextHasNoMarginBottom
-                />
             </PanelBody>
 
             <PanelBody title={__('Responsive', 'shapeblock')} initialOpen={false}>
-                <RangeControl
-                    label={__('Columns per row (Tablet)', 'shapeblock')}
-                    help={__('0 keeps the desktop layout.', 'shapeblock')}
-                    value={parseInt(attributes.columnsTablet, 10) || 0}
-                    onChange={(v) => setAttributes({ columnsTablet: v || 0 })}
-                    min={0}
-                    max={6}
-                    __next40pxDefaultSize
-                    __nextHasNoMarginBottom
-                />
-                <RangeControl
-                    label={__('Columns per row (Mobile)', 'shapeblock')}
-                    help={__('0 stacks the columns, one per row.', 'shapeblock')}
-                    value={parseInt(attributes.columnsMobile, 10) || 0}
-                    onChange={(v) => setAttributes({ columnsMobile: v || 0 })}
-                    min={0}
-                    max={4}
-                    __next40pxDefaultSize
-                    __nextHasNoMarginBottom
-                />
-                <Divider />
                 <ToggleControl
                     label={__('Hide on Desktop', 'shapeblock')}
                     checked={!!attributes.hideDesktop}
@@ -340,6 +277,27 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     ))}
                 </div>
                 <Divider />
+                <RangeControl
+                    label={__('Columns per row (Tablet)', 'shapeblock')}
+                    help={__('0 keeps the desktop layout.', 'shapeblock')}
+                    value={parseInt(attributes.columnsTablet, 10) || 0}
+                    onChange={(v) => setAttributes({ columnsTablet: v || 0 })}
+                    min={0}
+                    max={6}
+                    __next40pxDefaultSize
+                    __nextHasNoMarginBottom
+                />
+                <RangeControl
+                    label={__('Columns per row (Mobile)', 'shapeblock')}
+                    help={__('0 stacks the columns, one per row.', 'shapeblock')}
+                    value={parseInt(attributes.columnsMobile, 10) || 0}
+                    onChange={(v) => setAttributes({ columnsMobile: v || 0 })}
+                    min={0}
+                    max={4}
+                    __next40pxDefaultSize
+                    __nextHasNoMarginBottom
+                />
+                <Divider />
 
                 <SelectControl
                     label={__('Content Width', 'shapeblock')}
@@ -347,11 +305,38 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     options={[
                         { label: __('Boxed', 'shapeblock'), value: 'boxed' },
                         { label: __('Full Width', 'shapeblock'), value: 'full' },
+                        { label: __('Custom', 'shapeblock'), value: 'custom' },
                     ]}
+                    help={
+                        contentWidth === 'custom'
+                            ? __('The whole row - its background too - gets the width below, centred. In the page it stays within the site’s wide width; set the row’s alignment to Full to go wider.', 'shapeblock')
+                            : contentWidth === 'full'
+                                ? __('The content fills the whole row.', 'shapeblock')
+                                : __('The background fills the row; the content stays within the Max Width.', 'shapeblock')
+                    }
                     onChange={(value) => setAttributes({ contentWidth: value })}
                     __next40pxDefaultSize
                     __nextHasNoMarginBottom
                 />
+
+                {contentWidth === 'custom' && (
+                    <ResponsiveWrapper label={__('Width', 'shapeblock')}>
+                        {(device) => (
+                            <UnitControl
+                                value={attributes[getKey('customWidth', device)]}
+                                onChange={(v) => setAttributes({ [getKey('customWidth', device)]: v })}
+                                placeholder="800px"
+                                units={[
+                                    { value: 'px', label: 'px', default: 800 },
+                                    { value: '%', label: '%', default: 80 },
+                                    { value: 'vw', label: 'vw', default: 80 },
+                                    { value: 'rem', label: 'rem', default: 50 },
+                                ]}
+                                __next40pxDefaultSize
+                            />
+                        )}
+                    </ResponsiveWrapper>
+                )}
 
                 {contentWidth === 'boxed' && (
                     <ResponsiveWrapper label={__('Max Width', 'shapeblock')}>
@@ -374,6 +359,48 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         />
                     )}
                 </ResponsiveWrapper>
+            </PanelBody>
+
+            <PanelBody title={__('Position & Z-Index', 'shapeblock')} initialOpen={false}>
+                <SelectControl
+                    label={__('Position', 'shapeblock')}
+                    value={attributes.position}
+                    options={[
+                        { label: __('Default', 'shapeblock'), value: '' },
+                        { label: 'static', value: 'static' },
+                        { label: 'relative', value: 'relative' },
+                        { label: 'absolute', value: 'absolute' },
+                        { label: 'fixed', value: 'fixed' },
+                    ]}
+                    onChange={(v) => setAttributes({ position: v })}
+                    __next40pxDefaultSize
+                    __nextHasNoMarginBottom
+                />
+
+                <Divider />
+                <SelectControl
+                    label={__('Overflow', 'shapeblock')}
+                    value={attributes.overflow}
+                    options={[
+                        { label: __('Default', 'shapeblock'), value: '' },
+                        { label: 'visible', value: 'visible' },
+                        { label: 'hidden', value: 'hidden' },
+                        { label: 'auto', value: 'auto' },
+                        { label: 'scroll', value: 'scroll' },
+                    ]}
+                    onChange={(v) => setAttributes({ overflow: v })}
+                    __next40pxDefaultSize
+                    __nextHasNoMarginBottom
+                />
+                <Divider />
+                <TextControl
+                    label={__('Z-Index', 'shapeblock')}
+                    value={attributes.zIndex}
+                    onChange={(v) => setAttributes({ zIndex: v })}
+                    type="number"
+                    __next40pxDefaultSize
+                    __nextHasNoMarginBottom
+                />
             </PanelBody>
 
             <PanelBody title={__('Flexbox', 'shapeblock')} initialOpen={false}>
@@ -502,26 +529,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </ResponsiveWrapper>
             </PanelBody>
 
-            <PanelBody title={__('Spacing', 'shapeblock')} initialOpen={false}>
-                <ResponsiveWrapper label={__('Padding', 'shapeblock')}>
-                    {(device) => (
-                        <BoxControl
-                            values={attributes[getKey('padding', device)]}
-                            onChange={(v) => setAttributes({ [getKey('padding', device)]: v })}
-                        />
-                    )}
-                </ResponsiveWrapper>
-                <Divider />
-                <ResponsiveWrapper label={__('Margin', 'shapeblock')}>
-                    {(device) => (
-                        <BoxControl
-                            values={attributes[getKey('margin', device)]}
-                            onChange={(v) => setAttributes({ [getKey('margin', device)]: v })}
-                        />
-                    )}
-                </ResponsiveWrapper>
-            </PanelBody>
-
             <PanelBody title={__('Advanced Layout', 'shapeblock')} initialOpen={false}>
                 <SelectControl
                     label={__('Vertical Align', 'shapeblock')}
@@ -557,7 +564,27 @@ export default function Edit({ attributes, setAttributes, clientId }) {
     // --- Tab 3: Style (visual) ------------------------------------------------
     const styleTab = (
         <>
-            <PanelBody title={__('Background', 'shapeblock')} initialOpen={true}>
+            <PanelBody title={__('Spacing', 'shapeblock')} initialOpen={true}>
+                <ResponsiveWrapper label={__('Padding', 'shapeblock')}>
+                    {(device) => (
+                        <BoxControl
+                            values={attributes[getKey('padding', device)]}
+                            onChange={(v) => setAttributes({ [getKey('padding', device)]: v })}
+                        />
+                    )}
+                </ResponsiveWrapper>
+                <Divider />
+                <ResponsiveWrapper label={__('Margin', 'shapeblock')}>
+                    {(device) => (
+                        <BoxControl
+                            values={attributes[getKey('margin', device)]}
+                            onChange={(v) => setAttributes({ [getKey('margin', device)]: v })}
+                        />
+                    )}
+                </ResponsiveWrapper>
+            </PanelBody>
+
+            <PanelBody title={__('Background', 'shapeblock')} initialOpen={false}>
                 <BackgroundControl
                     label={__('Background', 'shapeblock')}
                     colorValue={attributes.background}

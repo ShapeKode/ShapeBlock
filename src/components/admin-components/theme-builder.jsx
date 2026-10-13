@@ -12,7 +12,7 @@ import {
 
 const { Search } = Input;
 
-import BuilderConditionsModal from './builder-conditions-modal';
+import BuilderConditionsModal, { ConditionRows, conditionsPayload, defaultConditionRows } from './builder-conditions-modal';
 
 /**
  * Theme Builder — manage header/footer (and future) templates.
@@ -93,8 +93,13 @@ export default function ThemeBuilder() {
         fetchItems(1, pagination.pageSize, search, typeFilter, value);
     };
 
+    // Display conditions chosen while adding a template.
+    const [newRows, setNewRows] = useState(defaultConditionRows);
+    const newType = Form.useWatch('type', form);
+
     const openAdd = () => {
         form.resetFields();
+        setNewRows(defaultConditionRows());
         // Default the type select to the active filter or the first registered type.
         const defaultType = typeFilter || (builderTypes[0] && builderTypes[0].slug);
         form.setFieldsValue({ type: defaultType });
@@ -110,6 +115,17 @@ export default function ThemeBuilder() {
                 body: JSON.stringify(values),
             })
                 .then((res) => res.json())
+                .then((data) => {
+                    // Save the chosen display conditions before opening the editor.
+                    if (data.id && !shortcodeTypes.includes(values.type)) {
+                        return fetch(`${shapeblock.rest_url}builder/${data.id}/conditions`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': shapeblock.nonce },
+                            body: JSON.stringify({ conditions: conditionsPayload(newRows) }),
+                        }).then(() => data);
+                    }
+                    return data;
+                })
                 .then((data) => {
                     if (data.id) {
                         notification.success({ message: __( 'Template created', 'shapeblock' ), duration: 2 });
@@ -294,7 +310,7 @@ export default function ThemeBuilder() {
         // Patch the row's summary in place without a full refetch.
         setItems((prev) => prev.map((row) =>
             row.id === (conditionsItem && conditionsItem.id)
-                ? { ...row, conditions: data.conditions, conditionsSummary: data.summary }
+                ? { ...row, conditionsSummary: data.summary }
                 : row
         ));
     };
@@ -449,13 +465,13 @@ export default function ThemeBuilder() {
 
     return (
         <div className="shapeblock-options-content">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, gap: 12, flexWrap: 'wrap' }}>
                 <h1 className="shapeblock-options-title" style={{ margin: 0 }}>{ __( 'Theme Builder', 'shapeblock' ) }</h1>
                 <Button type="primary" icon={<PlusOutlined />} onClick={openAdd}>{ __( 'Add New', 'shapeblock' ) }</Button>
             </div>
 
             <p style={{ color: '#666', marginTop: 0, marginBottom: 16 }}>
-                { __( 'Build custom headers and footers and control exactly where they appear.', 'shapeblock' ) }
+                { __( 'Build templates for your site and control exactly where they appear.', 'shapeblock' ) }
             </p>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, gap: 12, flexWrap: 'wrap' }}>
@@ -478,6 +494,7 @@ export default function ThemeBuilder() {
                         onChange={changeStatusView}
                     />
                     <Segmented
+                        className="shapeblock-builder-types"
                         options={typeFilterOptions}
                         value={typeFilter}
                         onChange={setTypeFilter}
@@ -506,7 +523,7 @@ export default function ThemeBuilder() {
                         </Tag>
                     )}
                 </Space>
-                <Space>
+                <Space wrap>
                     <Search
                         placeholder={ __( 'Search templates...', 'shapeblock' ) }
                         allowClear
@@ -519,7 +536,7 @@ export default function ThemeBuilder() {
                             clearTimeout(window.__shapeblockTbSearchT);
                             window.__shapeblockTbSearchT = setTimeout(() => fetchItems(1, pagination.pageSize, v, typeFilter, statusView), 300);
                         }}
-                        style={{ width: 250 }}
+                        style={{ width: 250, maxWidth: '100%' }}
                         prefix={<SearchOutlined />}
                     />
                     <Button icon={<ReloadOutlined />} aria-label={ __( 'Reload', 'shapeblock' ) } onClick={() => { setSearch(''); fetchItems(1, pagination.pageSize, '', typeFilter, statusView); }} />
@@ -532,6 +549,7 @@ export default function ThemeBuilder() {
                 dataSource={items}
                 loading={loading}
                 rowSelection={{ selectedRowKeys, onChange: setSelectedRowKeys }}
+                scroll={{ x: 'max-content' }}
                 pagination={{
                     current: pagination.current,
                     pageSize: pagination.pageSize,
@@ -557,6 +575,7 @@ export default function ThemeBuilder() {
                 onCancel={() => { setAddOpen(false); form.resetFields(); }}
                 confirmLoading={submitting}
                 okText={ __( 'Create & Edit', 'shapeblock' ) }
+                width={680}
             >
                 <Form form={form} layout="vertical">
                     <Form.Item
@@ -573,12 +592,22 @@ export default function ThemeBuilder() {
                     >
                         <Select
                             placeholder={ __( 'Select type', 'shapeblock' ) }
+                            showSearch
+                            optionFilterProp="label"
                             options={builderTypes.map((t) => ({
                                 value: t.slug,
                                 label: t.label,
                             }))}
                         />
                     </Form.Item>
+                    {newType && !shortcodeTypes.includes(newType) && (
+                        <Form.Item
+                            label={ __( 'Display Conditions', 'shapeblock' ) }
+                            extra={ __( 'Where this template appears. You can change it later too.', 'shapeblock' ) }
+                        >
+                            <ConditionRows rows={newRows} setRows={setNewRows} />
+                        </Form.Item>
+                    )}
                 </Form>
             </Modal>
 

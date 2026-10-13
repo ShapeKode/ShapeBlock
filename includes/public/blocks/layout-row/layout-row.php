@@ -12,8 +12,7 @@ function shapeblock_create_block_layout_row_block_init() {
     );
 
     register_block_type( __DIR__ . '/build', array(
-        'style'        => 'shapeblock-layout-row-style',
-        'editor_style' => 'shapeblock-layout-row-style',
+        'style' => 'shapeblock-layout-row-style',
     ) );
 }
 add_action( 'init', 'shapeblock_create_block_layout_row_block_init' );

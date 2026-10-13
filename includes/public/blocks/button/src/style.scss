@@ -5,60 +5,11 @@
  * plugin's own "shapeblock-" prefix and preset CSS variables.
  */
 
-.shapeblock-button-gradient {
-	position: relative;
-	overflow: hidden;
-
-	&::after,
-	&::before {
-		content: "";
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		transition: opacity 0.6s ease-in-out;
-		z-index: 0;
-	}
-
-	&::after {
-		background: linear-gradient(
-			68.75deg,
-			var(--shapeblock-gradient-1, #4750cc) 9.78%,
-			var(--shapeblock-gradient-2, #ef5ce8) 58.79%,
-			var(--shapeblock-gradient-3, #efc7ae) 92.67%
-		);
-		opacity: 1;
-	}
-
-	&::before {
-		background: linear-gradient(
-			-68.75deg,
-			var(--shapeblock-gradient-1, #4750cc) 9.78%,
-			var(--shapeblock-gradient-2, #ef5ce8) 58.79%,
-			var(--shapeblock-gradient-3, #efc7ae) 92.67%
-		);
-		opacity: 0;
-	}
-
-	&:hover {
-		&::after {
-			opacity: 0;
-		}
-		&::before {
-			opacity: 1;
-		}
-	}
-
-	span {
-		position: relative;
-		z-index: 1;
-	}
-}
-
 /* Base button */
 .shapeblock-button {
 	display: inline-flex;
+	box-sizing: border-box;
+	max-width: 100%;
 	align-items: center;
 	justify-content: center;
 	text-decoration: none;
@@ -91,6 +42,17 @@
 	}
 }
 
+.shapeblock-button-icon_btn {
+	background-color: transparent;
+	color: var(--shapeblock-preset-color-secondary, #0b3665);
+	padding-left: 0;
+	padding-right: 0;
+
+	&:hover {
+		color: var(--shapeblock-preset-color-primary, #ffd012);
+	}
+}
+
 .shapeblock-button-outline {
 	background-color: transparent;
 	color: var(--shapeblock-preset-color-secondary, #0b3665);
@@ -119,27 +81,9 @@
 }
 
 .shapeblock-button {
-	i,
-	svg {
+	i {
 		color: inherit;
 		font-size: inherit;
-	}
-
-	svg {
-		width: 1em;
-		height: 1em;
-	}
-
-	.shapeblock-button-icon-before svg path,
-	.shapeblock-button-icon-after svg path {
-		fill: currentColor;
-	}
-
-	img {
-		width: 1em;
-		height: 1em;
-		object-fit: contain;
-		vertical-align: middle;
 	}
 }
 
@@ -163,37 +107,6 @@
 		background-color: var(--shapeblock-preset-color-primary, #ffd012);
 		color: #ffffff;
 		margin-right: 16px;
-	}
-}
-
-/* Gradient border button */
-.shapeblock-button {
-	&.shapeblock-button-border-gradient {
-		z-index: 1;
-		transition: all 0.4s ease;
-		position: relative;
-		background: #fff;
-		color: currentColor;
-
-		&::before {
-			content: "";
-			position: absolute;
-			inset: 0;
-			padding: 2px;
-			background: linear-gradient(90deg, var(--shapeblock-border-gradient-1, #a53e1b) 0%, var(--shapeblock-border-gradient-2, #173998) 100%);
-			-webkit-mask:
-				linear-gradient(#fff 0 0) content-box,
-				linear-gradient(#fff 0 0);
-			-webkit-mask-composite: xor;
-			mask-composite: exclude;
-			z-index: -1;
-			transition: background 0.5s ease;
-		}
-
-		&:hover {
-			color: #fff;
-			background: linear-gradient(90deg, var(--shapeblock-border-gradient-1, #a53e1b), var(--shapeblock-border-gradient-2, #173998));
-		}
 	}
 }
 

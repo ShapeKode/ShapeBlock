@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -12,6 +12,7 @@ import {
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import IconPicker from '../../custom-components/IconPicker';
 import BorderControl from '../../custom-components/BorderControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
@@ -36,6 +37,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// Shared control helpers (same pattern as the Button block).
 	const color = (label, key) => (
 		<ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
+	);
+	const bg = (label, c, g) => (
+		<BackgroundControl
+			label={label}
+			colorValue={attributes[c]}
+			gradientValue={attributes[g]}
+			onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })}
+			onGradientChange={(v) => setAttributes({ [g]: v || '' })}
+		/>
 	);
 	const border = (label, key) => (
 		<BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
@@ -74,8 +84,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	// --- Tab 1: Settings (content & behavior) ---------------------------------
 	const settingsTab = (
-		<PanelBody title={__('Button', 'shapeblock')} initialOpen={true}>
+		<PanelBody title={__('Scroll to Top', 'shapeblock')} initialOpen={true}>
 			<IconPicker label={__('Icon', 'shapeblock')} value={attributes.scrollIcon || ''} onChange={(v) => setAttributes({ scrollIcon: v })} />
+			<Divider />
+			{num(__('Show After Scroll (px)', 'shapeblock'), 'showAfter')}
+		</PanelBody>
+	);
+
+	// --- Tab 2: Layout (size & position) --------------------------------------
+	const layoutTab = (
+		<PanelBody title={__('Position & Size', 'shapeblock')} initialOpen={true}>
+			{respNum(__('Button Size (px)', 'shapeblock'), 'buttonSize')}
+			<Divider />
 			<SelectControl
 				label={__('Horizontal Position', 'shapeblock')}
 				value={attributes.position}
@@ -87,18 +107,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				__next40pxDefaultSize
 				__nextHasNoMarginBottom
 			/>
-			<Divider />
-			{num(__('Show After Scroll (px)', 'shapeblock'), 'showAfter')}
-		</PanelBody>
-	);
-
-	// --- Tab 2: Layout (size, spacing & position) -----------------------------
-	const layoutTab = (
-		<PanelBody title={__('Button', 'shapeblock')} initialOpen={true}>
-			{respNum(__('Button Size (px)', 'shapeblock'), 'buttonSize')}
-			{respNum(__('Icon Size (px)', 'shapeblock'), 'iconSize')}
-			{respBox(__('Padding', 'shapeblock'), 'sttPadding')}
-			<Divider />
 			{num(__('Horizontal Offset (px)', 'shapeblock'), 'offsetX')}
 			{num(__('Bottom Offset (px)', 'shapeblock'), 'offsetY')}
 		</PanelBody>
@@ -108,14 +116,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const styleTab = (
 		<PanelBody title={__('Button', 'shapeblock')} initialOpen={true}>
 			{color(__('Icon Color', 'shapeblock'), 'color')}
-			{color(__('Background', 'shapeblock'), 'bgColor')}
+			{bg(__('Background', 'shapeblock'), 'bgColor', 'bgGradient')}
 			{border(__('Border', 'shapeblock'), 'sttBorder')}
 			{shadow(__('Box Shadow', 'shapeblock'), 'sttBoxShadow')}
 			<Divider />
 			{color(__('Icon Color (Hover)', 'shapeblock'), 'colorHover')}
-			{color(__('Background (Hover)', 'shapeblock'), 'bgColorHover')}
+			{bg(__('Background (Hover)', 'shapeblock'), 'bgColorHover', 'bgGradientHover')}
 			<Divider />
 			{box(__('Border Radius', 'shapeblock'), 'sttRadius')}
+			{respNum(__('Icon Size (px)', 'shapeblock'), 'iconSize')}
+			{respBox(__('Padding', 'shapeblock'), 'sttPadding')}
 		</PanelBody>
 	);
 

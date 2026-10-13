@@ -6,6 +6,33 @@ body {
     overflow-y: visible;
 }
 
+/* A Row sits flush, without the gap WordPress's layout puts above blocks
+ * ( :root :where(.is-layout-constrained) > * { margin-block-start: 1.5rem } ).
+ * Two classes outweigh that rule; the Row's own Margin setting (render.php,
+ * printed after this file) still wins. */
+.shapeblock-block.shapeblock-layout-row {
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+/* Content Width "Custom": the whole Row - its background and border too - is
+ * as wide as set (render.php writes the variable per device), centred, and
+ * never wider than the space it sits in. Three classes outweigh the theme
+ * layout's content-size cap and Wide / Full alignment; the Row's own Margin
+ * rule (render.php, three classes, printed later) still wins. */
+.shapeblock-block.shapeblock-layout-row.is-content-custom {
+    width: var(--shapeblock-layout-row-width, 800px);
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Straight in the page it also keeps the theme's side gutters, as the other
+ * Rows do: at most the site's wide width. Full alignment lifts that cap. */
+.is-layout-constrained > .shapeblock-block.shapeblock-layout-row.is-content-custom:not(.alignfull) {
+    max-width: var(--wp--style--global--wide-size, 100%);
+}
+
 .wp-block-shapeblock-layout-row {
     display: flex;
     flex-direction: row;
@@ -46,7 +73,8 @@ body {
         margin-right: auto;
     }
 
-    &.is-content-full > .shapeblock-layout-row__inner {
+    &.is-content-full > .shapeblock-layout-row__inner,
+    &.is-content-custom > .shapeblock-layout-row__inner {
         max-width: none;
     }
 
@@ -62,6 +90,37 @@ body {
     &.is-valign-top > .shapeblock-layout-row__inner    { align-items: flex-start; }
     &.is-valign-middle > .shapeblock-layout-row__inner { align-items: center; }
     &.is-valign-bottom > .shapeblock-layout-row__inner { align-items: flex-end; }
+
+    /* Wide / Full width: the theme widens the Row with negative margins, which
+     * only works while its width is left to the layout (width:100% kept it at
+     * the content width, short on one side). */
+    &.alignwide,
+    &.alignfull {
+        width: auto;
+    }
+
+    /* A theme without theme.json gives Wide / Full no size (render.php adds
+     * has-align-fallback there): the Row breaks out of the content column on
+     * its own - Full to the window's width, Wide to the site's wide size. */
+    &.has-align-fallback.alignfull {
+        width: 100vw;
+        max-width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+    }
+
+    &.has-align-fallback.alignwide {
+        --shapeblock-row-wide: min(var(--wp--style--global--wide-size, 1200px), 100vw - 40px);
+        width: var(--shapeblock-row-wide);
+        max-width: var(--shapeblock-row-wide);
+        margin-left: calc(50% - var(--shapeblock-row-wide) / 2);
+        margin-right: calc(50% - var(--shapeblock-row-wide) / 2);
+    }
+}
+
+/* 100vw counts a desktop scrollbar too; keep that sliver from scrolling the page sideways. */
+html:has(.wp-block-shapeblock-layout-row.has-align-fallback.alignfull) {
+    overflow-x: clip;
 }
 
 /* Columns per row, Tablet. Without !important, so a column that carries its own

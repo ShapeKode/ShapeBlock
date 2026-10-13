@@ -1,23 +1,31 @@
 import React, { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import {
-    Breadcrumb, Layout, Menu, theme, ConfigProvider, App
+    Layout, Menu, theme, ConfigProvider, App, Grid
 } from 'antd';
 import Blocks from './components/admin-components/blocks';
 import Templates from './components/admin-components/templates';
 import ThemeBuilder from './components/admin-components/theme-builder';
 import Settings from './components/admin-components/settings';
-import { DashboardOutlined, SettingOutlined, BlockOutlined, PicRightOutlined, LayoutOutlined } from '@ant-design/icons';
-import { icons } from 'antd/es/image/PreviewGroup';
-import './editor';
+import ExportImport from './components/admin-components/export-import';
+import AddonTab from './components/admin-components/addon-tab';
+import { SettingOutlined, BlockOutlined, PicRightOutlined, LayoutOutlined, SwapOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
+
+// Pages added by add-ons (shapeblock_admin_pages filter): { tab, label, page }.
+const addonPages = (typeof shapeblock !== 'undefined' && Array.isArray(shapeblock.addonPages)) ? shapeblock.addonPages : [];
 
 const getMenuItems = () => [
     {
+        key: 'settings',
+        label: __( 'General', 'shapeblock' ),
+        icon: <SettingOutlined />
+    },
+    {
         key: 'blocks',
-        label: __( 'Blocks Settings', 'shapeblock' ),
+        label: __( 'Blocks', 'shapeblock' ),
         icon: <BlockOutlined />
     },
     {
@@ -30,16 +38,20 @@ const getMenuItems = () => [
         label: __( 'Custom Templates', 'shapeblock' ),
         icon: <PicRightOutlined />
     },
+    // Add-on pages, then Export & Import last (the same order as the submenu).
+    ...addonPages.map((p) => ({ key: p.tab, label: p.label, icon: <AppstoreAddOutlined /> })),
     {
-        key: 'settings',
-        label: __( 'Settings', 'shapeblock' ),
-        icon: <SettingOutlined />
-    }
+        key: 'export-import',
+        label: __( 'Export & Import', 'shapeblock' ),
+        icon: <SwapOutlined />
+    },
 ];
 
 const ThemeData = {
     borderRadius: 2,
     colorPrimary: '#a216ffff',
+    // No glow around a focused field; its border colour shows the focus.
+    controlOutlineWidth: 0,
     Button: {
         colorPrimary: '#a216ffff',
         algorithm: true,
@@ -54,23 +66,28 @@ export default function ShapeBlockApp({ initialTab } = {}) {
     } = theme.useToken();
 
     // Tab resolution priority: the submenu page's data-initial-tab, then the URL
-    // hash (e.g. #theme-builder used when returning from the block editor), then Blocks.
-    const validKeys = ['blocks', 'templates', 'theme-builder', 'settings'];
+    // hash (e.g. #theme-builder used when returning from the block editor), then General.
+    const validKeys = ['blocks', 'templates', 'theme-builder', 'settings', 'export-import', ...addonPages.map((p) => p.tab)];
     const hashKey = window.location.hash.replace('#', '');
     const initialKey = validKeys.includes(initialTab)
         ? initialTab
-        : (validKeys.includes(hashKey) ? hashKey : 'blocks');
+        : (validKeys.includes(hashKey) ? hashKey : 'settings');
 
     const [current, setCurrent] = useState(initialKey);
     const [collapsed, setCollapsed] = useState(false);
+    // Phones and small tablets: a narrow menu and tighter spacing, so the page keeps its width.
+    const wide = Grid.useBreakpoint().md !== false;
 
     // Tab => admin submenu page slug (mirrors Main::get_admin_pages()).
     const tabPages = {
-        'blocks': 'shapeblock',
+        'blocks': 'shapeblock-blocks',
         'theme-builder': 'shapeblock-theme-builder',
         'templates': 'shapeblock-templates',
-        'settings': 'shapeblock-settings',
+        'settings': 'shapeblock',
+        'export-import': 'shapeblock-export-import',
+        ...Object.fromEntries(addonPages.map((p) => [p.tab, p.page])),
     };
+    const isAddonTab = addonPages.some((p) => p.tab === current);
 
     const changeMenu = (e) => {
         setCurrent(e.key);
@@ -106,7 +123,7 @@ export default function ShapeBlockApp({ initialTab } = {}) {
         <ConfigProvider theme={{ token: ThemeData }}>
             <App>
                 <Layout style={{ minHeight: '100vh' }}>
-                    <Sider theme="light" collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>
+                    <Sider theme="light" collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)} breakpoint="md" collapsedWidth={wide ? 80 : 56}>
                         <div className="shapeblock-logo">
                             <img src={shapeblock.shapeblockUrl + 'assets/images/icons/shapeblock-logo.png'} alt={ __( 'ShapeBlock logo', 'shapeblock' ) } />
                         </div>
@@ -119,13 +136,12 @@ export default function ShapeBlockApp({ initialTab } = {}) {
                         />
                     </Sider>
                     <Layout>
-                        {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
-                        <Content style={{ margin: '0 16px' }}>
+                        <Content style={{ margin: wide ? '0 16px' : '0 8px', minWidth: 0 }}>
                             <div
                                 style={{
                                     background: colorBgContainer,
                                     minHeight: 280,
-                                    padding: 24,
+                                    padding: wide ? 24 : 12,
                                     margin: '16px 0',
                                     borderRadius: borderRadiusLG,
                                 }}
@@ -135,6 +151,8 @@ export default function ShapeBlockApp({ initialTab } = {}) {
                                 {current === 'templates' && <Templates />}
                                 {current === 'theme-builder' && <ThemeBuilder />}
                                 {current === 'settings' && <Settings />}
+                                {current === 'export-import' && <ExportImport />}
+                                {isAddonTab && <AddonTab key={current} tab={current} />}
 
                             </div>
                         </Content>

@@ -20,18 +20,15 @@ $text          = isset( $attributes['buttonText'] ) ? $attributes['buttonText'] 
 $url           = ! empty( $attributes['buttonUrl'] ) ? $attributes['buttonUrl'] : '#';
 $is_external   = ! empty( $attributes['buttonTarget'] );
 $nofollow      = ! empty( $attributes['buttonNofollow'] );
-$button_type   = isset( $attributes['buttonType'] ) ? $attributes['buttonType'] : 'primary';
+$button_type   = isset( $attributes['buttonType'] ) ? sanitize_html_class( (string) $attributes['buttonType'], 'primary' ) : 'primary';
 $icon          = isset( $attributes['buttonIcon'] ) ? $attributes['buttonIcon'] : '';
 $icon_position = isset( $attributes['iconPosition'] ) ? $attributes['iconPosition'] : 'after';
 // Full gradient strings from the Background (Normal / Hover) and Border
-// Gradient controls. The older fixed three-colour gradient (showGradient,
-// gradient1-3) and two-colour border (borderGradientColor1-2) still render for
-// buttons saved before, until the editor carries them over on next edit.
+// Gradient controls.
 $bg_gradient       = isset( $attributes['bgGradient'] ) ? (string) $attributes['bgGradient'] : '';
 $bg_gradient_hover = isset( $attributes['bgGradientHover'] ) ? (string) $attributes['bgGradientHover'] : '';
 $border_gradient   = isset( $attributes['borderGradient'] ) ? (string) $attributes['borderGradient'] : '';
-$show_gradient     = ! empty( $attributes['showGradient'] ) && '' === $bg_gradient && '' === $bg_gradient_hover;
-$border_grad       = ! empty( $attributes['borderGradientButton'] );
+$border_grad       = ! empty( $attributes['borderGradientButton'] ) && '' !== $border_gradient;
 
 $target   = $is_external ? '_blank' : '_self';
 $rel      = [];
@@ -47,11 +44,8 @@ $button_classes = [ 'shapeblock-button' ];
 if ( ! empty( $button_type ) ) {
 	$button_classes[] = 'shapeblock-button-' . $button_type;
 }
-if ( $show_gradient ) {
-	$button_classes[] = 'shapeblock-button-gradient';
-}
 if ( $border_grad ) {
-	$button_classes[] = '' !== $border_gradient ? 'shapeblock-button-has-border-gradient' : 'shapeblock-button-border-gradient';
+	$button_classes[] = 'shapeblock-button-has-border-gradient';
 }
 if ( '' !== $bg_gradient_hover ) {
 	$button_classes[] = 'shapeblock-button-has-hover-gradient';
@@ -125,7 +119,8 @@ $shadow = function ( $obj ) use ( $H ) {
 // Button (normal).
 $button_styles = $typo( $attributes['buttonTypography'] ?? [] );
 if ( ! empty( $attributes['buttonAlignment'] ) ) $button_styles['justify-content'] = $attributes['buttonAlignment'];
-if ( ! empty( $attributes['minWidth'] ) ) $button_styles['min-width'] = $H::ensure_unit( $attributes['minWidth'] );
+// min() so a wide minimum never pushes the button past a narrow column or screen.
+if ( ! empty( $attributes['minWidth'] ) ) $button_styles['min-width'] = 'min(' . $H::ensure_unit( $attributes['minWidth'] ) . ', 100%)';
 if ( ! empty( $attributes['textColor'] ) ) $button_styles['color'] = $attributes['textColor'];
 if ( ! empty( $attributes['bgColor'] ) ) $button_styles['background-color'] = $attributes['bgColor'];
 $button_styles = array_merge( $button_styles, $dims( $attributes['buttonBorderRadius'] ?? [], 'radius' ), $dims( $attributes['buttonPadding'] ?? [], 'padding' ), $dims( $attributes['buttonMargin'] ?? [], 'margin' ), $shadow( $attributes['buttonBoxShadow'] ?? [] ) );
@@ -149,23 +144,10 @@ if ( '' !== $bg_gradient ) {
 if ( '' !== $bg_gradient_hover ) {
 	$button_styles['--shapeblock-button-hover-gradient'] = $bg_gradient_hover;
 }
-if ( $border_grad && '' !== $border_gradient ) {
+if ( $border_grad ) {
 	$button_styles['--shapeblock-button-border-gradient'] = $border_gradient;
 	$bw = isset( $attributes['borderGradientWidth'] ) && '' !== $attributes['borderGradientWidth'] ? $attributes['borderGradientWidth'] : '2';
 	$button_styles['--shapeblock-button-border-width'] = $H::ensure_unit( $bw );
-}
-
-// Gradient CSS variables.
-$gradient_vars = [];
-if ( $show_gradient ) {
-	if ( ! empty( $attributes['gradient1'] ) ) $gradient_vars['--shapeblock-gradient-1'] = $attributes['gradient1'];
-	if ( ! empty( $attributes['gradient2'] ) ) $gradient_vars['--shapeblock-gradient-2'] = $attributes['gradient2'];
-	if ( ! empty( $attributes['gradient3'] ) ) $gradient_vars['--shapeblock-gradient-3'] = $attributes['gradient3'];
-}
-$border_gradient_vars = [];
-if ( $border_grad && '' === $border_gradient ) {
-	if ( ! empty( $attributes['borderGradientColor1'] ) ) $border_gradient_vars['--shapeblock-border-gradient-1'] = $attributes['borderGradientColor1'];
-	if ( ! empty( $attributes['borderGradientColor2'] ) ) $border_gradient_vars['--shapeblock-border-gradient-2'] = $attributes['borderGradientColor2'];
 }
 
 // Icon spacing.
@@ -180,36 +162,28 @@ if ( isset( $attributes['iconSpacing'] ) && '' !== $attributes['iconSpacing'] ) 
 // Icon (normal).
 $icon_color_styles = [];
 if ( ! empty( $attributes['iconColor'] ) ) $icon_color_styles['color'] = $attributes['iconColor'];
-$icon_fill_styles = [];
-if ( ! empty( $attributes['iconColor'] ) ) $icon_fill_styles['fill'] = $attributes['iconColor'];
 
 $icon_box_styles = [];
-if ( ! empty( $attributes['iconBg'] ) ) $icon_box_styles['background-color'] = $attributes['iconBg'];
+if ( ! empty( $attributes['iconBgGradient'] ) ) $icon_box_styles['background'] = $attributes['iconBgGradient'];
+elseif ( ! empty( $attributes['iconBg'] ) ) $icon_box_styles['background-color'] = $attributes['iconBg'];
 if ( ! empty( $attributes['iconBoxWidth'] ) ) $icon_box_styles['width'] = $H::ensure_unit( $attributes['iconBoxWidth'] );
 if ( ! empty( $attributes['iconBoxHeight'] ) ) $icon_box_styles['height'] = $H::ensure_unit( $attributes['iconBoxHeight'] );
 $icon_box_styles = array_merge( $icon_box_styles, $dims( $attributes['iconBoxBorderRadius'] ?? [], 'radius' ) );
 
-$icon_i_styles   = [];
-$icon_svg_styles = [];
+$icon_i_styles = [];
 if ( ! empty( $attributes['iconSize'] ) ) {
-	$is = $H::ensure_unit( $attributes['iconSize'] );
-	$icon_i_styles['font-size'] = $is;
-	$icon_svg_styles['width']   = $is;
-	$icon_svg_styles['height']  = $is;
+	$icon_i_styles['font-size'] = $H::ensure_unit( $attributes['iconSize'] );
 }
 if ( isset( $attributes['iconRotation'] ) && '' !== $attributes['iconRotation'] ) {
-	$rot = $attributes['iconRotation'] . 'deg';
-	$icon_i_styles['transform']   = 'rotate(' . $rot . ')';
-	$icon_svg_styles['transform'] = 'rotate(' . $rot . ')';
+	$icon_i_styles['transform'] = 'rotate(' . $attributes['iconRotation'] . 'deg)';
 }
 
 // Icon (hover).
 $icon_hover_color = [];
 if ( ! empty( $attributes['iconColorHover'] ) ) $icon_hover_color['color'] = $attributes['iconColorHover'];
-$icon_hover_fill = [];
-if ( ! empty( $attributes['iconColorHover'] ) ) $icon_hover_fill['fill'] = $attributes['iconColorHover'];
 $icon_hover_bg = [];
-if ( ! empty( $attributes['iconBgHover'] ) ) $icon_hover_bg['background-color'] = $attributes['iconBgHover'];
+if ( ! empty( $attributes['iconBgHoverGradient'] ) ) $icon_hover_bg['background'] = $attributes['iconBgHoverGradient'];
+elseif ( ! empty( $attributes['iconBgHover'] ) ) $icon_hover_bg[ ! empty( $attributes['iconBgGradient'] ) ? 'background' : 'background-color' ] = $attributes['iconBgHover'];
 $icon_hover_rot = [];
 if ( isset( $attributes['iconRotationHover'] ) && '' !== $attributes['iconRotationHover'] ) {
 	$icon_hover_rot['transform'] = 'rotate(' . $attributes['iconRotationHover'] . 'deg)';
@@ -223,16 +197,12 @@ if ( isset( $attributes['iconRotationHover'] ) && '' !== $attributes['iconRotati
 $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H ) {
 	$btn = $typo( $attributes[ 'buttonTypography' . $suffix ] ?? [] );
 	if ( ! empty( $attributes[ 'buttonAlignment' . $suffix ] ) ) $btn['justify-content'] = $attributes[ 'buttonAlignment' . $suffix ];
-	if ( isset( $attributes[ 'minWidth' . $suffix ] ) && '' !== $attributes[ 'minWidth' . $suffix ] ) $btn['min-width'] = $H::ensure_unit( $attributes[ 'minWidth' . $suffix ] );
+	if ( isset( $attributes[ 'minWidth' . $suffix ] ) && '' !== $attributes[ 'minWidth' . $suffix ] ) $btn['min-width'] = 'min(' . $H::ensure_unit( $attributes[ 'minWidth' . $suffix ] ) . ', 100%)';
 	$btn = array_merge( $btn, $dims( $attributes[ 'buttonPadding' . $suffix ] ?? [], 'padding' ), $dims( $attributes[ 'buttonMargin' . $suffix ] ?? [], 'margin' ) );
 
-	$icon_i   = [];
-	$icon_svg = [];
+	$icon_i = [];
 	if ( isset( $attributes[ 'iconSize' . $suffix ] ) && '' !== $attributes[ 'iconSize' . $suffix ] ) {
-		$is = $H::ensure_unit( $attributes[ 'iconSize' . $suffix ] );
-		$icon_i['font-size'] = $is;
-		$icon_svg['width']   = $is;
-		$icon_svg['height']  = $is;
+		$icon_i['font-size'] = $H::ensure_unit( $attributes[ 'iconSize' . $suffix ] );
 	}
 
 	$box = [];
@@ -251,7 +221,6 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H ) {
 	return [
 		'.shapeblock-button'                           => $btn,
 		'.shapeblock-button i'                         => $icon_i,
-		'.shapeblock-button svg'                       => $icon_svg,
 		'.shapeblock-button .shapeblock-button-icon-before' => $before,
 		'.shapeblock-button .shapeblock-button-icon-after'  => $after,
 	];
@@ -270,7 +239,7 @@ foreach ( [ '' => 'desktop', 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $su
 if ( ! empty( $position_data ) ) {
 	$resp_css .= $H::generate_responsive_css( $selector, $position_data );
 }
-foreach ( [ '.shapeblock-button', '.shapeblock-button i', '.shapeblock-button svg', '.shapeblock-button .shapeblock-button-icon-before', '.shapeblock-button .shapeblock-button-icon-after' ] as $sub_sel ) {
+foreach ( [ '.shapeblock-button', '.shapeblock-button i', '.shapeblock-button .shapeblock-button-icon-before', '.shapeblock-button .shapeblock-button-icon-after' ] as $sub_sel ) {
 	$rdata = [];
 	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
 		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
@@ -286,14 +255,10 @@ wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-button'                                    => $H::get_inline_styles( $button_styles ),
 	'.shapeblock-button:hover'                              => $H::get_inline_styles( $button_hover ),
-	'.shapeblock-button-gradient'                           => $H::get_inline_styles( $gradient_vars ),
-	'.shapeblock-button-border-gradient'                    => $H::get_inline_styles( $border_gradient_vars ),
 	'.shapeblock-button .shapeblock-button-icon-before'          => $H::get_inline_styles( array_merge( $icon_before, $icon_box_styles ) ),
 	'.shapeblock-button .shapeblock-button-icon-after'           => $H::get_inline_styles( array_merge( $icon_after, $icon_box_styles ) ),
 	'.shapeblock-button i'                                  => $H::get_inline_styles( array_merge( $icon_color_styles, $icon_i_styles ) ),
-	'.shapeblock-button svg'                                => $H::get_inline_styles( array_merge( $icon_fill_styles, $icon_svg_styles ) ),
 	'.shapeblock-button:hover i'                            => $H::get_inline_styles( array_merge( $icon_hover_color, $icon_hover_rot ) ),
-	'.shapeblock-button:hover svg'                          => $H::get_inline_styles( array_merge( $icon_hover_fill, $icon_hover_rot ) ),
 	'.shapeblock-button:hover .shapeblock-button-icon-before, ' . $selector . ' .shapeblock-button:hover .shapeblock-button-icon-after' => $H::get_inline_styles( $icon_hover_bg ),
 ] );
 

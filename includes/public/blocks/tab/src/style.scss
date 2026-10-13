@@ -101,21 +101,16 @@
 
 	.shapeblock-tab-contents .shapeblock-tab-content {
 		display: none;
-	}
-	.shapeblock-tabs-wrapper[data-tab-direction='top'] .shapeblock-tab-contents .shapeblock-tab-content {
-		margin-top: 30px;
-	}
-	.shapeblock-tab-contents .shapeblock-tab-content.active {
-		display: block;
-	}
-	.shapeblock-tab-content {
-		display: none;
 		opacity: 0;
 		transition: opacity 0.3s ease;
 	}
-	.shapeblock-tab-content.active {
+	.shapeblock-tab-contents .shapeblock-tab-content.active {
 		display: block;
 		opacity: 1;
+	}
+	/* :where() keeps this default below the block's own Margin setting. */
+	:where(.shapeblock-tabs-wrapper[data-tab-direction='top'] .shapeblock-tab-contents) .shapeblock-tab-content {
+		margin-top: 30px;
 	}
 
 	.shapeblock-tab-contents .shapeblock-content-title {
@@ -197,7 +192,8 @@
 			flex: 1 1 100%;
 			padding: 12px;
 		}
-		.shapeblock-tabs-wrapper[data-tab-direction='top'] .shapeblock-tab-contents .shapeblock-tab-content {
+		/* :where() keeps this default below the block's own Margin setting. */
+		:where(.shapeblock-tabs-wrapper[data-tab-direction='top'] .shapeblock-tab-contents) .shapeblock-tab-content {
 			margin-top: 20px;
 		}
 		.shapeblock-tab-contents .shapeblock-content-title {

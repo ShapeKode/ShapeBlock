@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState, useRef } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -16,12 +16,11 @@ import {
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import AdvancedControls from '../../custom-components/AdvancedControls';
-
-import './editor.scss';
 
 // Map a base attribute name to its per-device key (desktop uses the base name).
 const getKey = (base, device) =>
@@ -45,6 +44,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		const root = previewRef.current;
 		if (!root) return undefined;
 		const doc = root.ownerDocument || document;
+		// The overlay is only shown together with its own panel (as on the front end).
+		const syncOverlay = (panel, on) => {
+			root.querySelectorAll('.shapeblock-offcanvas-overlay').forEach((el) => {
+				if (el.getAttribute('data-target') === '#' + panel.id) el.classList.toggle('shapeblock-active', on);
+			});
+		};
 		const syncBody = () => {
 			const anyOpen = !!root.querySelector('.shapeblock-offcanvas.shapeblock-active');
 			doc.body.classList.toggle('shapeblock-offcanvas-active', anyOpen);
@@ -59,6 +64,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			if (!panel) return;
 			const nowOpen = !panel.classList.contains('shapeblock-active');
 			panel.classList.toggle('shapeblock-active', nowOpen);
+			syncOverlay(panel, nowOpen);
 			isOpenRef.current = nowOpen;
 			syncBody();
 		};
@@ -67,7 +73,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		// does not snap shut on every edit.
 		const applyOpenState = () => {
 			const p = root.querySelector('.shapeblock-offcanvas');
-			if (p) p.classList.toggle('shapeblock-active', isOpenRef.current);
+			if (p) {
+				p.classList.toggle('shapeblock-active', isOpenRef.current);
+				syncOverlay(p, isOpenRef.current);
+			}
 			syncBody();
 		};
 		root.addEventListener('click', onClick);
@@ -103,6 +112,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		: '';
 
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
+	const bg = (label, c, g) => (
+		<BackgroundControl
+			label={label}
+			colorValue={attributes[c]}
+			gradientValue={attributes[g]}
+			onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })}
+			onGradientChange={(v) => setAttributes({ [g]: v || '' })}
+		/>
+	);
 	const num = (label, key) => <TextControl label={label} type="number" value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
 	// Responsive variants — a device switcher above the control, editing the
 	// matching per-device attribute (base / baseTablet / baseMobile).
@@ -142,7 +160,23 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				__nextHasNoMarginBottom
 			/>
 			<TextControl label={__('Canvas Menu Text', 'shapeblock')} value={menuText} onChange={(v) => setAttributes({ menuText: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-			<IconPicker label={__('Menu Icon', 'shapeblock')} value={attributes.btnIcon || ''} onChange={(v) => setAttributes({ btnIcon: v })} />
+			{isClassic && <IconPicker label={__('Menu Icon', 'shapeblock')} value={attributes.btnIcon || ''} onChange={(v) => setAttributes({ btnIcon: v })} />}
+			{!isClassic && (
+				<SelectControl
+					label={__('Open Position', 'shapeblock')}
+					value={attributes.modernPosition || 'fade'}
+					options={[
+						{ label: __('Fade in place', 'shapeblock'), value: 'fade' },
+						{ label: __('From left', 'shapeblock'), value: 'left' },
+						{ label: __('From right', 'shapeblock'), value: 'right' },
+						{ label: __('From top', 'shapeblock'), value: 'top' },
+						{ label: __('From bottom', 'shapeblock'), value: 'bottom' },
+					]}
+					onChange={(v) => setAttributes({ modernPosition: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+			)}
 			{isClassic && (
 				<SelectControl
 					label={__('Open Position', 'shapeblock')}
@@ -181,30 +215,33 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					{__('No templates yet. Click “Create New Template” to add one, then select it here.', 'shapeblock')}
 				</Notice>
 			)}
-			<IconPicker label={__('Close Icon', 'shapeblock')} value={attributes.closeIcon || ''} onChange={(v) => setAttributes({ closeIcon: v })} />
-			<ToggleControl label={__('Enable Blur', 'shapeblock')} checked={!!attributes.needBlur} onChange={(v) => setAttributes({ needBlur: v })} __nextHasNoMarginBottom />
+			{isClassic && <IconPicker label={__('Close Icon', 'shapeblock')} value={attributes.closeIcon || ''} onChange={(v) => setAttributes({ closeIcon: v })} />}
 		</PanelBody>
 	);
 
-	// --- Tab 2: Layout (size & spacing) ---------------------------------------
+	// --- Tab 2: Layout (size) -------------------------------------------------
 	const layoutTab = (
 		<>
-			<PanelBody title={__('Offcanvas Item', 'shapeblock')} initialOpen={true}>
-				{respNum(__('Canvas Width (px)', 'shapeblock'), 'offcanvasWidth')}
-				{respBox(__('Padding', 'shapeblock'), 'offcanvasPadding')}
+			<PanelBody title={__('Canvas', 'shapeblock')} initialOpen={true}>
+				{isClassic && respNum(__('Canvas Width (px)', 'shapeblock'), 'offcanvasWidth')}
+				{!isClassic && (
+					<ResponsiveWrapper label={__('Canvas Width', 'shapeblock')}>
+						{(device) => {
+							const k = getKey('modernWidth', device);
+							return (
+								<TextControl
+									value={attributes[k] || ''}
+									placeholder="100%"
+									help={__('Empty = full screen (100%). A number is px; 80% or 60vw also work.', 'shapeblock')}
+									onChange={(v) => setAttributes({ [k]: v })}
+									__next40pxDefaultSize
+									__nextHasNoMarginBottom
+								/>
+							);
+						}}
+					</ResponsiveWrapper>
+				)}
 			</PanelBody>
-
-			<PanelBody title={__('Opener Icon', 'shapeblock')} initialOpen={false}>
-				{isClassic
-					? num(__('Hamburger Size (px)', 'shapeblock'), 'openerIconSize')
-					: num(__('Hamburger Size (px)', 'shapeblock'), 'openerIconSizeModern')}
-			</PanelBody>
-
-			{isClassic && (
-				<PanelBody title={__('Closing Icon', 'shapeblock')} initialOpen={false}>
-					{num(__('Icon Size (px)', 'shapeblock'), 'closingIconSize')}
-				</PanelBody>
-			)}
 		</>
 	);
 
@@ -217,16 +254,22 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				{isClassic
 					? color(__('Hamburger Color', 'shapeblock'), 'openerIconColor')
 					: color(__('Hamburger Color', 'shapeblock'), 'openerHamburgerColor')}
+				{isClassic
+					? num(__('Hamburger Size (px)', 'shapeblock'), 'openerIconSize')
+					: num(__('Hamburger Size (px)', 'shapeblock'), 'openerIconSizeModern')}
 			</PanelBody>
 
 			<PanelBody title={__('Closing Icon', 'shapeblock')} initialOpen={false}>
 				{isClassic
 					? color(__('Icon Color', 'shapeblock'), 'closingIconColor')
 					: color(__('Icon Color', 'shapeblock'), 'closingIconModernColor')}
+				{isClassic && num(__('Icon Size (px)', 'shapeblock'), 'closingIconSize')}
 			</PanelBody>
 
 			<PanelBody title={__('Offcanvas Item', 'shapeblock')} initialOpen={false}>
-				{color(__('Background', 'shapeblock'), 'offcanvasBg')}
+				{bg(__('Background', 'shapeblock'), 'offcanvasBg', 'offcanvasBgGradient')}
+				{respBox(__('Padding', 'shapeblock'), 'offcanvasPadding')}
+				<ToggleControl label={__('Enable Blur', 'shapeblock')} checked={!!attributes.needBlur} onChange={(v) => setAttributes({ needBlur: v })} __nextHasNoMarginBottom />
 			</PanelBody>
 		</>
 	);

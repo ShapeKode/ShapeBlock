@@ -18,7 +18,7 @@ class Helper {
 				foreach ($properties as $prop_key => $css_prop) {
 					if ( isset( $val[$prop_key] ) && $val[$prop_key] !== '' ) {
 						$v = $val[$prop_key];
-						if ( in_array( $prop_key, ['top', 'right', 'bottom', 'left', 'fontSize', 'letterSpacing', 'itemGap'] ) ) {
+						if ( in_array( $prop_key, ['top', 'right', 'bottom', 'left', 'fontSize', 'letterSpacing'] ) ) {
 							$v = self::ensure_unit($v);
 						}
 						$target_array[$device][$css_prop] = $v;
@@ -54,7 +54,6 @@ class Helper {
 			'order',
 			'font-weight',
 			'zoom',
-			'--bp-cols',
 		];
 	}
 
@@ -229,8 +228,10 @@ class Helper {
 			return '';
 		}
 
-		// url() may only reference an http(s), protocol-relative or data:image source.
-		if ( false !== stripos( $value, 'url(' ) && ! preg_match( '#url\(\s*[\'"]?(?:(?:https?:)?//|data:image/)#i', $value ) ) {
+		// url() may only reference an http(s), protocol-relative or data:image
+		// source - every one of them, not just the first.
+		$urls = preg_match_all( '#url\(#i', $value );
+		if ( $urls && preg_match_all( '#url\(\s*[\'"]?(?:(?:https?:)?//|data:image/)#i', $value ) !== $urls ) {
 			return '';
 		}
 
@@ -239,7 +240,46 @@ class Helper {
 			return '';
 		}
 
+		// An unclosed bracket or quote would swallow the declarations after it.
+		if ( ! self::css_value_is_balanced( $value ) ) {
+			return '';
+		}
+
 		return $value;
+	}
+
+	/**
+	 * Are the brackets and quotes in a CSS value paired? An unclosed ( or [
+	 * runs past the ; and } that follow it, and an unclosed quote swallows the
+	 * rest of the line, so either would break the rules printed after it.
+	 *
+	 * @param string $value CSS value.
+	 * @return bool
+	 */
+	private static function css_value_is_balanced( $value ) {
+		$stack = array();
+		$quote = '';
+		$pairs = array( ')' => '(', ']' => '[' );
+		$len   = strlen( $value );
+		for ( $i = 0; $i < $len; $i++ ) {
+			$ch = $value[ $i ];
+			if ( '' !== $quote ) {
+				if ( $ch === $quote ) {
+					$quote = '';
+				}
+				continue;
+			}
+			if ( '"' === $ch || "'" === $ch ) {
+				$quote = $ch;
+			} elseif ( '(' === $ch || '[' === $ch ) {
+				$stack[] = $ch;
+			} elseif ( isset( $pairs[ $ch ] ) ) {
+				if ( array_pop( $stack ) !== $pairs[ $ch ] ) {
+					return false;
+				}
+			}
+		}
+		return '' === $quote && empty( $stack );
 	}
 
 	/**
@@ -404,7 +444,7 @@ class Helper {
 		}
 
 		if ( is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || did_action( 'wp_footer' ) ) {
-			self::queue_pending_css( $css );
+			self::queue_pending_css( $css, $handle );
 			return;
 		}
 
@@ -432,16 +472,62 @@ class Helper {
 	public static $rendering_templates = [];
 
 	/**
+	 * Take the CSS that rendered inner blocks / template markup carry out of
+	 * that markup, before the markup is escaped against the template allowlist.
+	 *
+	 * In the editor (and any render after wp_footer) each block hands its CSS
+	 * back inside its own markup as a style element. The allowlist drops that
+	 * element but keeps its text, which then shows up on the page as visible
+	 * code. The CSS is therefore taken out first and routed through add_css(),
+	 * which attaches it to the calling block's output again.
+	 *
+	 * Callers still escape the returned markup at their output point.
+	 *
+	 * @param string $html   Rendered markup.
+	 * @param string $handle Style handle of the calling block.
+	 * @return string Markup without the style elements.
+	 */
+	public static function move_block_css( $html, $handle ) {
+		$html = (string) $html;
+		$css  = '';
+		$out  = preg_replace_callback(
+			'#<(style)\b[^>]*>(.*?)</\1>#is',
+			function ( $m ) use ( &$css ) {
+				$css .= $m[2] . "\n";
+				return '';
+			},
+			$html
+		);
+		if ( is_string( $out ) ) {
+			$html = $out;
+			self::add_css( $handle, $css );
+		}
+		return $html;
+	}
+
+	/**
 	 * Hold CSS until the block it belongs to returns its markup.
 	 *
-	 * @param string $css Generated CSS.
+	 * The CSS is kept for the block that made it, named from its style handle
+	 * ("shapeblock-post-grid-style" → "shapeblock/post-grid"). A block that
+	 * renders other blocks before it returns - the Post Grid building excerpts,
+	 * say - would otherwise hand its CSS to one of those, whose markup is then
+	 * stripped, and the editor preview would lose every style setting.
+	 * CSS whose handle names no block goes out with the next block, as before.
+	 *
+	 * @param string $css    Generated CSS.
+	 * @param string $handle Style handle of the block that made it.
 	 * @return void
 	 */
-	private static function queue_pending_css( $css ) {
+	private static function queue_pending_css( $css, $handle = '' ) {
 		if ( empty( self::$pending_css ) ) {
-			add_filter( 'render_block', [ __CLASS__, 'inject_pending_css' ], 5, 1 );
+			add_filter( 'render_block', [ __CLASS__, 'inject_pending_css' ], 5, 2 );
 		}
-		self::$pending_css[] = $css;
+		$owner = '';
+		if ( preg_match( '/^shapeblock-(?:pro-)?(.+)-style$/', (string) $handle, $m ) && \WP_Block_Type_Registry::get_instance()->is_registered( 'shapeblock/' . $m[1] ) ) {
+			$owner = 'shapeblock/' . $m[1];
+		}
+		self::$pending_css[ $owner ][] = $css;
 	}
 
 	/**
@@ -454,16 +540,27 @@ class Helper {
 	 * the sheet, so nothing in it can close the element early.
 	 *
 	 * @param string $content Block markup.
+	 * @param array  $block   The block being rendered.
 	 * @return string
 	 */
-	public static function inject_pending_css( $content ) {
+	public static function inject_pending_css( $content, $block = [] ) {
 		if ( empty( self::$pending_css ) ) {
 			return $content;
 		}
 
-		$css               = implode( '', self::$pending_css );
-		self::$pending_css = [];
-		$css               = str_replace( [ '<!--', '-->' ], '', $css );
+		// This block's own CSS, plus any that names no block.
+		$name  = is_array( $block ) && isset( $block['blockName'] ) ? (string) $block['blockName'] : '';
+		$parts = [];
+		foreach ( array_unique( [ '', $name ] ) as $owner ) {
+			if ( isset( self::$pending_css[ $owner ] ) ) {
+				$parts = array_merge( $parts, self::$pending_css[ $owner ] );
+				unset( self::$pending_css[ $owner ] );
+			}
+		}
+		if ( ! $parts ) {
+			return $content;
+		}
+		$css = str_replace( [ '<!--', '-->' ], '', implode( '', $parts ) );
 
 		// One handle per piece of CSS: core prints a handle only once.
 		static $count = 0;
@@ -563,20 +660,6 @@ class Helper {
 		return [ 'border' => "$w $style $color" ];
 	}
 
-	public static function border_to_css($border) {
-		if ( ! is_array( $border ) ) {
-			return '';
-		}
-		$width = $border['width'] ?? 0;
-		if ( is_array( $width ) ) {
-			$width = $width['top'] ?? 0;
-		}
-		$w     = self::ensure_unit( $width );
-		$style = self::sanitize_css_border_style( $border['style'] ?? 'solid' );
-		$color = self::sanitize_css_color( $border['color'] ?? 'rgba(0,0,0,0)' );
-		return "$w $style $color";
-	}
-
 	/**
 	 * Border styles are a fixed CSS keyword list, so an allowlist is exact.
 	 *
@@ -591,99 +674,6 @@ class Helper {
 
 	public static function shapeblock_time_ago() {
 		return human_time_diff( get_the_time('U'), current_time('timestamp') );
-	}
-
-	public static function shapeblock_get_video_embed($video_url, $autoplay = 0, $mute = 0, $controls = 1, $height = '400px', $width = '100%') {
-
-		$embed_video = '';
-
-		if( !empty($video_url) ) {
-
-			// Self-hosted video files: render a <video> tag directly (works in both frontend and editor)
-			$video_extensions = ['mp4', 'webm', 'ogg', 'mov'];
-			$url_path = strtolower( wp_parse_url( $video_url, PHP_URL_PATH ) );
-			$ext = pathinfo( $url_path, PATHINFO_EXTENSION );
-
-			if ( in_array( $ext, $video_extensions, true ) ) {
-				$attrs  = $controls ? ' controls' : '';
-				$attrs .= $autoplay ? ' autoplay' : '';
-				$attrs .= $mute ? ' muted' : '';
-
-				$embed_video = '<video width="' . esc_attr( $width ) . '" height="' . esc_attr( $height ) . '"' . $attrs . ' playsinline>'
-					. '<source src="' . esc_url( $video_url ) . '" type="' . esc_attr( wp_check_filetype( $video_url )['type'] ) . '">'
-					. '</video>';
-
-				return $embed_video;
-			}
-
-			// In the block editor (ServerSideRender via REST), wp_oembed_get's output omits the
-			// allow="autoplay" attribute, so the editor's iframe permission policy blocks autoplay.
-			// Build the embed iframe directly for YouTube/Vimeo so we can force the params we need.
-			if ( is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
-				// Browsers block unmuted autoplay; force mute when autoplay is on.
-				$effective_mute = $autoplay ? 1 : (int) $mute;
-
-				if ( preg_match( '/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $video_url, $m ) ) {
-					$src = add_query_arg( array(
-						'autoplay'    => (int) $autoplay,
-						'mute'        => $effective_mute,
-						'controls'    => (int) $controls,
-						'rel'         => 0,
-						'playsinline' => 1,
-						'referrerpolicy' => 'strict-origin-when-cross-origin',
-					), 'https://www.youtube.com/embed/' . $m[1] );
-
-					return '<iframe referrerpolicy="strict-origin-when-cross-origin" width="' . esc_attr( $width ) . '" height="' . esc_attr( $height ) . '" src="' . esc_url( $src ) . '" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
-				}
-
-				if ( preg_match( '/vimeo\.com\/(?:video\/)?(\d+)/', $video_url, $m ) ) {
-					$src = add_query_arg( array(
-						'autoplay' => (int) $autoplay,
-						'muted'    => $effective_mute,
-						'controls' => (int) $controls,
-					), 'https://player.vimeo.com/video/' . $m[1] );
-
-					return '<iframe width="' . esc_attr( $width ) . '" height="' . esc_attr( $height ) . '" src="' . esc_url( $src ) . '" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
-				}
-
-				// Unknown provider: skip the embed in the editor.
-				return '';
-			}
-
-			// oEmbed is a remote request; keep the result for a day instead of repeating it on every page view.
-			$embed_key   = 'shapeblock_oembed_' . md5( wp_json_encode( array( $video_url, $height, $width, $mute, $autoplay, $controls ) ) );
-			$embed_video = get_transient( $embed_key );
-			if ( false === $embed_video ) {
-				$embed_video = (string) wp_oembed_get( $video_url, ['height' => $height, 'width' => $width, 'mute' => $mute, 'autoplay' => $autoplay, 'controls' => $controls] );
-				set_transient( $embed_key, $embed_video, '' === $embed_video ? HOUR_IN_SECONDS : DAY_IN_SECONDS );
-			}
-
-			if( $embed_video ) {
-
-				$mute_param = 'mute=' . $mute;
-
-				// Vimeo uses muted instead of mute
-				if ( strpos($video_url, 'vimeo.com') !== false ) {
-					$mute_param = 'muted=' . $mute;
-				}
-
-				$params = '&referrerpolicy=strict-origin-when-cross-origin&autoplay=' . $autoplay . '&' . $mute_param . '&controls=' . $controls;
-
-				$embed_video = preg_replace(
-					'/src="([^"]+)"/',
-					'src="$1' . $params . '"',
-					$embed_video
-				);
-
-				// Force the height and width since wp_oembed_get ignores these for most providers
-				$embed_video = preg_replace( '/\s+height="[^"]*"/', '', $embed_video );
-				$embed_video = preg_replace( '/\s+width="[^"]*"/', '', $embed_video );
-				$embed_video = preg_replace( '/<iframe/', '<iframe width="' . esc_attr( $width ) . '" height="' . esc_attr( $height ) . '"', $embed_video );
-
-			}
-		}
-
-		return $embed_video;
 	}
 
     /**

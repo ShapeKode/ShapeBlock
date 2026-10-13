@@ -2,10 +2,10 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/image-carousel",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "title": "Image Carousel",
   "category": "shapeblock",
-  "description": "A multi-image carousel with centred slides and continuous scrolling.",
+  "description": "A multi-image carousel with centered slides and continuous scrolling.",
   "keywords": [
     "carousel",
     "images",
@@ -202,7 +202,7 @@
     },
     "imageSize": {
       "type": "string",
-      "default": "thumbnail"
+      "default": "large"
     },
     "slidePadding": {
       "type": "object"
@@ -214,6 +214,10 @@
       "type": "object"
     },
     "slideBg": {
+      "type": "string",
+      "default": ""
+    },
+    "slideBgGradient": {
       "type": "string",
       "default": ""
     },
@@ -244,6 +248,10 @@
       "type": "string",
       "default": ""
     },
+    "arrowBgGradient": {
+      "type": "string",
+      "default": ""
+    },
     "arrowSize": {
       "type": "string",
       "default": ""
@@ -263,7 +271,15 @@
       "type": "string",
       "default": ""
     },
+    "dotGradient": {
+      "type": "string",
+      "default": ""
+    },
     "dotActiveColor": {
+      "type": "string",
+      "default": ""
+    },
+    "dotActiveGradient": {
       "type": "string",
       "default": ""
     },

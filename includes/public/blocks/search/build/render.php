@@ -86,7 +86,11 @@ if ( 'left' === $side ) {
 // Input field (shared).
 $field = $typo( $attributes['inputTypography'] ?? [] );
 if ( ! empty( $attributes['inputTextColor'] ) ) $field['color'] = $attributes['inputTextColor'];
-if ( ! empty( $attributes['inputBgColor'] ) ) $field['background'] = $attributes['inputBgColor'];
+if ( ! empty( $attributes['inputBgColorGradient'] ) ) {
+	$field['background'] = $attributes['inputBgColorGradient'];
+} elseif ( ! empty( $attributes['inputBgColor'] ) ) {
+	$field['background'] = $attributes['inputBgColor'];
+}
 $field = array_merge( $field, $dims( $attributes['inputPadding'] ?? [], 'padding' ) );
 if ( '' !== $u( 'inputHeight' ) ) $field['height'] = $u( 'inputHeight' );
 $field2 = [];
@@ -95,21 +99,29 @@ $field2 = array_merge( $field2, $dims( $attributes['inputBorderRadius'] ?? [], '
 if ( ! empty( $attributes['inputBorderColor'] ) ) $field2['border-color'] = $attributes['inputBorderColor'];
 $placeholder_styles = ! empty( $attributes['placeholderColor'] ) ? [ 'color' => $attributes['placeholderColor'] ] : [];
 
-// Submit button.
-$submit1 = [];
+// Submit button. A gradient wins over the flat colour.
+$submit_bg = ! empty( $attributes['submitBtnBgGradient'] ) ? [ 'background' => $attributes['submitBtnBgGradient'] ] : ( ! empty( $attributes['submitBtnBg'] ) ? [ 'background-color' => $attributes['submitBtnBg'] ] : [] );
+$submit1   = [];
 if ( ! empty( $attributes['submitIconColor'] ) ) $submit1['color'] = $attributes['submitIconColor'];
-if ( ! empty( $attributes['submitBtnBg'] ) ) $submit1['background-color'] = $attributes['submitBtnBg'];
+$submit1 = array_merge( $submit1, $submit_bg );
 $submit1 = array_merge( $submit1, $dims( $attributes['submitPadding'] ?? [], 'padding' ) );
 $submit1_svg = ! empty( $attributes['submitIconColor'] ) ? [ 'fill' => $attributes['submitIconColor'] ] : [];
 $submit1_hover = [];
+$submit1_hover_svg = ! empty( $attributes['submitIconHoverColor'] ) ? [ 'fill' => $attributes['submitIconHoverColor'] ] : [];
 if ( ! empty( $attributes['submitIconHoverColor'] ) ) $submit1_hover['color'] = $attributes['submitIconHoverColor'];
-if ( ! empty( $attributes['submitBtnHoverBg'] ) ) $submit1_hover['background-color'] = $attributes['submitBtnHoverBg'];
+// A flat hover colour replaces a normal-state gradient, so it is written as
+// the shorthand then; otherwise it stays background-color as before.
+if ( ! empty( $attributes['submitBtnHoverBgGradient'] ) ) {
+	$submit1_hover['background'] = $attributes['submitBtnHoverBgGradient'];
+} elseif ( ! empty( $attributes['submitBtnHoverBg'] ) ) {
+	$submit1_hover[ ! empty( $attributes['submitBtnBgGradient'] ) ? 'background' : 'background-color' ] = $attributes['submitBtnHoverBg'];
+}
 $submit2 = $submit2_pos;
-if ( ! empty( $attributes['submitBtnBg'] ) ) $submit2['background-color'] = $attributes['submitBtnBg'];
+$submit2 = array_merge( $submit2, $submit_bg );
 $submit2 = array_merge( $submit2, $dims( $attributes['submitPadding'] ?? [], 'padding' ) );
 
 // Popup.
-$overlay = ! empty( $attributes['overlayBg'] ) ? [ 'background' => $attributes['overlayBg'] ] : [];
+$overlay = ! empty( $attributes['overlayBgGradient'] ) ? [ 'background' => $attributes['overlayBgGradient'] ] : ( ! empty( $attributes['overlayBg'] ) ? [ 'background' => $attributes['overlayBg'] ] : [] );
 $popup_title = $typo( $attributes['popupTitleTypography'] ?? [] );
 if ( ! empty( $attributes['popupTitleColor'] ) ) $popup_title['color'] = $attributes['popupTitleColor'];
 $close_styles = [];
@@ -215,6 +227,7 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-search-content .shapeblock-search-submit'        => $H::get_inline_styles( $submit1 ),
 	'.shapeblock-search-content .shapeblock-search-submit svg'    => $H::get_inline_styles( $submit1_svg ),
 	'.shapeblock-search-content .shapeblock-search-submit:hover'  => $H::get_inline_styles( $submit1_hover ),
+	'.shapeblock-search-content .shapeblock-search-submit:hover svg' => $H::get_inline_styles( $submit1_hover_svg ),
 	'.shapeblock-search-style-2 .shapeblock-search-submit-btn'    => $H::get_inline_styles( $submit2 ),
 	'.shapeblock-search-lightbox, ' . $selector . ' .shapeblock-search-overlay' => $H::get_inline_styles( $overlay ),
 	'.shapeblock-search-title'                               => $H::get_inline_styles( $popup_title ),

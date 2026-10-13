@@ -25,7 +25,8 @@
 
 	.shapeblock-social-layout-grid .shapeblock-social-buttons {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
+		/* Columns as wide as the buttons, so the gap between them is the spacing set. */
+		grid-template-columns: repeat(auto-fill, minmax(45px, max-content));
 		gap: 10px;
 		width: 100%;
 		max-width: 300px;

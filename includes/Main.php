@@ -18,15 +18,10 @@ class Main {
 
     public function init() {
         // Initialize the plugin
-        add_action( 'admin_init', array( $this, 'register_settings' ) );
         add_action( 'admin_menu', array( $this, 'add_menu' ) );
-        add_filter( 'plugin_action_links_' . SHAPEBLOCK_PLUGIN_BASE, array( $this, 'plugin_action_links' ), 10, 4 );
+        add_filter( 'plugin_action_links_' . SHAPEBLOCK_PLUGIN_BASE, array( $this, 'plugin_action_links' ) );
 
         $this->includes();
-    }
-
-    public function register_settings() {
-        register_setting( 'shapeblock_settings', 'shapeblock_version', 'sanitize_text_field' );
     }
 
     public function includes() {
@@ -48,14 +43,58 @@ class Main {
     /**
      * Page slug => dashboard tab. The parent menu slug doubles as the first
      * submenu (Blocks). Add a row here and a matching React tab to grow the menu.
+     * Labels are plain text; they are escaped where they are printed.
      */
     public static function get_admin_pages() {
-        return array(
-            'shapeblock' => array( 'tab' => 'blocks',        'label' => esc_html__( 'Blocks Settings', 'shapeblock' ) ),
-            'shapeblock-theme-builder'          => array( 'tab' => 'theme-builder', 'label' => esc_html__( 'Theme Builder', 'shapeblock' ) ),
-            'shapeblock-templates'              => array( 'tab' => 'templates',     'label' => esc_html__( 'Custom Templates', 'shapeblock' ) ),
-            'shapeblock-settings'               => array( 'tab' => 'settings',      'label' => esc_html__( 'Settings', 'shapeblock' ) ),
+        $pages = array(
+            // The first page shares the menu's own slug: it is the one the ShapeBlock menu item opens.
+            'shapeblock'                        => array( 'tab' => 'settings',      'label' => __( 'General', 'shapeblock' ) ),
+            'shapeblock-blocks'                 => array( 'tab' => 'blocks',        'label' => __( 'Blocks', 'shapeblock' ) ),
+            'shapeblock-theme-builder'          => array( 'tab' => 'theme-builder', 'label' => __( 'Theme Builder', 'shapeblock' ) ),
+            'shapeblock-templates'              => array( 'tab' => 'templates',     'label' => __( 'Custom Templates', 'shapeblock' ) ),
         );
+
+        // Add-ons can add their own pages to the dashboard. Each one becomes a
+        // submenu item and a tab in the app; the add-on draws the tab's content
+        // when the app fires the `shapeblock.admin.tabMounted` JS action.
+        // The built-in pages cannot be replaced.
+        $reserved = array( 'shapeblock-export-import' );
+        foreach ( (array) apply_filters( 'shapeblock_admin_pages', array() ) as $slug => $page ) {
+            $slug = sanitize_key( $slug );
+            if ( '' === $slug || isset( $pages[ $slug ] ) || in_array( $slug, $reserved, true ) || ! is_array( $page ) || empty( $page['tab'] ) || empty( $page['label'] ) ) {
+                continue;
+            }
+            $pages[ $slug ] = array(
+                'tab'   => sanitize_key( $page['tab'] ),
+                'label' => wp_strip_all_tags( (string) $page['label'] ),
+                'addon' => true,
+            );
+        }
+
+        // Export & Import always comes last, after any add-on pages.
+        $pages['shapeblock-export-import'] = array( 'tab' => 'export-import', 'label' => __( 'Export & Import', 'shapeblock' ) );
+
+        return $pages;
+    }
+
+    /**
+     * Pages added by add-ons through the `shapeblock_admin_pages` filter, for
+     * the dashboard app: tab key, label and page slug.
+     *
+     * @return array
+     */
+    public static function get_addon_pages() {
+        $out = array();
+        foreach ( self::get_admin_pages() as $slug => $page ) {
+            if ( ! empty( $page['addon'] ) ) {
+                $out[] = array(
+                    'tab'   => $page['tab'],
+                    'label' => $page['label'],
+                    'page'  => $slug,
+                );
+            }
+        }
+        return $out;
     }
 
     /**
@@ -144,8 +183,8 @@ class Main {
         foreach ( self::get_admin_pages() as $slug => $page ) {
             $hook = add_submenu_page(
                 'shapeblock',
-                'ShapeBlock - ' . $page['label'], // Label is already escaped.
-                $page['label'],
+                esc_html( 'ShapeBlock - ' . $page['label'] ),
+                esc_html( $page['label'] ),
                 'manage_options',
                 $slug,
                 array( $this, 'render_menu_page' )
@@ -159,31 +198,12 @@ class Main {
     public function render_menu_page() {
         $pages = self::get_admin_pages();
         $page  = self::get_current_page_slug();
-        $tab   = isset( $pages[ $page ] ) ? $pages[ $page ]['tab'] : 'blocks';
+        $tab   = isset( $pages[ $page ] ) ? $pages[ $page ]['tab'] : 'settings';
 
-        echo '<div class="shapeblock-options-wrap">';
         echo '<div id="shapeblock-dashboard" data-initial-tab="' . esc_attr( $tab ) . '"></div>';
-        echo '</div>';
     }
 
-    public static function activate() {
-        update_option( 'shapeblock_version', SHAPEBLOCK_VERSION );
-
-        // enable all blocks 
-        $blocks = \ShapeBlock\Admin\Blocks::instance()->get_blocks();
-        foreach ( $blocks as $block ) {
-            // update option if option not exist
-            if (!get_option('shapeblock_block_' . $block['id'])) {
-                update_option('shapeblock_block_' . $block['id'], 'enable');
-            }
-        }
-    }
-
-    public static function deactivate() {
-        delete_option( 'shapeblock_version' );
-    }
-
-    public function plugin_action_links( $plugin_actions, $plugin_file, $plugin_data, $context ) {
+    public function plugin_action_links( $plugin_actions ) {
 
 		$new_actions = array();
 		$new_actions['shapeblock_plugin_actions_setting'] = '<a href="' . esc_url( admin_url( 'admin.php?page=shapeblock' ) ) . '">' . esc_html__( 'Settings', 'shapeblock' ) . '</a>';

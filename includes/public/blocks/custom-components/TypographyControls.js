@@ -20,36 +20,28 @@ const SHAPEBLOCK_FALLBACK_GOOGLE = [
     'Raleway', 'Oswald', 'Merriweather', 'Ubuntu', 'Rubik', 'Work Sans',
     'Playfair Display', 'Source Sans 3', 'PT Sans', 'Mukti', 'Hind Siliguri',
 ];
-// Popular fonts we preload (weight 400) so their dropdown options render IN
-// their own font. Previewing all ~1500 Google fonts is not feasible (each
-// styled option would download a font file), so we preview this popular set;
-// any other font still applies when selected (loaded on demand).
-const SHAPEBLOCK_POPULAR_FONTS = [
-    'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Poppins', 'Oswald', 'Raleway',
-    'Merriweather', 'Nunito', 'Playfair Display', 'Ubuntu', 'Rubik', 'Work Sans',
-    'Inter', 'Roboto Condensed', 'Roboto Slab', 'PT Sans', 'Noto Sans', 'Mulish',
-    'Quicksand', 'Josefin Sans', 'Bebas Neue', 'Dancing Script', 'Pacifico',
-    'Lobster', 'Source Sans 3', 'Barlow', 'Kanit', 'Manrope', 'Karla',
-    'Fira Sans', 'Cabin', 'DM Sans', 'Heebo', 'Titillium Web', 'Archivo',
-    'Libre Baskerville', 'Comfortaa', 'Teko', 'Anton', 'Hind Siliguri',
-];
 import {
     SelectControl,
     TextControl,
-    Popover,
     Button,
     Icon
 } from '@wordpress/components';
+import * as blockEditor from '@wordpress/block-editor';
 
-const TypographyControls = ({ label, attributes, setAttributes, attributeKey, nextDefaultSize }) => {
-    const [isVisible, setIsVisible] = useState(false);
-    // Popover needs a stable anchor element. Without one it falls back to a
-    // placeholder node and floating-ui keeps re-measuring against a moving
-    // reference, which makes the panel visibly jitter while it is open.
-    const [anchorEl, setAnchorEl] = useState(null);
+// The same controls the core Typography panel is made of. Most of them are
+// still exported under an __experimental name, so each one is looked up here
+// and the panel simply leaves out any a WordPress version does not have.
+const FontSizePicker = blockEditor.FontSizePicker;
+const FontAppearanceControl = blockEditor.__experimentalFontAppearanceControl;
+const LineHeightControl = blockEditor.LineHeightControl || blockEditor.__experimentalLineHeightControl;
+const LetterSpacingControl = blockEditor.__experimentalLetterSpacingControl;
+const TextDecorationControl = blockEditor.__experimentalTextDecorationControl;
+const TextTransformControl = blockEditor.__experimentalTextTransformControl;
+
+const TypographyControls = ({ label, attributes, setAttributes, attributeKey }) => {
+    // The controls sit inline, under a row that opens and closes them.
+    const [isOpen, setIsOpen] = useState(false);
     const typography = attributes[attributeKey] || {};
-
-    const _nextDefaultSize = nextDefaultSize || false;
 
     // Google Fonts is an opt-in connection (ShapeBlock > Settings). While it is
     // off the picker offers only locally available stacks and nothing here ever
@@ -134,88 +126,134 @@ const TypographyControls = ({ label, attributes, setAttributes, attributeKey, ne
         }
     }, [typography.fontFamily]);
 
-    const toggleVisible = () => {
-        setIsVisible((state) => !state);
-    };
-
     const updateTypography = (newAttrs) => {
-        const nextTypography = {
-            ...typography,
-            ...newAttrs
-        };
-
         setAttributes({
-            [attributeKey]: nextTypography
+            [attributeKey]: {
+                ...typography,
+                ...newAttrs
+            }
         });
     };
 
+    // A stored 'inherit' (the old default for weight) means "not set".
+    const weightValue = (typography.fontWeight && typography.fontWeight !== 'inherit') ? typography.fontWeight : undefined;
+    const summary = [
+        currentFont && currentFont.value ? currentFont.label : '',
+        typography.fontSize || '',
+        weightValue || '',
+    ].filter(Boolean).join(' \u00b7 ');
+
+    const sectionLabel = { fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', color: '#1e1e1e' };
+    const twoColumns = { display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '12px', alignItems: 'start' };
+
     return (
-        <div className="shapeblock-typography-control" style={{ position: 'relative' }}>
+        <div className="shapeblock-typography-control" style={{ position: 'relative', marginBottom: '15px' }}>
             <Button
-                variant="secondary"
-                ref={setAnchorEl}
-                onClick={toggleVisible}
-                style={{ width: '100%', justifyContent: 'space-between', marginBottom: '15px', boxShadow: 'none' }}
+                className="shapeblock-typography-toggle"
+                onClick={() => setIsOpen((v) => !v)}
+                aria-expanded={isOpen}
+                style={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    height: 'auto',
+                    minHeight: '40px',
+                    justifyContent: 'space-between',
+                    gap: '10px',
+                    padding: '8px 12px',
+                    border: '1px solid #ddd',
+                    borderRadius: '2px',
+                    background: isOpen ? '#f0f0f0' : 'transparent',
+                }}
             >
-                {label}
-                <Icon icon="editor-textcolor" />
+                <span style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                    <span
+                        aria-hidden="true"
+                        style={{
+                            fontFamily: typography.fontFamily || undefined,
+                            fontWeight: weightValue,
+                            fontSize: '18px',
+                            lineHeight: 1,
+                        }}
+                    >
+                        Aa
+                    </span>
+                    <span style={{ textAlign: 'left' }}>{label}</span>
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
+                    {summary ? (
+                        <span style={{ color: '#757575', fontSize: '11px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '110px' }}>
+                            {summary}
+                        </span>
+                    ) : null}
+                    <Icon icon={isOpen ? 'arrow-up-alt2' : 'arrow-down-alt2'} />
+                </span>
             </Button>
-            {isVisible && (
-                <Popover
-                    anchor={anchorEl}
-                    placement="left-start"
-                    offset={20}
-                    shift
-                    flip={false}
-                    resize={false}
-                    onFocusOutside={() => setIsVisible(false)}
+
+            {isOpen && (
+                <div
+                    style={{
+                        boxSizing: 'border-box',
+                        display: 'grid',
+                        gridTemplateColumns: 'minmax(0, 1fr)',
+                        gap: '16px',
+                        padding: '16px 12px',
+                        border: '1px solid #ddd',
+                        borderTop: 0,
+                        borderRadius: '0 0 2px 2px',
+                    }}
                 >
-                    <div style={{ padding: '20px', width: '260px' }}>
-                        <div style={{ marginBottom: '16px' }}>
-                            <label className="components-base-control__label" style={{ display: 'block', marginBottom: '8px' }}>
-                                {__('Font Family', 'shapeblock')}
-                            </label>
-                            <Button
-                                variant="secondary"
-                                onClick={() => setFontOpen((v) => !v)}
-                                style={{ width: '100%', justifyContent: 'space-between' }}
-                            >
-                                <span style={{ fontFamily: (currentFont && currentFont.value) ? currentFont.value : undefined, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                    {currentFont ? currentFont.label : __('Default', 'shapeblock')}
-                                </span>
-                                <Icon icon={fontOpen ? 'arrow-up-alt2' : 'arrow-down-alt2'} />
-                            </Button>
-                            {fontOpen && (
-                                <div style={{ border: '1px solid #ddd', borderRadius: '2px', marginTop: '6px' }}>
-                                    <TextControl
-                                        value={fontSearch}
-                                        onChange={setFontSearch}
-                                        placeholder={__('Search fonts…', 'shapeblock')}
-                                        __nextHasNoMarginBottom={true}
-                                        __next40pxDefaultSize={true}
-                                    />
-                                    <div style={{ maxHeight: '220px', overflowY: 'auto' }}>
-                                        {shownFonts.map((o) => (
-                                            <div
-                                                key={o.value || 'default'}
-                                                onClick={() => { updateTypography({ fontFamily: o.value }); setFontOpen(false); setFontSearch(''); }}
-                                                style={{
-                                                    padding: '6px 10px',
-                                                    cursor: 'pointer',
-                                                    fontFamily: o.value || undefined,
-                                                    background: (typography.fontFamily || '') === o.value ? '#e7f0f7' : 'transparent',
-                                                }}
-                                            >
-                                                {o.label}
-                                            </div>
-                                        ))}
-                                        {shownFonts.length === 0 && (
-                                            <div style={{ padding: '6px 10px', color: '#757575' }}>{__('No fonts found', 'shapeblock')}</div>
-                                        )}
-                                    </div>
+                    <div>
+                        <div style={{ ...sectionLabel, marginBottom: '8px' }}>{__('Font family', 'shapeblock')}</div>
+                        <Button
+                            variant="secondary"
+                            onClick={() => setFontOpen((v) => !v)}
+                            style={{ width: '100%', boxSizing: 'border-box', justifyContent: 'space-between' }}
+                        >
+                            <span style={{ fontFamily: (currentFont && currentFont.value) ? currentFont.value : undefined, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {currentFont ? currentFont.label : __('Default', 'shapeblock')}
+                            </span>
+                            <Icon icon={fontOpen ? 'arrow-up-alt2' : 'arrow-down-alt2'} />
+                        </Button>
+                        {fontOpen && (
+                            <div style={{ border: '1px solid #ddd', borderRadius: '2px', marginTop: '6px' }}>
+                                <TextControl
+                                    value={fontSearch}
+                                    onChange={setFontSearch}
+                                    placeholder={__('Search fonts…', 'shapeblock')}
+                                    __nextHasNoMarginBottom={true}
+                                    __next40pxDefaultSize={true}
+                                />
+                                <div style={{ maxHeight: '220px', overflowY: 'auto' }}>
+                                    {shownFonts.map((o) => (
+                                        <div
+                                            key={o.value || 'default'}
+                                            onClick={() => { updateTypography({ fontFamily: o.value }); setFontOpen(false); setFontSearch(''); }}
+                                            style={{
+                                                padding: '6px 10px',
+                                                cursor: 'pointer',
+                                                fontFamily: o.value || undefined,
+                                                background: (typography.fontFamily || '') === o.value ? '#e7f0f7' : 'transparent',
+                                            }}
+                                        >
+                                            {o.label}
+                                        </div>
+                                    ))}
+                                    {shownFonts.length === 0 && (
+                                        <div style={{ padding: '6px 10px', color: '#757575' }}>{__('No fonts found', 'shapeblock')}</div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {FontSizePicker ? (
+                        <FontSizePicker
+                            value={typography.fontSize || undefined}
+                            onChange={(value) => updateTypography({ fontSize: (value === undefined || value === null || value === '') ? '' : (typeof value === 'number' ? value + 'px' : String(value)) })}
+                            withReset
+                            __next40pxDefaultSize
+                        />
+                    ) : (
                         <TextControl
                             label={__('Font Size', 'shapeblock')}
                             value={typography.fontSize}
@@ -224,101 +262,112 @@ const TypographyControls = ({ label, attributes, setAttributes, attributeKey, ne
                             __next40pxDefaultSize={true}
                             __nextHasNoMarginBottom={true}
                         />
+                    )}
+
+                    {FontAppearanceControl ? (
+                        <FontAppearanceControl
+                            value={{ fontStyle: typography.fontStyle || undefined, fontWeight: weightValue }}
+                            onChange={(next) => updateTypography({ fontStyle: next.fontStyle || '', fontWeight: next.fontWeight || '' })}
+                            hasFontStyles
+                            hasFontWeights
+                            __next40pxDefaultSize
+                        />
+                    ) : (
                         <SelectControl
                             label={__('Font Weight', 'shapeblock')}
-                            value={typography.fontWeight}
+                            value={weightValue || ''}
                             options={[
-                                { label: __('Default', 'shapeblock'), value: 'inherit' },
-                                { label: __('Thin (100)', 'shapeblock'), value: '100' },
+                                { label: __('Default', 'shapeblock'), value: '' },
                                 { label: __('Light (300)', 'shapeblock'), value: '300' },
                                 { label: __('Regular (400)', 'shapeblock'), value: '400' },
                                 { label: __('Medium (500)', 'shapeblock'), value: '500' },
                                 { label: __('Semi Bold (600)', 'shapeblock'), value: '600' },
                                 { label: __('Bold (700)', 'shapeblock'), value: '700' },
-                                { label: __('Extra Bold (800)', 'shapeblock'), value: '800' },
                                 { label: __('Black (900)', 'shapeblock'), value: '900' },
                             ]}
                             onChange={(val) => updateTypography({ fontWeight: val })}
                             __next40pxDefaultSize={true}
                             __nextHasNoMarginBottom={true}
                         />
-                        <SelectControl
-                            label={__('Font Style', 'shapeblock')}
-                            value={typography.fontStyle || ''}
-                            options={[
-                                { label: __('Default', 'shapeblock'), value: '' },
-                                { label: __('Normal', 'shapeblock'), value: 'normal' },
-                                { label: __('Italic', 'shapeblock'), value: 'italic' },
-                                { label: __('Oblique', 'shapeblock'), value: 'oblique' },
-                            ]}
-                            onChange={(val) => updateTypography({ fontStyle: val })}
-                            __next40pxDefaultSize={true}
-                            __nextHasNoMarginBottom={true}
-                        />
-                        <SelectControl
-                            label={__('Text Decoration', 'shapeblock')}
-                            value={typography.textDecoration || ''}
-                            options={[
-                                { label: __('Default', 'shapeblock'), value: '' },
-                                { label: __('None', 'shapeblock'), value: 'none' },
-                                { label: __('Underline', 'shapeblock'), value: 'underline' },
-                                { label: __('Overline', 'shapeblock'), value: 'overline' },
-                                { label: __('Line Through', 'shapeblock'), value: 'line-through' },
-                            ]}
-                            onChange={(val) => updateTypography({ textDecoration: val })}
-                            __next40pxDefaultSize={true}
-                            __nextHasNoMarginBottom={true}
-                        />
-                        <SelectControl
-                            label={__('Text Transform', 'shapeblock')}
-                            value={typography.textTransform}
-                            options={[
-                                { label: __('None', 'shapeblock'), value: 'none' },
-                                { label: __('Uppercase', 'shapeblock'), value: 'uppercase' },
-                                { label: __('Lowercase', 'shapeblock'), value: 'lowercase' },
-                                { label: __('Capitalize', 'shapeblock'), value: 'capitalize' },
-                            ]}
-                            onChange={(val) => updateTypography({ textTransform: val })}
-                            __next40pxDefaultSize={true}
-                            __nextHasNoMarginBottom={true}
-                        />
-                        <TextControl
-                            __next40pxDefaultSize={_nextDefaultSize}
-                            label={__('Line Height', 'shapeblock')}
-                            value={typography.lineHeight}
-                            onChange={(val) => updateTypography({ lineHeight: val })}
-                            __nextHasNoMarginBottom={true}
-                        />
-                        <TextControl
-                            __next40pxDefaultSize={_nextDefaultSize}
-                            label={__('Letter Spacing', 'shapeblock')}
-                            value={typography.letterSpacing}
-                            onChange={(val) => updateTypography({ letterSpacing: val })}
-                            help={__('Include unit (e.g., 1px)', 'shapeblock')}
-                            __nextHasNoMarginBottom={true}
-                        />
-                        <Button
-                            variant="secondary"
-                            isSmall
-                            onClick={() => {
-                                setAttributes({
-                                    [attributeKey]: {
-                                        fontFamily: '',
-                                        fontSize: '',
-                                        fontWeight: 'inherit',
-                                        lineHeight: '',
-                                        textTransform: 'none',
-                                        letterSpacing: ''
-                                    }
-                                });
-                                setIsVisible(false);
-                            }}
-                            style={{ marginTop: '10px', width: '100%', justifyContent: 'center' }}
-                        >
-                            {__('Reset Typography', 'shapeblock')}
-                        </Button>
+                    )}
+
+                    <div style={twoColumns}>
+                        {LineHeightControl ? (
+                            <LineHeightControl
+                                value={typography.lineHeight || undefined}
+                                onChange={(value) => updateTypography({ lineHeight: value === undefined || value === null ? '' : String(value) })}
+                                __unstableInputWidth="100%"
+                                __nextHasNoMarginBottom
+                                __next40pxDefaultSize
+                            />
+                        ) : (
+                            <TextControl
+                                label={__('Line Height', 'shapeblock')}
+                                value={typography.lineHeight}
+                                onChange={(val) => updateTypography({ lineHeight: val })}
+                                __next40pxDefaultSize={true}
+                                __nextHasNoMarginBottom={true}
+                            />
+                        )}
+                        {LetterSpacingControl ? (
+                            <LetterSpacingControl
+                                value={typography.letterSpacing || undefined}
+                                onChange={(value) => updateTypography({ letterSpacing: value || '' })}
+                                __unstableInputWidth="100%"
+                                __nextHasNoMarginBottom
+                                __next40pxDefaultSize
+                            />
+                        ) : (
+                            <TextControl
+                                label={__('Letter Spacing', 'shapeblock')}
+                                value={typography.letterSpacing}
+                                onChange={(val) => updateTypography({ letterSpacing: val })}
+                                help={__('Include unit (e.g., 1px)', 'shapeblock')}
+                                __next40pxDefaultSize={true}
+                                __nextHasNoMarginBottom={true}
+                            />
+                        )}
                     </div>
-                </Popover>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: '16px' }}>
+                        {TextDecorationControl ? (
+                            <TextDecorationControl
+                                value={typography.textDecoration || undefined}
+                                onChange={(value) => updateTypography({ textDecoration: value || '' })}
+                                __next40pxDefaultSize
+                            />
+                        ) : null}
+                        {TextTransformControl ? (
+                            <TextTransformControl
+                                value={(typography.textTransform && typography.textTransform !== 'none') ? typography.textTransform : undefined}
+                                onChange={(value) => updateTypography({ textTransform: value || '' })}
+                                __next40pxDefaultSize
+                            />
+                        ) : null}
+                    </div>
+
+                    <Button
+                        variant="tertiary"
+                        isSmall
+                        onClick={() => {
+                            setAttributes({
+                                [attributeKey]: {
+                                    fontFamily: '',
+                                    fontSize: '',
+                                    fontWeight: '',
+                                    fontStyle: '',
+                                    lineHeight: '',
+                                    textTransform: '',
+                                    textDecoration: '',
+                                    letterSpacing: ''
+                                }
+                            });
+                        }}
+                        style={{ justifySelf: 'start' }}
+                    >
+                        {__('Reset typography', 'shapeblock')}
+                    </Button>
+                </div>
             )}
         </div>
     );

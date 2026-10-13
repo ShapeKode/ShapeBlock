@@ -14,13 +14,11 @@ class Admin {
     }
 
     public function __construct() {
-        add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10, 1 );
+        add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
         add_action( 'enqueue_block_editor_assets', array( $this, 'editor_overrides' ) );
     }
 
-    public function enqueue_scripts($hook) {
-       
-
+    public function enqueue_scripts() {
         $asset_file = include SHAPEBLOCK_PL_PATH . 'build/index.asset.php';
 
         // No match(): the plugin supports PHP 7.4.
@@ -55,23 +53,24 @@ class Admin {
 
         $blocks = \ShapeBlock\Admin\Blocks::instance()->get_blocks();
 
-        $template_count = wp_count_posts( 'shapeblock-template' );
-        $total_templates = isset( $template_count->publish ) ? (int) $template_count->publish : 0;
-
         wp_localize_script( 'shapeblock-admin-js', 'shapeblock', array(
-            'ajaxurl' => admin_url( 'admin-ajax.php' ),
-            'siteUrl' => site_url(),
             'rest_url' => esc_url_raw(rest_url('shapeblock/v1/')),
             'nonce' => wp_create_nonce('wp_rest'),
             'blocks' => $blocks,
+            'blockCategories' => \ShapeBlock\Admin\Blocks::instance()->get_categories(),
+            /**
+             * Filter the "more blocks" link under the Blocks page list. An add-on
+             * that is installed returns '' so the link is not shown.
+             *
+             * @param string $url Link, or '' for none.
+             */
+            'upgradeUrl' => esc_url_raw( (string) apply_filters( 'shapeblock_upgrade_url', 'https://shapekode.com/product/shapeblock/' ) ),
             'shapeblockUrl' => SHAPEBLOCK_PL_URL,
-            'templateCount' => $total_templates,
-            'colors' => \ShapeBlock\Admin\Api::get_saved_colors(),
-            'colorDefaults' => \ShapeBlock\Admin\Api::get_color_defaults(),
             'layout' => \ShapeBlock\Admin\Api::get_saved_layout(),
             'layoutDefaults' => \ShapeBlock\Admin\Api::get_layout_defaults(),
             'builderTypes' => array_values( \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_template_types() ),
             'builderRules' => \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::get_rules(),
+            'addonPages' => \ShapeBlock\Main::get_addon_pages(),
         ) );
     }
 
@@ -81,7 +80,11 @@ class Admin {
             return;
         }
 
-        // Send the editor "close" button back to the relevant dashboard submenu.
+        // Send the editor's back button (top left, fullscreen mode) to the matching
+        // ShapeBlock dashboard page instead of the hidden edit.php list for the
+        // post type. Current WordPress renders it as a class-less link inside
+        // .editor-header__back-button; older supported releases gave the link the
+        // class edit-post-fullscreen-mode-close.
         $page = $screen->post_type === 'shapeblock-builder' ? 'shapeblock-theme-builder' : 'shapeblock-templates';
         $template_page_url = admin_url( 'admin.php?page=' . $page );
 
@@ -89,7 +92,7 @@ class Admin {
             (function() {
                 var url = " . wp_json_encode( $template_page_url ) . ";
                 function updateLink() {
-                    var link = document.querySelector('a.edit-post-fullscreen-mode-close');
+                    var link = document.querySelector('.editor-header__back-button a[href], a.edit-post-fullscreen-mode-close');
                     if (link && link.getAttribute('href') !== url) {
                         link.setAttribute('href', url);
                     }

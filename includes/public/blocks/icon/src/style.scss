@@ -18,20 +18,10 @@
 		text-decoration: none;
 		transition: all 0.3s ease;
 
-		i,
-		svg {
+		i {
 			transition: all 0.3s ease;
 			line-height: 1;
-		}
-
-		i {
 			font-size: 1em;
-		}
-
-		svg {
-			width: 1em;
-			height: 1em;
-			fill: currentColor;
 		}
 	}
 

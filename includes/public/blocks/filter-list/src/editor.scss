@@ -1,0 +1,115 @@
+/**
+ * Editor-only styles for the Filterable List block - the item and filter
+ * repeaters in the sidebar: collapsible rows with hairline separators.
+ */
+.shapeblock-fl-repeater {
+	margin-bottom: 12px;
+}
+
+.shapeblock-fl-repeater-item {
+	border-bottom: 1px solid #e0e0e0;
+
+	&:first-child {
+		border-top: 1px solid #e0e0e0;
+	}
+
+	.shapeblock-fl-repeater-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		gap: 8px;
+		padding: 10px 2px;
+		background: none;
+		border: 0;
+		cursor: pointer;
+		text-align: left;
+
+		strong {
+			flex: 1;
+			min-width: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			font-size: 13px;
+			font-weight: 600;
+			color: #1e1e1e;
+		}
+
+		&:hover strong {
+			color: #3858e9;
+		}
+	}
+
+	.shapeblock-fl-repeater-body {
+		padding: 4px 2px 16px;
+
+		> * {
+			margin-bottom: 14px;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+}
+
+.shapeblock-fl-repeater-tag {
+	flex: 0 0 auto;
+	max-width: 40%;
+	overflow: hidden;
+	padding: 0 6px;
+	border-radius: 4px;
+	background: #e8efff;
+	color: #3858e9;
+	font-size: 10px;
+	font-weight: 600;
+	line-height: 18px;
+	text-overflow: ellipsis;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.shapeblock-fl-caret {
+	display: inline-flex;
+	flex: 0 0 auto;
+	transition: transform 0.2s ease;
+
+	svg {
+		width: 18px;
+		height: 18px;
+		fill: #949494;
+	}
+}
+
+/* A filter row: its name, then how many items it holds and its buttons. */
+.shapeblock-fl-filter-row {
+	padding: 10px 2px;
+}
+
+.shapeblock-fl-filter-row-meta {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-top: 6px;
+}
+
+.shapeblock-fl-repeater-count {
+	font-size: 12px;
+	color: #757575;
+}
+
+.shapeblock-fl-subhead {
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: #757575;
+}
+
+.shapeblock-fl-repeater-actions {
+	display: flex;
+	gap: 4px;
+	justify-content: flex-end;
+}

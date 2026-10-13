@@ -26,26 +26,18 @@
 	justify-content: flex-end;
 }
 
+/* Vertical menu: the items run down the page, so Justification aligns them across. */
+.shapeblock-menu--vertical.shapeblock-menu-align-center .shapeblock-menu-list {
+	align-items: center;
+}
+
+.shapeblock-menu--vertical.shapeblock-menu-align-right .shapeblock-menu-list {
+	align-items: flex-end;
+}
+
 .shapeblock-menu .shapeblock-menu-list li {
 	margin: 0;
 	position: relative;
-}
-
-/* Zone that holds any blocks added via "Add block" ( logo, buttons, search, etc. ).
-   It is a list item, so it lines up inline beside the menu items. */
-.shapeblock-menu .shapeblock-menu-inner {
-	display: inline-flex;
-	align-items: center;
-	gap: 12px;
-	list-style: none;
-}
-
-.shapeblock-menu .shapeblock-menu-inner:empty {
-	display: none;
-}
-
-.shapeblock-menu .shapeblock-menu-inner > * {
-	margin: 0;
 }
 
 .shapeblock-menu .shapeblock-menu-list a {
@@ -56,6 +48,13 @@
 	text-decoration: none;
 	line-height: 1.35;
 	transition: color 0.2s ease;
+}
+
+/* Room above and below the top-level links, so a dropdown opens clear of its item.
+   Kept low in specificity: the drawer and the item-background pills set their own. */
+.shapeblock-menu--horizontal :where(.shapeblock-menu-list > li > a) {
+	padding-top: 20px;
+	padding-bottom: 20px;
 }
 
 /* Label + description stack together; icons sit beside this text block. */
@@ -74,10 +73,6 @@
 	align-items: center;
 	flex: 0 0 auto;
 	color: inherit;
-}
-
-.shapeblock-menu .shapeblock-menu-item-icon--dir.shapeblock-menu-item-icon--left .shapeblock-menu-svg {
-	transform: scaleX( -1 );
 }
 
 .shapeblock-menu .shapeblock-menu-svg {
@@ -228,6 +223,7 @@
 	pointer-events: none;
 }
 
+.shapeblock-menu .shapeblock-menu-list li.is-sub-open > .sub-menu,
 .shapeblock-menu-click .shapeblock-menu-list li.is-sub-open > .sub-menu {
 	opacity: 1;
 	visibility: visible;
@@ -607,16 +603,6 @@
 	justify-content: center;
 }
 
-.shapeblock-menu-sides {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 8px;
-}
-
-.shapeblock-menu-sides .components-base-control {
-	margin-bottom: 0;
-}
-
 .shapeblock-menu-field {
 	margin-bottom: 12px;
 }
@@ -654,8 +640,7 @@
 }
 
 /* ---- Notices ---- */
-.shapeblock-menu-notice,
-.shapeblock-menu-placeholder {
+.shapeblock-menu-notice {
 	margin: 0;
 	padding: 14px 16px;
 	background: #f6f7f7;
@@ -663,10 +648,6 @@
 	border-radius: 6px;
 	color: #50575e;
 	font-size: 13px;
-}
-
-.shapeblock-menu-placeholder {
-	text-align: center;
 }
 
 /* ---- Editor: search input row + result text (title + slug) ---- */

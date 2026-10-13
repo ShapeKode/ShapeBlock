@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/table",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"title": "Table",
 	"category": "shapeblock",
 	"description": "A data table with header, body and footer cells — icons, images, tooltips, colspan/rowspan and full styling.",
@@ -76,6 +76,7 @@
 		"headerAlignMobile": { "type": "string", "default": "" },
 		"headerTextColor": { "type": "string", "default": "" },
 		"headerBgColor": { "type": "string", "default": "" },
+		"headerBgColorGradient": { "type": "string", "default": "" },
 		"headerTypography": {
 			"type": "object",
 			"default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" }
@@ -99,6 +100,7 @@
 		"bodyAlignMobile": { "type": "string", "default": "" },
 		"bodyTextColor": { "type": "string", "default": "" },
 		"bodyBgColor": { "type": "string", "default": "" },
+		"bodyBgColorGradient": { "type": "string", "default": "" },
 		"bodyTypography": {
 			"type": "object",
 			"default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" }
@@ -107,6 +109,7 @@
 		"bodyTypographyMobile": { "type": "object", "default": {} },
 		"stripedBg": { "type": "boolean", "default": false },
 		"stripedBgColor": { "type": "string", "default": "" },
+		"stripedBgColorGradient": { "type": "string", "default": "" },
 		"bodyIconColor": { "type": "string", "default": "" },
 		"bodyIconSize": { "type": "string", "default": "16" },
 		"bodyIconSizeTablet": { "type": "string", "default": "" },
@@ -118,9 +121,6 @@
 		"tbodyPadding": { "type": "object" },
 		"tbodyPaddingTablet": { "type": "object" },
 		"tbodyPaddingMobile": { "type": "object" },
-		"tbodyMargin": { "type": "object" },
-		"tbodyMarginTablet": { "type": "object" },
-		"tbodyMarginMobile": { "type": "object" },
 		"bodyBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"tooltipIconColor": { "type": "string", "default": "" },
 		"tooltipIconSize": { "type": "string", "default": "16" },
@@ -140,6 +140,7 @@
 		"footerAlignMobile": { "type": "string", "default": "" },
 		"footerTextColor": { "type": "string", "default": "" },
 		"footerBgColor": { "type": "string", "default": "" },
+		"footerBgColorGradient": { "type": "string", "default": "" },
 		"footerTypography": {
 			"type": "object",
 			"default": { "fontFamily": "", "fontSize": "", "fontWeight": "", "fontStyle": "", "textTransform": "", "lineHeight": "", "letterSpacing": "" }

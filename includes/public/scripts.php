@@ -12,23 +12,17 @@ function shapeblock_enqueue_block_scripts() {
 	// on a block editor screen, or on a front-end request that actually
 	// contains a ShapeBlock block. See that function for why — this hook
 	// otherwise fires on every wp-admin screen and every front-end page.
-	if ( ! function_exists( 'shapeblock_should_load_common_assets' ) || ! shapeblock_should_load_common_assets() ) {
+	if ( ! shapeblock_should_load_common_assets() ) {
 		return;
 	}
 
 	wp_enqueue_style( 'shapeblock-public-style', SHAPEBLOCK_PL_URL . 'includes/public/assets/css/public.css', array(), shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/css/public.css' ) );
 
-	// Styling for the "ShapeBlock Menu" core-Navigation variation ( .shapeblock-nav ). Versioned by
-	// file modified time so CSS tweaks always bust the browser cache.
-	$nav_var_file = SHAPEBLOCK_PL_PATH . 'includes/public/assets/css/shapeblock-nav-variation.css';
-	wp_enqueue_style(
-		'shapeblock-nav-variation',
-		SHAPEBLOCK_PL_URL . 'includes/public/assets/css/shapeblock-nav-variation.css',
-		array(),
-		file_exists( $nav_var_file ) ? filemtime( $nav_var_file ) : SHAPEBLOCK_VERSION
-	);
-	// Small enough for WordPress to print inline -- see shapeblock_add_style_paths().
-	wp_style_add_data( 'shapeblock-nav-variation', 'path', $nav_var_file );
+	// The editor canvas can gain a "ShapeBlock Menu" at any moment, so it always
+	// has the variation's styling. The front end loads it per render, below.
+	if ( is_admin() ) {
+		wp_enqueue_style( 'shapeblock-nav-variation' );
+	}
 
 	$colors  = \ShapeBlock\Admin\Api::get_saved_colors();
 	$css_map = array(
@@ -63,3 +57,46 @@ function shapeblock_enqueue_block_scripts() {
 		wp_add_inline_style( 'shapeblock-public-style', ':root{' . $declarations . '}' );
 	}
 }
+
+/**
+ * Register the stylesheet of the "ShapeBlock Menu" core-Navigation variation
+ * ( class .shapeblock-nav ). Versioned by file modified time so CSS tweaks
+ * always bust the browser cache, and small enough for WordPress to print
+ * inline -- see shapeblock_add_style_paths().
+ *
+ * @return void
+ */
+function shapeblock_register_nav_variation_style() {
+	wp_register_style(
+		'shapeblock-nav-variation',
+		SHAPEBLOCK_PL_URL . 'includes/public/assets/css/shapeblock-nav-variation.css',
+		array(),
+		shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/css/shapeblock-nav-variation.css' )
+	);
+}
+add_action( 'init', 'shapeblock_register_nav_variation_style' );
+
+/**
+ * Load the variation's stylesheet whenever a core Navigation block carrying the
+ * shapeblock-nav class renders.
+ *
+ * The variation is core Navigation, not a shapeblock/* block, so a page whose
+ * only ShapeBlock piece is this menu never passes the shared asset gate. Hooking
+ * the render catches it wherever it lives -- post content, a block theme's
+ * template part, a Theme Builder header or footer -- and leaves every other
+ * page alone. Template parts and Theme Builder locations render before wp_head,
+ * so the sheet lands in the head; a menu inside post content of a classic theme
+ * gets it printed with the footer styles.
+ *
+ * @param string $content Rendered block markup.
+ * @param array  $block   Parsed block.
+ * @return string
+ */
+function shapeblock_nav_variation_style( $content, $block ) {
+	$class = isset( $block['attrs']['className'] ) ? (string) $block['attrs']['className'] : '';
+	if ( preg_match( '/(^|\s)shapeblock-nav(\s|$)/', $class ) ) {
+		wp_enqueue_style( 'shapeblock-nav-variation' );
+	}
+	return $content;
+}
+add_filter( 'render_block_core/navigation', 'shapeblock_nav_variation_style', 10, 2 );

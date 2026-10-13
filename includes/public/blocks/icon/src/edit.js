@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import { useBlockProps, InspectorControls, BlockControls, AlignmentControl } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -16,6 +16,7 @@ import {
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import IconPicker from '../../custom-components/IconPicker';
 import BorderControl from '../../custom-components/BorderControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
@@ -62,6 +63,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	const color = (label, key) => (
 		<ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
+	);
+	const bg = (label, c, g) => (
+		<BackgroundControl label={label} colorValue={attributes[c]} gradientValue={attributes[g]} onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })} onGradientChange={(v) => setAttributes({ [g]: v || '' })} />
 	);
 	const border = (label, key) => (
 		<BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
@@ -139,8 +143,34 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				>
 					{(tab) => (
 						tab.name === 'settings' ? (
-							<PanelBody title={__('Icon', 'shapeblock')} initialOpen={true}>
+							<PanelBody title={__('Content', 'shapeblock')} initialOpen={true}>
 								<IconPicker label={__('Icon', 'shapeblock')} value={icon} onChange={(v) => setAttributes({ icon: v })} />
+								<Divider />
+								<TextControl
+									label={__('Link URL', 'shapeblock')}
+									type="url"
+									value={iconUrl}
+									onChange={(v) => setAttributes({ iconUrl: v })}
+									placeholder="https://"
+									__next40pxDefaultSize
+									__nextHasNoMarginBottom
+								/>
+								{iconUrl && (
+									<>
+										<ToggleControl label={__('Open in new tab', 'shapeblock')} checked={iconTarget} onChange={(v) => setAttributes({ iconTarget: v })} __nextHasNoMarginBottom />
+										<ToggleControl label={__('Add nofollow', 'shapeblock')} checked={iconNofollow} onChange={(v) => setAttributes({ iconNofollow: v })} __nextHasNoMarginBottom />
+									</>
+								)}
+							</PanelBody>
+						) : tab.name === 'advanced' ? (
+							<AdvancedControls attributes={attributes} setAttributes={setAttributes} />
+						) : tab.name === 'layout' ? (
+							<PanelBody title={__('Alignment & Size', 'shapeblock')} initialOpen={true}>
+								{respAlign(__('Alignment', 'shapeblock'), 'alignment')}
+								{respNum(__('Size (px)', 'shapeblock'), 'iconSize')}
+							</PanelBody>
+						) : (
+							<PanelBody title={__('Icon', 'shapeblock')} initialOpen={true}>
 								<SelectControl
 									label={__('View', 'shapeblock')}
 									value={view}
@@ -167,42 +197,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 										__nextHasNoMarginBottom
 									/>
 								)}
-								<Divider />
-								<TextControl
-									label={__('Link URL', 'shapeblock')}
-									type="url"
-									value={iconUrl}
-									onChange={(v) => setAttributes({ iconUrl: v })}
-									placeholder="https://"
-									__next40pxDefaultSize
-									__nextHasNoMarginBottom
-								/>
-								{iconUrl && (
-									<>
-										<ToggleControl label={__('Open in new tab', 'shapeblock')} checked={iconTarget} onChange={(v) => setAttributes({ iconTarget: v })} __nextHasNoMarginBottom />
-										<ToggleControl label={__('Add nofollow', 'shapeblock')} checked={iconNofollow} onChange={(v) => setAttributes({ iconNofollow: v })} __nextHasNoMarginBottom />
-									</>
-								)}
-							</PanelBody>
-						) : tab.name === 'advanced' ? (
-							<AdvancedControls attributes={attributes} setAttributes={setAttributes} />
-						) : tab.name === 'layout' ? (
-							<PanelBody title={__('Icon', 'shapeblock')} initialOpen={true}>
-								{respAlign(__('Alignment', 'shapeblock'), 'alignment')}
-								{respNum(__('Size (px)', 'shapeblock'), 'iconSize')}
 								{respBox(__('Padding', 'shapeblock'), 'iconPadding')}
-							</PanelBody>
-						) : (
-							<PanelBody title={__('Icon', 'shapeblock')} initialOpen={true}>
+								<Divider />
 								{color(__('Color', 'shapeblock'), 'iconColor')}
-								{color(__('Background', 'shapeblock'), 'iconBg')}
+								{bg(__('Background', 'shapeblock'), 'iconBg', 'iconBgGradient')}
 								{num(__('Rotation (deg)', 'shapeblock'), 'iconRotation')}
 								{border(__('Border', 'shapeblock'), 'iconBorder')}
 								{shadow(__('Box Shadow', 'shapeblock'), 'iconBoxShadow')}
 								{box(__('Border Radius', 'shapeblock'), 'iconBorderRadius')}
 								<Divider />
 								{color(__('Color (Hover)', 'shapeblock'), 'iconColorHover')}
-								{color(__('Background (Hover)', 'shapeblock'), 'iconBgHover')}
+								{bg(__('Background (Hover)', 'shapeblock'), 'iconBgHover', 'iconBgHoverGradient')}
 								{border(__('Border (Hover)', 'shapeblock'), 'iconBorderHover')}
 								{num(__('Rotation Hover (deg)', 'shapeblock'), 'iconRotationHover')}
 							</PanelBody>

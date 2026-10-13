@@ -16,8 +16,8 @@ $unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $
 
 $features   = isset( $attributes['features'] ) && is_array( $attributes['features'] ) ? $attributes['features'] : [];
 $dir        = ( isset( $attributes['feaDir'] ) && 'right' === $attributes['feaDir'] ) ? 'right' : 'left';
-$view       = isset( $attributes['iconView'] ) ? $attributes['iconView'] : 'stracked';
-$shape      = isset( $attributes['iconShape'] ) ? $attributes['iconShape'] : 'rounded';
+$view       = isset( $attributes['iconView'] ) ? sanitize_html_class( (string) $attributes['iconView'], 'stracked' ) : 'stracked';
+$shape      = isset( $attributes['iconShape'] ) ? sanitize_html_class( (string) $attributes['iconShape'], 'rounded' ) : 'rounded';
 $allowed    = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span' ];
 $title_tag  = isset( $attributes['titleTag'] ) && in_array( $attributes['titleTag'], $allowed, true ) ? $attributes['titleTag'] : 'h3';
 $connector  = ! empty( $attributes['feaConnector'] );
@@ -118,7 +118,7 @@ $extra_css = '';
 if ( $connector ) {
 	$before_decls = $H::get_inline_styles( $conn_before );
 	if ( $before_decls ) {
-		$extra_css = $selector . '.shapeblock-fea-list-connector::before{' . $before_decls . '}';
+		$extra_css = $selector . '.shapeblock-fea-list-wrapper.shapeblock-fea-list-connector.shapeblock-fea-list-dir-' . $dir . '::before{' . $before_decls . '}';
 	}
 }
 
@@ -175,7 +175,7 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $di
 		' .shapeblock-fea-list'          => $H::get_inline_styles( $list ),
 		' .shapeblock-fea-list-icon'     => $H::get_inline_styles( $icon_box ),
 		' .shapeblock-fea-list-icon svg' => $H::get_inline_styles( $icon_svg ),
-		' .shapeblock-fea-list-number'   => $H::get_inline_styles( $icon_num ),
+		' .shapeblock-fea-list-number, ' . $selector . ' .shapeblock-fea-list-icon i' => $H::get_inline_styles( $icon_num ),
 		' .shapeblock-fea-list-title'    => $H::get_inline_styles( $title_r ),
 		' .shapeblock-fea-list-desc'     => $H::get_inline_styles( $desc_r ),
 	];
@@ -197,7 +197,7 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $di
 		if ( 'right' === $dir && '' !== $uu( 'feaConnectorRightPositionX' ) )  $before['right'] = $uu( 'feaConnectorRightPositionX' );
 		$before_decls = $H::get_inline_styles( $before );
 		if ( $before_decls ) {
-			$css .= $selector . '.shapeblock-fea-list-connector::before{' . $before_decls . '}';
+			$css .= $selector . '.shapeblock-fea-list-wrapper.shapeblock-fea-list-connector.shapeblock-fea-list-dir-' . $dir . '::before{' . $before_decls . '}';
 		}
 	}
 
@@ -213,7 +213,7 @@ $H::add_custom_style( $style_handle, $selector, $extra_css, [
 	'.shapeblock-fea-list-icon svg, ' . $selector . ' .shapeblock-fea-list-icon svg path, ' . $selector . ' .shapeblock-fea-list-icon i, ' . $selector . ' .shapeblock-fea-list-number' => $H::get_inline_styles( $icon_color ),
 	'.shapeblock-fea-list-icon'                       => $H::get_inline_styles( $icon_box ),
 	'.shapeblock-fea-list-icon svg'                   => $H::get_inline_styles( $icon_svg ),
-	'.shapeblock-fea-list-number'                     => $H::get_inline_styles( $icon_num ),
+	'.shapeblock-fea-list-number, ' . $selector . ' .shapeblock-fea-list-icon i' => $H::get_inline_styles( $icon_num ),
 	'.shapeblock-fea-list-title'                      => $H::get_inline_styles( $title_styles ),
 	'.shapeblock-fea-list-desc'                       => $H::get_inline_styles( $desc_styles ),
 ] );
@@ -239,7 +239,7 @@ if ( '' !== $responsive_media ) {
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<?php
 	foreach ( $features as $item ) :
-		$type = isset( $item['icon_type'] ) ? $item['icon_type'] : ( $item['iconType'] ?? 'icon' );
+		$type = isset( $item['iconType'] ) ? $item['iconType'] : 'icon';
 		$icon = isset( $item['icon'] ) ? $item['icon'] : '';
 		$num  = isset( $item['number'] ) ? $item['number'] : '';
 		$img  = isset( $item['image'] ) && is_array( $item['image'] ) ? $item['image'] : [];

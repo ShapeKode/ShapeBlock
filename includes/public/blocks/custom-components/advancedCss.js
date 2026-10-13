@@ -82,5 +82,3 @@ export const buildAdvancedCss = ( attrs ) => {
 		return css + ( query ? `${ query }{${ rule }}` : rule );
 	}, '' );
 };
-
-export default buildAdvancedCss;

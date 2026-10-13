@@ -544,8 +544,24 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 .shapeblock-team-grid .shapeblock-team-card.skin5:hover .shapeblock-author-contact .shapeblock-contact-inner {
 	transform: translateY(0);
 }
-.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-image-content:not(.has-description) .shapeblock-description {
-	display: none;
+/* Layer behind the description, shown by the Hover Background setting. */
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-image-content {
+	position: relative;
+
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		pointer-events: none;
+		border-radius: inherit;
+		transition: opacity 0.4s ease;
+	}
+
+	.shapeblock-description {
+		position: relative;
+		z-index: 1;
+	}
 }
 
 body.shapeblock-popup-open {

@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/team-grid",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "title": "Team Member",
   "category": "shapeblock",
   "description": "A team member card with 5 skins, social icons, contact info and an optional popup.",
@@ -318,6 +318,10 @@
       "type": "string",
       "default": ""
     },
+    "imageBelowBgGradient": {
+      "type": "string",
+      "default": ""
+    },
     "imageBelowHeight": {
       "type": "string",
       "default": ""
@@ -344,6 +348,10 @@
       }
     },
     "areaBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "areaBgGradient": {
       "type": "string",
       "default": ""
     },
@@ -663,11 +671,19 @@
       "type": "string",
       "default": ""
     },
+    "sIconBgGradient": {
+      "type": "string",
+      "default": ""
+    },
     "sIconHoverColor": {
       "type": "string",
       "default": ""
     },
     "sIconHoverBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "sIconHoverBgGradient": {
       "type": "string",
       "default": ""
     },
@@ -764,6 +780,10 @@
       }
     },
     "popupBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "popupBgGradient": {
       "type": "string",
       "default": ""
     },

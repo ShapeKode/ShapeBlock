@@ -6,6 +6,7 @@ import {
 	SelectControl,
 	ToggleControl,
 	TextControl,
+	TextareaControl,
 	BoxControl,
 	Button,
 	TabPanel,
@@ -14,6 +15,7 @@ import {
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import IconPicker from '../../custom-components/IconPicker';
 import BorderControl from '../../custom-components/BorderControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
@@ -96,6 +98,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	const toggleOpen = (index) => setOpenIndex((cur) => (cur === index ? null : index));
 
+	// Which item is expanded in the sidebar list. Expanding one also opens its
+	// answer on the canvas, so the field being edited is the one you can see.
+	const [panelIndex, setPanelIndex] = useState(0);
+	const togglePanel = (index) => {
+		const next = panelIndex === index ? null : index;
+		setPanelIndex(next);
+		if (null !== next) {
+			setOpenIndex(next);
+		}
+	};
+
 	const updateItem = (index, key, value) => {
 		setAttributes({
 			faqItems: items.map((item, i) => (i === index ? { ...item, [key]: value } : item)),
@@ -150,6 +163,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const color = (label, key) => (
 		<ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
 	);
+	// Background row: a colour or a gradient, stored in `<key>` and `<key>Gradient`.
+	const bg = (label, key) => (
+		<BackgroundControl label={label} colorValue={attributes[key]} gradientValue={attributes[`${key}Gradient`]} onColorChange={(v) => setAttributes({ [key]: v && typeof v === 'object' ? v.hex : v || '' })} onGradientChange={(v) => setAttributes({ [`${key}Gradient`]: v || '' })} />
+	);
 
 	// Responsive variants — a device switcher above the control, editing the
 	// matching per-device attribute (base / baseTablet / baseMobile).
@@ -173,8 +190,69 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	);
 
 	// --- Tab 1: Settings (content & behavior) ---------------------------------
+	const itemsPanel = (
+		<PanelBody title={__('Items', 'shapeblock')} initialOpen={true}>
+			{items.map((item, index) => {
+				const open = panelIndex === index;
+				return (
+					<div key={index} style={{ borderBottom: '1px solid #e0e0e0', borderTop: index === 0 ? '1px solid #e0e0e0' : 0 }}>
+						<button
+							type="button"
+							onClick={() => togglePanel(index)}
+							aria-expanded={open}
+							style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '8px', padding: '12px 2px', background: 'none', border: 0, cursor: 'pointer', textAlign: 'left' }}
+						>
+							<strong style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '13px', fontWeight: 600, color: '#1e1e1e' }}>
+								{(item.title || '').replace(/<[^>]+>/g, '') || `${__('Question', 'shapeblock')} ${index + 1}`}
+							</strong>
+							<span style={{ display: 'inline-flex', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .2s' }}>{ICON_ARROW_DOWN}</span>
+						</button>
+						{open && (
+							<div style={{ display: 'grid', gap: '14px', padding: '4px 2px 16px' }}>
+								<TextControl
+									label={__('Question', 'shapeblock')}
+									value={item.title || ''}
+									onChange={(v) => { updateItem(index, 'title', v); setOpenIndex(index); }}
+									__next40pxDefaultSize
+									__nextHasNoMarginBottom
+								/>
+								<TextareaControl
+									label={__('Answer', 'shapeblock')}
+									help={__('Basic HTML works, for example <br> for a line break and <a> for a link.', 'shapeblock')}
+									value={item.description || ''}
+									onChange={(v) => { updateItem(index, 'description', v); setOpenIndex(index); }}
+									rows={6}
+									__nextHasNoMarginBottom
+								/>
+								<ToggleControl
+									label={__('Open by default', 'shapeblock')}
+									checked={!!item.active}
+									onChange={(v) => updateItem(index, 'active', v)}
+									__nextHasNoMarginBottom
+								/>
+								<div style={{ display: 'flex', gap: '4px', justifyContent: 'flex-end' }}>
+									<Button icon={ICON_ARROW_UP} label={__('Move up', 'shapeblock')} onClick={() => { moveItem(index, -1); setPanelIndex(index - 1); }} disabled={index === 0} size="small" />
+									<Button icon={ICON_ARROW_DOWN} label={__('Move down', 'shapeblock')} onClick={() => { moveItem(index, 1); setPanelIndex(index + 1); }} disabled={index === items.length - 1} size="small" />
+									<Button icon={ICON_COPY} label={__('Duplicate', 'shapeblock')} onClick={() => duplicateItem(index)} size="small" />
+									<Button icon={ICON_TRASH} label={__('Remove', 'shapeblock')} onClick={() => { removeItem(index); setPanelIndex(null); }} isDestructive size="small" />
+								</div>
+							</div>
+						)}
+					</div>
+				);
+			})}
+			<div style={{ marginTop: '12px' }}>
+				<Button variant="primary" onClick={() => { addItem(); setPanelIndex(items.length); setOpenIndex(items.length); }} icon={ICON_ADD}>
+					{__('Add Item', 'shapeblock')}
+				</Button>
+			</div>
+		</PanelBody>
+	);
+
 	const settingsTab = (
-		<PanelBody title={__('General', 'shapeblock')} initialOpen={true}>
+		<>
+		{itemsPanel}
+		<PanelBody title={__('General', 'shapeblock')} initialOpen={false}>
 			<SelectControl
 				label={__('Title HTML Tag', 'shapeblock')}
 				value={titleTag}
@@ -204,17 +282,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				value={iconClose}
 				onChange={(v) => setAttributes({ iconClose: v })}
 			/>
-			<SelectControl
-				label={__('Icon Position', 'shapeblock')}
-				value={iconPosition}
-				options={[
-					{ label: __('Right', 'shapeblock'), value: 'row' },
-					{ label: __('Left', 'shapeblock'), value: 'row-reverse' },
-				]}
-				onChange={(v) => setAttributes({ iconPosition: v })}
-				__next40pxDefaultSize
-				__nextHasNoMarginBottom
-			/>
 			<Divider />
 			<ToggleControl
 				label={__('Open All FAQs by Default', 'shapeblock')}
@@ -231,14 +298,25 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				/>
 			)}
 		</PanelBody>
+		</>
 	);
 
-	// --- Tab 2: Layout (spacing) ----------------------------------------------
+	// --- Tab 2: Layout (structure) --------------------------------------------
 	const layoutTab = (
-		<PanelBody title={__('Spacing', 'shapeblock')} initialOpen={true}>
+		<PanelBody title={__('Spacing & Position', 'shapeblock')} initialOpen={true}>
 			{respNum(__('Items Space (gap px)', 'shapeblock'), 'itemsGap')}
 			<Divider />
-			{respBox(__('Item Padding', 'shapeblock'), 'itemPadding')}
+			<SelectControl
+				label={__('Icon Position', 'shapeblock')}
+				value={iconPosition}
+				options={[
+					{ label: __('Right', 'shapeblock'), value: 'row' },
+					{ label: __('Left', 'shapeblock'), value: 'row-reverse' },
+				]}
+				onChange={(v) => setAttributes({ iconPosition: v })}
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			/>
 		</PanelBody>
 	);
 
@@ -249,9 +327,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<TabPanel tabs={STATE_TABS}>
 					{(tab) => (
 						<>
-							{tab.name === 'normal' && color(__('Background', 'shapeblock'), 'itemBackgroundColor')}
-							{tab.name === 'hover' && color(__('Background', 'shapeblock'), 'itemBackgroundColorHover')}
-							{tab.name === 'active' && color(__('Background', 'shapeblock'), 'itemBackgroundColorActive')}
+							{tab.name === 'normal' && bg(__('Background', 'shapeblock'), 'itemBackgroundColor')}
+							{tab.name === 'hover' && bg(__('Background', 'shapeblock'), 'itemBackgroundColorHover')}
+							{tab.name === 'active' && bg(__('Background', 'shapeblock'), 'itemBackgroundColorActive')}
 
 							<BorderControl
 								label={__('Border', 'shapeblock')}
@@ -281,6 +359,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					values={attributes.itemBorderRadius}
 					onChange={(v) => setAttributes({ itemBorderRadius: v })}
 				/>
+				<Divider />
+				{respBox(__('Item Padding', 'shapeblock'), 'itemPadding')}
 			</PanelBody>
 
 			<PanelBody title={__('Title', 'shapeblock')} initialOpen={false}>
@@ -291,7 +371,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							{tab.name === 'normal' && (
 								<>
 									{color(__('Color', 'shapeblock'), 'titleColor')}
-									{color(__('Question Background', 'shapeblock'), 'titleBgColor')}
+									{bg(__('Question Background', 'shapeblock'), 'titleBgColor')}
 									<BorderControl
 										label={__('Question Border', 'shapeblock')}
 										value={attributes.titleBorder}
@@ -308,7 +388,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							{tab.name === 'hover' && (
 								<>
 									{color(__('Color', 'shapeblock'), 'titleColorHover')}
-									{color(__('Question Background', 'shapeblock'), 'titleBgColorHover')}
+									{bg(__('Question Background', 'shapeblock'), 'titleBgColorHover')}
 									{color(__('Question Border Color', 'shapeblock'), 'titleBorderColorHover')}
 									<BoxShadowControls
 										label={__('Question Box Shadow', 'shapeblock')}
@@ -320,7 +400,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							{tab.name === 'active' && (
 								<>
 									{color(__('Color', 'shapeblock'), 'titleColorActive')}
-									{color(__('Question Background', 'shapeblock'), 'titleBgColorActive')}
+									{bg(__('Question Background', 'shapeblock'), 'titleBgColorActive')}
 									{color(__('Question Border Color', 'shapeblock'), 'titleBorderColorActive')}
 									<BoxShadowControls
 										label={__('Question Box Shadow', 'shapeblock')}
@@ -350,7 +430,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						return (
 							<>
 								{color(__('Color', 'shapeblock'), `descriptionColor${suffix}`)}
-								{color(__('Background', 'shapeblock'), `descriptionBgColor${suffix}`)}
+								{bg(__('Background', 'shapeblock'), `descriptionBgColor${suffix}`)}
 								{tab.name === 'normal' ? (
 									<BorderControl
 										label={__('Border', 'shapeblock')}
@@ -381,7 +461,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						return (
 							<>
 								{color(__('Color', 'shapeblock'), `iconColor${suffix}`)}
-								{color(__('Background', 'shapeblock'), `iconBgColor${suffix}`)}
+								{bg(__('Background', 'shapeblock'), `iconBgColor${suffix}`)}
 								{tab.name === 'normal' ? (
 									<BorderControl
 										label={__('Border', 'shapeblock')}

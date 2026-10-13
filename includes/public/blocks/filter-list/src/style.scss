@@ -1,0 +1,254 @@
+/**
+ * Filterable List block - front-end and editor styles.
+ *
+ * Every class uses the "shapeblock-fl" prefix and sits under
+ * `.shapeblock-fl-block-wrap`. Values the block's settings change are custom
+ * properties or are replaced by the rules render.php prints for the block.
+ */
+.shapeblock-fl-block-wrap {
+	--shapeblock-fl-accent: var(--shapeblock-preset-color-primary, #126bf0);
+	--shapeblock-fl-cols: 4;
+	--shapeblock-fl-row-gap: 10px;
+	--shapeblock-fl-col-gap: 24px;
+	--shapeblock-fl-header-space: 20px;
+
+	/* Header: filter buttons and the search box. Side by side, it wraps onto
+	   two lines when there is no room; stacked, the search comes first. */
+	.shapeblock-fl-header {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		margin-bottom: var(--shapeblock-fl-header-space);
+
+		&.has-separator {
+			padding-bottom: var(--shapeblock-fl-header-space);
+			border-bottom: 1px dashed #d0d5dd;
+		}
+	}
+
+	&.shapeblock-fl-header-stacked .shapeblock-fl-header {
+		flex-direction: column-reverse;
+		align-items: stretch;
+	}
+
+	.shapeblock-fl-filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	.shapeblock-fl-filter {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		margin: 0;
+		padding: 6px 12px;
+		border: 1px solid #e4e7ec;
+		border-radius: 6px;
+		background: #fff;
+		color: #1d2939;
+		font: inherit;
+		font-size: 13px;
+		font-weight: 600;
+		line-height: 1.4;
+		cursor: pointer;
+		transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+
+		&:hover {
+			border-color: var(--shapeblock-fl-accent);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--shapeblock-fl-accent);
+			outline-offset: 2px;
+		}
+
+		&.is-active {
+			border-color: var(--shapeblock-fl-accent);
+			background: var(--shapeblock-fl-accent);
+			color: #fff;
+		}
+	}
+
+	.shapeblock-fl-count {
+		font-weight: 400;
+		opacity: 0.85;
+	}
+
+	/* Search box, with its magnifier inside on the left. */
+	.shapeblock-fl-search {
+		position: relative;
+		flex: 0 1 auto;
+		width: 300px;
+		max-width: 100%;
+	}
+
+	&.shapeblock-fl-header-stacked .shapeblock-fl-search {
+		width: 100%;
+	}
+
+	.shapeblock-fl-search-icon {
+		position: absolute;
+		top: 50%;
+		left: 14px;
+		width: 16px;
+		height: 16px;
+		transform: translateY(-50%);
+		color: #98a2b3;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+		pointer-events: none;
+	}
+
+	.shapeblock-fl-search-input {
+		box-sizing: border-box;
+		width: 100%;
+		margin: 0;
+		padding: 9px 16px 9px 38px;
+		border: 1px solid #e4e7ec;
+		border-radius: 999px;
+		background: #fff;
+		color: #1d2939;
+		font: inherit;
+		font-size: 14px;
+		line-height: 1.4;
+		-webkit-appearance: none;
+		appearance: none;
+
+		&::placeholder {
+			color: #98a2b3;
+			opacity: 1;
+		}
+
+		&:focus {
+			border-color: var(--shapeblock-fl-accent);
+			outline: none;
+			box-shadow: 0 0 0 3px rgba(18, 107, 240, 0.12);
+		}
+	}
+
+	/* List. "Down the columns" fills the first column, then the next, like
+	   an index; "Across the rows" fills each row from left to right. */
+	.shapeblock-fl-list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&.shapeblock-fl-flow-columns .shapeblock-fl-list {
+		column-count: var(--shapeblock-fl-cols);
+		column-gap: var(--shapeblock-fl-col-gap);
+
+		.shapeblock-fl-item {
+			break-inside: avoid;
+			margin-bottom: var(--shapeblock-fl-row-gap);
+		}
+	}
+
+	&.shapeblock-fl-flow-rows .shapeblock-fl-list {
+		display: grid;
+		grid-template-columns: repeat(var(--shapeblock-fl-cols), minmax(0, 1fr));
+		gap: var(--shapeblock-fl-row-gap) var(--shapeblock-fl-col-gap);
+	}
+
+	.shapeblock-fl-list .shapeblock-fl-item {
+		margin-top: 0;
+		margin-left: 0;
+		padding: 0;
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	.shapeblock-fl-link {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		box-sizing: border-box;
+		padding: 4px 0;
+		border: 0 solid transparent;
+		color: inherit;
+		text-decoration: none;
+		transition: background-color 0.2s ease, border-color 0.2s ease;
+	}
+
+	.shapeblock-fl-icon {
+		flex: 0 0 auto;
+		color: #475467;
+		font-size: 18px;
+		line-height: 1;
+		transition: color 0.2s ease;
+	}
+
+	.shapeblock-fl-title {
+		min-width: 0;
+		color: #1d2939;
+		font-size: 15px;
+		line-height: 1.4;
+		transition: color 0.2s ease;
+	}
+
+	a.shapeblock-fl-link:hover .shapeblock-fl-title {
+		color: var(--shapeblock-fl-accent);
+	}
+
+	.shapeblock-fl-badge {
+		--shapeblock-fl-badge-bg: #e8efff;
+		--shapeblock-fl-badge-color: var(--shapeblock-fl-accent);
+		flex: 0 0 auto;
+		padding: 2px 6px;
+		border-radius: 4px;
+		background: var(--shapeblock-fl-badge-bg);
+		color: var(--shapeblock-fl-badge-color);
+		font-size: 10px;
+		font-weight: 700;
+		line-height: 1.5;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+
+	.shapeblock-fl-empty {
+		margin: 8px 0 0;
+		color: #667085;
+		font-size: 15px;
+
+		&[hidden] {
+			display: none;
+		}
+	}
+}
+
+/* No underline, whatever a theme does to links: the extra class outranks
+   rules such as `.entry-content a:hover`. */
+.shapeblock-fl-block-wrap .shapeblock-fl-list .shapeblock-fl-link,
+.shapeblock-fl-block-wrap .shapeblock-fl-list .shapeblock-fl-link:hover,
+.shapeblock-fl-block-wrap .shapeblock-fl-list .shapeblock-fl-link:focus {
+	text-decoration: none;
+}
+
+@media (max-width: 767px) {
+	.shapeblock-fl-block-wrap {
+		.shapeblock-fl-search {
+			width: 100%;
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.shapeblock-fl-block-wrap {
+		.shapeblock-fl-filter,
+		.shapeblock-fl-link,
+		.shapeblock-fl-icon,
+		.shapeblock-fl-title {
+			transition: none;
+		}
+	}
+}

@@ -16,7 +16,6 @@ $H = '\ShapeBlock\Frontend\Helper';
 
 $unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-pricing-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
-$skin_style   = isset( $attributes['skinStyle'] ) ? $attributes['skinStyle'] : 'skin1';
 $title        = isset( $attributes['title'] ) ? $attributes['title'] : '';
 $description  = isset( $attributes['description'] ) ? $attributes['description'] : '';
 $on_sale      = ! empty( $attributes['onSale'] );
@@ -26,12 +25,11 @@ $period       = isset( $attributes['period'] ) ? $attributes['period'] : '';
 $separator    = isset( $attributes['separator'] ) ? $attributes['separator'] : '';
 $features     = isset( $attributes['features'] ) && is_array( $attributes['features'] ) ? $attributes['features'] : [];
 $features_des = isset( $attributes['featuresDescription'] ) ? $attributes['featuresDescription'] : '';
-$icon_style   = isset( $attributes['featureIconStyle'] ) ? $attributes['featureIconStyle'] : 'icon-only';
+$icon_style   = isset( $attributes['featureIconStyle'] ) ? sanitize_html_class( (string) $attributes['featureIconStyle'], 'icon-only' ) : 'icon-only';
 $is_featured  = ! empty( $attributes['isFeatured'] );
-$ribbon_style = isset( $attributes['ribbonStyle'] ) ? $attributes['ribbonStyle'] : 'style1';
+$ribbon_style = isset( $attributes['ribbonStyle'] ) ? sanitize_html_class( (string) $attributes['ribbonStyle'], 'style1' ) : 'style1';
 $featured_txt = isset( $attributes['featuredText'] ) ? $attributes['featuredText'] : '';
-$ribbon_align = isset( $attributes['ribbonAlignment'] ) ? $attributes['ribbonAlignment'] : 'right';
-$show_button  = ! empty( $attributes['showButton'] );
+$ribbon_align = isset( $attributes['ribbonAlignment'] ) ? sanitize_html_class( (string) $attributes['ribbonAlignment'], 'right' ) : 'right';
 $button_pos   = isset( $attributes['buttonPosition'] ) ? $attributes['buttonPosition'] : 'after_features';
 
 $block_wrap_attr = get_block_wrapper_attributes( array(
@@ -108,7 +106,11 @@ $header_align = ! empty( $attributes['headerAlignment'] ) ? [ 'text-align' => $a
 // ---- Title ----
 $title_styles = $typo( $attributes['titleTypography'] ?? [] );
 if ( ! empty( $attributes['titleColor'] ) ) $title_styles['color'] = $attributes['titleColor'];
-if ( ! empty( $attributes['titleBgColor'] ) ) $title_styles['background-color'] = $attributes['titleBgColor'];
+if ( ! empty( $attributes['titleBgGradient'] ) ) {
+	$title_styles['background'] = $attributes['titleBgGradient'];
+} elseif ( ! empty( $attributes['titleBgColor'] ) ) {
+	$title_styles['background-color'] = $attributes['titleBgColor'];
+}
 $title_styles = array_merge( $title_styles, $header_align, $dims( $attributes['titleBorderRadius'] ?? [], 'radius' ), $dims( $attributes['titlePadding'] ?? [], 'padding' ), $dims( $attributes['titleMargin'] ?? [], 'margin' ) );
 if ( ! empty( $attributes['titleBorder'] ) ) $title_styles = array_merge( $title_styles, $H::border_to_css_props( $attributes['titleBorder'] ) );
 
@@ -152,6 +154,10 @@ $features_text_styles = $typo( $attributes['featuresTextTypography'] ?? [] );
 if ( ! empty( $attributes['featuresTextColor'] ) ) $features_text_styles['color'] = $attributes['featuresTextColor'];
 $features_text_styles = array_merge( $features_text_styles, $dims( $attributes['featuresPadding'] ?? [], 'padding' ), $dims( $attributes['featuresMargin'] ?? [], 'margin' ) );
 if ( ! empty( $attributes['featuresBorder'] ) ) $features_text_styles = array_merge( $features_text_styles, $H::border_to_css_props( $attributes['featuresBorder'] ) );
+$features_justify_map = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end' ];
+if ( ! empty( $attributes['featureTextAlignment'] ) && isset( $features_justify_map[ $attributes['featureTextAlignment'] ] ) ) {
+	$features_text_styles['justify-content'] = $features_justify_map[ $attributes['featureTextAlignment'] ];
+}
 if ( isset( $attributes['featuresIconGap'] ) && '' !== $attributes['featuresIconGap'] ) {
 	$features_text_styles['display']     = 'flex';
 	$features_text_styles['align-items'] = 'center';
@@ -173,14 +179,22 @@ if ( ! empty( $attributes['featureIconSize'] ) ) {
 }
 $feat_icon_box_styles = array_merge( $dims( $attributes['featureIconPadding'] ?? [], 'padding' ), $dims( $attributes['featureIconBorderRadius'] ?? [], 'radius' ) );
 $feat_icon_bg_styles  = $feat_icon_box_styles;
-if ( ! empty( $attributes['featureIconBgColor'] ) ) $feat_icon_bg_styles['background'] = $attributes['featureIconBgColor'];
+if ( ! empty( $attributes['featureIconBgGradient'] ) ) {
+	$feat_icon_bg_styles['background'] = $attributes['featureIconBgGradient'];
+} elseif ( ! empty( $attributes['featureIconBgColor'] ) ) {
+	$feat_icon_bg_styles['background'] = $attributes['featureIconBgColor'];
+}
 $feat_icon_border_styles = $feat_icon_box_styles;
 if ( ! empty( $attributes['featureIconBorder'] ) ) $feat_icon_border_styles = array_merge( $feat_icon_border_styles, $H::border_to_css_props( $attributes['featureIconBorder'] ) );
 
 // ---- Ribbon ----
 $ribbon_styles = $typo( $attributes['ribbonTypography'] ?? [] );
 if ( ! empty( $attributes['ribbonColor'] ) ) $ribbon_styles['color'] = $attributes['ribbonColor'];
-if ( ! empty( $attributes['ribbonBgColor'] ) ) $ribbon_styles['background'] = $attributes['ribbonBgColor'];
+if ( ! empty( $attributes['ribbonBgGradient'] ) ) {
+	$ribbon_styles['background'] = $attributes['ribbonBgGradient'];
+} elseif ( ! empty( $attributes['ribbonBgColor'] ) ) {
+	$ribbon_styles['background'] = $attributes['ribbonBgColor'];
+}
 if ( 'style1' === $ribbon_style ) {
 	$ribbon_styles = array_merge( $ribbon_styles, $dims( $attributes['ribbonPadding'] ?? [], 'padding' ), $dims( $attributes['ribbonBorderRadius'] ?? [], 'radius' ) );
 }
@@ -188,20 +202,27 @@ if ( 'style1' === $ribbon_style ) {
 // ---- Button ----
 $button_styles = $typo( $attributes['buttonTypography'] ?? [] );
 if ( ! empty( $attributes['buttonTextColor'] ) ) $button_styles['color'] = $attributes['buttonTextColor'];
-if ( ! empty( $attributes['buttonBgColor'] ) ) $button_styles['background-color'] = $attributes['buttonBgColor'];
+if ( ! empty( $attributes['buttonBgGradient'] ) ) {
+	$button_styles['background'] = $attributes['buttonBgGradient'];
+} elseif ( ! empty( $attributes['buttonBgColor'] ) ) {
+	$button_styles['background-color'] = $attributes['buttonBgColor'];
+}
 $button_styles = array_merge( $button_styles, $dims( $attributes['buttonBorderRadius'] ?? [], 'radius' ), $dims( $attributes['buttonPadding'] ?? [], 'padding' ), $dims( $attributes['buttonMargin'] ?? [], 'margin' ), $shadow( $attributes['buttonBoxShadow'] ?? [] ) );
 if ( ! empty( $attributes['buttonBorder'] ) ) $button_styles = array_merge( $button_styles, $H::border_to_css_props( $attributes['buttonBorder'] ) );
 
 $button_hover_styles = [];
 if ( ! empty( $attributes['buttonTextColorHover'] ) ) $button_hover_styles['color'] = $attributes['buttonTextColorHover'];
-if ( ! empty( $attributes['buttonBgColorHover'] ) ) $button_hover_styles['background-color'] = $attributes['buttonBgColorHover'];
+// A hover colour over a normal-state gradient must use the shorthand, or the gradient image stays on top.
+if ( ! empty( $attributes['buttonBgGradientHover'] ) ) {
+	$button_hover_styles['background'] = $attributes['buttonBgGradientHover'];
+} elseif ( ! empty( $attributes['buttonBgColorHover'] ) ) {
+	$button_hover_styles[ ! empty( $attributes['buttonBgGradient'] ) ? 'background' : 'background-color' ] = $attributes['buttonBgColorHover'];
+}
 $button_hover_styles = array_merge( $button_hover_styles, $shadow( $attributes['buttonBoxShadowHover'] ?? [] ) );
 if ( ! empty( $attributes['buttonBorderHover'] ) ) $button_hover_styles = array_merge( $button_hover_styles, $H::border_to_css_props( $attributes['buttonBorderHover'] ) );
 
 $button_icon_styles = [];
 if ( ! empty( $attributes['buttonIconColor'] ) ) $button_icon_styles['color'] = $attributes['buttonIconColor'];
-$button_icon_fill = [];
-if ( ! empty( $attributes['buttonIconColor'] ) ) $button_icon_fill['fill'] = $attributes['buttonIconColor'];
 
 $btn_icon_before = [];
 $btn_icon_after  = [];
@@ -261,13 +282,6 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $ribbon_s
 	if ( 'style1' === $ribbon_style ) {
 		$ribbon = array_merge( $ribbon, $dims( $attributes[ 'ribbonPadding' . $suffix ] ?? [], 'padding' ) );
 	}
-	if ( 'style2' === $ribbon_style && ! empty( $attributes[ 'ribbonAlignment' . $suffix ] ) ) {
-		if ( 'left' === $attributes[ 'ribbonAlignment' . $suffix ] ) {
-			$ribbon = array_merge( $ribbon, [ 'left' => '-60px', 'right' => 'auto', 'transform' => 'rotate(-45deg)' ] );
-		} else {
-			$ribbon = array_merge( $ribbon, [ 'right' => '-60px', 'left' => 'auto', 'transform' => 'rotate(45deg)' ] );
-		}
-	}
 
 	// Button alignment + button.
 	$btn_align = ( ! empty( $attributes[ 'btnAlignment' . $suffix ] ) ) ? [ 'text-align' => $attributes[ 'btnAlignment' . $suffix ] ] : [];
@@ -284,7 +298,30 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $ribbon_s
 	// Button subtext.
 	$subtext = array_merge( $typo( $attributes[ 'buttonSubtextTypography' . $suffix ] ?? [] ), $dims( $attributes[ 'buttonSubtextMargin' . $suffix ] ?? [], 'margin' ) );
 
+	// Features: the items are flex rows, so text-align alone cannot move them.
+	$features_justify = [];
+	if ( ! empty( $attributes[ 'featureTextAlignment' . $suffix ] ) ) {
+		$map = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end' ];
+		if ( isset( $map[ $attributes[ 'featureTextAlignment' . $suffix ] ] ) ) {
+			$features_justify = [ 'justify-content' => $map[ $attributes[ 'featureTextAlignment' . $suffix ] ] ];
+		}
+	}
+	$features_li = array_merge( $features_li, $features_justify );
+
+	// Style 2 ribbon side per device. The selector has to outrank the stylesheet's
+	// .featured.style2 .shapeblock-ribbon.shapeblock-left/-right defaults.
+	$ribbon_side = [];
+	if ( 'style2' === $ribbon_style && ! empty( $attributes[ 'ribbonAlignment' . $suffix ] ) ) {
+		$off = ( 'Mobile' === $suffix ) ? '-48px' : '-60px';
+		if ( 'left' === $attributes[ 'ribbonAlignment' . $suffix ] ) {
+			$ribbon_side = [ 'left' => $off, 'right' => 'auto', 'transform' => 'rotate(-45deg)' ];
+		} else {
+			$ribbon_side = [ 'right' => $off, 'left' => 'auto', 'transform' => 'rotate(45deg)' ];
+		}
+	}
+
 	return [
+		'.shapeblock-price-title-wrap'                   => $dev_header_align,
 		'.shapeblock-price-title'                        => $title,
 		'.shapeblock-subtitle-price'                     => $desc,
 		'.shapeblock-price'                              => $price_wrap,
@@ -298,6 +335,7 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $ribbon_s
 		'.shapeblock-features .feature-icon.icon-bg'     => $feat_icon_box,
 		'.shapeblock-features .feature-icon.icon-border' => $feat_icon_box,
 		'.shapeblock-ribbon'                             => $ribbon,
+		'.featured.style2 .shapeblock-ribbon.shapeblock-ribbon' => $ribbon_side,
 		'.shapeblock-btn-part'                           => $btn_align,
 		'.shapeblock-button'                             => $button,
 		'.shapeblock-button .shapeblock-icon-before'          => $btn_icon_before,
@@ -309,6 +347,7 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $ribbon_s
 $dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
 $resp_css = '';
 $resp_sub_selectors = [
+	'.shapeblock-price-title-wrap',
 	'.shapeblock-price-title',
 	'.shapeblock-subtitle-price',
 	'.shapeblock-price',
@@ -322,6 +361,7 @@ $resp_sub_selectors = [
 	'.shapeblock-features .feature-icon.icon-bg',
 	'.shapeblock-features .feature-icon.icon-border',
 	'.shapeblock-ribbon',
+	'.featured.style2 .shapeblock-ribbon.shapeblock-ribbon',
 	'.shapeblock-btn-part',
 	'.shapeblock-button',
 	'.shapeblock-button .shapeblock-icon-before',
@@ -342,6 +382,7 @@ foreach ( $resp_sub_selectors as $sub_sel ) {
 
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $resp_css, [
+	'.shapeblock-price-title-wrap'                         => $H::get_inline_styles( $header_align ),
 	'.shapeblock-price-title'                              => $H::get_inline_styles( $title_styles ),
 	'.shapeblock-price-title span'                         => ! empty( $attributes['titleHighlightColor'] ) ? 'color:' . $attributes['titleHighlightColor'] : '',
 	'.shapeblock-subtitle-price'                           => $H::get_inline_styles( $desc_styles ),
@@ -365,7 +406,6 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-button'                                   => $H::get_inline_styles( $button_styles ),
 	'.shapeblock-button:hover'                             => $H::get_inline_styles( $button_hover_styles ),
 	'.shapeblock-button .shapeblock-icon-before, .shapeblock-button .shapeblock-icon-after' => $H::get_inline_styles( $button_icon_styles ),
-	'.shapeblock-button .shapeblock-icon-before svg path, .shapeblock-button .shapeblock-icon-after svg path' => $H::get_inline_styles( $button_icon_fill ),
 	'.shapeblock-button .shapeblock-icon-before'                => $H::get_inline_styles( $btn_icon_before ),
 	'.shapeblock-button .shapeblock-icon-after'                 => $H::get_inline_styles( $btn_icon_after ),
 	'.shapeblock-button-subtext'                           => $H::get_inline_styles( $subtext_styles ),
@@ -405,7 +445,7 @@ $render_button = function () use ( $attributes, $H, $icon_allowed_html ) {
 	$new_tab    = ! empty( $attributes['buttonTarget'] );
 	$nofollow   = ! empty( $attributes['buttonNofollow'] );
 	$icon       = isset( $attributes['buttonIcon'] ) ? $attributes['buttonIcon'] : '';
-	$icon_pos   = isset( $attributes['buttonIconPosition'] ) ? $attributes['buttonIconPosition'] : 'after';
+	$icon_pos   = isset( $attributes['buttonIconPosition'] ) ? sanitize_html_class( (string) $attributes['buttonIconPosition'], 'after' ) : 'after';
 	$text       = isset( $attributes['buttonText'] ) ? $attributes['buttonText'] : '';
 	$subtext    = isset( $attributes['buttonSubtext'] ) ? $attributes['buttonSubtext'] : '';
 	$icon_html  = ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';
@@ -427,7 +467,7 @@ $render_button = function () use ( $attributes, $H, $icon_allowed_html ) {
 	<?php
 };
 
-$wrap_classes = 'shapeblock-pricing-table shapeblock--' . $skin_style;
+$wrap_classes = 'shapeblock-pricing-table';
 if ( $is_featured ) {
 	$wrap_classes .= ' featured ' . $ribbon_style;
 }
@@ -440,7 +480,7 @@ if ( $is_featured ) {
 			</div>
 		<?php endif; ?>
 
-		<h3 class="shapeblock-price-title"><?php echo wp_kses_post( $title ); ?></h3>
+		<div class="shapeblock-price-title-wrap"><h3 class="shapeblock-price-title"><?php echo wp_kses_post( $title ); ?></h3></div>
 		<div class="shapeblock-subtitle-price"><?php echo wp_kses_post( $description ); ?></div>
 
 		<div class="shapeblock-price">

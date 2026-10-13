@@ -1,7 +1,5 @@
-@use 'style';
-
 /**
- * Editor-only styles for the Icon List block â€” clean, minimal collapsible rows
+ * Editor-only styles for the Icon List block — clean, minimal collapsible rows
  * (WordPress-native list feel: full-width row, title + right caret, hairline
  * separators, no card boxes).
  */
@@ -92,7 +90,7 @@
 }
 
 // Only uppercase the native ToggleGroupControl label so it matches WordPress's
-// SelectControl labels â€” weight / size / colour stay WP-native (no mismatch).
+// SelectControl labels — weight / size / colour stay WP-native (no mismatch).
 .shapeblock-caps-label {
 	margin-bottom: 16px;
 

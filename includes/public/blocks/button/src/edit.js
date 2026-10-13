@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import { useBlockProps, InspectorControls, BlockControls, AlignmentControl } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -66,7 +66,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		buttonType,
 		buttonIcon,
 		iconPosition,
-		showGradient,
 		borderGradientButton,
 	} = attributes;
 
@@ -75,29 +74,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			setAttributes({ blockId: 'shapeblock-button-' + clientId.slice(0, 6) });
 		}
 	}, [blockId, clientId, setAttributes]);
-
-	// Carry the old fixed three-colour gradient and two-colour border gradient
-	// over to the full gradient strings the controls now edit, so a button
-	// saved before looks the same and stays editable.
-	useEffect(() => {
-		const next = {};
-		const { gradient1, gradient2, gradient3, bgGradient, bgGradientHover } = attributes;
-		if (showGradient && !bgGradient && !bgGradientHover) {
-			const stops = `${gradient1 || '#4750cc'} 9.78%, ${gradient2 || '#ef5ce8'} 58.79%, ${gradient3 || '#efc7ae'} 92.67%`;
-			next.bgGradient = `linear-gradient(68.75deg, ${stops})`;
-			next.bgGradientHover = `linear-gradient(-68.75deg, ${stops})`;
-			next.showGradient = false;
-		}
-		if (borderGradientButton && !attributes.borderGradient) {
-			const grad = `linear-gradient(90deg, ${attributes.borderGradientColor1 || '#a53e1b'} 0%, ${attributes.borderGradientColor2 || '#173998'} 100%)`;
-			next.borderGradient = grad;
-			// The old border style also filled the button with it on hover.
-			if (!attributes.bgGradientHover && !next.bgGradientHover && !attributes.bgColorHover) next.bgGradientHover = grad;
-			if (!attributes.textColorHover) next.textColorHover = '#ffffff';
-		}
-		if (Object.keys(next).length) setAttributes(next);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	// Current preview device, so the toolbar alignment edits the matching
 	// per-device attribute (buttonPosition / buttonPositionTablet / buttonPositionMobile).
@@ -115,9 +91,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	const color = (label, key) => (
 		<ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
-	);
-	const typo = (label, key) => (
-		<TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />
 	);
 	// Solid colour or gradient (linear/radial, any angle, any number of stops).
 	const background = (label, colorKey, gradKey) => (
@@ -181,7 +154,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	// --- Tab 1: Settings (content & behavior) ---------------------------------
 	const settingsTab = (
-		<PanelBody title={__('Button', 'shapeblock')} initialOpen={true}>
+		<PanelBody title={__('Content', 'shapeblock')} initialOpen={true}>
 			<TextControl
 				label={__('Button Text', 'shapeblock')}
 				value={buttonText}
@@ -200,25 +173,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<ToggleControl label={__('Open in new tab', 'shapeblock')} checked={buttonTarget} onChange={(v) => setAttributes({ buttonTarget: v })} __nextHasNoMarginBottom />
 			<ToggleControl label={__('Add nofollow', 'shapeblock')} checked={buttonNofollow} onChange={(v) => setAttributes({ buttonNofollow: v })} __nextHasNoMarginBottom />
 			<Divider />
-			<SelectControl
-				label={__('Button Type', 'shapeblock')}
-				value={buttonType}
-				options={[
-					{ label: __('Primary', 'shapeblock'), value: 'primary' },
-					{ label: __('Outline', 'shapeblock'), value: 'outline' },
-					{ label: __('Icon', 'shapeblock'), value: 'icon_btn' },
-				]}
-				onChange={(v) => setAttributes({ buttonType: v })}
-				__next40pxDefaultSize
-				__nextHasNoMarginBottom
-			/>
 			<IconPicker label={__('Icon', 'shapeblock')} value={buttonIcon} onChange={(v) => setAttributes({ buttonIcon: v })} />
 		</PanelBody>
 	);
 
 	// --- Tab 2: Layout (structure & spacing) ----------------------------------
 	const layoutTab = (
-		<PanelBody title={__('Icon Position', 'shapeblock')} initialOpen={true}>
+		<PanelBody title={__('Layout', 'shapeblock')} initialOpen={true}>
 			{hasIcon && (
 				<>
 					<SelectControl
@@ -239,10 +200,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			{respAlign(__('Button Alignment', 'shapeblock'), 'buttonPosition', POSITION_OPTIONS)}
 			{respNum(__('Minimum Width (px)', 'shapeblock'), 'minWidth')}
 			{respAlign(__('Content Alignment', 'shapeblock'), 'buttonAlignment', ALIGN_OPTIONS)}
-			<Divider />
-			{respBox(__('Padding', 'shapeblock'), 'buttonPadding')}
-			<Divider />
-			{respBox(__('Margin', 'shapeblock'), 'buttonMargin')}
 		</PanelBody>
 	);
 
@@ -250,6 +207,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const styleTab = (
 		<>
 			<PanelBody title={__('Button', 'shapeblock')} initialOpen={true}>
+				<SelectControl
+					label={__('Button Type', 'shapeblock')}
+					value={buttonType}
+					options={[
+						{ label: __('Primary', 'shapeblock'), value: 'primary' },
+						{ label: __('Outline', 'shapeblock'), value: 'outline' },
+						{ label: __('Icon', 'shapeblock'), value: 'icon_btn' },
+					]}
+					onChange={(v) => setAttributes({ buttonType: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+				<Divider />
 				{respTypo(__('Typography', 'shapeblock'), 'buttonTypography')}
 				<Divider />
 				<TabPanel className="shapeblock-tab-panel" activeClass="is-active" tabs={STATE_TABS}>
@@ -272,6 +242,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</TabPanel>
 				<Divider />
 				{box(__('Border Radius', 'shapeblock'), 'buttonBorderRadius')}
+				<Divider />
+				{respBox(__('Padding', 'shapeblock'), 'buttonPadding')}
+				<Divider />
+				{respBox(__('Margin', 'shapeblock'), 'buttonMargin')}
 			</PanelBody>
 
 			<PanelBody title={__('Border Gradient', 'shapeblock')} initialOpen={false}>
@@ -316,13 +290,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							tab.name === 'hover' ? (
 								<>
 									{color(__('Color', 'shapeblock'), 'iconColorHover')}
-									{color(__('Background', 'shapeblock'), 'iconBgHover')}
+									{background(__('Background', 'shapeblock'), 'iconBgHover', 'iconBgHoverGradient')}
 									{num(__('Rotation (deg)', 'shapeblock'), 'iconRotationHover')}
 								</>
 							) : (
 								<>
 									{color(__('Color', 'shapeblock'), 'iconColor')}
-									{color(__('Background', 'shapeblock'), 'iconBg')}
+									{background(__('Background', 'shapeblock'), 'iconBg', 'iconBgGradient')}
 									{num(__('Rotation (deg)', 'shapeblock'), 'iconRotation')}
 								</>
 							)

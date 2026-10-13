@@ -46,13 +46,48 @@ class Theme_Builder {
 	public function __construct() {
 		add_action( 'init', array( $this, 'register_post_type' ) );
 		add_action( 'init', array( $this, 'register_meta' ) );
+		add_filter( 'block_editor_settings_all', array( $this, 'editor_layout' ), 10, 2 );
 
 		$this->includes();
 	}
 
+	/**
+	 * Give the template editor a layout that offers Wide and Full alignment.
+	 *
+	 * The post type is not public, so the editor has no template of its own and
+	 * borrows the post content layout of the theme's single-post template. Many
+	 * block themes give that one the plain "default" layout, which offers no
+	 * Wide or Full alignment at all - so a Row in a header had neither. Here
+	 * the templates get a constrained layout whose content width is the whole
+	 * width (blocks stay full width, as on the site) and whose wide width is
+	 * the theme's own.
+	 *
+	 * @param array                   $settings Block editor settings.
+	 * @param WP_Block_Editor_Context $context  Editor context.
+	 * @return array
+	 */
+	public function editor_layout( $settings, $context ) {
+		if ( empty( $context->post ) || self::POST_TYPE !== $context->post->post_type ) {
+			return $settings;
+		}
+		$layout = array(
+			'type'        => 'constrained',
+			'contentSize' => '100%',
+		);
+		// The wide width has to be named here: left out, the editor takes the
+		// content width for it, and Wide would be as wide as Full.
+		$wide = function_exists( 'wp_get_global_settings' ) ? wp_get_global_settings( array( 'layout', 'wideSize' ) ) : '';
+		if ( is_string( $wide ) && '' !== $wide ) {
+			$layout['wideSize'] = $wide;
+		}
+		$settings['postContentAttributes'] = array( 'layout' => $layout );
+		return $settings;
+	}
+
 	private function includes() {
 		// Classes are PSR-4 autoloaded; instantiating them registers their hooks.
-		\ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::instance();
+		// Builder_Conditions is all static and registers none, so it is loaded on
+		// first use instead.
 		\ShapeBlock\Extension\ThemeBuilder\Builder_Render::instance();
 		\ShapeBlock\Extension\ThemeBuilder\Builder_API::instance();
 	}
@@ -68,40 +103,26 @@ class Theme_Builder {
 	public static function get_template_types() {
 		$types = array(
 			'header' => array(
-				'slug'        => 'header',
-				'label'       => __( 'Header', 'shapeblock' ),
-				'plural'      => __( 'Headers', 'shapeblock' ),
-				'description' => __( 'Replaces your theme header across the site.', 'shapeblock' ),
-				'enabled'     => true,
+				'slug'    => 'header',
+				'label'   => __( 'Header', 'shapeblock' ),
+				'plural'  => __( 'Headers', 'shapeblock' ),
+				'enabled' => true,
 			),
 			'footer' => array(
-				'slug'        => 'footer',
-				'label'       => __( 'Footer', 'shapeblock' ),
-				'plural'      => __( 'Footers', 'shapeblock' ),
-				'description' => __( 'Replaces your theme footer across the site.', 'shapeblock' ),
-				'enabled'     => true,
+				'slug'    => 'footer',
+				'label'   => __( 'Footer', 'shapeblock' ),
+				'plural'  => __( 'Footers', 'shapeblock' ),
+				'enabled' => true,
 			),
 
 			'custom_block' => array(
-				'slug'        => 'custom_block',
-				'label'       => __( 'Custom Block', 'shapeblock' ),
-				'plural'      => __( 'Custom Blocks', 'shapeblock' ),
-				'description' => __( 'A reusable block you place anywhere with its shortcode — it is not injected automatically.', 'shapeblock' ),
-				'enabled'     => true,
+				'slug'      => 'custom_block',
+				'label'     => __( 'Custom Block', 'shapeblock' ),
+				'plural'    => __( 'Custom Blocks', 'shapeblock' ),
+				'enabled'   => true,
 				// Rendered only via [shapeblock_builder id="…"]; the admin shows the shortcode for this type.
-				'shortcode'   => true,
+				'shortcode' => true,
 			),
-
-			/*
-			 * Future template types — register them here (or via the
-			 * `shapeblock_builder_template_types` filter) when their rendering is
-			 * implemented in \ShapeBlock\Extension\ThemeBuilder\Builder_Render. Kept commented so the UI
-			 * only surfaces what actually works today.
-			 *
-			 * 'single'  => array( 'slug' => 'single',  'label' => 'Single Post', 'plural' => 'Single Posts', 'enabled' => true ),
-			 * 'page'    => array( 'slug' => 'page',    'label' => 'Page',        'plural' => 'Pages',        'enabled' => true ),
-			 * 'archive' => array( 'slug' => 'archive', 'label' => 'Archive',     'plural' => 'Archives',     'enabled' => true ),
-			 */
 		);
 
 		/**
@@ -161,7 +182,6 @@ class Theme_Builder {
 				'show_in_rest'        => true,   // Required for the Gutenberg editor.
 				'rest_base'           => 'shapeblock-builder',
 				'supports'            => array( 'title', 'editor', 'custom-fields', 'revisions' ),
-				'menu_icon'           => 'dashicons-layout',
 				// Builder templates are site-wide layout, managed from the dashboard
 				// by administrators only -- not by every role that can write posts.
 				'capabilities'        => array(

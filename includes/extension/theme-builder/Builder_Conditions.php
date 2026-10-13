@@ -27,16 +27,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Builder_Conditions {
 
-	public static function instance() {
-		static $instance = null;
-		if ( null === $instance ) {
-			$instance = new self();
-		}
-		return $instance;
-	}
-
-	public function __construct() {}
-
 	/**
 	 * Catalog of selectable rules, grouped for the UI.
 	 *

@@ -16,15 +16,10 @@ $unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $
 
 $features   = isset( $attributes['features'] ) && is_array( $attributes['features'] ) ? $attributes['features'] : [];
 $dir        = ( isset( $attributes['feaDir'] ) && 'right' === $attributes['feaDir'] ) ? 'right' : 'left';
-$view       = isset( $attributes['iconView'] ) ? $attributes['iconView'] : 'stracked';
-$shape      = isset( $attributes['iconShape'] ) ? $attributes['iconShape'] : 'rounded';
 $allowed    = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span' ];
 $title_tag  = isset( $attributes['titleTag'] ) && in_array( $attributes['titleTag'], $allowed, true ) ? $attributes['titleTag'] : 'h3';
-$connector  = ! empty( $attributes['feaConnector'] );
-$conn_left  = $connector && ! empty( $attributes['feaConnectorLeft'] );
 $layout     = ( isset( $attributes['layout'] ) && 'inline' === $attributes['layout'] ) ? 'inline' : 'default';
 $align      = ( isset( $attributes['listAlign'] ) && in_array( $attributes['listAlign'], [ 'left', 'center', 'right' ], true ) ) ? $attributes['listAlign'] : 'left';
-$ihalign    = ( isset( $attributes['iconHAlign'] ) && in_array( $attributes['iconHAlign'], [ 'left', 'center', 'right' ], true ) ) ? $attributes['iconHAlign'] : 'left';
 $divider    = ! empty( $attributes['divider'] );
 $show_icon  = ! ( isset( $attributes['showIcon'] ) && false === $attributes['showIcon'] );
 
@@ -36,15 +31,9 @@ if ( empty( $features ) ) {
 
 $wrap_classes = [
 	'shapeblock-block', 'shapeblock-icon-list-block-wrap', $unique_id, 'shapeblock-icon-list-wrapper',
-	'shapeblock-icon-list-icon-view-' . $view,
-	'shapeblock-icon-list-icon-shape-' . $shape,
-	'shapeblock-icon-list-dir-' . $dir,
 	'shapeblock-icon-list-layout-' . $layout,
 	'shapeblock-icon-list-align-' . $align,
-	'shapeblock-icon-list-ihalign-' . $ihalign,
 ];
-if ( $connector ) { $wrap_classes[] = 'shapeblock-icon-list-connector'; }
-if ( $conn_left ) { $wrap_classes[] = 'shapeblock-icon-list-connector-left'; }
 if ( $divider ) { $wrap_classes[] = 'shapeblock-icon-list-has-divider'; }
 
 $block_wrap_attr = get_block_wrapper_attributes( array( 'class' => implode( ' ', $wrap_classes ) ) );
@@ -71,73 +60,25 @@ $typo = function ( $obj ) use ( $H ) {
 	if ( ! empty( $obj['textDecoration'] ) ) $out['text-decoration'] = $obj['textDecoration'];
 	return $out;
 };
-$dims = function ( $obj, $type ) use ( $H ) {
-	$out = [];
-	if ( empty( $obj ) || ! is_array( $obj ) ) return $out;
-	if ( 'padding' === $type ) {
-		$map = [ 'top' => 'padding-top', 'right' => 'padding-right', 'bottom' => 'padding-bottom', 'left' => 'padding-left' ];
-	} elseif ( 'margin' === $type ) {
-		$map = [ 'top' => 'margin-top', 'right' => 'margin-right', 'bottom' => 'margin-bottom', 'left' => 'margin-left' ];
-	} else {
-		$map = [ 'top' => 'border-top-left-radius', 'right' => 'border-top-right-radius', 'bottom' => 'border-bottom-right-radius', 'left' => 'border-bottom-left-radius' ];
-	}
-	foreach ( $map as $side => $css_prop ) {
-		if ( isset( $obj[ $side ] ) && '' !== $obj[ $side ] ) $out[ $css_prop ] = $H::ensure_unit( $obj[ $side ] );
-	}
-	return $out;
-};
-$shadow = function ( $obj ) use ( $H ) {
-	if ( empty( $obj ) || ! is_array( $obj ) ) return [];
-	$x = (int) ( $obj['x'] ?? 0 ); $y = (int) ( $obj['y'] ?? 0 ); $b = (int) ( $obj['b'] ?? 0 ); $s = (int) ( $obj['s'] ?? 0 );
-	$c = $obj['c'] ?? '';
-	$transparent = in_array( str_replace( ' ', '', (string) $c ), [ '', 'rgba(0,0,0,0)' ], true );
-	if ( 0 === $x && 0 === $y && 0 === $b && 0 === $s && $transparent ) return [];
-	return [ 'box-shadow' => $H::box_shadow_to_css( $obj ) ];
-};
-$bg = function ( $colorKey, $gradKey ) use ( $attributes ) {
-	if ( ! empty( $attributes[ $gradKey ] ) ) return [ 'background' => $attributes[ $gradKey ] ];
-	if ( ! empty( $attributes[ $colorKey ] ) ) return [ 'background' => $attributes[ $colorKey ] ];
-	return [];
-};
 $u = function ( $key ) use ( $attributes, $H ) {
 	return ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? $H::ensure_unit( $attributes[ $key ] ) : '';
 };
 
 // List item.
-$list = $bg( 'listBgColor', 'listBgGradient' );
-if ( ! empty( $attributes['feaListBorder'] ) ) $list = array_merge( $list, $H::border_to_css_props( $attributes['feaListBorder'] ) );
-$list = array_merge( $list, $dims( $attributes['feaListBorderRadius'] ?? [], 'radius' ), $dims( $attributes['feaListPadding'] ?? [], 'padding' ) );
+$list = [];
 if ( '' !== $u( 'feaMiddleGap' ) ) $list['gap'] = $u( 'feaMiddleGap' );
 if ( ! empty( $attributes['feaVerticalAlign'] ) ) $list['align-items'] = $attributes['feaVerticalAlign'];
 
-// Connector (::before on wrapper, ::after on icon for left connector).
-$conn = [];
-if ( ! empty( $attributes['feaConnectorType'] ) ) $conn['border-style'] = $attributes['feaConnectorType'];
-if ( '' !== $u( 'feaConnectorWidth' ) ) $conn['border-width'] = $u( 'feaConnectorWidth' );
-if ( ! empty( $attributes['feaConnectorColor'] ) ) $conn['border-color'] = $attributes['feaConnectorColor'];
-$conn_before = $conn;
-if ( 'left' === $dir && '' !== $u( 'feaConnectorPositionX' ) ) $conn_before['left'] = $u( 'feaConnectorPositionX' );
-if ( 'right' === $dir && '' !== $u( 'feaConnectorRightPositionX' ) ) $conn_before['right'] = $u( 'feaConnectorRightPositionX' );
-
-// The connector line is a ::before on the wrapper element itself (which is the
-// scoped selector), so it can't go through the descendant-based sub_styles map.
+// The hover colour, the gap and the divider colour go on the wrapper element
+// itself (which is the scoped selector), so they can't use the descendant-based
+// sub_styles map.
 $extra_css = '';
-if ( $connector ) {
-	$before_decls = $H::get_inline_styles( $conn_before );
-	if ( $before_decls ) {
-		$extra_css = $selector . '.shapeblock-icon-list-connector::before{' . $before_decls . '}';
-	}
-}
 
 // Icon.
 $icon_color = [];
 if ( ! empty( $attributes['iconColor'] ) ) { $icon_color['color'] = $attributes['iconColor']; $icon_color['fill'] = $attributes['iconColor']; }
-$icon_box = $bg( 'iconBgColor', 'iconBgGradient' );
-if ( '' !== $u( 'iconBoxSize' ) ) { $b = $u( 'iconBoxSize' ); $icon_box['min-width'] = $b; $icon_box['min-height'] = $b; $icon_box['line-height'] = $b; }
-$icon_box = array_merge( $icon_box, $shadow( $attributes['iconShadow'] ?? [] ), $dims( $attributes['iconRadius'] ?? [], 'radius' ) );
-if ( ! empty( $attributes['iconBorder'] ) ) $icon_box = array_merge( $icon_box, $H::border_to_css_props( $attributes['iconBorder'] ) );
 // Adjust vertical position - nudge the icon up/down without affecting the text.
-if ( '' !== $u( 'iconOffsetY' ) ) $icon_box['transform'] = 'translateY(' . $u( 'iconOffsetY' ) . ')';
+$icon_box = ( '' !== $u( 'iconOffsetY' ) ) ? [ 'transform' => 'translateY(' . $u( 'iconOffsetY' ) . ')' ] : [];
 // Icon hover colour.
 if ( ! empty( $attributes['iconColorHover'] ) ) {
 	$hover_decls = $H::get_inline_styles( [ 'color' => $attributes['iconColorHover'], 'fill' => $attributes['iconColorHover'] ] );
@@ -146,80 +87,52 @@ if ( ! empty( $attributes['iconColorHover'] ) ) {
 		. $selector . ' .shapeblock-icon-list:hover .shapeblock-icon-list-icon svg path{' . $hover_decls . '}';
 }
 $icon_svg = ( '' !== $u( 'iconSize' ) ) ? [ 'width' => $u( 'iconSize' ), 'height' => $u( 'iconSize' ) ] : [];
-$icon_num = ( '' !== $u( 'iconSize' ) ) ? [ 'font-size' => $u( 'iconSize' ) ] : [];
 $icon_i   = ( '' !== $u( 'iconSize' ) ) ? [ 'font-size' => $u( 'iconSize' ) ] : [];
 
-// Title / description.
+// Title.
 $title_styles = $typo( $attributes['titleTypography'] ?? [] );
 if ( ! empty( $attributes['titleColor'] ) ) $title_styles['color'] = $attributes['titleColor'];
-$title_styles = array_merge( $title_styles, $dims( $attributes['titlePadding'] ?? [], 'padding' ) );
-$desc_styles = $typo( $attributes['descTypography'] ?? [] );
-if ( ! empty( $attributes['descColor'] ) ) $desc_styles['color'] = $attributes['descColor'];
 
-// Block wrapper margin + space-between (gap) + divider colour on the list (desktop).
-// The gap is stored in a CSS variable so the divider (::after) can centre itself in it.
-$block_margin = $dims( $attributes['feaBlockMargin'] ?? [], 'margin' );
-if ( '' !== $u( 'feaItemGap' ) ) $block_margin['--shapeblock-list-gap'] = $u( 'feaItemGap' );
-if ( $divider && ! empty( $attributes['dividerColor'] ) ) $block_margin['--shapeblock-divider-color'] = $attributes['dividerColor'];
-$block_margin_decls = $H::get_inline_styles( $block_margin );
-if ( $block_margin_decls ) {
-	$extra_css .= $selector . '{' . $block_margin_decls . '}';
+// Space-between (gap) + divider colour on the list (desktop). The gap is stored
+// in a CSS variable so the divider (::after) can centre itself in it.
+$wrap_vars = [];
+if ( '' !== $u( 'feaItemGap' ) ) $wrap_vars['--shapeblock-list-gap'] = $u( 'feaItemGap' );
+if ( $divider && ! empty( $attributes['dividerColorGradient'] ) ) $wrap_vars['--shapeblock-divider-color'] = $attributes['dividerColorGradient'];
+elseif ( $divider && ! empty( $attributes['dividerColor'] ) ) $wrap_vars['--shapeblock-divider-color'] = $attributes['dividerColor'];
+$wrap_vars_decls = $H::get_inline_styles( $wrap_vars );
+if ( $wrap_vars_decls ) {
+	$extra_css .= $selector . '{' . $wrap_vars_decls . '}';
 }
 
 // ---------------------------------------------------------------------------
-// Responsive (tablet / mobile) Ã¢â‚¬â€ padding, margin and typography only.
+// Responsive (tablet / mobile) — gaps, icon size / offset and typography.
 // ---------------------------------------------------------------------------
-$resp = function ( $suffix ) use ( $attributes, $selector, $typo, $dims, $H, $dir, $connector ) {
+$resp = function ( $suffix ) use ( $attributes, $selector, $typo, $H ) {
 	// ensure_unit helper for a per-device (suffixed) attribute.
 	$uu = function ( $key ) use ( $attributes, $H, $suffix ) {
 		$k = $key . $suffix;
 		return ( isset( $attributes[ $k ] ) && '' !== $attributes[ $k ] ) ? $H::ensure_unit( $attributes[ $k ] ) : '';
 	};
 
-	// List item Ã¢â‚¬â€ padding + gaps.
-	$list = $dims( $attributes[ 'feaListPadding' . $suffix ] ?? [], 'padding' );
-	if ( '' !== $uu( 'feaMiddleGap' ) ) $list['gap']           = $uu( 'feaMiddleGap' );
-
-	$wrap_m   = $dims( $attributes[ 'feaBlockMargin' . $suffix ] ?? [], 'margin' );
-	if ( '' !== $uu( 'feaItemGap' ) ) $wrap_m['--shapeblock-list-gap'] = $uu( 'feaItemGap' );
-	$icon_box = ( '' !== $uu( 'iconBoxSize' ) ) ? [ 'min-width' => $uu( 'iconBoxSize' ), 'min-height' => $uu( 'iconBoxSize' ), 'line-height' => $uu( 'iconBoxSize' ) ] : [];
-	if ( '' !== $uu( 'iconOffsetY' ) ) $icon_box['transform'] = 'translateY(' . $uu( 'iconOffsetY' ) . ')';
+	$list     = ( '' !== $uu( 'feaMiddleGap' ) ) ? [ 'gap' => $uu( 'feaMiddleGap' ) ] : [];
+	$wrap_v   = ( '' !== $uu( 'feaItemGap' ) ) ? [ '--shapeblock-list-gap' => $uu( 'feaItemGap' ) ] : [];
+	$icon_box = ( '' !== $uu( 'iconOffsetY' ) ) ? [ 'transform' => 'translateY(' . $uu( 'iconOffsetY' ) . ')' ] : [];
 	$icon_svg = ( '' !== $uu( 'iconSize' ) ) ? [ 'width' => $uu( 'iconSize' ), 'height' => $uu( 'iconSize' ) ] : [];
-	$icon_num = ( '' !== $uu( 'iconSize' ) ) ? [ 'font-size' => $uu( 'iconSize' ) ] : [];
 	$icon_i   = ( '' !== $uu( 'iconSize' ) ) ? [ 'font-size' => $uu( 'iconSize' ) ] : [];
-	$title_r  = array_merge( $typo( $attributes[ 'titleTypography' . $suffix ] ?? [] ), $dims( $attributes[ 'titlePadding' . $suffix ] ?? [], 'padding' ) );
-	$desc_r   = $typo( $attributes[ 'descTypography' . $suffix ] ?? [] );
+	$title_r  = $typo( $attributes[ 'titleTypography' . $suffix ] ?? [] );
 
 	$css   = '';
 	$rules = [
-		''                          => $H::get_inline_styles( $wrap_m ),
+		''                                => $H::get_inline_styles( $wrap_v ),
 		' .shapeblock-icon-list'          => $H::get_inline_styles( $list ),
 		' .shapeblock-icon-list-icon'     => $H::get_inline_styles( $icon_box ),
 		' .shapeblock-icon-list-icon svg' => $H::get_inline_styles( $icon_svg ),
 		' .shapeblock-icon-list-icon i'   => $H::get_inline_styles( $icon_i ),
-		' .shapeblock-icon-list-number'   => $H::get_inline_styles( $icon_num ),
 		' .shapeblock-icon-list-title'    => $H::get_inline_styles( $title_r ),
-		' .shapeblock-icon-list-desc'     => $H::get_inline_styles( $desc_r ),
 	];
 	foreach ( $rules as $sub => $decls ) {
 		if ( $decls ) {
 			$css .= $selector . $sub . '{' . $decls . '}';
-		}
-	}
-
-	// Connector width + horizontal position.
-	if ( $connector ) {
-		$conn = ( '' !== $uu( 'feaConnectorWidth' ) ) ? [ 'border-width' => $uu( 'feaConnectorWidth' ) ] : [];
-		$after = $H::get_inline_styles( $conn );
-		if ( $after ) {
-			$css .= $selector . ' .shapeblock-icon-list-icon::after{' . $after . '}';
-		}
-		$before = $conn;
-		if ( 'left' === $dir && '' !== $uu( 'feaConnectorPositionX' ) )       $before['left']  = $uu( 'feaConnectorPositionX' );
-		if ( 'right' === $dir && '' !== $uu( 'feaConnectorRightPositionX' ) )  $before['right'] = $uu( 'feaConnectorRightPositionX' );
-		$before_decls = $H::get_inline_styles( $before );
-		if ( $before_decls ) {
-			$css .= $selector . '.shapeblock-icon-list-connector::before{' . $before_decls . '}';
 		}
 	}
 
@@ -231,18 +144,15 @@ $mobile_css = $resp( 'Mobile' );
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $extra_css, [
 	'.shapeblock-icon-list'                            => $H::get_inline_styles( $list ),
-	'.shapeblock-icon-list-icon::after'                => $H::get_inline_styles( $conn ),
-	'.shapeblock-icon-list-icon svg, ' . $selector . ' .shapeblock-icon-list-icon svg path, ' . $selector . ' .shapeblock-icon-list-icon i, ' . $selector . ' .shapeblock-icon-list-number' => $H::get_inline_styles( $icon_color ),
+	'.shapeblock-icon-list-icon svg, ' . $selector . ' .shapeblock-icon-list-icon svg path, ' . $selector . ' .shapeblock-icon-list-icon i' => $H::get_inline_styles( $icon_color ),
 	'.shapeblock-icon-list-icon'                       => $H::get_inline_styles( $icon_box ),
 	'.shapeblock-icon-list-icon svg'                   => $H::get_inline_styles( $icon_svg ),
 	'.shapeblock-icon-list-icon i'                     => $H::get_inline_styles( $icon_i ),
-	'.shapeblock-icon-list-number'                     => $H::get_inline_styles( $icon_num ),
 	'.shapeblock-icon-list-title'                      => $H::get_inline_styles( $title_styles ),
-	'.shapeblock-icon-list-desc'                       => $H::get_inline_styles( $desc_styles ),
 ] );
 
 // Responsive media queries are printed AFTER the desktop rules so they win at
-// their breakpoints (media queries add no specificity Ã¢â‚¬â€ source order decides).
+// their breakpoints (media queries add no specificity — source order decides).
 $responsive_media = '';
 if ( '' !== $tablet_css ) $responsive_media .= '@media (max-width:1024px){' . $tablet_css . '}';
 if ( '' !== $mobile_css ) $responsive_media .= '@media (max-width:767px){' . $mobile_css . '}';
@@ -267,7 +177,7 @@ if ( '' !== $responsive_media ) {
 		?>
 		<li class="shapeblock-icon-list shapeblock-icon-list-dir-<?php echo esc_attr( $dir ); ?>">
 			<?php if ( $show_icon ) : ?>
-			<span class="shapeblock-icon-list-icon shapeblock-icon-list-type-icon">
+			<span class="shapeblock-icon-list-icon">
 				<?php if ( ! empty( $icon ) && 'none' !== $icon ) : ?>
 					<i class="shapeblock-icon <?php echo esc_attr( $icon ); ?>" aria-hidden="true"></i>
 				<?php else : ?>

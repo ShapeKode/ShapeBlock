@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/tab",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "title": "Tabs",
   "category": "shapeblock",
   "description": "Tabbed content with icon/image titles, content title, description and a button — horizontal or vertical layouts.",
@@ -169,6 +169,10 @@
       "type": "string",
       "default": ""
     },
+    "titleBgColorGradient": {
+      "type": "string",
+      "default": ""
+    },
     "titleBorder": {
       "type": "object",
       "default": {
@@ -212,6 +216,10 @@
       "type": "string",
       "default": ""
     },
+    "tabIconBgColorGradient": {
+      "type": "string",
+      "default": ""
+    },
     "titleActiveColor": {
       "type": "string",
       "default": "#ffffff"
@@ -219,6 +227,10 @@
     "titleActiveBgColor": {
       "type": "string",
       "default": "#5933FF"
+    },
+    "titleActiveBgColorGradient": {
+      "type": "string",
+      "default": ""
     },
     "titleActiveBorderColor": {
       "type": "string",
@@ -245,6 +257,10 @@
       }
     },
     "contentBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "contentBgColorGradient": {
       "type": "string",
       "default": ""
     },
@@ -389,11 +405,19 @@
       "type": "string",
       "default": ""
     },
+    "btnBgColorGradient": {
+      "type": "string",
+      "default": ""
+    },
     "btnHoverColor": {
       "type": "string",
       "default": ""
     },
     "btnHoverBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "btnHoverBgColorGradient": {
       "type": "string",
       "default": ""
     },

@@ -2,10 +2,10 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/image-carousel",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"title": "Image Carousel",
 	"category": "shapeblock",
-	"description": "A multi-image carousel with centred slides and continuous scrolling.",
+	"description": "A multi-image carousel with centered slides and continuous scrolling.",
 	"keywords": [ "carousel", "images", "logos", "marquee", "slider" ],
 	"example": {},
 	"supports": {
@@ -57,12 +57,13 @@
 		"slideHeightTablet": { "type": "string", "default": "" },
 		"slideHeightMobile": { "type": "string", "default": "" },
 		"imageFit": { "type": "string", "default": "cover" },
-		"imageSize": { "type": "string", "default": "thumbnail" },
+		"imageSize": { "type": "string", "default": "large" },
 		"slidePadding": { "type": "object" },
 		"slidePaddingTablet": { "type": "object" },
 		"slidePaddingMobile": { "type": "object" },
 
 		"slideBg": { "type": "string", "default": "" },
+		"slideBgGradient": { "type": "string", "default": "" },
 		"slideRadius": { "type": "object" },
 		"slideBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"overlayColor": { "type": "string", "default": "" },
@@ -70,13 +71,16 @@
 
 		"arrowColor": { "type": "string", "default": "" },
 		"arrowBgColor": { "type": "string", "default": "" },
+		"arrowBgGradient": { "type": "string", "default": "" },
 		"arrowSize": { "type": "string", "default": "" },
 		"arrowSizeTablet": { "type": "string", "default": "" },
 		"arrowSizeMobile": { "type": "string", "default": "" },
 		"arrowRadius": { "type": "object" },
 
 		"dotColor": { "type": "string", "default": "" },
+		"dotGradient": { "type": "string", "default": "" },
 		"dotActiveColor": { "type": "string", "default": "" },
+		"dotActiveGradient": { "type": "string", "default": "" },
 		"dotSize": { "type": "string", "default": "" }
 	}
 }

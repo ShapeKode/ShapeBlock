@@ -72,15 +72,13 @@ if ( ! empty( $attributes['buttonBorderHover'] ) ) $button_hover = array_merge( 
 
 $buttons_wrap = ( '' !== $u( 'buttonSpacing' ) ) ? [ 'gap' => $u( 'buttonSpacing' ) ] : [];
 
-$icon_i   = ( '' !== $u( 'iconSize' ) ) ? [ 'font-size' => $u( 'iconSize' ) ] : [];
-$icon_svg = ( '' !== $u( 'iconSize' ) ) ? [ 'width' => $u( 'iconSize' ), 'height' => $u( 'iconSize' ) ] : [];
+$icon_i = ( '' !== $u( 'iconSize' ) ) ? [ 'font-size' => $u( 'iconSize' ) ] : [];
 
 $sub = [
 	'.shapeblock-si-buttons'        => $H::get_inline_styles( $buttons_wrap ),
 	'.shapeblock-si-button'         => $H::get_inline_styles( $button ),
 	'.shapeblock-si-button:hover'   => $H::get_inline_styles( $button_hover ),
 	'.shapeblock-si-button i'       => $H::get_inline_styles( $icon_i ),
-	'.shapeblock-si-button svg'     => $H::get_inline_styles( $icon_svg ),
 ];
 
 // Global colour mode: one set of colours for all buttons.
@@ -91,11 +89,9 @@ if ( 'global' === $color_mode ) {
 	if ( '' !== $g_hbg ) $sub['.shapeblock-si-button:hover'] = $H::get_inline_styles( array_merge( $button_hover, [ 'background' => $g_hbg ] ) );
 	if ( ! empty( $attributes['gIconColor'] ) ) {
 		$sub['.shapeblock-si-button i']   = $H::get_inline_styles( array_merge( $icon_i, [ 'color' => $attributes['gIconColor'] ] ) );
-		$sub['.shapeblock-si-button svg'] = $H::get_inline_styles( array_merge( $icon_svg, [ 'fill' => $attributes['gIconColor'] ] ) );
 	}
 	if ( ! empty( $attributes['gHoverIconColor'] ) ) {
 		$sub['.shapeblock-si-button:hover i']   = $H::get_inline_styles( [ 'color' => $attributes['gHoverIconColor'] ] );
-		$sub['.shapeblock-si-button:hover svg'] = $H::get_inline_styles( [ 'fill' => $attributes['gHoverIconColor'] ] );
 	}
 }
 
@@ -110,7 +106,7 @@ if ( 'custom' === $color_mode ) {
 			$extra_css .= $item_sel . ':hover{background:' . $hbg . '!important;}';
 		}
 		if ( '' !== $hic ) {
-			$extra_css .= $item_sel . ':hover i,' . $item_sel . ':hover svg{color:' . $hic . '!important;fill:' . $hic . '!important;}';
+			$extra_css .= $item_sel . ':hover i{color:' . $hic . '!important;}';
 		}
 	}
 }
@@ -138,7 +134,6 @@ $size_resp = [
 	'.shapeblock-si-buttons'    => [],
 	'.shapeblock-si-button'     => [],
 	'.shapeblock-si-button i'   => [],
-	'.shapeblock-si-button svg' => [],
 ];
 foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
 	$bs = $u_dev( 'buttonSize' . $suffix );
@@ -151,8 +146,7 @@ foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_k
 	}
 	$isz = $u_dev( 'iconSize' . $suffix );
 	if ( '' !== $isz ) {
-		$size_resp['.shapeblock-si-button i'][ $device_key ]   = [ 'font-size' => $isz ];
-		$size_resp['.shapeblock-si-button svg'][ $device_key ] = [ 'width' => $isz, 'height' => $isz ];
+		$size_resp['.shapeblock-si-button i'][ $device_key ] = [ 'font-size' => $isz ];
 	}
 }
 foreach ( $size_resp as $sub_sel => $rdata ) {
@@ -197,7 +191,7 @@ $H::add_custom_style( $style_handle, $selector, $extra_css, $sub );
 					. ( ! empty( $rel ) ? ' rel="' . esc_attr( implode( ' ', $rel ) ) . '"' : '' )
 					. ' title="' . esc_attr( $title ) . '"' . ( '' !== $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>';
 				if ( ! empty( $icon ) && 'none' !== $icon ) {
-					echo '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"' . ( '' !== $icon_color ? ' style="color:' . esc_attr( $icon_color ) . ';fill:' . esc_attr( $icon_color ) . ';"' : '' ) . '></i>';
+					echo '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"' . ( '' !== $icon_color ? ' style="color:' . esc_attr( $icon_color ) . ';"' : '' ) . '></i>';
 				}
 				echo '</a>';
 			}

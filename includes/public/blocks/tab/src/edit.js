@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState, useRef } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -23,6 +23,7 @@ import {
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
 import BorderControl from '../../custom-components/BorderControl';
@@ -169,24 +170,20 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const color = (label, key) => (
 		<ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
 	);
-	const typo = (label, key) => (
-		<TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />
+	const bg = (label, c, g) => (
+		<BackgroundControl
+			label={label}
+			colorValue={attributes[c]}
+			gradientValue={attributes[g]}
+			onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })}
+			onGradientChange={(v) => setAttributes({ [g]: v || '' })}
+		/>
 	);
 	const border = (label, key) => (
 		<BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
 	);
 	const box = (label, key) => (
 		<BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
-	);
-	const num = (label, key) => (
-		<TextControl
-			label={label}
-			type="number"
-			value={attributes[key]}
-			onChange={(v) => setAttributes({ [key]: v })}
-			__next40pxDefaultSize
-			__nextHasNoMarginBottom
-		/>
 	);
 	// Responsive variants — a device switcher above the control, editing the
 	// matching per-device attribute (base / baseTablet / baseMobile).
@@ -333,6 +330,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				__next40pxDefaultSize
 				__nextHasNoMarginBottom
 			/>
+			{respSelect(__('Content Alignment', 'shapeblock'), 'descriptionAlignment', [
+				{ label: __('Left', 'shapeblock'), value: 'left' },
+				{ label: __('Center', 'shapeblock'), value: 'center' },
+				{ label: __('Right', 'shapeblock'), value: 'right' },
+				{ label: __('Justify', 'shapeblock'), value: 'justify' },
+			])}
 		</PanelBody>
 	);
 
@@ -346,42 +349,34 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						tab.name === 'normal' ? (
 							<>
 								{color(__('Text Color', 'shapeblock'), 'titleColor')}
-								{color(__('Background Color', 'shapeblock'), 'titleBgColor')}
+								{bg(__('Background Color', 'shapeblock'), 'titleBgColor', 'titleBgColorGradient')}
 								{border(__('Border', 'shapeblock'), 'titleBorder')}
 								{box(__('Border Radius', 'shapeblock'), 'titleBorderRadius')}
 								{respBox(__('Padding', 'shapeblock'), 'titlePadding')}
 								{respBox(__('Margin', 'shapeblock'), 'titleMargin')}
 								{color(__('Icon Color', 'shapeblock'), 'tabIconColor')}
-								{color(__('Icon / Image Bg Color', 'shapeblock'), 'tabIconBgColor')}
+								{bg(__('Icon / Image Bg Color', 'shapeblock'), 'tabIconBgColor', 'tabIconBgColorGradient')}
 							</>
 						) : (
 							<>
 								{color(__('Text Color', 'shapeblock'), 'titleActiveColor')}
-								{color(__('Background Color', 'shapeblock'), 'titleActiveBgColor')}
+								{bg(__('Background Color', 'shapeblock'), 'titleActiveBgColor', 'titleActiveBgColorGradient')}
 								{color(__('Border Color', 'shapeblock'), 'titleActiveBorderColor')}
 							</>
 						)
 					}
 				</TabPanel>
-			</PanelBody>
-
-			<PanelBody title={__('Tab Nav Border & Spacing', 'shapeblock')} initialOpen={false}>
+				<Divider />
 				{respNum(__('Bottom Spacing (px)', 'shapeblock'), 'titleBottomSpacing')}
 				{border(__('Bottom Border (top layout)', 'shapeblock'), 'navBorder')}
 			</PanelBody>
 
 			<PanelBody title={__('Tab Content Area', 'shapeblock')} initialOpen={false}>
-				{color(__('Background Color', 'shapeblock'), 'contentBgColor')}
+				{bg(__('Background Color', 'shapeblock'), 'contentBgColor', 'contentBgColorGradient')}
 				{border(__('Border', 'shapeblock'), 'contentBorder')}
 				{box(__('Border Radius', 'shapeblock'), 'contentBorderRadius')}
 				{respBox(__('Padding', 'shapeblock'), 'contentPadding')}
 				{respBox(__('Margin', 'shapeblock'), 'contentMargin')}
-				{respSelect(__('Alignment', 'shapeblock'), 'descriptionAlignment', [
-					{ label: __('Left', 'shapeblock'), value: 'left' },
-					{ label: __('Center', 'shapeblock'), value: 'center' },
-					{ label: __('Right', 'shapeblock'), value: 'right' },
-					{ label: __('Justify', 'shapeblock'), value: 'justify' },
-				])}
 			</PanelBody>
 
 			<PanelBody title={__('Content Title', 'shapeblock')} initialOpen={false}>
@@ -403,12 +398,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						tab.name === 'normal' ? (
 							<>
 								{color(__('Text Color', 'shapeblock'), 'btnColor')}
-								{color(__('Background Color', 'shapeblock'), 'btnBgColor')}
+								{bg(__('Background Color', 'shapeblock'), 'btnBgColor', 'btnBgColorGradient')}
 							</>
 						) : (
 							<>
 								{color(__('Text Color', 'shapeblock'), 'btnHoverColor')}
-								{color(__('Background Color', 'shapeblock'), 'btnHoverBgColor')}
+								{bg(__('Background Color', 'shapeblock'), 'btnHoverBgColor', 'btnHoverBgColorGradient')}
 								{color(__('Border Color', 'shapeblock'), 'btnHoverBorderColor')}
 							</>
 						)

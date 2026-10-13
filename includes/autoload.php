@@ -24,7 +24,6 @@ spl_autoload_register(
 		// Longest prefixes first so the more specific mapping wins.
 		static $prefixes = array(
 			'ShapeBlock\\Extension\\ThemeBuilder\\' => 'includes/extension/theme-builder/',
-			'ShapeBlock\\Extension\\'               => 'includes/extension/',
 			'ShapeBlock\\Admin\\'                   => 'includes/admin/',
 			'ShapeBlock\\Editor\\'                  => 'includes/editor/',
 			'ShapeBlock\\Frontend\\'                => 'includes/public/',

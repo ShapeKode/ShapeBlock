@@ -94,7 +94,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         removeBlock,
         moveBlocksDown,
         moveBlocksUp,
-        replaceInnerBlocks,
     } = useDispatch(blockEditorStore);
 
     const editorCss = useMemo(() => buildColumnEditorCss(attributes), [attributes]);
@@ -368,7 +367,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </ResponsiveWrapper>
             </PanelBody>
 
-            <PanelBody title={__('Spacing', 'shapeblock')} initialOpen={false}>
+        </>
+    );
+
+    // --- Tab 3: Style (appearance) --------------------------------------------
+    const styleTab = (
+        <>
+            <PanelBody title={__('Spacing', 'shapeblock')} initialOpen={true}>
                 <ResponsiveWrapper label={__('Padding', 'shapeblock')}>
                     {(device) => (
                         <BoxControl
@@ -388,12 +393,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </ResponsiveWrapper>
             </PanelBody>
 
-        </>
-    );
-
-    // --- Tab 3: Style (appearance) --------------------------------------------
-    const styleTab = (
-        <>
             <PanelBody title={__('Background', 'shapeblock')} initialOpen={false}>
                 <BackgroundControl
                     label={__('Background', 'shapeblock')}

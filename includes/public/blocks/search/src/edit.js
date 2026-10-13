@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -18,12 +18,11 @@ import {
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import AdvancedControls from '../../custom-components/AdvancedControls';
-
-import './editor.scss';
 
 // Map a base attribute name to its per-device key (desktop uses the base name).
 const getKey = (base, device) =>
@@ -88,7 +87,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const isFields = selectStyle === '2';
 
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const typo = (label, key) => <TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />;
+	const bg = (label, c, g) => (
+		<BackgroundControl
+			label={label}
+			colorValue={attributes[c]}
+			gradientValue={attributes[g]}
+			onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })}
+			onGradientChange={(v) => setAttributes({ [g]: v || '' })}
+		/>
+	);
 	const box = (label, key) => <BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const num = (label, key) => <TextControl label={label} type="number" value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
 	// Upload a custom image / SVG for an icon. Stored as { id, url, alt }; an image
@@ -176,8 +183,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// --- Tab 2: Layout (size, spacing & position) -----------------------------
 	const layoutTab = (
 		<>
-			<PanelBody title={__('Search Icon', 'shapeblock')} initialOpen={true}>
-				{respNum(__('Icon Size (px)', 'shapeblock'), 'iconSize')}
+			<PanelBody title={__('Search Icon Position', 'shapeblock')} initialOpen={true}>
 				{isPopup && num(__('Icon Vertical Position (px)', 'shapeblock'), 'iconVerticalPosition')}
 				{isFields && (
 					<>
@@ -198,21 +204,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				)}
 			</PanelBody>
 
-			<PanelBody title={__('Input Field', 'shapeblock')} initialOpen={false}>
-				{respBox(__('Padding', 'shapeblock'), 'inputPadding')}
+			<PanelBody title={__('Input Size', 'shapeblock')} initialOpen={false}>
 				{respNum(__('Height (px)', 'shapeblock'), 'inputHeight')}
 				{isFields && respNum(__('Input Field Width (px)', 'shapeblock'), 'inputFieldWidth')}
 			</PanelBody>
-
-			<PanelBody title={__('Submit Button', 'shapeblock')} initialOpen={false}>
-				{respBox(__('Padding', 'shapeblock'), 'submitPadding')}
-			</PanelBody>
-
-			{isPopup && (
-				<PanelBody title={__('Search Popup', 'shapeblock')} initialOpen={false}>
-					{respNum(__('Close Icon Size (px)', 'shapeblock'), 'closeIconSize')}
-				</PanelBody>
-			)}
 		</>
 	);
 
@@ -221,33 +216,37 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		<>
 			<PanelBody title={__('Search Icon', 'shapeblock')} initialOpen={true}>
 				{color(__('Icon Color', 'shapeblock'), 'iconColor')}
+				{respNum(__('Icon Size (px)', 'shapeblock'), 'iconSize')}
 			</PanelBody>
 
 			<PanelBody title={__('Input Field', 'shapeblock')} initialOpen={false}>
 				{respTypo(__('Typography', 'shapeblock'), 'inputTypography')}
 				{color(__('Input Text Color', 'shapeblock'), 'inputTextColor')}
 				{color(__('Placeholder Color', 'shapeblock'), 'placeholderColor')}
-				{color(__('Input Background Color', 'shapeblock'), 'inputBgColor')}
+				{bg(__('Input Background Color', 'shapeblock'), 'inputBgColor', 'inputBgColorGradient')}
 				{isFields && box(__('Border Radius', 'shapeblock'), 'inputBorderRadius')}
 				{isFields && color(__('Input Border Color', 'shapeblock'), 'inputBorderColor')}
 				{isFields && color(__('Border Color (Focus)', 'shapeblock'), 'inputFocusBorderColor')}
+				{respBox(__('Padding', 'shapeblock'), 'inputPadding')}
 			</PanelBody>
 
 			<PanelBody title={__('Submit Button', 'shapeblock')} initialOpen={false}>
 				{isPopup && color(__('Submit Icon Color', 'shapeblock'), 'submitIconColor')}
 				{isPopup && color(__('Submit Icon Hover Color', 'shapeblock'), 'submitIconHoverColor')}
-				{color(__('Submit Icon Background', 'shapeblock'), 'submitBtnBg')}
-				{isPopup && color(__('Submit Icon Hover Background', 'shapeblock'), 'submitBtnHoverBg')}
+				{bg(__('Submit Icon Background', 'shapeblock'), 'submitBtnBg', 'submitBtnBgGradient')}
+				{isPopup && bg(__('Submit Icon Hover Background', 'shapeblock'), 'submitBtnHoverBg', 'submitBtnHoverBgGradient')}
+				{respBox(__('Padding', 'shapeblock'), 'submitPadding')}
 			</PanelBody>
 
 			{isPopup && (
 				<PanelBody title={__('Search Popup', 'shapeblock')} initialOpen={false}>
-					{color(__('Overlay Background', 'shapeblock'), 'overlayBg')}
+					{bg(__('Overlay Background', 'shapeblock'), 'overlayBg', 'overlayBgGradient')}
 					<Divider />
 					{color(__('Title Color', 'shapeblock'), 'popupTitleColor')}
 					{respTypo(__('Title Typography', 'shapeblock'), 'popupTitleTypography')}
 					<Divider />
 					{color(__('Close Icon Color', 'shapeblock'), 'closeIconColor')}
+					{respNum(__('Close Icon Size (px)', 'shapeblock'), 'closeIconSize')}
 				</PanelBody>
 			)}
 		</>

@@ -1,7 +1,9 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import { decodeEntities } from '@wordpress/html-entities';
+import ServerSideRender from '../../custom-components/ServerRender';
+import useInlineText from '../../custom-components/useInlineText';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -24,6 +26,7 @@ import {
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	__experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon,
 	__experimentalDivider as Divider,
+	__experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
@@ -35,8 +38,6 @@ import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import SpacingControl from '../../custom-components/SpacingControl';
 import AdvancedControls from '../../custom-components/AdvancedControls';
-
-import './editor.scss';
 
 // Desktop keeps the base key; tablet / mobile append a suffix (e.g. titlePaddingTablet).
 const getKey = (base, device) =>
@@ -61,7 +62,10 @@ const ICON_VMID = <ASVG><rect x="3" y="11" width="18" height="2" /><rect x="8" y
 const ICON_VBOT = <ASVG><rect x="3" y="18" width="18" height="2" /><rect x="8" y="5" width="8" height="11" rx="1.5" /></ASVG>;
 
 export default function Edit({ attributes, setAttributes, clientId }) {
-	const { blockId, iconType, icon, number, image, title, desc, iconView, showIcon } = attributes;
+	const { blockId, iconType, icon, number, image, title, desc, iconView, showIcon, showButton } = attributes;
+	const isTextButton = attributes.buttonStyle === 'text';
+	// No label: the button is a square around its icon (render.php).
+	const isIconOnlyButton = !isTextButton && (attributes.buttonText || '').trim() === '' && !!attributes.buttonIcon && attributes.buttonIcon !== 'none';
 
 	useEffect(() => {
 		if (!blockId) {
@@ -118,6 +122,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	// --- Tab 1: Settings (content & behavior) ---------------------------------
 	const settingsTab = (
+		<>
 		<PanelBody title={__('Content', 'shapeblock')} initialOpen={true}>
 			<ToggleControl label={__('Icon', 'shapeblock')} checked={showIcon !== false} onChange={(v) => setAttributes({ showIcon: v })} __nextHasNoMarginBottom />
 			{showIcon !== false && (
@@ -154,18 +159,50 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<TextControl label={__('Title', 'shapeblock')} value={title || ''} onChange={(v) => setAttributes({ title: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 			<TextareaControl label={__('Description', 'shapeblock')} value={desc || ''} onChange={(v) => setAttributes({ desc: v })} __nextHasNoMarginBottom />
 			<Divider />
-			{showIcon !== false && <SelectControl label={__('Icon View', 'shapeblock')} value={iconView} options={[{ label: __('Default', 'shapeblock'), value: 'default' }, { label: __('Frame', 'shapeblock'), value: 'frame' }, { label: __('Stacked', 'shapeblock'), value: 'stracked' }]} onChange={(v) => setAttributes({ iconView: v })} __next40pxDefaultSize __nextHasNoMarginBottom />}
-			{showIcon !== false && (iconView === 'frame' || iconView === 'stracked') && (
-				<SelectControl label={__('Shape', 'shapeblock')} value={attributes.iconShape} options={[{ label: __('Rounded', 'shapeblock'), value: 'rounded' }, { label: __('Square', 'shapeblock'), value: 'square' }, { label: __('Circle', 'shapeblock'), value: 'circle' }, { label: __('Square Rotate', 'shapeblock'), value: 'sq_rotate' }]} onChange={(v) => setAttributes({ iconShape: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-			)}
 			<SelectControl label={__('Title HTML Tag', 'shapeblock')} value={attributes.titleTag} options={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span'].map((t) => ({ label: t.toUpperCase(), value: t }))} onChange={(v) => setAttributes({ titleTag: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 		</PanelBody>
+		<PanelBody title={__('Button', 'shapeblock')} initialOpen={false}>
+			<ToggleControl label={__('Show a button', 'shapeblock')} checked={!!showButton} onChange={(v) => setAttributes({ showButton: v })} __nextHasNoMarginBottom />
+			{showButton && (
+				<>
+					<TextControl
+						label={__('Button Text', 'shapeblock')}
+						help={__('You can also type it on the button itself. Leave it empty and pick an icon below for an icon-only button.', 'shapeblock')}
+						value={attributes.buttonText || ''}
+						onChange={(v) => setAttributes({ buttonText: v })}
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+					<TextControl label={__('Link', 'shapeblock')} type="url" placeholder="https://" value={attributes.buttonUrl || ''} onChange={(v) => setAttributes({ buttonUrl: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+					{attributes.buttonUrl && (
+						<>
+							<ToggleControl label={__('Open in New Tab', 'shapeblock')} checked={!!attributes.buttonNewTab} onChange={(v) => setAttributes({ buttonNewTab: v })} __nextHasNoMarginBottom />
+							<ToggleControl label={__('Add Nofollow', 'shapeblock')} checked={!!attributes.buttonNofollow} onChange={(v) => setAttributes({ buttonNofollow: v })} __nextHasNoMarginBottom />
+						</>
+					)}
+					<IconPicker label={__('Button Icon (optional)', 'shapeblock')} value={attributes.buttonIcon || ''} onChange={(v) => setAttributes({ buttonIcon: v })} />
+					{attributes.buttonIcon && attributes.buttonIcon !== 'none' && (
+						<SelectControl
+							label={__('Icon Position', 'shapeblock')}
+							value={attributes.buttonIconPosition || 'after'}
+							options={[
+								{ label: __('After the Text', 'shapeblock'), value: 'after' },
+								{ label: __('Before the Text', 'shapeblock'), value: 'before' },
+							]}
+							onChange={(v) => setAttributes({ buttonIconPosition: v })}
+							__next40pxDefaultSize
+							__nextHasNoMarginBottom
+						/>
+					)}
+				</>
+			)}
+		</PanelBody>
+		</>
 	);
 
-	// --- Tab 2: Layout (size & spacing) ---------------------------------------
+	// --- Tab 2: Layout (structure & alignment) --------------------------------
 	const layoutTab = (
-		<>
-			<PanelBody title={__('Icon Box', 'shapeblock')} initialOpen={true}>
+		<PanelBody title={__('Layout', 'shapeblock')} initialOpen={true}>
 				{showIcon !== false && (
 					<ResponsiveWrapper label={__('Icon Position', 'shapeblock')}>
 						{(d) => {
@@ -200,35 +237,57 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					</ToggleGroupControl>
 				)}
 				{num(__('Gap (px)', 'shapeblock'), 'feaMiddleGap')}
-				{respBox(__('Padding', 'shapeblock'), 'feaListPadding')}
-				{respBox(__('Margin', 'shapeblock'), 'feaBlockMargin')}
-			</PanelBody>
-
-			{showIcon !== false && (
-			<PanelBody title={__('Icon', 'shapeblock')} initialOpen={false}>
-				{num(__('Size (px)', 'shapeblock'), 'iconSize', 200)}
-				{num(__('Box Size (px)', 'shapeblock'), 'iconBoxSize', 200)}
-				{respBox(__('Padding', 'shapeblock'), 'iconPadding')}
-			</PanelBody>
-			)}
-
-			<PanelBody title={__('Title', 'shapeblock')} initialOpen={false}>
-				{respBox(__('Padding', 'shapeblock'), 'titlePadding')}
-			</PanelBody>
-		</>
+		</PanelBody>
 	);
 
 	// --- Tab 3: Style (appearance) --------------------------------------------
 	const styleTab = (
 		<>
 			<PanelBody title={__('Icon Box', 'shapeblock')} initialOpen={true}>
-				{bg(__('Background', 'shapeblock'), 'listBgColor', 'listBgGradient')}
-				{border(__('Border', 'shapeblock'), 'feaListBorder')}
+				<TabPanel
+					className="shapeblock-tab-panel"
+					activeClass="is-active"
+					tabs={[
+						{ name: 'normal', title: __('Normal', 'shapeblock'), className: 'shapeblock-tab-normal' },
+						{ name: 'hover', title: __('Hover', 'shapeblock'), className: 'shapeblock-tab-hover' },
+					]}
+				>
+					{(tab) =>
+						tab.name === 'hover' ? (
+							<>
+								{bg(__('Background', 'shapeblock'), 'listBgColorHover', 'listBgGradientHover')}
+								{color(__('Border Color', 'shapeblock'), 'feaListBorderColorHover')}
+								{shadow(__('Box Shadow', 'shapeblock'), 'boxShadowHover')}
+								<ToggleControl
+									label={__('Lift the box on hover', 'shapeblock')}
+									checked={!!attributes.boxHoverLift}
+									onChange={(v) => setAttributes({ boxHoverLift: v })}
+									__nextHasNoMarginBottom
+								/>
+							</>
+						) : (
+							<>
+								{bg(__('Background', 'shapeblock'), 'listBgColor', 'listBgGradient')}
+								{border(__('Border', 'shapeblock'), 'feaListBorder')}
+								{shadow(__('Box Shadow', 'shapeblock'), 'boxShadow')}
+							</>
+						)
+					}
+				</TabPanel>
 				{box(__('Border Radius', 'shapeblock'), 'feaListBorderRadius')}
+				{respBox(__('Padding', 'shapeblock'), 'feaListPadding')}
+				{respBox(__('Margin', 'shapeblock'), 'feaBlockMargin')}
 			</PanelBody>
 
 			{showIcon !== false && (
 			<PanelBody title={__('Icon', 'shapeblock')} initialOpen={false}>
+				<SelectControl label={__('Icon View', 'shapeblock')} value={iconView} options={[{ label: __('Default', 'shapeblock'), value: 'default' }, { label: __('Frame', 'shapeblock'), value: 'frame' }, { label: __('Stacked', 'shapeblock'), value: 'stracked' }]} onChange={(v) => setAttributes({ iconView: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+				{(iconView === 'frame' || iconView === 'stracked') && (
+					<SelectControl label={__('Shape', 'shapeblock')} value={attributes.iconShape} options={[{ label: __('Rounded', 'shapeblock'), value: 'rounded' }, { label: __('Square', 'shapeblock'), value: 'square' }, { label: __('Circle', 'shapeblock'), value: 'circle' }, { label: __('Square Rotate', 'shapeblock'), value: 'sq_rotate' }]} onChange={(v) => setAttributes({ iconShape: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+				)}
+				{num(__('Size (px)', 'shapeblock'), 'iconSize', 200)}
+				{num(__('Box Size (px)', 'shapeblock'), 'iconBoxSize', 200)}
+				{respBox(__('Padding', 'shapeblock'), 'iconPadding')}
 				{color(__('Color', 'shapeblock'), 'iconColor')}
 				{bg(__('Background', 'shapeblock'), 'iconBgColor', 'iconBgGradient')}
 				{shadow(__('Box Shadow', 'shapeblock'), 'iconShadow')}
@@ -240,12 +299,75 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<PanelBody title={__('Title', 'shapeblock')} initialOpen={false}>
 				{color(__('Color', 'shapeblock'), 'titleColor')}
 				{respTypo(__('Typography', 'shapeblock'), 'titleTypography')}
+				{respBox(__('Padding', 'shapeblock'), 'titlePadding')}
 			</PanelBody>
 
 			<PanelBody title={__('Description', 'shapeblock')} initialOpen={false}>
 				{color(__('Color', 'shapeblock'), 'descColor')}
 				{respTypo(__('Typography', 'shapeblock'), 'descTypography')}
 			</PanelBody>
+
+			{showButton && (
+				<PanelBody title={__('Button', 'shapeblock')} initialOpen={false}>
+					<SelectControl
+						label={__('Button Style', 'shapeblock')}
+						value={attributes.buttonStyle || 'button'}
+						options={[
+							{ label: __('Button', 'shapeblock'), value: 'button' },
+							{ label: __('Text Link', 'shapeblock'), value: 'text' },
+						]}
+						onChange={(v) => setAttributes({ buttonStyle: v })}
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+					<TabPanel
+						className="shapeblock-tab-panel"
+						activeClass="is-active"
+						tabs={[
+							{ name: 'normal', title: __('Normal', 'shapeblock'), className: 'shapeblock-tab-normal' },
+							{ name: 'hover', title: __('Hover', 'shapeblock'), className: 'shapeblock-tab-hover' },
+						]}
+					>
+						{(tab) =>
+							tab.name === 'hover' ? (
+								<>
+									{color(__('Text Color', 'shapeblock'), 'btnColorHover')}
+									{isTextButton ? null : bg(__('Background', 'shapeblock'), 'btnBgHover', 'btnBgHoverGradient')}
+									{isTextButton ? null : color(__('Border Color', 'shapeblock'), 'btnBorderColorHover')}
+								</>
+							) : (
+								<>
+									{color(__('Text Color', 'shapeblock'), 'btnColor')}
+									{isTextButton ? null : bg(__('Background', 'shapeblock'), 'btnBg', 'btnBgGradient')}
+									{isTextButton ? null : border(__('Border', 'shapeblock'), 'btnBorder')}
+								</>
+							)
+						}
+					</TabPanel>
+					{!isTextButton && box(__('Border Radius', 'shapeblock'), 'btnRadius')}
+					{respTypo(__('Typography', 'shapeblock'), 'btnTypography')}
+					{isIconOnlyButton ? (
+						<UnitControl
+							label={__('Button Size', 'shapeblock')}
+							help={__('Width and height of the icon button. Set Border Radius to 50% for a circle.', 'shapeblock')}
+							value={attributes.btnIconBoxSize || ''}
+							onChange={(v) => setAttributes({ btnIconBoxSize: v || '' })}
+							__next40pxDefaultSize
+						/>
+					) : (
+						!isTextButton && respBox(__('Padding', 'shapeblock'), 'btnPadding')
+					)}
+					<UnitControl label={__('Space Above', 'shapeblock')} value={attributes.btnSpacing || ''} onChange={(v) => setAttributes({ btnSpacing: v || '' })} __next40pxDefaultSize />
+					{attributes.buttonIcon && attributes.buttonIcon !== 'none' && (
+						<>
+							<UnitControl label={__('Icon Size', 'shapeblock')} value={attributes.btnIconSize || ''} onChange={(v) => setAttributes({ btnIconSize: v || '' })} __next40pxDefaultSize />
+							{(attributes.buttonText || '').trim() !== '' && (
+								<UnitControl label={__('Space Between Icon and Text', 'shapeblock')} value={attributes.btnIconGap || ''} onChange={(v) => setAttributes({ btnIconGap: v || '' })} __next40pxDefaultSize />
+							)}
+						</>
+					)}
+				</PanelBody>
+			)}
 		</>
 	);
 
@@ -259,6 +381,49 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	}, []);
 	const dev = device ? device.toLowerCase() : 'desktop';
 	const alignKey = getKey('contentAlign', dev);
+
+	// The title and description are typed right on the preview.
+	const inlineRef = useInlineText([
+		{ selector: '.shapeblock-icon-box-title', save: (i, v) => setAttributes({ title: v }) },
+		{ selector: '.shapeblock-icon-box-desc', multiline: true, save: (i, v) => setAttributes({ desc: v }) },
+		{
+			// The button label is plain text (escaped on output): formatting is
+			// dropped. Clearing it leaves an icon-only button when there is an
+			// icon; without one the old label stays (the Button switch is what
+			// removes the button).
+			selector: '.shapeblock-icon-box-btn-text',
+			save: (i, v) => {
+				const text = decodeEntities(v.replace(/<[^>]*>/g, '')).replace(/\s+/g, ' ').trim();
+				const hasIcon = !!attributes.buttonIcon && attributes.buttonIcon !== 'none';
+				if (!text && !hasIcon) {
+					// Nothing changes, so the preview is not redrawn: put the
+					// label back on the canvas by hand.
+					const el = inlineRef.current && inlineRef.current.querySelector('.shapeblock-icon-box-btn-text');
+					if (el) {
+						el.textContent = attributes.buttonText;
+					}
+					return;
+				}
+				setAttributes({ buttonText: text });
+			},
+		},
+	]);
+
+	// In the editor the button is for typing its label, not for following its
+	// link: a click on it must not leave the editor.
+	useEffect(() => {
+		const root = inlineRef.current;
+		if (!root) {
+			return undefined;
+		}
+		const stay = (e) => {
+			if (e.target.closest && e.target.closest('.shapeblock-icon-box-btn')) {
+				e.preventDefault();
+			}
+		};
+		root.addEventListener('click', stay);
+		return () => root.removeEventListener('click', stay);
+	}, [inlineRef]);
 
 	return (
 		<div {...useBlockProps()}>
@@ -298,7 +463,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</TabPanel>
 			</InspectorControls>
 
-			<ServerSideRender block="shapeblock/icon-box" attributes={attributes} httpMethod="POST" />
+			<div ref={inlineRef}>
+				<ServerSideRender block="shapeblock/icon-box" attributes={attributes} httpMethod="POST" />
+			</div>
 		</div>
 	);
 }

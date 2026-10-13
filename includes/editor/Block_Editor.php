@@ -15,7 +15,6 @@ class Block_Editor {
 
     public function __construct() {
         add_action( 'enqueue_block_editor_assets', [$this, 'enqueue_editor_scripts'] );
-        add_filter( 'admin_body_class', [$this, 'admin_body_class'] );
     }
 
     public function enqueue_editor_scripts () {
@@ -32,11 +31,13 @@ class Block_Editor {
         wp_register_script( 'shapeblock-block-editor-js', false, array(), $asset_file['version'], false );
         wp_enqueue_script( 'shapeblock-block-editor-js' );
 
+        // Editor-only sidebar/canvas tweaks, loaded as a plain file so nothing
+        // from the dashboard bundle reaches the block editor.
         wp_enqueue_style(
             'shapeblock-block-editor-css',
-            SHAPEBLOCK_PL_URL . 'build/index.css',
+            SHAPEBLOCK_PL_URL . 'assets/css/editor.css',
             array( 'wp-components' ),
-            $asset_file['version']
+            \shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'assets/css/editor.css' )
         );
 
         wp_localize_script(
@@ -44,20 +45,13 @@ class Block_Editor {
             'shapeblockEditor',
             [
                 'plugin_url'    => SHAPEBLOCK_PL_URL,
-                'nonce'         => wp_create_nonce( 'wp_rest' ),
                 'admin_url'     => admin_url(),
                 'new_tpl_url'   => admin_url( 'post-new.php?post_type=shapeblock-template' ),
+                // Changes whenever the icon library is rebuilt, so the picker never
+                // shows a list the browser kept from before.
+                'icons_version' => shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/icon/library.json' ),
             ]
         );
-    }
-
-    public function admin_body_class( $classes ) {
-        global $pagenow;
-        if (!$pagenow || 'post.php' !== $pagenow) {
-           return $classes;
-        }
-        $classes .= ' shapeblock-block-editor';
-        return $classes;
     }
 }
 

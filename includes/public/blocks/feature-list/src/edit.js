@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -97,7 +97,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	};
 
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const typo = (label, key) => <TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />;
 	const border = (label, key) => <BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const shadow = (label, key) => <BoxShadowControls label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const box = (label, key) => <BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
@@ -207,24 +206,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<Button variant="primary" onClick={addItem} icon={ICON_ADD}>{__('Add Item', 'shapeblock')}</Button>
 				<Divider />
 				<ToggleControl label={__('Icon', 'shapeblock')} checked={showIcon !== false} onChange={(v) => setAttributes({ showIcon: v })} __nextHasNoMarginBottom />
-				{showIcon !== false && <SelectControl label={__('Icon View', 'shapeblock')} value={iconView} options={[{ label: __('Default', 'shapeblock'), value: 'default' }, { label: __('Frame', 'shapeblock'), value: 'frame' }, { label: __('Stacked', 'shapeblock'), value: 'stracked' }]} onChange={(v) => setAttributes({ iconView: v })} __next40pxDefaultSize __nextHasNoMarginBottom />}
-				{showIcon !== false && (iconView === 'frame' || iconView === 'stracked') && (
-					<SelectControl label={__('Shape', 'shapeblock')} value={attributes.iconShape} options={[{ label: __('Rounded', 'shapeblock'), value: 'rounded' }, { label: __('Square', 'shapeblock'), value: 'square' }, { label: __('Circle', 'shapeblock'), value: 'circle' }, { label: __('Square Rotate', 'shapeblock'), value: 'sq_rotate' }]} onChange={(v) => setAttributes({ iconShape: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-				)}
 				<SelectControl label={__('Title HTML Tag', 'shapeblock')} value={attributes.titleTag} options={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span'].map((t) => ({ label: t.toUpperCase(), value: t }))} onChange={(v) => setAttributes({ titleTag: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 			</PanelBody>
 
 			<PanelBody title={__('Connector', 'shapeblock')} initialOpen={false}>
 				<ToggleControl label={__('Connector', 'shapeblock')} checked={feaConnector} onChange={(v) => setAttributes({ feaConnector: v })} __nextHasNoMarginBottom />
 				{feaConnector && (
-					<>
-						<ToggleControl label={__('Left Connector', 'shapeblock')} checked={attributes.feaConnectorLeft} onChange={(v) => setAttributes({ feaConnectorLeft: v })} __nextHasNoMarginBottom />
-						<SelectControl label={__('Type', 'shapeblock')} value={attributes.feaConnectorType} options={['solid', 'dotted', 'dashed', 'double'].map((v) => ({ label: v, value: v }))} onChange={(v) => setAttributes({ feaConnectorType: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-						{num(__('Connector Width (px)', 'shapeblock'), 'feaConnectorWidth', 50)}
-						{feaDir === 'left' && num(__('Position Horizontal (px)', 'shapeblock'), 'feaConnectorPositionX', 100, -100)}
-						{feaDir === 'right' && num(__('Position Horizontal (px)', 'shapeblock'), 'feaConnectorRightPositionX', 100, -100)}
-						{color(__('Color', 'shapeblock'), 'feaConnectorColor')}
-					</>
+					<ToggleControl label={__('Left Connector', 'shapeblock')} checked={attributes.feaConnectorLeft} onChange={(v) => setAttributes({ feaConnectorLeft: v })} __nextHasNoMarginBottom />
 				)}
 			</PanelBody>
 		</>
@@ -252,22 +240,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			)}
 
 			<PanelBody title={__('Spacing', 'shapeblock')} initialOpen={showIcon === false}>
-				{respBox(__('Padding', 'shapeblock'), 'feaListPadding')}
 				{respBox(__('Margin', 'shapeblock'), 'feaBlockMargin')}
 				{num(__('Item Gap (px)', 'shapeblock'), 'feaItemGap')}
 				{num(__('Middle Gap (px)', 'shapeblock'), 'feaMiddleGap')}
-			</PanelBody>
-
-			{showIcon !== false && (
-			<PanelBody title={__('Icon', 'shapeblock')} initialOpen={false}>
-				{num(__('Size (px)', 'shapeblock'), 'iconSize', 200)}
-				{num(__('Box Size (px)', 'shapeblock'), 'iconBoxSize', 200)}
-				<SelectControl label={__('Alignment', 'shapeblock')} value={attributes.iconAlignment} options={[{ label: __('Left', 'shapeblock'), value: 'start' }, { label: __('Center', 'shapeblock'), value: 'center' }, { label: __('Right', 'shapeblock'), value: 'end' }]} onChange={(v) => setAttributes({ iconAlignment: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-			</PanelBody>
-			)}
-
-			<PanelBody title={__('Title', 'shapeblock')} initialOpen={false}>
-				{respBox(__('Padding', 'shapeblock'), 'titlePadding')}
 			</PanelBody>
 		</>
 	);
@@ -279,10 +254,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				{bg(__('Background', 'shapeblock'), 'listBgColor', 'listBgGradient')}
 				{border(__('Border', 'shapeblock'), 'feaListBorder')}
 				{box(__('Border Radius', 'shapeblock'), 'feaListBorderRadius')}
+				{respBox(__('Padding', 'shapeblock'), 'feaListPadding')}
 			</PanelBody>
 
 			{showIcon !== false && (
 			<PanelBody title={__('Icon', 'shapeblock')} initialOpen={false}>
+				<SelectControl label={__('Icon View', 'shapeblock')} value={iconView} options={[{ label: __('Default', 'shapeblock'), value: 'default' }, { label: __('Frame', 'shapeblock'), value: 'frame' }, { label: __('Stacked', 'shapeblock'), value: 'stracked' }]} onChange={(v) => setAttributes({ iconView: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+				{(iconView === 'frame' || iconView === 'stracked') && (
+					<SelectControl label={__('Shape', 'shapeblock')} value={attributes.iconShape} options={[{ label: __('Rounded', 'shapeblock'), value: 'rounded' }, { label: __('Square', 'shapeblock'), value: 'square' }, { label: __('Circle', 'shapeblock'), value: 'circle' }, { label: __('Square Rotate', 'shapeblock'), value: 'sq_rotate' }]} onChange={(v) => setAttributes({ iconShape: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+				)}
+				{num(__('Size (px)', 'shapeblock'), 'iconSize', 200)}
+				{num(__('Box Size (px)', 'shapeblock'), 'iconBoxSize', 200)}
+				<SelectControl label={__('Alignment', 'shapeblock')} value={attributes.iconAlignment} options={[{ label: __('Left', 'shapeblock'), value: 'start' }, { label: __('Center', 'shapeblock'), value: 'center' }, { label: __('Right', 'shapeblock'), value: 'end' }]} onChange={(v) => setAttributes({ iconAlignment: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 				{color(__('Color', 'shapeblock'), 'iconColor')}
 				{bg(__('Background', 'shapeblock'), 'iconBgColor', 'iconBgGradient')}
 				{shadow(__('Box Shadow', 'shapeblock'), 'iconShadow')}
@@ -294,12 +277,23 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<PanelBody title={__('Title', 'shapeblock')} initialOpen={false}>
 				{color(__('Color', 'shapeblock'), 'titleColor')}
 				{respTypo(__('Typography', 'shapeblock'), 'titleTypography')}
+				{respBox(__('Padding', 'shapeblock'), 'titlePadding')}
 			</PanelBody>
 
 			<PanelBody title={__('Description', 'shapeblock')} initialOpen={false}>
 				{color(__('Color', 'shapeblock'), 'descColor')}
 				{respTypo(__('Typography', 'shapeblock'), 'descTypography')}
 			</PanelBody>
+
+			{feaConnector && (
+			<PanelBody title={__('Connector Style', 'shapeblock')} initialOpen={false}>
+				<SelectControl label={__('Type', 'shapeblock')} value={attributes.feaConnectorType} options={['solid', 'dotted', 'dashed', 'double'].map((v) => ({ label: v, value: v }))} onChange={(v) => setAttributes({ feaConnectorType: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+				{num(__('Connector Width (px)', 'shapeblock'), 'feaConnectorWidth', 50)}
+				{feaDir === 'left' && num(__('Position Horizontal (px)', 'shapeblock'), 'feaConnectorPositionX', 100, -100)}
+				{feaDir === 'right' && num(__('Position Horizontal (px)', 'shapeblock'), 'feaConnectorRightPositionX', 100, -100)}
+				{color(__('Color', 'shapeblock'), 'feaConnectorColor')}
+			</PanelBody>
+			)}
 		</>
 	);
 

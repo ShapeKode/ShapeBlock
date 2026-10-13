@@ -18,241 +18,285 @@ class Blocks {
             [
                 'title'       => __( 'Post Grid', 'shapeblock' ),
                 'id'        => 'post-grid',
-                'description' => __( 'Display posts in a customizable grid.', 'shapeblock' ),
+                'description' => __( 'Posts in a customizable grid.', 'shapeblock' ),
                 'iconClass'   => 'shapeblock-icon-post-grid',
-                'status'      => 'enable',
             ],
              [
                 'title'       => __( 'Row', 'shapeblock' ),
                 'id'          => 'layout-row',
-                'description' => __( 'Flexible row/section container holding columns.', 'shapeblock' ),
+                'description' => __( 'Section that holds columns.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-row',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Column', 'shapeblock' ),
                 'id'          => 'column',
-                'description' => __( 'Child column inside a ShapeBlock Row.', 'shapeblock' ),
+                'description' => __( 'A column inside a Row.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-columns',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Simple Gallery', 'shapeblock' ),
                 'id'          => 'gallery',
-                'description' => __( 'Responsive image gallery with lightbox.', 'shapeblock' ),
+                'description' => __( 'Image gallery with lightbox.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-marquee-logo',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Accordion', 'shapeblock' ),
                 'id'          => 'faq',
-                'description' => __( 'FAQ accordion with collapsible icons and schema.', 'shapeblock' ),
+                'description' => __( 'Collapsible FAQ with schema.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-faq-1',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Pricing Table', 'shapeblock' ),
                 'id'          => 'pricing-table',
-                'description' => __( 'Configurable pricing table with features, featured ribbon and CTA.', 'shapeblock' ),
+                'description' => __( 'Pricing plans with features.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-pricing-table',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Button', 'shapeblock' ),
                 'id'          => 'button',
-                'description' => __( 'A flexible button with icon, gradient and full style controls.', 'shapeblock' ),
+                'description' => __( 'Button with icon and styles.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-button',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Icon', 'shapeblock' ),
                 'id'          => 'icon',
-                'description' => __( 'A single icon with color, size, background, border, rotation and link.', 'shapeblock' ),
+                'description' => __( 'A single icon with a link.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-iconbox',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Heading', 'shapeblock' ),
                 'id'          => 'heading',
-                'description' => __( 'Heading with sub-heading, highlight, separator, gradient text.', 'shapeblock' ),
+                'description' => __( 'Heading with a sub-heading.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-heading',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Team Member', 'shapeblock' ),
                 'id'          => 'team-grid',
-                'description' => __( 'Team member card with 5 skins, social icons, contact info and popup.', 'shapeblock' ),
+                'description' => __( 'Team members with socials.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-team-grid',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Testimonial', 'shapeblock' ),
                 'id'          => 'testimonials-grid',
-                'description' => __( 'Grid of testimonials with 6 skins, ratings, quote icons and logos.', 'shapeblock' ),
+                'description' => __( 'Client reviews with ratings.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-testimonials-grid',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Feature List', 'shapeblock' ),
                 'id'          => 'feature-list',
-                'description' => __( 'A vertical list of features, each with an icon, number or image and a title.', 'shapeblock' ),
+                'description' => __( 'Feature list with icons.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-service-list',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Hover Box', 'shapeblock' ),
                 'id'          => 'hover-box',
-                'description' => __( 'An image or icon in a circle or square that reveals a title and description on hover.', 'shapeblock' ),
+                'description' => __( 'Box that shows text on hover.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-iconbox',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Icon Box', 'shapeblock' ),
                 'id'          => 'icon-box',
-                'description' => __( 'Icon boxes with the icon on top, then title and description.', 'shapeblock' ),
+                'description' => __( 'Icon, title and text box.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-iconbox',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Icon List', 'shapeblock' ),
                 'id'          => 'icon-list',
-                'description' => __( 'A list of icon + text rows with icon position and full styling.', 'shapeblock' ),
+                'description' => __( 'List of rows with icons.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-service-list',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Counter', 'shapeblock' ),
                 'id'          => 'counter',
-                'description' => __( 'Animated number counter with prefix/suffix, icon, title and odometer.', 'shapeblock' ),
+                'description' => __( 'Animated number counter.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-counter',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Tabs', 'shapeblock' ),
                 'id'          => 'tab',
-                'description' => __( 'Tabbed content with icon or image tab titles, plus a title, description and button for each panel.', 'shapeblock' ),
+                'description' => __( 'Content in tabbed panels.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-tab',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Countdown', 'shapeblock' ),
                 'id'          => 'countdown',
-                'description' => __( 'Countdown timer to a target date with custom labels, separators and styling.', 'shapeblock' ),
+                'description' => __( 'Countdown timer to a date.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-countdown',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Table', 'shapeblock' ),
                 'id'          => 'table',
-                'description' => __( 'Data table with header, body and footer cells, icons, images and styling.', 'shapeblock' ),
+                'description' => __( 'Data table with icons.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-clients-logo-grid',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Social Share', 'shapeblock' ),
                 'id'          => 'social-share',
-                'description' => __( 'Buttons for sharing the current page on social networks.', 'shapeblock' ),
+                'description' => __( 'Share buttons for socials.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-social-share',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Social Icon', 'shapeblock' ),
                 'id'          => 'social-icon',
-                'description' => __( 'A row of linked social icons with per-icon or global colors and hover states.', 'shapeblock' ),
+                'description' => __( 'Linked social media icons.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-social-icons',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Progress Bar', 'shapeblock' ),
                 'id'          => 'progress',
-                'description' => __( 'A progress / skill bar with title and percent, in two layout styles.', 'shapeblock' ),
+                'description' => __( 'Progress and skill bars.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-progress-bar',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Client Logo', 'shapeblock' ),
                 'id'          => 'clients-logo-grid',
-                'description' => __( 'A responsive grid of client / partner logos with links and effects.', 'shapeblock' ),
+                'description' => __( 'A grid of client logos.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-clients-logo-grid',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Image Comparison', 'shapeblock' ),
                 'id'          => 'image-comparison',
-                'description' => __( 'A before / after image comparison slider with a draggable handle.', 'shapeblock' ),
+                'description' => __( 'Before / after image slider.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-image-carousel',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Scroll to Top', 'shapeblock' ),
                 'id'          => 'scroll-to-top',
-                'description' => __( 'A floating scroll-to-top button that appears after scrolling.', 'shapeblock' ),
+                'description' => __( 'Button back to page top.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-scroll-top',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Offcanvas', 'shapeblock' ),
                 'id'          => 'offcanvas',
-                'description' => __( 'A toggle button that opens an off-canvas template.', 'shapeblock' ),
+                'description' => __( 'Button that opens a panel.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-canvas',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Search', 'shapeblock' ),
                 'id'          => 'search',
-                'description' => __( 'Site search with a popup lightbox skin or an inline search field skin.', 'shapeblock' ),
+                'description' => __( 'Search popup or search field.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-search',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Breadcrumb', 'shapeblock' ),
                 'id'          => 'breadcrumb',
-                'description' => __( 'A dynamic breadcrumb trail for the current page.', 'shapeblock' ),
+                'description' => __( 'Breadcrumb trail for pages.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-tab',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Menu', 'shapeblock' ),
                 'id'          => 'menu',
-                'description' => __( 'Display a WordPress navigation menu with layout, alignment and colors.', 'shapeblock' ),
+                'description' => __( 'Navigation menu with styles.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-navigation',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Slider', 'shapeblock' ),
                 'id'          => 'slider',
-                'description' => __( 'A full-width image slider with arrows, dots and autoplay.', 'shapeblock' ),
+                'description' => __( 'Full-width image slider.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-slider',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Image Carousel', 'shapeblock' ),
                 'id'          => 'image-carousel',
-                'description' => __( 'Show several images at once with centered slides and continuous scrolling.', 'shapeblock' ),
+                'description' => __( 'Images in a carousel.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-image-horizontal-scroll',
-                'status'      => 'enable',
             ],
             [
                 'title'       => __( 'Isotope Filter', 'shapeblock' ),
                 'id'          => 'isotope',
-                'description' => __( 'Filterable grid: category buttons with icon, title and description items.', 'shapeblock' ),
+                'description' => __( 'Filterable grid by category.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-filterable-gallery',
-                'status'      => 'enable',
+            ],
+            [
+                'title'       => __( 'Filterable List', 'shapeblock' ),
+                'id'          => 'filter-list',
+                'description' => __( 'Links with icons, filter buttons and search.', 'shapeblock' ),
+                'iconClass'    => 'shapeblock-icon-service-list',
+            ],
+            [
+                'title'       => __( 'Sticky Stack', 'shapeblock' ),
+                'id'          => 'sticky-stack',
+                'description' => __( 'Cards that stack on scroll.', 'shapeblock' ),
+                'iconClass'    => 'shapeblock-icon-process-slider',
             ],
         ];
 
-        // Default-enabled IDs: any block we want available without the user toggling it on first.
-        $default_enabled = [ 'layout-row', 'column', 'post-grid', 'gallery', 'faq', 'pricing-table', 'button', 'icon', 'heading', 'hover-box', 'team-grid', 'testimonials-grid', 'feature-list', 'icon-box', 'icon-list', 'counter', 'tab', 'countdown', 'table', 'social-share', 'social-icon', 'progress', 'clients-logo-grid', 'image-comparison', 'scroll-to-top', 'offcanvas', 'search', 'breadcrumb', 'menu', 'slider', 'image-carousel', 'isotope' ];
+        // The tab each block is listed under on the dashboard.
+        $categories = array(
+            'layout-row'        => 'layout',
+            'column'            => 'layout',
+            'sticky-stack'      => 'layout',
+            'heading'           => 'content',
+            'button'            => 'content',
+            'icon'              => 'content',
+            'icon-box'          => 'content',
+            'icon-list'         => 'content',
+            'feature-list'      => 'content',
+            'faq'               => 'content',
+            'tab'               => 'content',
+            'table'             => 'content',
+            'hover-box'         => 'content',
+            'slider'            => 'media',
+            'image-carousel'    => 'media',
+            'gallery'           => 'media',
+            'image-comparison'  => 'media',
+            'clients-logo-grid' => 'media',
+            'team-grid'         => 'showcase',
+            'testimonials-grid' => 'showcase',
+            'pricing-table'     => 'showcase',
+            'counter'           => 'showcase',
+            'progress'          => 'showcase',
+            'isotope'           => 'showcase',
+            'filter-list'       => 'content',
+            'countdown'         => 'showcase',
+            'menu'              => 'header-footer',
+            'search'            => 'header-footer',
+            'breadcrumb'        => 'header-footer',
+            'offcanvas'         => 'header-footer',
+            'scroll-to-top'     => 'header-footer',
+            'social-icon'       => 'header-footer',
+            'post-grid'         => 'posts',
+            'social-share'      => 'posts',
+        );
 
-        // Merge status from DB
+        // Merge status from DB. Every block is enabled until it is switched off.
+        // Every block in this plugin is free; the dashboard shows that as a tag.
         foreach ($blocks as &$block) {
-            $default = in_array( $block['id'], $default_enabled, true ) ? 'enable' : 'disable';
-            $block['status'] = get_option('shapeblock_block_' . $block['id'], $default);
+            $block['category']  = isset( $categories[ $block['id'] ] ) ? $categories[ $block['id'] ] : '';
+            $block['status']    = get_option('shapeblock_block_' . $block['id'], 'enable');
+            $block['badge']     = __( 'Free', 'shapeblock' );
+            $block['badgeType'] = 'free';
         }
         unset($block);
 
         $blocks = apply_filters('shapeblock_blocks', $blocks);
 
         return $blocks;
+    }
+
+    /**
+     * The tabs of the Blocks page, in order: slug => label. A tab shows only
+     * when a block is in it.
+     *
+     * @return array<string,string>
+     */
+    public function get_categories() {
+        $categories = array(
+            'layout'        => __( 'Layout', 'shapeblock' ),
+            'content'       => __( 'Content', 'shapeblock' ),
+            'media'         => __( 'Media', 'shapeblock' ),
+            'header-footer' => __( 'Header Footer', 'shapeblock' ),
+            'showcase'      => __( 'Showcase', 'shapeblock' ),
+            'posts'         => __( 'Posts & Site', 'shapeblock' ),
+            'form'          => __( 'Form', 'shapeblock' ),
+            'feed'          => __( 'Feed', 'shapeblock' ),
+        );
+
+        /**
+         * Filter the tabs of the Blocks page.
+         *
+         * @param array<string,string> $categories Slug => label.
+         */
+        return (array) apply_filters( 'shapeblock_block_categories', $categories );
     }
 }

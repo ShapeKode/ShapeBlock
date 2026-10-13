@@ -21,6 +21,95 @@
 	margin-bottom: 40px;
 }
 
+/* With the search box on: the filter bar on the left and the box on the
+   right of one row, which wraps when there is no room for both. */
+.shapeblock-iso-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: var(--shapeblock-iso-header-space, 40px);
+
+	/* A line below the filters and the search box, halfway down the space, so
+	   the cards stay as far below as without it. */
+	&.has-separator {
+		padding-bottom: calc(var(--shapeblock-iso-header-space, 40px) / 2);
+		margin-bottom: calc(var(--shapeblock-iso-header-space, 40px) / 2);
+		border-bottom: 1px solid var(--shapeblock-preset-color-border, rgba(0, 0, 0, 0.1));
+	}
+
+	.shapeblock-iso-filters {
+		flex: 1 1 auto;
+		justify-content: flex-start;
+		min-width: 0;
+		margin-bottom: 0;
+	}
+}
+
+.shapeblock-iso-search {
+	position: relative;
+	flex: 0 1 auto;
+	width: 280px;
+	max-width: 100%;
+	margin-left: auto;
+}
+
+.shapeblock-iso-search-icon {
+	position: absolute;
+	top: 50%;
+	left: 16px;
+	width: 16px;
+	height: 16px;
+	transform: translateY(-50%);
+	color: #98a2b3;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	pointer-events: none;
+}
+
+.shapeblock-iso-search-input {
+	box-sizing: border-box;
+	width: 100%;
+	margin: 0;
+	padding: 10px 18px 10px 40px;
+	border: 1px solid var(--shapeblock-preset-color-border, rgba(0, 0, 0, 0.14));
+	border-radius: 999px;
+	background: #fff;
+	color: var(--shapeblock-preset-color-contrast-1, #0e0e0e);
+	font: inherit;
+	line-height: 1.2;
+	-webkit-appearance: none;
+	appearance: none;
+
+	&::placeholder {
+		color: #98a2b3;
+		opacity: 1;
+	}
+
+	&:focus {
+		border-color: var(--shapeblock-preset-color-primary, #126bf0);
+		outline: none;
+	}
+}
+
+.shapeblock-iso-empty {
+	margin: 8px 0 0;
+	text-align: center;
+
+	&[hidden] {
+		display: none;
+	}
+}
+
+@media (max-width: 767px) {
+	.shapeblock-iso-search {
+		width: 100%;
+	}
+}
+
 .shapeblock-iso-filter {
 	appearance: none;
 	cursor: pointer;
@@ -75,7 +164,25 @@
 }
 
 /* ---- Card ---------------------------------------------------------------- */
+/* Card link: covers the whole card; links typed in the text stay clickable above it. */
+.shapeblock-iso-card-link {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	border-radius: inherit;
+}
+
+.shapeblock-iso-card.has-link {
+	cursor: pointer;
+
+	.shapeblock-iso-desc a {
+		position: relative;
+		z-index: 2;
+	}
+}
+
 .shapeblock-iso-card {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	gap: 18px;
@@ -104,7 +211,7 @@
 	background: color-mix(in srgb, var(--shapeblock-preset-color-primary, #126bf0) 12%, transparent);
 
 	i {
-		font-size: 26px;
+		font-size: 20px;
 		line-height: 1;
 		color: var(--shapeblock-preset-color-primary, #126bf0);
 
@@ -134,6 +241,138 @@
 	font-size: 15px;
 	line-height: 1.6;
 	color: #5b6470;
+}
+
+/* ---- Badge --------------------------------------------------------------- */
+/* Colours come in as --shapeblock-iso-badge-bg (the badge colour) and
+   --shapeblock-iso-badge-color (its text); each style below uses them. */
+.shapeblock-iso-badge {
+	display: inline-block;
+	box-sizing: border-box;
+	max-width: calc(100% - 24px);
+	padding: 4px 12px;
+	border: 1px solid transparent;
+	border-radius: 999px;
+	background: var(--shapeblock-iso-badge-bg, var(--shapeblock-preset-color-primary, #126bf0));
+	color: var(--shapeblock-iso-badge-color, #fff);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.4;
+	letter-spacing: 0.02em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* In a corner: above the card link, but clicks still reach the card. */
+.shapeblock-iso-badge-top-right .shapeblock-iso-badge,
+.shapeblock-iso-badge-top-left .shapeblock-iso-badge {
+	position: absolute;
+	top: 14px;
+	z-index: 2;
+	pointer-events: none;
+}
+
+.shapeblock-iso-badge-top-right .shapeblock-iso-badge {
+	right: 14px;
+}
+
+.shapeblock-iso-badge-top-left .shapeblock-iso-badge {
+	left: 14px;
+}
+
+/* Above the title: sized to its text, following the card's alignment. */
+.shapeblock-iso-badge-inline .shapeblock-iso-badge {
+	align-self: var(--shapeblock-iso-badge-align, flex-start);
+	max-width: 100%;
+}
+
+/* Styles. Pill is the base above. */
+.shapeblock-iso-badge-style-square .shapeblock-iso-badge {
+	border-radius: 4px;
+}
+
+.shapeblock-iso-badge-style-soft .shapeblock-iso-badge {
+	background: rgba(18, 107, 240, 0.12);
+	background: color-mix(in srgb, var(--shapeblock-iso-badge-bg, var(--shapeblock-preset-color-primary, #126bf0)) 14%, transparent);
+	color: var(--shapeblock-iso-badge-color, var(--shapeblock-iso-badge-bg, var(--shapeblock-preset-color-primary, #126bf0)));
+}
+
+.shapeblock-iso-badge-style-outline .shapeblock-iso-badge {
+	border-color: var(--shapeblock-iso-badge-bg, var(--shapeblock-preset-color-primary, #126bf0));
+	background: transparent;
+	color: var(--shapeblock-iso-badge-color, var(--shapeblock-iso-badge-bg, var(--shapeblock-preset-color-primary, #126bf0)));
+}
+
+/* Ribbon: a short band across the card's corner. */
+.shapeblock-iso-badge-style-ribbon .shapeblock-iso-card {
+	overflow: hidden;
+}
+
+.shapeblock-iso-badge-style-ribbon .shapeblock-iso-badge {
+	top: 9px;
+	width: 112px;
+	max-width: none;
+	padding: 3px 28px;
+	border-radius: 0;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.shapeblock-iso-badge-style-ribbon.shapeblock-iso-badge-top-right .shapeblock-iso-badge {
+	right: -35px;
+	transform: rotate(45deg);
+}
+
+.shapeblock-iso-badge-style-ribbon.shapeblock-iso-badge-top-left .shapeblock-iso-badge {
+	left: -35px;
+	transform: rotate(-45deg);
+}
+
+/* Tab: a tag sitting on the card's top edge, its end folded behind. */
+.shapeblock-iso-badge-style-tab .shapeblock-iso-badge {
+	top: -9px;
+	overflow: visible;
+	padding: 3px 9px;
+	border-radius: 3px 3px 0 3px;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+
+	&::after {
+		content: "";
+		position: absolute;
+		top: 100%;
+		right: 0;
+		border-top: 5px solid rgba(0, 0, 0, 0.35);
+		border-right: 5px solid transparent;
+	}
+}
+
+/* The fold shows the badge colour, darkened, behind it. */
+.shapeblock-iso-badge-style-tab .shapeblock-iso-badge::before {
+	content: "";
+	position: absolute;
+	top: 100%;
+	right: 0;
+	border-top: 5px solid var(--shapeblock-iso-badge-bg, var(--shapeblock-preset-color-primary, #126bf0));
+	border-right: 5px solid transparent;
+}
+
+.shapeblock-iso-badge-style-tab.shapeblock-iso-badge-top-left .shapeblock-iso-badge {
+	border-radius: 3px 3px 3px 0;
+
+	&::before,
+	&::after {
+		right: auto;
+		left: 0;
+		border-right: 0;
+		border-left: 5px solid transparent;
+	}
 }
 
 /* ---- Icon beside the text ------------------------------------------------ */
@@ -166,5 +405,41 @@
 	.shapeblock-iso-filter,
 	.shapeblock-iso-card {
 		transition: none;
+	}
+}
+
+/* ---- Load More ----------------------------------------------------------- */
+.shapeblock-iso-more {
+	display: flex;
+	justify-content: center;
+	margin-top: 40px;
+
+	/* display:flex above would otherwise win over the hidden attribute. */
+	&[hidden] {
+		display: none;
+	}
+}
+
+.shapeblock-iso-load-more {
+	appearance: none;
+	cursor: pointer;
+	font: inherit;
+	font-weight: 600;
+	line-height: 1.2;
+	margin: 0;
+	padding: 13px 30px;
+	border: 1px solid var(--shapeblock-preset-color-primary, #126bf0);
+	border-radius: 999px;
+	background: var(--shapeblock-preset-color-primary, #126bf0);
+	color: #fff;
+	transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+
+	&:hover {
+		transform: translateY(-1px);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--shapeblock-preset-color-primary, #126bf0);
+		outline-offset: 2px;
 	}
 }

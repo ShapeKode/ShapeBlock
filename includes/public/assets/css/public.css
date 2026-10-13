@@ -1,22 +1,11 @@
 @charset "UTF-8";
 @font-face {
   font-family: "shapeblock-icon";
-  src: url("../font/shapeblock-icon.eot?83516218");
-  src: url("../font/shapeblock-icon.eot?83516218#iefix") format("embedded-opentype"), url("../font/shapeblock-icon.woff2?83516218") format("woff2"), url("../font/shapeblock-icon.woff?83516218") format("woff"), url("../font/shapeblock-icon.ttf?83516218") format("truetype"), url("../font/shapeblock-icon.svg?83516218#shapeblock-icon") format("svg");
+  src: url("../font/shapeblock-icon.woff2?83516218") format("woff2"), url("../font/shapeblock-icon.woff?83516218") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
-/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
-/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
-/*
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  @font-face {
-    font-family: 'shapeblock-icon';
-    src: url('../font/shapeblock-icon.svg?83516218#shapeblock-icon') format('svg');
-  }
-}
-*/
 [class^=shapeblock-icon-]:before,
 [class*=" shapeblock-icon-"]:before {
   font-family: "shapeblock-icon";
@@ -477,18 +466,6 @@
   --shapeblock-preset-hover-transition: 0.4s ease;
 }
 
-.shapeblock-text-left {
-  justify-content: flex-start;
-}
-
-.shapeblock-text-center {
-  justify-content: center;
-}
-
-.shapeblock-text-right {
-  justify-content: flex-end;
-}
-
 .shapeblock-block {
   color: var(--shapeblock-preset-color-contrast-2);
 }
@@ -505,7 +482,6 @@
   margin-top: 0;
 }
 
-.shapeblock-post-categories,
 .shapeblock-post-metas {
   margin: 20px 0 5px;
   padding: 0;
@@ -517,109 +493,28 @@
   align-items: center;
   gap: 18px;
 }
-.shapeblock-post-categories .bldpost-meta,
 .shapeblock-post-metas .bldpost-meta {
   display: flex;
   align-items: center;
 }
-.shapeblock-post-categories .bldpost-meta a,
 .shapeblock-post-metas .bldpost-meta a {
   overflow: visible !important;
   color: currentColor;
 }
-.shapeblock-post-categories a,
 .shapeblock-post-metas a {
   text-decoration: none;
 }
-.shapeblock-post-categories a:hover,
 .shapeblock-post-metas a:hover {
   text-decoration: underline;
 }
-.shapeblock-post-categories li,
 .shapeblock-post-metas li {
   position: relative;
 }
-.shapeblock-post-categories li + li,
 .shapeblock-post-metas li + li {
   margin-left: 10px;
   padding-left: 10px;
 }
 
-.shapeblock-post-categories {
-  margin: 0;
-  gap: 5px;
-  display: flex;
-}
-.shapeblock-post-categories .shapeblock-cat-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: var(--shapeblock-preset-color-primary);
-  margin-right: 6px;
-}
-.shapeblock-post-categories .bldpost-meta {
-  text-transform: uppercase;
-}
-.shapeblock-post-categories .bldpost-meta a {
-  text-decoration: none;
-}
-.shapeblock-post-categories.shapeblock-post-categories-style-1 {
-  margin-left: 12px;
-  margin-top: 12px;
-}
-.shapeblock-post-categories.shapeblock-post-categories-style-1 .bldpost-meta {
-  background: var(--shapeblock-preset-color-white);
-  color: var(--shapeblock-preset-color-contrast-1);
-  padding: 8px 8px 7px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  line-height: 1;
-  flex-wrap: wrap;
-  gap: 1px;
-}
-.shapeblock-post-categories.shapeblock-post-categories-style-2 .bldpost-meta {
-  font-size: 0.875rem;
-  background: var(--shapeblock-preset-color-primary);
-  color: var(--shapeblock-preset-color-white);
-  display: inline-block;
-  max-width: -moz-max-content;
-  max-width: max-content;
-  padding: 8px 16px;
-  border-radius: 30px;
-  margin: 3px 2px 3px;
-  line-height: 1;
-  text-transform: capitalize;
-}
-.shapeblock-post-categories.shapeblock-post-categories-style-2 .bldpost-meta a {
-  color: currentColor;
-}
-.shapeblock-post-categories.shapeblock-post-categories-style-2 .bldpost-meta a:hover {
-  color: var(--shapeblock-preset-color-tertiary) !important;
-}
-.shapeblock-post-categories.shapeblock-post-categories-style-2 .bldpost-meta .shapeblock-cat-dot {
-  display: none;
-}
-.shapeblock-post-categories.shapeblock-post-categories-style-3 .bldpost-meta {
-  font-size: 0.875rem;
-  padding: 0;
-  margin: 3px 2px 3px;
-  line-height: 1;
-  text-transform: capitalize;
-}
-.shapeblock-post-categories.shapeblock-post-categories-style-3 .bldpost-meta a {
-  color: currentColor;
-}
-.shapeblock-post-categories.shapeblock-post-categories-style-3 .bldpost-meta a:hover {
-  color: var(--shapeblock-preset-color-primary) !important;
-}
-.shapeblock-post-categories.shapeblock-post-categories-style-3 .bldpost-meta .shapeblock-cat-dot {
-  display: none;
-}
-
-.shapeblock-post-metas.shapeblock-upper-metas {
-  margin-top: 0px !important;
-}
 .shapeblock-post-metas.shapeblock-post-metas-style-1 .bldpost-meta {
   position: relative;
 }
@@ -664,11 +559,11 @@
   display: none;
 }
 .shapeblock-post-metas.shapeblock-post-meta-position-up_title {
-  margin-top: 0 !important;
+  margin-top: 0;
   margin-bottom: 8px;
 }
 .shapeblock-post-metas.shapeblock-post-meta-position-below_title {
-  margin: 12px 0 0 !important;
+  margin: 12px 0 0;
 }
 
 .shapeblock-post-grid .shapeblock-blog-content {
@@ -690,16 +585,6 @@
   background-image: linear-gradient(to right, currentColor 100%, transparent 100%);
   width: fit-content;
 }
-.shapeblock-post-grid .nav-btn {
-  transition: var(--shapeblock-preset-hover-transition);
-}
-.shapeblock-post-grid .swiper-button-next:after, .shapeblock-post-grid .swiper-button-prev:after {
-  font-size: 16px;
-}
-
-.shapeblock-video-wrapper video {
-  background-color: #000;
-}
 
 /* Images inside any ShapeBlock block stay inside their container.
  * Without this an image field renders at its natural pixel size and spills out
@@ -709,4 +594,18 @@
 .shapeblock-menu img {
   max-width: 100%;
   height: auto;
+}
+
+/* The Theme Builder footer sits flush against the content above it. */
+.shapeblock-builder-footer {
+  margin-top: 0;
+}
+
+/* A Wide block straight in a Theme Builder template (a header, a footer ...)
+ * is as wide as the theme's wide width and centred, as in its editor; other
+ * blocks stay full width. */
+[class*=shapeblock-builder-] > .alignwide {
+  max-width: var(--wp--style--global--wide-size, 1200px);
+  margin-left: auto;
+  margin-right: auto;
 }

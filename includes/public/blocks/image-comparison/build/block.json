@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/image-comparison",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "title": "Image Comparison",
   "category": "shapeblock",
   "description": "A before / after image comparison slider with a draggable handle — horizontal or vertical.",
@@ -103,6 +103,60 @@
       "type": "object",
       "default": {}
     },
+    "containerBorder": {
+      "type": "object",
+      "default": {
+        "width": 0,
+        "color": "",
+        "style": "solid"
+      }
+    },
+    "containerShadow": {
+      "type": "object",
+      "default": {
+        "x": 0,
+        "y": 0,
+        "b": 0,
+        "s": 0,
+        "c": ""
+      }
+    },
+    "handleStyle": {
+      "type": "string",
+      "default": "circle"
+    },
+    "handleIcon": {
+      "type": "string",
+      "default": "triangles"
+    },
+    "handleColor": {
+      "type": "string",
+      "default": ""
+    },
+    "handleBg": {
+      "type": "string",
+      "default": ""
+    },
+    "handleBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "handleIconColor": {
+      "type": "string",
+      "default": ""
+    },
+    "handleSize": {
+      "type": "string",
+      "default": ""
+    },
+    "handleLine": {
+      "type": "string",
+      "default": ""
+    },
+    "handleShadow": {
+      "type": "boolean",
+      "default": true
+    },
     "orientation": {
       "type": "string",
       "default": "horizontal"
@@ -143,6 +197,59 @@
     "hideMobile": {
       "type": "boolean",
       "default": false
+    },
+    "showLabels": {
+      "type": "boolean",
+      "default": false
+    },
+    "beforeLabel": {
+      "type": "string",
+      "default": "Before"
+    },
+    "afterLabel": {
+      "type": "string",
+      "default": "After"
+    },
+    "labelsOnHover": {
+      "type": "boolean",
+      "default": false
+    },
+    "labelPosition": {
+      "type": "string",
+      "default": "center"
+    },
+    "labelOffset": {
+      "type": "string",
+      "default": ""
+    },
+    "labelColor": {
+      "type": "string",
+      "default": ""
+    },
+    "labelBg": {
+      "type": "string",
+      "default": ""
+    },
+    "labelBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "labelTypography": {
+      "type": "object",
+      "default": {}
+    },
+    "labelPadding": {
+      "type": "object",
+      "default": {}
+    },
+    "labelRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
     }
   }
 }

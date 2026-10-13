@@ -27,7 +27,7 @@ function shapeblock_is_block_editor_screen() {
 		return false;
 	}
 	$screen = get_current_screen();
-	return $screen && method_exists( $screen, 'is_block_editor' ) && $screen->is_block_editor();
+	return $screen && $screen->is_block_editor();
 }
 
 /**
@@ -45,8 +45,7 @@ function shapeblock_content_has_any_block( $post ) {
 	if ( ! $post instanceof WP_Post ) {
 		return false;
 	}
-	return function_exists( 'has_blocks' ) && has_blocks( $post )
-		&& false !== strpos( (string) $post->post_content, '<!-- wp:shapeblock/' );
+	return has_blocks( $post ) && false !== strpos( (string) $post->post_content, '<!-- wp:shapeblock/' );
 }
 
 /**
@@ -63,13 +62,11 @@ function shapeblock_frontend_has_any_block() {
 		return true;
 	}
 
-	if ( class_exists( '\ShapeBlock\Extension\ThemeBuilder\Builder_Render' ) ) {
-		$shapeblock_builder = \ShapeBlock\Extension\ThemeBuilder\Builder_Render::instance();
-		foreach ( array( 'header', 'footer' ) as $shapeblock_location ) {
-			$shapeblock_tpl_id = $shapeblock_builder->get_location_post( $shapeblock_location );
-			if ( $shapeblock_tpl_id && shapeblock_content_has_any_block( get_post( $shapeblock_tpl_id ) ) ) {
-				return true;
-			}
+	$shapeblock_builder = \ShapeBlock\Extension\ThemeBuilder\Builder_Render::instance();
+	foreach ( array( 'header', 'footer' ) as $shapeblock_location ) {
+		$shapeblock_tpl_id = $shapeblock_builder->get_location_post( $shapeblock_location );
+		if ( $shapeblock_tpl_id && shapeblock_content_has_any_block( get_post( $shapeblock_tpl_id ) ) ) {
+			return true;
 		}
 	}
 
@@ -131,11 +128,71 @@ function shapeblock_register_common_assets() {
 		wp_register_script( 'shapeblock-swiper', SHAPEBLOCK_PL_URL . 'assets/lib/swiper/swiper-bundle.js', array(), '12.0.3', array( 'strategy' => 'defer' ) );
 	}
 
+	// The icon library (Bootstrap Icons). Enqueued only where it is needed: see
+	// shapeblock_enqueue_icon_library() and shapeblock_icon_library_editor().
+	if ( ! wp_style_is( 'shapeblock-icons', 'registered' ) ) {
+		wp_register_style(
+			'shapeblock-icons',
+			SHAPEBLOCK_PL_URL . 'includes/public/assets/css/shapeblock-icons.css',
+			array(),
+			shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/css/shapeblock-icons.css' )
+		);
+	}
+
 	if ( ! wp_style_is( 'shapeblock-bootstrap-grid', 'registered' ) ) {
 		wp_register_style( 'shapeblock-bootstrap-grid', SHAPEBLOCK_PL_URL . 'assets/lib/bootstrap/bootstrap-grid.css', array(), shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'assets/lib/bootstrap/bootstrap-grid.css' ), 'all' );
 	}
 }
 add_action( 'init', 'shapeblock_register_common_assets', 9 );
+
+/**
+ * Stop links in ShapeBlock previews from navigating away in the editor.
+ *
+ * Enqueued on enqueue_block_assets so it reaches the iframed editor canvas,
+ * where the previews live; gated to block editor screens only.
+ */
+function shapeblock_editor_links_script() {
+	if ( ! is_admin() || ! shapeblock_is_block_editor_screen() ) {
+		return;
+	}
+	wp_enqueue_script(
+		'shapeblock-editor-links',
+		SHAPEBLOCK_PL_URL . 'includes/public/assets/js/editor-links.js',
+		array(),
+		shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/js/editor-links.js' ),
+		true
+	);
+}
+add_action( 'enqueue_block_assets', 'shapeblock_editor_links_script' );
+
+/**
+ * Load the icon library stylesheet on a page only when a ShapeBlock block on
+ * it actually shows one of its icons, so pages without them download nothing.
+ *
+ * @param string $content Block markup.
+ * @param array  $block   The block being rendered.
+ * @return string
+ */
+function shapeblock_enqueue_icon_library( $content, $block ) {
+	if ( is_string( $content ) && ! empty( $block['blockName'] ) && 0 === strpos( $block['blockName'], 'shapeblock/' ) && false !== strpos( $content, 'shapeblock-bi-' ) ) {
+		wp_enqueue_style( 'shapeblock-icons' );
+	}
+	return $content;
+}
+add_filter( 'render_block', 'shapeblock_enqueue_icon_library', 10, 2 );
+
+/**
+ * In the block editor the icon library is always needed: by the icon picker in
+ * the sidebar (editor page) and by the block previews (editor canvas).
+ */
+function shapeblock_icon_library_editor() {
+	if ( ! is_admin() || ! shapeblock_is_block_editor_screen() ) {
+		return;
+	}
+	wp_enqueue_style( 'shapeblock-icons' );
+}
+add_action( 'enqueue_block_editor_assets', 'shapeblock_icon_library_editor' );
+add_action( 'enqueue_block_assets', 'shapeblock_icon_library_editor' );
 
 add_action( 'enqueue_block_editor_assets', 'shapeblock_enqueue_block_styles' );
 add_action( 'enqueue_block_assets', 'shapeblock_enqueue_block_styles' );
@@ -177,6 +234,11 @@ function shapeblock_add_style_paths() {
 		if ( 0 !== strpos( $handle, 'shapeblock-' ) || ! is_string( $style->src ) || isset( $style->extra['path'] ) ) {
 			continue;
 		}
+		// The icon library is ~45 KB of class rules: kept as a cached file rather
+		// than copied into the HTML of every page that shows an icon.
+		if ( 'shapeblock-icons' === $handle ) {
+			continue;
+		}
 		if ( 0 !== strpos( $style->src, SHAPEBLOCK_PL_URL ) ) {
 			continue;
 		}
@@ -188,6 +250,43 @@ function shapeblock_add_style_paths() {
 }
 add_action( 'wp_head', 'shapeblock_add_style_paths', 0 );
 add_action( 'wp_footer', 'shapeblock_add_style_paths', 0 );
+
+/**
+ * Serve the right-to-left stylesheets on RTL sites.
+ *
+ * The build emits a mirrored "-rtl.css" next to every compiled stylesheet
+ * (each block's build/ folder and the dashboard's build/). Marking a handle
+ * with 'rtl' => 'replace' makes WordPress load that sibling instead of the
+ * left-to-right file (and inline it, when the handle also has a 'path').
+ * Runs once after the block styles are registered on `init`, and again after
+ * the dashboard registers its own stylesheet; handles already marked are
+ * skipped, and nothing runs at all on left-to-right sites.
+ *
+ * @return void
+ */
+function shapeblock_add_rtl_styles() {
+	if ( ! is_rtl() ) {
+		return;
+	}
+	$styles = wp_styles();
+	foreach ( $styles->registered as $handle => $style ) {
+		if ( 0 !== strpos( $handle, 'shapeblock-' ) || ! is_string( $style->src ) || isset( $style->extra['rtl'] ) ) {
+			continue;
+		}
+		if ( 0 !== strpos( $style->src, SHAPEBLOCK_PL_URL ) ) {
+			continue;
+		}
+		$path = SHAPEBLOCK_PL_PATH . substr( strtok( $style->src, '?' ), strlen( SHAPEBLOCK_PL_URL ) );
+		if ( '.css' !== substr( $path, -4 ) || '-rtl.css' === substr( $path, -8 ) ) {
+			continue;
+		}
+		if ( file_exists( substr( $path, 0, -4 ) . '-rtl.css' ) ) {
+			wp_style_add_data( $handle, 'rtl', 'replace' );
+		}
+	}
+}
+add_action( 'init', 'shapeblock_add_rtl_styles', 99 );
+add_action( 'admin_enqueue_scripts', 'shapeblock_add_rtl_styles', 99 );
 
 /**
  * Let a little more small CSS be printed inline.
@@ -232,42 +331,38 @@ function shapeblock_add_swiper_dependency( $block_type ) {
 }
 
 /**
+ * Is the optional Google Fonts connection switched on?
+ *
+ * Off by default. While it is off the plugin never contacts Google: the
+ * font catalogue is not fetched, no fonts.googleapis.com stylesheet is
+ * enqueued on the front end, and the editor offers only locally available
+ * font stacks. Site owners turn it on in ShapeBlock > Settings.
+ *
+ * @return bool
+ */
+function shapeblock_google_fonts_enabled() {
+	$layout = get_option( 'shapeblock_layout', array() );
+	return is_array( $layout ) && ! empty( $layout['google_fonts'] );
+}
+
+/**
  * Full Google Fonts family list. Reuses the Menu block's cached weekly fetch
- * when available; returns an empty array otherwise (the editor then falls back
- * to its bundled web-safe list).
+ * when available (the Menu block can be switched off); returns an empty array
+ * otherwise (the editor then falls back to its bundled web-safe list).
  *
  * @return array
  */
-if ( ! function_exists( 'shapeblock_google_fonts_enabled' ) ) {
-	/**
-	 * Is the optional Google Fonts connection switched on?
-	 *
-	 * Off by default. While it is off the plugin never contacts Google: the
-	 * font catalogue is not fetched, no fonts.googleapis.com stylesheet is
-	 * enqueued on the front end, and the editor offers only locally available
-	 * font stacks. Site owners turn it on in ShapeBlock > Settings.
-	 *
-	 * @return bool
-	 */
-	function shapeblock_google_fonts_enabled() {
-		$layout = get_option( 'shapeblock_layout', array() );
-		return is_array( $layout ) && ! empty( $layout['google_fonts'] );
-	}
-}
-
-if ( ! function_exists( 'shapeblock_get_google_fonts' ) ) {
-	function shapeblock_get_google_fonts() {
-		if ( ! shapeblock_google_fonts_enabled() ) {
-			return array();
-		}
-		if ( function_exists( 'shapeblock_menu_get_google_fonts' ) ) {
-			$fonts = shapeblock_menu_get_google_fonts();
-			if ( is_array( $fonts ) && ! empty( $fonts ) ) {
-				return $fonts;
-			}
-		}
+function shapeblock_get_google_fonts() {
+	if ( ! shapeblock_google_fonts_enabled() ) {
 		return array();
 	}
+	if ( function_exists( 'shapeblock_menu_get_google_fonts' ) ) {
+		$fonts = shapeblock_menu_get_google_fonts();
+		if ( is_array( $fonts ) && ! empty( $fonts ) ) {
+			return $fonts;
+		}
+	}
+	return array();
 }
 
 /**
@@ -314,15 +409,6 @@ function shapeblock_expose_google_fonts_editor() {
 		shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/js/editor-fonts.js' ),
 		true
 	);
-
-	// Shared styling for the 3-tab (Settings / Layout / Style) inspector used by
-	// every ShapeBlock block, so the tabs sit evenly across the sidebar.
-	wp_register_style( 'shapeblock-editor-ui', false, array(), SHAPEBLOCK_VERSION );
-	wp_enqueue_style( 'shapeblock-editor-ui' );
-	wp_add_inline_style(
-		'shapeblock-editor-ui',
-		'.shapeblock-inspector-tabs .components-tab-panel__tabs{display:flex}.shapeblock-inspector-tabs .components-tab-panel__tabs-item{flex:1;justify-content:center}'
-	);
 }
 add_action( 'enqueue_block_editor_assets', 'shapeblock_expose_google_fonts_editor' );
 
@@ -333,22 +419,20 @@ add_action( 'enqueue_block_editor_assets', 'shapeblock_expose_google_fonts_edito
  *
  * @param string $family e.g. "Poppins".
  */
-if ( ! function_exists( 'shapeblock_enqueue_google_font' ) ) {
-	function shapeblock_enqueue_google_font( $family ) {
-		if ( ! shapeblock_google_fonts_enabled() ) {
-			return;
-		}
-		$family = trim( (string) $family );
-		if ( '' === $family || false !== strpos( $family, ',' ) ) {
-			return;
-		}
-		$handle = 'shapeblock-font-' . sanitize_title( $family );
-		if ( wp_style_is( $handle, 'enqueued' ) ) {
-			return;
-		}
-		$url = 'https://fonts.googleapis.com/css2?family=' . str_replace( '%20', '+', rawurlencode( $family ) ) . ':wght@100;200;300;400;500;600;700;800;900&display=swap';
-		wp_enqueue_style( $handle, $url, array(), SHAPEBLOCK_VERSION );
+function shapeblock_enqueue_google_font( $family ) {
+	if ( ! shapeblock_google_fonts_enabled() ) {
+		return;
 	}
+	$family = trim( (string) $family );
+	if ( '' === $family || false !== strpos( $family, ',' ) ) {
+		return;
+	}
+	$handle = 'shapeblock-font-' . sanitize_title( $family );
+	if ( wp_style_is( $handle, 'enqueued' ) ) {
+		return;
+	}
+	$url = 'https://fonts.googleapis.com/css2?family=' . str_replace( '%20', '+', rawurlencode( $family ) ) . ':wght@100;200;300;400;500;600;700;800;900&display=swap';
+	wp_enqueue_style( $handle, $url, array(), SHAPEBLOCK_VERSION );
 }
 
 /**
@@ -364,7 +448,7 @@ function shapeblock_render_block_load_fonts( $content, $block ) {
 	if ( empty( $block['blockName'] ) || 0 !== strpos( (string) $block['blockName'], 'shapeblock/' ) ) {
 		return $content;
 	}
-	if ( ! empty( $block['attrs'] ) && is_array( $block['attrs'] ) && function_exists( 'shapeblock_enqueue_google_font' ) ) {
+	if ( ! empty( $block['attrs'] ) && is_array( $block['attrs'] ) ) {
 		array_walk_recursive(
 			$block['attrs'],
 			function ( $value, $key ) {
@@ -377,6 +461,50 @@ function shapeblock_render_block_load_fonts( $content, $block ) {
 	return $content;
 }
 add_filter( 'render_block', 'shapeblock_render_block_load_fonts', 10, 2 );
+
+/**
+ * Keep line breaks out of a ShapeBlock block's markup.
+ *
+ * The block templates are written over several lines for readability. WordPress
+ * only skips its auto-paragraph filter (wpautop) for content it knows is made
+ * of blocks; a theme, a widget, a shortcode or any plugin that runs wpautop()
+ * over rendered output turns every one of those line breaks into a visible
+ * <br /> -- inside an icon list item, a button, a search toggle. A line break in
+ * HTML renders as a single space, so replacing each run of whitespace that holds
+ * one with a single space looks identical and leaves wpautop nothing to change.
+ * Preformatted text, text areas and inline script or style elements are left
+ * exactly as written.
+ *
+ * @param string $content Block markup.
+ * @param array  $block   The block being rendered.
+ * @return string
+ */
+function shapeblock_compact_block_markup( $content, $block ) {
+	if ( ! is_string( $content ) || empty( $block['blockName'] ) || 0 !== strpos( $block['blockName'], 'shapeblock/' ) ) {
+		return $content;
+	}
+
+	$parts = preg_split( '#(<(pre|textarea|script|style)\b[^>]*>.*?</\2>)#is', $content, -1, PREG_SPLIT_DELIM_CAPTURE );
+	if ( ! is_array( $parts ) ) {
+		return $content;
+	}
+
+	// With the delimiter captured the parts repeat as: text, element, tag name.
+	$out = '';
+	foreach ( $parts as $i => $part ) {
+		if ( 0 === $i % 3 ) {
+			// Explicit \r and \n only: \R also matches the single byte 0x85, the last byte of
+			// characters such as the star in a rating, and would corrupt them.
+			$part = preg_replace( '/[ \t]*(?:\r\n|\r|\n)[ \t\r\n\f]*/', ' ', $part );
+			$out .= is_string( $part ) ? $part : '';
+		} elseif ( 1 === $i % 3 ) {
+			$out .= $part;
+		}
+	}
+
+	return $out;
+}
+add_filter( 'render_block', 'shapeblock_compact_block_markup', 99, 2 );
 
 /**
  * Load the files of every enabled block.
@@ -413,7 +541,7 @@ add_action( 'init', 'shapeblock_load_block_files', 1 );
  * handle pattern, and has_block() means nothing loads on pages without the block.
  */
 add_action( 'wp_enqueue_scripts', function () {
-	if ( is_admin() || ! function_exists( 'has_block' ) ) {
+	if ( is_admin() ) {
 		return;
 	}
 
@@ -424,13 +552,11 @@ add_action( 'wp_enqueue_scripts', function () {
 	// render unstyled. Collect any active builder template posts for this request
 	// and check their content too.
 	$shapeblock_extra_posts = array();
-	if ( class_exists( '\ShapeBlock\Extension\ThemeBuilder\Builder_Render' ) ) {
-		$shapeblock_builder = \ShapeBlock\Extension\ThemeBuilder\Builder_Render::instance();
-		foreach ( array( 'header', 'footer' ) as $shapeblock_location ) {
-			$shapeblock_tpl_id = $shapeblock_builder->get_location_post( $shapeblock_location );
-			if ( $shapeblock_tpl_id ) {
-				$shapeblock_extra_posts[] = $shapeblock_tpl_id;
-			}
+	$shapeblock_builder     = \ShapeBlock\Extension\ThemeBuilder\Builder_Render::instance();
+	foreach ( array( 'header', 'footer' ) as $shapeblock_location ) {
+		$shapeblock_tpl_id = $shapeblock_builder->get_location_post( $shapeblock_location );
+		if ( $shapeblock_tpl_id ) {
+			$shapeblock_extra_posts[] = $shapeblock_tpl_id;
 		}
 	}
 

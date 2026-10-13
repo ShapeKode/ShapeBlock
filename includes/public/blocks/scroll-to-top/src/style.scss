@@ -59,7 +59,7 @@
  * specificity, so they always win over what follows.
  */
 @media (max-width: 767px) {
-	.shapeblock-scroll-to-top {
+	.shapeblock-scroll-top-block-wrap .shapeblock-scroll-top {
 		right: 16px;
 		bottom: 16px;
 	}

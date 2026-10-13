@@ -51,13 +51,130 @@ body.toplevel_page_shapeblock #wpcontent {
     margin-top: 0;
 }
 
+// No focus ring from WordPress on the fields of the ShapeBlock pages (this
+// stylesheet loads only there); the field's border colour shows the focus.
+// Not scoped to the dashboard, as dialogs sit outside it. "body" outweighs
+// WordPress's own input[type="text"]:focus rule.
+body #shapeblock-dashboard input:focus,
+body #shapeblock-dashboard textarea:focus,
+body #shapeblock-dashboard select:focus,
+body input.ant-input:focus,
+body textarea.ant-input:focus,
+body .ant-select input:focus,
+body .ant-input-number input:focus,
+body .ant-picker input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+// A field on its own (not inside an Ant Design wrapper) takes the ShapeBlock
+// colour on focus, not WordPress blue.
+body input.ant-input:focus,
+body textarea.ant-input:focus {
+    border-color: #a216ff;
+}
+
+// The search field keeps the height of the controls beside it: WordPress's
+// own input styles would add their padding and minimum height inside it.
+.shapeblock-blocks-filters .ant-input-affix-wrapper > input.ant-input {
+    min-height: 0;
+    padding: 0;
+    line-height: inherit;
+    box-shadow: none;
+}
+
+// Category tabs above the block list.
+.shapeblock-blocks-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.shapeblock-blocks-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: #fff;
+    color: #475467;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+
+    &:hover {
+        color: #a216ff;
+        border-color: #a216ff;
+    }
+
+    &:focus-visible {
+        outline: 2px solid #a216ff;
+        outline-offset: 2px;
+    }
+
+    &.is-active {
+        color: #a216ff;
+        border-color: #a216ff;
+        background: #faf5ff;
+    }
+}
+
+.shapeblock-blocks-tab-count {
+    min-width: 22px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #f2f4f7;
+    color: #667085;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+
+    .is-active > & {
+        background: #a216ff;
+        color: #fff;
+    }
+}
+
+// The one line under the block list that links to more blocks.
+.shapeblock-blocks-more {
+    margin: 24px 0 0;
+    color: #667085;
+    font-size: 14px;
+    text-align: center;
+
+    a {
+        color: #a216ff;
+        font-weight: 500;
+    }
+}
+
+// As many cards per row as fit at a width where a description stays on one line.
+.shapeblock-blocks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: 16px;
+}
+
 .shapeblock-block-item {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #f1f2fa;
     padding: 8px 12px;
     gap: 10px;
+    border: 1px solid #efeff5;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(18, 16, 42, 0.04), 0 4px 14px rgba(18, 16, 42, 0.06);
+    transition: box-shadow 0.2s ease;
+
+    &:hover {
+        box-shadow: 0 2px 4px rgba(18, 16, 42, 0.05), 0 8px 22px rgba(18, 16, 42, 0.1);
+    }
     .meta {
         display: flex;
         align-content: center;
@@ -68,31 +185,15 @@ body.toplevel_page_shapeblock #wpcontent {
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #fff;
-        width: 60px;
-        min-width: 60px;
-        height: 60px;
-        padding: 12px;
+        background-color: #f6f5fb;
+        width: 52px;
+        min-width: 52px;
+        height: 52px;
+        padding: 10px;
         border-radius: 8px;
         position: relative;
         flex-direction: column;
         font-size: 22px;
-        .shapeblock-block-badge {
-            position: absolute;
-            left: 50%;
-            top: -4px;
-            background-color: #f2295b;
-            color: var(--shapeblock-white-color, #fff);
-            border-radius: 36px;
-            font-size: 8px;
-            font-weight: 500;
-            transform: translateX(-50%);
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            padding: 4px 6px;
-            line-height: 100%;
-        }
     }
 
     .content {
@@ -105,12 +206,39 @@ body.toplevel_page_shapeblock #wpcontent {
             line-height: 1.2;
         }
 
+        // Never more than two lines, however long a description is.
         p {
+            display: -webkit-box;
             margin: 0;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
         }
     }
 
+    // Small tag centred on the top edge of the icon box ("Free", or a
+    // label an add-on passes for its own blocks, which also styles it).
+    .shapeblock-block-badge {
+        position: absolute;
+        top: -7px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0 5px;
+        border-radius: 6px;
+        background: #8c8f94;
+        color: #fff;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        line-height: 13px;
+        text-transform: uppercase;
+        white-space: nowrap;
 
+        &.is-free {
+            background: #00a32a;
+        }
+    }
 }
 
 .shapeblock-options-content-header {
@@ -170,4 +298,13 @@ body.toplevel_page_shapeblock #wpcontent {
             border-color: #d9d9d9 !important;
         }
     }
+}
+// Theme Builder: the template type filter wraps onto more lines when an
+// add-on brings more types than fit on one.
+.shapeblock-builder-types {
+	max-width: 100%;
+
+	.ant-segmented-group {
+		flex-wrap: wrap;
+	}
 }

@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import { useBlockProps, InspectorControls, BlockControls, AlignmentControl } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -15,6 +15,7 @@ import {
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
 import BorderControl from '../../custom-components/BorderControl';
@@ -78,17 +79,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		}
 
 		const SEPARATORS = { comma: ',', dot: '.', space: ' ', underline: '_' };
-		const formatNum = (num, sep) => {
-			const str = num.toString();
-			if (!sep) {
-				return str;
-			}
+		// Mirrors view.js: thousands separator on the whole part, decimals kept.
+		const formatNum = (num, sep, decimals = 0) => {
+			const str = decimals ? num.toFixed(decimals) : Math.floor(num).toString();
 			const negative = str.charAt(0) === '-';
-			const body = negative ? str.slice(1) : str;
-			if (body.length < 4) {
-				return str;
+			const parts = (negative ? str.slice(1) : str).split('.');
+			let whole = parts[0];
+			if (sep && whole.length > 3) {
+				whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, sep);
 			}
-			return (negative ? '-' : '') + body.replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+			const mark = sep === '.' ? ',' : '.';
+			return (negative ? '-' : '') + whole + (parts[1] ? mark + parts[1] : '');
 		};
 
 		let io = null;
@@ -98,8 +99,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			if (!el) {
 				return;
 			}
-			const target = parseInt(el.dataset.count, 10) || 0;
-			const start = parseInt(el.dataset.start, 10) || 0;
+			const target = parseFloat(el.dataset.count) || 0;
+			const start = parseFloat(el.dataset.start) || 0;
+			const decMatch = String(el.dataset.count || '').match(/\.(\d+)/);
+			const decimals = decMatch ? decMatch[1].length : 0;
 			const duration = parseInt(el.dataset.duration, 10) || 1000;
 			const sep = SEPARATORS[el.dataset.format] || '';
 			const sig = [el.dataset.count, el.dataset.start, el.dataset.duration, el.dataset.format, el.dataset.animation].join('|');
@@ -112,7 +115,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 			// Non-count re-renders (e.g. colour tweaks) just show the final value.
 			if (sig === lastSigRef.current) {
-				el.textContent = formatNum(target, sep);
+				el.textContent = formatNum(target, sep, decimals);
 				return;
 			}
 			lastSigRef.current = sig;
@@ -124,7 +127,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				const startTime = performance.now();
 				const tick = (time) => {
 					const progress = Math.min((time - startTime) / duration, 1);
-					el.textContent = formatNum(Math.floor(start + (target - start) * progress), sep);
+					el.textContent = formatNum(progress < 1 ? start + (target - start) * progress : target, sep, decimals);
 					if (progress < 1) {
 						requestAnimationFrame(tick);
 					}
@@ -184,7 +187,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			};
 
 			const animate = () => {
-				if (animationType === 'odometer') {
+				if (animationType === 'odometer' && !decimals) {
 					runOdometer();
 				} else {
 					runCounter();
@@ -234,7 +237,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	}, []);
 
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const typo = (label, key) => <TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />;
+	const bg = (label, c, g) => (
+		<BackgroundControl label={label} colorValue={attributes[c]} gradientValue={attributes[g]} onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })} onGradientChange={(v) => setAttributes({ [g]: v || '' })} />
+	);
 	const border = (label, key) => <BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const shadow = (label, key) => <BoxShadowControls label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const box = (label, key) => <BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
@@ -286,7 +291,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const settingsTab = (
 		<PanelBody title={__('Counter', 'shapeblock')} initialOpen={true}>
 			{num(__('Ending Number', 'shapeblock'), 'number')}
-			{num(__('Starting Number', 'shapeblock'), 'startNumber')}
+			{attributes.animationType !== 'odometer' && num(__('Starting Number', 'shapeblock'), 'startNumber')}
 			<TextControl label={__('Number Prefix', 'shapeblock')} value={attributes.prefix} onChange={(v) => setAttributes({ prefix: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 			<TextControl label={__('Number Suffix', 'shapeblock')} value={attributes.suffix} onChange={(v) => setAttributes({ suffix: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 			{num(__('Animation Duration (ms)', 'shapeblock'), 'duration')}
@@ -418,7 +423,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			{iconEnable && (
 				<PanelBody title={__('Icon', 'shapeblock')} initialOpen={false}>
 					{color(__('Color', 'shapeblock'), 'iconColor')}
-					{color(__('Background', 'shapeblock'), 'iconBgColor')}
+					{bg(__('Background', 'shapeblock'), 'iconBgColor', 'iconBgColorGradient')}
 					{num(__('Box Size (px)', 'shapeblock'), 'iconBoxSize')}
 					{num(__('Icon Size (px)', 'shapeblock'), 'iconSize')}
 					{box(__('Border Radius', 'shapeblock'), 'iconBorderRadius')}

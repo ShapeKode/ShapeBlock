@@ -47,21 +47,9 @@ class Api {
         ) );
 
         register_rest_route( 'shapeblock/v1', '/templates/(?P<id>\d+)', array(
-            array(
-                'methods'  => 'GET',
-                'callback' => array( $this, 'get_template' ),
-                'permission_callback' => array( $this, 'can_edit_template' ),
-            ),
-            array(
-                'methods'  => 'PUT,PATCH',
-                'callback' => array( $this, 'update_template' ),
-                'permission_callback' => array( $this, 'can_edit_template' ),
-            ),
-            array(
-                'methods'  => 'DELETE',
-                'callback' => array( $this, 'delete_template' ),
-                'permission_callback' => array( $this, 'can_delete_template' ),
-            ),
+            'methods'  => 'DELETE',
+            'callback' => array( $this, 'delete_template' ),
+            'permission_callback' => array( $this, 'can_delete_template' ),
         ) );
 
         register_rest_route( 'shapeblock/v1', '/templates/(?P<id>\d+)/restore', array(
@@ -78,32 +66,11 @@ class Api {
             'permission_callback' => array( $this, 'can_bulk_template' ),
         ) );
 
-        // Colors endpoints
-        register_rest_route( 'shapeblock/v1', '/colors', array(
-            array(
-                'methods'  => 'GET',
-                'callback' => array( $this, 'get_colors' ),
-                'permission_callback' => array( $this, 'can_manage' ),
-            ),
-            array(
-                'methods'  => 'POST',
-                'callback' => array( $this, 'save_colors' ),
-                'permission_callback' => array( $this, 'can_manage' ),
-            ),
-        ) );
-
-        // Layout endpoints — global container width, etc.
+        // Layout endpoint — global container width and the Google Fonts opt-in.
         register_rest_route( 'shapeblock/v1', '/layout', array(
-            array(
-                'methods'  => 'GET',
-                'callback' => array( $this, 'get_layout' ),
-                'permission_callback' => array( $this, 'can_manage' ),
-            ),
-            array(
-                'methods'  => 'POST',
-                'callback' => array( $this, 'save_layout' ),
-                'permission_callback' => array( $this, 'can_manage' ),
-            ),
+            'methods'  => 'POST',
+            'callback' => array( $this, 'save_layout' ),
+            'permission_callback' => array( $this, 'can_manage' ),
         ) );
 
         // Export / Import — settings, custom templates and theme builder templates.
@@ -146,33 +113,13 @@ class Api {
     }
 
     /**
-     * Reading or writing one specific template.
-     *
-     * @param \WP_REST_Request $request Request.
-     * @return bool
-     */
-    public function can_edit_template( $request ) {
-        return $this->can_template( $request, 'edit_post' );
-    }
-
-    /**
-     * Trashing, restoring or deleting one specific template.
+     * Trashing, restoring or deleting one specific template: authorised against
+     * the template the request names.
      *
      * @param \WP_REST_Request $request Request.
      * @return bool
      */
     public function can_delete_template( $request ) {
-        return $this->can_template( $request, 'delete_post' );
-    }
-
-    /**
-     * Authorise a capability against the template the request names.
-     *
-     * @param \WP_REST_Request $request Request.
-     * @param string           $cap     Meta capability to test.
-     * @return bool
-     */
-    private function can_template( $request, $cap ) {
         if ( ! current_user_can( 'manage_options' ) ) {
             return false;
         }
@@ -185,7 +132,7 @@ class Api {
             return true;
         }
 
-        return current_user_can( $cap, $id );
+        return current_user_can( 'delete_post', $id );
     }
 
     /**
@@ -229,41 +176,6 @@ class Api {
      * Block namespace used by this plugin's blocks inside post content.
      */
     const BLOCK_NAMESPACE = 'shapeblock';
-
-    /**
-     * Export formats this plugin can read, mapped to the block namespace the
-     * file's template content uses.
-     *
-     * @return array<string,string>
-     */
-    private function compatible_formats() {
-        return array(
-            'shapeblock-export' => 'shapeblock',
-        );
-    }
-
-    /**
-     * Retarget block delimiters written with another block namespace at this plugin's
-     * namespace. Only the two exact comment openers are replaced, so attribute
-     * JSON and inner markup are untouched.
-     *
-     * @param string $content Post content from the export file.
-     * @param string $from    Namespace the content was written with.
-     * @return string
-     */
-    private function migrate_block_namespace( $content, $from ) {
-        $to = self::BLOCK_NAMESPACE;
-
-        if ( '' === $from || $from === $to || ! preg_match( '/^[a-z0-9-]+$/', $from ) ) {
-            return $content;
-        }
-
-        return str_replace(
-            array( '<!-- wp:' . $from . '/', '<!-- /wp:' . $from . '/' ),
-            array( '<!-- wp:' . $to . '/', '<!-- /wp:' . $to . '/' ),
-            $content
-        );
-    }
 
     /**
      * The three sections an export/import can cover.
@@ -389,10 +301,6 @@ class Api {
      * @return array<int,array<string,mixed>>
      */
     private function export_builder_templates() {
-        if ( ! class_exists( '\ShapeBlock\Extension\ThemeBuilder\Theme_Builder' ) ) {
-            return array();
-        }
-
         $query = new \WP_Query( array(
             'post_type'      => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE,
             'post_status'    => 'publish',
@@ -426,9 +334,8 @@ class Api {
             return new \WP_Error( 'invalid_payload', __( 'The import file could not be read.', 'shapeblock' ), array( 'status' => 400 ) );
         }
 
-        $format     = isset( $data['format'] ) ? sanitize_key( $data['format'] ) : '';
-        $compatible = $this->compatible_formats();
-        if ( ! isset( $compatible[ $format ] ) ) {
+        $format = isset( $data['format'] ) ? sanitize_key( $data['format'] ) : '';
+        if ( self::EXPORT_FORMAT !== $format ) {
             return new \WP_Error( 'invalid_format', __( 'This is not a ShapeBlock export file.', 'shapeblock' ), array( 'status' => 400 ) );
         }
 
@@ -437,41 +344,29 @@ class Api {
             return new \WP_Error( 'unsupported_version', __( 'This file was created by a newer version of ShapeBlock.', 'shapeblock' ), array( 'status' => 400 ) );
         }
 
-        // The file states its own block namespace; fall back to the one implied
-        // by its format so older files still import.
-        $namespace = '';
-        if ( isset( $data['source']['block_namespace'] ) && is_string( $data['source']['block_namespace'] ) ) {
-            $namespace = sanitize_key( $data['source']['block_namespace'] );
-        }
-        if ( '' === $namespace ) {
-            $namespace = $compatible[ $format ];
-        }
-
         $sections     = $this->parse_sections( $request->get_param( 'include' ) );
         $on_duplicate = 'skip' === sanitize_key( (string) $request->get_param( 'on_duplicate' ) ) ? 'skip' : 'create';
 
         $result = array(
-            'settings'          => array( 'colors' => false, 'layout' => false, 'blocks' => 0 ),
             'templates'         => array( 'imported' => 0, 'skipped' => 0 ),
             'builder_templates' => array( 'imported' => 0, 'skipped' => 0 ),
         );
 
         if ( in_array( 'settings', $sections, true ) && isset( $data['settings'] ) && is_array( $data['settings'] ) ) {
-            $result['settings'] = $this->import_settings( $data['settings'] );
+            $this->import_settings( $data['settings'] );
         }
 
         if ( in_array( 'templates', $sections, true ) && isset( $data['templates'] ) && is_array( $data['templates'] ) ) {
-            $result['templates'] = $this->import_templates( $data['templates'], $on_duplicate, $namespace );
+            $result['templates'] = $this->import_templates( $data['templates'], $on_duplicate );
         }
 
         if ( in_array( 'builder', $sections, true ) && isset( $data['builder_templates'] ) && is_array( $data['builder_templates'] ) ) {
-            $result['builder_templates'] = $this->import_builder_templates( $data['builder_templates'], $on_duplicate, $namespace );
+            $result['builder_templates'] = $this->import_builder_templates( $data['builder_templates'], $on_duplicate );
         }
 
         return rest_ensure_response( array(
             'status'   => 'success',
             'imported' => $result,
-            'colors'   => self::get_saved_colors(),
             'layout'   => self::get_saved_layout(),
             'blocks'   => $this->get_block_status_map(),
         ) );
@@ -482,11 +377,9 @@ class Api {
      * sanitizers the normal save endpoints use.
      *
      * @param array $settings Settings section of the payload.
-     * @return array Summary of what was applied.
+     * @return void
      */
     private function import_settings( $settings ) {
-        $summary = array( 'colors' => false, 'layout' => false, 'blocks' => 0 );
-
         if ( isset( $settings['colors'] ) && is_array( $settings['colors'] ) ) {
             $defaults = self::get_color_defaults();
             $clean    = array();
@@ -495,7 +388,6 @@ class Api {
                 $clean[ $key ] = '' !== $sanitized ? $sanitized : $default;
             }
             update_option( 'shapeblock_colors', $clean );
-            $summary['colors'] = true;
         }
 
         if ( isset( $settings['layout'] ) && is_array( $settings['layout'] ) ) {
@@ -508,7 +400,6 @@ class Api {
                 // that consent belongs to this site, not to the file.
                 'google_fonts'    => empty( $current['google_fonts'] ) ? 0 : 1,
             ) );
-            $summary['layout'] = true;
         }
 
         if ( isset( $settings['blocks'] ) && is_array( $settings['blocks'] ) ) {
@@ -522,11 +413,8 @@ class Api {
                 }
                 $status = ( 'disable' === $status ) ? 'disable' : 'enable';
                 update_option( 'shapeblock_block_' . $block_id, $status );
-                $summary['blocks']++;
             }
         }
-
-        return $summary;
     }
 
     /**
@@ -553,10 +441,9 @@ class Api {
      *
      * @param array  $items        Template rows.
      * @param string $on_duplicate 'skip' or 'create'.
-     * @param string $namespace    Block namespace the content was written with.
      * @return array Summary counts.
      */
-    private function import_templates( $items, $on_duplicate, $namespace ) {
+    private function import_templates( $items, $on_duplicate ) {
         $summary = array( 'imported' => 0, 'skipped' => 0 );
 
         foreach ( $items as $item ) {
@@ -577,7 +464,6 @@ class Api {
             // Block markup is stored as-is; wp_insert_post applies the normal
             // content_save_pre / kses chain for the current user's capabilities.
             $content = isset( $item['content'] ) ? (string) $item['content'] : '';
-            $content = $this->migrate_block_namespace( $content, $namespace );
 
             $post_id = wp_insert_post( array(
                 'post_title'   => $title,
@@ -602,15 +488,10 @@ class Api {
      *
      * @param array  $items        Builder template rows.
      * @param string $on_duplicate 'skip' or 'create'.
-     * @param string $namespace    Block namespace the content was written with.
      * @return array Summary counts.
      */
-    private function import_builder_templates( $items, $on_duplicate, $namespace ) {
+    private function import_builder_templates( $items, $on_duplicate ) {
         $summary = array( 'imported' => 0, 'skipped' => 0 );
-
-        if ( ! class_exists( '\ShapeBlock\Extension\ThemeBuilder\Theme_Builder' ) ) {
-            return $summary;
-        }
 
         $post_type = \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE;
 
@@ -632,7 +513,6 @@ class Api {
             }
 
             $content = isset( $item['content'] ) ? (string) $item['content'] : '';
-            $content = $this->migrate_block_namespace( $content, $namespace );
 
             $post_id = wp_insert_post( array(
                 'post_title'   => $title,
@@ -697,39 +577,6 @@ class Api {
         return '';
     }
 
-    public function get_colors() {
-        return rest_ensure_response( array(
-            'colors'   => self::get_saved_colors(),
-            'defaults' => self::get_color_defaults(),
-        ) );
-    }
-
-    public function save_colors( $request ) {
-        $input    = $request->get_param( 'colors' );
-        $defaults = self::get_color_defaults();
-
-        if ( ! is_array( $input ) ) {
-            return new \WP_Error( 'invalid_payload', __( 'Colors payload must be an object.', 'shapeblock' ), array( 'status' => 400 ) );
-        }
-
-        $clean = array();
-        foreach ( $defaults as $key => $default ) {
-            if ( isset( $input[ $key ] ) ) {
-                $sanitized = $this->sanitize_color( $input[ $key ] );
-                $clean[ $key ] = $sanitized !== '' ? $sanitized : $default;
-            } else {
-                $clean[ $key ] = $default;
-            }
-        }
-
-        update_option( 'shapeblock_colors', $clean );
-
-        return rest_ensure_response( array(
-            'status' => 'success',
-            'colors' => $clean,
-        ) );
-    }
-
     public static function get_layout_defaults() {
         return array(
             'container_width' => '1200px',
@@ -764,13 +611,6 @@ class Api {
             return $n > 0 ? $n . strtolower( $m[2] ) : '';
         }
         return '';
-    }
-
-    public function get_layout() {
-        return rest_ensure_response( array(
-            'layout'   => self::get_saved_layout(),
-            'defaults' => self::get_layout_defaults(),
-        ) );
     }
 
     public function save_layout( $request ) {
@@ -845,27 +685,26 @@ class Api {
             return new \WP_Error( 'invalid_block_ids', __( 'No blocks provided.', 'shapeblock' ), array( 'status' => 400 ) );
         }
 
-        $known   = array_keys( $this->get_block_status_map() );
-        $updated = array();
+        $known = array_keys( $this->get_block_status_map() );
         foreach ( $block_ids as $block_id ) {
             if ( ! is_string( $block_id ) || ! in_array( $block_id, $known, true ) ) {
                 continue;
             }
             update_option( 'shapeblock_block_' . $block_id, $status );
-            $updated[ $block_id ] = get_option( 'shapeblock_block_' . $block_id );
         }
 
-        return rest_ensure_response( array( 'status' => 'success', 'saved_status' => $status, 'updated' => $updated ) );
+        return rest_ensure_response( array( 'status' => 'success' ) );
     }
 
     // Templates CRUD
 
     public function get_templates( $request ) {
         $page     = (int) $request->get_param('page') ?: 1;
-        $per_page = (int) $request->get_param('per_page') ?: 10;
+        $per_page = min( 100, max( 1, (int) $request->get_param('per_page') ?: 10 ) );
         $search   = sanitize_text_field( $request->get_param('search') ?: '' );
-        $orderby  = sanitize_text_field( $request->get_param('orderby') ?: 'date' );
-        $order    = sanitize_text_field( $request->get_param('order') ?: 'DESC' );
+        $orderby  = sanitize_key( $request->get_param('orderby') ?: 'date' );
+        $orderby  = in_array( $orderby, array( 'date', 'title' ), true ) ? $orderby : 'date';
+        $order    = 'ASC' === strtoupper( (string) $request->get_param('order') ) ? 'ASC' : 'DESC';
         $status   = sanitize_text_field( $request->get_param('status') ?: 'publish' );
         if ( ! in_array( $status, array( 'publish', 'trash' ), true ) ) {
             $status = 'publish';
@@ -876,7 +715,7 @@ class Api {
             'posts_per_page' => $per_page,
             'paged'          => $page,
             'orderby'        => $orderby,
-            'order'          => strtoupper($order) === 'ASC' ? 'ASC' : 'DESC',
+            'order'          => $order,
             'post_status'    => $status,
         );
 
@@ -891,14 +730,7 @@ class Api {
             $templates[] = $this->format_template( $post );
         }
 
-        // Counts per status so the UI can show the free-limit badge and the
-        // Trash tab count regardless of which view is currently loaded.
-        $active_q = new \WP_Query( array(
-            'post_type'      => 'shapeblock-template',
-            'post_status'    => 'publish',
-            'posts_per_page' => 1,
-            'fields'         => 'ids',
-        ) );
+        // The Trash tab count, whichever view is currently loaded.
         $trash_q = new \WP_Query( array(
             'post_type'      => 'shapeblock-template',
             'post_status'    => 'trash',
@@ -909,23 +741,10 @@ class Api {
         return rest_ensure_response( array(
             'templates'    => $templates,
             'total'        => (int) $query->found_posts,
-            'pages'        => (int) $query->max_num_pages,
             'page'         => $page,
             'per_page'     => $per_page,
-            'active_count' => (int) $active_q->found_posts,
             'trash_count'  => (int) $trash_q->found_posts,
         ) );
-    }
-
-    public function get_template( $request ) {
-        $id   = (int) $request->get_param('id');
-        $post = get_post( $id );
-
-        if ( ! $post || $post->post_type !== 'shapeblock-template' ) {
-            return new \WP_Error( 'not_found', __( 'Template not found', 'shapeblock' ), array( 'status' => 404 ) );
-        }
-
-        return rest_ensure_response( $this->format_template( $post ) );
     }
 
     public function create_template( $request ) {
@@ -950,36 +769,6 @@ class Api {
         return rest_ensure_response( $this->format_template( $post ) );
     }
 
-    public function update_template( $request ) {
-        $id    = (int) $request->get_param('id');
-        $post  = get_post( $id );
-
-        if ( ! $post || $post->post_type !== 'shapeblock-template' ) {
-            return new \WP_Error( 'not_found', __( 'Template not found', 'shapeblock' ), array( 'status' => 404 ) );
-        }
-
-        $update_args = array( 'ID' => $id );
-
-        $title = $request->get_param('title');
-        if ( $title !== null ) {
-            $update_args['post_title'] = sanitize_text_field( $title );
-        }
-
-        $content = $request->get_param('content');
-        if ( $content !== null ) {
-            $update_args['post_content'] = wp_kses_post( $content );
-        }
-
-        $result = wp_update_post( $update_args, true );
-
-        if ( is_wp_error( $result ) ) {
-            return $result;
-        }
-
-        $post = get_post( $id );
-        return rest_ensure_response( $this->format_template( $post ) );
-    }
-
     public function delete_template( $request ) {
         $id   = (int) $request->get_param('id');
         $post = get_post( $id );
@@ -997,7 +786,7 @@ class Api {
             wp_trash_post( $id );
         }
 
-        return rest_ensure_response( array( 'status' => 'success', 'id' => $id, 'force' => $force ) );
+        return rest_ensure_response( array( 'status' => 'success' ) );
     }
 
     public function restore_template( $request ) {
@@ -1014,7 +803,7 @@ class Api {
             wp_update_post( array( 'ID' => $id, 'post_status' => 'publish' ) );
         }
 
-        return rest_ensure_response( array( 'status' => 'success', 'id' => $id ) );
+        return rest_ensure_response( array( 'status' => 'success' ) );
     }
 
     public function bulk_delete_templates( $request ) {
@@ -1047,7 +836,7 @@ class Api {
             }
         }
 
-        return rest_ensure_response( array( 'status' => 'success', 'deleted' => $deleted, 'action' => $action ) );
+        return rest_ensure_response( array( 'status' => 'success', 'deleted' => $deleted ) );
     }
 
     private function format_template( $post ) {
@@ -1055,11 +844,8 @@ class Api {
         return array(
             'id'         => $post->ID,
             'title'      => $post->post_title,
-            'content'    => $post->post_content,
             'date'       => $post->post_date,
-            'modified'   => $post->post_modified,
             'author'     => $author ? $author->display_name : '',
-            'status'     => $post->post_status,
             'editUrl'    => admin_url( 'post.php?post=' . $post->ID . '&action=edit' ),
         );
     }

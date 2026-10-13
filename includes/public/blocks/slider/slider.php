@@ -25,9 +25,7 @@ function shapeblock_create_block_slider_block_init() {
 	) );
 
 	// Swiper loads only with this block - see blocks.php.
-	if ( function_exists( 'shapeblock_add_swiper_dependency' ) ) {
-		shapeblock_add_swiper_dependency( $block_type );
-	}
+	shapeblock_add_swiper_dependency( $block_type );
 }
 add_action( 'init', 'shapeblock_create_block_slider_block_init' );
 
@@ -42,7 +40,7 @@ function shapeblock_slider_editor_preview_script() {
 	// enqueue_block_assets fires on every wp-admin screen, not only the block
 	// editor, so is_admin() alone is not enough — see blocks.php's
 	// shapeblock_is_block_editor_screen().
-	if ( ! function_exists( 'shapeblock_is_block_editor_screen' ) || ! shapeblock_is_block_editor_screen() ) {
+	if ( ! shapeblock_is_block_editor_screen() ) {
 		return;
 	}
 

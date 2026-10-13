@@ -54,8 +54,17 @@ if ( 'style2' === $style ) {
 	$bg = ! empty( $attributes['style2BgGradient'] ) ? $attributes['style2BgGradient'] : ( ! empty( $attributes['style2BgColor'] ) ? $attributes['style2BgColor'] : '' );
 	if ( '' !== $bg ) $track['background'] = $bg;
 } else {
-	if ( ! empty( $attributes['progressColor'] ) ) $track['background'] = $attributes['progressColor'];
-	if ( ! empty( $attributes['progressBarColor'] ) ) $fill['background'] = $attributes['progressBarColor'];
+	if ( ! empty( $attributes['progressColorGradient'] ) ) {
+		$track['background'] = $attributes['progressColorGradient'];
+	} elseif ( ! empty( $attributes['progressColor'] ) ) {
+		$track['background'] = $attributes['progressColor'];
+	}
+}
+// The fill is shared by both styles; a gradient wins over the flat colour.
+if ( ! empty( $attributes['progressBarColorGradient'] ) ) {
+	$fill['background'] = $attributes['progressBarColorGradient'];
+} elseif ( ! empty( $attributes['progressBarColor'] ) ) {
+	$fill['background'] = $attributes['progressBarColor'];
 }
 if ( '' !== $u( 'progressHeight' ) ) $track['height'] = $u( 'progressHeight' );
 if ( '' !== $u( 'progressRadius' ) ) $track['border-radius'] = $u( 'progressRadius' );
@@ -80,11 +89,12 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $H ) {
 		'.shapeblock-progress'   => $track,
 		'.shapeblock-pb-title'   => $typo( $attributes[ 'titleTypography' . $suffix ] ?? [] ),
 		'.shapeblock-pb-percent' => $typo( $attributes[ 'percentTypography' . $suffix ] ?? [] ),
+		'.shapeblock-progress-style2 .shapeblock-progress .shapeblock-pb-percent' => $typo( $attributes[ 'percentTypography' . $suffix ] ?? [] ),
 	];
 };
 $dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
 $resp_css = '';
-foreach ( [ '.shapeblock-progress', '.shapeblock-pb-title', '.shapeblock-pb-percent' ] as $sub_sel ) {
+foreach ( [ '.shapeblock-progress', '.shapeblock-pb-title', '.shapeblock-pb-percent', '.shapeblock-progress-style2 .shapeblock-progress .shapeblock-pb-percent' ] as $sub_sel ) {
 	$rdata = [];
 	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
 		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
@@ -100,8 +110,11 @@ wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-progress'      => $H::get_inline_styles( $track ),
 	'.shapeblock-progress-fill' => $H::get_inline_styles( $fill ),
+	// Style 2's own stylesheet rule is longer; match it so the Fill colour wins.
+	'.shapeblock-progress-style2 .shapeblock-progress .shapeblock-progress-fill' => $H::get_inline_styles( $fill ),
 	'.shapeblock-pb-title'      => $H::get_inline_styles( $title_styles ),
 	'.shapeblock-pb-percent'    => $H::get_inline_styles( $percent_styles ),
+	'.shapeblock-progress-style2 .shapeblock-progress .shapeblock-pb-percent' => $H::get_inline_styles( $percent_styles ),
 ] );
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>

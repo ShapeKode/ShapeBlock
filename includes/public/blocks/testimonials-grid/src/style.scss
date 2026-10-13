@@ -36,14 +36,6 @@
 	color: #ffaf02;
 }
 
-.shapeblock-title-icon svg {
-	height: 1em;
-	width: 1em;
-	position: relative;
-	top: 4px;
-	left: 2px;
-}
-
 .shapeblock-grid-layout .shapeblock-tstml-inner {
 	background: #efeff9;
 	display: inline-flex;
@@ -91,42 +83,10 @@
 	}
 	.shapeblock-quote {
 		text-align: left;
-		svg {
-			height: 120px;
-			fill: var(--shapeblock-preset-color-primary, #eaa638);
-		}
-	}
-
-	&.skin1 {
-		display: block;
-		.shapeblock-picture img { width: 50px; height: 50px; }
-		.shapeblock-picture { min-width: 50px; margin-right: 15px; }
-		.shapeblock-author-wrap { justify-content: flex-start; width: 100%; margin-top: 25px; align-items: center; }
-		.shapeblock-designation { margin-bottom: 0; }
-		.shapeblock-company-logo { text-align: left; margin-bottom: 12px; }
-	}
-
-	&.skin2 {
-		display: block;
-		.shapeblock-picture-des-wrap { display: flex; justify-content: space-between; }
-		.shapeblock-picture img { width: 50px; height: 50px; }
-		.shapeblock-picture { min-width: 50px; margin-right: 15px; }
-		.shapeblock-author-wrap { justify-content: flex-start; width: 100%; margin-top: 25px; align-items: center; }
-		.shapeblock-designation { margin-bottom: 0; }
-		.shapeblock-company-logo { text-align: left; margin-bottom: 12px; }
-
-		&.shapeblock-avatar-image-top {
-			.shapeblock-company-logo { text-align: center; }
-			.shapeblock-picture-des-wrap { display: block; }
-			.shapeblock-picture { margin-bottom: 24px; margin-right: 0; }
-			.shapeblock-description { text-align: center; }
-			.shapeblock-author-wrap { justify-content: center; text-align: center; }
-		}
 	}
 
 	&.skin3 {
 		display: block;
-		.shapeblock-picture-des-wrap { display: flex; justify-content: space-between; }
 		.shapeblock-picture img { width: 50px; height: 50px; display: block; }
 		.shapeblock-picture { min-width: max-content; margin-right: 15px; }
 		.shapeblock-author-wrap { justify-content: flex-start; width: 100%; margin-top: 25px; align-items: center; }
@@ -135,32 +95,8 @@
 		.shapeblock-rating { display: flex; justify-content: end; flex: 1; }
 	}
 
-	&.skin4 {
-		display: block;
-		.shapeblock-picture-des-wrap { display: flex; justify-content: space-between; }
-		.shapeblock-picture img { width: 100%; height: 400px; border-radius: 8px; }
-		.shapeblock-picture { min-width: 320px; margin-right: 80px; }
-		.shapeblock-author-wrap { justify-content: flex-start; width: 100%; margin-top: 25px; align-items: flex-end; }
-		.shapeblock-designation { margin-bottom: 0; }
-		.shapeblock-company-logo { text-align: left; margin-bottom: 12px; }
-		.shapeblock-description-wrap { display: grid; }
-	}
-
-	&.skin5 {
-		display: block;
-		.shapeblock-picture-des-wrap { display: flex; justify-content: space-between; }
-		.shapeblock-picture img { width: 50px; height: 50px; display: block; }
-		.shapeblock-picture { min-width: 50px; margin-right: 15px; }
-		.shapeblock-author { min-width: 100px; }
-		.shapeblock-author-wrap { justify-content: flex-start; width: 100%; margin-top: 25px; align-items: center; }
-		.shapeblock-designation { margin-bottom: 0; }
-		.shapeblock-company-logo { text-align: left; margin-bottom: 12px; }
-		.shapeblock-rating { display: flex; flex: 1; text-align: right; margin-left: 15px; justify-content: end; }
-	}
-
 	&.skin6 {
 		display: block;
-		.shapeblock-picture-des-wrap { display: flex; justify-content: space-between; }
 		.shapeblock-picture img { width: 50px; height: 50px; display: block; }
 		.shapeblock-picture { min-width: 50px; margin-right: 15px; }
 		.shapeblock-description { text-align: center; }
@@ -180,7 +116,6 @@
 	.shapeblock-grid-layout .shapeblock-tstml-inner .shapeblock-author-wrap { justify-content: flex-start; }
 	.shapeblock-grid-layout .shapeblock-tstml-inner .shapeblock-author { display: inline-grid; align-content: center; }
 	.shapeblock-grid-layout .shapeblock-tstml-inner.skin3 .shapeblock-author-wrap { flex-wrap: wrap; display: flex; }
-	.shapeblock-grid-layout .shapeblock-tstml-inner.skin4 .shapeblock-picture { margin-right: 30px; }
 }
 
 @media (max-width: 767px) {
@@ -190,22 +125,10 @@
 	.shapeblock-grid-layout .shapeblock-tstml-inner .shapeblock-picture { min-width: 100px; margin: 0 auto; padding-top: 10px; }
 	.shapeblock-grid-layout .shapeblock-tstml-inner .shapeblock-description { text-align: center; margin-bottom: 30px; }
 	.shapeblock-grid-layout .shapeblock-tstml-inner .shapeblock-quote { text-align: center; }
-	.shapeblock-grid-layout .shapeblock-tstml-inner .shapeblock-quote svg { height: 60px; }
-	.shapeblock-grid-layout .shapeblock-testimonial .shapeblock-grid-wrap { display: block; }
 	.shapeblock-grid-layout .shapeblock-tstml-inner.skin3 .shapeblock-company-logo { text-align: center; }
 	.shapeblock-grid-layout .shapeblock-tstml-inner.skin3 .shapeblock-picture { margin: 0 auto; margin-bottom: 10px; }
 	.shapeblock-grid-layout .shapeblock-tstml-inner.skin3 .shapeblock-author { margin-bottom: 0; }
-	.shapeblock-grid-layout .shapeblock-tstml-inner.skin2 .shapeblock-picture-des-wrap { display: inline-grid; }
-	.shapeblock-grid-layout .shapeblock-tstml-inner.skin2 .shapeblock-company-logo { text-align: center; }
-	.shapeblock-grid-layout .shapeblock-tstml-inner.skin2 .shapeblock-picture { margin-right: auto; padding-bottom: 10px; }
-	.shapeblock-grid-layout .shapeblock-tstml-inner.skin1 .shapeblock-picture { margin-right: auto; }
-	.shapeblock-grid-layout .shapeblock-tstml-inner.skin1 .shapeblock-company-logo { text-align: center; margin-top: 15px; }
-	.shapeblock-grid-layout .shapeblock-tstml-inner.skin4 .shapeblock-picture-des-wrap { display: block; }
-	.shapeblock-grid-layout .shapeblock-tstml-inner.skin4 .shapeblock-picture { margin-right: 0; margin-bottom: 25px; }
 	.shapeblock-grid-layout .shapeblock-tstml-inner .shapeblock-author-wrap { display: block; text-align: center; }
-	.shapeblock-grid-layout .shapeblock-tstml-inner.skin5 .shapeblock-rating { justify-content: center; text-align: center; }
-	.shapeblock-grid-layout .shapeblock-tstml-inner.skin5 .shapeblock-picture img { margin: auto; margin-bottom: 20px; }
-	.shapeblock-grid-layout .shapeblock-tstml-inner.skin5 .shapeblock-company-logo { text-align: center; }
 	.shapeblock-grid-layout .shapeblock-tstml-inner.skin6 .shapeblock-picture img { margin: auto; margin-bottom: 10px; }
 
 	/* The card collapses to one centred column on mobile.
@@ -265,9 +188,7 @@
 		gap: clamp(16px, 6%, 80px);
 	}
 
-	.shapeblock-author-wrap,
-	.shapeblock-picture-des-wrap,
-	.shapeblock-description-wrap {
+	.shapeblock-author-wrap {
 		min-width: 0;
 		flex-wrap: wrap;
 	}
@@ -281,16 +202,5 @@
 	.shapeblock-designation {
 		min-width: 0;
 		overflow-wrap: break-word;
-	}
-
-	/* Style 3 pins the portrait at 320px; that has to give way in a small card. */
-	.shapeblock-tstml-inner.skin4 .shapeblock-picture {
-		min-width: 0;
-		max-width: 100%;
-		margin-right: clamp(16px, 6%, 80px);
-	}
-
-	.shapeblock-tstml-inner.skin4 .shapeblock-picture img {
-		max-width: 100%;
 	}
 }

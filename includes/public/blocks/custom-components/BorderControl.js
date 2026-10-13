@@ -2,13 +2,14 @@ import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import {
     BoxControl,
-    ColorPicker,
     BaseControl,
     Popover,
     Button,
     Icon,
     SelectControl
 } from '@wordpress/components';
+
+import ColorField from './ColorField';
 
 const toUnit = (v) => {
     if (!v && v !== 0) return '0px';
@@ -78,10 +79,9 @@ const BorderControl = ({ label, value, onChange }) => {
     return (
         <div className="shapeblock-border-control" style={{ position: 'relative' }}>
             <Button
-                variant="secondary"
                 ref={setAnchorEl}
                 onClick={toggleVisible}
-                style={{ width: '100%', justifyContent: 'space-between', marginBottom: '15px' }}
+                style={{ width: '100%', boxSizing: 'border-box', height: 'auto', minHeight: '40px', justifyContent: 'space-between', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '2px', background: 'transparent', marginBottom: '15px' }}
             >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <div style={{
@@ -120,26 +120,22 @@ const BorderControl = ({ label, value, onChange }) => {
                             label={__('Style', 'shapeblock')}
                             value={style}
                             options={[
-                                { label: 'Solid',  value: 'solid' },
-                                { label: 'Dashed', value: 'dashed' },
-                                { label: 'Dotted', value: 'dotted' },
-                                { label: 'Double', value: 'double' },
-                                { label: 'Groove', value: 'groove' },
-                                { label: 'Ridge',  value: 'ridge' },
-                                { label: 'Inset',  value: 'inset' },
-                                { label: 'Outset', value: 'outset' },
-                                { label: 'None',   value: 'none' },
+                                { label: __('Solid', 'shapeblock'), value: 'solid' },
+                                { label: __('Dashed', 'shapeblock'), value: 'dashed' },
+                                { label: __('Dotted', 'shapeblock'), value: 'dotted' },
+                                { label: __('Double', 'shapeblock'), value: 'double' },
+                                { label: __('Groove', 'shapeblock'), value: 'groove' },
+                                { label: __('Ridge', 'shapeblock'), value: 'ridge' },
+                                { label: __('Inset', 'shapeblock'), value: 'inset' },
+                                { label: __('Outset', 'shapeblock'), value: 'outset' },
+                                { label: __('None', 'shapeblock'), value: 'none' },
                             ]}
                             onChange={(val) => updateBorder({ style: val })}
                             __next40pxDefaultSize={true}
                             __nextHasNoMarginBottom={true}
                         />
                         <BaseControl label={__('Color', 'shapeblock')} style={{ marginTop: '15px' }} __nextHasNoMarginBottom={true}>
-                            <ColorPicker
-                                color={color}
-                                onChange={handleColorChange}
-                                enableAlpha
-                            />
+                            <ColorField value={color} onChange={handleColorChange} />
                         </BaseControl>
                         <Button
                             variant="secondary"

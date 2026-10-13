@@ -1,0 +1,796 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "shapeblock/filter-list",
+  "version": "1.0.0",
+  "title": "Filterable List",
+  "category": "shapeblock",
+  "description": "A list of links with icons, filter buttons that show how many items each holds, and a search box to find an item.",
+  "keywords": [
+    "filter",
+    "search",
+    "list",
+    "directory",
+    "index",
+    "links"
+  ],
+  "example": {},
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "textdomain": "shapeblock",
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php",
+  "attributes": {
+    "advPadding": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advPaddingTablet": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advPaddingMobile": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advMargin": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advMarginTablet": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advMarginMobile": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "advBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "filters": {
+      "type": "array",
+      "default": [
+        {
+          "id": "layout",
+          "name": "Layout"
+        },
+        {
+          "id": "content",
+          "name": "Content"
+        },
+        {
+          "id": "media",
+          "name": "Media"
+        },
+        {
+          "id": "header-footer",
+          "name": "Header Footer"
+        },
+        {
+          "id": "showcase",
+          "name": "Showcase"
+        },
+        {
+          "id": "posts",
+          "name": "Posts & Site"
+        },
+        {
+          "id": "upcoming",
+          "name": "Upcoming"
+        }
+      ]
+    },
+    "items": {
+      "type": "array",
+      "default": [
+        {
+          "icon": "shapeblock-icon-open-panel-top",
+          "title": "Accordion",
+          "filters": [
+            "content"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-direction-straight-right",
+          "title": "Breadcrumb",
+          "filters": [
+            "header-footer"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-button",
+          "title": "Button",
+          "filters": [
+            "content"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-image-copy",
+          "title": "Client Logo",
+          "filters": [
+            "media"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-open-panel-left",
+          "title": "Column",
+          "filters": [
+            "layout"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-time",
+          "title": "Countdown",
+          "filters": [
+            "showcase"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-notification-status",
+          "title": "Counter",
+          "filters": [
+            "showcase"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-check-empty",
+          "title": "Features List",
+          "filters": [
+            "content"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-categories",
+          "title": "Filterable List",
+          "filters": [
+            "content"
+          ],
+          "badge": "New",
+          "badgeBg": "#e7f8ef",
+          "badgeColor": "#12b76a"
+        },
+        {
+          "icon": "shapeblock-icon-font",
+          "title": "Heading",
+          "filters": [
+            "content"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-gui",
+          "title": "Hover Box",
+          "filters": [
+            "content"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-favorite",
+          "title": "Icon",
+          "filters": [
+            "content"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-vcard",
+          "title": "Icon Box",
+          "filters": [
+            "content"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-data-base",
+          "title": "Icon List",
+          "filters": [
+            "content"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-carousel-horizontal",
+          "title": "Image Carousel",
+          "filters": [
+            "media"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-map-o",
+          "title": "Image Comparison",
+          "filters": [
+            "media"
+          ],
+          "badge": "Hot",
+          "badgeBg": "#fff0eb",
+          "badgeColor": "#f04438"
+        },
+        {
+          "icon": "shapeblock-icon-thumbnail-2",
+          "title": "Isotope Filter",
+          "filters": [
+            "showcase"
+          ],
+          "badge": "Hot",
+          "badgeBg": "#fff0eb",
+          "badgeColor": "#f04438"
+        },
+        {
+          "icon": "shapeblock-icon-notebook",
+          "title": "Menu",
+          "filters": [
+            "header-footer"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-left",
+          "title": "Offcanvas",
+          "filters": [
+            "header-footer"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-thumbnail-1",
+          "title": "Post Grid",
+          "filters": [
+            "posts"
+          ],
+          "badge": "Hot",
+          "badgeBg": "#fff0eb",
+          "badgeColor": "#f04438"
+        },
+        {
+          "icon": "shapeblock-icon-cart",
+          "title": "Pricing Table",
+          "filters": [
+            "showcase"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-arrow-up-right",
+          "title": "Progress Bar",
+          "filters": [
+            "showcase"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-credit-card-alt",
+          "title": "Row",
+          "filters": [
+            "layout"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-arrow-up",
+          "title": "Scroll Top",
+          "filters": [
+            "header-footer"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-wikis",
+          "title": "Search",
+          "filters": [
+            "header-footer"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-image",
+          "title": "Simple Gallery",
+          "filters": [
+            "media"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-carousel-vertical",
+          "title": "Slider",
+          "filters": [
+            "media"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-thumbs-up",
+          "title": "Social Icon",
+          "filters": [
+            "header-footer"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-share-2",
+          "title": "Social Share",
+          "filters": [
+            "posts"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-move",
+          "title": "Sticky Stack",
+          "filters": [
+            "layout"
+          ],
+          "badge": "New",
+          "badgeBg": "#e7f8ef",
+          "badgeColor": "#12b76a"
+        },
+        {
+          "icon": "shapeblock-icon-chart-treemap",
+          "title": "Table",
+          "filters": [
+            "content"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-doc-text",
+          "title": "Table of Contents",
+          "badge": "Upcoming",
+          "filters": [
+            "upcoming"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-doc-text",
+          "title": "Tabs",
+          "filters": [
+            "content"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-user-avatar",
+          "title": "Team Member",
+          "filters": [
+            "showcase"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-chat",
+          "title": "Testimonial",
+          "filters": [
+            "showcase"
+          ]
+        },
+        {
+          "icon": "shapeblock-icon-time",
+          "title": "Timeline",
+          "badge": "Upcoming",
+          "filters": [
+            "upcoming"
+          ]
+        }
+      ]
+    },
+    "showFilters": {
+      "type": "boolean",
+      "default": true
+    },
+    "showAll": {
+      "type": "boolean",
+      "default": true
+    },
+    "allLabel": {
+      "type": "string",
+      "default": ""
+    },
+    "showCount": {
+      "type": "boolean",
+      "default": true
+    },
+    "defaultFilter": {
+      "type": "string",
+      "default": "all"
+    },
+    "showSearch": {
+      "type": "boolean",
+      "default": true
+    },
+    "searchPlaceholder": {
+      "type": "string",
+      "default": ""
+    },
+    "noResultsText": {
+      "type": "string",
+      "default": ""
+    },
+    "showIcon": {
+      "type": "boolean",
+      "default": true
+    },
+    "linksNewTab": {
+      "type": "boolean",
+      "default": false
+    },
+    "headerLayout": {
+      "type": "string",
+      "default": "split"
+    },
+    "filterAlign": {
+      "type": "string",
+      "default": "left"
+    },
+    "filterAlignTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "filterAlignMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "searchWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "searchWidthTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "searchWidthMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "listFlow": {
+      "type": "string",
+      "default": "columns"
+    },
+    "columns": {
+      "type": "string",
+      "default": "4"
+    },
+    "columnsTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "columnsMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "rowGap": {
+      "type": "string",
+      "default": ""
+    },
+    "rowGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "rowGapMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "columnGap": {
+      "type": "string",
+      "default": ""
+    },
+    "columnGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "columnGapMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "filterGap": {
+      "type": "string",
+      "default": ""
+    },
+    "filterTypography": {
+      "type": "object",
+      "default": {}
+    },
+    "filterTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "filterTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "filterColor": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBg": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBorder": {
+      "type": "object",
+      "default": {}
+    },
+    "filterColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBgHover": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBgGradientHover": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBorderColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "filterColorActive": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBgActive": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBgGradientActive": {
+      "type": "string",
+      "default": ""
+    },
+    "filterBorderColorActive": {
+      "type": "string",
+      "default": ""
+    },
+    "filterRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "filterPadding": {
+      "type": "object",
+      "default": {}
+    },
+    "filterPaddingTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "filterPaddingMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "countColor": {
+      "type": "string",
+      "default": ""
+    },
+    "countColorActive": {
+      "type": "string",
+      "default": ""
+    },
+    "searchTypography": {
+      "type": "object",
+      "default": {}
+    },
+    "searchColor": {
+      "type": "string",
+      "default": ""
+    },
+    "searchPlaceholderColor": {
+      "type": "string",
+      "default": ""
+    },
+    "searchIconColor": {
+      "type": "string",
+      "default": ""
+    },
+    "searchBg": {
+      "type": "string",
+      "default": ""
+    },
+    "searchBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "searchBorder": {
+      "type": "object",
+      "default": {}
+    },
+    "searchBorderColorFocus": {
+      "type": "string",
+      "default": ""
+    },
+    "searchRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "searchHeight": {
+      "type": "string",
+      "default": ""
+    },
+    "showSeparator": {
+      "type": "boolean",
+      "default": true
+    },
+    "separatorStyle": {
+      "type": "string",
+      "default": "dashed"
+    },
+    "separatorColor": {
+      "type": "string",
+      "default": ""
+    },
+    "separatorWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "headerSpace": {
+      "type": "string",
+      "default": ""
+    },
+    "headerSpaceTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "headerSpaceMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "itemBg": {
+      "type": "string",
+      "default": ""
+    },
+    "itemBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "itemBorder": {
+      "type": "object",
+      "default": {}
+    },
+    "itemBgHover": {
+      "type": "string",
+      "default": ""
+    },
+    "itemBgGradientHover": {
+      "type": "string",
+      "default": ""
+    },
+    "itemBorderColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "itemRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "itemPadding": {
+      "type": "object",
+      "default": {}
+    },
+    "itemPaddingTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "itemPaddingMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "iconColor": {
+      "type": "string",
+      "default": ""
+    },
+    "iconColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSize": {
+      "type": "string",
+      "default": ""
+    },
+    "iconSpace": {
+      "type": "string",
+      "default": ""
+    },
+    "titleTypography": {
+      "type": "object",
+      "default": {}
+    },
+    "titleTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "titleTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "titleColor": {
+      "type": "string",
+      "default": ""
+    },
+    "titleColorHover": {
+      "type": "string",
+      "default": ""
+    },
+    "badgeTypography": {
+      "type": "object",
+      "default": {}
+    },
+    "badgeColor": {
+      "type": "string",
+      "default": ""
+    },
+    "badgeBg": {
+      "type": "string",
+      "default": ""
+    },
+    "badgeBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "badgePadding": {
+      "type": "object",
+      "default": {}
+    },
+    "badgeRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "noResultsColor": {
+      "type": "string",
+      "default": ""
+    },
+    "noResultsTypography": {
+      "type": "object",
+      "default": {}
+    }
+  }
+}

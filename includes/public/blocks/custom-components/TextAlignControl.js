@@ -5,7 +5,6 @@ const TextAlignControl = ({
     attributes,
     setAttributes,
     attributeKey,
-    label = __('Text Align', 'shapeblock'),
 }) => {
     const value = attributes[attributeKey] || '';
 

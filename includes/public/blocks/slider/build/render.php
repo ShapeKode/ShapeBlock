@@ -80,13 +80,26 @@ if ( ! empty( $attributes['overlayGradient'] ) ) {
 
 $arrow = $dims( $attributes['arrowRadius'] ?? [], 'radius' );
 if ( ! empty( $attributes['arrowColor'] ) ) $arrow['color'] = $attributes['arrowColor'];
-if ( ! empty( $attributes['arrowBgColor'] ) ) $arrow['background-color'] = $attributes['arrowBgColor'];
+if ( ! empty( $attributes['arrowBgGradient'] ) ) {
+	$arrow['background'] = $attributes['arrowBgGradient'];
+} elseif ( ! empty( $attributes['arrowBgColor'] ) ) {
+	$arrow['background-color'] = $attributes['arrowBgColor'];
+}
 if ( '' !== $u( 'arrowSize' ) ) { $arrow['width'] = $u( 'arrowSize' ); $arrow['height'] = $u( 'arrowSize' ); }
 
 $dot = [];
-if ( ! empty( $attributes['dotColor'] ) ) $dot['background'] = $attributes['dotColor'];
+if ( ! empty( $attributes['dotGradient'] ) ) {
+	$dot['background'] = $attributes['dotGradient'];
+} elseif ( ! empty( $attributes['dotColor'] ) ) {
+	$dot['background'] = $attributes['dotColor'];
+}
 if ( '' !== $u( 'dotSize' ) ) { $dot['width'] = $u( 'dotSize' ); $dot['height'] = $u( 'dotSize' ); }
-$dot_active = ! empty( $attributes['dotActiveColor'] ) ? [ 'background' => $attributes['dotActiveColor'] ] : [];
+$dot_active = [];
+if ( ! empty( $attributes['dotActiveGradient'] ) ) {
+	$dot_active['background'] = $attributes['dotActiveGradient'];
+} elseif ( ! empty( $attributes['dotActiveColor'] ) ) {
+	$dot_active['background'] = $attributes['dotActiveColor'];
+}
 
 // ---------------------------------------------------------------------------
 // Responsive (Tablet / Mobile) overrides. The desktop CSS above is unchanged;
@@ -135,11 +148,13 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 // ---------------------------------------------------------------------------
 // Swiper options travel as one data attribute so view.js needs no inline JS.
 // ---------------------------------------------------------------------------
+// Whole numbers within a sane range (ms, px), so a stored value cannot
+// hand the slider an absurd speed, delay or gap.
 $int = function ( $key, $fallback ) use ( $attributes ) {
-	return ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? (int) $attributes[ $key ] : $fallback;
+	return ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? max( 0, min( 60000, (int) $attributes[ $key ] ) ) : $fallback;
 };
 $per_view = function ( $key, $fallback ) use ( $attributes ) {
-	return ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? max( 1, (int) $attributes[ $key ] ) : $fallback;
+	return ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? max( 1, min( 12, (int) $attributes[ $key ] ) ) : $fallback;
 };
 
 $options = array(

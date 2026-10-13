@@ -11,17 +11,8 @@ function shapeblock_create_block_heading_block_init() {
 		shapeblock_asset_version( __DIR__ . '/build/style-index.css' )
 	);
 
-	// Editor-only styles (compiled from src/editor.scss).
-	wp_register_style(
-		'shapeblock-heading-editor-style',
-		plugins_url( 'build/index.css', __FILE__ ),
-		array( 'shapeblock-heading-style' ),
-		shapeblock_asset_version( __DIR__ . '/build/index.css' )
-	);
-
 	register_block_type( __DIR__ . '/build', array(
-		'style'        => 'shapeblock-heading-style',
-		'editor_style' => 'shapeblock-heading-editor-style',
+		'style' => 'shapeblock-heading-style',
 	) );
 }
 add_action( 'init', 'shapeblock_create_block_heading_block_init' );

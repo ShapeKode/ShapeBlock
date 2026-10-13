@@ -20,7 +20,7 @@
 			input.select();
 			try {
 				document.execCommand('copy');
-			} catch (e) {
+			} catch {
 				/* no-op */
 			}
 			document.body.removeChild(input);

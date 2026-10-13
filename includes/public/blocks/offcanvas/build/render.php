@@ -17,6 +17,7 @@ return ( function ( $attributes, $content, $block ) {
 $H = '\ShapeBlock\Frontend\Helper';
 
 $unique_id  = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-oc-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
+$unique_id  = $H::unique_block_id( $unique_id );
 $panel_id   = $unique_id . '-panel';
 
 $layout     = ( isset( $attributes['offcanvasLayout'] ) && 'modern' === $attributes['offcanvasLayout'] ) ? 'modern' : 'classic';
@@ -24,6 +25,7 @@ $menu_text  = isset( $attributes['menuText'] ) ? $attributes['menuText'] : '';
 $btn_icon   = isset( $attributes['btnIcon'] ) ? $attributes['btnIcon'] : '';
 $close_icon = isset( $attributes['closeIcon'] ) ? $attributes['closeIcon'] : '';
 $position   = ( isset( $attributes['positionOffcanvas'] ) && 'shapeblock-offcanvas-left' === $attributes['positionOffcanvas'] ) ? 'shapeblock-offcanvas-left' : 'shapeblock-offcanvas-right';
+$modern_pos = ( isset( $attributes['modernPosition'] ) && in_array( $attributes['modernPosition'], array( 'left', 'right', 'top', 'bottom' ), true ) ) ? 'shapeblock-oc-from-' . $attributes['modernPosition'] : '';
 $blur       = ! empty( $attributes['needBlur'] ) ? 'shapeblock-blur-effect' : '';
 $template   = ! empty( $attributes['contentTemplate'] ) ? absint( $attributes['contentTemplate'] ) : 0;
 
@@ -69,18 +71,16 @@ $opener_text = $typo( $attributes['openerTextTypography'] ?? [] );
 if ( ! empty( $attributes['openerTextColor'] ) ) $opener_text['color'] = $attributes['openerTextColor'];
 
 // Opener icon.
-$opener_icon_i   = [];
-$opener_icon_svg = [];
-$opener_menu     = [];
+$opener_icon_i = [];
+$opener_menu   = [];
 if ( ! empty( $attributes['openerIconColor'] ) ) {
-	$opener_icon_i['color']  = $attributes['openerIconColor'];
-	$opener_icon_svg['fill'] = $attributes['openerIconColor'];
+	$opener_icon_i['color'] = $attributes['openerIconColor'];
 	$opener_menu['border-bottom-color'] = $attributes['openerIconColor'];
 }
+$opener_menu_wrap = [];
 if ( '' !== $u( 'openerIconSize' ) ) {
-	$opener_icon_i['font-size'] = $u( 'openerIconSize' );
-	$opener_icon_svg['width']   = $u( 'openerIconSize' );
-	$opener_icon_svg['height']  = $u( 'openerIconSize' );
+	$opener_icon_i['font-size']  = $u( 'openerIconSize' );
+	$opener_menu_wrap['width']   = $u( 'openerIconSize' );
 }
 $opener_label_span = ! empty( $attributes['openerHamburgerColor'] ) ? [ 'background' => $attributes['openerHamburgerColor'] ] : [];
 $opener_label      = ( '' !== $u( 'openerIconSizeModern' ) ) ? [ 'width' => $u( 'openerIconSizeModern' ) ] : [];
@@ -93,7 +93,11 @@ $close_modern_span = ! empty( $attributes['closingIconModernColor'] ) ? [ 'backg
 
 // Panel.
 $panel = [];
-if ( ! empty( $attributes['offcanvasBg'] ) ) $panel['background'] = $attributes['offcanvasBg'];
+if ( ! empty( $attributes['offcanvasBgGradient'] ) ) {
+	$panel['background'] = $attributes['offcanvasBgGradient'];
+} elseif ( ! empty( $attributes['offcanvasBg'] ) ) {
+	$panel['background'] = $attributes['offcanvasBg'];
+}
 $panel = array_merge( $panel, $dims( $attributes['offcanvasPadding'] ?? [] ) );
 $panel_width = ( '' !== $u( 'offcanvasWidth' ) ) ? [ 'width' => $u( 'offcanvasWidth' ) ] : [];
 
@@ -115,12 +119,12 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H ) {
 	return [
 		'.shapeblock-offcanvas-toggle-text .shapeblock-icon-text' => $text,
 		'.shapeblock-offcanvas'                              => $panel,
-		'.shapeblock-offcanvas:not(.shapeblock-modern)'           => $width,
+		'.shapeblock-offcanvas:not(.modern)'                      => $width,
 	];
 };
 $dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
 $resp_css = '';
-foreach ( [ '.shapeblock-offcanvas-toggle-text .shapeblock-icon-text', '.shapeblock-offcanvas', '.shapeblock-offcanvas:not(.shapeblock-modern)' ] as $sub_sel ) {
+foreach ( [ '.shapeblock-offcanvas-toggle-text .shapeblock-icon-text', '.shapeblock-offcanvas', '.shapeblock-offcanvas:not(.modern)' ] as $sub_sel ) {
 	$rdata = [];
 	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
 		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
@@ -132,18 +136,29 @@ foreach ( [ '.shapeblock-offcanvas-toggle-text .shapeblock-icon-text', '.shapebl
 	}
 }
 
+// Modern panel width: full screen (100%) unless a width is set, per device.
+$modern_width = [];
+foreach ( [ '' => 'desktop', 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
+	if ( isset( $attributes[ 'modernWidth' . $suffix ] ) && '' !== trim( (string) $attributes[ 'modernWidth' . $suffix ] ) ) {
+		$modern_width[ $device_key ] = [ 'width' => $H::ensure_unit( trim( (string) $attributes[ 'modernWidth' . $suffix ] ) ) ];
+	}
+}
+if ( 'modern' === $layout && ! empty( $modern_width ) ) {
+	$resp_css .= $H::generate_responsive_css( $selector . ' .shapeblock-offcanvas.modern', $modern_width );
+}
+
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-offcanvas-toggle-text .shapeblock-icon-text' => $H::get_inline_styles( $opener_text ),
 	'.shapeblock-offcanvas-toggle-text i'                => $H::get_inline_styles( $opener_icon_i ),
-	'.shapeblock-offcanvas-toggle-text svg'              => $H::get_inline_styles( $opener_icon_svg ),
 	'.shapeblock-icon-menu'                              => $H::get_inline_styles( $opener_menu ),
+	'.shapeblock-icon-menu-wrap'                         => $H::get_inline_styles( $opener_menu_wrap ),
 	'.shapeblock-offcanvas-toggle label span'            => $H::get_inline_styles( $opener_label_span ),
 	'.shapeblock-offcanvas-toggle label'                 => $H::get_inline_styles( $opener_label ),
 	'.shapeblock-offcanvas-close'                        => $H::get_inline_styles( $close_classic ),
 	'.shapeblock-modern-close-toggle span'               => $H::get_inline_styles( $close_modern_span ),
 	'.shapeblock-offcanvas'                              => $H::get_inline_styles( $panel ),
-	'.shapeblock-offcanvas:not(.shapeblock-modern)'           => $H::get_inline_styles( $panel_width ),
+	'.shapeblock-offcanvas:not(.modern)'                      => $H::get_inline_styles( $panel_width ),
 ] );
 
 // ---------------------------------------------------------------------------
@@ -182,15 +197,19 @@ if ( $template && $template !== get_queried_object_id() && empty( \ShapeBlock\Fr
 		$tpl_content  = do_blocks( $tpl_post->post_content );
 		$tpl_content  = wptexturize( $tpl_content );
 		$tpl_content  = convert_smilies( $tpl_content );
-		$tpl_content  = wpautop( $tpl_content );
+		// Content made of blocks is not run through wpautop, exactly as core does.
+		if ( ! has_blocks( $tpl_post->post_content ) ) {
+			$tpl_content = wpautop( $tpl_content );
+		}
 		$content_html = do_shortcode( $tpl_content );
 		unset( \ShapeBlock\Frontend\Helper::$rendering_templates[ $template ] );
 	}
 }
+
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-offcanvas-wrapper <?php echo esc_attr( $layout ); ?>">
-		<div class="shapeblock-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0">
+		<div class="shapeblock-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0" aria-expanded="false" aria-controls="<?php echo esc_attr( $panel_id ); ?>">
 			<span class="shapeblock-offcanvas-toggle-text">
 				<?php if ( '' !== $menu_text ) : ?>
 					<em class="shapeblock-icon-text"><?php echo esc_html( $menu_text ); ?></em>
@@ -210,10 +229,10 @@ if ( $template && $template !== get_queried_object_id() && empty( \ShapeBlock\Fr
 		</div>
 
 		<div class="shapeblock-offcanvas-overlay shapeblock-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>"></div>
-		<div id="<?php echo esc_attr( $panel_id ); ?>" class="shapeblock-offcanvas <?php echo esc_attr( trim( $blur . ' ' . ( 'classic' === $layout ? $position : '' ) . ' ' . $layout ) ); ?>">
+		<div id="<?php echo esc_attr( $panel_id ); ?>" class="shapeblock-offcanvas <?php echo esc_attr( trim( $blur . ' ' . ( 'classic' === $layout ? $position : $modern_pos ) . ' ' . $layout ) ); ?>">
 			<div class="shapeblock-offcanvas-panel">
 				<?php if ( 'classic' === $layout ) : ?>
-					<span class="shapeblock-offcanvas-close shapeblock-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0">
+					<span class="shapeblock-offcanvas-close shapeblock-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0" aria-label="<?php esc_attr_e( 'Close', 'shapeblock' ); ?>">
 						<?php if ( '' !== $render_icon( $close_icon ) ) : ?>
 							<?php echo wp_kses( $render_icon( $close_icon ), $icon_allowed_html ); ?>
 						<?php else : ?>
@@ -221,15 +240,15 @@ if ( $template && $template !== get_queried_object_id() && empty( \ShapeBlock\Fr
 						<?php endif; ?>
 					</span>
 				<?php else : ?>
-					<span class="shapeblock-offcanvas-close shapeblock-offcanvas-toggle shapeblock-modern-close" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0">
+					<span class="shapeblock-offcanvas-close shapeblock-offcanvas-toggle shapeblock-modern-close" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0" aria-label="<?php esc_attr_e( 'Close', 'shapeblock' ); ?>">
 						<label class="shapeblock-modern-close-toggle"><span></span><span></span><span></span></label>
 					</span>
 				<?php endif; ?>
 				<div class="shapeblock-offcanvas-content">
 					<?php
 					// Rendered template markup, escaped against the same allowlist the
-					// Templates shortcode uses.
-					echo wp_kses( $content_html, \ShapeBlock\Frontend\Helper::template_allowed_html() );
+					// Templates shortcode uses; the CSS its blocks carry is kept.
+					echo wp_kses( \ShapeBlock\Frontend\Helper::move_block_css( $content_html, $style_handle ), \ShapeBlock\Frontend\Helper::template_allowed_html() );
 					?>
 				</div>
 			</div>

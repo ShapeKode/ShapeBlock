@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState, useRef } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -23,6 +23,7 @@ import {
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
 import BorderControl from '../../custom-components/BorderControl';
@@ -70,7 +71,7 @@ const DECORATION_OPTIONS = [
 ];
 
 export default function Edit({ attributes, setAttributes, clientId }) {
-	const { blockId, tableHeader, tableBody, tableFooter } = attributes;
+	const { blockId } = attributes;
 
 	useEffect(() => {
 		if (!blockId) {
@@ -112,7 +113,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	}, []);
 
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const typo = (label, key) => <TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />;
+	const bg = (label, c, g) => (
+		<BackgroundControl
+			label={label}
+			colorValue={attributes[c]}
+			gradientValue={attributes[g]}
+			onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })}
+			onGradientChange={(v) => setAttributes({ [g]: v || '' })}
+		/>
+	);
 	const border = (label, key) => <BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const box = (label, key) => <BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const num = (label, key) => <TextControl label={label} type="number" value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
@@ -147,9 +156,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	);
 
 	// ---- Generic repeater management -------------------------------------------
+	// BackgroundControl clears the other field with a second call in the same
+	// tick, before this render's list updates - so update() builds on the latest
+	// list rather than the one this render started with.
+	const latestItems = useRef({});
 	const makeRepeater = (attrKey, newItem) => {
 		const items = Array.isArray(attributes[attrKey]) ? attributes[attrKey] : [];
-		const update = (i, key, val) => setAttributes({ [attrKey]: items.map((it, idx) => (idx === i ? { ...it, [key]: val } : it)) });
+		latestItems.current[attrKey] = items;
+		const update = (i, key, val) => {
+			const next = latestItems.current[attrKey].map((it, idx) => (idx === i ? { ...it, [key]: val } : it));
+			latestItems.current[attrKey] = next;
+			setAttributes({ [attrKey]: next });
+		};
 		const add = () => setAttributes({ [attrKey]: [...items, { ...newItem }] });
 		const remove = (i) => setAttributes({ [attrKey]: items.filter((_, idx) => idx !== i) });
 		// Deep copy, so the clone's nested values are not shared with the original.
@@ -217,7 +235,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<SelectControl label={__('Decoration', 'shapeblock')} value={item.decoration || ''} options={DECORATION_OPTIONS} onChange={(v) => update(index, 'decoration', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
 					{opts.colors && (
 						<>
-							<ColorPopover label={__('Background Color', 'shapeblock')} color={item.bgColor || ''} onChange={(v) => update(index, 'bgColor', v)} />
+							<BackgroundControl
+								label={__('Background Color', 'shapeblock')}
+								colorValue={item.bgColor || ''}
+								gradientValue={item.bgGradient || ''}
+								onColorChange={(v) => update(index, 'bgColor', (v && typeof v === 'object' ? v.hex : v) || '')}
+								onGradientChange={(v) => update(index, 'bgGradient', v || '')}
+							/>
 							<ColorPopover label={__('Text Color', 'shapeblock')} color={item.textColor || ''} onChange={(v) => update(index, 'textColor', v)} />
 							<ColorPopover label={__('Icon Color', 'shapeblock')} color={item.iconColor || ''} onChange={(v) => update(index, 'iconColor', v)} />
 						</>
@@ -246,7 +270,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// --- Tab 1: Settings (content / data) -------------------------------------
 	const settingsTab = (
 		<>
-			<PanelBody title={__('Table Header', 'shapeblock')} initialOpen={true}>
+			<PanelBody title={__('Header Cells', 'shapeblock')} initialOpen={true}>
 				{headerRep.items.map((item, index) => (
 					<div className="shapeblock-tbl-repeater-item" key={index}>
 						<ItemHead section="header" index={index} label={item.text} rep={headerRep} />
@@ -264,7 +288,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<Button variant="primary" onClick={headerRep.add} icon={ICON_ADD}>{__('Add Header Cell', 'shapeblock')}</Button>
 			</PanelBody>
 
-			<PanelBody title={__('Table Body', 'shapeblock')} initialOpen={false}>
+			<PanelBody title={__('Body Cells', 'shapeblock')} initialOpen={false}>
 				{bodyRep.items.map((item, index) => (
 					<div className="shapeblock-tbl-repeater-item" key={index}>
 						<ItemHead section="body" index={index} label={item.text} rep={bodyRep} />
@@ -298,7 +322,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<Button variant="primary" onClick={bodyRep.add} icon={ICON_ADD}>{__('Add Body Cell', 'shapeblock')}</Button>
 			</PanelBody>
 
-			<PanelBody title={__('Table Footer', 'shapeblock')} initialOpen={false}>
+			<PanelBody title={__('Footer Cells', 'shapeblock')} initialOpen={false}>
 				{footerRep.items.map((item, index) => (
 					<div className="shapeblock-tbl-repeater-item" key={index}>
 						<ItemHead section="footer" index={index} label={item.text} rep={footerRep} />
@@ -319,39 +343,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// --- Tab 2: Layout (alignment, spacing, sizes) ----------------------------
 	const layoutTab = (
 		<>
-			<PanelBody title={__('General', 'shapeblock')} initialOpen={true}>
+			<PanelBody title={__('Alignment', 'shapeblock')} initialOpen={true}>
 				{respAlign(__('Vertical Alignment', 'shapeblock'), 'verticalAlignTable', VALIGN_OPTIONS)}
-				{respBox(__('Table Margin', 'shapeblock'), 'tableMargin')}
-				{respBox(__('Cell Padding', 'shapeblock'), 'tablePadding')}
-			</PanelBody>
-
-			<PanelBody title={__('Table Header', 'shapeblock')} initialOpen={false}>
-				{respAlign(__('Alignment', 'shapeblock'), 'headerAlign', ALIGN_OPTIONS)}
-				{respBox(__('Padding', 'shapeblock'), 'theadPadding')}
-				<Divider />
-				{respNum(__('Icon Size (px)', 'shapeblock'), 'headerIconSize')}
-				{num(__('Icon Vertical Position (px)', 'shapeblock'), 'headerIconYPos')}
-				{box(__('Icon Margin', 'shapeblock'), 'headerIconMargin')}
-			</PanelBody>
-
-			<PanelBody title={__('Table Body', 'shapeblock')} initialOpen={false}>
-				{respAlign(__('Alignment', 'shapeblock'), 'bodyAlign', ALIGN_OPTIONS)}
-				{respNum(__('Icon Size (px)', 'shapeblock'), 'bodyIconSize')}
-				{respBox(__('Icon Margin', 'shapeblock'), 'bodyIconGap')}
-				<Divider />
-				{respBox(__('Padding', 'shapeblock'), 'tbodyPadding')}
-				{respBox(__('Margin', 'shapeblock'), 'tbodyMargin')}
-				<Divider />
-				{respNum(__('Tooltip Icon Size (px)', 'shapeblock'), 'tooltipIconSize')}
-				{box(__('Tooltip Icon Margin', 'shapeblock'), 'tooltipIconMargin')}
+				{respAlign(__('Header Alignment', 'shapeblock'), 'headerAlign', ALIGN_OPTIONS)}
+				{respAlign(__('Body Alignment', 'shapeblock'), 'bodyAlign', ALIGN_OPTIONS)}
+				{respAlign(__('Footer Alignment', 'shapeblock'), 'footerAlign', ALIGN_OPTIONS)}
 				{respAlign(__('Tooltip Align', 'shapeblock'), 'tooltipAlign', [{ label: __('Left', 'shapeblock'), value: 'left' }, { label: __('Top', 'shapeblock'), value: 'top' }, { label: __('Right', 'shapeblock'), value: 'right' }, { label: __('Bottom', 'shapeblock'), value: 'bottom' }])}
-				<Divider />
-				{respNum(__('Image Size (px)', 'shapeblock'), 'imgSize')}
-			</PanelBody>
-
-			<PanelBody title={__('Table Footer', 'shapeblock')} initialOpen={false}>
-				{respAlign(__('Alignment', 'shapeblock'), 'footerAlign', ALIGN_OPTIONS)}
-				{respBox(__('Padding', 'shapeblock'), 'tfootPadding')}
 			</PanelBody>
 		</>
 	);
@@ -362,41 +359,54 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<PanelBody title={__('General', 'shapeblock')} initialOpen={true}>
 				{border(__('Table Border', 'shapeblock'), 'tableBorder')}
 				{box(__('Table Border Radius', 'shapeblock'), 'tableRadius')}
+				{respBox(__('Table Margin', 'shapeblock'), 'tableMargin')}
+				{respBox(__('Cell Padding', 'shapeblock'), 'tablePadding')}
 			</PanelBody>
 
 			<PanelBody title={__('Table Header', 'shapeblock')} initialOpen={false}>
 				{color(__('Text Color', 'shapeblock'), 'headerTextColor')}
 				{respTypo(__('Typography', 'shapeblock'), 'headerTypography')}
-				{color(__('Background Color', 'shapeblock'), 'headerBgColor')}
+				{bg(__('Background Color', 'shapeblock'), 'headerBgColor', 'headerBgColorGradient')}
 				{border(__('Border', 'shapeblock'), 'headBorder')}
 				{box(__('Border Radius', 'shapeblock'), 'theadRadius')}
+				{respBox(__('Padding', 'shapeblock'), 'theadPadding')}
 				<Divider />
 				{color(__('Icon Color', 'shapeblock'), 'headerIconColor')}
+				{respNum(__('Icon Size (px)', 'shapeblock'), 'headerIconSize')}
+				{num(__('Icon Vertical Position (px)', 'shapeblock'), 'headerIconYPos')}
+				{box(__('Icon Margin', 'shapeblock'), 'headerIconMargin')}
 			</PanelBody>
 
 			<PanelBody title={__('Table Body', 'shapeblock')} initialOpen={false}>
 				{color(__('Text Color', 'shapeblock'), 'bodyTextColor')}
 				{respTypo(__('Typography', 'shapeblock'), 'bodyTypography')}
-				{color(__('Background Color', 'shapeblock'), 'bodyBgColor')}
+				{bg(__('Background Color', 'shapeblock'), 'bodyBgColor', 'bodyBgColorGradient')}
 				<ToggleControl label={__('Striped Background', 'shapeblock')} checked={attributes.stripedBg} onChange={(v) => setAttributes({ stripedBg: v })} __nextHasNoMarginBottom />
-				{attributes.stripedBg && color(__('Secondary Background Color', 'shapeblock'), 'stripedBgColor')}
+				{attributes.stripedBg && bg(__('Secondary Background Color', 'shapeblock'), 'stripedBgColor', 'stripedBgColorGradient')}
 				<Divider />
 				{color(__('Icon Color', 'shapeblock'), 'bodyIconColor')}
+				{respNum(__('Icon Size (px)', 'shapeblock'), 'bodyIconSize')}
+				{respBox(__('Icon Margin', 'shapeblock'), 'bodyIconGap')}
 				<Divider />
 				{box(__('Border Radius', 'shapeblock'), 'tbodyRadius')}
 				{border(__('Border', 'shapeblock'), 'bodyBorder')}
+				{respBox(__('Padding', 'shapeblock'), 'tbodyPadding')}
 				<Divider />
 				{color(__('Tooltip Icon Color', 'shapeblock'), 'tooltipIconColor')}
+				{respNum(__('Tooltip Icon Size (px)', 'shapeblock'), 'tooltipIconSize')}
+				{box(__('Tooltip Icon Margin', 'shapeblock'), 'tooltipIconMargin')}
 				<Divider />
+				{respNum(__('Image Size (px)', 'shapeblock'), 'imgSize')}
 				{box(__('Image Border Radius', 'shapeblock'), 'imgRadius')}
 			</PanelBody>
 
 			<PanelBody title={__('Table Footer', 'shapeblock')} initialOpen={false}>
 				{color(__('Text Color', 'shapeblock'), 'footerTextColor')}
 				{respTypo(__('Typography', 'shapeblock'), 'footerTypography')}
-				{color(__('Background Color', 'shapeblock'), 'footerBgColor')}
+				{bg(__('Background Color', 'shapeblock'), 'footerBgColor', 'footerBgColorGradient')}
 				{box(__('Border Radius', 'shapeblock'), 'tfootRadius')}
 				{border(__('Border', 'shapeblock'), 'footBorder')}
+				{respBox(__('Padding', 'shapeblock'), 'tfootPadding')}
 			</PanelBody>
 		</>
 	);

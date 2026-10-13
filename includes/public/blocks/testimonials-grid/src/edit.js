@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -175,8 +175,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<TextControl label={__('Designation', 'shapeblock')} value={item.designation || ''} onChange={(v) => updateItem(index, 'designation', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
 					<TextareaControl label={__('Description', 'shapeblock')} value={item.description || ''} onChange={(v) => updateItem(index, 'description', v)} __nextHasNoMarginBottom />
 					<SelectControl label={__('Rating', 'shapeblock')} value={item.rating || '5'} options={RATINGS} onChange={(v) => updateItem(index, 'rating', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
-					<IconPicker label={__('Quote Icon', 'shapeblock')} value={item.quoteIcon || ''} onChange={(v) => updateItem(index, 'quoteIcon', v)} />
-					{mediaField(__('Logo', 'shapeblock'), item, index, 'logo')}
+					{(attributes.testimonialsSkin || 'default') === 'default' && (
+						<IconPicker label={__('Quote Icon', 'shapeblock')} value={item.quoteIcon || ''} onChange={(v) => updateItem(index, 'quoteIcon', v)} />
+					)}
+					{(attributes.testimonialsSkin || 'default') !== 'default' && mediaField(__('Logo', 'shapeblock'), item, index, 'logo')}
 				</div>
 			))}
 			<Button variant="primary" onClick={addItem} icon={ICON_ADD}>{__('Add Testimonial', 'shapeblock')}</Button>
@@ -209,8 +211,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</>
 			)}
 			{respAlign(__('Alignment', 'shapeblock'), 'testimonialsAlignment', [{ label: __('Default', 'shapeblock'), value: '' }, ...ALIGN])}
-			{respBox(__('Item Padding', 'shapeblock'), 'itemPadding')}
-			{testimonialsSkin !== 'default' && respNum(__('Logo Height (px)', 'shapeblock'), 'logoHeight')}
+			{showImage && respAlign(__('Author Info Alignment', 'shapeblock'), 'authorMetaAlignment', AUTHOR_ALIGN)}
+			{respBox(__('Item Spacing', 'shapeblock'), 'itemPadding')}
 		</PanelBody>
 	);
 
@@ -247,10 +249,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 			{showImage && (
 				<PanelBody title={__('Author Image', 'shapeblock')} initialOpen={false}>
-					{respAlign(__('Author Info Alignment', 'shapeblock'), 'authorMetaAlignment', AUTHOR_ALIGN)}
 					{respBox(__('Author Info Gap (margin)', 'shapeblock'), 'authorMetaGap')}
 					{num(__('Image Size (px)', 'shapeblock'), 'authorImageSize')}
 					{box(__('Image Border Radius', 'shapeblock'), 'authorImageBorderRadius')}
+				</PanelBody>
+			)}
+
+			{testimonialsSkin !== 'default' && (
+				<PanelBody title={__('Logo', 'shapeblock')} initialOpen={false}>
+					{respNum(__('Logo Height (px)', 'shapeblock'), 'logoHeight')}
 				</PanelBody>
 			)}
 

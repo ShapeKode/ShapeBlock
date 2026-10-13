@@ -62,17 +62,19 @@
 	}
 }
 
-.shapeblock-button svg {
-	width: 16px;
-	height: 16px;
+/* The full-width Style 1 ribbon sits across the top of the card: start the
+   content below it instead of under it. */
+.shapeblock-pricing-table.featured.style1 {
+	padding-top: 60px;
 }
 
 /* Ribbon styles */
 .shapeblock-ribbon {
+	box-sizing: border-box;
 	position: absolute;
 	top: 0;
 	padding: 3px 15px;
-	background: var(--e-global-color-secondary, #0b3665);
+	background: var(--shapeblock-preset-color-secondary, #0b3665);
 	color: #fff;
 	width: 100%;
 	left: 0;
@@ -92,8 +94,7 @@
 	font-size: 36px;
 }
 
-.shapeblock-features li svg.feature-icon,
-.shapeblock-features li .feature-icon i {
+.shapeblock-features li svg.feature-icon {
 	margin-right: 10px;
 	color: var(--shapeblock-preset-color-primary, #ffd012);
 	font-size: 18px;
@@ -125,7 +126,7 @@
 
 .feature-icon.icon-bg {
 	background-color: #f1f1f1;
-	color: var(--e-global-color-secondary, #0b3665);
+	color: var(--shapeblock-preset-color-secondary, #0b3665);
 	padding: 5px;
 	border-radius: 50%;
 }
@@ -145,7 +146,7 @@ li.icon-bg svg {
 .featured.style2 {
 	.shapeblock-ribbon {
 		position: absolute;
-		background: var(--e-global-color-secondary, #0b3665);
+		background: var(--shapeblock-preset-color-secondary, #0b3665);
 		color: #fff;
 		top: 22px;
 		right: -60px;

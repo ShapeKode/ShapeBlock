@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ShapeBlock
  * Plugin URI:  https://shapekode.com/product/shapeblock/
- * Description: A library of 32 Gutenberg blocks - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls.
+ * Description: A library of 34 Gutenberg blocks - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls.
  * Version:     1.0.0
  * Author:      ShapeKode
  * Author URI:  https://profiles.wordpress.org/shapekode22/
@@ -29,8 +29,5 @@ define( 'SHAPEBLOCK_PLUGIN_BASE', plugin_basename( SHAPEBLOCK_PL_ROOT ) );
 // Register the PSR-4 autoloader, then boot the plugin. Every class under the
 // ShapeBlock\ namespace is loaded on demand from includes/ — no manual require list.
 require_once SHAPEBLOCK_PL_PATH . 'includes/autoload.php';
-
-register_activation_hook( SHAPEBLOCK_PL_ROOT, array( '\ShapeBlock\Main', 'activate' ) );
-register_deactivation_hook( SHAPEBLOCK_PL_ROOT, array( '\ShapeBlock\Main', 'deactivate' ) );
 
 \ShapeBlock\Main::instance();

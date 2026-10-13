@@ -8,19 +8,61 @@
 	--shapeblock-bc-primary: #ffd012;
 	--shapeblock-bc-secondary: #0b3665;
 
-	.shapeblock-breadcrumb {
-		display: inline-block;
+	/* Older blocks aligned with the block toolbar's left / center / right. */
+	&.aligncenter {
+		text-align: center;
+
+		.shapeblock-breadcrumb-path {
+			justify-content: center;
+		}
+	}
+	&.alignright {
+		text-align: right;
+
+		.shapeblock-breadcrumb-path {
+			justify-content: flex-end;
+		}
 	}
 
+	.shapeblock-breadcrumb {
+		display: inline-block;
+		max-width: 100%;
+		line-height: 1.4;
+	}
+
+	/* Every crumb, icon and separator sits on one centred line. */
 	.shapeblock-breadcrumb-path {
+		display: inline-flex;
+		flex-wrap: wrap;
+		align-items: center;
+		vertical-align: middle;
+		/* Takes the Typography line height set on the trail. */
+		line-height: inherit;
+
 		a {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.35em;
 			text-decoration: none;
 			color: inherit;
+			transition: color 0.2s ease, background 0.2s ease;
+		}
+
+		> span,
+		> a,
+		> i,
+		> svg {
+			line-height: inherit;
 		}
 
 		svg {
 			height: 1em;
 			width: 1em;
+			flex-shrink: 0;
+		}
+
+		i {
+			line-height: 1;
 		}
 	}
 
@@ -30,11 +72,14 @@
 		font-weight: 400;
 		color: var(--shapeblock-bc-secondary, #0b3665);
 		font-size: 1em;
+		line-height: 1;
 		vertical-align: middle;
 	}
 
 	.shapeblock-breadcrumb-home-icon {
 		position: relative;
-		top: 1px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
 	}
 }

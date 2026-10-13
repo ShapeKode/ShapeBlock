@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import { useBlockProps, InspectorControls, BlockControls, AlignmentControl } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -16,6 +16,7 @@ import {
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
 import BorderControl from '../../custom-components/BorderControl';
@@ -49,7 +50,6 @@ const ALIGN_OPTIONS = [
 export default function Edit({ attributes, setAttributes, clientId }) {
 	const {
 		blockId,
-		skinStyle,
 		title,
 		description,
 		onSale,
@@ -125,8 +125,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const color = (label, key) => (
 		<ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
 	);
-	const typo = (label, key) => (
-		<TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />
+	const bg = (label, c, g) => (
+		<BackgroundControl
+			label={label}
+			colorValue={attributes[c]}
+			gradientValue={attributes[g]}
+			onColorChange={(v) => setAttributes({ [c]: (v && typeof v === 'object') ? v.hex : v || '' })}
+			onGradientChange={(v) => setAttributes({ [g]: v || '' })}
+		/>
 	);
 	const border = (label, key) => (
 		<BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
@@ -179,20 +185,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// --- Tab 1: Settings (content & behavior) ---------------------------------
 	const settingsTab = (
 		<>
-			<PanelBody title={__('General', 'shapeblock')} initialOpen={true}>
-				<SelectControl
-					label={__('Skin', 'shapeblock')}
-					value={skinStyle}
-					options={[
-						{ label: __('Skin 01', 'shapeblock'), value: 'skin1' },
-					]}
-					onChange={(v) => setAttributes({ skinStyle: v })}
-					__next40pxDefaultSize
-					__nextHasNoMarginBottom
-				/>
-			</PanelBody>
-
-			<PanelBody title={__('Title & Price', 'shapeblock')} initialOpen={false}>
+			<PanelBody title={__('Title & Price', 'shapeblock')} initialOpen={true}>
 				<TextControl label={__('Title', 'shapeblock')} value={title} onChange={(v) => setAttributes({ title: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 				<TextControl label={__('Description', 'shapeblock')} value={description} onChange={(v) => setAttributes({ description: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 				<Divider />
@@ -258,38 +251,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<Button variant="primary" onClick={addFeature} icon={ICON_ADD}>
 					{__('Add Feature', 'shapeblock')}
 				</Button>
-				<Divider />
-				<SelectControl
-					label={__('Icon Style', 'shapeblock')}
-					value={featureIconStyle}
-					options={[
-						{ label: __('Icon Only', 'shapeblock'), value: 'icon-only' },
-						{ label: __('Icon with Background', 'shapeblock'), value: 'icon-bg' },
-						{ label: __('Icon with Border', 'shapeblock'), value: 'icon-border' },
-					]}
-					onChange={(v) => setAttributes({ featureIconStyle: v })}
-					__next40pxDefaultSize
-					__nextHasNoMarginBottom
-				/>
 			</PanelBody>
 
 			<PanelBody title={__('Featured', 'shapeblock')} initialOpen={false}>
 				<ToggleControl label={__('Featured', 'shapeblock')} checked={isFeatured} onChange={(v) => setAttributes({ isFeatured: v })} __nextHasNoMarginBottom />
 				{isFeatured && (
-					<>
-						<SelectControl
-							label={__('Ribbon Style', 'shapeblock')}
-							value={ribbonStyle}
-							options={[
-								{ label: __('Style 1', 'shapeblock'), value: 'style1' },
-								{ label: __('Style 2', 'shapeblock'), value: 'style2' },
-							]}
-							onChange={(v) => setAttributes({ ribbonStyle: v })}
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-						/>
-						<TextControl label={__('Featured Text', 'shapeblock')} value={featuredText} onChange={(v) => setAttributes({ featuredText: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					</>
+					<TextControl label={__('Featured Text', 'shapeblock')} value={featuredText} onChange={(v) => setAttributes({ featuredText: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 				)}
 			</PanelBody>
 
@@ -343,19 +310,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						__next40pxDefaultSize
 						__nextHasNoMarginBottom
 					/>
-					<SelectControl
-						label={__('Icon Position', 'shapeblock')}
-						value={buttonIconPosition}
-						options={[
-							{ label: __('Before', 'shapeblock'), value: 'before' },
-							{ label: __('After', 'shapeblock'), value: 'after' },
-						]}
-						onChange={(v) => setAttributes({ buttonIconPosition: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
 					{respAlign(__('Button Alignment', 'shapeblock'), 'btnAlignment', ALIGN_OPTIONS)}
-					<ToggleControl label={__('Full Width Button', 'shapeblock')} checked={buttonFullWidth} onChange={(v) => setAttributes({ buttonFullWidth: v })} __nextHasNoMarginBottom />
 				</>
 			)}
 		</PanelBody>
@@ -364,10 +319,38 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// --- Tab 3: Style (appearance) --------------------------------------------
 	const styleTab = (
 		<>
-			<PanelBody title={__('Title', 'shapeblock')} initialOpen={true}>
+			{isFeatured && (
+				<PanelBody title={__('Ribbon', 'shapeblock')} initialOpen={true}>
+					<SelectControl
+						label={__('Ribbon Style', 'shapeblock')}
+						value={ribbonStyle}
+						options={[
+							{ label: __('Style 1', 'shapeblock'), value: 'style1' },
+							{ label: __('Style 2', 'shapeblock'), value: 'style2' },
+						]}
+						onChange={(v) => setAttributes({ ribbonStyle: v })}
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+					<Divider />
+					{color(__('Text Color', 'shapeblock'), 'ribbonColor')}
+					{bg(__('Background', 'shapeblock'), 'ribbonBgColor', 'ribbonBgGradient')}
+					{respTypo(__('Typography', 'shapeblock'), 'ribbonTypography')}
+					{ribbonStyle === 'style1' && (
+						<>
+							<Divider />
+							{respBox(__('Padding', 'shapeblock'), 'ribbonPadding')}
+							<Divider />
+							{box(__('Border Radius', 'shapeblock'), 'ribbonBorderRadius')}
+						</>
+					)}
+				</PanelBody>
+			)}
+
+			<PanelBody title={__('Title', 'shapeblock')} initialOpen={!isFeatured}>
 				{color(__('Color', 'shapeblock'), 'titleColor')}
 				{color(__('Highlight Color (span)', 'shapeblock'), 'titleHighlightColor')}
-				{color(__('Background', 'shapeblock'), 'titleBgColor')}
+				{bg(__('Background', 'shapeblock'), 'titleBgColor', 'titleBgGradient')}
 				{respTypo(__('Typography', 'shapeblock'), 'titleTypography')}
 				<Divider />
 				{border(__('Border', 'shapeblock'), 'titleBorder')}
@@ -429,7 +412,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 			<PanelBody title={__('Features', 'shapeblock')} initialOpen={false}>
 				{color(__('Text Color', 'shapeblock'), 'featuresTextColor')}
-				{color(__('Icon Color', 'shapeblock'), 'featuresIconColor')}
 				{respTypo(__('Text Typography', 'shapeblock'), 'featuresTextTypography')}
 				<Divider />
 				{border(__('Item Border', 'shapeblock'), 'featuresBorder')}
@@ -442,8 +424,22 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			</PanelBody>
 
 			<PanelBody title={__('Feature Icon', 'shapeblock')} initialOpen={false}>
+				<SelectControl
+					label={__('Icon Style', 'shapeblock')}
+					value={featureIconStyle}
+					options={[
+						{ label: __('Icon Only', 'shapeblock'), value: 'icon-only' },
+						{ label: __('Icon with Background', 'shapeblock'), value: 'icon-bg' },
+						{ label: __('Icon with Border', 'shapeblock'), value: 'icon-border' },
+					]}
+					onChange={(v) => setAttributes({ featureIconStyle: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+				<Divider />
+				{color(__('Icon Color', 'shapeblock'), 'featuresIconColor')}
 				{num(__('Icon Size (px)', 'shapeblock'), 'featureIconSize')}
-				{featureIconStyle === 'icon-bg' && color(__('Background', 'shapeblock'), 'featureIconBgColor')}
+				{featureIconStyle === 'icon-bg' && bg(__('Background', 'shapeblock'), 'featureIconBgColor', 'featureIconBgGradient')}
 				{featureIconStyle === 'icon-border' && border(__('Border', 'shapeblock'), 'featureIconBorder')}
 				{(featureIconStyle === 'icon-bg' || featureIconStyle === 'icon-border') && (
 					<>
@@ -455,33 +451,30 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				)}
 			</PanelBody>
 
-			{isFeatured && (
-				<PanelBody title={__('Ribbon', 'shapeblock')} initialOpen={false}>
-					{color(__('Text Color', 'shapeblock'), 'ribbonColor')}
-					{color(__('Background Color', 'shapeblock'), 'ribbonBgColor')}
-					{respTypo(__('Typography', 'shapeblock'), 'ribbonTypography')}
-					{ribbonStyle === 'style1' && (
-						<>
-							<Divider />
-							{respBox(__('Padding', 'shapeblock'), 'ribbonPadding')}
-							<Divider />
-							{box(__('Border Radius', 'shapeblock'), 'ribbonBorderRadius')}
-						</>
-					)}
-				</PanelBody>
-			)}
-
 			<PanelBody title={__('Button', 'shapeblock')} initialOpen={false}>
+				<ToggleControl label={__('Full Width Button', 'shapeblock')} checked={buttonFullWidth} onChange={(v) => setAttributes({ buttonFullWidth: v })} __nextHasNoMarginBottom />
+				<SelectControl
+					label={__('Icon Position', 'shapeblock')}
+					value={buttonIconPosition}
+					options={[
+						{ label: __('Before', 'shapeblock'), value: 'before' },
+						{ label: __('After', 'shapeblock'), value: 'after' },
+					]}
+					onChange={(v) => setAttributes({ buttonIconPosition: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+				<Divider />
 				{color(__('Text Color', 'shapeblock'), 'buttonTextColor')}
 				{color(__('Icon Color', 'shapeblock'), 'buttonIconColor')}
-				{color(__('Background', 'shapeblock'), 'buttonBgColor')}
+				{bg(__('Background', 'shapeblock'), 'buttonBgColor', 'buttonBgGradient')}
 				{respTypo(__('Typography', 'shapeblock'), 'buttonTypography')}
 				<Divider />
 				{border(__('Border', 'shapeblock'), 'buttonBorder')}
 				{shadow(__('Box Shadow', 'shapeblock'), 'buttonBoxShadow')}
 				<Divider />
 				{color(__('Text Color (Hover)', 'shapeblock'), 'buttonTextColorHover')}
-				{color(__('Background (Hover)', 'shapeblock'), 'buttonBgColorHover')}
+				{bg(__('Background (Hover)', 'shapeblock'), 'buttonBgColorHover', 'buttonBgGradientHover')}
 				{border(__('Border (Hover)', 'shapeblock'), 'buttonBorderHover')}
 				{shadow(__('Box Shadow (Hover)', 'shapeblock'), 'buttonBoxShadowHover')}
 				<Divider />

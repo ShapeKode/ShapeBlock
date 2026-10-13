@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/heading",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"title": "Heading",
 	"category": "shapeblock",
 	"description": "A heading with sub-heading, highlight, separator, gradient text and watermark.",

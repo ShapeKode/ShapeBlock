@@ -95,6 +95,15 @@ const typographyToCss = (typo) => {
 	return out;
 };
 
+// One background setting: the gradient wins (as `background`), else the colour under `prop`.
+const bgCss = (a, key, prop) => {
+	if (a[`${key}Gradient`]) return { background: a[`${key}Gradient`] };
+	return a[key] ? { [prop]: a[key] } : {};
+};
+// Property for a normal/hover/active colour group: the shorthand once any state
+// uses a gradient, so a plain colour on another state still replaces it.
+const bgProp = (a, key) => (['', 'Hover', 'Active'].some((s) => a[`${key}${s}Gradient`]) ? 'background' : 'background-color');
+
 const toRule = (selector, styleObj) => {
 	const decls = Object.keys(styleObj)
 		.filter((k) => styleObj[k] !== '' && styleObj[k] !== undefined && styleObj[k] !== null)
@@ -117,20 +126,17 @@ export function buildFaqEditorCss(attributes) {
 	};
 
 	// Item
-	const item = {};
-	if (a.itemBackgroundColor) item.background = a.itemBackgroundColor;
+	const item = bgCss(a, 'itemBackgroundColor', 'background');
 	Object.assign(item, dims(a.itemBorderRadius, 'radius'), dims(a.itemPadding, 'padding'), borderToCss(a.itemBorder));
 	const itemShadow = boxShadowToCss(a.itemBoxShadow);
 	if (itemShadow && itemShadow !== '0px 0px 0px 0px rgba(0,0,0,0)') item['box-shadow'] = itemShadow;
 
-	const itemHover = {};
-	if (a.itemBackgroundColorHover) itemHover.background = a.itemBackgroundColorHover;
+	const itemHover = bgCss(a, 'itemBackgroundColorHover', 'background');
 	Object.assign(itemHover, borderToCss(a.itemBorderHover));
 	const itemHoverShadow = boxShadowToCss(a.itemBoxShadowHover);
 	if (itemHoverShadow && itemHoverShadow !== '0px 0px 0px 0px rgba(0,0,0,0)') itemHover['box-shadow'] = itemHoverShadow;
 
-	const itemActive = {};
-	if (a.itemBackgroundColorActive) itemActive.background = a.itemBackgroundColorActive;
+	const itemActive = bgCss(a, 'itemBackgroundColorActive', 'background');
 	Object.assign(itemActive, borderToCss(a.itemBorderActive));
 	const itemActiveShadow = boxShadowToCss(a.itemBoxShadowActive);
 	if (itemActiveShadow && itemActiveShadow !== '0px 0px 0px 0px rgba(0,0,0,0)') itemActive['box-shadow'] = itemActiveShadow;
@@ -142,21 +148,19 @@ export function buildFaqEditorCss(attributes) {
 	const titleActive = a.titleColorActive ? { color: a.titleColorActive } : {};
 
 	// Question (bar)
-	const question = {};
-	if (a.titleBgColor) question['background-color'] = a.titleBgColor;
+	const titleBgProp = bgProp(a, 'titleBgColor');
+	const question = bgCss(a, 'titleBgColor', titleBgProp);
 	Object.assign(question, dims(a.questionPadding, 'padding'), dims(a.questionBorderRadius, 'radius'), borderToCss(a.titleBorder));
 	const titleShadow = boxShadowToCss(a.titleBoxShadow);
 	if (titleShadow && titleShadow !== '0px 0px 0px 0px rgba(0,0,0,0)') question['box-shadow'] = titleShadow;
 	const questionFull = { ...questionLayout, ...question };
 
-	const questionHover = {};
-	if (a.titleBgColorHover) questionHover['background-color'] = a.titleBgColorHover;
+	const questionHover = bgCss(a, 'titleBgColorHover', titleBgProp);
 	if (a.titleBorderColorHover) questionHover['border-color'] = a.titleBorderColorHover;
 	const titleShadowHover = boxShadowToCss(a.titleBoxShadowHover);
 	if (titleShadowHover && titleShadowHover !== '0px 0px 0px 0px rgba(0,0,0,0)') questionHover['box-shadow'] = titleShadowHover;
 
-	const questionActive = {};
-	if (a.titleBgColorActive) questionActive['background-color'] = a.titleBgColorActive;
+	const questionActive = bgCss(a, 'titleBgColorActive', titleBgProp);
 	if (a.titleBorderColorActive) questionActive['border-color'] = a.titleBorderColorActive;
 	const titleShadowActive = boxShadowToCss(a.titleBoxShadowActive);
 	if (titleShadowActive && titleShadowActive !== '0px 0px 0px 0px rgba(0,0,0,0)') questionActive['box-shadow'] = titleShadowActive;
@@ -164,17 +168,18 @@ export function buildFaqEditorCss(attributes) {
 	// Answer
 	const answer = typographyToCss(a.descriptionTypography);
 	if (a.descriptionColor) answer.color = a.descriptionColor;
-	if (a.descriptionBgColor) answer['background-color'] = a.descriptionBgColor;
+	const descBgProp = bgProp(a, 'descriptionBgColor');
+	Object.assign(answer, bgCss(a, 'descriptionBgColor', descBgProp));
 	Object.assign(answer, dims(a.answerPadding, 'padding'), dims(a.descriptionBorderRadius, 'radius'), borderToCss(a.descriptionBorder));
 
 	const answerHover = {};
 	if (a.descriptionColorHover) answerHover.color = a.descriptionColorHover;
-	if (a.descriptionBgColorHover) answerHover['background-color'] = a.descriptionBgColorHover;
+	Object.assign(answerHover, bgCss(a, 'descriptionBgColorHover', descBgProp));
 	if (a.descriptionBorderColorHover) answerHover['border-color'] = a.descriptionBorderColorHover;
 
 	const answerActive = {};
 	if (a.descriptionColorActive) answerActive.color = a.descriptionColorActive;
-	if (a.descriptionBgColorActive) answerActive['background-color'] = a.descriptionBgColorActive;
+	Object.assign(answerActive, bgCss(a, 'descriptionBgColorActive', descBgProp));
 	if (a.descriptionBorderColorActive) answerActive['border-color'] = a.descriptionBorderColorActive;
 
 	// Icon
@@ -183,7 +188,7 @@ export function buildFaqEditorCss(attributes) {
 		icon.color = a.iconColor;
 		icon.fill = a.iconColor;
 	}
-	if (a.iconBgColor) icon.background = a.iconBgColor;
+	Object.assign(icon, bgCss(a, 'iconBgColor', 'background'));
 	if (a.iconSize) icon['font-size'] = ensureUnit(a.iconSize);
 	if (a.iconBoxSize) {
 		const box = ensureUnit(a.iconBoxSize);
@@ -205,7 +210,7 @@ export function buildFaqEditorCss(attributes) {
 		iconHover.color = a.iconColorHover;
 		iconHover.fill = a.iconColorHover;
 	}
-	if (a.iconBgColorHover) iconHover.background = a.iconBgColorHover;
+	Object.assign(iconHover, bgCss(a, 'iconBgColorHover', 'background'));
 	if (a.iconBorderColorHover) iconHover['border-color'] = a.iconBorderColorHover;
 
 	const iconActive = {};
@@ -213,7 +218,7 @@ export function buildFaqEditorCss(attributes) {
 		iconActive.color = a.iconColorActive;
 		iconActive.fill = a.iconColorActive;
 	}
-	if (a.iconBgColorActive) iconActive.background = a.iconBgColorActive;
+	Object.assign(iconActive, bgCss(a, 'iconBgColorActive', 'background'));
 	if (a.iconBorderColorActive) iconActive['border-color'] = a.iconBorderColorActive;
 	if (a.iconPositionYActive !== '' && a.iconPositionYActive !== undefined) {
 		iconActive.transform = `translateY(${ensureUnit(a.iconPositionYActive)})`;

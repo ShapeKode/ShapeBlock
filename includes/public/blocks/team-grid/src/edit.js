@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -107,7 +107,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	};
 
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const typo = (label, key) => <TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />;
 	const border = (label, key) => <BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const shadow = (label, key) => <BoxShadowControls label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const box = (label, key) => <BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
@@ -151,39 +150,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	);
 
 	const isContentSkin = teamSkin === 'default' || teamSkin === 'skin2';
+	// Skin 05 lists contact details instead of social icons.
+	const socialOn = showSocialIcon && teamSkin !== 'skin5';
 
 	// --- Tab 1: Settings (content & behavior) ---------------------------------
 	const settingsTab = (
 		<>
 			<PanelBody title={__('Team Settings', 'shapeblock')} initialOpen={true}>
-				<SelectControl
-					label={__('Skin Type', 'shapeblock')}
-					value={teamSkin}
-					options={[
-						{ label: __('Default', 'shapeblock'), value: 'default' },
-						{ label: __('Skin 01', 'shapeblock'), value: 'skin1' },
-						{ label: __('Skin 02', 'shapeblock'), value: 'skin2' },
-						{ label: __('Skin 03', 'shapeblock'), value: 'skin3' },
-						{ label: __('Skin 04 (Hover Overlay)', 'shapeblock'), value: 'skin4' },
-						{ label: __('Skin 05', 'shapeblock'), value: 'skin5' },
-					]}
-					onChange={(v) => setAttributes({ teamSkin: v })}
-					__next40pxDefaultSize
-					__nextHasNoMarginBottom
-				/>
-				{teamSkin === 'skin4' && (
-					<SelectControl
-						label={__('Hover Overlay Style', 'shapeblock')}
-						value={attributes.skin4HoverOverlay}
-						options={[
-							{ label: __('Hover Overlay 1', 'shapeblock'), value: 'overlay1' },
-							{ label: __('Hover Overlay 2', 'shapeblock'), value: 'overlay2' },
-						]}
-						onChange={(v) => setAttributes({ skin4HoverOverlay: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-				)}
 				<MediaUploadCheck>
 					<MediaUpload
 						onSelect={(media) => setAttributes({ image: { id: media.id, url: media.url, alt: media.alt } })}
@@ -200,27 +173,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<TextControl label={__('Name', 'shapeblock')} value={attributes.name} onChange={(v) => setAttributes({ name: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 				<SelectControl label={__('Title HTML Tag', 'shapeblock')} value={attributes.titleTag} options={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p'].map((t) => ({ label: t.toUpperCase(), value: t }))} onChange={(v) => setAttributes({ titleTag: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 				<TextControl label={__('Designation', 'shapeblock')} value={attributes.designation} onChange={(v) => setAttributes({ designation: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-				<TextareaControl label={__('Description', 'shapeblock')} value={attributes.details} onChange={(v) => setAttributes({ details: v })} __nextHasNoMarginBottom />
-				{isContentSkin && (
-					<SelectControl
-						label={__('Content Show', 'shapeblock')}
-						value={contentShow}
-						options={[
-							{ label: __('Inside Image', 'shapeblock'), value: 'inside' },
-							{ label: __('Normal', 'shapeblock'), value: 'normal' },
-						]}
-						onChange={(v) => setAttributes({ contentShow: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-				)}
-				<Divider />
-				{bg(__('Image Overlay', 'shapeblock'), 'imageOverlayColor', 'imageOverlayGradient')}
-				<ToggleControl label={__('Show Social Icon', 'shapeblock')} checked={showSocialIcon} onChange={(v) => setAttributes({ showSocialIcon: v })} __nextHasNoMarginBottom />
+				{(teamSkin !== 'skin4' || actionType === 'popup') && <TextareaControl label={__('Description', 'shapeblock')} value={attributes.details} onChange={(v) => setAttributes({ details: v })} __nextHasNoMarginBottom />}
+				{teamSkin !== 'skin5' && <Divider />}
+				{teamSkin !== 'skin5' && <ToggleControl label={__('Show Social Icon', 'shapeblock')} checked={showSocialIcon} onChange={(v) => setAttributes({ showSocialIcon: v })} __nextHasNoMarginBottom />}
 			</PanelBody>
 
 			{teamSkin === 'skin5' && (
-				<PanelBody title={__('Contact Info', 'shapeblock')} initialOpen={false}>
+				<PanelBody title={__('Contact Details', 'shapeblock')} initialOpen={false}>
 					<ToggleControl label={__('Show Contact Info', 'shapeblock')} checked={showContactInfo} onChange={(v) => setAttributes({ showContactInfo: v })} __nextHasNoMarginBottom />
 					{showContactInfo && (
 						<>
@@ -254,22 +213,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				)}
 			</PanelBody>
 
-			{showSocialIcon && (
+			{socialOn && (
 				<PanelBody title={__('Social Settings', 'shapeblock')} initialOpen={false}>
-					<SelectControl
-						label={__('Icon Position', 'shapeblock')}
-						value={socialIconPosition}
-						options={[
-							{ label: __('Default', 'shapeblock'), value: 'default' },
-							{ label: __('Top Left', 'shapeblock'), value: 'posi_left' },
-							{ label: __('Top Right', 'shapeblock'), value: 'posi_right' },
-							{ label: __('Bottom Left', 'shapeblock'), value: 'posi_botttom_left' },
-							{ label: __('Bottom Right', 'shapeblock'), value: 'posi_botttom_right' },
-						]}
-						onChange={(v) => setAttributes({ socialIconPosition: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
 					{socialIconPosition !== 'default' && (
 						<>
 							<SelectControl
@@ -284,13 +229,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								__nextHasNoMarginBottom
 							/>
 							{socialIconShow === 'hover_show' && <IconPicker label={__('Hover Icon', 'shapeblock')} value={socialHoverIcon} onChange={(v) => setAttributes({ socialHoverIcon: v })} />}
-							{(socialIconPosition === 'posi_left' || socialIconPosition === 'posi_right') && num(__('Top Position (px)', 'shapeblock'), 'sIconPosiTop')}
-							{(socialIconPosition === 'posi_botttom_left' || socialIconPosition === 'posi_botttom_right') && num(__('Bottom Position (px)', 'shapeblock'), 'sIconPosiBottom')}
-							{(socialIconPosition === 'posi_left' || socialIconPosition === 'posi_botttom_left') && num(__('Left Position (px)', 'shapeblock'), 'sIconPosiLeft')}
-							{(socialIconPosition === 'posi_right' || socialIconPosition === 'posi_botttom_right') && num(__('Right Position (px)', 'shapeblock'), 'sIconPosiRight')}
+							<Divider />
 						</>
 					)}
-					<Divider />
 					{items.map((item, index) => (
 						<div className="shapeblock-team-grid-repeater-item" key={index}>
 							<div className="shapeblock-team-grid-repeater-head">
@@ -314,26 +255,68 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	// --- Tab 2: Layout (arrangement & dimensions) -----------------------------
 	const layoutTab = (
-		<PanelBody title={__('Spacing & Sizing', 'shapeblock')} initialOpen={true}>
-			{respAlign(__('Content Alignment', 'shapeblock'), 'teamContentAlignment', [{ label: __('Default', 'shapeblock'), value: '' }, ...ALIGN])}
-			{respBox(__('Team Item Padding', 'shapeblock'), 'itemPadding')}
-			{respBox(__('Content Area Padding', 'shapeblock'), 'wrapPadding')}
-			{respBox(__('Content Area Margin', 'shapeblock'), 'wrapMargin')}
-			{box(__('Name Padding', 'shapeblock'), 'namePadding')}
-			<Divider />
-			{respNum(__('Image Width (px)', 'shapeblock'), 'imageWidth')}
-			{respNum(__('Image Height (px)', 'shapeblock'), 'imageHeightStyle')}
-			{respBox(__('Image Padding', 'shapeblock'), 'imagePadding')}
-			{showSocialIcon && (
-				<>
-					<Divider />
-					{respNum(__('Social Icon Gap (px)', 'shapeblock'), 'sIconGap')}
-					{respNum(__('Social Button Size (px)', 'shapeblock'), 'sIconButtonSize')}
-					{respBox(__('Social Icon Area Padding', 'shapeblock'), 'sIconAreaPadding')}
+		<>
+			<PanelBody title={__('Skin & Alignment', 'shapeblock')} initialOpen={true}>
+				<SelectControl
+					label={__('Skin Type', 'shapeblock')}
+					value={teamSkin}
+					options={[
+						{ label: __('Default', 'shapeblock'), value: 'default' },
+						{ label: __('Skin 01', 'shapeblock'), value: 'skin1' },
+						{ label: __('Skin 02', 'shapeblock'), value: 'skin2' },
+						{ label: __('Skin 03', 'shapeblock'), value: 'skin3' },
+						{ label: __('Skin 04 (Hover Overlay)', 'shapeblock'), value: 'skin4' },
+						{ label: __('Skin 05', 'shapeblock'), value: 'skin5' },
+					]}
+					onChange={(v) => setAttributes({ teamSkin: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+				{isContentSkin && (
+					<SelectControl
+						label={__('Content Show', 'shapeblock')}
+						value={contentShow}
+						options={[
+							{ label: __('Inside Image', 'shapeblock'), value: 'inside' },
+							{ label: __('Normal', 'shapeblock'), value: 'normal' },
+						]}
+						onChange={(v) => setAttributes({ contentShow: v })}
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+				)}
+				{respAlign(__('Content Alignment', 'shapeblock'), 'teamContentAlignment', [{ label: __('Default', 'shapeblock'), value: '' }, ...ALIGN])}
+			</PanelBody>
+
+			<PanelBody title={__('Image Size', 'shapeblock')} initialOpen={false}>
+				{respNum(__('Image Width (px)', 'shapeblock'), 'imageWidth')}
+				{respNum(__('Image Height (px)', 'shapeblock'), 'imageHeightStyle')}
+			</PanelBody>
+
+			{socialOn && (
+				<PanelBody title={__('Social Icon Position', 'shapeblock')} initialOpen={false}>
+					<SelectControl
+						label={__('Icon Position', 'shapeblock')}
+						value={socialIconPosition}
+						options={[
+							{ label: __('Default', 'shapeblock'), value: 'default' },
+							{ label: __('Top Left', 'shapeblock'), value: 'posi_left' },
+							{ label: __('Top Right', 'shapeblock'), value: 'posi_right' },
+							{ label: __('Bottom Left', 'shapeblock'), value: 'posi_botttom_left' },
+							{ label: __('Bottom Right', 'shapeblock'), value: 'posi_botttom_right' },
+						]}
+						onChange={(v) => setAttributes({ socialIconPosition: v })}
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+					{(socialIconPosition === 'posi_left' || socialIconPosition === 'posi_right') && num(__('Top Position (px)', 'shapeblock'), 'sIconPosiTop')}
+					{(socialIconPosition === 'posi_botttom_left' || socialIconPosition === 'posi_botttom_right') && num(__('Bottom Position (px)', 'shapeblock'), 'sIconPosiBottom')}
+					{(socialIconPosition === 'posi_left' || socialIconPosition === 'posi_botttom_left') && num(__('Left Position (px)', 'shapeblock'), 'sIconPosiLeft')}
+					{(socialIconPosition === 'posi_right' || socialIconPosition === 'posi_botttom_right') && num(__('Right Position (px)', 'shapeblock'), 'sIconPosiRight')}
 					{socialIconPosition === 'default' && respAlign(__('Social Icon Alignment', 'shapeblock'), 'teamSocialIconAlignment', [{ label: __('Default', 'shapeblock'), value: '' }, { label: __('Left', 'shapeblock'), value: 'flex-start' }, { label: __('Center', 'shapeblock'), value: 'center' }, { label: __('Right', 'shapeblock'), value: 'flex-end' }])}
-				</>
+				</PanelBody>
 			)}
-		</PanelBody>
+		</>
 	);
 
 	// --- Tab 3: Style (colors, typography, borders) ---------------------------
@@ -345,24 +328,41 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				{border(__('Border', 'shapeblock'), 'teamBorder')}
 				{color(__('Hover Border Color', 'shapeblock'), 'teamHoverBorderColor')}
 				{shadow(__('Box Shadow', 'shapeblock'), 'teamBoxShadow')}
+				<Divider />
+				{respBox(__('Padding', 'shapeblock'), 'itemPadding')}
 			</PanelBody>
 
 			<PanelBody title={__('Image', 'shapeblock')} initialOpen={false}>
+				{bg(__('Image Overlay', 'shapeblock'), 'imageOverlayColor', 'imageOverlayGradient')}
 				{box(__('Border Radius', 'shapeblock'), 'imageStyleRadius')}
+				{respBox(__('Padding', 'shapeblock'), 'imagePadding')}
 				<Divider />
-				{color(__('Below Background Color', 'shapeblock'), 'imageBelowBg')}
+				{bg(__('Below Background', 'shapeblock'), 'imageBelowBg', 'imageBelowBgGradient')}
 				{respNum(__('Below BG Height (%)', 'shapeblock'), 'imageBelowHeight')}
 				<SelectControl label={__('Below BG Position', 'shapeblock')} value={attributes.imageBelowPosition} options={[{ label: __('Top', 'shapeblock'), value: 'top' }, { label: __('Bottom', 'shapeblock'), value: 'bottom' }]} onChange={(v) => setAttributes({ imageBelowPosition: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 				{box(__('Below BG Border Radius', 'shapeblock'), 'imageBelowRadius')}
 			</PanelBody>
 
 			<PanelBody title={__('Name & Designation Area', 'shapeblock')} initialOpen={false}>
-				{color(__('Background Color', 'shapeblock'), 'areaBgColor')}
+				{bg(__('Background', 'shapeblock'), 'areaBgColor', 'areaBgGradient')}
 				{box(__('Border Radius', 'shapeblock'), 'areaBorderRadius')}
+				{respBox(__('Padding', 'shapeblock'), 'wrapPadding')}
+				{respBox(__('Margin', 'shapeblock'), 'wrapMargin')}
 			</PanelBody>
 
 			{teamSkin === 'skin4' && (
 				<PanelBody title={__('Hover Overlay', 'shapeblock')} initialOpen={false}>
+					<SelectControl
+						label={__('Hover Overlay Style', 'shapeblock')}
+						value={attributes.skin4HoverOverlay}
+						options={[
+							{ label: __('Hover Overlay 1', 'shapeblock'), value: 'overlay1' },
+							{ label: __('Hover Overlay 2', 'shapeblock'), value: 'overlay2' },
+						]}
+						onChange={(v) => setAttributes({ skin4HoverOverlay: v })}
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
 					{bg(__('Background', 'shapeblock'), 'skin4OverlayColor', 'skin4OverlayGradient')}
 					{num(__('Backdrop Blur (px)', 'shapeblock'), 'skin4OverlayBlur')}
 					{color(__('Text Color', 'shapeblock'), 'skin4OverlayTextColor')}
@@ -376,6 +376,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<PanelBody title={__('Name', 'shapeblock')} initialOpen={false}>
 				{color(__('Color', 'shapeblock'), 'nameColor')}
 				{respTypo(__('Typography', 'shapeblock'), 'nameTypography')}
+				{box(__('Padding', 'shapeblock'), 'namePadding')}
 			</PanelBody>
 
 			<PanelBody title={__('Designation', 'shapeblock')} initialOpen={false}>
@@ -412,8 +413,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</PanelBody>
 			)}
 
-			{teamSkin === 'skin3' && (
-				<PanelBody title={__('Description (Overlay)', 'shapeblock')} initialOpen={false}>
+			{(teamSkin === 'skin3' || teamSkin === 'skin5') && (
+				<PanelBody title={teamSkin === 'skin5' ? __('Description', 'shapeblock') : __('Description (Overlay)', 'shapeblock')} initialOpen={false}>
 					{color(__('Color', 'shapeblock'), 'descColor')}
 					{bg(__('Background', 'shapeblock'), 'descBgColor', 'descBgGradient')}
 					{color(__('Color (Hover)', 'shapeblock'), 'descColorHover')}
@@ -424,22 +425,26 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</PanelBody>
 			)}
 
-			{showSocialIcon && (
+			{socialOn && (
 				<PanelBody title={__('Social Icon', 'shapeblock')} initialOpen={false}>
 					{color(__('Color', 'shapeblock'), 'sIconColor')}
-					{color(__('Background', 'shapeblock'), 'sIconBgColor')}
+					{bg(__('Background', 'shapeblock'), 'sIconBgColor', 'sIconBgGradient')}
 					{color(__('Color (Hover)', 'shapeblock'), 'sIconHoverColor')}
-					{color(__('Background (Hover)', 'shapeblock'), 'sIconHoverBgColor')}
+					{bg(__('Background (Hover)', 'shapeblock'), 'sIconHoverBgColor', 'sIconHoverBgGradient')}
 					{respTypo(__('Typography', 'shapeblock'), 'sIconTypography')}
 					{box(__('Border Radius', 'shapeblock'), 'sIconRadius')}
 					{socialIconPosition === 'default' && border(__('Area Border', 'shapeblock'), 'socialItemBorder')}
 					{shadow(__('Box Shadow', 'shapeblock'), 'socialBoxShadow')}
+					<Divider />
+					{respNum(__('Social Icon Gap (px)', 'shapeblock'), 'sIconGap')}
+					{respNum(__('Social Button Size (px)', 'shapeblock'), 'sIconButtonSize')}
+					{respBox(__('Social Icon Area Padding', 'shapeblock'), 'sIconAreaPadding')}
 				</PanelBody>
 			)}
 
 			{actionType === 'popup' && (
 				<PanelBody title={__('Popup Style', 'shapeblock')} initialOpen={false}>
-					{color(__('Background Color', 'shapeblock'), 'popupBgColor')}
+					{bg(__('Background', 'shapeblock'), 'popupBgColor', 'popupBgGradient')}
 					{color(__('Name Color', 'shapeblock'), 'popupNameColor')}
 					{respTypo(__('Name Typography', 'shapeblock'), 'popupNameTypography')}
 					{color(__('Designation Color', 'shapeblock'), 'popupDesignationColor')}

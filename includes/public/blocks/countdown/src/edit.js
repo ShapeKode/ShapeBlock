@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import { useBlockProps, InspectorControls, BlockControls, AlignmentControl } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -14,13 +14,12 @@ import {
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import TypographyControls from '../../custom-components/TypographyControls';
 import BorderControl from '../../custom-components/BorderControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import AdvancedControls from '../../custom-components/AdvancedControls';
-
-import './editor.scss';
 
 // Map a base attribute name to its per-device key (desktop uses the base name).
 const getKey = (base, device) =>
@@ -88,8 +87,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const color = (label, key) => (
 		<ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
 	);
-	const typo = (label, key) => (
-		<TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />
+	const bg = (label, c, g) => (
+		<BackgroundControl label={label} colorValue={attributes[c]} gradientValue={attributes[g]} onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })} onGradientChange={(v) => setAttributes({ [g]: v || '' })} />
 	);
 	const box = (label, key) => (
 		<BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
@@ -147,7 +146,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	// --- Tab 1: Settings (content/behavior) -----------------------------------
 	const settingsTab = (
-		<PanelBody title={__('Countdown', 'shapeblock')} initialOpen={true}>
+		<PanelBody title={__('Content', 'shapeblock')} initialOpen={true}>
 			<TextControl
 				label={__('Target Date', 'shapeblock')}
 				type="datetime-local"
@@ -162,31 +161,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<TextControl label={__('Hours Label', 'shapeblock')} value={hoursLabel} onChange={(v) => setAttributes({ hoursLabel: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 			<TextControl label={__('Minutes Label', 'shapeblock')} value={minuteLabel} onChange={(v) => setAttributes({ minuteLabel: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 			<TextControl label={__('Seconds Label', 'shapeblock')} value={secondsLabel} onChange={(v) => setAttributes({ secondsLabel: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-			<Divider />
-			<SelectControl
-				label={__('Separator', 'shapeblock')}
-				value={separator}
-				options={[
-					{ label: __('Space', 'shapeblock'), value: 'shapeblock-cntdwn-space' },
-					{ label: __('Bullets', 'shapeblock'), value: 'shapeblock-cntdwn-bullets' },
-					{ label: __('Dash', 'shapeblock'), value: 'shapeblock-cntdwn-dash' },
-				]}
-				onChange={(v) => setAttributes({ separator: v })}
-				__next40pxDefaultSize
-				__nextHasNoMarginBottom
-			/>
+		</PanelBody>
+	);
+
+	// --- Tab 2: Layout (structure & alignment) --------------------------------
+	const layoutTab = (
+		<PanelBody title={__('Layout', 'shapeblock')} initialOpen={true}>
 			<ToggleControl
 				label={__('Display Label Under Number', 'shapeblock')}
 				checked={labelUnderNumber}
 				onChange={(v) => setAttributes({ labelUnderNumber: v })}
 				__nextHasNoMarginBottom
 			/>
-		</PanelBody>
-	);
-
-	// --- Tab 2: Layout (size & spacing) ---------------------------------------
-	const layoutTab = (
-		<PanelBody title={__('Countdown', 'shapeblock')} initialOpen={true}>
 			{labelUnderNumber && respAlign(
 				__('Content Alignment', 'shapeblock'),
 				'contentAlign',
@@ -197,20 +183,35 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				]
 			)}
 			{respNum(__('Mid Gap (px)', 'shapeblock'), 'midGap')}
-			{isSeparator && num(__('Separator Position X (px)', 'shapeblock'), 'separatorPositionX')}
-			{respBox(__('Item Padding', 'shapeblock'), 'itemPadding')}
 		</PanelBody>
 	);
 
 	// --- Tab 3: Style (appearance) --------------------------------------------
 	const styleTab = (
 		<>
-			<PanelBody title={__('Countdown', 'shapeblock')} initialOpen={true}>
-				{isSeparator && color(__('Separator Color', 'shapeblock'), 'separatorColor')}
-				{color(__('Item Background', 'shapeblock'), 'itemBgColor')}
+			<PanelBody title={__('Item', 'shapeblock')} initialOpen={true}>
+				{bg(__('Item Background', 'shapeblock'), 'itemBgColor', 'itemBgColorGradient')}
 				<BorderControl label={__('Item Border', 'shapeblock')} value={attributes.itemBorder} onChange={(v) => setAttributes({ itemBorder: v })} />
 				<BoxShadowControls label={__('Item Box Shadow', 'shapeblock')} value={attributes.itemBoxShadow} onChange={(v) => setAttributes({ itemBoxShadow: v })} />
 				{box(__('Item Border Radius', 'shapeblock'), 'itemBorderRadius')}
+				{respBox(__('Item Padding', 'shapeblock'), 'itemPadding')}
+			</PanelBody>
+
+			<PanelBody title={__('Separator', 'shapeblock')} initialOpen={false}>
+				<SelectControl
+					label={__('Separator', 'shapeblock')}
+					value={separator}
+					options={[
+						{ label: __('Space', 'shapeblock'), value: 'shapeblock-cntdwn-space' },
+						{ label: __('Bullets', 'shapeblock'), value: 'shapeblock-cntdwn-bullets' },
+						{ label: __('Dash', 'shapeblock'), value: 'shapeblock-cntdwn-dash' },
+					]}
+					onChange={(v) => setAttributes({ separator: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+				{isSeparator && bg(__('Separator Color', 'shapeblock'), 'separatorColor', 'separatorColorGradient')}
+				{isSeparator && num(__('Separator Position X (px)', 'shapeblock'), 'separatorPositionX')}
 			</PanelBody>
 
 			{unitSection(__('Days', 'shapeblock'), 'daysTypography', 'daysColor', 'daysLabelColor', 'daysLabelTypography')}
@@ -222,12 +223,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	return (
 		<div {...useBlockProps()}>
-			<BlockControls>
-				<AlignmentControl
-					value={attributes[alignKey]}
-					onChange={(value) => setAttributes({ [alignKey]: value || (dev === 'desktop' ? 'center' : '') })}
-				/>
-			</BlockControls>
+			{/* Alignment applies to a label shown under its number, as in the sidebar. */}
+			{attributes.labelUnderNumber && (
+				<BlockControls>
+					<AlignmentControl
+						value={attributes[alignKey]}
+						onChange={(value) => setAttributes({ [alignKey]: value || (dev === 'desktop' ? 'center' : '') })}
+					/>
+				</BlockControls>
+			)}
 			<InspectorControls>
 				<TabPanel
 					className="shapeblock-inspector-tabs"

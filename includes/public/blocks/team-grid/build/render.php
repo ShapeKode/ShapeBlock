@@ -16,8 +16,8 @@ $H = '\ShapeBlock\Frontend\Helper';
 $unique_id  = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-team-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 $popup_id   = $unique_id . '-popup';
 
-$skin       = isset( $attributes['teamSkin'] ) ? $attributes['teamSkin'] : 'default';
-$overlay4   = isset( $attributes['skin4HoverOverlay'] ) ? $attributes['skin4HoverOverlay'] : 'overlay1';
+$skin       = isset( $attributes['teamSkin'] ) ? sanitize_html_class( (string) $attributes['teamSkin'], 'default' ) : 'default';
+$overlay4   = isset( $attributes['skin4HoverOverlay'] ) ? sanitize_html_class( (string) $attributes['skin4HoverOverlay'], 'overlay1' ) : 'overlay1';
 $image      = isset( $attributes['image'] ) && is_array( $attributes['image'] ) ? $attributes['image'] : [];
 $img_url    = ! empty( $image['url'] ) ? $image['url'] : '';
 $allowed    = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p' ];
@@ -34,8 +34,8 @@ if ( ! empty( $attributes['linkNofollow'] ) ) { $rel_parts[] = 'nofollow'; }
 $nofollow   = ! empty( $rel_parts ) ? ' rel="' . esc_attr( implode( ' ', $rel_parts ) ) . '"' : '';
 $content_show = isset( $attributes['contentShow'] ) ? $attributes['contentShow'] : 'inside';
 $show_social  = ! empty( $attributes['showSocialIcon'] );
-$social_pos   = isset( $attributes['socialIconPosition'] ) ? $attributes['socialIconPosition'] : 'default';
-$social_show  = isset( $attributes['socialIconShow'] ) ? $attributes['socialIconShow'] : 'dafault_show';
+$social_pos   = isset( $attributes['socialIconPosition'] ) ? sanitize_html_class( (string) $attributes['socialIconPosition'], 'default' ) : 'default';
+$social_show  = isset( $attributes['socialIconShow'] ) ? sanitize_html_class( (string) $attributes['socialIconShow'], 'dafault_show' ) : 'dafault_show';
 $social_hover_icon = isset( $attributes['socialHoverIcon'] ) ? $attributes['socialHoverIcon'] : '';
 $social_links = isset( $attributes['socialLinks'] ) && is_array( $attributes['socialLinks'] ) ? $attributes['socialLinks'] : [];
 
@@ -115,7 +115,11 @@ $img_box = array_merge( $img_box, $dims( $attributes['imageStyleRadius'] ?? [], 
 $img_el = ( '' !== $u( 'imageHeightStyle' ) ) ? [ 'height' => $u( 'imageHeightStyle' ) ] : [];
 $img_area = $dims( $attributes['imagePadding'] ?? [], 'padding' );
 $below = [];
-if ( ! empty( $attributes['imageBelowBg'] ) ) $below['background-color'] = $attributes['imageBelowBg'];
+if ( ! empty( $attributes['imageBelowBgGradient'] ) ) {
+	$below['background'] = $attributes['imageBelowBgGradient'];
+} elseif ( ! empty( $attributes['imageBelowBg'] ) ) {
+	$below['background-color'] = $attributes['imageBelowBg'];
+}
 if ( ! empty( $attributes['imageBelowHeight'] ) ) $below['height'] = $attributes['imageBelowHeight'] . '%';
 if ( ! empty( $attributes['imageBelowPosition'] ) ) {
 	if ( 'bottom' === $attributes['imageBelowPosition'] ) { $below['top'] = 'auto'; $below['bottom'] = '0'; } else { $below['top'] = '0'; $below['bottom'] = 'auto'; }
@@ -125,7 +129,11 @@ $overlay = $bg( 'imageOverlayColor', 'imageOverlayGradient' );
 
 // Name & designation area.
 $area = [];
-if ( ! empty( $attributes['areaBgColor'] ) ) $area['background-color'] = $attributes['areaBgColor'];
+if ( ! empty( $attributes['areaBgGradient'] ) ) {
+	$area['background'] = $attributes['areaBgGradient'];
+} elseif ( ! empty( $attributes['areaBgColor'] ) ) {
+	$area['background-color'] = $attributes['areaBgColor'];
+}
 $area = array_merge( $area, $dims( $attributes['wrapPadding'] ?? [], 'padding' ), $dims( $attributes['wrapMargin'] ?? [], 'margin' ), $dims( $attributes['areaBorderRadius'] ?? [], 'radius' ) );
 
 // Skin4 overlay.
@@ -133,6 +141,9 @@ $ov = $bg( 'skin4OverlayColor', 'skin4OverlayGradient' );
 if ( '' !== $u( 'skin4OverlayBlur' ) ) { $ov['backdrop-filter'] = 'blur(' . $u( 'skin4OverlayBlur' ) . ')'; $ov['-webkit-backdrop-filter'] = 'blur(' . $u( 'skin4OverlayBlur' ) . ')'; }
 if ( ! empty( $attributes['skin4OverlayTextColor'] ) ) $ov['color'] = $attributes['skin4OverlayTextColor'];
 $ov = array_merge( $ov, $dims( $attributes['skin4OverlayPadding'] ?? [], 'padding' ), $dims( $attributes['skin4OverlayBorderRadius'] ?? [], 'radius' ) );
+if ( isset( $attributes['skin4OverlayTransition'] ) && is_numeric( $attributes['skin4OverlayTransition'] ) ) {
+	$ov['transition-duration'] = max( 0, (float) $attributes['skin4OverlayTransition'] ) . 's';
+}
 $ov2 = ( '' !== $u( 'skin4Overlay2CircleSize' ) ) ? [ 'width' => $u( 'skin4Overlay2CircleSize' ) ] : [];
 
 // Name / designation.
@@ -169,17 +180,23 @@ $desc3_box = $bg( 'descBgColor', 'descBgGradient' );
 $desc3_box = array_merge( $desc3_box, $dims( $attributes['descPadding'] ?? [], 'padding' ) );
 $desc3_hover = ! empty( $attributes['descColorHover'] ) ? [ 'color' => $attributes['descColorHover'] ] : [];
 $desc3_hover_bg = $bg( 'descBgHoverColor', 'descBgHoverGradient' );
-if ( '' !== $u( 'descBgHoverOpacity' ) ) $desc3_hover_bg['opacity'] = $attributes['descBgHoverOpacity'];
+// The hover layer rests at opacity 0, so a Hover Background with no opacity
+// typed in would never show -- it fades in fully unless one is given.
+if ( '' !== $u( 'descBgHoverOpacity' ) ) {
+	$desc3_hover_bg['opacity'] = $attributes['descBgHoverOpacity'];
+} elseif ( ! empty( $desc3_hover_bg ) ) {
+	$desc3_hover_bg['opacity'] = '1';
+}
 
 // Social.
 $soc = [];
 if ( ! empty( $attributes['sIconColor'] ) ) $soc['color'] = $attributes['sIconColor'];
-if ( ! empty( $attributes['sIconBgColor'] ) ) $soc['background'] = $attributes['sIconBgColor'];
+$soc = array_merge( $soc, $bg( 'sIconBgColor', 'sIconBgGradient' ) );
 $soc = array_merge( $soc, $typo( $attributes['sIconTypography'] ?? [] ), $dims( $attributes['sIconRadius'] ?? [], 'radius' ), $shadow( $attributes['socialBoxShadow'] ?? [] ) );
 if ( '' !== $u( 'sIconButtonSize' ) ) { $soc['width'] = $u( 'sIconButtonSize' ); $soc['height'] = $u( 'sIconButtonSize' ); }
 $soc_hover = [];
 if ( ! empty( $attributes['sIconHoverColor'] ) ) $soc_hover['color'] = $attributes['sIconHoverColor'];
-if ( ! empty( $attributes['sIconHoverBgColor'] ) ) $soc_hover['background'] = $attributes['sIconHoverBgColor'];
+$soc_hover = array_merge( $soc_hover, $bg( 'sIconHoverBgColor', 'sIconHoverBgGradient' ) );
 $soc_ul = ( '' !== $u( 'sIconGap' ) ) ? [ 'gap' => $u( 'sIconGap' ) ] : [];
 $soc_area = $dims( $attributes['sIconAreaPadding'] ?? [], 'padding' );
 if ( ! empty( $attributes['socialItemBorder'] ) ) $soc_area = array_merge( $soc_area, $H::border_to_css_props( $attributes['socialItemBorder'] ) );
@@ -192,7 +209,12 @@ if ( '' !== $u( 'sIconPosiLeft' ) ) $soc_pos['left'] = $u( 'sIconPosiLeft' );
 if ( '' !== $u( 'sIconPosiRight' ) ) $soc_pos['right'] = $u( 'sIconPosiRight' );
 
 // Popup.
-$pop_content = ! empty( $attributes['popupBgColor'] ) ? [ 'background-color' => $attributes['popupBgColor'] ] : [];
+$pop_content = [];
+if ( ! empty( $attributes['popupBgGradient'] ) ) {
+	$pop_content['background'] = $attributes['popupBgGradient'];
+} elseif ( ! empty( $attributes['popupBgColor'] ) ) {
+	$pop_content['background-color'] = $attributes['popupBgColor'];
+}
 $pop_name = $typo( $attributes['popupNameTypography'] ?? [] );
 if ( ! empty( $attributes['popupNameColor'] ) ) $pop_name['color'] = $attributes['popupNameColor'];
 $pop_deg = $typo( $attributes['popupDesignationTypography'] ?? [] );
@@ -215,7 +237,23 @@ $deg_sel         = '.shapeblock-designation, ' . $selector . '.skin4 .shapeblock
 $cicon_glyph_sel = '.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon i, ' . $selector . ' .shapeblock-team-card.skin5 .shapeblock-contact-icon svg';
 $soc_sel         = '.shapeblock-team-social ul li a, ' . $selector . ' .shapeblock-team-social .shapeblock-team-social-hover a';
 
-$build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $name_sel, $deg_sel, $cicon_glyph_sel, $soc_sel ) {
+// Several skins style these parts with longer selectors in style.scss (skin 1's
+// right column, skin 3's image box, skin 4's second overlay, skin 5's
+// designation). A user setting has to be at least as specific to win, so each
+// key below also carries the skin's own path.
+$ov2_path     = $selector . ' .shapeblock-team-card .shapeblock-team-hover-content.overlay2';
+$soc_sel     .= ', ' . $ov2_path . ' .shapeblock-team-social ul li a:not(.shapeblock-popup-trigger), ' . $ov2_path . ' .shapeblock-team-social ul li:first-child a:not(.shapeblock-popup-trigger)';
+$soc_hov_sel  = '.shapeblock-team-social ul li a:hover, ' . $selector . ' .shapeblock-team-social .shapeblock-team-social-hover a:hover, ' . $ov2_path . ' .shapeblock-team-social ul li a:not(.shapeblock-popup-trigger):hover';
+$deg_sel     .= ', ' . $selector . ' .shapeblock-team-card.skin5 .shapeblock-designation';
+$k_wrap       = '.shapeblock-team-card .shapeblock-name-deg-wrap, ' . $selector . ' .shapeblock-team-card .shapeblock-team-right .shapeblock-name-deg-wrap, ' . $ov2_path . ' .shapeblock-name-deg-wrap';
+$k_img_box    = '.shapeblock-team-card .shapeblock-team-img-box, ' . $selector . ' .shapeblock-grid-item .shapeblock-team-card .shapeblock-team-img-area .shapeblock-team-img-box';
+$k_img_el     = '.shapeblock-team-card .shapeblock-team-img-box img, ' . $selector . ' .shapeblock-grid-item .shapeblock-team-card .shapeblock-team-img-area .shapeblock-team-img-box img';
+$k_soc_ul     = '.shapeblock-team-social ul, ' . $ov2_path . ' .shapeblock-team-social ul';
+$k_soc        = '.shapeblock-team-social, ' . $selector . ' .shapeblock-team-card .shapeblock-team-right .shapeblock-team-social.default, ' . $ov2_path . ' .shapeblock-team-social';
+$k_soc_align  = '.shapeblock-team-card .shapeblock-team-social.default ul, ' . $selector . ' .shapeblock-team-card .shapeblock-team-right .shapeblock-team-social.default ul';
+$k_desc3_box  = '.shapeblock-image-content, ' . $selector . ' .shapeblock-team-img-box .shapeblock-image-content';
+
+$build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $name_sel, $deg_sel, $cicon_glyph_sel, $soc_sel, $k_wrap, $k_img_box, $k_img_el, $k_soc_ul, $k_soc, $k_soc_align ) {
 	$ru = function ( $key ) use ( $attributes, $H ) {
 		return ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? $H::ensure_unit( $attributes[ $key ] ) : '';
 	};
@@ -261,9 +299,9 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $name_sel
 
 	return [
 		'.shapeblock-team-card'                                                   => $card,
-		'.shapeblock-team-card .shapeblock-name-deg-wrap'                              => $wrap,
-		'.shapeblock-team-card .shapeblock-team-img-box'                                                => $img_box,
-		'.shapeblock-team-card .shapeblock-team-img-box img'                                            => $img_el,
+		$k_wrap                              => $wrap,
+		$k_img_box                                                => $img_box,
+		$k_img_el                                            => $img_el,
 		'.shapeblock-team-card .shapeblock-team-img-area'                                               => $img_area,
 		'.shapeblock-team-card .shapeblock-team-img-area .shapeblock-image-below-bg'                         => $below,
 		$name_sel                                                                             => $name_styles,
@@ -275,9 +313,9 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $name_sel
 		'.shapeblock-team-description'                                                             => $tdesc,
 		'.shapeblock-image-content .shapeblock-description'                                             => $desc3,
 		$soc_sel                                                                              => $soc,
-		'.shapeblock-team-social ul'                                                               => $soc_ul,
-		'.shapeblock-team-social'                                                                  => $soc_area,
-		'.shapeblock-team-card .shapeblock-team-social.default ul'                                      => $soc_align,
+		$k_soc_ul                                                               => $soc_ul,
+		$k_soc                                                                  => $soc_area,
+		$k_soc_align                                      => $soc_align,
 		'.shapeblock-popup-name .shapeblock-name'                                                       => $pop_name,
 		'.shapeblock-popup-designation'                                                            => $pop_deg,
 		'.shapeblock-popup-details'                                                                => $pop_det,
@@ -286,9 +324,9 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $name_sel
 $dev_data      = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
 $sub_selectors = [
 	'.shapeblock-team-card',
-	'.shapeblock-team-card .shapeblock-name-deg-wrap',
-	'.shapeblock-team-card .shapeblock-team-img-box',
-	'.shapeblock-team-card .shapeblock-team-img-box img',
+	$k_wrap,
+	$k_img_box,
+	$k_img_el,
 	'.shapeblock-team-card .shapeblock-team-img-area',
 	'.shapeblock-team-card .shapeblock-team-img-area .shapeblock-image-below-bg',
 	$name_sel,
@@ -300,9 +338,9 @@ $sub_selectors = [
 	'.shapeblock-team-description',
 	'.shapeblock-image-content .shapeblock-description',
 	$soc_sel,
-	'.shapeblock-team-social ul',
-	'.shapeblock-team-social',
-	'.shapeblock-team-card .shapeblock-team-social.default ul',
+	$k_soc_ul,
+	$k_soc,
+	$k_soc_align,
 	'.shapeblock-popup-name .shapeblock-name',
 	'.shapeblock-popup-designation',
 	'.shapeblock-popup-details',
@@ -341,17 +379,17 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	// generated but never applied to anything.
 	'.shapeblock-team-card'                                        => $H::get_inline_styles( $card ),
 	'.shapeblock-team-card:hover'                                  => $H::get_inline_styles( $card_hover ),
-	'.shapeblock-team-card .shapeblock-name-deg-wrap'              => $H::get_inline_styles( array_merge( $area, $content_align ) ),
-	'.shapeblock-team-card .shapeblock-team-img-box'               => $H::get_inline_styles( $img_box ),
-	'.shapeblock-team-card .shapeblock-team-img-box img'           => $H::get_inline_styles( $img_el ),
+	$k_wrap              => $H::get_inline_styles( array_merge( $area, $content_align ) ),
+	$k_img_box               => $H::get_inline_styles( $img_box ),
+	$k_img_el           => $H::get_inline_styles( $img_el ),
 	'.shapeblock-team-card .shapeblock-team-img-area'              => $H::get_inline_styles( $img_area ),
 	'.shapeblock-team-card .shapeblock-team-img-area .shapeblock-image-below-bg' => $H::get_inline_styles( $below ),
 	'.shapeblock-team-card .shapeblock-image-overlay'              => $H::get_inline_styles( $overlay ),
 	// The two skin 4 overlay rules are not here: their selector has to join
 	// onto the wrapper without a space, and this list always inserts one. They
 	// are written straight into $resp_css above instead.
-	'.shapeblock-name, ' . $selector . '.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-name' => $H::get_inline_styles( $name_styles ),
-	'.shapeblock-designation, ' . $selector . '.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-designation' => $H::get_inline_styles( $deg_styles ),
+	$name_sel                                                       => $H::get_inline_styles( $name_styles ),
+	$deg_sel                                                        => $H::get_inline_styles( $deg_styles ),
 	'.shapeblock-team-card.skin5 .shapeblock-author-contact'       => $H::get_inline_styles( $contact_wrap ),
 	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item' => $H::get_inline_styles( $contact_item ),
 	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item:hover' => $H::get_inline_styles( $contact_item_hover ),
@@ -359,14 +397,14 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon i, ' . $selector . ' .shapeblock-team-card.skin5 .shapeblock-contact-icon svg' => $H::get_inline_styles( array_merge( $contact_icon_glyph, $contact_icon_fill ) ),
 	'.shapeblock-team-description'                            => $H::get_inline_styles( $tdesc ),
 	'.shapeblock-image-content .shapeblock-description'            => $H::get_inline_styles( $desc3 ),
-	'.shapeblock-image-content'                               => $H::get_inline_styles( $desc3_box ),
+	$k_desc3_box                               => $H::get_inline_styles( $desc3_box ),
 	'.shapeblock-image-content:hover .shapeblock-description'      => $H::get_inline_styles( $desc3_hover ),
 	'.shapeblock-image-content:hover::before'                 => $H::get_inline_styles( $desc3_hover_bg ),
-	'.shapeblock-team-social ul li a, ' . $selector . ' .shapeblock-team-social .shapeblock-team-social-hover a' => $H::get_inline_styles( $soc ),
-	'.shapeblock-team-social ul li a:hover, ' . $selector . ' .shapeblock-team-social .shapeblock-team-social-hover a:hover' => $H::get_inline_styles( $soc_hover ),
-	'.shapeblock-team-social ul'                              => $H::get_inline_styles( $soc_ul ),
-	'.shapeblock-team-social'                                 => $H::get_inline_styles( array_merge( $soc_area, $soc_pos ) ),
-	'.shapeblock-team-card .shapeblock-team-social.default ul'     => $H::get_inline_styles( $soc_align ),
+	$soc_sel                                                        => $H::get_inline_styles( $soc ),
+	$soc_hov_sel => $H::get_inline_styles( $soc_hover ),
+	$k_soc_ul                              => $H::get_inline_styles( $soc_ul ),
+	$k_soc                                 => $H::get_inline_styles( array_merge( $soc_area, $soc_pos ) ),
+	$k_soc_align     => $H::get_inline_styles( $soc_align ),
 	'.shapeblock-popup-content'                               => $H::get_inline_styles( $pop_content ),
 	'.shapeblock-popup-name .shapeblock-name'                      => $H::get_inline_styles( $pop_name ),
 	'.shapeblock-popup-designation'                           => $H::get_inline_styles( $pop_deg ),
@@ -491,7 +529,7 @@ ob_start();
 	<div class="shapeblock-image-below-bg"></div>
 	<div class="shapeblock-image-overlay"></div>
 	<?php if ( in_array( $skin, [ 'skin3', 'skin5' ], true ) && $details ) : ?>
-		<div class="shapeblock-image-content <?php echo 'skin5' === $skin ? 'has-description' : ''; ?>">
+		<div class="shapeblock-image-content">
 			<div class="shapeblock-description"><?php echo wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></div>
 		</div>
 	<?php endif; ?>
@@ -531,6 +569,9 @@ $build_name_wrap = function ( $extra_class = '', $with_details = true, $with_soc
 							<?php $render_social(); ?>
 						<?php endif; ?>
 					</div>
+					<?php if ( $has_social && 'default' !== $social_pos ) : ?>
+						<?php $render_social(); ?>
+					<?php endif; ?>
 				</div>
 			</div>
 		<?php elseif ( 'skin3' === $skin ) : ?>

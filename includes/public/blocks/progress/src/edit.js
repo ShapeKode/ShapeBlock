@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -16,8 +16,6 @@ import TypographyControls from '../../custom-components/TypographyControls';
 import BackgroundControl from '../../custom-components/BackgroundControl';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import AdvancedControls from '../../custom-components/AdvancedControls';
-
-import './editor.scss';
 
 // Map a base attribute name to its per-device key (desktop uses the base name).
 const getKey = (base, device) =>
@@ -68,7 +66,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	}, []);
 
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const typo = (label, key) => <TypographyControls label={label} attributes={attributes} setAttributes={setAttributes} attributeKey={key} />;
+	const bg = (label, c, g) => (
+		<BackgroundControl
+			label={label}
+			colorValue={attributes[c]}
+			gradientValue={attributes[g]}
+			onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })}
+			onGradientChange={(v) => setAttributes({ [g]: v || '' })}
+		/>
+	);
 	const num = (label, key) => <TextControl label={label} type="number" value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
 	// Responsive variants — a device switcher above the control, editing the
 	// matching per-device attribute (base / baseTablet / baseMobile).
@@ -121,7 +127,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	// --- Tab 2: Layout (size & spacing) ---------------------------------------
 	const layoutTab = (
-		<PanelBody title={__('Progress', 'shapeblock')} initialOpen={true}>
+		<PanelBody title={__('Bar Size', 'shapeblock')} initialOpen={true}>
 			{respNum(__('Height (px)', 'shapeblock'), 'progressHeight')}
 		</PanelBody>
 	);
@@ -132,8 +138,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<PanelBody title={__('Progress', 'shapeblock')} initialOpen={true}>
 				{selectStyle === 'style1' && (
 					<>
-						{color(__('Progress Color (track)', 'shapeblock'), 'progressColor')}
-						{color(__('Progress Bar Color (fill)', 'shapeblock'), 'progressBarColor')}
+						{bg(__('Progress Color (track)', 'shapeblock'), 'progressColor', 'progressColorGradient')}
+						{bg(__('Progress Bar Color (fill)', 'shapeblock'), 'progressBarColor', 'progressBarColorGradient')}
 					</>
 				)}
 				{selectStyle === 'style2' && (
@@ -145,6 +151,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						onGradientChange={(v) => setAttributes({ style2BgGradient: v || '' })}
 					/>
 				)}
+				{selectStyle === 'style2' && bg(__('Progress Bar Color (fill)', 'shapeblock'), 'progressBarColor', 'progressBarColorGradient')}
 				<Divider />
 				{num(__('Border Radius (px)', 'shapeblock'), 'progressRadius')}
 			</PanelBody>

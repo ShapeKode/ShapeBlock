@@ -11,7 +11,7 @@
 	function readOptions(el) {
 		try {
 			return JSON.parse(el.dataset.shapeblockImageCarousel || '{}');
-		} catch (e) {
+		} catch {
 			return {};
 		}
 	}

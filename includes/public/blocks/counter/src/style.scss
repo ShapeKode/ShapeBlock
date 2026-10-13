@@ -32,12 +32,6 @@
 	display: grid;
 }
 
-.shapeblock-cnt-icon svg {
-	width: 60px;
-	height: 60px;
-	fill: var(--shapeblock-preset-color-secondary, #0b3665);
-}
-
 .shapeblock-cnt-icon i {
 	font-size: 40px;
 }
@@ -140,10 +134,6 @@
 	.shapeblock-cnt-number-wrap {
 		font-size: 56px;
 	}
-	.shapeblock-cnt-icon svg {
-		width: 48px;
-		height: 48px;
-	}
 	.shapeblock-cnt-icon i {
 		font-size: 34px;
 	}
@@ -152,10 +142,6 @@
 @media (max-width: 767px) {
 	.shapeblock-cnt-number-wrap {
 		font-size: 40px;
-	}
-	.shapeblock-cnt-icon svg {
-		width: 40px;
-		height: 40px;
 	}
 	.shapeblock-cnt-icon i {
 		font-size: 28px;

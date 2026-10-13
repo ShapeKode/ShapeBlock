@@ -12,8 +12,7 @@ function shapeblock_create_block_column_block_init() {
     );
 
     register_block_type( __DIR__ . '/build', array(
-        'style'        => 'shapeblock-column-style',
-        'editor_style' => 'shapeblock-column-style',
+        'style' => 'shapeblock-column-style',
     ) );
 }
 add_action( 'init', 'shapeblock_create_block_column_block_init' );

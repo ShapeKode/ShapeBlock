@@ -17,15 +17,25 @@ $H = '\ShapeBlock\Frontend\Helper';
 $unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-cntdwn-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 // Target date (default: +1 day). Stored as "Y-m-d\TH:i" by the datetime-local control.
-$target_raw = ! empty( $attributes['targetDate'] ) ? $attributes['targetDate'] : '';
-$target_ts  = $target_raw ? strtotime( $target_raw ) : strtotime( '+1 day', current_time( 'timestamp', 1 ) );
-if ( ! $target_ts ) {
-	$target_ts = strtotime( '+1 day', current_time( 'timestamp', 1 ) );
+// The date is read in the site's timezone (Settings > General), and handed to
+// the browser as an exact UTC moment, so every visitor counts down to the same
+// instant whatever timezone their own device is in.
+$target_raw = ! empty( $attributes['targetDate'] ) ? (string) $attributes['targetDate'] : '';
+$target_ts  = 0;
+if ( '' !== $target_raw ) {
+	try {
+		$target_ts = ( new DateTimeImmutable( $target_raw, wp_timezone() ) )->getTimestamp();
+	} catch ( Exception $e ) {
+		$target_ts = 0;
+	}
 }
-$target_date = gmdate( 'Y-m-d H:i:s', $target_ts );
+if ( ! $target_ts ) {
+	$target_ts = time() + DAY_IN_SECONDS;
+}
+$target_date = gmdate( 'Y-m-d\TH:i:s\Z', $target_ts );
 
 // Initial snapshot (so the numbers show before JS runs / in the SSR preview).
-$now_ts   = current_time( 'timestamp' );
+$now_ts   = time();
 $distance = max( 0, $target_ts - $now_ts );
 $i_days    = (int) floor( $distance / 86400 );
 $i_hours   = (int) floor( ( $distance % 86400 ) / 3600 );
@@ -93,13 +103,14 @@ if ( '' !== $u( 'midGap' ) ) $cntdwn['gap'] = $u( 'midGap' );
 
 // Item box.
 $item = [];
-if ( ! empty( $attributes['itemBgColor'] ) ) $item['background'] = $attributes['itemBgColor'];
+if ( ! empty( $attributes['itemBgColorGradient'] ) ) $item['background'] = $attributes['itemBgColorGradient'];
+elseif ( ! empty( $attributes['itemBgColor'] ) ) $item['background'] = $attributes['itemBgColor'];
 $item = array_merge( $item, $shadow( $attributes['itemBoxShadow'] ?? [] ), $dims( $attributes['itemBorderRadius'] ?? [], 'radius' ), $dims( $attributes['itemPadding'] ?? [], 'padding' ) );
 if ( ! empty( $attributes['itemBorder'] ) ) $item = array_merge( $item, $H::border_to_css_props( $attributes['itemBorder'] ) );
 
 // Separator position + color (pseudo-elements).
 $sep_pos = ( '' !== $u( 'separatorPositionX' ) ) ? [ 'left' => $u( 'separatorPositionX' ) ] : [];
-$sep_col = ! empty( $attributes['separatorColor'] ) ? [ 'background' => $attributes['separatorColor'] ] : [];
+$sep_col = ! empty( $attributes['separatorColorGradient'] ) ? [ 'background' => $attributes['separatorColorGradient'] ] : ( ! empty( $attributes['separatorColor'] ) ? [ 'background' => $attributes['separatorColor'] ] : [] );
 
 // Label display (under number vs inline) + alignment.
 $span = [ 'display' => ! empty( $attributes['labelUnderNumber'] ) ? 'block' : 'inline-block' ];

@@ -1,6 +1,6 @@
 === ShapeBlock ===
 Contributors: shapekode22
-Tags: blocks, gutenberg, block editor, carousel, slider
+Tags: gutenberg blocks, header footer builder, block editor, gutenberg, wordpress blocks
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -8,301 +8,199 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A library of 32 Gutenberg blocks - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls.
+**30+ Gutenberg blocks** - sliders, grids, tabs, counters and more - plus a Header & Footer Builder, with per-device controls.
 
 == Description ==
 
-ShapeBlock is a block library for the WordPress block editor. It adds 32 blocks for the things a page usually needs - sliders and carousels, post and team grids, tabs and accordions, pricing tables, counters and countdowns, navigation, search and more.
+**ShapeBlock adds 30+** blocks to the WordPress block editor, plus a **Header & Footer Builder**.
 
-Every block is built the same way: a Settings tab for content, a Layout tab for structure, and a Style tab for colours, typography, borders, spacing and shadows. Sizes, spacing and layout values can be set separately for desktop, tablet and mobile.
+Every block has the same three tabs: **Settings** for the content, **Layout** for columns, alignment and spacing, and **Style** for colours, typography, borders, shadows and hover effects. Sizes, spacing and columns can be set separately for desktop, tablet and mobile.
 
-= Blocks included =
+See every block in action on the [ShapeBlock demo](https://shapekode.com/product/shapeblock/).
 
-1. Accordion - Collapsible question and answer sections.
-2. Breadcrumb - Show visitors where they are in the site.
-3. Button - Buttons with icons, sizes and hover styles.
-4. Client Logo - A grid of client or partner logos with links, grayscale and hover-swap.
+= Key Features =
+
+* **30+ blocks** for layouts, content, media, navigation and marketing.
+* **Header & Footer Builder** with Include and Exclude display conditions, for classic and block themes.
+* **Fully responsive** - separate desktop, tablet and mobile values, and hide any block per device.
+* **Full design control** - typography, gradients, borders, shadows, spacing and a built-in icon picker.
+* **Custom Templates** - build a layout once and reuse it anywhere with a shortcode.
+* **Lightweight** - each block loads its files only on pages that use it, and unused blocks can be switched off.
+* **Export & Import** - move your settings and templates between sites in one file.
+* **Privacy friendly** - no tracking, no CDN, and Google Fonts stays off until you turn it on.
+
+= Blocks =
+
+1. [Accordion](https://shapekode.com/product/shapeblock/accordion/) - Collapsible question and answer sections.
+2. [Breadcrumb](https://shapekode.com/product/shapeblock/breadcrumb/) - Shows visitors where they are on the site.
+3. [Button](https://shapekode.com/product/shapeblock/button/) - Buttons with icons, sizes and hover styles.
+4. [Client Logo](https://shapekode.com/product/shapeblock/client-logo/) - A grid of client or partner logos with links, grayscale and hover-swap.
 5. Column - A column inside a Row, with its own width per device.
-6. Countdown - A countdown timer to a date and time.
-7. Counter - Animated number counters.
-8. Features List - Icon-based feature lists.
-9. Heading - Headings with typography, gradient and highlight options.
-10. Hover Box - An image or icon in a circle or square that reveals a title and description on hover.
-11. Icon - A single icon with colour, size and link.
-12. Icon Box - An icon, heading and text together, with several layouts.
-13. Icon List - A list of items, each with its own icon.
-14. Image Carousel - Several images at once, with centred slides and continuous scrolling.
-15. Image Comparison - A before / after image slider with a draggable handle.
-16. Isotope Filter - A filterable grid: category buttons with an icon, title and description under each category.
-17. Menu - Display a WordPress navigation menu with layout, alignment and colours.
-18. Offcanvas - Slide-in panels for menus, sidebars or extra content.
-19. Post Grid - Show posts in grid layouts, with pagination and optional video.
-20. Pricing Table - Pricing plans with features, badges and a call to action.
-21. Progress Bar - Animated progress and skill bars.
+6. [Countdown](https://shapekode.com/product/shapeblock/countdown/) - Counts down to a date and time.
+7. [Counter](https://shapekode.com/product/shapeblock/counter/) - Animated number counters.
+8. [Features List](https://shapekode.com/product/shapeblock/feature-list/) - Feature lists with icons.
+9. [Heading](https://shapekode.com/product/shapeblock/heading/) - Headings with typography, gradient and highlight options.
+10. [Hover Box](https://shapekode.com/product/shapeblock/hover-box/) - An image or icon in a circle or square that shows a title and description on hover.
+11. [Icon](https://shapekode.com/product/shapeblock/icon/) - A single icon with colour, size and link.
+12. [Icon Box](https://shapekode.com/product/shapeblock/icon-box/) - Icon, heading and text together, in several layouts.
+13. [Icon List](https://shapekode.com/product/shapeblock/icon-list/) - A list where each item gets its own icon.
+14. [Image Carousel](https://shapekode.com/product/shapeblock/image-carousel/) - Several images at once, with centred slides and continuous scrolling.
+15. [Image Comparison](https://shapekode.com/product/shapeblock/image-comparison/) - Before / after images with a draggable handle.
+16. [Isotope Filter](https://shapekode.com/product/shapeblock/isotope-filter/) - A filterable grid with category buttons, and an icon, title and description for each item.
+17. [Menu](https://shapekode.com/product/shapeblock/menu/) - Shows a WordPress navigation menu with layout, alignment and colour options.
+18. [Offcanvas](https://shapekode.com/product/shapeblock/offcanvas/) - Slide-in panels for menus, sidebars or extra content.
+19. [Post Grid](https://shapekode.com/product/shapeblock/post-grid/) - Posts in grid layouts, with pagination and optional video.
+20. [Pricing Table](https://shapekode.com/product/shapeblock/pricing-table/) - Pricing plans with features, badges and a button.
+21. [Progress Bar](https://shapekode.com/product/shapeblock/progress-bar/) - Animated progress and skill bars.
 22. Row - A responsive row that holds Column blocks.
-23. Scroll Top - A back-to-top button.
-24. Search - A site search field you can place anywhere.
-25. Simple Gallery - An image gallery with spacing and column controls.
-26. Slider - A full-width image slider with arrows, dots and autoplay.
-27. Social Icon - A row of linked social icons with global or per-icon colours.
-28. Social Share - Share buttons for the current page.
-29. Table - Build a table with styled headers, rows and cells.
-30. Tabs - Tabbed content with icons and several tab styles.
-31. Team Member - Present team members with photo, role and social links.
-32. Testimonial - Client feedback with photo, rating and company logo.
+23. [Scroll Top](https://shapekode.com/product/shapeblock/scroll-to-top/) - A back-to-top button.
+24. [Search](https://shapekode.com/product/shapeblock/search/) - A search field you can put anywhere.
+25. [Simple Gallery](https://shapekode.com/product/shapeblock/simple-gallery/) - An image gallery with spacing and column controls.
+26. [Slider](https://shapekode.com/product/shapeblock/slider/) - A full-width image slider with arrows, dots and autoplay.
+27. [Social Icon](https://shapekode.com/product/shapeblock/social-icon/) - Linked social icons, coloured all together or one by one.
+28. [Social Share](https://shapekode.com/product/shapeblock/social-share/) - Share buttons for the current page.
+29. [Table](https://shapekode.com/product/shapeblock/table/) - Tables with styled headers, rows and cells.
+30. [Tabs](https://shapekode.com/product/shapeblock/tabs/) - Tabbed content with icons and a few tab styles to pick from.
+31. [Team Member](https://shapekode.com/product/shapeblock/team-member/) - Team members with photo, role and social links.
+32. [Testimonial](https://shapekode.com/product/shapeblock/testimonial/) - Testimonials in three styles, with ratings, quote icons and logos.
 
-= No external connections by default =
+= Header & Footer Builder =
 
-ShapeBlock works entirely on your own site. Google Fonts is optional and switched
-off until you enable it in ShapeBlock > Settings, so nothing is requested from
-Google unless you ask for it.
+**Build your header and footer in the block editor** - no child theme and no PHP. Then pick where each one shows up with **display conditions**: Entire Site, Front Page, All Pages, All Posts, All Archives, Search Results, 404 Page, or specific pages and posts. Any condition can be set to Include or Exclude.
 
-= Turn off what you do not use =
+It **works with classic and block themes**. Pages that match none of your conditions keep the theme's own header and footer. There's also a Custom Block type you can place anywhere with the `[shapeblock_builder]` shortcode.
 
-Every block can be switched off from the ShapeBlock settings screen, so only the blocks you actually use are registered and only their assets load.
+= Features =
 
-= Templates and theme areas =
+**Design controls on every block**
 
-ShapeBlock includes a template post type and a builder for site areas such as the header and footer. Saved templates can also be placed with the `[shapeblock_template]` shortcode, and builder areas with `[shapeblock_builder]`.
+* Settings, Layout and Style tabs, plus an Advanced tab with padding, margin and a solid or gradient background.
+* Typography: font family, size, weight, style, line height, letter spacing, transform and decoration.
+* Borders, radius and box shadows.
+* A built-in icon picker with search, served from your own site.
 
-= Built for the block editor =
+**Fully responsive**
 
-The blocks are native block-editor blocks with live previews in the canvas, no page-builder layer and no shortcode required for normal use. Styles are printed per block instance and scoped to that block, so two copies of the same block on one page never affect each other.
+* A desktop, tablet and mobile switcher on sizes, spacing, columns and typography, so each device gets its own value.
+* Tablet styles apply up to 1024px and mobile styles up to 767px.
+* Padding and margin per device on every block.
+* Hide any block on desktop, tablet or mobile from its Responsive panel.
+* Tablet and mobile padding and margin for core WordPress blocks too.
+
+**Header & Footer Builder**
+
+* Header, Footer and Custom Block templates, built in the block editor.
+* Include and Exclude display conditions, where Exclude always wins.
+* Works with classic and block themes.
+* Copy a template's shortcode with one click.
+
+**Custom Templates**
+
+* Save a layout once and reuse it anywhere with the `[shapeblock_template]` shortcode.
+* Use a template as the content of the Offcanvas block.
+* Search, sort, trash, restore and bulk actions in the template list.
+
+**Dashboard**
+
+* Turn any block on or off, or all at once. A block that's off doesn't load.
+* A global container width for the Row block.
+* Export and import your settings, Custom Templates and Theme Builder templates as one JSON file. Pick what to import and skip duplicates.
+
+**Speed**
+
+* Block styles and scripts load only on pages that use the block.
+* Styles are generated per block, so two copies of a block can look different.
+* All libraries are bundled with the plugin, with no CDN.
+* Google Fonts are optional, off by default, and load only the fonts you use.
+
+**Other**
+
+* Duplicated or pasted blocks get a new ID, so their styles never clash.
+* Translation ready, with a `.pot` file.
+* No tracking and no licence check.
+* Deleting the plugin removes its settings and cached data, and keeps your content.
 
 == External services ==
 
-ShapeBlock works without any external service. The only connections it can make
-are the two described first below (Google Fonts, which is off by default, and
-video embeds); the share and profile links after them are ordinary links that
-open only when a visitor clicks them. Each one is described with exactly what is
-sent and when.
+Out of the box, **ShapeBlock** doesn't connect to any outside service. It only does in the two cases below, and both are your choice.
 
 = Google Fonts (optional, off by default) =
 
-ShapeBlock can use Google Fonts for the Font Family pickers in the block
-settings and for loading the chosen font on the front end.
+When it's turned on, Google Fonts feeds the Font Family picker in the block settings and loads the fonts you pick. While it's off, the plugin doesn't talk to Google at all. To turn it on, go to **ShapeBlock > Settings > Google Fonts**. If you turn it off later, the requests stop and the cached font list is deleted.
 
-This connection is **off by default**. While it is off the plugin never contacts
-Google at all: the font list is not downloaded, the font pickers offer only the
-locally available font stacks, and no stylesheet is requested from Google on the
-front end. To turn it on, go to **ShapeBlock > Settings > Google Fonts** and tick
-"Allow ShapeBlock to connect to Google Fonts".
+With it switched on:
 
-Once it is switched on:
+* In the WordPress admin, your server fetches the font list from `https://fonts.google.com/metadata/fonts` and caches it for a week. That request carries no site, post or user data.
+* In the block editor and on the front end, the browser loads the font stylesheet from `https://fonts.googleapis.com` and the font files from `https://fonts.gstatic.com`. Like any browser request, this sends the visitor's IP address, user agent and the referring page to Google.
 
-* In the WordPress admin, the plugin requests the font catalogue from
-  `https://fonts.google.com/metadata/fonts` the first time a font list is needed,
-  and caches the result for one week. Only the request itself is sent; no site
-  data, post data or user data is included.
-* In the block editor, the browser requests a font stylesheet from
-  `https://fonts.googleapis.com/css2?family=...` so the picker and the canvas can
-  preview a font.
-* On the front end, a visitor's browser requests the chosen font stylesheet from
-  `https://fonts.googleapis.com` and the font files from `https://fonts.gstatic.com`.
-  As with any browser request, the visitor's IP address, user agent and the
-  referring page reach Google.
+Google Fonts is provided by Google LLC. Terms of service: https://policies.google.com/terms - Privacy policy: https://policies.google.com/privacy
 
-Service provided by Google LLC. Terms of service: https://policies.google.com/terms
-Privacy policy: https://policies.google.com/privacy
+= Video embeds (only when you add a video URL) =
 
-= Video embeds (only for a video URL you enter yourself) =
+The Post Grid block can show a video for a post. With no video URL, nothing is contacted, and a video file (`.mp4`, `.webm`, `.ogg`, `.mov`) plays in a regular `<video>` tag. For a YouTube or Vimeo URL, WordPress' own oEmbed (`wp_oembed_get()`) asks the provider for the embed code (cached for a day), and the visitor's browser loads the player from the provider, which receives their IP address, user agent and the referring page.
 
-If you enter a video URL in the Post Grid block, WordPress' own oEmbed handling
-contacts that provider to build the embed, and the player is then loaded from the
-provider when the page is viewed. Only the URL you entered is sent from the
-server; when a visitor views the page their browser contacts the provider
-directly, so their IP address, user agent and the referring page reach it. No
-request is made unless you enter a URL.
+* YouTube (Google LLC) - Terms: https://www.youtube.com/t/terms - Privacy: https://policies.google.com/privacy
+* Vimeo, Inc. - Terms: https://vimeo.com/terms - Privacy: https://vimeo.com/privacy
 
-YouTube (Google LLC) - terms of service: https://www.youtube.com/t/terms
-Privacy policy: https://policies.google.com/privacy
+= Social Share and Social Icon links =
 
-Vimeo, Inc. - terms of service: https://vimeo.com/terms
-Privacy policy: https://vimeo.com/privacy
-
-= Social Share links =
-
-The Social Share block does not contact anything. It builds an ordinary link to
-each network's own sharing page, and nothing at all is sent until a visitor
-clicks one. When a visitor does click, their browser opens that network's page
-and the network receives the current page's URL and title (plus, where noted, the
-excerpt or featured image URL) as part of the address, together with the normal
-information any browser sends, such as their IP address and user agent.
-
-The links each enabled network produces:
-
-* Facebook - `https://www.facebook.com/sharer/sharer.php?u=` + page URL.
-  Terms: https://www.facebook.com/terms.php - Privacy: https://www.facebook.com/privacy/policy/
-* X (Twitter) - `https://twitter.com/intent/tweet?url=` + page URL + `&text=` + page title.
-  Terms: https://x.com/en/tos - Privacy: https://x.com/en/privacy
-* LinkedIn - `https://www.linkedin.com/sharing/share-offsite/?url=` + page URL.
-  Terms: https://www.linkedin.com/legal/user-agreement - Privacy: https://www.linkedin.com/legal/privacy-policy
-* Pinterest - `https://pinterest.com/pin/create/button/?url=` + page URL + `&description=` + page title + optional `&media=` + featured image URL.
-  Terms: https://policy.pinterest.com/en/terms-of-service - Privacy: https://policy.pinterest.com/en/privacy-policy
-* WhatsApp - `https://api.whatsapp.com/send?text=` + page title + page URL.
-  Terms: https://www.whatsapp.com/legal/terms-of-service - Privacy: https://www.whatsapp.com/legal/privacy-policy
-* Telegram - `https://t.me/share/url?url=` + page URL + `&text=` + page title.
-  Terms: https://telegram.org/tos - Privacy: https://telegram.org/privacy
-* Reddit - `https://www.reddit.com/submit?url=` + page URL + `&title=` + page title.
-  Terms: https://www.redditinc.com/policies/user-agreement - Privacy: https://www.reddit.com/policies/privacy-policy
-
-The Instagram, YouTube, TikTok, Snapchat, Discord and Spotify buttons are plain
-links to those sites' home pages and carry no page data:
-`https://www.instagram.com/`, `https://www.youtube.com/`, `https://www.tiktok.com/`,
-`https://www.snapchat.com/`, `https://discord.com/`, `https://open.spotify.com/`.
-
-* Instagram - Terms: https://help.instagram.com/581066165581870 - Privacy: https://privacycenter.instagram.com/policy
-* YouTube - Terms: https://www.youtube.com/t/terms - Privacy: https://policies.google.com/privacy
-* TikTok - Terms: https://www.tiktok.com/legal/page/row/terms-of-service/en - Privacy: https://www.tiktok.com/legal/page/row/privacy-policy/en
-* Snapchat - Terms: https://snap.com/en-US/terms - Privacy: https://snap.com/en-US/privacy/privacy-policy
-* Discord - Terms: https://discord.com/terms - Privacy: https://discord.com/privacy
-* Spotify - Terms: https://www.spotify.com/legal/end-user-agreement/ - Privacy: https://www.spotify.com/legal/privacy-policy/
-
-The Email button is a `mailto:` link and opens the visitor's own mail program;
-no service is contacted. The Copy Link button copies the page URL locally.
-
-The Social Icon block only outputs the links you type into it yourself, so it
-contacts nothing on its own.
+These blocks only output normal links. Nothing is sent until a visitor clicks one; the Social Share links then pass the page URL and title (and for Pinterest the featured image) to that network: Facebook, X, LinkedIn, Pinterest, WhatsApp, Telegram and Reddit. Email opens the visitor's own mail app, and Copy Link copies the URL in the browser.
 
 == Source code and build process ==
 
-Every compiled or minified file in this plugin is generated from readable source
-that ships inside the plugin, next to the file it produces. Nothing is obfuscated
-and no build output is included without its source.
+Every compiled file in the plugin ships with its readable source right beside it:
 
-Where the source is:
+* Blocks: `includes/public/blocks/<block>/src/`, built into the `build/` folder next to it. The Menu block is hand-written in `includes/public/blocks/menu/build/` and has no build step.
+* Admin dashboard: `src/` in the plugin root, built into `build/`.
+* Stylesheets: `assets/css/style.scss`, `includes/public/assets/css/public.scss` and `assets/lib/bootstrap/bootstrap-grid.scss`, each built beside its source.
 
-* Block editor and front-end scripts: `includes/public/blocks/<block>/src/`
-  (`index.js`, `edit.js`, `save.js`, `view.js`, `style.scss`, `editor.scss`,
-  `render.php`). Each one compiles to the `build/` folder beside it.
-* The settings and template screens: `src/` at the plugin root, which compiles
-  to `build/` at the plugin root.
-* The admin stylesheet: `assets/css/style.scss`, which compiles to
-  `assets/css/style.css`.
-* The shared front-end stylesheet: `includes/public/assets/css/public.scss`
-  (with the `_shapeblock-icon.scss` partial beside it),
-  which compiles to `includes/public/assets/css/public.css`.
-* The block icon font in `includes/public/assets/font/` is generated from
-  `includes/public/assets/icon/config.json`, which is the Fontello project file
-  for it - open it at https://fontello.com to rebuild or change the glyph set.
-  The dashboard icon font in `includes/admin/assets/icons/font/` is a separate
-  Fontello export, shipped as the readable font and stylesheet files it consists of.
-* The prefixed Bootstrap grid: `assets/lib/bootstrap/bootstrap-grid.scss`, which
-  compiles to `bootstrap-grid.css` in the same folder.
-* The Menu block's `includes/public/blocks/menu/build/index.js` and `view.js` are
-  written by hand against the `wp.*` globals and are not generated by any build
-  step, which is why that block has no `src/` folder. The files in it are the
-  source.
-
-Build tools:
-
-* [@wordpress/scripts](https://www.npmjs.com/package/@wordpress/scripts) 32.4
-  (webpack + Babel) builds the blocks and the admin screens.
-* [Dart Sass](https://sass-lang.com/dart-sass/) 1.105 compiles the two
-  stylesheets above.
-* [Bootstrap](https://getbootstrap.com/) 5.3 supplies the grid SCSS that
-  `bootstrap-grid.scss` imports and re-prefixes.
-
-All three are declared in `package.json`. To rebuild everything from source:
-
-1. `npm install`
-2. `npm run build` - the plugin-root bundle (`build/`).
-3. `npm run build:<block>` - one block, for example `npm run build:heading` or
-   `npm run build:teamGrid`. The full list of block script names is in
-   `package.json`.
-4. `npm run build:css` - `assets/css/style.css`.
-5. `npm run build:public` - `includes/public/assets/css/public.css`.
-6. `npm run build:grid` - the prefixed Bootstrap grid CSS.
-
-Each block's own `style.scss` and `editor.scss` are compiled by that block's
-`npm run build:<block>` into its `build/` folder; they are not built separately.
-
-`npm run start` and `npm run start:<block>` are the same builds in watch mode.
+Built with [@wordpress/scripts](https://www.npmjs.com/package/@wordpress/scripts) and [Dart Sass](https://sass-lang.com/dart-sass/). To rebuild: `npm install`, then `npm run build` and `npm run build:<block>` (all script names are in `package.json`).
 
 == Credits ==
 
-ShapeBlock's own code is GPLv2-or-later, as stated above. It bundles three
-third-party libraries, each under its own MIT license, with the upstream
-license text shipped alongside:
+ShapeBlock is licensed GPLv2 or later and includes these MIT-licensed libraries, each with its licence file:
 
-* Swiper 12.0.3 (https://swiperjs.com, https://github.com/nolimits4web/swiper),
-  Copyright (c) 2014-2025 Vladimir Kharlampidi - `assets/lib/swiper/LICENSE`.
-  `assets/lib/swiper/swiper-bundle.js` and `swiper-bundle.css` are the
-  unmodified, unminified `dist` files from the upstream 12.0.3 release (the npm
-  package `swiper@12.0.3`), and each carries the
-  library name, version and homepage in its own header comment. They are used as
-  published; this plugin does not build them.
-* Bootstrap 5.3 grid component (https://getbootstrap.com,
-  https://github.com/twbs/bootstrap), Copyright (c) 2011-2025 The Bootstrap
-  Authors - `assets/lib/bootstrap/LICENSE`. Only the grid and flex utilities are
-  used, recompiled with a `shapeblock-` class/variable prefix and a 345px `sm`
-  breakpoint by `assets/lib/bootstrap/bootstrap-grid.scss` - see "Source code and
-  build process" above.
+* Swiper 12.0.3 (https://swiperjs.com) - `assets/lib/swiper/LICENSE`, unmodified release files.
+* Bootstrap 5.3 grid (https://getbootstrap.com) - `assets/lib/bootstrap/LICENSE`, only the grid, recompiled with a `shapeblock-` prefix.
+* Ant Design 6 and Ant Design Icons (https://ant.design) - `assets/lib/antd/LICENSE`, used only in the admin dashboard.
 
-* Ant Design 6 (https://ant.design, https://github.com/ant-design/ant-design)
-  and Ant Design Icons (https://github.com/ant-design/ant-design-icons),
-  Copyright (c) 2015-present Ant UED - `assets/lib/antd/LICENSE` and
-  `assets/lib/antd/ICONS-LICENSE`. They are compiled into the dashboard screens
-  only (`build/index.js`, built from `src/` with `npm run build`; see "Source code
-  and build process" above) and are never loaded on the front end. Their own
-  dependencies (about 60 small packages such as `@ant-design/cssinjs`, `dayjs`,
-  `clsx` and `@babel/runtime`) are also MIT-licensed.
-
-All of these licenses are compatible with the GPLv2-or-later this plugin is
-distributed under.
-
-The two bundled icon fonts (`includes/public/assets/font/` for the blocks,
-`includes/admin/assets/icons/font/` for the dashboard) are generated with
-Fontello (https://fontello.com). Their custom glyphs are drawings supplied by the
-plugin author and are released under the same GPLv2-or-later license as the
-plugin; the Fontello project file for the block font, which lists every glyph and
-its source, is `includes/public/assets/icon/config.json`. The block font also
-contains 3 glyphs from other icon sets, each under the SIL Open Font License 1.1
-(GPL-compatible):
-
-* `map-o` and `h-sigh` — Font Awesome 4.7 (https://fontawesome.com/v4/license/).
-* `move` — Elusive Icons (https://github.com/aristath/elusive-iconfont).
-
-The SIL Open Font License 1.1 text is published at https://openfontlicense.org.
+The icon fonts were made with Fontello (https://fontello.com). Our own icons are GPLv2 or later; three come from Font Awesome 4.7 and Elusive Icons under the SIL Open Font License 1.1 (https://openfontlicense.org), listed in `includes/public/assets/icon/config.json`.
 
 == Installation ==
 
-1. Upload the `shapeblock` folder to the `/wp-content/plugins/` directory, or install the plugin through the Plugins screen in WordPress.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Edit any post or page and add a ShapeBlock block from the block inserter.
-4. Adjust the block in the Settings, Layout and Style tabs, then publish.
+1. Go to **Plugins > Add New Plugin**, search for "ShapeBlock" and click **Install Now**.
+2. Activate ShapeBlock from the Plugins screen.
+3. Open any post or page and add a ShapeBlock block from the block inserter.
+4. Optional: visit **ShapeBlock > Blocks Settings** to turn off blocks you won't use.
 
 == Frequently Asked Questions ==
 
-= Is ShapeBlock compatible with my theme? =
+= Will it work with my theme? =
 
-Yes. ShapeBlock is designed to work with any properly coded WordPress theme, block themes included. The blocks inherit your theme's typography and can be restyled from the block settings.
+Yes, with any well-coded theme, including block themes. The blocks pick up your theme's typography, and you can restyle them from the block settings.
 
 = Do I have to use all 32 blocks? =
 
-No. Open the ShapeBlock settings screen and switch off any block you do not need. A block that is off is not registered and its assets are not loaded.
+No. Turn off any you don't need in **ShapeBlock > Blocks Settings**. A block that's off isn't registered and its files aren't loaded.
 
-= Can I set different values for mobile and tablet? =
+= Can I replace my theme's header and footer? =
 
-Yes. Sizes, spacing, column counts and similar settings have a device switcher, so desktop, tablet and mobile can each hold their own value.
+Yes. Build one in **ShapeBlock > Theme Builder** and set where it should appear. Pages that don't match your conditions keep the theme's own header and footer.
 
-= Can I customize the block styles? =
+= Does ShapeBlock send any data to outside servers? =
 
-Yes. Each block has a Style tab with colours, typography, spacing, borders, radius, shadows and hover states.
+Not by default. See External services above.
 
-= Does it work with custom post types? =
+= What happens when I delete the plugin? =
 
-The Post Grid block is built around standard WordPress posts. Custom post type support may be added in a future version.
-
-= Is the plugin translation ready? =
-
-Yes. ShapeBlock follows WordPress internationalization standards and ships with a `.pot` file in the `languages` folder.
-
-= Does ShapeBlock work with page builders? =
-
-ShapeBlock works natively inside the WordPress block editor. It does not add widgets to third-party page builders.
+Deleting the plugin removes the options and cached data it created. Your Custom Templates, Theme Builder items and the blocks in your posts are your content, so they stay.
 
 == Changelog ==
 
 = 1.0.0 =
 * Initial release.
+
+== Upgrade Notice ==
+
+= 1.0.0 =
+Initial release.

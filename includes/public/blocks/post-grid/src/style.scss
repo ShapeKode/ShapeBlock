@@ -27,6 +27,7 @@
 				display: flex;
 				flex-direction: column;
 				height: 100%;
+				transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 			}
 
 			img {
@@ -70,6 +71,14 @@
 
 			.shapeblock-blog-img {
 				position: relative;
+
+				/* The Overlay colour sits over the image in every layout. */
+				.shapeblock-overlay-all {
+					position: absolute;
+					inset: 0;
+					pointer-events: none;
+				}
+
 				max-width: 100%;
 				height: auto;
 				display: block;
@@ -99,6 +108,12 @@
 					&.top_bottom {
 						&:hover img {
 							transform: translateY(15px) scale(1.1);
+						}
+					}
+
+					&.zoom {
+						&:hover img {
+							transform: scale(1.08);
 						}
 					}
 				}
@@ -139,15 +154,6 @@
 						text-decoration: underline;
 					}
 				}
-
-				li {
-					position: relative;
-				}
-
-				li+li {
-					margin-left: 10px;
-					padding-left: 10px;
-				}
 			}
 
 			.shapeblock-read-more {
@@ -187,10 +193,6 @@
 				margin-bottom: 20px;
 				font-size: 18px;
 				color: var(--shapeblock-preset-color-contrast-2);
-
-				a {
-					color: currentColor;
-				}
 			}
 
 			a {
@@ -201,6 +203,25 @@
 
 		}
 
+		/* The card lifts a little on hover (Style > Card > Hover). */
+		&.is-hover-lift .shapeblock-grid-item .shapeblock-grid-item-inner:hover {
+			transform: translateY(-6px);
+		}
+
+		/* The button sits at the bottom of the card, so buttons line up across a row. */
+		&.is-button-bottom:not(.style-1) .shapeblock-grid-item {
+			.shapeblock-blog-content {
+				display: flex;
+				flex: 1 1 auto;
+				flex-direction: column;
+			}
+
+			.shapeblock-read-more {
+				margin-top: auto;
+				padding-top: 10px;
+			}
+		}
+
 		&.style-1 {
 			.shapeblock-grid-item-inner {
 				position: relative;
@@ -209,14 +230,38 @@
 			.shapeblock-grid-item {
 				position: relative;
 
+				/* Text over the image: both share one grid cell, so a card
+				   padding insets them together and the text stays on the image. */
+				.shapeblock-grid-item-inner {
+					display: grid;
+					grid-template-columns: minmax(0, 1fr);
+				}
+
+				.shapeblock-blog-img,
 				.shapeblock-blog-content {
-					position: absolute;
-					bottom: 0;
+					grid-area: 1 / 1;
+				}
+
+				.shapeblock-blog-content {
+					position: relative;
+					z-index: 1;
+					align-self: end;
 					padding: 0 30px 30px;
 					display: flex;
 					flex-direction: column;
-					height: max-content;
 					justify-content: flex-end;
+					pointer-events: none;
+
+					a {
+						pointer-events: auto;
+					}
+				}
+
+				.shapeblock-blog-date-top {
+					position: relative;
+					grid-area: 1 / 1;
+					align-self: start;
+					justify-self: end;
 				}
 
 				.shapeblock-overlay-all {
@@ -282,6 +327,16 @@
  * per-device values a user sets are printed as per-block CSS with a higher
  * specificity, so they always win over what follows.
  */
+@media (prefers-reduced-motion: reduce) {
+	.shapeblock-post-grid-block-wrap .shapeblock-grid-item .shapeblock-grid-item-inner {
+		transition: none;
+	}
+
+	.shapeblock-post-grid-block-wrap .shapeblock-post-grid.is-hover-lift .shapeblock-grid-item .shapeblock-grid-item-inner:hover {
+		transform: none;
+	}
+}
+
 @media (max-width: 767px) {
 	.shapeblock-post-grid-block-wrap {
 		.shapeblock-post-metas {

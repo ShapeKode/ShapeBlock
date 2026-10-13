@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -19,7 +19,7 @@ import {
 	__experimentalDivider as Divider,
 } from '@wordpress/components';
 
-import ColorPopover from '../../custom-components/ColorPopover';
+import BackgroundControl from '../../custom-components/BackgroundControl';
 import BorderControl from '../../custom-components/BorderControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
@@ -135,7 +135,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		setAttributes({ logos: next });
 	};
 
-	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
+	const bg = (label, c, g) => (
+		<BackgroundControl label={label} colorValue={attributes[c]} gradientValue={attributes[g]} onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })} onGradientChange={(v) => setAttributes({ [g]: v || '' })} />
+	);
 	const box = (label, key) => <BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const num = (label, key) => <TextControl label={label} type="number" value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
 	// Responsive variants — a device switcher above the control, editing the
@@ -182,6 +184,25 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								)}
 							/>
 						</MediaUploadCheck>
+						{hoverSwap && (
+							<MediaUploadCheck>
+								<MediaUpload
+									onSelect={(media) => update(index, 'hoverImage', { id: media.id, url: media.url, alt: media.alt })}
+									allowedTypes={['image']}
+									value={item.hoverImage?.id}
+									render={({ open }) => (
+										<div style={{ marginBottom: '8px' }}>
+											<div style={{ fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', margin: '4px 0' }}>{__('Hover Image', 'shapeblock')}</div>
+											<ItemThumb image={item.hoverImage} onClick={open} />
+											<Button variant="secondary" size="small" onClick={open}>{item.hoverImage?.url ? __('Replace Hover Image', 'shapeblock') : __('Select Hover Image', 'shapeblock')}</Button>
+											{item.hoverImage?.url && (
+												<Button variant="link" isDestructive size="small" onClick={() => update(index, 'hoverImage', {})} style={{ marginLeft: '8px' }}>{__('Remove', 'shapeblock')}</Button>
+											)}
+										</div>
+									)}
+								/>
+							</MediaUploadCheck>
+						)}
 						<TextControl label={__('Link', 'shapeblock')} value={item.link || ''} onChange={(v) => update(index, 'link', v)} placeholder="https://example.com" __next40pxDefaultSize __nextHasNoMarginBottom />
 						{item.link && (
 							<>
@@ -193,59 +214,52 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				))}
 				<Button variant="primary" onClick={add} icon={ICON_ADD}>{__('Add Logo', 'shapeblock')}</Button>
 				<Divider />
-				<ToggleControl label={__('Image Hover Swap Effect', 'shapeblock')} checked={hoverSwap} onChange={(v) => setAttributes({ hoverSwap: v })} __nextHasNoMarginBottom />
-			</PanelBody>
-
-			<PanelBody title={__('Grayscale', 'shapeblock')} initialOpen={false}>
-				<ToggleControl label={__('Image Grayscale', 'shapeblock')} checked={grayscale} onChange={(v) => setAttributes({ grayscale: v })} __nextHasNoMarginBottom />
-				{grayscale && (
-					<SelectControl
-						label={__('Grayscale', 'shapeblock')}
-						value={attributes.grayscaleOption}
-						options={[
-							{ label: __('Default Grayscale', 'shapeblock'), value: 'normal_grayscale' },
-							{ label: __('Hover Grayscale', 'shapeblock'), value: 'hover_grayscale' },
-							{ label: __('Hover to Default Image', 'shapeblock'), value: 'hover_to_default' },
-						]}
-						onChange={(v) => setAttributes({ grayscaleOption: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-				)}
+				<ToggleControl label={__('Image Hover Swap Effect', 'shapeblock')} help={__('On hover the logo slides away and a second image slides in. Pick that image per logo above (the logo itself is used when none is set).', 'shapeblock')} checked={hoverSwap} onChange={(v) => setAttributes({ hoverSwap: v })} __nextHasNoMarginBottom />
 			</PanelBody>
 		</>
 	);
 
-	// --- Tab 2: Layout (columns, size & spacing) ------------------------------
+	// --- Tab 2: Layout (columns & item size) ----------------------------------
 	const layoutTab = (
-		<>
-			<PanelBody title={__('Columns', 'shapeblock')} initialOpen={true}>
-				{respNum(__('Image Width (px)', 'shapeblock'), 'imageWidth')}
-				<SelectControl label={__('Columns', 'shapeblock')} value={attributes.columns} options={COLS} onChange={(v) => setAttributes({ columns: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-				<SelectControl label={__('Columns (Tablet)', 'shapeblock')} value={attributes.columnsTablet} options={COLS} onChange={(v) => setAttributes({ columnsTablet: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-				<SelectControl label={__('Columns (Mobile)', 'shapeblock')} value={attributes.columnsMobile} options={COLS} onChange={(v) => setAttributes({ columnsMobile: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-			</PanelBody>
-
-			<PanelBody title={__('Item', 'shapeblock')} initialOpen={false}>
-				{respNum(__('Item Max Width (px)', 'shapeblock'), 'itemWidth')}
-				{respNum(__('Item Height (px)', 'shapeblock'), 'itemHeight')}
-				{box(__('Item Space', 'shapeblock'), 'itemSpace')}
-				{respBox(__('Padding', 'shapeblock'), 'itemPadding')}
-			</PanelBody>
-		</>
+		<PanelBody title={__('Columns', 'shapeblock')} initialOpen={true}>
+			{respNum(__('Image Width (px)', 'shapeblock'), 'imageWidth')}
+			<SelectControl label={__('Columns', 'shapeblock')} value={attributes.columns} options={COLS} onChange={(v) => setAttributes({ columns: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+			<SelectControl label={__('Columns (Tablet)', 'shapeblock')} value={attributes.columnsTablet} options={COLS} onChange={(v) => setAttributes({ columnsTablet: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+			<SelectControl label={__('Columns (Mobile)', 'shapeblock')} value={attributes.columnsMobile} options={COLS} onChange={(v) => setAttributes({ columnsMobile: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+			{respNum(__('Item Max Width (px)', 'shapeblock'), 'itemWidth')}
+			{respNum(__('Item Height (px)', 'shapeblock'), 'itemHeight')}
+			{box(__('Item Space', 'shapeblock'), 'itemSpace')}
+		</PanelBody>
 	);
 
 	// --- Tab 3: Style (appearance & hover effects) ----------------------------
 	const styleTab = (
 		<PanelBody title={__('Item', 'shapeblock')} initialOpen={true}>
+			<ToggleControl label={__('Image Grayscale', 'shapeblock')} checked={grayscale} onChange={(v) => setAttributes({ grayscale: v })} __nextHasNoMarginBottom />
+			{grayscale && (
+				<SelectControl
+					label={__('Grayscale', 'shapeblock')}
+					value={attributes.grayscaleOption}
+					options={[
+						{ label: __('Default Grayscale', 'shapeblock'), value: 'normal_grayscale' },
+						{ label: __('Hover Grayscale', 'shapeblock'), value: 'hover_grayscale' },
+						{ label: __('Hover to Default Image', 'shapeblock'), value: 'hover_to_default' },
+					]}
+					onChange={(v) => setAttributes({ grayscaleOption: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+			)}
+			<Divider />
 			{box(__('Border Radius', 'shapeblock'), 'itemRadius')}
+			{respBox(__('Padding', 'shapeblock'), 'itemPadding')}
 			{num(__('Transition (seconds)', 'shapeblock'), 'transition')}
 			<Divider />
 			<TabPanel tabs={STATE_TABS}>
 				{(tab) =>
 					tab.name === 'normal' ? (
 						<>
-							{color(__('Item Background', 'shapeblock'), 'itemBg')}
+							{bg(__('Item Background', 'shapeblock'), 'itemBg', 'itemBgGradient')}
 							<BorderControl label={__('Border', 'shapeblock')} value={attributes.itemBorder} onChange={(v) => setAttributes({ itemBorder: v })} />
 							<BoxShadowControls label={__('Box Shadow', 'shapeblock')} value={attributes.itemBoxShadow} onChange={(v) => setAttributes({ itemBoxShadow: v })} />
 							{num(__('Opacity (0–1)', 'shapeblock'), 'itemOpacity')}
@@ -253,7 +267,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						</>
 					) : (
 						<>
-							{color(__('Item Hover Background', 'shapeblock'), 'itemHoverBg')}
+							{bg(__('Item Hover Background', 'shapeblock'), 'itemHoverBg', 'itemHoverBgGradient')}
 							<BorderControl label={__('Border', 'shapeblock')} value={attributes.itemHoverBorder} onChange={(v) => setAttributes({ itemHoverBorder: v })} />
 							<BoxShadowControls label={__('Box Shadow', 'shapeblock')} value={attributes.itemHoverBoxShadow} onChange={(v) => setAttributes({ itemHoverBoxShadow: v })} />
 							{num(__('Opacity (0–1)', 'shapeblock'), 'itemHoverOpacity')}

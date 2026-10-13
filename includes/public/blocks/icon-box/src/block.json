@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/icon-box",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"title": "Icon Box",
 	"category": "shapeblock",
 	"description": "Icon boxes with the icon on top, then title and description — icon, number or image supported.",
@@ -179,6 +179,42 @@
 				"left": ""
 			}
 		},
+		"boxShadow": {
+			"type": "object",
+			"default": {
+				"x": 0,
+				"y": 0,
+				"b": 0,
+				"s": 0,
+				"c": ""
+			}
+		},
+		"listBgColorHover": {
+			"type": "string",
+			"default": ""
+		},
+		"listBgGradientHover": {
+			"type": "string",
+			"default": ""
+		},
+		"feaListBorderColorHover": {
+			"type": "string",
+			"default": ""
+		},
+		"boxShadowHover": {
+			"type": "object",
+			"default": {
+				"x": 0,
+				"y": 0,
+				"b": 0,
+				"s": 0,
+				"c": ""
+			}
+		},
+		"boxHoverLift": {
+			"type": "boolean",
+			"default": false
+		},
 		"feaListPadding": {
 			"type": "object"
 		},
@@ -241,10 +277,6 @@
 		"iconBoxSizeMobile": {
 			"type": "string",
 			"default": ""
-		},
-		"iconAlignment": {
-			"type": "string",
-			"default": "center"
 		},
 		"iconShadow": {
 			"type": "object",
@@ -359,6 +391,123 @@
 			"default": ""
 		},
 		"contentAlignMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"showButton": {
+			"type": "boolean",
+			"default": false
+		},
+		"buttonText": {
+			"type": "string",
+			"default": "Learn More"
+		},
+		"buttonUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"buttonNewTab": {
+			"type": "boolean",
+			"default": false
+		},
+		"buttonNofollow": {
+			"type": "boolean",
+			"default": false
+		},
+		"buttonStyle": {
+			"type": "string",
+			"default": "button"
+		},
+		"buttonIcon": {
+			"type": "string",
+			"default": ""
+		},
+		"buttonIconPosition": {
+			"type": "string",
+			"default": "after"
+		},
+		"btnTypography": {
+			"type": "object",
+			"default": {}
+		},
+		"btnTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"btnTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"btnColor": {
+			"type": "string",
+			"default": ""
+		},
+		"btnColorHover": {
+			"type": "string",
+			"default": ""
+		},
+		"btnBg": {
+			"type": "string",
+			"default": ""
+		},
+		"btnBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"btnBgHover": {
+			"type": "string",
+			"default": ""
+		},
+		"btnBgHoverGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"btnBorder": {
+			"type": "object",
+			"default": {
+				"width": 0,
+				"color": "",
+				"style": "solid"
+			}
+		},
+		"btnBorderColorHover": {
+			"type": "string",
+			"default": ""
+		},
+		"btnRadius": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"btnPadding": {
+			"type": "object",
+			"default": {}
+		},
+		"btnPaddingTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"btnPaddingMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"btnSpacing": {
+			"type": "string",
+			"default": ""
+		},
+		"btnIconSize": {
+			"type": "string",
+			"default": ""
+		},
+		"btnIconGap": {
+			"type": "string",
+			"default": ""
+		},
+		"btnIconBoxSize": {
 			"type": "string",
 			"default": ""
 		}

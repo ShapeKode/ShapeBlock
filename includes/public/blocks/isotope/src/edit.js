@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useState, useRef } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import { useBlockProps, InspectorControls, BlockControls, AlignmentControl } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -15,8 +15,10 @@ import {
 	TabPanel,
 	ToolbarDropdownMenu,
 	__experimentalToggleGroupControl as ToggleGroupControl,
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	__experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon,
 	__experimentalDivider as Divider,
+	__experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
@@ -79,7 +81,7 @@ const moved = (arr, i, dir) => {
 };
 
 export default function Edit({ attributes, setAttributes, clientId }) {
-	const { blockId, categories, showIcon, showAll, defaultFilter } = attributes;
+	const { blockId, categories, showIcon, showAll, showFilters, defaultFilter } = attributes;
 
 	useEffect(() => {
 		if (!blockId) {
@@ -134,6 +136,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const itemsOf = (ci) => (Array.isArray(cats[ci]?.items) ? cats[ci].items : []);
 	const setItems = (ci, items) => updateCat(ci, { items });
 	const updateItem = (ci, ii, patch) => setItems(ci, itemsOf(ci).map((it, i) => (i === ii ? { ...it, ...patch } : it)));
+	// BackgroundControl clears the other field with a second call in the same
+	// tick, before this render's categories update - so each call builds on the
+	// latest list rather than the one this render started with.
+	const latestCats = useRef(cats);
+	latestCats.current = cats;
+	const updateItemLatest = (ci, ii, patch) => {
+		const next = latestCats.current.map((c, i) => (i === ci ? { ...c, items: (Array.isArray(c.items) ? c.items : []).map((it, j) => (j === ii ? { ...it, ...patch } : it)) } : c));
+		latestCats.current = next;
+		setAttributes({ categories: next });
+	};
 	const addItem = (ci) => {
 		setItems(ci, [...itemsOf(ci), blankItem()]);
 		setOpenItem(`${ci}-${itemsOf(ci).length}`);
@@ -230,6 +242,34 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						)}
 						<TextControl label={__('Title', 'shapeblock')} value={item.title || ''} onChange={(v) => updateItem(ci, ii, { title: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 						<TextareaControl label={__('Description', 'shapeblock')} value={item.desc || ''} onChange={(v) => updateItem(ci, ii, { desc: v })} __nextHasNoMarginBottom />
+						<TextControl label={__('Badge', 'shapeblock')} help={__('A short label on the card, such as New or Popular. Leave empty for none.', 'shapeblock')} value={item.badge || ''} onChange={(v) => updateItem(ci, ii, { badge: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+						{item.badge && (
+							<>
+								<ColorPopover label={__('Badge Color', 'shapeblock')} color={item.badgeBg || ''} onChange={(v) => updateItem(ci, ii, { badgeBg: v || '' })} />
+								<ColorPopover label={__('Badge Text Color', 'shapeblock')} color={item.badgeColor || ''} onChange={(v) => updateItem(ci, ii, { badgeColor: v || '' })} />
+							</>
+						)}
+						<div className="shapeblock-iso-subhead">{__('This Card’s Colors', 'shapeblock')}</div>
+						<p className="components-base-control__help">{__('Only for this card. Leave empty to use the colors under Style.', 'shapeblock')}</p>
+						<BackgroundControl
+							label={__('Card Background', 'shapeblock')}
+							colorValue={item.cardBg || ''}
+							gradientValue={item.cardBgGradient || ''}
+							onColorChange={(v) => updateItemLatest(ci, ii, { cardBg: (v && typeof v === 'object' ? v.hex : v) || '' })}
+							onGradientChange={(v) => updateItemLatest(ci, ii, { cardBgGradient: v || '' })}
+						/>
+						{showIcon !== false && item.icon && item.icon !== 'none' && (
+							<ColorPopover label={__('Icon Color', 'shapeblock')} color={item.iconColor || ''} onChange={(v) => updateItem(ci, ii, { iconColor: v || '' })} />
+						)}
+						<ColorPopover label={__('Title Color', 'shapeblock')} color={item.titleColor || ''} onChange={(v) => updateItem(ci, ii, { titleColor: v || '' })} />
+						<ColorPopover label={__('Description Color', 'shapeblock')} color={item.descColor || ''} onChange={(v) => updateItem(ci, ii, { descColor: v || '' })} />
+						<TextControl label={__('Card Link', 'shapeblock')} help={__('Makes the whole card clickable. Leave empty for no link.', 'shapeblock')} value={item.link || ''} onChange={(v) => updateItem(ci, ii, { link: v })} placeholder="https://" type="url" __next40pxDefaultSize __nextHasNoMarginBottom />
+						{item.link && (
+							<>
+								<ToggleControl label={__('Open in New Tab', 'shapeblock')} checked={!!item.linkNewTab} onChange={(v) => updateItem(ci, ii, { linkNewTab: v })} __nextHasNoMarginBottom />
+								<ToggleControl label={__('Add Nofollow', 'shapeblock')} checked={!!item.linkNofollow} onChange={(v) => updateItem(ci, ii, { linkNofollow: v })} __nextHasNoMarginBottom />
+							</>
+						)}
 						<div className="shapeblock-iso-repeater-actions">
 							<Button icon={ICON_UP} label={__('Move up', 'shapeblock')} onClick={() => setItems(ci, moved(list, ii, -1))} disabled={ii === 0} size="small" />
 							<Button icon={ICON_DOWN} label={__('Move down', 'shapeblock')} onClick={() => setItems(ci, moved(list, ii, 1))} disabled={ii === list.length - 1} size="small" />
@@ -290,21 +330,79 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			</PanelBody>
 
 			<PanelBody title={__('Filter Bar', 'shapeblock')} initialOpen={false}>
-				<ToggleControl label={__('Show "All" button', 'shapeblock')} checked={showAll !== false} onChange={(v) => setAttributes({ showAll: v })} __nextHasNoMarginBottom />
-				{showAll !== false && (
-					<TextControl label={__('"All" Label', 'shapeblock')} value={attributes.allLabel || ''} onChange={(v) => setAttributes({ allLabel: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+				<ToggleControl
+					label={__('Show the filter bar', 'shapeblock')}
+					help={showFilters === false ? __('Hidden: visitors see the items chosen under "Show" below, with no buttons to switch.', 'shapeblock') : undefined}
+					checked={showFilters !== false}
+					onChange={(v) => setAttributes({ showFilters: v })}
+					__nextHasNoMarginBottom
+				/>
+				{showFilters !== false && (
+					<>
+						<ToggleControl label={__('Show "All" button', 'shapeblock')} checked={showAll !== false} onChange={(v) => setAttributes({ showAll: v })} __nextHasNoMarginBottom />
+						{showAll !== false && (
+							<TextControl label={__('"All" Label', 'shapeblock')} value={attributes.allLabel || ''} onChange={(v) => setAttributes({ allLabel: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+						)}
+					</>
 				)}
 				<SelectControl
-					label={__('Show First', 'shapeblock')}
+					label={showFilters === false ? __('Show', 'shapeblock') : __('Show First', 'shapeblock')}
 					value={defaultFilter || 'all'}
 					options={[
-						...(showAll !== false ? [{ label: attributes.allLabel || __('All', 'shapeblock'), value: 'all' }] : []),
+						...(showAll !== false || showFilters === false ? [{ label: showFilters === false ? __('All items', 'shapeblock') : attributes.allLabel || __('All', 'shapeblock'), value: 'all' }] : []),
 						...cats.map((c, i) => ({ label: c.name || `${__('Category', 'shapeblock')} ${i + 1}`, value: String(i) })),
 					]}
 					onChange={(v) => setAttributes({ defaultFilter: v })}
 					__next40pxDefaultSize
 					__nextHasNoMarginBottom
 				/>
+			</PanelBody>
+
+			<PanelBody title={__('Search', 'shapeblock')} initialOpen={false}>
+				<ToggleControl
+					label={__('Show search box', 'shapeblock')}
+					help={__('A search box on the right of the filter bar; the filter buttons then sit on the left. Visitors type to find a card by its title, description or badge.', 'shapeblock')}
+					checked={!!attributes.showSearch}
+					onChange={(v) => setAttributes({ showSearch: v })}
+					__nextHasNoMarginBottom
+				/>
+				{attributes.showSearch && (
+					<>
+						<TextControl label={__('Placeholder', 'shapeblock')} placeholder={__('Search…', 'shapeblock')} value={attributes.searchPlaceholder || ''} onChange={(v) => setAttributes({ searchPlaceholder: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+						<TextControl
+							label={__('No Results Text', 'shapeblock')}
+							placeholder={__('Nothing found. Try another word.', 'shapeblock')}
+							value={attributes.noResultsText || ''}
+							onChange={(v) => setAttributes({ noResultsText: v })}
+							__next40pxDefaultSize
+							__nextHasNoMarginBottom
+						/>
+					</>
+				)}
+			</PanelBody>
+
+			<PanelBody title={__('Load More', 'shapeblock')} initialOpen={false}>
+				<ToggleControl
+					label={__('Show a Load More button', 'shapeblock')}
+					help={__('Show only the first items, and reveal the rest when the button is clicked.', 'shapeblock')}
+					checked={attributes.loadMore !== false}
+					onChange={(v) => setAttributes({ loadMore: v })}
+					__nextHasNoMarginBottom
+				/>
+				{attributes.loadMore !== false && (
+					<>
+						{single(__('Items shown first', 'shapeblock'), 'initialItems', 60, 1)}
+						{single(__('Items added per click', 'shapeblock'), 'loadMoreStep', 60, 1)}
+						<TextControl
+							label={__('Button label', 'shapeblock')}
+							value={attributes.loadMoreText || ''}
+							placeholder={__('Load More', 'shapeblock')}
+							onChange={(v) => setAttributes({ loadMoreText: v })}
+							__next40pxDefaultSize
+							__nextHasNoMarginBottom
+						/>
+					</>
+				)}
 			</PanelBody>
 
 			<PanelBody title={__('Content', 'shapeblock')} initialOpen={false}>
@@ -317,73 +415,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					__next40pxDefaultSize
 					__nextHasNoMarginBottom
 				/>
-			</PanelBody>
-		</>
-	);
-
-	// --- Tab 2: Layout ----------------------------------------------------------
-	const layoutTab = (
-		<>
-			<PanelBody title={__('Card Alignment', 'shapeblock')} initialOpen={true}>
-				<ResponsiveWrapper label={__('Content Alignment', 'shapeblock')}>
-					{(d) => {
-						const k = getKey('cardAlign', d);
-						return (
-							<ToggleGroupControl
-								value={attributes[k] || (d === 'desktop' ? 'left' : undefined)}
-								onChange={(v) => setAttributes({ [k]: v || '' })}
-								isBlock
-								isDeselectable={d !== 'desktop'}
-								__next40pxDefaultSize
-								__nextHasNoMarginBottom
-							>
-								<ToggleGroupControlOptionIcon value="left" icon={ICON_ALIGN_LEFT} label={__('Left', 'shapeblock')} />
-								<ToggleGroupControlOptionIcon value="center" icon={ICON_ALIGN_CENTER} label={__('Center', 'shapeblock')} />
-								<ToggleGroupControlOptionIcon value="right" icon={ICON_ALIGN_RIGHT} label={__('Right', 'shapeblock')} />
-							</ToggleGroupControl>
-						);
-					}}
-				</ResponsiveWrapper>
-				<SelectControl
-					label={__('Icon Position', 'shapeblock')}
-					value={attributes.iconPosition}
-					options={[{ label: __('Top', 'shapeblock'), value: 'top' }, { label: __('Left', 'shapeblock'), value: 'left' }]}
-					onChange={(v) => setAttributes({ iconPosition: v })}
-					__next40pxDefaultSize
-					__nextHasNoMarginBottom
-				/>
-			</PanelBody>
-
-			<PanelBody title={__('Grid', 'shapeblock')} initialOpen={false}>
-				{num(__('Columns', 'shapeblock'), 'columns', 6, 1)}
-				{num(__('Gap (px)', 'shapeblock'), 'gap', 80)}
-				<ToggleControl label={__('Equal height cards', 'shapeblock')} checked={attributes.equalHeight !== false} onChange={(v) => setAttributes({ equalHeight: v })} __nextHasNoMarginBottom />
-			</PanelBody>
-
-			<PanelBody title={__('Filter Bar', 'shapeblock')} initialOpen={false}>
-				<ResponsiveWrapper label={__('Alignment', 'shapeblock')}>
-					{(device) => {
-						const k = getKey('filterAlign', device);
-						return (
-							<SelectControl
-								value={attributes[k]}
-								options={[...(device === 'desktop' ? [] : [{ label: __('Default', 'shapeblock'), value: '' }]), ...ALIGN3]}
-								onChange={(v) => setAttributes({ [k]: v })}
-								__next40pxDefaultSize
-								__nextHasNoMarginBottom
-							/>
-						);
-					}}
-				</ResponsiveWrapper>
-				{num(__('Button Gap (px)', 'shapeblock'), 'filterGap', 60)}
-				{num(__('Space Below (px)', 'shapeblock'), 'filterSpace', 120)}
-				{respBox(__('Button Padding', 'shapeblock'), 'filterPadding')}
-			</PanelBody>
-
-			<PanelBody title={__('Card', 'shapeblock')} initialOpen={false}>
-				{respBox(__('Padding', 'shapeblock'), 'cardPadding')}
-				{single(__('Icon Gap (px)', 'shapeblock'), 'iconSpace', 60)}
-				{single(__('Title / Description Gap (px)', 'shapeblock'), 'textGap', 40)}
 			</PanelBody>
 
 			<PanelBody title={__('Animation', 'shapeblock')} initialOpen={false}>
@@ -415,40 +446,228 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		</>
 	);
 
+	// --- Tab 2: Layout ----------------------------------------------------------
+	const layoutTab = (
+		<>
+			<PanelBody title={__('Grid', 'shapeblock')} initialOpen={true}>
+				<ResponsiveWrapper label={__('Columns', 'shapeblock')}>
+					{(device) => {
+						const k = getKey('columns', device);
+						return (
+							<ToggleGroupControl
+								value={String(attributes[k] || '')}
+								onChange={(v) => setAttributes({ [k]: v || '' })}
+								isBlock
+								__next40pxDefaultSize
+								__nextHasNoMarginBottom
+							>
+								{['1', '2', '3', '4', '5', '6'].map((n) => (
+									<ToggleGroupControlOption key={n} value={n} label={n} />
+								))}
+							</ToggleGroupControl>
+						);
+					}}
+				</ResponsiveWrapper>
+				{num(__('Gap (px)', 'shapeblock'), 'gap', 80)}
+				<ToggleControl label={__('Equal height cards', 'shapeblock')} checked={attributes.equalHeight !== false} onChange={(v) => setAttributes({ equalHeight: v })} __nextHasNoMarginBottom />
+			</PanelBody>
+
+			<PanelBody title={__('Card Alignment', 'shapeblock')} initialOpen={false}>
+				<ResponsiveWrapper label={__('Content Alignment', 'shapeblock')}>
+					{(d) => {
+						const k = getKey('cardAlign', d);
+						return (
+							<ToggleGroupControl
+								value={attributes[k] || (d === 'desktop' ? 'left' : undefined)}
+								onChange={(v) => setAttributes({ [k]: v || '' })}
+								isBlock
+								isDeselectable={d !== 'desktop'}
+								__next40pxDefaultSize
+								__nextHasNoMarginBottom
+							>
+								<ToggleGroupControlOptionIcon value="left" icon={ICON_ALIGN_LEFT} label={__('Left', 'shapeblock')} />
+								<ToggleGroupControlOptionIcon value="center" icon={ICON_ALIGN_CENTER} label={__('Center', 'shapeblock')} />
+								<ToggleGroupControlOptionIcon value="right" icon={ICON_ALIGN_RIGHT} label={__('Right', 'shapeblock')} />
+							</ToggleGroupControl>
+						);
+					}}
+				</ResponsiveWrapper>
+				<SelectControl
+					label={__('Icon Position', 'shapeblock')}
+					value={attributes.iconPosition}
+					options={[{ label: __('Top', 'shapeblock'), value: 'top' }, { label: __('Left', 'shapeblock'), value: 'left' }]}
+					onChange={(v) => setAttributes({ iconPosition: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+			</PanelBody>
+
+			{(showFilters !== false || attributes.showSearch) && (
+				<PanelBody title={attributes.showSearch ? __('Filter Bar & Search', 'shapeblock') : __('Filter Bar Alignment', 'shapeblock')} initialOpen={false}>
+					{showFilters !== false && !attributes.showSearch && (
+						<ResponsiveWrapper label={__('Alignment', 'shapeblock')}>
+							{(device) => {
+								const k = getKey('filterAlign', device);
+								return (
+									<SelectControl
+										value={attributes[k]}
+										options={[...(device === 'desktop' ? [] : [{ label: __('Default', 'shapeblock'), value: '' }]), ...ALIGN3]}
+										onChange={(v) => setAttributes({ [k]: v })}
+										__next40pxDefaultSize
+										__nextHasNoMarginBottom
+									/>
+								);
+							}}
+						</ResponsiveWrapper>
+					)}
+					{showFilters !== false && attributes.showSearch && (
+						<p className="components-base-control__help">{__('With the search box on, the filter buttons sit on the left and the search box on the right.', 'shapeblock')}</p>
+					)}
+					{showFilters !== false && num(__('Button Gap (px)', 'shapeblock'), 'filterGap', 60)}
+					{attributes.showSearch && (
+						<ResponsiveWrapper label={__('Search Box Width', 'shapeblock')}>
+							{(device) => {
+								const k = getKey('searchWidth', device);
+								return <UnitControl value={attributes[k] || ''} onChange={(v) => setAttributes({ [k]: v || '' })} placeholder="280px" __next40pxDefaultSize />;
+							}}
+						</ResponsiveWrapper>
+					)}
+				</PanelBody>
+			)}
+
+			<PanelBody title={__('Badge Position', 'shapeblock')} initialOpen={false}>
+				<SelectControl
+					label={__('Position', 'shapeblock')}
+					help={__('Add a badge to a card under Settings > Categories > Items.', 'shapeblock')}
+					value={attributes.badgePosition || 'top-right'}
+					options={[
+						{ label: __('Top Right', 'shapeblock'), value: 'top-right' },
+						{ label: __('Top Left', 'shapeblock'), value: 'top-left' },
+						{ label: __('Above the Title', 'shapeblock'), value: 'inline' },
+					]}
+					onChange={(v) => setAttributes({ badgePosition: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+				{attributes.badgePosition !== 'inline' && attributes.badgeStyle !== 'ribbon' && (
+					<>
+						<p className="components-base-control__help">
+							{__('Move the badge in from the card’s edges. Leave empty for the default.', 'shapeblock')}
+						</p>
+						{attributes.badgeStyle !== 'tab' && single(__('Space from the Top (px)', 'shapeblock'), 'badgeTop', 80)}
+						{single(
+							attributes.badgePosition === 'top-left' ? __('Space from the Left (px)', 'shapeblock') : __('Space from the Right (px)', 'shapeblock'),
+							'badgeSide',
+							80
+						)}
+					</>
+				)}
+			</PanelBody>
+
+			{attributes.loadMore !== false && (
+				<PanelBody title={__('Load More Alignment', 'shapeblock')} initialOpen={false}>
+					<ResponsiveWrapper label={__('Alignment', 'shapeblock')}>
+						{(device) => {
+							const k = getKey('loadMoreAlign', device);
+							return (
+								<SelectControl
+									value={attributes[k]}
+									options={[...(device === 'desktop' ? [] : [{ label: __('Default', 'shapeblock'), value: '' }]), ...ALIGN3]}
+									onChange={(v) => setAttributes({ [k]: v })}
+									__next40pxDefaultSize
+									__nextHasNoMarginBottom
+								/>
+							);
+						}}
+					</ResponsiveWrapper>
+				</PanelBody>
+			)}
+		</>
+	);
+
 	// --- Tab 3: Style -----------------------------------------------------------
 	const styleTab = (
 		<>
-			<PanelBody title={__('Filter Buttons', 'shapeblock')} initialOpen={true}>
-				{respTypo(__('Typography', 'shapeblock'), 'filterTypography')}
-				<Divider />
-				<TabPanel className="shapeblock-tab-panel" activeClass="is-active" tabs={FILTER_TABS}>
-					{(tab) =>
-						tab.name === 'hover' ? (
-							<>
-								{color(__('Text Color', 'shapeblock'), 'filterColorHover')}
-								{bg(__('Background', 'shapeblock'), 'filterBgHover', 'filterBgGradientHover')}
-								{color(__('Border Color', 'shapeblock'), 'filterBorderColorHover')}
-							</>
-						) : tab.name === 'active' ? (
-							<>
-								{color(__('Text Color', 'shapeblock'), 'filterColorActive')}
-								{bg(__('Background', 'shapeblock'), 'filterBgActive', 'filterBgGradientActive')}
-								{color(__('Border Color', 'shapeblock'), 'filterBorderColorActive')}
-							</>
-						) : (
-							<>
-								{color(__('Text Color', 'shapeblock'), 'filterColor')}
-								{bg(__('Background', 'shapeblock'), 'filterBg', 'filterBgGradient')}
-								{border(__('Border', 'shapeblock'), 'filterBorder')}
-							</>
-						)
-					}
-				</TabPanel>
-				<Divider />
-				{box(__('Border Radius', 'shapeblock'), 'filterRadius')}
-			</PanelBody>
+			{showFilters !== false && (
+				<PanelBody title={__('Filter Buttons', 'shapeblock')} initialOpen={true}>
+					{respTypo(__('Typography', 'shapeblock'), 'filterTypography')}
+					<Divider />
+					<TabPanel className="shapeblock-tab-panel" activeClass="is-active" tabs={FILTER_TABS}>
+						{(tab) =>
+							tab.name === 'hover' ? (
+								<>
+									{color(__('Text Color', 'shapeblock'), 'filterColorHover')}
+									{bg(__('Background', 'shapeblock'), 'filterBgHover', 'filterBgGradientHover')}
+									{color(__('Border Color', 'shapeblock'), 'filterBorderColorHover')}
+								</>
+							) : tab.name === 'active' ? (
+								<>
+									{color(__('Text Color', 'shapeblock'), 'filterColorActive')}
+									{bg(__('Background', 'shapeblock'), 'filterBgActive', 'filterBgGradientActive')}
+									{color(__('Border Color', 'shapeblock'), 'filterBorderColorActive')}
+								</>
+							) : (
+								<>
+									{color(__('Text Color', 'shapeblock'), 'filterColor')}
+									{bg(__('Background', 'shapeblock'), 'filterBg', 'filterBgGradient')}
+									{border(__('Border', 'shapeblock'), 'filterBorder')}
+								</>
+							)
+						}
+					</TabPanel>
+					<Divider />
+					{box(__('Border Radius', 'shapeblock'), 'filterRadius')}
+					{respBox(__('Button Padding', 'shapeblock'), 'filterPadding')}
+					{num(__('Space Below (px)', 'shapeblock'), 'filterSpace', 120)}
+				</PanelBody>
+			)}
 
-			<PanelBody title={__('Card', 'shapeblock')} initialOpen={false}>
+			{attributes.showSearch && (
+				<PanelBody title={__('Line Below Filters', 'shapeblock')} initialOpen={false}>
+					<ToggleControl
+						label={__('Show a line', 'shapeblock')}
+						help={__('A line under the filter buttons and the search box.', 'shapeblock')}
+						checked={attributes.showSeparator !== false}
+						onChange={(v) => setAttributes({ showSeparator: v })}
+						__nextHasNoMarginBottom
+					/>
+					{attributes.showSeparator !== false && (
+						<>
+							{color(__('Line Color', 'shapeblock'), 'separatorColor')}
+							<SelectControl
+								label={__('Line Style', 'shapeblock')}
+								value={attributes.separatorStyle || 'solid'}
+								options={[
+									{ label: __('Solid', 'shapeblock'), value: 'solid' },
+									{ label: __('Dashed', 'shapeblock'), value: 'dashed' },
+									{ label: __('Dotted', 'shapeblock'), value: 'dotted' },
+									{ label: __('Double', 'shapeblock'), value: 'double' },
+								]}
+								onChange={(v) => setAttributes({ separatorStyle: v })}
+								__next40pxDefaultSize
+								__nextHasNoMarginBottom
+							/>
+							{single(__('Line Width (px)', 'shapeblock'), 'separatorWidth', 10, 1)}
+						</>
+					)}
+				</PanelBody>
+			)}
+
+			{attributes.showSearch && (
+				<PanelBody title={__('Search Box', 'shapeblock')} initialOpen={false}>
+					<TypographyControls label={__('Typography', 'shapeblock')} attributes={attributes} setAttributes={setAttributes} attributeKey="searchTypography" />
+					{color(__('Text Color', 'shapeblock'), 'searchColor')}
+					{color(__('Placeholder Color', 'shapeblock'), 'searchPlaceholderColor')}
+					{color(__('Icon Color', 'shapeblock'), 'searchIconColor')}
+					{bg(__('Background', 'shapeblock'), 'searchBg', 'searchBgGradient')}
+					{border(__('Border', 'shapeblock'), 'searchBorder')}
+					{color(__('Border Color (Focus)', 'shapeblock'), 'searchBorderColorFocus')}
+					{box(__('Border Radius', 'shapeblock'), 'searchRadius')}
+					{color(__('No Results Text Color', 'shapeblock'), 'noResultsColor')}
+				</PanelBody>
+			)}
+
+			<PanelBody title={__('Card', 'shapeblock')} initialOpen={showFilters === false}>
 				<TabPanel className="shapeblock-tab-panel" activeClass="is-active" tabs={STATE_TABS}>
 					{(tab) =>
 						tab.name === 'hover' ? (
@@ -468,6 +687,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</TabPanel>
 				<Divider />
 				{box(__('Border Radius', 'shapeblock'), 'cardRadius')}
+				{respBox(__('Padding', 'shapeblock'), 'cardPadding')}
 			</PanelBody>
 
 			{showIcon !== false && (
@@ -477,6 +697,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					{num(__('Icon Size (px)', 'shapeblock'), 'iconSize', 120)}
 					{num(__('Box Size (px)', 'shapeblock'), 'iconBoxSize', 200)}
 					{box(__('Border Radius', 'shapeblock'), 'iconRadius')}
+					{single(__('Icon Gap (px)', 'shapeblock'), 'iconSpace', 60)}
 				</PanelBody>
 			)}
 
@@ -484,12 +705,71 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				{color(__('Color', 'shapeblock'), 'titleColor')}
 				{color(__('Color (Card Hover)', 'shapeblock'), 'titleColorHover')}
 				{respTypo(__('Typography', 'shapeblock'), 'titleTypography')}
+				{single(__('Title / Description Gap (px)', 'shapeblock'), 'textGap', 40)}
 			</PanelBody>
 
 			<PanelBody title={__('Description', 'shapeblock')} initialOpen={false}>
 				{color(__('Color', 'shapeblock'), 'descColor')}
 				{respTypo(__('Typography', 'shapeblock'), 'descTypography')}
 			</PanelBody>
+
+			<PanelBody title={__('Badge', 'shapeblock')} initialOpen={false}>
+				<SelectControl
+					label={__('Style', 'shapeblock')}
+					help={
+						attributes.badgePosition === 'inline' && attributes.badgeStyle === 'ribbon'
+							? __('A ribbon sits in a corner; above the title it shows as a pill.', 'shapeblock')
+							: attributes.badgePosition === 'inline' && attributes.badgeStyle === 'tab'
+								? __('A tab sits on the top edge; above the title it shows as a square.', 'shapeblock')
+								: undefined
+					}
+					value={attributes.badgeStyle || 'pill'}
+					options={[
+						{ label: __('Pill', 'shapeblock'), value: 'pill' },
+						{ label: __('Square', 'shapeblock'), value: 'square' },
+						{ label: __('Soft', 'shapeblock'), value: 'soft' },
+						{ label: __('Outline', 'shapeblock'), value: 'outline' },
+						{ label: __('Ribbon', 'shapeblock'), value: 'ribbon' },
+						{ label: __('Tab', 'shapeblock'), value: 'tab' },
+					]}
+					onChange={(v) => setAttributes({ badgeStyle: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+				{color(attributes.badgeStyle === 'soft' || attributes.badgeStyle === 'outline' ? __('Text Color (default: the badge color)', 'shapeblock') : __('Text Color', 'shapeblock'), 'badgeColor')}
+				{color(__('Badge Color', 'shapeblock'), 'badgeBg')}
+				{respTypo(__('Typography', 'shapeblock'), 'badgeTypography')}
+				{respBox(__('Padding', 'shapeblock'), 'badgePadding')}
+				{box(__('Border Radius', 'shapeblock'), 'badgeRadius')}
+			</PanelBody>
+
+			{attributes.loadMore !== false && (
+				<PanelBody title={__('Load More Button', 'shapeblock')} initialOpen={false}>
+					{respTypo(__('Typography', 'shapeblock'), 'loadMoreTypography')}
+					<Divider />
+					<TabPanel className="shapeblock-tab-panel" activeClass="is-active" tabs={STATE_TABS}>
+						{(tab) =>
+							tab.name === 'hover' ? (
+								<>
+									{color(__('Text Color', 'shapeblock'), 'loadMoreColorHover')}
+									{bg(__('Background', 'shapeblock'), 'loadMoreBgHover', 'loadMoreBgGradientHover')}
+									{color(__('Border Color', 'shapeblock'), 'loadMoreBorderColorHover')}
+								</>
+							) : (
+								<>
+									{color(__('Text Color', 'shapeblock'), 'loadMoreColor')}
+									{bg(__('Background', 'shapeblock'), 'loadMoreBg', 'loadMoreBgGradient')}
+									{border(__('Border', 'shapeblock'), 'loadMoreBorder')}
+								</>
+							)
+						}
+					</TabPanel>
+					<Divider />
+					{box(__('Border Radius', 'shapeblock'), 'loadMoreRadius')}
+					{respBox(__('Padding', 'shapeblock'), 'loadMorePadding')}
+					{num(__('Space Above (px)', 'shapeblock'), 'loadMoreSpace', 160)}
+				</PanelBody>
+			)}
 		</>
 	);
 

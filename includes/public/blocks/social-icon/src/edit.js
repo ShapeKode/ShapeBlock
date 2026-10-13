@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useRef } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import { useBlockProps, InspectorControls, BlockControls, AlignmentControl } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -66,7 +66,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const alignKey = dev === 'desktop' ? 'alignment' : `alignment${dev.charAt(0).toUpperCase() + dev.slice(1)}`;
 
 	const items = Array.isArray(socialLinks) ? socialLinks : [];
-	const update = (i, key, val) => setAttributes({ socialLinks: items.map((it, idx) => (idx === i ? { ...it, [key]: val } : it)) });
+	// Two updates can arrive in one click (a colour picked, the gradient cleared), so each one
+	// builds on the latest list rather than the one this render started with.
+	const latestItems = useRef(items);
+	latestItems.current = items;
+	const update = (i, key, val) => {
+		const next = latestItems.current.map((it, idx) => (idx === i ? { ...it, [key]: val } : it));
+		latestItems.current = next;
+		setAttributes({ socialLinks: next });
+	};
 	const add = () =>
 		setAttributes({
 			socialLinks: [
@@ -152,7 +160,20 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</div>
 			))}
 			<Button variant="primary" onClick={add} icon={ICON_ADD}>{__('Add Social Link', 'shapeblock')}</Button>
-			<Divider />
+		</PanelBody>
+	);
+
+	// --- Tab 2: Layout (size & spacing) ---------------------------------------
+	const layoutTab = (
+		<PanelBody title={__('Size & Spacing', 'shapeblock')} initialOpen={true}>
+			{respNum(__('Button Size (px)', 'shapeblock'), 'buttonSize')}
+			{respNum(__('Button Spacing (px)', 'shapeblock'), 'buttonSpacing')}
+		</PanelBody>
+	);
+
+	// --- Tab 3: Style (appearance) --------------------------------------------
+	const styleTab = (
+		<PanelBody title={__('Buttons', 'shapeblock')} initialOpen={true}>
 			<SelectControl
 				label={__('Color Mode', 'shapeblock')}
 				value={colorMode}
@@ -164,21 +185,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				__next40pxDefaultSize
 				__nextHasNoMarginBottom
 			/>
-		</PanelBody>
-	);
-
-	// --- Tab 2: Layout (size & spacing) ---------------------------------------
-	const layoutTab = (
-		<PanelBody title={__('Buttons', 'shapeblock')} initialOpen={true}>
-			{respNum(__('Button Size (px)', 'shapeblock'), 'buttonSize')}
-			{respNum(__('Button Spacing (px)', 'shapeblock'), 'buttonSpacing')}
 			{respNum(__('Icon Size (px)', 'shapeblock'), 'iconSize')}
-		</PanelBody>
-	);
-
-	// --- Tab 3: Style (appearance) --------------------------------------------
-	const styleTab = (
-		<PanelBody title={__('Buttons', 'shapeblock')} initialOpen={true}>
+			<Divider />
 			<BoxControl label={__('Border Radius', 'shapeblock')} values={attributes.buttonRadius} onChange={(v) => setAttributes({ buttonRadius: v })} />
 			<BorderControl label={__('Border', 'shapeblock')} value={attributes.buttonBorder} onChange={(v) => setAttributes({ buttonBorder: v })} />
 			<BorderControl label={__('Border (Hover)', 'shapeblock')} value={attributes.buttonBorderHover} onChange={(v) => setAttributes({ buttonBorderHover: v })} />

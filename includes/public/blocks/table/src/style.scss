@@ -15,20 +15,22 @@
 		caption-side: bottom;
 		color: inherit;
 		vertical-align: top;
+		text-align: left;
 	}
 
 	.shapeblock-table th,
 	.shapeblock-table td {
 		padding: 12px 16px;
-		text-align: left;
+		text-align: inherit;
+		font-weight: inherit;
 		vertical-align: top;
 	}
 
-	.shapeblock-table-header th {
+	.shapeblock-table-header {
 		font-weight: 700;
 	}
 
-	.shapeblock-table-footer th {
+	.shapeblock-table-footer {
 		font-weight: 600;
 	}
 
@@ -41,12 +43,6 @@
 		top: 4px;
 		left: 0;
 		margin-right: 10px;
-
-		svg {
-			width: 15px;
-			height: auto;
-			fill: currentColor;
-		}
 	}
 
 	/* Flex data cell */

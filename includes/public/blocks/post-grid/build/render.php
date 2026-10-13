@@ -11,10 +11,11 @@ return ( function ( $attributes, $content, $block ) {
 // posts_per_page as an unbounded query.
 $per_page = isset($attributes['perPage']) ? (int) $attributes['perPage'] : 6;
 $per_page = max( 1, min( 100, $per_page ) );
-$order = isset($attributes['order']) ? $attributes['order'] : 'ASC';
-$orderby = isset($attributes['orderby']) && in_array( $attributes['orderby'], array( 'date', 'title', 'modified', 'rand', 'menu_order', 'comment_count', 'ID', 'author', 'name' ), true ) ? $attributes['orderby'] : 'date';
+// Newest first unless the block says otherwise.
+$order = isset($attributes['order']) ? $attributes['order'] : 'DESC';
+$orderby = isset( $attributes['orderby'] ) ? ( 'id' === $attributes['orderby'] ? 'ID' : $attributes['orderby'] ) : 'date';
+$orderby = in_array( $orderby, array( 'date', 'title', 'modified', 'rand', 'menu_order', 'comment_count', 'ID', 'author', 'name' ), true ) ? $orderby : 'date';
 $offset = isset($attributes['offset']) ? $attributes['offset'] : '';
-$columns = isset($attributes['columns']) ? $attributes['columns'] : 3;
 $style = isset($attributes['gridStyle']) && in_array( $attributes['gridStyle'], array( 'default', '1' ), true ) ? $attributes['gridStyle'] : 'default';
 $thumbnail_size = isset($attributes['thumbnailSize']) ? $attributes['thumbnailSize'] : 'large';
 $is_featured = !empty($attributes['isFeatured']) ? true : false;
@@ -27,17 +28,15 @@ if ( '' === $unique_id ) {
 }
 $page_key = 'paged_' . $unique_id;
 
-if ( ! isset( $paged ) ) {
-    if ( is_archive() ) {
-        $paged = max( 1, get_query_var('paged') );
-    } else {
-        // filter_input() reads the raw request value directly rather than the
-        // $_GET superglobal, so this public, read-only pagination parameter
-        // does not need a nonce (it changes no state and matches a plain
-        // bookmarkable/paginated URL, the same as WordPress's own ?paged=).
-        $shapeblock_paged_param = filter_input( INPUT_GET, $page_key, FILTER_VALIDATE_INT );
-        $paged                  = $shapeblock_paged_param ? max( 1, $shapeblock_paged_param ) : 1;
-    }
+if ( is_archive() ) {
+    $paged = max( 1, get_query_var('paged') );
+} else {
+    // filter_input() reads the raw request value directly rather than the
+    // $_GET superglobal, so this public, read-only pagination parameter
+    // does not need a nonce (it changes no state and matches a plain
+    // bookmarkable/paginated URL, the same as WordPress's own ?paged=).
+    $shapeblock_paged_param = filter_input( INPUT_GET, $page_key, FILTER_VALIDATE_INT );
+    $paged                  = $shapeblock_paged_param ? max( 1, $shapeblock_paged_param ) : 1;
 }
 
 $paged = max( 1, (int) $paged );
@@ -54,53 +53,16 @@ $read_more_text = isset($attributes['readMoreText']) ? $attributes['readMoreText
 $read_more_icon = isset($attributes['readMoreIcon']) ? $attributes['readMoreIcon'] : 'none';
 $read_more_icon_pos = isset($attributes['readMoreIconPosition']) ? $attributes['readMoreIconPosition'] : 'after';
 $show_date_on_top = !empty($attributes['showDateOnTop']) ? 'yes' : 'no';
-$title_trim = isset($attributes['titleTrim']) ? $attributes['titleTrim'] : 100;
-$excerpt_trim = isset($attributes['excerptTrim']) ? $attributes['excerptTrim'] : 20;
-$anim_style = isset($attributes['animStyle']) ? $attributes['animStyle'] : '';
-$thumb_anim = isset($attributes['thumbAnim']) ? 'shapeblock-animate' : '';
-$show_video = !empty($attributes['showVideo']) ? true : false;
-$video_autoplay = isset($attributes['videoAutoplay']) && $attributes['videoAutoplay'] ? 1 : 0;
-$video_mute = isset($attributes['videoMute']) && $attributes['videoMute'] ? 1 : 0;
-$video_height = isset($attributes['videoHeight']) ? $attributes['videoHeight'] : '400px';
-$video_width = isset($attributes['videoWidth']) ? $attributes['videoWidth'] : '100%';
-$video_controls = isset($attributes['videoControls']) && $attributes['videoControls'] ? 1 : 0;
+// Word counts; an empty or zero value would cut every title / excerpt to "...".
+$title_trim   = isset( $attributes['titleTrim'] ) && (int) $attributes['titleTrim'] > 0 ? (int) $attributes['titleTrim'] : 100;
+$excerpt_trim = isset( $attributes['excerptTrim'] ) && (int) $attributes['excerptTrim'] > 0 ? (int) $attributes['excerptTrim'] : 20;
+$anim_style = isset( $attributes['animStyle'] ) && in_array( $attributes['animStyle'], array( 'left_right', 'top_bottom', 'zoom' ), true ) ? $attributes['animStyle'] : '';
 
-$meta_style = isset($attributes['metaStyle']) ? $attributes['metaStyle'] : '';
-$cat_style = 'default';
-if ( $style === '1' ) {
-    $cat_style = '1';
-}else if($style == 2) {
-    $cat_style = '3';
-    if(empty($meta_position) || $meta_position == 'default') {
-        $meta_position = 'below_title';
-    }else{
-        $meta_position = 'up_title';
-    }
-    if(empty($show_video)) {
-        $show_video = 'yes';
-    }
-    if(empty($meta_style)) {
-        $meta_style = '2';
-    }
-}
+$meta_style = ! empty( $attributes['metaStyle'] ) && in_array( $attributes['metaStyle'], array( 'default', '1', '2', '3' ), true ) ? $attributes['metaStyle'] : 'default';
 
-
-if(empty($meta_style)) {
-    $meta_style = 'default';
-}
-
-if(empty($meta_position) || $meta_position == 'default') {
+if ( ! in_array( $meta_position, array( 'up_title', 'below_title', 'below_content' ), true ) ) {
     $meta_position = 'up_title';
 }
-
-
-
-// styles
-$responsive_data = [
-    'desktop' => [],
-    'tablet'  => [],
-    'mobile'  => []
-];
 
 // Columns
 $c_desktop = isset($attributes['columns']) ? (int)$attributes['columns'] : 3;
@@ -167,11 +129,6 @@ $wrap_responsive = [
     'mobile'  => [ 'padding-right' => $gutter_half( $g_mobile ),  'padding-left' => $gutter_half( $g_mobile ) ],
 ];
 
-// The gutter classes are gone — the values above carry it now — but the markup
-// still prints these two slots, so they stay defined and empty.
-$gap_class     = '';
-$row_gap_class = '';
-
 // Item Styles
 $item_responsive = ['desktop' => [], 'tablet' => [], 'mobile' => []];
 \ShapeBlock\Frontend\Helper::add_responsive_vars($attributes, $item_responsive, 'itemPadding', '', ['top'=>'padding-top','right'=>'padding-right','bottom'=>'padding-bottom','left'=>'padding-left'], true);
@@ -181,18 +138,15 @@ $item_desktop = [];
 if ( ! empty( $attributes['itemBackgroundColor'] ) ) {
     $item_desktop['background-color'] = $attributes['itemBackgroundColor'];
 }
-if ( ! empty( $attributes['itemBackgroundColorTwo'] ) ) {
-    $item_desktop['background-color'] = $attributes['itemBackgroundColorTwo'];
-}
 if ( ! empty( $attributes['itemBackgroundGradient'] ) ) {
     $item_desktop['background'] = $attributes['itemBackgroundGradient'];
 }
 
 $i_border_radius = $attributes['itemBorderRadius'] ?? [];
-if ( ! empty( $i_border_radius['top'] ) ) $item_desktop['border-top-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $i_border_radius['top'] );
-if ( ! empty( $i_border_radius['right'] ) ) $item_desktop['border-top-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $i_border_radius['right'] );
-if ( ! empty( $i_border_radius['bottom'] ) ) $item_desktop['border-bottom-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $i_border_radius['bottom'] );
-if ( ! empty( $i_border_radius['left'] ) ) $item_desktop['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $i_border_radius['left'] );
+if ( ( isset( $i_border_radius['top'] ) && '' !== (string) $i_border_radius['top'] ) ) $item_desktop['border-top-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $i_border_radius['top'] );
+if ( ( isset( $i_border_radius['right'] ) && '' !== (string) $i_border_radius['right'] ) ) $item_desktop['border-top-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $i_border_radius['right'] );
+if ( ( isset( $i_border_radius['bottom'] ) && '' !== (string) $i_border_radius['bottom'] ) ) $item_desktop['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $i_border_radius['bottom'] );
+if ( ( isset( $i_border_radius['left'] ) && '' !== (string) $i_border_radius['left'] ) ) $item_desktop['border-bottom-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $i_border_radius['left'] );
 
 $item_responsive['desktop'] = array_merge($item_responsive['desktop'], $item_desktop);
 
@@ -213,6 +167,13 @@ if(!empty($attributes['itemBackgroundColorHover'])) {
 }
 if(!empty($attributes['itemBackgroundGradientHover'])) {
     $item_hover['background'] = $attributes['itemBackgroundGradientHover'] . ' !important';
+}
+if ( ! empty( $attributes['itemBorderColorHover'] ) ) {
+    $item_hover['border-color'] = $attributes['itemBorderColorHover'];
+}
+$hover_shadow = $attributes['itemBoxShadowHover'] ?? [];
+if ( is_array( $hover_shadow ) && ( ! empty( $hover_shadow['x'] ) || ! empty( $hover_shadow['y'] ) || ! empty( $hover_shadow['b'] ) || ! empty( $hover_shadow['s'] ) ) ) {
+    $item_hover['box-shadow'] = \ShapeBlock\Frontend\Helper::box_shadow_to_css( $hover_shadow );
 }
 
 // Overlay Styles
@@ -276,11 +237,6 @@ if ( ! empty( $attributes['itemExcerptColor'] ) ) {
 
 \ShapeBlock\Frontend\Helper::add_responsive_vars($attributes, $excerpt_responsive, 'excerptTextAlign', 'text-align', [], false);
 
-$excerpt_hover = [];
-if(!empty($attributes['itemExcerptColorHover'])) {
-    $excerpt_hover['color'] = $attributes['itemExcerptColorHover'];
-}
-
 // Button Styles
 $button_styles = [];
 if ( ! empty( $attributes['readMoreBackgroundColor'] ) ) {
@@ -294,35 +250,35 @@ if ( ! empty( $attributes['readMoreBackgroundGradient'] ) ) {
 }
 
 $ib_padding = $attributes['readMorePadding'] ?? [];
-if ( ! empty( $ib_padding['top'] ) ) $button_styles['padding-top'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_padding['top'] );
-if ( ! empty( $ib_padding['right'] ) ) $button_styles['padding-right'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_padding['right'] );
-if ( ! empty( $ib_padding['bottom'] ) ) $button_styles['padding-bottom'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_padding['bottom'] );
-if ( ! empty( $ib_padding['left'] ) ) $button_styles['padding-left'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_padding['left'] );
+if ( ( isset( $ib_padding['top'] ) && '' !== (string) $ib_padding['top'] ) ) $button_styles['padding-top'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_padding['top'] );
+if ( ( isset( $ib_padding['right'] ) && '' !== (string) $ib_padding['right'] ) ) $button_styles['padding-right'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_padding['right'] );
+if ( ( isset( $ib_padding['bottom'] ) && '' !== (string) $ib_padding['bottom'] ) ) $button_styles['padding-bottom'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_padding['bottom'] );
+if ( ( isset( $ib_padding['left'] ) && '' !== (string) $ib_padding['left'] ) ) $button_styles['padding-left'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_padding['left'] );
 
 $ib_margin = $attributes['readMoreMargin'] ?? [];
-if ( ! empty( $ib_margin['top'] ) ) $button_styles['margin-top'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_margin['top'] );
-if ( ! empty( $ib_margin['right'] ) ) $button_styles['margin-right'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_margin['right'] );
-if ( ! empty( $ib_margin['bottom'] ) ) $button_styles['margin-bottom'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_margin['bottom'] );
-if ( ! empty( $ib_margin['left'] ) ) $button_styles['margin-left'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_margin['left'] );
+if ( ( isset( $ib_margin['top'] ) && '' !== (string) $ib_margin['top'] ) ) $button_styles['margin-top'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_margin['top'] );
+if ( ( isset( $ib_margin['right'] ) && '' !== (string) $ib_margin['right'] ) ) $button_styles['margin-right'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_margin['right'] );
+if ( ( isset( $ib_margin['bottom'] ) && '' !== (string) $ib_margin['bottom'] ) ) $button_styles['margin-bottom'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_margin['bottom'] );
+if ( ( isset( $ib_margin['left'] ) && '' !== (string) $ib_margin['left'] ) ) $button_styles['margin-left'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_margin['left'] );
 
 $ib_typo = $attributes['readMoreTypography'] ?? [];
 if ( ! empty( $ib_typo['fontFamily'] ) ) $button_styles['font-family'] = $ib_typo['fontFamily'];
-if ( ! empty( $ib_typo['fontSize'] ) ) $button_styles['font-size'] = $ib_typo['fontSize'];
+if ( ! empty( $ib_typo['fontSize'] ) ) $button_styles['font-size'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_typo['fontSize'] );
 if ( ! empty( $ib_typo['fontWeight'] ) ) $button_styles['font-weight'] = $ib_typo['fontWeight'];
 if ( ! empty( $ib_typo['fontStyle'] ) ) $button_styles['font-style'] = $ib_typo['fontStyle'];
 if ( ! empty( $ib_typo['lineHeight'] ) ) $button_styles['line-height'] = $ib_typo['lineHeight'];
 if ( ! empty( $ib_typo['textDecoration'] ) ) $button_styles['text-decoration'] = $ib_typo['textDecoration'];
 if ( ! empty( $ib_typo['textTransform'] ) ) $button_styles['text-transform'] = $ib_typo['textTransform'];
-if ( ! empty( $ib_typo['letterSpacing'] ) ) $button_styles['letter-spacing'] = $ib_typo['letterSpacing'];
+if ( ! empty( $ib_typo['letterSpacing'] ) ) $button_styles['letter-spacing'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_typo['letterSpacing'] );
 
 $button_text_align_responsive = ['desktop' => [], 'tablet' => [], 'mobile' => []];
 \ShapeBlock\Frontend\Helper::add_responsive_vars($attributes, $button_text_align_responsive, 'buttonTextAlign', 'text-align', [], false);
 
 $ib_border_radius = $attributes['readMoreBorderRadius'] ?? [];
-if ( ! empty( $ib_border_radius['top'] ) ) $button_styles['border-top-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_border_radius['top'] );
-if ( ! empty( $ib_border_radius['right'] ) ) $button_styles['border-top-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_border_radius['right'] );
-if ( ! empty( $ib_border_radius['bottom'] ) ) $button_styles['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_border_radius['bottom'] );
-if ( ! empty( $ib_border_radius['left'] ) ) $button_styles['border-bottom-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_border_radius['left'] );
+if ( ( isset( $ib_border_radius['top'] ) && '' !== (string) $ib_border_radius['top'] ) ) $button_styles['border-top-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_border_radius['top'] );
+if ( ( isset( $ib_border_radius['right'] ) && '' !== (string) $ib_border_radius['right'] ) ) $button_styles['border-top-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_border_radius['right'] );
+if ( ( isset( $ib_border_radius['bottom'] ) && '' !== (string) $ib_border_radius['bottom'] ) ) $button_styles['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_border_radius['bottom'] );
+if ( ( isset( $ib_border_radius['left'] ) && '' !== (string) $ib_border_radius['left'] ) ) $button_styles['border-bottom-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $ib_border_radius['left'] );
 if ( ! empty( $attributes['readMoreBorder'] ) ) {
     foreach ( \ShapeBlock\Frontend\Helper::border_to_css_props( $attributes['readMoreBorder'] ) as $prop => $val ) {
         $button_styles[$prop] = $val;
@@ -341,7 +297,11 @@ if(!empty($attributes['readMoreBackgroundGradientHover'])) {
 }
 
 $td_styles = [];
-if(!empty($attributes['topDateBackgroundColor'])) $td_styles['background-color'] = $attributes['topDateBackgroundColor'];
+if ( ! empty( $attributes['topDateBackgroundGradient'] ) ) {
+    $td_styles['background'] = $attributes['topDateBackgroundGradient'];
+} elseif ( ! empty( $attributes['topDateBackgroundColor'] ) ) {
+    $td_styles['background-color'] = $attributes['topDateBackgroundColor'];
+}
 if(!empty($attributes['topDateColor'])) $td_styles['color'] = $attributes['topDateColor'];
 
 $meta_styles = [];
@@ -349,10 +309,10 @@ if(!empty($attributes['metaColor'])) $meta_styles['color'] = $attributes['metaCo
 
 $metas_styles = [];
 $meta_margin = $attributes['metaMargin'] ?? [];
-if(!empty($meta_margin['top'])) $metas_styles['margin-top'] = \ShapeBlock\Frontend\Helper::ensure_unit($meta_margin['top']);
-if(!empty($meta_margin['right'])) $metas_styles['margin-right'] = \ShapeBlock\Frontend\Helper::ensure_unit($meta_margin['right']);
-if(!empty($meta_margin['bottom'])) $metas_styles['margin-bottom'] = \ShapeBlock\Frontend\Helper::ensure_unit($meta_margin['bottom']);
-if(!empty($meta_margin['left'])) $metas_styles['margin-left'] = \ShapeBlock\Frontend\Helper::ensure_unit($meta_margin['left']);
+if(( isset( $meta_margin['top'] ) && '' !== (string) $meta_margin['top'] )) $metas_styles['margin-top'] = \ShapeBlock\Frontend\Helper::ensure_unit($meta_margin['top']);
+if(( isset( $meta_margin['right'] ) && '' !== (string) $meta_margin['right'] )) $metas_styles['margin-right'] = \ShapeBlock\Frontend\Helper::ensure_unit($meta_margin['right']);
+if(( isset( $meta_margin['bottom'] ) && '' !== (string) $meta_margin['bottom'] )) $metas_styles['margin-bottom'] = \ShapeBlock\Frontend\Helper::ensure_unit($meta_margin['bottom']);
+if(( isset( $meta_margin['left'] ) && '' !== (string) $meta_margin['left'] )) $metas_styles['margin-left'] = \ShapeBlock\Frontend\Helper::ensure_unit($meta_margin['left']);
 
 $meta_responsive = ['desktop' => [], 'tablet' => [], 'mobile' => []];
 \ShapeBlock\Frontend\Helper::add_responsive_vars($attributes, $meta_responsive, 'metaTypography', '', [
@@ -375,50 +335,36 @@ if(!empty($attributes['metaIconColor'])) $meta_icon_styles['color'] = $attribute
 $meta_icon_hover = [];
 if(!empty($attributes['metaIconColorHover'])) $meta_icon_hover['color'] = $attributes['metaIconColorHover'];
 
-// Category Badge Styles
-$cat_container_styles = [];
-if(!empty($attributes['categoryBackgroundColor'])) $cat_container_styles['background-color'] = $attributes['categoryBackgroundColor'];
-$cat_padding = $attributes['categoryPadding'] ?? [];
-if(!empty($cat_padding['top'])) $cat_container_styles['padding-top'] = \ShapeBlock\Frontend\Helper::ensure_unit($cat_padding['top']);
-if(!empty($cat_padding['right'])) $cat_container_styles['padding-right'] = \ShapeBlock\Frontend\Helper::ensure_unit($cat_padding['right']);
-if(!empty($cat_padding['bottom'])) $cat_container_styles['padding-bottom'] = \ShapeBlock\Frontend\Helper::ensure_unit($cat_padding['bottom']);
-if(!empty($cat_padding['left'])) $cat_container_styles['padding-left'] = \ShapeBlock\Frontend\Helper::ensure_unit($cat_padding['left']);
-$cat_margin = $attributes['categoryMargin'] ?? [];
-if(!empty($cat_margin['top'])) $cat_container_styles['margin-top'] = \ShapeBlock\Frontend\Helper::ensure_unit($cat_margin['top']);
-if(!empty($cat_margin['right'])) $cat_container_styles['margin-right'] = \ShapeBlock\Frontend\Helper::ensure_unit($cat_margin['right']);
-if(!empty($cat_margin['bottom'])) $cat_container_styles['margin-bottom'] = \ShapeBlock\Frontend\Helper::ensure_unit($cat_margin['bottom']);
-if(!empty($cat_margin['left'])) $cat_container_styles['margin-left'] = \ShapeBlock\Frontend\Helper::ensure_unit($cat_margin['left']);
-$cat_link_styles = [];
-if(!empty($attributes['categoryColor'])) $cat_link_styles['color'] = $attributes['categoryColor'];
-$cat_container_hover = [];
-if(!empty($attributes['categoryBackgroundColorHover'])) $cat_container_hover['background-color'] = $attributes['categoryBackgroundColorHover'];
-$cat_link_hover = [];
-if(!empty($attributes['categoryColorHover'])) $cat_link_hover['color'] = $attributes['categoryColorHover'];
-
 $pag_styles = [];
 if ( ! empty( $attributes['paginationColor'] ) ) $pag_styles['color'] = $attributes['paginationColor'];
-if ( ! empty( $attributes['paginationBackgroundColor'] ) ) $pag_styles['background-color'] = $attributes['paginationBackgroundColor'];
+if ( ! empty( $attributes['paginationBackgroundGradient'] ) ) {
+    $pag_styles['background'] = $attributes['paginationBackgroundGradient'];
+} elseif ( ! empty( $attributes['paginationBackgroundColor'] ) ) {
+    $pag_styles['background-color'] = $attributes['paginationBackgroundColor'];
+}
 
 $pag_typo = $attributes['paginationTypography'] ?? [];
 if ( ! empty( $pag_typo['fontFamily'] ) ) $pag_styles['font-family'] = $pag_typo['fontFamily'];
-if ( ! empty( $pag_typo['fontSize'] ) ) $pag_styles['font-size'] = $pag_typo['fontSize'];
+if ( ! empty( $pag_typo['fontSize'] ) ) $pag_styles['font-size'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pag_typo['fontSize'] );
 if ( ! empty( $pag_typo['fontWeight'] ) ) $pag_styles['font-weight'] = $pag_typo['fontWeight'];
 if ( ! empty( $pag_typo['fontStyle'] ) ) $pag_styles['font-style'] = $pag_typo['fontStyle'];
 if ( ! empty( $pag_typo['lineHeight'] ) ) $pag_styles['line-height'] = $pag_typo['lineHeight'];
 if ( ! empty( $pag_typo['textTransform'] ) ) $pag_styles['text-transform'] = $pag_typo['textTransform'];
-if ( ! empty( $pag_typo['letterSpacing'] ) ) $pag_styles['letter-spacing'] = $pag_typo['letterSpacing'];
+if ( ! empty( $pag_typo['letterSpacing'] ) ) $pag_styles['letter-spacing'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pag_typo['letterSpacing'] );
 if ( ! empty( $pag_typo['textDecoration'] ) ) $pag_styles['text-decoration'] = $pag_typo['textDecoration'];
 
 $pag_hover = [];
 if ( ! empty( $attributes['paginationColorHover'] ) ) $pag_hover['color'] = $attributes['paginationColorHover'];
+// The border follows the hover colour only; a gradient cannot be a border colour.
+// A hover colour over a normal-state gradient must use the shorthand, or the gradient image stays on top.
+if ( ! empty( $attributes['paginationBackgroundGradientHover'] ) ) {
+    $pag_hover['background'] = $attributes['paginationBackgroundGradientHover'];
+} elseif ( ! empty( $attributes['paginationBackgroundColorHover'] ) ) {
+    $pag_hover[ ! empty( $attributes['paginationBackgroundGradient'] ) ? 'background' : 'background-color' ] = $attributes['paginationBackgroundColorHover'];
+}
 if ( ! empty( $attributes['paginationBackgroundColorHover'] ) ) {
-    $pag_hover['background-color'] = $attributes['paginationBackgroundColorHover'];
     $pag_hover['border-color'] = $attributes['paginationBackgroundColorHover'];
 }
-
-// Pagination Button Width
-$pagination_btn_width_responsive = ['desktop' => [], 'tablet' => [], 'mobile' => []];
-\ShapeBlock\Frontend\Helper::add_responsive_vars($attributes, $pagination_btn_width_responsive, 'paginationBtnWidth', 'width', [], false);
 
 // Pagination Button Border
 if ( ! empty( $attributes['paginationBtnBorder'] ) ) {
@@ -429,10 +375,10 @@ if ( ! empty( $attributes['paginationBtnBorder'] ) ) {
 
 // Pagination Button Border Radius
 $pagination_btn_border_radius = $attributes['paginationBtnBorderRadius'] ?? [];
-if ( ! empty( $pagination_btn_border_radius['top'] ) ) $pag_styles['border-top-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pagination_btn_border_radius['top'] );
-if ( ! empty( $pagination_btn_border_radius['right'] ) ) $pag_styles['border-top-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pagination_btn_border_radius['right'] );
-if ( ! empty( $pagination_btn_border_radius['bottom'] ) ) $pag_styles['border-bottom-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pagination_btn_border_radius['bottom'] );
-if ( ! empty( $pagination_btn_border_radius['left'] ) ) $pag_styles['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pagination_btn_border_radius['left'] );
+if ( ( isset( $pagination_btn_border_radius['top'] ) && '' !== (string) $pagination_btn_border_radius['top'] ) ) $pag_styles['border-top-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pagination_btn_border_radius['top'] );
+if ( ( isset( $pagination_btn_border_radius['right'] ) && '' !== (string) $pagination_btn_border_radius['right'] ) ) $pag_styles['border-top-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pagination_btn_border_radius['right'] );
+if ( ( isset( $pagination_btn_border_radius['bottom'] ) && '' !== (string) $pagination_btn_border_radius['bottom'] ) ) $pag_styles['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pagination_btn_border_radius['bottom'] );
+if ( ( isset( $pagination_btn_border_radius['left'] ) && '' !== (string) $pagination_btn_border_radius['left'] ) ) $pag_styles['border-bottom-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pagination_btn_border_radius['left'] );
 
 
 $thumbnail_height_responsive = ['desktop' => [], 'tablet' => [], 'mobile' => []];
@@ -441,10 +387,10 @@ $thumbnail_height_responsive = ['desktop' => [], 'tablet' => [], 'mobile' => []]
 // Thumbnail Border Radius
 $thumbnail_border_radius_styles = [];
 $t_border_radius = $attributes['thumbnailBorderRadius'] ?? [];
-if ( ! empty( $t_border_radius['top'] ) ) $thumbnail_border_radius_styles['border-top-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $t_border_radius['top'] );
-if ( ! empty( $t_border_radius['right'] ) ) $thumbnail_border_radius_styles['border-top-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $t_border_radius['right'] );
-if ( ! empty( $t_border_radius['bottom'] ) ) $thumbnail_border_radius_styles['border-bottom-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $t_border_radius['bottom'] );
-if ( ! empty( $t_border_radius['left'] ) ) $thumbnail_border_radius_styles['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $t_border_radius['left'] );
+if ( ( isset( $t_border_radius['top'] ) && '' !== (string) $t_border_radius['top'] ) ) $thumbnail_border_radius_styles['border-top-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $t_border_radius['top'] );
+if ( ( isset( $t_border_radius['right'] ) && '' !== (string) $t_border_radius['right'] ) ) $thumbnail_border_radius_styles['border-top-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $t_border_radius['right'] );
+if ( ( isset( $t_border_radius['bottom'] ) && '' !== (string) $t_border_radius['bottom'] ) ) $thumbnail_border_radius_styles['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $t_border_radius['bottom'] );
+if ( ( isset( $t_border_radius['left'] ) && '' !== (string) $t_border_radius['left'] ) ) $thumbnail_border_radius_styles['border-bottom-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $t_border_radius['left'] );
 
 $style_handle = 'shapeblock-post-grid-style';
 $selector    = '.shapeblock-post-grid-block-wrap.' . $unique_id;
@@ -459,8 +405,7 @@ $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($se
 $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-blog-excerpt', $excerpt_responsive);
 $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-blog-content', $content_padding_responsive);
 $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-blog-img img', $thumbnail_height_responsive);   
-$full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-read-more .shapeblock-read-more-link', $button_text_align_responsive);   
-$full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-load-more-btn', $pagination_btn_width_responsive);
+$full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-read-more', $button_text_align_responsive);   
 
 wp_enqueue_style( $style_handle );
 \ShapeBlock\Frontend\Helper::add_custom_style( $style_handle, $selector, $full_responsive_css, [
@@ -468,25 +413,21 @@ wp_enqueue_style( $style_handle );
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-grid-item-inner:hover'    => \ShapeBlock\Frontend\Helper::get_inline_styles($item_hover),
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-overlay-all'        => \ShapeBlock\Frontend\Helper::get_inline_styles($overlay_styles),
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-blog-title a:hover' => \ShapeBlock\Frontend\Helper::get_inline_styles($title_hover),
-    '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-blog-excerpt a:hover'=> \ShapeBlock\Frontend\Helper::get_inline_styles($excerpt_hover),
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-read-more .shapeblock-read-more-link'     => \ShapeBlock\Frontend\Helper::get_inline_styles($button_styles),
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-read-more .shapeblock-read-more-link:hover'=> \ShapeBlock\Frontend\Helper::get_inline_styles($button_hover),
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-blog-date-top'      => \ShapeBlock\Frontend\Helper::get_inline_styles($td_styles),
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas'         => \ShapeBlock\Frontend\Helper::get_inline_styles($metas_styles),
-    '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas a'         => \ShapeBlock\Frontend\Helper::get_inline_styles($meta_styles),
-    '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas a:hover'   => \ShapeBlock\Frontend\Helper::get_inline_styles($meta_hover),
-    '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas .bldpost-meta'       => \ShapeBlock\Frontend\Helper::get_inline_styles($meta_icon_styles),
-    '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas .bldpost-meta:hover' => \ShapeBlock\Frontend\Helper::get_inline_styles($meta_icon_hover),
+    // Meta text is links (author, category, tag) and plain text (date, comments).
+    '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas .bldpost-meta'       => \ShapeBlock\Frontend\Helper::get_inline_styles($meta_styles),
+    '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas a'                   => \ShapeBlock\Frontend\Helper::get_inline_styles($meta_styles),
+    '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas .bldpost-meta:hover' => \ShapeBlock\Frontend\Helper::get_inline_styles($meta_hover),
+    '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas a:hover'             => \ShapeBlock\Frontend\Helper::get_inline_styles($meta_hover),
+    '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas .shapeblock-meta-icon'                     => \ShapeBlock\Frontend\Helper::get_inline_styles($meta_icon_styles),
+    '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas .bldpost-meta:hover .shapeblock-meta-icon' => \ShapeBlock\Frontend\Helper::get_inline_styles($meta_icon_hover),
     '.shapeblock-pagination .page-numbers' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_styles),
     '.shapeblock-pagination .page-numbers.current' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
     '.shapeblock-pagination a:hover' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
-    '.shapeblock-load-more-btn' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_styles),
-    '.shapeblock-load-more-btn:hover' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-blog-img'   => \ShapeBlock\Frontend\Helper::get_inline_styles($thumbnail_border_radius_styles),
-    '.shapeblock-post-categories .bldpost-meta' => \ShapeBlock\Frontend\Helper::get_inline_styles($cat_container_styles),
-    '.shapeblock-post-categories .bldpost-meta:hover' => \ShapeBlock\Frontend\Helper::get_inline_styles($cat_container_hover),
-    '.shapeblock-post-categories .bldpost-meta a' => \ShapeBlock\Frontend\Helper::get_inline_styles($cat_link_styles),
-    '.shapeblock-post-categories .bldpost-meta a:hover' => \ShapeBlock\Frontend\Helper::get_inline_styles($cat_link_hover),
 ] );
 
 
@@ -529,9 +470,12 @@ if ( ! empty( $attributes['excludes'] ) && ! in_array( 'no-excludes', $attribute
             array(
                 'post_type'      => $args['post_type'],
                 'post_status'    => $args['post_status'],
-                'posts_per_page' => -1,
+                // Bounded: a grid never pages through more than this many posts.
+                'posts_per_page' => 1000,
                 'fields'         => 'ids',
                 'no_found_rows'  => true,
+                'update_post_meta_cache' => false,
+                'update_post_term_cache' => false,
                 'orderby'        => $args['orderby'],
                 'order'          => $args['order'],
             )
@@ -585,6 +529,12 @@ if($is_featured == true) {
 }
 
 $query = new \WP_Query( $args );
+
+// WP_Query counts pages over every post, ignoring the offset, so the pager
+// would offer pages that come out empty. Count them over what is left.
+if ( ! empty( $offset ) ) {
+    $query->max_num_pages = (int) ceil( max( 0, (int) $query->found_posts - (int) $offset ) / $per_page );
+}
 $block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'shapeblock-block shapeblock-post-grid-block-wrap ' . $unique_id ) );
 
 if ( empty( $block_wrap_attr ) ) {
@@ -596,14 +546,7 @@ $template_pl_path = SHAPEBLOCK_PL_PATH;
 if ( $query->have_posts() ) :
 ?>
     <div <?php echo wp_kses_post($block_wrap_attr); ?>>
-        <div class="shapeblock-post-grid shapeblock-row style-<?php echo esc_attr($style); ?> <?php echo esc_attr($gap_class); ?> <?php echo esc_attr($row_gap_class); ?>" 
-             <?php if ($pagination_type !== 'numeric') {
-                 $data_attr = $attributes;
-                 $data_attr['blockName'] = 'shapeblock/post-grid';
-                 // wp_json_encode() rather than json_encode(): it is the WordPress wrapper
-                 // and it fails cleanly instead of emitting invalid JSON.
-                 echo 'data-attributes="' . esc_attr(wp_json_encode($data_attr)) . '" data-query-args="' . esc_attr(wp_json_encode($args)) . '"'; 
-             } ?>>
+        <div class="<?php echo esc_attr( 'shapeblock-post-grid shapeblock-row style-' . $style . ( ! empty( $attributes['itemHoverLift'] ) ? ' is-hover-lift' : '' ) . ( ! empty( $attributes['buttonAtBottom'] ) ? ' is-button-bottom' : '' ) ); ?>">
             <?php
             while ( $query->have_posts() ) : $query->the_post();
                 $item_class = $col_class;
@@ -618,12 +561,6 @@ if ( $query->have_posts() ) :
                 $trimmed_title = wp_trim_words( get_the_title(), $title_trim, '...' );
                 $trimmed_excerpt = wp_trim_words( get_the_excerpt(), $excerpt_trim, '...' );
 
-                $video_url = $show_video ? get_post_meta( get_the_ID(), '_video_url', true ) : '';
-                $embed_video = \ShapeBlock\Frontend\Helper::shapeblock_get_video_embed($video_url, $video_autoplay, $video_mute, $video_controls, $video_height, $video_width);
-                if(!empty($embed_video)) {
-                    $item_class .= ' shapeblock-has-video';
-                }
-               
                 $style_file = $template_pl_path . 'includes/public/template-parts/post-grid/style-' . $style . '.php';
 
                 if ( file_exists( $style_file ) ) {

@@ -31,17 +31,6 @@ import BackgroundControl from './BackgroundControl';
 const advKey = ( base, device ) =>
     device === 'desktop' ? base : base + device.charAt( 0 ).toUpperCase() + device.slice( 1 );
 
-/**
- * The attribute definitions every block.json must declare for this tab to work.
- * Exported so the shape is documented in exactly one place; block.json files
- * cannot import, so they carry a literal copy of the same seven entries.
- */
-export const ADVANCED_ATTRIBUTE_KEYS = [
-    'advPadding', 'advPaddingTablet', 'advPaddingMobile',
-    'advMargin', 'advMarginTablet', 'advMarginMobile',
-    'advBgColor',
-];
-
 const AdvancedControls = ( { attributes, setAttributes } ) => (
     <>
         <PanelBody title={ __( 'Spacing', 'shapeblock' ) } initialOpen={ true }>

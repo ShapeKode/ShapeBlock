@@ -30,20 +30,42 @@
 		}
 
 		var current = 0;
+		var duration = parseInt(lightbox.getAttribute('data-duration'), 10) || 0;
+		var closing = null;
+
+		// Show a picture: back to the animation's start, then play it in.
+		function present(src) {
+			image.classList.remove('is-in');
+			image.style.transition = 'none';
+			image.setAttribute('src', src);
+			void image.offsetWidth;
+			image.style.transition = '';
+			window.requestAnimationFrame(function () {
+				image.classList.add('is-in');
+			});
+		}
 
 		function open(index) {
+			window.clearTimeout(closing);
 			current = index;
-			image.setAttribute('src', links[current].getAttribute('href'));
 			lightbox.classList.add('is-open');
+			present(links[current].getAttribute('href'));
+			window.requestAnimationFrame(function () {
+				lightbox.classList.add('is-visible');
+			});
 		}
 
 		function close() {
-			lightbox.classList.remove('is-open');
+			lightbox.classList.remove('is-visible');
+			image.classList.remove('is-in');
+			closing = window.setTimeout(function () {
+				lightbox.classList.remove('is-open');
+			}, duration);
 		}
 
 		function show(index) {
 			current = (index + links.length) % links.length;
-			image.setAttribute('src', links[current].getAttribute('href'));
+			present(links[current].getAttribute('href'));
 		}
 
 		links.forEach(function (link, index) {
@@ -76,7 +98,7 @@
 		});
 
 		document.addEventListener('keydown', function (e) {
-			if (!lightbox.classList.contains('is-open')) {
+			if (!lightbox.classList.contains('is-visible')) {
 				return;
 			}
 			if (e.key === 'ArrowRight') {

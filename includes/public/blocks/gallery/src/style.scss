@@ -63,21 +63,14 @@
 
 /* === Hover Icon === */
 .shapeblock-hover-icon {
-	i,
-	svg {
+	i {
 		color: #fff;
 		font-size: 36px;
 		transition: transform 0.3s ease;
 	}
 
-	&:hover i,
-	&:hover svg {
+	&:hover i {
 		transform: scale(1.2);
-	}
-
-	svg {
-		height: 1em;
-		width: 1em;
 	}
 }
 
@@ -113,6 +106,8 @@
 	justify-content: center;
 	align-items: center;
 	place-items: center;
+	opacity: 0;
+	transition: opacity var(--shapeblock-lb-duration, 300ms) ease;
 
 	&.is-open {
 		display: grid;
@@ -122,6 +117,48 @@
 		max-width: 90%;
 		max-height: 80%;
 		border-radius: 10px;
+	}
+
+	/* Opening and closing: the backdrop fades while the picture plays the
+	   chosen animation (is-anim-*). view.js adds is-visible a frame after
+	   is-open, and is-in to the picture each time it shows a new one. */
+	&.is-visible {
+		opacity: 1;
+	}
+
+	.shapeblock-lightbox-image {
+		opacity: 0;
+		transition: opacity var(--shapeblock-lb-duration, 300ms) ease, transform var(--shapeblock-lb-duration, 300ms) cubic-bezier(0.2, 0.7, 0.2, 1);
+	}
+
+	&.is-visible .shapeblock-lightbox-image.is-in {
+		opacity: 1;
+		transform: none;
+	}
+
+	&.is-anim-zoom-in .shapeblock-lightbox-image {
+		transform: scale(0.8);
+	}
+
+	&.is-anim-zoom-out .shapeblock-lightbox-image {
+		transform: scale(1.2);
+	}
+
+	&.is-anim-slide-up .shapeblock-lightbox-image {
+		transform: translateY(60px);
+	}
+
+	&.is-anim-slide-down .shapeblock-lightbox-image {
+		transform: translateY(-60px);
+	}
+
+	&.is-anim-flip .shapeblock-lightbox-image {
+		transform: perspective(1200px) rotateY(-75deg);
+	}
+
+	&.is-anim-none,
+	&.is-anim-none .shapeblock-lightbox-image {
+		transition: none;
 	}
 
 	.shapeblock-close {
@@ -151,6 +188,13 @@
 
 .shapeblock-next {
 	right: 40px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.shapeblock-lightbox-gallery,
+	.shapeblock-lightbox-gallery .shapeblock-lightbox-image {
+		transition: none;
+	}
 }
 
 /* --- Responsive defaults ------------------------------------------------

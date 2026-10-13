@@ -58,6 +58,74 @@ class Builder_Render {
 		add_filter( 'pre_render_block', array( $this, 'maybe_replace_template_part' ), 10, 2 );
 
 		add_shortcode( 'shapeblock_builder', array( $this, 'shortcode' ) );
+
+		// Front-end admin bar: edit links for the templates this page shows.
+		add_action( 'admin_bar_menu', array( $this, 'admin_bar_templates' ), 81 );
+	}
+
+	/**
+	 * Add an "Edit Template" menu to the front-end admin bar, listing the
+	 * templates the current page shows, each linking to its editor.
+	 *
+	 * @param \WP_Admin_Bar $wp_admin_bar Admin bar.
+	 * @return void
+	 */
+	public function admin_bar_templates( $wp_admin_bar ) {
+		if ( is_admin() || ! current_user_can( 'edit_posts' ) ) {
+			return;
+		}
+
+		$templates = array();
+		foreach ( array( 'header', 'footer' ) as $type ) {
+			$post_id = $this->get_location_post( $type );
+			if ( $post_id ) {
+				$templates[ (int) $post_id ] = $type;
+			}
+		}
+
+		/**
+		 * Filter the templates the current page shows, for the admin bar.
+		 *
+		 * @param array<int,string> $templates Template post id => template type slug.
+		 */
+		$templates = (array) apply_filters( 'shapeblock_builder_page_templates', $templates );
+
+		$items = array();
+		foreach ( $templates as $post_id => $type ) {
+			$post_id = (int) $post_id;
+			if ( $post_id && current_user_can( 'edit_post', $post_id ) ) {
+				$items[ $post_id ] = (string) $type;
+			}
+		}
+		if ( ! $items ) {
+			return;
+		}
+
+		$wp_admin_bar->add_node(
+			array(
+				'id'    => 'shapeblock-templates',
+				'title' => esc_html__( 'Edit Template', 'shapeblock' ),
+				'href'  => get_edit_post_link( (int) array_key_first( $items ), 'raw' ),
+			)
+		);
+		foreach ( $items as $post_id => $type ) {
+			$title = get_the_title( $post_id );
+			$wp_admin_bar->add_node(
+				array(
+					'parent' => 'shapeblock-templates',
+					'id'     => 'shapeblock-template-' . $post_id,
+					'title'  => esc_html(
+						sprintf(
+							/* translators: 1: template type, e.g. Header. 2: template title. */
+							__( '%1$s: %2$s', 'shapeblock' ),
+							\ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_type_label( $type ),
+							'' !== $title ? $title : __( '(no title)', 'shapeblock' )
+						)
+					),
+					'href'   => get_edit_post_link( $post_id, 'raw' ),
+				)
+			);
+		}
 	}
 
 	/**
@@ -102,7 +170,8 @@ class Builder_Render {
 			return $pre;
 		}
 
-		return $this->render_post( $post_id, $type );
+		// Escaped like every other consumer of a rendered template.
+		return wp_kses( $this->render_post( $post_id, $type ), \ShapeBlock\Frontend\Helper::template_allowed_html() );
 	}
 
 	/**
@@ -199,7 +268,7 @@ class Builder_Render {
 		 * The swap happens in the output buffer's own callback, so the theme's
 		 * markup is transformed on its way out instead of being read into a
 		 * variable and echoed. That matters: a theme's header.php emits the
-		 * doctype, <head> and its enqueued link and script tags, and there is no
+		 * doctype, the document head and its enqueued assets, and there is no
 		 * escaping function that can be applied to a document opening without
 		 * destroying it. This way nothing here echoes an unescaped string — the
 		 * theme prints its own template exactly as get_header() would, and the
@@ -305,7 +374,7 @@ class Builder_Render {
 	 * Render a builder post's stored block content for the frontend.
 	 *
 	 * @param int    $post_id Builder post id.
-	 * @param string $type    Location type, used for the wrapper class/attr.
+	 * @param string $type    Location type, used for the wrapper class.
 	 */
 	public function render_post( $post_id, $type = '' ) {
 		$post = get_post( $post_id );
@@ -323,15 +392,20 @@ class Builder_Render {
 		$content = shortcode_unautop( $content );
 		$content = do_shortcode( $content );
 
+		// Blocks and shortcodes (a form plugin, for one) may print their CSS as a
+		// style element in the markup. Every consumer escapes this output against
+		// the template allowlist, which drops that element but keeps its text, so
+		// the CSS would show on the page as code. It is taken out here and loaded
+		// as a stylesheet instead.
+		wp_register_style( 'shapeblock-builder-inline', false, array(), SHAPEBLOCK_VERSION );
+		wp_enqueue_style( 'shapeblock-builder-inline' );
+		$content = \ShapeBlock\Frontend\Helper::move_block_css( $content, 'shapeblock-builder-inline' );
+
 		$type = $type ? $type : \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_post_type_slug( $post_id );
 
-		$wrapper_class = 'shapeblock-builder-location shapeblock-builder-' . sanitize_html_class( $type );
-
 		return sprintf(
-			'<div class="%1$s" data-shapeblock-builder-type="%2$s" data-shapeblock-builder-id="%3$d">%4$s</div>',
-			esc_attr( $wrapper_class ),
-			esc_attr( $type ),
-			(int) $post_id,
+			'<div class="%1$s">%2$s</div>',
+			esc_attr( 'shapeblock-builder-' . sanitize_html_class( $type ) ),
 			$content
 		);
 	}
@@ -360,7 +434,7 @@ class Builder_Render {
 		$html                   = $this->render_post( $id );
 		unset( self::$rendering[ $id ] );
 
-		return $html;
+		return wp_kses( $html, \ShapeBlock\Frontend\Helper::template_allowed_html() );
 	}
 
 	/**

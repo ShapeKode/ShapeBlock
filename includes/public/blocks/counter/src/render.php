@@ -26,8 +26,8 @@ $format    = isset( $attributes['format'] ) ? $attributes['format'] : 'default';
 $animation = ( isset( $attributes['animationType'] ) && 'odometer' === $attributes['animationType'] ) ? 'odometer' : 'counter';
 $icon_on   = ! empty( $attributes['iconEnable'] );
 $icon      = isset( $attributes['icon'] ) ? $attributes['icon'] : '';
-$title_pos = isset( $attributes['titlePosition'] ) ? $attributes['titlePosition'] : 'bottom';
-$icon_pos  = isset( $attributes['iconPosition'] ) ? $attributes['iconPosition'] : 'top';
+$title_pos = isset( $attributes['titlePosition'] ) ? sanitize_html_class( (string) $attributes['titlePosition'], 'bottom' ) : 'bottom';
+$icon_pos  = isset( $attributes['iconPosition'] ) ? sanitize_html_class( (string) $attributes['iconPosition'], 'top' ) : 'top';
 
 $wrap_classes = [ 'shapeblock-block', 'shapeblock-cnt-block-wrap', $unique_id ];
 if ( '' !== $title ) { $wrap_classes[] = 'shapeblock-cnt-title-pos-' . $title_pos; }
@@ -140,8 +140,6 @@ $title_content_css = function ( $align ) use ( $icon_row ) {
 
 // Wrap (align/gap).
 list( $wrap, $content ) = $align_css( $attributes['wrapAlign'] ?? '' );
-// Legacy "Box Justify" -- no longer offered, still honoured for saved blocks.
-if ( ! empty( $attributes['wrapJustify'] ) && ! isset( $wrap['justify-content'] ) ) $wrap['justify-content'] = $attributes['wrapJustify'];
 if ( $icon_row && ! empty( $attributes['iconVerticalAlign'] ) ) $wrap['align-items'] = $attributes['iconVerticalAlign'];
 if ( $icon_on && '' !== $u( 'iconGap' ) ) $wrap['gap'] = $u( 'iconGap' );
 
@@ -175,13 +173,13 @@ $title_styles = array_merge( $title_styles, $tshadow( $attributes['titleTextShad
 
 // Icon.
 $icon_box = [];
-if ( ! empty( $attributes['iconBgColor'] ) ) $icon_box['background'] = $attributes['iconBgColor'];
+if ( ! empty( $attributes['iconBgColorGradient'] ) ) $icon_box['background'] = $attributes['iconBgColorGradient'];
+elseif ( ! empty( $attributes['iconBgColor'] ) ) $icon_box['background'] = $attributes['iconBgColor'];
 if ( '' !== $u( 'iconBoxSize' ) ) { $icon_box['width'] = $u( 'iconBoxSize' ) . ' !important'; $icon_box['height'] = $u( 'iconBoxSize' ) . ' !important'; }
 $icon_box = array_merge( $icon_box, $dims( $attributes['iconBorderRadius'] ?? [], 'radius' ), $dims( $attributes['iconPadding'] ?? [], 'padding' ), $shadow( $attributes['iconBoxShadow'] ?? [] ) );
 if ( ! empty( $attributes['iconBorder'] ) ) $icon_box = array_merge( $icon_box, $H::border_to_css_props( $attributes['iconBorder'] ) );
-$icon_color = ! empty( $attributes['iconColor'] ) ? [ 'color' => $attributes['iconColor'], 'fill' => $attributes['iconColor'] ] : [];
-$icon_svg = ( '' !== $u( 'iconSize' ) ) ? [ 'width' => $u( 'iconSize' ) . ' !important', 'height' => $u( 'iconSize' ) . ' !important' ] : [];
 $icon_i = ( '' !== $u( 'iconSize' ) ) ? [ 'font-size' => $u( 'iconSize' ) ] : [];
+if ( ! empty( $attributes['iconColor'] ) ) $icon_i['color'] = $attributes['iconColor'];
 
 // ---------------------------------------------------------------------------
 // Responsive (Tablet / Mobile) overrides for layout controls. The desktop CSS
@@ -245,8 +243,6 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-cnt-suffix'                          => $H::get_inline_styles( $suffix_styles ),
 	'.shapeblock-cnt-title'                           => $H::get_inline_styles( $title_styles ),
 	'.shapeblock-cnt-icon'                            => $H::get_inline_styles( $icon_box ),
-	'.shapeblock-cnt-icon svg, ' . $selector . ' .shapeblock-cnt-icon svg path, ' . $selector . ' .shapeblock-cnt-icon i' => $H::get_inline_styles( $icon_color ),
-	'.shapeblock-cnt-icon svg'                        => $H::get_inline_styles( $icon_svg ),
 	'.shapeblock-cnt-icon i'                          => $H::get_inline_styles( $icon_i ),
 ] );
 

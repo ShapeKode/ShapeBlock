@@ -8,21 +8,34 @@
 
 	var SEPARATORS = { comma: ',', dot: '.', space: ' ', underline: '_' };
 
-	function formatWithSeparator(num, separator) {
-		var str = num.toString();
-		if (!separator) return str;
-		var negative = str.charAt(0) === '-';
-		var body = negative ? str.slice(1) : str;
-		if (body.length < 4) return str;
-		return (negative ? '-' : '') + body.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+	// Number of decimal places typed in a value ("99.50" -> 2).
+	function decimalsOf(value) {
+		var m = String(value || '').match(/\.(\d+)/);
+		return m ? m[1].length : 0;
 	}
 
-	function runCounter(counter, target, start, duration, separator) {
+	// Thousands separator on the whole part; the decimal mark is "." (or ","
+	// when the thousands separator itself is a dot).
+	function formatWithSeparator(num, separator, decimals) {
+		decimals = decimals || 0;
+		var str = decimals ? num.toFixed(decimals) : Math.floor(num).toString();
+		var negative = str.charAt(0) === '-';
+		var body = negative ? str.slice(1) : str;
+		var parts = body.split('.');
+		var whole = parts[0];
+		if (separator && whole.length > 3) {
+			whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+		}
+		var mark = separator === '.' ? ',' : '.';
+		return (negative ? '-' : '') + whole + (parts[1] ? mark + parts[1] : '');
+	}
+
+	function runCounter(counter, target, start, duration, separator, decimals) {
 		var startTime = performance.now();
 		function tick(time) {
 			var progress = Math.min((time - startTime) / duration, 1);
-			var current = Math.floor(start + (target - start) * progress);
-			counter.textContent = formatWithSeparator(current, separator);
+			var current = start + (target - start) * progress;
+			counter.textContent = formatWithSeparator(progress < 1 ? current : target, separator, decimals);
 			if (progress < 1) requestAnimationFrame(tick);
 		}
 		requestAnimationFrame(tick);
@@ -98,17 +111,20 @@
 				var counter = entry.target;
 				observer.unobserve(counter);
 
-				var target = parseInt(counter.dataset.count, 10) || 0;
-				var start = parseInt(counter.dataset.start, 10) || 0;
+				var target = parseFloat(counter.dataset.count) || 0;
+				var start = parseFloat(counter.dataset.start) || 0;
+				var decimals = decimalsOf(counter.dataset.count);
 				var duration = parseInt(counter.dataset.duration, 10) || 1000;
 				var format = counter.dataset.format || 'default';
 				var animation = counter.dataset.animation || 'counter';
 				var separator = SEPARATORS[format] || '';
 
-				if (animation === 'odometer') {
+				// The odometer rolls whole digits, so a number with decimals
+				// counts up normally instead.
+				if (animation === 'odometer' && !decimals) {
 					runOdometer(counter, target, duration, separator);
 				} else {
-					runCounter(counter, target, start, duration, separator);
+					runCounter(counter, target, start, duration, separator, decimals);
 				}
 			});
 		}, { threshold: 0.2 });

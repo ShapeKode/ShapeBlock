@@ -68,16 +68,25 @@
 				return;
 			}
 
+			var title = item.querySelector('.shapeblock-faq-title');
+			var setExpanded = function (el, open) {
+				var t = el.querySelector('.shapeblock-faq-title');
+				if (t) {
+					t.setAttribute('aria-expanded', open ? 'true' : 'false');
+				}
+			};
+
 			// Initial state.
 			answer.style.display = item.classList.contains('active') ? 'block' : 'none';
 
-			question.addEventListener('click', function () {
+			var toggle = function () {
 				var isActive = item.classList.contains('active');
 
 				// Close every other open item.
 				items.forEach(function (other) {
 					if (other !== item && other.classList.contains('active')) {
 						other.classList.remove('active');
+						setExpanded(other, false);
 						var otherAnswer = other.querySelector('.shapeblock-faq-answer');
 						if (otherAnswer) {
 							slideUp(otherAnswer);
@@ -93,7 +102,20 @@
 					item.classList.add('active');
 					slideDown(answer);
 				}
-			});
+				setExpanded(item, !isActive);
+			};
+
+			question.addEventListener('click', toggle);
+
+			// The question is focusable: Enter and Space open and close it too.
+			if (title) {
+				title.addEventListener('keydown', function (e) {
+					if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+						e.preventDefault();
+						toggle();
+					}
+				});
+			}
 		});
 	}
 

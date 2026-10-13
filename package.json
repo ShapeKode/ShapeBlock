@@ -19,6 +19,7 @@
         "start:teamGrid": "wp-scripts start --webpack-src-dir=includes/public/blocks/team-grid/src --output-path=includes/public/blocks/team-grid/build",
         "start:testimonials": "wp-scripts start --webpack-src-dir=includes/public/blocks/testimonials-grid/src --output-path=includes/public/blocks/testimonials-grid/build",
         "start:isotope": "wp-scripts start --webpack-src-dir=includes/public/blocks/isotope/src --output-path=includes/public/blocks/isotope/build",
+        "start:filterList": "wp-scripts start --webpack-src-dir=includes/public/blocks/filter-list/src --output-path=includes/public/blocks/filter-list/build",
         "start:featureList": "wp-scripts start --webpack-src-dir=includes/public/blocks/feature-list/src --output-path=includes/public/blocks/feature-list/build",
         "start:iconBox": "wp-scripts start --webpack-src-dir=includes/public/blocks/icon-box/src --output-path=includes/public/blocks/icon-box/build",
         "start:iconList": "wp-scripts start --webpack-src-dir=includes/public/blocks/icon-list/src --output-path=includes/public/blocks/icon-list/build",
@@ -48,6 +49,7 @@
         "build:teamGrid": "wp-scripts build --webpack-src-dir=includes/public/blocks/team-grid/src --output-path=includes/public/blocks/team-grid/build",
         "build:testimonials": "wp-scripts build --webpack-src-dir=includes/public/blocks/testimonials-grid/src --output-path=includes/public/blocks/testimonials-grid/build",
         "build:isotope": "wp-scripts build --webpack-src-dir=includes/public/blocks/isotope/src --output-path=includes/public/blocks/isotope/build",
+        "build:filterList": "wp-scripts build --webpack-src-dir=includes/public/blocks/filter-list/src --output-path=includes/public/blocks/filter-list/build",
         "build:featureList": "wp-scripts build --webpack-src-dir=includes/public/blocks/feature-list/src --output-path=includes/public/blocks/feature-list/build",
         "build:iconBox": "wp-scripts build --webpack-src-dir=includes/public/blocks/icon-box/src --output-path=includes/public/blocks/icon-box/build",
         "build:iconList": "wp-scripts build --webpack-src-dir=includes/public/blocks/icon-list/src --output-path=includes/public/blocks/icon-list/build",
@@ -72,14 +74,19 @@
         "start:hoverBox": "wp-scripts start --webpack-src-dir=includes/public/blocks/hover-box/src --output-path=includes/public/blocks/hover-box/build",
         "build:css": "sass --no-source-map assets/css/style.scss assets/css/style.css",
         "build:public": "sass --no-source-map includes/public/assets/css/public.scss includes/public/assets/css/public.css",
-        "build:grid": "sass --no-source-map --style=expanded assets/lib/bootstrap/bootstrap-grid.scss assets/lib/bootstrap/bootstrap-grid.css"
+        "build:grid": "sass --no-source-map --style=expanded assets/lib/bootstrap/bootstrap-grid.scss assets/lib/bootstrap/bootstrap-grid.css",
+        "start:stickyStack": "wp-scripts start --webpack-src-dir=includes/public/blocks/sticky-stack/src --output-path=includes/public/blocks/sticky-stack/build",
+        "build:stickyStack": "wp-scripts build --webpack-src-dir=includes/public/blocks/sticky-stack/src --output-path=includes/public/blocks/sticky-stack/build",
+        "build:icons": "node includes/public/assets/icon/build-library.mjs"
     },
     "devDependencies": {
         "@ant-design/icons": "^6.1.0",
         "@wordpress/scripts": "^32.4.0",
         "antd": "^6.1.4",
         "bootstrap": "^5.3.8",
+        "bootstrap-icons": "^1.13.1",
         "concurrently": "^9.1.2",
-        "sass": "^1.105.0"
+        "sass": "^1.105.0",
+        "svgtofont": "^6.5.3"
     }
 }

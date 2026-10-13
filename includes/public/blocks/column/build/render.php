@@ -40,10 +40,14 @@ foreach ( $devices as $suffix => $device ) {
         $w = isset( $attributes[ 'width' . $suffix ] ) ? trim( (string) $attributes[ 'width' . $suffix ] ) : '';
         if ( $w !== '' ) {
             if ( $width_type === 'percentage' ) {
-                // Subtract this column's share of the row gap so columns total exactly
-                // 100% of the row regardless of gap. Math runs in CSS via vars set by
-                // the parent row (see layout-row/src/render.php): --bp-cols, --bp-gap.
-                //   calc(W% - (cols - 1) * gap * W / 100)
+                // Subtract this column's share of the row gap, so the columns of one
+                // line fill exactly 100% of the row whatever the gap:
+                //   calc(W% - gap * (100 - W) / 100)
+                // Columns whose widths add up to 100% (50+50, 30+70, 25x4 ...) then
+                // lose exactly the gaps between them. It depends only on the column's
+                // own width - not on how many columns the row holds - so a row of
+                // four 50% columns makes two full lines. --bp-gap is set by the
+                // parent row (layout-row/src/render.php).
                 // "50" and "50%" both mean 50% here; without the unit the calc()
                 // below is invalid and the column loses its width entirely.
                 if ( is_numeric( $w ) ) {
@@ -51,9 +55,9 @@ foreach ( $devices as $suffix => $device ) {
                 }
                 $w_num = (float) $w; // "50%" -> 50
                 $calc  = sprintf(
-                    'calc(%s - (var(--bp-cols, 1) - 1) * var(--bp-gap, 0px) * %s / 100)',
+                    'calc(%s - var(--bp-gap, 0px) * %s / 100)',
                     $w,
-                    rtrim( rtrim( number_format( $w_num, 4, '.', '' ), '0' ), '.' )
+                    rtrim( rtrim( number_format( max( 0, 100 - $w_num ), 4, '.', '' ), '0' ), '.' )
                 );
                 $col_width[ $device ]['flex']      = '0 1 ' . $calc . ' !important';
                 $col_width[ $device ]['max-width'] = $calc . ' !important';
@@ -177,7 +181,8 @@ printf(
     // and comparing the markup either side shows the list changes none of them.
     // A block from another plugin that needs a tag the list does not carry can
     // add it through the shapeblock_template_allowed_html filter.
-    wp_kses( $content, \ShapeBlock\Frontend\Helper::template_allowed_html() )
+    // Any CSS the inner blocks carry in their markup is kept (see move_block_css()).
+    wp_kses( \ShapeBlock\Frontend\Helper::move_block_css( $content, $style_handle ), \ShapeBlock\Frontend\Helper::template_allowed_html() )
 );
 
 } )( $attributes, $content, $block );

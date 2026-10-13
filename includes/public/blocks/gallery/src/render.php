@@ -12,12 +12,25 @@ return ( function ( $attributes, $content, $block ) {
 
 $images = isset( $attributes['galleryImages'] ) && is_array( $attributes['galleryImages'] ) ? $attributes['galleryImages'] : [];
 
+// Only real image attachments are read from the database. An id that names
+// any other post (a private or draft one, say) is dropped, so its title or
+// content can never show here; the image then falls back to its stored URL.
+$images = array_values( array_filter( array_map( function ( $image ) {
+	if ( ! is_array( $image ) ) {
+		return null;
+	}
+	$image['id'] = ! empty( $image['id'] ) && wp_attachment_is_image( (int) $image['id'] ) ? (int) $image['id'] : 0;
+	return $image;
+}, $images ) ) );
+
 $unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-gallery-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $show_caption     = ! empty( $attributes['showCaption'] );
 $caption_source   = isset( $attributes['captionSource'] ) ? $attributes['captionSource'] : 'media';
 $show_description = ! empty( $attributes['showDescription'] );
 $popup_enabled    = ! empty( $attributes['enablePopup'] );
+$popup_anim       = isset( $attributes['popupAnimation'] ) && in_array( $attributes['popupAnimation'], [ 'none', 'fade', 'zoom-in', 'zoom-out', 'slide-up', 'slide-down', 'flip' ], true ) ? $attributes['popupAnimation'] : 'fade';
+$popup_duration   = isset( $attributes['popupDuration'] ) && is_numeric( $attributes['popupDuration'] ) ? max( 0, min( 2000, (int) $attributes['popupDuration'] ) ) : 300;
 $order_by         = isset( $attributes['orderBy'] ) ? $attributes['orderBy'] : 'menu_order';
 $thumbnail_size   = isset( $attributes['thumbnailSize'] ) ? $attributes['thumbnailSize'] : 'large';
 $hover_style      = isset( $attributes['hoverStyle'] ) ? $attributes['hoverStyle'] : 'default';
@@ -40,9 +53,9 @@ $style_handle = 'shapeblock-gallery-style';
 // NOTE: gallery element classes use the plugin's own "shapeblock-" prefix below.
 
 // Grid columns + gap (responsive).
-$c_desktop = isset( $attributes['columns'] ) && $attributes['columns'] !== '' ? (int) $attributes['columns'] : 4;
-$c_tablet  = isset( $attributes['columnsTablet'] ) && $attributes['columnsTablet'] !== '' ? (int) $attributes['columnsTablet'] : $c_desktop;
-$c_mobile  = isset( $attributes['columnsMobile'] ) && $attributes['columnsMobile'] !== '' ? (int) $attributes['columnsMobile'] : 1;
+$c_desktop = isset( $attributes['columns'] ) && $attributes['columns'] !== '' ? max( 1, min( 12, (int) $attributes['columns'] ) ) : 4;
+$c_tablet  = isset( $attributes['columnsTablet'] ) && $attributes['columnsTablet'] !== '' ? max( 1, min( 12, (int) $attributes['columnsTablet'] ) ) : $c_desktop;
+$c_mobile  = isset( $attributes['columnsMobile'] ) && $attributes['columnsMobile'] !== '' ? max( 1, min( 12, (int) $attributes['columnsMobile'] ) ) : 1;
 
 $g_desktop = isset( $attributes['imageGap'] ) && $attributes['imageGap'] !== '' ? \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['imageGap'] ) : '10px';
 $g_tablet  = isset( $attributes['imageGapTablet'] ) && $attributes['imageGapTablet'] !== '' ? \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['imageGapTablet'] ) : '';
@@ -90,7 +103,9 @@ $caption_styles = [];
 if ( ! empty( $attributes['captionColor'] ) ) {
 	$caption_styles['color'] = $attributes['captionColor'];
 }
-if ( ! empty( $attributes['captionBgColor'] ) ) {
+if ( ! empty( $attributes['captionBgColorGradient'] ) ) {
+	$caption_styles['background'] = $attributes['captionBgColorGradient'];
+} elseif ( ! empty( $attributes['captionBgColor'] ) ) {
 	$caption_styles['background-color'] = $attributes['captionBgColor'];
 }
 if ( ! empty( $attributes['captionAlign'] ) ) {
@@ -104,7 +119,9 @@ if ( ! empty( $attributes['descriptionColor'] ) ) {
 
 // Hover overlay / icon / text.
 $overlay_styles = [];
-if ( ! empty( $attributes['hoverOverlayColor'] ) ) {
+if ( ! empty( $attributes['hoverOverlayColorGradient'] ) ) {
+	$overlay_styles['background'] = $attributes['hoverOverlayColorGradient'];
+} elseif ( ! empty( $attributes['hoverOverlayColor'] ) ) {
 	$overlay_styles['background-color'] = $attributes['hoverOverlayColor'];
 }
 
@@ -116,15 +133,6 @@ if ( ! empty( $attributes['hoverIconSize'] ) ) {
 	$hover_icon_styles['font-size'] = \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['hoverIconSize'] );
 }
 
-$hover_icon_svg_styles = [];
-if ( ! empty( $attributes['hoverIconColor'] ) ) {
-	$hover_icon_svg_styles['fill'] = $attributes['hoverIconColor'];
-}
-if ( ! empty( $attributes['hoverIconSize'] ) ) {
-	$hover_icon_svg_styles['width']  = \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['hoverIconSize'] );
-	$hover_icon_svg_styles['height'] = \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['hoverIconSize'] );
-}
-
 $hover_text_styles = [];
 if ( ! empty( $attributes['hoverTextColor'] ) ) {
 	$hover_text_styles['color'] = $attributes['hoverTextColor'];
@@ -133,12 +141,11 @@ if ( ! empty( $attributes['hoverTextColor'] ) ) {
 wp_enqueue_style( $style_handle );
 \ShapeBlock\Frontend\Helper::add_custom_style( $style_handle, $selector, $full_responsive_css, [
 	'.shapeblock-gallery-item img'        => \ShapeBlock\Frontend\Helper::get_inline_styles( $image_styles ),
-	'.shapeblock-gallery-item img, .shapeblock-gallery-item' => \ShapeBlock\Frontend\Helper::get_inline_styles( $image_radius_styles ),
+	'.shapeblock-gallery-item img, ' . $selector . ' .shapeblock-gallery-item' => \ShapeBlock\Frontend\Helper::get_inline_styles( $image_radius_styles ),
 	'.shapeblock-gallery-caption'         => \ShapeBlock\Frontend\Helper::get_inline_styles( $caption_styles ),
 	'.shapeblock-gallery-description'     => \ShapeBlock\Frontend\Helper::get_inline_styles( $description_styles ),
 	'.shapeblock-hover-content'           => \ShapeBlock\Frontend\Helper::get_inline_styles( $overlay_styles ),
 	'.shapeblock-hover-icon i'            => \ShapeBlock\Frontend\Helper::get_inline_styles( $hover_icon_styles ),
-	'.shapeblock-hover-icon svg'          => \ShapeBlock\Frontend\Helper::get_inline_styles( $hover_icon_svg_styles ),
 	'.shapeblock-hover-text span'         => \ShapeBlock\Frontend\Helper::get_inline_styles( $hover_text_styles ),
 ] );
 
@@ -184,7 +191,7 @@ $popup_class = $popup_enabled ? 'shapeblock-popup-enabled' : '';
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-gallery-grid <?php echo esc_attr( $popup_class ); ?>">
 		<?php
-		foreach ( $images as $index => $image ) :
+		foreach ( $images as $image ) :
 			$image_id  = isset( $image['id'] ) ? (int) $image['id'] : 0;
 			$fallback  = isset( $image['url'] ) ? $image['url'] : '';
 			$image_url = $image_id ? wp_get_attachment_image_url( $image_id, $thumbnail_size ) : '';
@@ -210,7 +217,7 @@ $popup_class = $popup_enabled ? 'shapeblock-popup-enabled' : '';
 			?>
 			<div class="shapeblock-gallery-item">
 				<?php if ( $popup_enabled ) : ?>
-					<a href="<?php echo esc_url( $full_image ); ?>" class="shapeblock-popup-link" data-index="<?php echo esc_attr( $index ); ?>">
+					<a href="<?php echo esc_url( $full_image ); ?>" class="shapeblock-popup-link">
 				<?php else : ?>
 					<a href="<?php echo esc_url( $fallback ); ?>" target="_blank" rel="noopener">
 				<?php endif; ?>
@@ -247,7 +254,7 @@ $popup_class = $popup_enabled ? 'shapeblock-popup-enabled' : '';
 	</div>
 
 	<?php if ( $popup_enabled ) : ?>
-		<div class="shapeblock-lightbox-gallery">
+		<div class="<?php echo esc_attr( 'shapeblock-lightbox-gallery is-anim-' . $popup_anim ); ?>" style="<?php echo esc_attr( '--shapeblock-lb-duration:' . ( 'none' === $popup_anim ? 0 : $popup_duration ) . 'ms' ); ?>" data-duration="<?php echo esc_attr( (string) ( 'none' === $popup_anim ? 0 : $popup_duration ) ); ?>">
 			<span class="shapeblock-close">&times;</span>
 			<img class="shapeblock-lightbox-image" src="" alt="">
 			<button class="shapeblock-prev">&#10094;</button>

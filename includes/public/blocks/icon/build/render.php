@@ -88,7 +88,9 @@ if ( ! empty( $alignment ) ) {
 // Icon box (normal). Font-size drives BOTH the glyph and the (em-based) box, so
 // the Stacked / Framed square stays square and the Circle shape is a true circle.
 $box_styles = [];
-if ( ! empty( $attributes['iconBg'] ) ) {
+if ( ! empty( $attributes['iconBgGradient'] ) ) {
+	$box_styles['background'] = $attributes['iconBgGradient'];
+} elseif ( ! empty( $attributes['iconBg'] ) ) {
 	$box_styles['background-color'] = $attributes['iconBg'];
 }
 if ( isset( $attributes['iconSize'] ) && '' !== $attributes['iconSize'] ) {
@@ -100,38 +102,33 @@ if ( ! empty( $attributes['iconBorder'] ) ) {
 }
 
 // Icon glyph (normal). Size is inherited from the box font-size above.
-$i_styles   = [];
-$svg_styles = [];
+$i_styles = [];
 if ( ! empty( $attributes['iconColor'] ) ) {
-	$i_styles['color']   = $attributes['iconColor'];
-	$svg_styles['fill']  = $attributes['iconColor'];
+	$i_styles['color'] = $attributes['iconColor'];
 }
 if ( isset( $attributes['iconRotation'] ) && '' !== $attributes['iconRotation'] ) {
-	$rot = 'rotate(' . $attributes['iconRotation'] . 'deg)';
-	$i_styles['transform']   = $rot;
-	$svg_styles['transform'] = $rot;
+	$i_styles['transform'] = 'rotate(' . $attributes['iconRotation'] . 'deg)';
 }
 
 // Icon box (hover).
 $box_hover = [];
-if ( ! empty( $attributes['iconBgHover'] ) ) {
-	$box_hover['background-color'] = $attributes['iconBgHover'];
+if ( ! empty( $attributes['iconBgHoverGradient'] ) ) {
+	$box_hover['background'] = $attributes['iconBgHoverGradient'];
+} elseif ( ! empty( $attributes['iconBgHover'] ) ) {
+	// Shorthand when the normal state is a gradient, so the hover colour replaces it.
+	$box_hover[ ! empty( $attributes['iconBgGradient'] ) ? 'background' : 'background-color' ] = $attributes['iconBgHover'];
 }
 if ( ! empty( $attributes['iconBorderHover'] ) ) {
 	$box_hover = array_merge( $box_hover, $H::border_to_css_props( $attributes['iconBorderHover'] ) );
 }
 
 // Icon glyph (hover).
-$i_hover   = [];
-$svg_hover = [];
+$i_hover = [];
 if ( ! empty( $attributes['iconColorHover'] ) ) {
-	$i_hover['color']  = $attributes['iconColorHover'];
-	$svg_hover['fill'] = $attributes['iconColorHover'];
+	$i_hover['color'] = $attributes['iconColorHover'];
 }
 if ( isset( $attributes['iconRotationHover'] ) && '' !== $attributes['iconRotationHover'] ) {
-	$rot_h = 'rotate(' . $attributes['iconRotationHover'] . 'deg)';
-	$i_hover['transform']   = $rot_h;
-	$svg_hover['transform'] = $rot_h;
+	$i_hover['transform'] = 'rotate(' . $attributes['iconRotationHover'] . 'deg)';
 }
 
 // ---------------------------------------------------------------------------
@@ -175,10 +172,8 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-icon-wrap'        => $H::get_inline_styles( $wrap_styles ),
 	'.shapeblock-icon-el'          => $H::get_inline_styles( $box_styles ),
 	'.shapeblock-icon-el i'        => $H::get_inline_styles( $i_styles ),
-	'.shapeblock-icon-el svg'      => $H::get_inline_styles( $svg_styles ),
 	'.shapeblock-icon-el:hover'    => $H::get_inline_styles( $box_hover ),
 	'.shapeblock-icon-el:hover i'  => $H::get_inline_styles( $i_hover ),
-	'.shapeblock-icon-el:hover svg' => $H::get_inline_styles( $svg_hover ),
 ] );
 
 $icon_html = ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';

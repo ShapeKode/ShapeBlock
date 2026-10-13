@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { ServerSideRender } from '@wordpress/server-side-render';
+import ServerSideRender from '../../custom-components/ServerRender';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -16,8 +16,7 @@ import {
 	BoxControl,
 	Button,
 	TabPanel,
-	__experimentalDivider as Divider,
-} from '@wordpress/components';
+}from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
 import BackgroundControl from '../../custom-components/BackgroundControl';
@@ -165,6 +164,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	};
 
 	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
+	const bg = (label, c, g) => (
+		<BackgroundControl
+			label={label}
+			colorValue={attributes[c]}
+			gradientValue={attributes[g]}
+			onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })}
+			onGradientChange={(v) => setAttributes({ [g]: v || '' })}
+		/>
+	);
 	const box = (label, key) => <BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
 	const num = (label, key, help) => (
 		<TextControl label={label} help={help} type="number" value={attributes[key]}
@@ -237,6 +245,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					/>
 				</MediaUploadCheck>
 				<Button variant="secondary" onClick={add} style={{ marginLeft: '8px' }}>{__('Add Empty Item', 'shapeblock')}</Button>
+				<SelectControl
+					label={__('Image Size', 'shapeblock')}
+					value={attributes.imageSize}
+					options={imageSizes}
+					help={__('Several images show at once, so a smaller size loads faster. Pick a larger one if they look soft.', 'shapeblock')}
+					onChange={(v) => setAttributes({ imageSize: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
 			</PanelBody>
 
 			<PanelBody title={__('Playback', 'shapeblock')} initialOpen={false}>
@@ -248,6 +265,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					__nextHasNoMarginBottom
 				/>
 				<ToggleControl label={__('Loop', 'shapeblock')} checked={attributes.loop} onChange={(v) => setAttributes({ loop: v })} __nextHasNoMarginBottom />
+				<ToggleControl
+					label={__('Centered Slides', 'shapeblock')}
+					help={__('Keeps the active image in the middle, with its neighbors peeking in.', 'shapeblock')}
+					checked={centeredSlides}
+					onChange={(v) => setAttributes({ centeredSlides: v })}
+					__nextHasNoMarginBottom
+				/>
 				{!marquee && (
 					<ToggleControl label={__('Autoplay', 'shapeblock')} checked={autoplay} onChange={(v) => setAttributes({ autoplay: v })} __nextHasNoMarginBottom />
 				)}
@@ -272,23 +296,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// --- Tab 2: Layout --------------------------------------------------------
 	const layoutTab = (
 		<>
-			<PanelBody title={__('Layout', 'shapeblock')} initialOpen={true}>
+			<PanelBody title={__('Slides', 'shapeblock')} initialOpen={true}>
 				{respNum(__('Images Per View', 'shapeblock'), 'slidesPerView')}
 				{respNum(__('Space Between (px)', 'shapeblock'), 'spaceBetween')}
-				<Divider />
-				<ToggleControl
-					label={__('Centered Slides', 'shapeblock')}
-					help={__('Keeps the active image in the middle, with its neighbours peeking in.', 'shapeblock')}
-					checked={centeredSlides}
-					onChange={(v) => setAttributes({ centeredSlides: v })}
-					__nextHasNoMarginBottom
-				/>
-				{num(__('Inactive Image Scale (%)', 'shapeblock'), 'inactiveScale', __('Shrinks every image except the active one, so the active image stands out. Leave empty to keep them all the same size.', 'shapeblock'))}
-				{num(__('Inactive Image Opacity (%)', 'shapeblock'), 'inactiveOpacity', __('Leave empty to keep every image fully opaque.', 'shapeblock'))}
-			</PanelBody>
-
-			<PanelBody title={__('Image', 'shapeblock')} initialOpen={false}>
 				{respNum(__('Image Height (px)', 'shapeblock'), 'slideHeight')}
+			</PanelBody>
+		</>
+	);
+
+	// --- Tab 3: Style ---------------------------------------------------------
+	const styleTab = (
+		<>
+			<PanelBody title={__('Image Box', 'shapeblock')} initialOpen={true}>
 				<SelectControl
 					label={__('Image Fit', 'shapeblock')}
 					value={attributes.imageFit}
@@ -298,27 +317,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					__next40pxDefaultSize
 					__nextHasNoMarginBottom
 				/>
-				<SelectControl
-					label={__('Image Size', 'shapeblock')}
-					value={attributes.imageSize}
-					options={imageSizes}
-					help={__('Several images show at once, so a smaller size loads faster. Pick a larger one if they look soft.', 'shapeblock')}
-					onChange={(v) => setAttributes({ imageSize: v })}
-					__next40pxDefaultSize
-					__nextHasNoMarginBottom
-				/>
-				{respBox(__('Padding', 'shapeblock'), 'slidePadding')}
-			</PanelBody>
-		</>
-	);
-
-	// --- Tab 3: Style ---------------------------------------------------------
-	const styleTab = (
-		<>
-			<PanelBody title={__('Image Box', 'shapeblock')} initialOpen={true}>
-				{color(__('Background', 'shapeblock'), 'slideBg')}
+				{bg(__('Background', 'shapeblock'), 'slideBg', 'slideBgGradient')}
 				<BorderControl label={__('Border', 'shapeblock')} value={attributes.slideBorder} onChange={(v) => setAttributes({ slideBorder: v })} />
 				{box(__('Border Radius', 'shapeblock'), 'slideRadius')}
+				{respBox(__('Padding', 'shapeblock'), 'slidePadding')}
+				{num(__('Inactive Image Scale (%)', 'shapeblock'), 'inactiveScale', __('Shrinks every image except the active one, so the active image stands out. Leave empty to keep them all the same size.', 'shapeblock'))}
+				{num(__('Inactive Image Opacity (%)', 'shapeblock'), 'inactiveOpacity', __('Leave empty to keep every image fully opaque.', 'shapeblock'))}
 				<BackgroundControl
 					label={__('Image Overlay', 'shapeblock')}
 					colorValue={attributes.overlayColor}
@@ -331,7 +335,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			{showArrows && (
 				<PanelBody title={__('Arrows', 'shapeblock')} initialOpen={false}>
 					{color(__('Icon Color', 'shapeblock'), 'arrowColor')}
-					{color(__('Background', 'shapeblock'), 'arrowBgColor')}
+					{bg(__('Background', 'shapeblock'), 'arrowBgColor', 'arrowBgGradient')}
 					{respNum(__('Size (px)', 'shapeblock'), 'arrowSize')}
 					{box(__('Border Radius', 'shapeblock'), 'arrowRadius')}
 				</PanelBody>
@@ -339,8 +343,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 			{showDots && (
 				<PanelBody title={__('Dots', 'shapeblock')} initialOpen={false}>
-					{color(__('Color', 'shapeblock'), 'dotColor')}
-					{color(__('Active Color', 'shapeblock'), 'dotActiveColor')}
+					{bg(__('Color', 'shapeblock'), 'dotColor', 'dotGradient')}
+					{bg(__('Active Color', 'shapeblock'), 'dotActiveColor', 'dotActiveGradient')}
 					{num(__('Size (px)', 'shapeblock'), 'dotSize')}
 				</PanelBody>
 			)}

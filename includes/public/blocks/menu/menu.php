@@ -39,7 +39,7 @@ add_action( 'init', 'shapeblock_create_block_menu_block_init' );
 function shapeblock_menu_get_google_fonts() {
 	// The catalogue is only fetched once the site owner has switched the
 	// Google Fonts connection on in ShapeBlock > Settings ( off by default ).
-	if ( ! function_exists( 'shapeblock_google_fonts_enabled' ) || ! shapeblock_google_fonts_enabled() ) {
+	if ( ! shapeblock_google_fonts_enabled() ) {
 		return array();
 	}
 
@@ -230,4 +230,37 @@ function shapeblock_menu_save_last( WP_REST_Request $request ) {
 	$items = shapeblock_menu_sanitize_items( $request->get_param( 'items' ) );
 	update_option( 'shapeblock_menu_last_items', $items, false );
 	return rest_ensure_response( array( 'saved' => true ) );
+}
+
+/**
+ * Is a menu item's link the page being viewed?
+ *
+ * Compares scheme-less host + path, ignoring a trailing slash, the query string
+ * and the fragment. Used to mark the current item so the Active colour options
+ * apply to it.
+ *
+ * @param string $url Item link.
+ * @return bool
+ */
+function shapeblock_menu_is_current_url( $url ) {
+	if ( ! is_string( $url ) || '' === $url || '#' === $url[0] || is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+		return false;
+	}
+	static $current = null;
+	if ( null === $current ) {
+		global $wp;
+		$request = ( $wp instanceof WP ) ? $wp->request : '';
+		$current = home_url( '/' . ltrim( (string) $request, '/' ) );
+	}
+	$normalize = function ( $u ) {
+		$parts = wp_parse_url( $u );
+		if ( empty( $parts['host'] ) ) {
+			$parts = wp_parse_url( home_url( '/' . ltrim( $u, '/' ) ) );
+		}
+		$host = isset( $parts['host'] ) ? strtolower( $parts['host'] ) : '';
+		$port = isset( $parts['port'] ) ? ':' . $parts['port'] : '';
+		$path = isset( $parts['path'] ) ? untrailingslashit( $parts['path'] ) : '';
+		return $host . $port . $path;
+	};
+	return $normalize( $url ) === $normalize( $current );
 }
