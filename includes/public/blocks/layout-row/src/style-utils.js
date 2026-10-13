@@ -269,8 +269,9 @@ const collectColumnWidth = (attrs, suffix) => {
 
     if (widthType === 'percentage' && w) {
         if (!isNaN(Number(w))) w = `${w}%`;
-        const wNum = parseFloat(w);
-        // As column/src/render.php: the column's share of the gap depends only on its own width.
+        // As column/src/render.php: the column's share of the gap depends only on
+        // its own width, and only a percentage gives one up ("200px" keeps its size).
+        const wNum = /^-?[\d.]+%$/.test(w) ? parseFloat(w) : 100;
         const calc = `calc(${w} - var(--bp-gap, 0px) * ${Math.max(0, 100 - wNum)} / 100)`;
         decls['flex'] = `0 1 ${calc} !important`;
         decls['max-width'] = `${calc} !important`;

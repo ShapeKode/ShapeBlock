@@ -453,13 +453,13 @@ if ( '' !== $dd_bg ) {
 	$css .= $selector . ' .sub-menu{background:' . shapeblock_menu_paint( $dd_bg ) . ';}';
 }
 if ( ! empty( $attributes['dropdownTextColor'] ) ) {
-	$css .= $selector . ' .sub-menu a{color:' . shapeblock_menu_paint( $attributes['dropdownTextColor'] ) . ';}';
+	$css .= $selector . ' .sub-menu > li > a{color:' . shapeblock_menu_paint( $attributes['dropdownTextColor'] ) . ';}';
 }
 if ( ! empty( $attributes['dropdownHoverColor'] ) ) {
-	$css .= $selector . ' .sub-menu a:hover,' . $selector . ' .sub-menu a:focus{color:' . shapeblock_menu_paint( $attributes['dropdownHoverColor'] ) . ';}';
+	$css .= $selector . ' .sub-menu > li > a:hover,' . $selector . ' .sub-menu > li > a:focus{color:' . shapeblock_menu_paint( $attributes['dropdownHoverColor'] ) . ';}';
 }
 if ( '' !== $dd_hover_bg ) {
-	$css .= $selector . ' .sub-menu a:hover,' . $selector . ' .sub-menu a:focus{background:' . shapeblock_menu_paint( $dd_hover_bg ) . ';}';
+	$css .= $selector . ' .sub-menu > li > a:hover,' . $selector . ' .sub-menu > li > a:focus{background:' . shapeblock_menu_paint( $dd_hover_bg ) . ';}';
 }
 if ( ! empty( $attributes['toggleColor'] ) ) {
 	$css .= $selector . ' .shapeblock-menu-toggle{color:' . shapeblock_menu_paint( $attributes['toggleColor'] ) . ';}';

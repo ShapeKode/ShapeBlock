@@ -276,7 +276,7 @@
 	transform: translateX( 0 );
 }
 
-.shapeblock-menu .shapeblock-menu-list .sub-menu a {
+.shapeblock-menu .shapeblock-menu-list .sub-menu > li > a {
 	display: flex;
 	align-items: center;
 	gap: 8px;
@@ -294,9 +294,9 @@
 /* In a dropdown the arrow ( and the editor's leaf "+" ) is pushed to the far right, while any
    icon + label stay grouped on the left. On the front end the arrow is a direct child of the link;
    in the editor the caret / "+" is wrapped in a Dropdown ( .shapeblock-menu-subadd ), so target that too. */
-.shapeblock-menu .shapeblock-menu-list .sub-menu a > .shapeblock-menu-sub-toggle,
-.shapeblock-menu .shapeblock-menu-list .sub-menu a > .shapeblock-menu-sub-plus,
-.shapeblock-menu .shapeblock-menu-list .sub-menu a > .shapeblock-menu-subadd {
+.shapeblock-menu .shapeblock-menu-list .sub-menu > li > a > .shapeblock-menu-sub-toggle,
+.shapeblock-menu .shapeblock-menu-list .sub-menu > li > a > .shapeblock-menu-sub-plus,
+.shapeblock-menu .shapeblock-menu-list .sub-menu > li > a > .shapeblock-menu-subadd {
 	margin-left: auto;
 }
 

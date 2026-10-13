@@ -652,7 +652,8 @@
 			var wpMenusState   = useState( [] );
 			var wpMenus        = wpMenusState[0];
 			var setWpMenus     = wpMenusState[1];
-			var selMenuState   = useState( '' );
+			// The WordPress menu last loaded stays chosen in the picker (wpMenuId).
+			var selMenuState   = useState( attributes.wpMenuId ? String( attributes.wpMenuId ) : '' );
 			var selMenu        = selMenuState[0];
 			var setSelMenu     = selMenuState[1];
 			var loadMenuState  = useState( false );
@@ -691,6 +692,7 @@
 							if ( mi.parent && byId[ mi.parent ] ) { byId[ mi.parent ].children.push( node ); } else { roots.push( node ); }
 						} );
 						commit( roots );
+						setAttributes( { wpMenuId: String( id ) } );
 					} )
 					.catch( function () { setLoadingMenu( false ); } );
 			}
@@ -1525,13 +1527,13 @@
 				edCss += edSel + ' .sub-menu{background:' + edDdBg + ';}';
 			}
 			if ( attributes.dropdownTextColor ) {
-				edCss += edSel + ' .sub-menu a{color:' + attributes.dropdownTextColor + ';}';
+				edCss += edSel + ' .sub-menu > li > a{color:' + attributes.dropdownTextColor + ';}';
 			}
 			if ( attributes.dropdownHoverColor ) {
-				edCss += edSel + ' .sub-menu a:hover,' + edSel + ' .sub-menu a:focus{color:' + attributes.dropdownHoverColor + ';}';
+				edCss += edSel + ' .sub-menu > li > a:hover,' + edSel + ' .sub-menu > li > a:focus{color:' + attributes.dropdownHoverColor + ';}';
 			}
 			if ( edDdHovBg ) {
-				edCss += edSel + ' .sub-menu a:hover,' + edSel + ' .sub-menu a:focus{background:' + edDdHovBg + ';}';
+				edCss += edSel + ' .sub-menu > li > a:hover,' + edSel + ' .sub-menu > li > a:focus{background:' + edDdHovBg + ';}';
 			}
 
 			// Mobile-menu drawer preview ( showDrawer computed near the top of edit ).

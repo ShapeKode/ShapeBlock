@@ -53,11 +53,15 @@ foreach ( $devices as $suffix => $device ) {
                 if ( is_numeric( $w ) ) {
                     $w = $w . '%';
                 }
-                // Only a plain percentage goes into the calc() below.
-                if ( ! preg_match( '/^\d+(?:\.\d+)?%$/', $w ) ) {
+                // Any valid length goes in ("200px" on a tablet, say); anything
+                // else is refused, as ensure_unit() turns it into 0px.
+                $w = \ShapeBlock\Frontend\Helper::ensure_unit( $w );
+                if ( '0px' === $w ) {
                     continue;
                 }
-                $w_num = (float) $w; // "50%" -> 50
+                // Only a percentage gives up a share of the gap; a fixed length
+                // keeps its size, as in the editor (layout-row/src/style-utils.js).
+                $w_num = ( '%' === substr( $w, -1 ) && is_numeric( substr( $w, 0, -1 ) ) ) ? (float) $w : 100;
                 $calc  = sprintf(
                     'calc(%s - var(--bp-gap, 0px) * %s / 100)',
                     $w,
