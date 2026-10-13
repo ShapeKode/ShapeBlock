@@ -53,6 +53,10 @@ foreach ( $devices as $suffix => $device ) {
                 if ( is_numeric( $w ) ) {
                     $w = $w . '%';
                 }
+                // Only a plain percentage goes into the calc() below.
+                if ( ! preg_match( '/^\d+(?:\.\d+)?%$/', $w ) ) {
+                    continue;
+                }
                 $w_num = (float) $w; // "50%" -> 50
                 $calc  = sprintf(
                     'calc(%s - var(--bp-gap, 0px) * %s / 100)',
@@ -62,7 +66,7 @@ foreach ( $devices as $suffix => $device ) {
                 $col_width[ $device ]['flex']      = '0 1 ' . $calc . ' !important';
                 $col_width[ $device ]['max-width'] = $calc . ' !important';
             } else {
-                $col_width[ $device ]['width']     = $w . ' !important';
+                $col_width[ $device ]['width']     = \ShapeBlock\Frontend\Helper::ensure_unit( $w ) . ' !important';
                 $col_width[ $device ]['flex']      = '0 0 auto !important';
             }
         }
@@ -70,7 +74,7 @@ foreach ( $devices as $suffix => $device ) {
         $grow  = isset( $attributes[ 'flexGrow' . $suffix ] ) ? trim( (string) $attributes[ 'flexGrow' . $suffix ] ) : '';
         $basis = isset( $attributes[ 'flexBasis' . $suffix ] ) ? trim( (string) $attributes[ 'flexBasis' . $suffix ] ) : '';
         if ( $grow !== '' )  $col_width[ $device ]['flex-grow']  = (float) $grow . ' !important';
-        if ( $basis !== '' ) $col_width[ $device ]['flex-basis'] = $basis . ' !important';
+        if ( $basis !== '' ) $col_width[ $device ]['flex-basis'] = \ShapeBlock\Frontend\Helper::ensure_unit( $basis ) . ' !important';
     }
 }
 
@@ -117,7 +121,7 @@ if ( ! empty( $attributes['boxShadow'] ) && ! empty( $attributes['boxShadow']['c
     $col_responsive['desktop']['box-shadow'] = \ShapeBlock\Frontend\Helper::box_shadow_to_css( $attributes['boxShadow'] );
 }
 
-if ( $vertical ) {
+if ( in_array( $vertical, [ 'flex-start', 'center', 'flex-end', 'stretch' ], true ) ) {
     $col_responsive['desktop']['align-self'] = $vertical;
 }
 

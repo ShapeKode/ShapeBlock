@@ -281,38 +281,18 @@ class Builder_API {
 			'order'          => 'DESC',
 		);
 
+		// One type, or every type of one dashboard page (Theme Builder, Custom
+		// Templates, an add-on's page); none of either lists everything.
+		$group  = sanitize_key( (string) $request->get_param( 'group' ) );
+		$wanted = array();
 		if ( $type && \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::is_valid_type( $type ) ) {
-			/*
-			 * Resolve which templates are of this type first, then page through
-			 * them by id. As in Builder_Render, this keeps the meta out of the
-			 * query: the type is read from the meta cache, primed for the whole
-			 * set in a single call. The post type holds a handful of templates and
-			 * this only runs on the plugin's own admin screen.
-			 */
-			$ids = get_posts(
-				array(
-					'post_type'      => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE,
-					'post_status'    => $post_status,
-					'posts_per_page' => -1,
-					'fields'         => 'ids',
-					'no_found_rows'  => true,
-					'orderby'        => 'modified',
-					'order'          => 'DESC',
-				)
-			);
+			$wanted = array( $type );
+		} elseif ( '' !== $group ) {
+			$wanted = \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_group_types( $group );
+		}
 
-			$matching = array();
-
-			if ( $ids ) {
-				update_meta_cache( 'post', $ids );
-
-				foreach ( $ids as $id ) {
-					if ( $type === get_post_meta( $id, \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE, true ) ) {
-						$matching[] = (int) $id;
-					}
-				}
-			}
-
+		if ( $type || '' !== $group ) {
+			$matching = $this->ids_of_types( $post_status, $wanted );
 			// An empty post__in is ignored by WP_Query and would list everything.
 			$args['post__in'] = $matching ? $matching : array( 0 );
 		}
@@ -333,9 +313,50 @@ class Builder_API {
 				'total'      => (int) $query->found_posts,
 				'page'       => $page,
 				'per_page'   => $per_page,
-				'trashTotal' => $this->count_by_status( 'trash' ),
+				// The Trash count of the same page, so each page counts only its own.
+				'trashTotal' => ( $type || '' !== $group ) ? count( $this->ids_of_types( 'trash', $wanted ) ) : $this->count_by_status( 'trash' ),
 			)
 		);
+	}
+
+	/**
+	 * Ids of the templates of the given types in one post status, newest first.
+	 *
+	 * The templates are resolved first and paged through by id. As in
+	 * Builder_Render, this keeps the meta out of the query: the type is read
+	 * from the meta cache, primed for the whole set in a single call. The post
+	 * type holds a handful of templates and this only runs on the plugin's own
+	 * admin screens.
+	 *
+	 * @param string   $post_status Post status.
+	 * @param string[] $types       Type slugs.
+	 * @return int[]
+	 */
+	private function ids_of_types( $post_status, $types ) {
+		if ( empty( $types ) ) {
+			return array();
+		}
+		$ids = get_posts(
+			array(
+				'post_type'      => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE,
+				'post_status'    => $post_status,
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+				'orderby'        => 'modified',
+				'order'          => 'DESC',
+			)
+		);
+		$matching = array();
+		if ( $ids ) {
+			update_meta_cache( 'post', $ids );
+			foreach ( $ids as $id ) {
+				if ( in_array( get_post_meta( $id, \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE, true ), $types, true ) ) {
+					$matching[] = (int) $id;
+				}
+			}
+		}
+		return $matching;
 	}
 
 	/**

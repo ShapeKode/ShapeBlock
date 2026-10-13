@@ -139,19 +139,6 @@ body textarea.ant-input:focus {
     }
 }
 
-// The one line under the block list that links to more blocks.
-.shapeblock-blocks-more {
-    margin: 24px 0 0;
-    color: #667085;
-    font-size: 14px;
-    text-align: center;
-
-    a {
-        color: #a216ff;
-        font-weight: 500;
-    }
-}
-
 // As many cards per row as fit at a width where a description stays on one line.
 .shapeblock-blocks-grid {
     display: grid;

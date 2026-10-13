@@ -58,13 +58,6 @@ class Admin {
             'nonce' => wp_create_nonce('wp_rest'),
             'blocks' => $blocks,
             'blockCategories' => \ShapeBlock\Admin\Blocks::instance()->get_categories(),
-            /**
-             * Filter the "more blocks" link under the Blocks page list. An add-on
-             * that is installed returns '' so the link is not shown.
-             *
-             * @param string $url Link, or '' for none.
-             */
-            'upgradeUrl' => esc_url_raw( (string) apply_filters( 'shapeblock_upgrade_url', 'https://shapekode.com/product/shapeblock/' ) ),
             'shapeblockUrl' => SHAPEBLOCK_PL_URL,
             'layout' => \ShapeBlock\Admin\Api::get_saved_layout(),
             'layoutDefaults' => \ShapeBlock\Admin\Api::get_layout_defaults(),
@@ -86,7 +79,27 @@ class Admin {
         // .editor-header__back-button; older supported releases gave the link the
         // class edit-post-fullscreen-mode-close.
         $page = $screen->post_type === 'shapeblock-builder' ? 'shapeblock-theme-builder' : 'shapeblock-templates';
-        $template_page_url = admin_url( 'admin.php?page=' . $page );
+        $hash = '';
+        // A builder template goes back to the page that lists its type: the
+        // Theme Builder, Custom Templates (on that type's section) or an
+        // add-on's page.
+        $post = get_post();
+        if ( 'shapeblock-builder' === $screen->post_type && $post ) {
+            $type  = (string) get_post_meta( $post->ID, \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE, true );
+            $group = \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_type_group( $type );
+            if ( 'templates' === $group ) {
+                $page = 'shapeblock-templates';
+                $hash = '#tpl-' . sanitize_key( $type );
+            } elseif ( 'theme' !== $group ) {
+                foreach ( \ShapeBlock\Main::get_addon_pages() as $addon_page ) {
+                    if ( $addon_page['builderGroup'] === $group ) {
+                        $page = $addon_page['page'];
+                        break;
+                    }
+                }
+            }
+        }
+        $template_page_url = admin_url( 'admin.php?page=' . $page ) . $hash;
 
         wp_add_inline_script( 'wp-edit-post', "
             (function() {

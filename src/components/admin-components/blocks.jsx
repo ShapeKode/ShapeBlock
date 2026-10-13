@@ -276,14 +276,6 @@ export default function Blocks() {
                 ))
                 }
             </div>
-            {shapeblock.upgradeUrl && (
-                <p className="shapeblock-blocks-more">
-                    { __( 'Need more blocks?', 'shapeblock' ) }{' '}
-                    <a href={shapeblock.upgradeUrl} target="_blank" rel="noopener noreferrer">
-                        { __( 'See ShapeBlock Pro', 'shapeblock' ) }
-                    </a>
-                </p>
-            )}
         </div>
     );
 }

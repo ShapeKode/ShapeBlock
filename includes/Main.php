@@ -65,9 +65,12 @@ class Main {
                 continue;
             }
             $pages[ $slug ] = array(
-                'tab'   => sanitize_key( $page['tab'] ),
-                'label' => wp_strip_all_tags( (string) $page['label'] ),
-                'addon' => true,
+                'tab'          => sanitize_key( $page['tab'] ),
+                'label'        => wp_strip_all_tags( (string) $page['label'] ),
+                'addon'        => true,
+                // A page that lists one group of Theme Builder template types
+                // (see Theme_Builder::get_type_group()); the app draws it itself.
+                'builderGroup' => isset( $page['builderGroup'] ) ? sanitize_key( (string) $page['builderGroup'] ) : '',
             );
         }
 
@@ -88,9 +91,10 @@ class Main {
         foreach ( self::get_admin_pages() as $slug => $page ) {
             if ( ! empty( $page['addon'] ) ) {
                 $out[] = array(
-                    'tab'   => $page['tab'],
-                    'label' => $page['label'],
-                    'page'  => $slug,
+                    'tab'          => $page['tab'],
+                    'label'        => $page['label'],
+                    'page'         => $slug,
+                    'builderGroup' => $page['builderGroup'],
                 );
             }
         }
@@ -183,7 +187,13 @@ class Main {
         foreach ( self::get_admin_pages() as $slug => $page ) {
             $hook = add_submenu_page(
                 'shapeblock',
-                esc_html( 'ShapeBlock - ' . $page['label'] ),
+                esc_html(
+                    sprintf(
+                        /* translators: %s: name of the ShapeBlock admin page. */
+                        __( 'ShapeBlock - %s', 'shapeblock' ),
+                        $page['label']
+                    )
+                ),
                 esc_html( $page['label'] ),
                 'manage_options',
                 $slug,

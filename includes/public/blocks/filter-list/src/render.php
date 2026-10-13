@@ -127,11 +127,11 @@ $dims = function ( $obj, $type ) use ( $H ) {
 // A gradient wins over the flat colour of the same control.
 $bg = function ( $color_key, $grad_key ) use ( $attributes ) {
 	if ( ! empty( $attributes[ $grad_key ] ) ) return [ 'background' => $attributes[ $grad_key ] ];
-	if ( ! empty( $attributes[ $color_key ] ) ) return [ 'background' => $attributes[ $color_key ] ];
+	if ( ! empty( $attributes[ $color_key ] ) ) return [ 'background' => \ShapeBlock\Frontend\Helper::sanitize_css_color( (string) $attributes[ $color_key ], '' ) ];
 	return [];
 };
 $color = function ( $key, $prop = 'color' ) use ( $attributes ) {
-	return ! empty( $attributes[ $key ] ) ? [ $prop => $attributes[ $key ] ] : [];
+	return ! empty( $attributes[ $key ] ) ? [ $prop => \ShapeBlock\Frontend\Helper::sanitize_css_color( (string) $attributes[ $key ], '' ) ] : [];
 };
 $u = function ( $key ) use ( $attributes, $H ) {
 	return ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? $H::ensure_unit( $attributes[ $key ] ) : '';
@@ -198,11 +198,11 @@ $title_hover = $color( 'titleColorHover' );
 // Badge: its colours are custom properties, so an item's own colours can set
 // the same properties on that one badge.
 $badge = array_merge( $typo( $attributes['badgeTypography'] ?? [] ), $dims( $attributes['badgePadding'] ?? [], 'padding' ), $dims( $attributes['badgeRadius'] ?? [], 'radius' ) );
-if ( ! empty( $attributes['badgeColor'] ) ) $badge['--shapeblock-fl-badge-color'] = $attributes['badgeColor'];
+if ( ! empty( $attributes['badgeColor'] ) ) $badge['--shapeblock-fl-badge-color'] = $H::sanitize_css_color( (string) $attributes['badgeColor'], '' );
 if ( ! empty( $attributes['badgeBgGradient'] ) ) {
 	$badge['--shapeblock-fl-badge-bg'] = $attributes['badgeBgGradient'];
 } elseif ( ! empty( $attributes['badgeBg'] ) ) {
-	$badge['--shapeblock-fl-badge-bg'] = $attributes['badgeBg'];
+	$badge['--shapeblock-fl-badge-bg'] = $H::sanitize_css_color( (string) $attributes['badgeBg'], '' );
 }
 
 $empty = array_merge( $typo( $attributes['noResultsTypography'] ?? [] ), $color( 'noResultsColor' ) );

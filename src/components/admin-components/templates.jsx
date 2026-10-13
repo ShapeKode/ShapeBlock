@@ -10,9 +10,11 @@ import {
     UndoOutlined
 } from '@ant-design/icons';
 
+import ThemeBuilder from './theme-builder';
+
 const { Search } = Input;
 
-export default function Templates() {
+function SavedTemplates() {
     const [templates, setTemplates] = useState([]);
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({
@@ -550,5 +552,49 @@ export default function Templates() {
                 </Form>
             </Modal>
         </div>
+    );
+}
+
+/**
+ * The Custom Templates page: the saved templates (the [shapeblock_template]
+ * shortcode), and a section for each Theme Builder type listed here - such as
+ * Custom Blocks - drawn by the Theme Builder list. "#tpl-<type>" in the URL
+ * opens that type's section (the block editor's back link uses it).
+ */
+export default function Templates() {
+    const types = ((typeof shapeblock !== 'undefined' && shapeblock.builderTypes) || [])
+        .filter((t) => t.group === 'templates');
+    const fromHash = window.location.hash.replace('#tpl-', '');
+    const [section, setSection] = useState(types.some((t) => t.slug === fromHash) ? fromHash : 'saved');
+
+    if (!types.length) {
+        return <SavedTemplates />;
+    }
+    const current = types.find((t) => t.slug === section);
+
+    return (
+        <>
+            <Segmented
+                className="shapeblock-template-sections"
+                style={{ marginBottom: 20 }}
+                options={[
+                    { label: __( 'Templates', 'shapeblock' ), value: 'saved' },
+                    ...types.map((t) => ({ label: t.plural || t.label, value: t.slug })),
+                ]}
+                value={section}
+                onChange={setSection}
+            />
+            {current ? (
+                <ThemeBuilder
+                    key={current.slug}
+                    group="templates"
+                    fixedType={current.slug}
+                    title={current.plural || current.label}
+                    description=""
+                />
+            ) : (
+                <SavedTemplates />
+            )}
+        </>
     );
 }

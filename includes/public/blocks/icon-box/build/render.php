@@ -306,12 +306,9 @@ if ( '' !== $responsive_media ) {
 			<div class="shapeblock-icon-box-icon shapeblock-icon-box-type-<?php echo esc_attr( $type ); ?>">
 				<?php
 				if ( 'image' === $type && ! empty( $img['url'] ) ) {
-					echo '<img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $img['alt'] ?? $ttl ) . '" class="shapeblock-icon-box-img">';
+					echo '<img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $img['alt'] ?? wp_strip_all_tags( $ttl ) ) . '" class="shapeblock-icon-box-img">';
 				} elseif ( 'number' === $type ) {
 					echo '<span class="shapeblock-icon-box-number">' . esc_html( $num ) . '</span>';
-				} elseif ( 'none' === $icon ) {
-					// "Remove icon" was chosen: nothing is drawn.
-					echo '';
 				} elseif ( ! empty( $icon ) ) {
 					echo '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>';
 				} else {

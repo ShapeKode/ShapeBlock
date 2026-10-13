@@ -146,7 +146,7 @@ $shadow = function ( $obj ) use ( $H ) {
 };
 $bg = function ( $colorKey, $gradKey = '' ) use ( $attributes ) {
 	if ( '' !== $gradKey && ! empty( $attributes[ $gradKey ] ) ) return [ 'background' => $attributes[ $gradKey ] ];
-	if ( ! empty( $attributes[ $colorKey ] ) ) return [ 'background' => $attributes[ $colorKey ] ];
+	if ( ! empty( $attributes[ $colorKey ] ) ) return [ 'background' => \ShapeBlock\Frontend\Helper::sanitize_css_color( (string) $attributes[ $colorKey ], '' ) ];
 	return [];
 };
 $u = function ( $key ) use ( $attributes, $H ) {
@@ -173,14 +173,14 @@ $separator = $show_search && ( ! isset( $attributes['showSeparator'] ) || false 
 if ( $separator ) {
 	$header['border-bottom-style'] = isset( $attributes['separatorStyle'] ) && in_array( $attributes['separatorStyle'], [ 'solid', 'dashed', 'dotted', 'double' ], true ) ? $attributes['separatorStyle'] : 'solid';
 	if ( '' !== $u( 'separatorWidth' ) ) $header['border-bottom-width'] = $u( 'separatorWidth' );
-	if ( ! empty( $attributes['separatorColor'] ) ) $header['border-bottom-color'] = $attributes['separatorColor'];
+	if ( ! empty( $attributes['separatorColor'] ) ) $header['border-bottom-color'] = $H::sanitize_css_color( (string) $attributes['separatorColor'], '' );
 }
 if ( '' !== $u( 'filterGap' ) ) $bar['gap'] = $u( 'filterGap' );
 
 // Search box.
 $search_wrap = '' !== $u( 'searchWidth' ) ? [ 'width' => $u( 'searchWidth' ) ] : [];
 $search      = array_merge( $typo( $attributes['searchTypography'] ?? [] ), $bg( 'searchBg', 'searchBgGradient' ), $dims( $attributes['searchRadius'] ?? [], 'radius' ) );
-if ( ! empty( $attributes['searchColor'] ) ) $search['color'] = $attributes['searchColor'];
+if ( ! empty( $attributes['searchColor'] ) ) $search['color'] = $H::sanitize_css_color( (string) $attributes['searchColor'], '' );
 if ( ! empty( $attributes['searchBorder'] ) ) $search = array_merge( $search, $H::border_to_css_props( $attributes['searchBorder'] ) );
 $search_focus       = ! empty( $attributes['searchBorderColorFocus'] ) ? [ 'border-color' => $attributes['searchBorderColorFocus'] ] : [];
 $search_placeholder = ! empty( $attributes['searchPlaceholderColor'] ) ? [ 'color' => $attributes['searchPlaceholderColor'] ] : [];
@@ -189,17 +189,17 @@ $empty              = ! empty( $attributes['noResultsColor'] ) ? [ 'color' => $a
 
 // Filter button: normal / hover / active.
 $btn = array_merge( $typo( $attributes['filterTypography'] ?? [] ), $dims( $attributes['filterPadding'] ?? [], 'padding' ), $dims( $attributes['filterRadius'] ?? [], 'radius' ) );
-if ( ! empty( $attributes['filterColor'] ) ) $btn['color'] = $attributes['filterColor'];
+if ( ! empty( $attributes['filterColor'] ) ) $btn['color'] = $H::sanitize_css_color( (string) $attributes['filterColor'], '' );
 $btn = array_merge( $btn, $bg( 'filterBg', 'filterBgGradient' ) );
 if ( ! empty( $attributes['filterBorder'] ) ) $btn = array_merge( $btn, $H::border_to_css_props( $attributes['filterBorder'] ) );
 $btn_hover = [];
-if ( ! empty( $attributes['filterColorHover'] ) ) $btn_hover['color'] = $attributes['filterColorHover'];
+if ( ! empty( $attributes['filterColorHover'] ) ) $btn_hover['color'] = $H::sanitize_css_color( (string) $attributes['filterColorHover'], '' );
 $btn_hover = array_merge( $btn_hover, $bg( 'filterBgHover', 'filterBgGradientHover' ) );
-if ( ! empty( $attributes['filterBorderColorHover'] ) ) $btn_hover['border-color'] = $attributes['filterBorderColorHover'];
+if ( ! empty( $attributes['filterBorderColorHover'] ) ) $btn_hover['border-color'] = $H::sanitize_css_color( (string) $attributes['filterBorderColorHover'], '' );
 $btn_active = [];
-if ( ! empty( $attributes['filterColorActive'] ) ) $btn_active['color'] = $attributes['filterColorActive'];
+if ( ! empty( $attributes['filterColorActive'] ) ) $btn_active['color'] = $H::sanitize_css_color( (string) $attributes['filterColorActive'], '' );
 $btn_active = array_merge( $btn_active, $bg( 'filterBgActive', 'filterBgGradientActive' ) );
-if ( ! empty( $attributes['filterBorderColorActive'] ) ) $btn_active['border-color'] = $attributes['filterBorderColorActive'];
+if ( ! empty( $attributes['filterBorderColorActive'] ) ) $btn_active['border-color'] = $H::sanitize_css_color( (string) $attributes['filterBorderColorActive'], '' );
 
 // Grid. Columns and gap are CSS variables so the stylesheet default and the
 // per-device values share one rule.
@@ -229,29 +229,29 @@ $card = array_merge( $align_css( $card_align ), $bg( 'cardBg', 'cardBgGradient' 
 if ( ! empty( $attributes['cardBorder'] ) ) $card = array_merge( $card, $H::border_to_css_props( $attributes['cardBorder'] ) );
 if ( '' !== $u( 'iconSpace' ) ) $card['gap'] = $u( 'iconSpace' );
 $card_hover = array_merge( $bg( 'cardBgHover', 'cardBgGradientHover' ), $shadow( $attributes['cardShadowHover'] ?? [] ) );
-if ( ! empty( $attributes['cardBorderColorHover'] ) ) $card_hover['border-color'] = $attributes['cardBorderColorHover'];
+if ( ! empty( $attributes['cardBorderColorHover'] ) ) $card_hover['border-color'] = $H::sanitize_css_color( (string) $attributes['cardBorderColorHover'], '' );
 
 // Icon.
 $icon_box = array_merge( $bg( 'iconBg', 'iconBgGradient' ), $dims( $attributes['iconRadius'] ?? [], 'radius' ) );
 if ( '' !== $u( 'iconBoxSize' ) ) { $icon_box['width'] = $u( 'iconBoxSize' ); $icon_box['height'] = $u( 'iconBoxSize' ); }
 $icon_i = [];
-if ( ! empty( $attributes['iconColor'] ) ) $icon_i['color'] = $attributes['iconColor'];
+if ( ! empty( $attributes['iconColor'] ) ) $icon_i['color'] = $H::sanitize_css_color( (string) $attributes['iconColor'], '' );
 if ( '' !== $u( 'iconSize' ) ) $icon_i['font-size'] = $u( 'iconSize' );
 
 // Text.
 $text = [];
 if ( '' !== $u( 'textGap' ) ) $text['gap'] = $u( 'textGap' );
 $title = $typo( $attributes['titleTypography'] ?? [] );
-if ( ! empty( $attributes['titleColor'] ) ) $title['color'] = $attributes['titleColor'];
+if ( ! empty( $attributes['titleColor'] ) ) $title['color'] = $H::sanitize_css_color( (string) $attributes['titleColor'], '' );
 $title_hover = ! empty( $attributes['titleColorHover'] ) ? [ 'color' => $attributes['titleColorHover'] ] : [];
 $desc = $typo( $attributes['descTypography'] ?? [] );
-if ( ! empty( $attributes['descColor'] ) ) $desc['color'] = $attributes['descColor'];
+if ( ! empty( $attributes['descColor'] ) ) $desc['color'] = $H::sanitize_css_color( (string) $attributes['descColor'], '' );
 
 // Badge. Its colours are custom properties, which each style (style.scss)
 // uses in its own way; a card's own colours set the same properties on it.
 $badge = array_merge( $typo( $attributes['badgeTypography'] ?? [] ), $dims( $attributes['badgePadding'] ?? [], 'padding' ), $dims( $attributes['badgeRadius'] ?? [], 'radius' ) );
-if ( ! empty( $attributes['badgeColor'] ) ) $badge['--shapeblock-iso-badge-color'] = $attributes['badgeColor'];
-if ( ! empty( $attributes['badgeBg'] ) ) $badge['--shapeblock-iso-badge-bg'] = $attributes['badgeBg'];
+if ( ! empty( $attributes['badgeColor'] ) ) $badge['--shapeblock-iso-badge-color'] = $H::sanitize_css_color( (string) $attributes['badgeColor'], '' );
+if ( ! empty( $attributes['badgeBg'] ) ) $badge['--shapeblock-iso-badge-bg'] = $H::sanitize_css_color( (string) $attributes['badgeBg'], '' );
 // Its place in the corner. A ribbon has a fixed place, and a tab stays on the
 // top edge, so only its distance from the side moves.
 if ( 'inline' !== $badge_pos && 'ribbon' !== $badge_look ) {
@@ -269,13 +269,13 @@ $more_align    = isset( $attributes['loadMoreAlign'] ) && isset( $flex_map_more[
 $more_wrap     = [ 'justify-content' => $flex_map_more[ $more_align ] ];
 if ( '' !== $u( 'loadMoreSpace' ) ) $more_wrap['margin-top'] = $u( 'loadMoreSpace' );
 $more_btn = array_merge( $typo( $attributes['loadMoreTypography'] ?? [] ), $dims( $attributes['loadMorePadding'] ?? [], 'padding' ), $dims( $attributes['loadMoreRadius'] ?? [], 'radius' ) );
-if ( ! empty( $attributes['loadMoreColor'] ) ) $more_btn['color'] = $attributes['loadMoreColor'];
+if ( ! empty( $attributes['loadMoreColor'] ) ) $more_btn['color'] = $H::sanitize_css_color( (string) $attributes['loadMoreColor'], '' );
 $more_btn = array_merge( $more_btn, $bg( 'loadMoreBg', 'loadMoreBgGradient' ) );
 if ( ! empty( $attributes['loadMoreBorder'] ) ) $more_btn = array_merge( $more_btn, $H::border_to_css_props( $attributes['loadMoreBorder'] ) );
 $more_hover = [];
-if ( ! empty( $attributes['loadMoreColorHover'] ) ) $more_hover['color'] = $attributes['loadMoreColorHover'];
+if ( ! empty( $attributes['loadMoreColorHover'] ) ) $more_hover['color'] = $H::sanitize_css_color( (string) $attributes['loadMoreColorHover'], '' );
 $more_hover = array_merge( $more_hover, $bg( 'loadMoreBgHover', 'loadMoreBgGradientHover' ) );
-if ( ! empty( $attributes['loadMoreBorderColorHover'] ) ) $more_hover['border-color'] = $attributes['loadMoreBorderColorHover'];
+if ( ! empty( $attributes['loadMoreBorderColorHover'] ) ) $more_hover['border-color'] = $H::sanitize_css_color( (string) $attributes['loadMoreBorderColorHover'], '' );
 
 // Tablet / Mobile overrides, printed only for what was actually set.
 $resp_css = '';

@@ -87,7 +87,7 @@ export default function ShapeBlockApp({ initialTab } = {}) {
         'export-import': 'shapeblock-export-import',
         ...Object.fromEntries(addonPages.map((p) => [p.tab, p.page])),
     };
-    const isAddonTab = addonPages.some((p) => p.tab === current);
+    const addonPage = addonPages.find((p) => p.tab === current);
 
     const changeMenu = (e) => {
         setCurrent(e.key);
@@ -152,7 +152,10 @@ export default function ShapeBlockApp({ initialTab } = {}) {
                                 {current === 'theme-builder' && <ThemeBuilder />}
                                 {current === 'settings' && <Settings />}
                                 {current === 'export-import' && <ExportImport />}
-                                {isAddonTab && <AddonTab key={current} tab={current} />}
+                                {/* An add-on page that lists a group of Theme Builder types is drawn here; any other add-on page draws itself. */}
+                                {addonPage && (addonPage.builderGroup
+                                    ? <ThemeBuilder key={current} group={addonPage.builderGroup} title={addonPage.label} description="" />
+                                    : <AddonTab key={current} tab={current} />)}
 
                             </div>
                         </Content>

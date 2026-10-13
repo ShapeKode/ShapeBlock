@@ -103,9 +103,9 @@ if ( ! empty( $attributes['boxShadow'] ) && ! empty( $attributes['boxShadow']['c
 }
 
 // Advanced.
-if ( ! empty( $attributes['overflow'] ) ) $row_responsive['desktop']['overflow'] = $attributes['overflow'];
-if ( ! empty( $attributes['position'] ) ) $row_responsive['desktop']['position'] = $attributes['position'];
-if ( $attributes['zIndex'] !== '' && $attributes['zIndex'] !== null ) {
+if ( isset( $attributes['overflow'] ) && in_array( $attributes['overflow'], [ 'visible', 'hidden', 'auto', 'scroll' ], true ) ) $row_responsive['desktop']['overflow'] = $attributes['overflow'];
+if ( isset( $attributes['position'] ) && in_array( $attributes['position'], [ 'static', 'relative', 'absolute', 'fixed' ], true ) ) $row_responsive['desktop']['position'] = $attributes['position'];
+if ( isset( $attributes['zIndex'] ) && $attributes['zIndex'] !== '' ) {
     $z = trim( (string) $attributes['zIndex'] );
     if ( $z !== '' ) $row_responsive['desktop']['z-index'] = (int) $z;
 }

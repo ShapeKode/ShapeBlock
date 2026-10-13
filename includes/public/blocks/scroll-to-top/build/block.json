@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/scroll-to-top",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "Scroll Top",
   "category": "shapeblock",
   "description": "A floating scroll-to-top button that appears after scrolling and smoothly returns to the top.",

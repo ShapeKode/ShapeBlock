@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/filter-list",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "Filterable List",
   "category": "shapeblock",
   "description": "A list of links with icons, filter buttons that show how many items each holds, and a search box to find an item.",
@@ -119,10 +119,6 @@
         {
           "id": "posts",
           "name": "Posts & Site"
-        },
-        {
-          "id": "upcoming",
-          "name": "Upcoming"
         }
       ]
     },
@@ -190,10 +186,7 @@
           "title": "Filterable List",
           "filters": [
             "content"
-          ],
-          "badge": "New",
-          "badgeBg": "#e7f8ef",
-          "badgeColor": "#12b76a"
+          ]
         },
         {
           "icon": "shapeblock-icon-font",
@@ -242,20 +235,14 @@
           "title": "Image Comparison",
           "filters": [
             "media"
-          ],
-          "badge": "Hot",
-          "badgeBg": "#fff0eb",
-          "badgeColor": "#f04438"
+          ]
         },
         {
           "icon": "shapeblock-icon-thumbnail-2",
           "title": "Isotope Filter",
           "filters": [
             "showcase"
-          ],
-          "badge": "Hot",
-          "badgeBg": "#fff0eb",
-          "badgeColor": "#f04438"
+          ]
         },
         {
           "icon": "shapeblock-icon-notebook",
@@ -276,10 +263,7 @@
           "title": "Post Grid",
           "filters": [
             "posts"
-          ],
-          "badge": "Hot",
-          "badgeBg": "#fff0eb",
-          "badgeColor": "#f04438"
+          ]
         },
         {
           "icon": "shapeblock-icon-cart",
@@ -349,24 +333,13 @@
           "title": "Sticky Stack",
           "filters": [
             "layout"
-          ],
-          "badge": "New",
-          "badgeBg": "#e7f8ef",
-          "badgeColor": "#12b76a"
+          ]
         },
         {
           "icon": "shapeblock-icon-chart-treemap",
           "title": "Table",
           "filters": [
             "content"
-          ]
-        },
-        {
-          "icon": "shapeblock-icon-doc-text",
-          "title": "Table of Contents",
-          "badge": "Upcoming",
-          "filters": [
-            "upcoming"
           ]
         },
         {
@@ -388,14 +361,6 @@
           "title": "Testimonial",
           "filters": [
             "showcase"
-          ]
-        },
-        {
-          "icon": "shapeblock-icon-time",
-          "title": "Timeline",
-          "badge": "Upcoming",
-          "filters": [
-            "upcoming"
           ]
         }
       ]

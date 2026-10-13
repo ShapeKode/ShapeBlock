@@ -22,18 +22,23 @@ import BuilderConditionsModal, { ConditionRows, conditionsPayload, defaultCondit
  *
  * Deleting a template moves it to Trash first; from the Trash view it can be
  * restored or deleted permanently.
+ *
+ * Each template type belongs to one dashboard page (its `group`): the Theme
+ * Builder ("theme"), Custom Templates ("templates") or an add-on's page. This
+ * list shows one group; `fixedType` narrows it to a single type.
  */
-export default function ThemeBuilder() {
+export default function ThemeBuilder({ group = 'theme', fixedType = '', title = '', description } = {}) {
     const builderTypes = useMemo(
-        () => (typeof shapeblock !== 'undefined' && shapeblock.builderTypes) || [],
-        []
+        () => ((typeof shapeblock !== 'undefined' && shapeblock.builderTypes) || [])
+            .filter((t) => (t.group || 'theme') === group && (!fixedType || t.slug === fixedType)),
+        [group, fixedType]
     );
 
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 });
     const [search, setSearch] = useState('');
-    const [typeFilter, setTypeFilter] = useState(''); // '' = all
+    const [typeFilter, setTypeFilter] = useState(fixedType); // '' = all of this page's types
     const [statusView, setStatusView] = useState('publish'); // 'publish' = active, 'trash' = trashed
     const [trashCount, setTrashCount] = useState(0);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -48,7 +53,7 @@ export default function ThemeBuilder() {
 
     const fetchItems = useCallback((page = 1, pageSize = 10, searchVal = '', type = '', status = 'publish') => {
         setLoading(true);
-        const params = new URLSearchParams({ page, per_page: pageSize, search: searchVal, type, status });
+        const params = new URLSearchParams({ page, per_page: pageSize, search: searchVal, type, status, group });
         // rest_url may be the plain-permalink form (index.php?rest_route=/shapeblock/v1/),
         // in which case query args must be appended with "&", not "?".
         const sep = shapeblock.rest_url.includes('?') ? '&' : '?';
@@ -68,7 +73,7 @@ export default function ThemeBuilder() {
             })
             .catch(() => notification.error({ message: __( 'Failed to load templates', 'shapeblock' ) }))
             .finally(() => setLoading(false));
-    }, []);
+    }, [group]);
 
     useEffect(() => {
         fetchItems(1, pagination.pageSize, search, typeFilter, statusView);
@@ -466,13 +471,15 @@ export default function ThemeBuilder() {
     return (
         <div className="shapeblock-options-content">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, gap: 12, flexWrap: 'wrap' }}>
-                <h1 className="shapeblock-options-title" style={{ margin: 0 }}>{ __( 'Theme Builder', 'shapeblock' ) }</h1>
+                <h1 className="shapeblock-options-title" style={{ margin: 0 }}>{title || __( 'Theme Builder', 'shapeblock' )}</h1>
                 <Button type="primary" icon={<PlusOutlined />} onClick={openAdd}>{ __( 'Add New', 'shapeblock' ) }</Button>
             </div>
 
-            <p style={{ color: '#666', marginTop: 0, marginBottom: 16 }}>
-                { __( 'Build templates for your site and control exactly where they appear.', 'shapeblock' ) }
-            </p>
+            {description !== '' && (
+                <p style={{ color: '#666', marginTop: 0, marginBottom: 16 }}>
+                    {description !== undefined ? description : __( 'Build templates for your site and control exactly where they appear.', 'shapeblock' )}
+                </p>
+            )}
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, gap: 12, flexWrap: 'wrap' }}>
                 <Space wrap>
@@ -493,12 +500,14 @@ export default function ThemeBuilder() {
                         value={statusView}
                         onChange={changeStatusView}
                     />
-                    <Segmented
-                        className="shapeblock-builder-types"
-                        options={typeFilterOptions}
-                        value={typeFilter}
-                        onChange={setTypeFilter}
-                    />
+                    {builderTypes.length > 1 && (
+                        <Segmented
+                            className="shapeblock-builder-types"
+                            options={typeFilterOptions}
+                            value={typeFilter}
+                            onChange={setTypeFilter}
+                        />
+                    )}
                     {isTrashView ? (
                         <>
                             <Button disabled={selectedRowKeys.length === 0} icon={<UndoOutlined />} onClick={handleBulkRestore}>
@@ -587,6 +596,7 @@ export default function ThemeBuilder() {
                     </Form.Item>
                     <Form.Item
                         name="type"
+                        hidden={builderTypes.length < 2}
                         label={ __( 'Template Type', 'shapeblock' ) }
                         rules={[{ required: true, message: __( 'Please choose a type', 'shapeblock' ) }]}
                     >

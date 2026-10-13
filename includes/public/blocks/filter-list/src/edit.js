@@ -238,7 +238,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						) : (
 							<p className="components-base-control__help">{__('Add filters under Settings > Filters first.', 'shapeblock')}</p>
 						)}
-						<TextControl label={__('Badge', 'shapeblock')} help={__('A short label after the title, such as New or Upcoming. Leave empty for none.', 'shapeblock')} value={item.badge || ''} onChange={(v) => updateItem(i, { badge: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+						<TextControl label={__('Badge', 'shapeblock')} help={__('A short label after the title, such as New or Hot. Leave empty for none.', 'shapeblock')} value={item.badge || ''} onChange={(v) => updateItem(i, { badge: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 						{item.badge && (
 							<>
 								<BackgroundControl

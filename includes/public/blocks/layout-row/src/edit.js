@@ -309,7 +309,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     ]}
                     help={
                         contentWidth === 'custom'
-                            ? __('The whole row - its background too - gets the width below, centred. In the page it stays within the site’s wide width; set the row’s alignment to Full to go wider.', 'shapeblock')
+                            ? __('The whole row - its background too - gets the width below, centered. In the page it stays within the site’s wide width; set the row’s alignment to Full to go wider.', 'shapeblock')
                             : contentWidth === 'full'
                                 ? __('The content fills the whole row.', 'shapeblock')
                                 : __('The background fills the row; the content stays within the Max Width.', 'shapeblock')

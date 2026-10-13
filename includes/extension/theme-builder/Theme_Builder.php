@@ -122,6 +122,8 @@ class Theme_Builder {
 				'enabled'   => true,
 				// Rendered only via [shapeblock_builder id="…"]; the admin shows the shortcode for this type.
 				'shortcode' => true,
+				// Listed on the Custom Templates page, not the Theme Builder.
+				'group'     => 'templates',
 			),
 		);
 
@@ -139,6 +141,37 @@ class Theme_Builder {
 	public static function is_valid_type( $type ) {
 		$types = self::get_template_types();
 		return isset( $types[ $type ] ) && ! empty( $types[ $type ]['enabled'] );
+	}
+
+	/**
+	 * The dashboard page a template type is listed on: "theme" (the Theme
+	 * Builder, the default), "templates" (Custom Templates) or a group an
+	 * add-on gives its own page through the `builderGroup` key of
+	 * `shapeblock_admin_pages`.
+	 *
+	 * @param string $type Type slug.
+	 * @return string
+	 */
+	public static function get_type_group( $type ) {
+		$types = self::get_template_types();
+		$group = isset( $types[ $type ]['group'] ) ? sanitize_key( (string) $types[ $type ]['group'] ) : '';
+		return '' !== $group ? $group : 'theme';
+	}
+
+	/**
+	 * The enabled template types listed on one dashboard page.
+	 *
+	 * @param string $group Group slug, see get_type_group().
+	 * @return string[]
+	 */
+	public static function get_group_types( $group ) {
+		$out = array();
+		foreach ( self::get_template_types() as $slug => $type ) {
+			if ( ! empty( $type['enabled'] ) && self::get_type_group( $slug ) === $group ) {
+				$out[] = $slug;
+			}
+		}
+		return $out;
 	}
 
 	/**

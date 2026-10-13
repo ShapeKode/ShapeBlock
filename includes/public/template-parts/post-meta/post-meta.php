@@ -20,7 +20,7 @@ if ( in_array( 'author', $shapeblock_allowed_metas ) ) {
 
             $shapeblock_author_icon = '<img src="'. esc_url( $shapeblock_avatar_url )  .'">';
         }
-        $shapeblock_meta_html .= '<span class="bldpost-meta">' . $shapeblock_author_icon . '<a href="' . esc_url(get_author_posts_url(get_the_author_meta('ID'))) . '">' . esc_html( $author_prefix ) . ' ' . esc_html( get_the_author() ) . '</a></span>';
+        $shapeblock_meta_html .= '<span class="shapeblock-post-meta-item">' . $shapeblock_author_icon . '<a href="' . esc_url(get_author_posts_url(get_the_author_meta('ID'))) . '">' . esc_html( $author_prefix ) . ' ' . esc_html( get_the_author() ) . '</a></span>';
 }
 
 $shapeblock_date_html = '';
@@ -33,7 +33,7 @@ if ( in_array( 'date', $shapeblock_allowed_metas ) && empty($attributes['showDat
     if(in_array($meta_style, ['2', '3'])) {
         $shapeblock_date = \ShapeBlock\Frontend\Helper::shapeblock_time_ago();
     }
-    $shapeblock_date_html = '<span class="bldpost-meta">' . $shapeblock_date_icon . esc_html( $shapeblock_date ) . '</span>';
+    $shapeblock_date_html = '<span class="shapeblock-post-meta-item">' . $shapeblock_date_icon . esc_html( $shapeblock_date ) . '</span>';
 }
 
 $shapeblock_category_html = '';
@@ -48,7 +48,7 @@ if ( in_array( 'category', $shapeblock_allowed_metas ) ) {
             $shapeblock_cat_links[] = '<a href="' . esc_url(get_category_link($shapeblock_category->term_id)) . '" class="shapeblock-meta-cat">' . esc_html( $shapeblock_category->name ) . '</a>';
         }
         if ( ! empty( $shapeblock_cat_links ) ) {
-            $shapeblock_category_html  = '<span class="bldpost-meta"><i class="shapeblock-meta-icon shapeblock-icon-notification-status"></i>';
+            $shapeblock_category_html  = '<span class="shapeblock-post-meta-item"><i class="shapeblock-meta-icon shapeblock-icon-notification-status"></i>';
             $shapeblock_category_html .= implode( ', ', $shapeblock_cat_links );
             $shapeblock_category_html .= '</span>';
         }
@@ -63,7 +63,7 @@ if ( $meta_style == '3' ) {
 if ( in_array( 'tag', $shapeblock_allowed_metas ) ) {
     $shapeblock_tags = get_the_tags();
     if ( $shapeblock_tags ) {
-        $shapeblock_meta_html .= '<span class="bldpost-meta"><i class="shapeblock-meta-icon shapeblock-icon-tags"></i>';
+        $shapeblock_meta_html .= '<span class="shapeblock-post-meta-item"><i class="shapeblock-meta-icon shapeblock-icon-tags"></i>';
         $shapeblock_tag_links = [];
         foreach ($shapeblock_tags as $shapeblock_tag) {
             $shapeblock_tag_links[] = '<a href="' . esc_url(get_tag_link($shapeblock_tag->term_id)) . '">' . esc_html( $shapeblock_tag->name ) . '</a>';
@@ -74,7 +74,7 @@ if ( in_array( 'tag', $shapeblock_allowed_metas ) ) {
 }
 
 if ( in_array( 'comments_count', $shapeblock_allowed_metas ) ) {
-    $shapeblock_meta_html .= '<span class="bldpost-meta"><i class="shapeblock-meta-icon shapeblock-icon-chat"></i>';
+    $shapeblock_meta_html .= '<span class="shapeblock-post-meta-item"><i class="shapeblock-meta-icon shapeblock-icon-chat"></i>';
     $shapeblock_meta_html .= get_comments_number();
     $shapeblock_meta_html .= '</span>';
 }

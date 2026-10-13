@@ -289,8 +289,8 @@ $render_rating = function ( $item ) use ( $show_rating ) {
 	$r = (int) $item['rating'];
 	$out = '<div class="shapeblock-rating" role="img" aria-label="' . esc_attr(
 		sprintf(
-			/* translators: %s: star rating, for example 4.5. */
-			__( 'Rating: %s out of 5', 'shapeblock' ),
+			/* translators: %d: star rating, a whole number from 1 to 5. */
+			__( 'Rating: %d out of 5', 'shapeblock' ),
 			$r
 		)
 	) . '">';

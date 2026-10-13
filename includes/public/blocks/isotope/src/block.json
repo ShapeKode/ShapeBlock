@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/isotope",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"title": "Isotope Filter",
 	"category": "shapeblock",
 	"description": "A filterable grid: category buttons on top, and under each category a list of items with icon, title and description.",

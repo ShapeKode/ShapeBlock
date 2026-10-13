@@ -238,8 +238,11 @@
 						className: 'shapeblock-sp-device-note',
 						style: { gridColumn: '1 / -1', margin: '0 0 8px', fontSize: '12px', color: '#757575' }
 					},
-						/* translators: %s: Tablet or Mobile. */
-						sprintf( __( 'Editing %s padding / margin. Empty sides use the larger screen.', 'shapeblock' ), label )
+						sprintf(
+							/* translators: %s: Tablet or Mobile. */
+							__( 'Editing %s padding / margin. Empty sides use the larger screen.', 'shapeblock' ),
+							label
+						)
 					)
 				)
 			);

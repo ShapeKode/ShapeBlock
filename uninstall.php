@@ -43,6 +43,12 @@ function shapeblock_uninstall_cleanup_site() {
 			delete_option( $option_name );
 		}
 	}
+
+	// An option kept out of autoload is not in that cache. Each block's option
+	// is named after its folder, so those names are deleted as well.
+	foreach ( (array) glob( __DIR__ . '/includes/public/blocks/*', GLOB_ONLYDIR ) as $block_dir ) {
+		delete_option( 'shapeblock_block_' . basename( $block_dir ) );
+	}
 }
 
 if ( is_multisite() ) {

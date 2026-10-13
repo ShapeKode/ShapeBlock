@@ -117,17 +117,6 @@ body textarea.ant-input:focus {
   color: #fff;
 }
 
-.shapeblock-blocks-more {
-  margin: 24px 0 0;
-  color: #667085;
-  font-size: 14px;
-  text-align: center;
-}
-.shapeblock-blocks-more a {
-  color: #a216ff;
-  font-weight: 500;
-}
-
 .shapeblock-blocks-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));

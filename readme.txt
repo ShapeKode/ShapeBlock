@@ -4,11 +4,11 @@ Tags: gutenberg blocks, header footer builder, block editor, gutenberg, wordpres
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-**30+ Gutenberg blocks** - sliders, grids, tabs, counters and more - plus a Header & Footer Builder, with per-device controls.
+30+ Gutenberg blocks - sliders, grids, tabs, counters and more - plus a Header & Footer Builder, with per-device controls.
 
 == Description ==
 
@@ -39,30 +39,32 @@ See every block in action on the [ShapeBlock demo](https://shapekode.com/product
 6. [Countdown](https://shapekode.com/product/shapeblock/countdown/) - Counts down to a date and time.
 7. [Counter](https://shapekode.com/product/shapeblock/counter/) - Animated number counters.
 8. [Features List](https://shapekode.com/product/shapeblock/feature-list/) - Feature lists with icons.
-9. [Heading](https://shapekode.com/product/shapeblock/heading/) - Headings with typography, gradient and highlight options.
-10. [Hover Box](https://shapekode.com/product/shapeblock/hover-box/) - An image or icon in a circle or square that shows a title and description on hover.
-11. [Icon](https://shapekode.com/product/shapeblock/icon/) - A single icon with colour, size and link.
-12. [Icon Box](https://shapekode.com/product/shapeblock/icon-box/) - Icon, heading and text together, in several layouts.
+9. [Filterable List](https://shapekode.com/product/shapeblock/filterable-list/) - A list of links with icons, filter buttons that count their items, badges and a search box.
+10. [Heading](https://shapekode.com/product/shapeblock/heading/) - Headings with typography, gradient and highlight options.
+11. [Hover Box](https://shapekode.com/product/shapeblock/hover-box/) - An image or icon in a circle or square that shows a title and description on hover.
+12. [Icon Box](https://shapekode.com/product/shapeblock/icon-box/) - Icon, heading and text together, in several layouts, with an optional button (text, icon or icon only).
 13. [Icon List](https://shapekode.com/product/shapeblock/icon-list/) - A list where each item gets its own icon.
-14. [Image Carousel](https://shapekode.com/product/shapeblock/image-carousel/) - Several images at once, with centred slides and continuous scrolling.
-15. [Image Comparison](https://shapekode.com/product/shapeblock/image-comparison/) - Before / after images with a draggable handle.
-16. [Isotope Filter](https://shapekode.com/product/shapeblock/isotope-filter/) - A filterable grid with category buttons, and an icon, title and description for each item.
-17. [Menu](https://shapekode.com/product/shapeblock/menu/) - Shows a WordPress navigation menu with layout, alignment and colour options.
-18. [Offcanvas](https://shapekode.com/product/shapeblock/offcanvas/) - Slide-in panels for menus, sidebars or extra content.
-19. [Post Grid](https://shapekode.com/product/shapeblock/post-grid/) - Posts in grid layouts, with pagination and optional video.
-20. [Pricing Table](https://shapekode.com/product/shapeblock/pricing-table/) - Pricing plans with features, badges and a button.
-21. [Progress Bar](https://shapekode.com/product/shapeblock/progress-bar/) - Animated progress and skill bars.
-22. Row - A responsive row that holds Column blocks.
-23. [Scroll Top](https://shapekode.com/product/shapeblock/scroll-to-top/) - A back-to-top button.
-24. [Search](https://shapekode.com/product/shapeblock/search/) - A search field you can put anywhere.
-25. [Simple Gallery](https://shapekode.com/product/shapeblock/simple-gallery/) - An image gallery with spacing and column controls.
-26. [Slider](https://shapekode.com/product/shapeblock/slider/) - A full-width image slider with arrows, dots and autoplay.
-27. [Social Icon](https://shapekode.com/product/shapeblock/social-icon/) - Linked social icons, coloured all together or one by one.
-28. [Social Share](https://shapekode.com/product/shapeblock/social-share/) - Share buttons for the current page.
-29. [Table](https://shapekode.com/product/shapeblock/table/) - Tables with styled headers, rows and cells.
-30. [Tabs](https://shapekode.com/product/shapeblock/tabs/) - Tabbed content with icons and a few tab styles to pick from.
-31. [Team Member](https://shapekode.com/product/shapeblock/team-member/) - Team members with photo, role and social links.
-32. [Testimonial](https://shapekode.com/product/shapeblock/testimonial/) - Testimonials in three styles, with ratings, quote icons and logos.
+14. [Icon](https://shapekode.com/product/shapeblock/icon/) - A single icon with colour, size and link.
+15. [Image Carousel](https://shapekode.com/product/shapeblock/image-carousel/) - Several images at once, with centred slides and continuous scrolling.
+16. [Image Comparison](https://shapekode.com/product/shapeblock/image-comparison/) - Before / after images with a draggable handle - side by side, top and bottom, or corner to corner - with labels and several handle styles.
+17. [Isotope Filter](https://shapekode.com/product/shapeblock/isotope-filter/) - A filterable grid with category buttons, an optional search box, and an icon, title, description and badge for each item.
+18. [Menu](https://shapekode.com/product/shapeblock/menu/) - Shows a WordPress navigation menu with layout, alignment and colour options.
+19. [Offcanvas](https://shapekode.com/product/shapeblock/offcanvas/) - Slide-in panels for menus, sidebars or extra content.
+20. [Post Grid](https://shapekode.com/product/shapeblock/post-grid/) - Posts in grid layouts, with pagination.
+21. [Pricing Table](https://shapekode.com/product/shapeblock/pricing-table/) - Pricing plans with features, badges and a button.
+22. [Progress Bar](https://shapekode.com/product/shapeblock/progress-bar/) - Animated progress and skill bars.
+23. Row - A responsive row that holds Column blocks, boxed, full width or a custom width.
+24. [Scroll Top](https://shapekode.com/product/shapeblock/scroll-to-top/) - A back-to-top button.
+25. [Search](https://shapekode.com/product/shapeblock/search/) - A search field you can put anywhere.
+26. [Simple Gallery](https://shapekode.com/product/shapeblock/simple-gallery/) - An image gallery with spacing and column controls, and a popup with a choice of animations.
+27. [Slider](https://shapekode.com/product/shapeblock/slider/) - A full-width image slider with arrows, dots and autoplay.
+28. [Social Icon](https://shapekode.com/product/shapeblock/social-icon/) - Linked social icons, coloured all together or one by one.
+29. [Social Share](https://shapekode.com/product/shapeblock/social-share/) - Share buttons for the current page.
+30. [Sticky Stack](https://shapekode.com/product/shapeblock/sticky-stack/) - Cards that stick as you scroll and stack over one another.
+31. [Table](https://shapekode.com/product/shapeblock/table/) - Tables with styled headers, rows and cells.
+32. [Tabs](https://shapekode.com/product/shapeblock/tabs/) - Tabbed content with icons and a few tab styles to pick from.
+33. [Team Member](https://shapekode.com/product/shapeblock/team-member/) - Team members with photo, role and social links.
+34. [Testimonial](https://shapekode.com/product/shapeblock/testimonial/) - Testimonials in three styles, with ratings, quote icons and logos.
 
 = Header & Footer Builder =
 
@@ -122,7 +124,7 @@ It **works with classic and block themes**. Pages that match none of your condit
 
 == External services ==
 
-Out of the box, **ShapeBlock** doesn't connect to any outside service. It only does in the two cases below, and both are your choice.
+Out of the box, **ShapeBlock** doesn't connect to any outside service. It only does in the cases below, and each one is your choice.
 
 = Google Fonts (optional, off by default) =
 
@@ -135,12 +137,11 @@ With it switched on:
 
 Google Fonts is provided by Google LLC. Terms of service: https://policies.google.com/terms - Privacy policy: https://policies.google.com/privacy
 
-= Video embeds (only when you add a video URL) =
+= Gravatar (Post Grid author picture) =
 
-The Post Grid block can show a video for a post. With no video URL, nothing is contacted, and a video file (`.mp4`, `.webm`, `.ogg`, `.mov`) plays in a regular `<video>` tag. For a YouTube or Vimeo URL, WordPress' own oEmbed (`wp_oembed_get()`) asks the provider for the embed code (cached for a day), and the visitor's browser loads the player from the provider, which receives their IP address, user agent and the referring page.
+When a Post Grid uses meta style 2 or 3 with the author shown, it shows the author's profile picture from Gravatar. The visitor's browser loads that picture from Gravatar, which receives the visitor's IP address, user agent and the referring page, and a hash of the author's email address (WordPress' own avatars work the same way). With other meta styles, or the author hidden, nothing is loaded.
 
-* YouTube (Google LLC) - Terms: https://www.youtube.com/t/terms - Privacy: https://policies.google.com/privacy
-* Vimeo, Inc. - Terms: https://vimeo.com/terms - Privacy: https://vimeo.com/privacy
+Gravatar is provided by Automattic Inc. Terms of service: https://automattic.com/tos/ - Privacy policy: https://automattic.com/privacy/
 
 = Social Share and Social Icon links =
 
@@ -163,8 +164,20 @@ ShapeBlock is licensed GPLv2 or later and includes these MIT-licensed libraries,
 * Swiper 12.0.3 (https://swiperjs.com) - `assets/lib/swiper/LICENSE`, unmodified release files.
 * Bootstrap 5.3 grid (https://getbootstrap.com) - `assets/lib/bootstrap/LICENSE`, only the grid, recompiled with a `shapeblock-` prefix.
 * Ant Design 6 and Ant Design Icons (https://ant.design) - `assets/lib/antd/LICENSE`, used only in the admin dashboard.
+* Bootstrap Icons 1.13.1 (https://icons.getbootstrap.com) - `includes/public/assets/font/bootstrap-icons-LICENSE.txt`, the icons of the built-in icon picker.
 
 The icon fonts were made with Fontello (https://fontello.com). Our own icons are GPLv2 or later; three come from Font Awesome 4.7 and Elusive Icons under the SIL Open Font License 1.1 (https://openfontlicense.org), listed in `includes/public/assets/icon/config.json`.
+
+
+
+## Privacy Policy 
+ShapeBlock uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
+
+Appsero SDK **does not gather any data by default.** The SDK only starts gathering basic telemetry data **when a user allows it via the admin notice**. We collect the data to ensure a great user experience for all our users. 
+
+Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
+
+Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 == Installation ==
 
@@ -179,7 +192,7 @@ The icon fonts were made with Fontello (https://fontello.com). Our own icons are
 
 Yes, with any well-coded theme, including block themes. The blocks pick up your theme's typography, and you can restyle them from the block settings.
 
-= Do I have to use all 32 blocks? =
+= Do I have to use all 34 blocks? =
 
 No. Turn off any you don't need in **ShapeBlock > Blocks Settings**. A block that's off isn't registered and its files aren't loaded.
 
@@ -197,10 +210,19 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 
 == Changelog ==
 
+= 1.0.1 =
+* New: Filterable List block - links with icons, filter buttons with item counts, badges and a search box.
+* New: Isotope Filter - an optional search box beside the filter buttons, with a line below them.
+* New: Row - a Custom content width, set per device.
+* New: Icon Box - an optional button (text, text with icon, or icon only with its own size).
+* New: Image Comparison - Before / After labels, a corner-to-corner direction and more handle styles.
+* New: Simple Gallery - popup animations.
+* New: Post Grid - more style and hover options, laid out more clearly.
+* New: a gradient option on background colours.
+* New: Theme Builder templates offer Wide and Full alignment in every theme.
+* Fix: column widths in a Row now add up correctly whatever the number of columns, and a gap of 0 works.
+* Fix: Row margin now applies in the editor and is no longer lost to the order stylesheets load in.
+* Fix: colours can be cleared again, and Post Grid colour changes show in the editor.
+
 = 1.0.0 =
 * Initial release.
-
-== Upgrade Notice ==
-
-= 1.0.0 =
-Initial release.

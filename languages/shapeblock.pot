@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: ShapeBlock 1.0.0\n"
+"Project-Id-Version: ShapeBlock 1.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/shapeblock\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-13T06:21:54+00:00\n"
+"POT-Creation-Date: 2026-10-13T08:41:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: shapeblock\n"
@@ -524,7 +524,8 @@ msgstr ""
 
 #: includes/admin/post-types.php:50
 #: includes/admin/post-types.php:52
-#: src/components/admin-components/templates.jsx:417
+#: src/components/admin-components/templates.jsx:419
+#: src/components/admin-components/templates.jsx:581
 msgid "Templates"
 msgstr ""
 
@@ -534,15 +535,15 @@ msgid "Template"
 msgstr ""
 
 #: includes/admin/post-types.php:54
-#: includes/extension/theme-builder/Theme_Builder.php:122
-#: src/components/admin-components/templates.jsx:425
-#: src/components/admin-components/theme-builder.jsx:470
+#: includes/extension/theme-builder/Theme_Builder.php:189
+#: src/components/admin-components/templates.jsx:427
+#: src/components/admin-components/theme-builder.jsx:475
 msgid "Add New"
 msgstr ""
 
 #: includes/admin/post-types.php:55
-#: src/components/admin-components/templates.jsx:532
-#: src/components/admin-components/theme-builder.jsx:572
+#: src/components/admin-components/templates.jsx:534
+#: src/components/admin-components/theme-builder.jsx:581
 msgid "Add New Template"
 msgstr ""
 
@@ -576,26 +577,26 @@ msgstr ""
 msgid "No templates found in Trash."
 msgstr ""
 
-#: includes/extension/theme-builder/Builder_API.php:357
+#: includes/extension/theme-builder/Builder_API.php:378
 msgid "A title is required."
 msgstr ""
 
-#: includes/extension/theme-builder/Builder_API.php:361
+#: includes/extension/theme-builder/Builder_API.php:382
 msgid "Please choose a valid template type."
 msgstr ""
 
-#: includes/extension/theme-builder/Builder_API.php:428
-#: includes/extension/theme-builder/Builder_API.php:452
+#: includes/extension/theme-builder/Builder_API.php:449
+#: includes/extension/theme-builder/Builder_API.php:473
 msgid "No items provided."
 msgstr ""
 
-#: includes/extension/theme-builder/Builder_API.php:512
+#: includes/extension/theme-builder/Builder_API.php:533
 msgid "Builder template not found."
 msgstr ""
 
 #: includes/extension/theme-builder/Builder_Conditions.php:41
 #: includes/extension/theme-builder/Builder_Conditions.php:223
-#: src/components/admin-components/theme-builder.jsx:383
+#: src/components/admin-components/theme-builder.jsx:388
 msgid "Entire Site"
 msgstr ""
 
@@ -638,69 +639,69 @@ msgid "%1$s: %2$s"
 msgstr ""
 
 #: includes/extension/theme-builder/Builder_Render.php:122
-#: src/components/admin-components/theme-builder.jsx:349
-#: src/components/admin-components/theme-builder.jsx:350
+#: src/components/admin-components/theme-builder.jsx:354
+#: src/components/admin-components/theme-builder.jsx:355
 msgid "(no title)"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:73
+#: includes/extension/theme-builder/Theme_Builder.php:107
 msgid "Header"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:74
+#: includes/extension/theme-builder/Theme_Builder.php:108
 msgid "Headers"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:79
+#: includes/extension/theme-builder/Theme_Builder.php:113
 msgid "Footer"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:80
+#: includes/extension/theme-builder/Theme_Builder.php:114
 msgid "Footers"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:86
+#: includes/extension/theme-builder/Theme_Builder.php:120
 msgid "Custom Block"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:87
+#: includes/extension/theme-builder/Theme_Builder.php:121
 msgid "Custom Blocks"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:120
-#: includes/extension/theme-builder/Theme_Builder.php:130
+#: includes/extension/theme-builder/Theme_Builder.php:187
+#: includes/extension/theme-builder/Theme_Builder.php:197
 msgid "ShapeBlock Builder"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:121
+#: includes/extension/theme-builder/Theme_Builder.php:188
 msgid "Builder Template"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:123
+#: includes/extension/theme-builder/Theme_Builder.php:190
 msgid "Add New Builder Template"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:124
+#: includes/extension/theme-builder/Theme_Builder.php:191
 msgid "Edit Builder Template"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:125
+#: includes/extension/theme-builder/Theme_Builder.php:192
 msgid "New Builder Template"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:126
+#: includes/extension/theme-builder/Theme_Builder.php:193
 msgid "View Builder Template"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:127
+#: includes/extension/theme-builder/Theme_Builder.php:194
 msgid "Search Builder Templates"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:128
+#: includes/extension/theme-builder/Theme_Builder.php:195
 msgid "No builder templates found"
 msgstr ""
 
-#: includes/extension/theme-builder/Theme_Builder.php:129
+#: includes/extension/theme-builder/Theme_Builder.php:196
 msgid "No builder templates found in Trash"
 msgstr ""
 
@@ -723,7 +724,7 @@ msgstr ""
 
 #: includes/Main.php:53
 #: src/app.js:33
-#: src/components/admin-components/theme-builder.jsx:469
+#: src/components/admin-components/theme-builder.jsx:474
 msgid "Theme Builder"
 msgstr ""
 
@@ -733,13 +734,19 @@ msgstr ""
 msgid "Custom Templates"
 msgstr ""
 
-#: includes/Main.php:75
+#: includes/Main.php:78
 #: src/app.js:45
 #: src/components/admin-components/export-import.jsx:219
 msgid "Export & Import"
 msgstr ""
 
-#: includes/Main.php:209
+#. translators: %s: name of the ShapeBlock admin page.
+#: includes/Main.php:193
+#, php-format
+msgid "ShapeBlock - %s"
+msgstr ""
+
+#: includes/Main.php:219
 #: includes/public/blocks/breadcrumb/src/edit.js:240
 #: includes/public/blocks/button/src/edit.js:331
 #: includes/public/blocks/clients-logo-grid/src/edit.js:289
@@ -832,7 +839,7 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:352
 #: includes/public/blocks/post-grid/src/edit.js:148
 #: src/components/admin-components/blocks.jsx:176
-#: src/components/admin-components/theme-builder.jsx:319
+#: src/components/admin-components/theme-builder.jsx:324
 msgid "All"
 msgstr ""
 
@@ -869,7 +876,7 @@ msgstr ""
 msgid "Read more"
 msgstr ""
 
-#: includes/public/blocks/icon-box/src/render.php:338
+#: includes/public/blocks/icon-box/src/render.php:335
 msgid "Learn more"
 msgstr ""
 
@@ -997,10 +1004,10 @@ msgstr ""
 msgid "Please add testimonials."
 msgstr ""
 
-#. translators: %s: star rating, for example 4.5.
+#. translators: %d: star rating, a whole number from 1 to 5.
 #: includes/public/blocks/testimonials-grid/src/render.php:293
 #, php-format
-msgid "Rating: %s out of 5"
+msgid "Rating: %d out of 5"
 msgstr ""
 
 #: includes/public/template-parts/post-grid/style-1.php:13
@@ -1020,7 +1027,7 @@ msgid "Mobile"
 msgstr ""
 
 #. translators: %s: Tablet or Mobile.
-#: includes/public/assets/js/responsive-spacing.js:242
+#: includes/public/assets/js/responsive-spacing.js:243
 #, js-format
 msgid "Editing %s padding / margin. Empty sides use the larger screen."
 msgstr ""
@@ -2854,8 +2861,8 @@ msgstr ""
 #: includes/public/blocks/progress/src/edit.js:159
 #: includes/public/blocks/sticky-stack/src/edit.js:228
 #: includes/public/blocks/sticky-stack/src/edit.js:447
-#: src/components/admin-components/templates.jsx:261
-#: src/components/admin-components/theme-builder.jsx:344
+#: src/components/admin-components/templates.jsx:263
+#: src/components/admin-components/theme-builder.jsx:349
 msgid "Title"
 msgstr ""
 
@@ -3193,8 +3200,8 @@ msgstr ""
 #: includes/public/blocks/faq/src/edit.js:37
 #: includes/public/blocks/filter-list/src/edit.js:54
 #: includes/public/blocks/isotope/src/edit.js:61
-#: src/components/admin-components/templates.jsx:435
-#: src/components/admin-components/theme-builder.jsx:481
+#: src/components/admin-components/templates.jsx:437
+#: src/components/admin-components/theme-builder.jsx:488
 msgid "Active"
 msgstr ""
 
@@ -3367,7 +3374,7 @@ msgstr ""
 #: includes/public/blocks/feature-list/src/edit.js:165
 #: includes/public/blocks/feature-list/src/edit.js:290
 #: includes/public/blocks/icon-box/src/edit.js:130
-#: src/components/admin-components/theme-builder.jsx:354
+#: src/components/admin-components/theme-builder.jsx:359
 msgid "Type"
 msgstr ""
 
@@ -3544,7 +3551,7 @@ msgid "Badge"
 msgstr ""
 
 #: includes/public/blocks/filter-list/src/edit.js:241
-msgid "A short label after the title, such as New or Upcoming. Leave empty for none."
+msgid "A short label after the title, such as New or Hot. Leave empty for none."
 msgstr ""
 
 #: includes/public/blocks/filter-list/src/edit.js:245
@@ -3824,7 +3831,7 @@ msgstr ""
 #: includes/public/blocks/gallery/src/edit.js:254
 #: includes/public/blocks/post-grid/src/edit.js:208
 #: includes/public/blocks/post-grid/src/edit.js:294
-#: src/components/admin-components/templates.jsx:311
+#: src/components/admin-components/templates.jsx:313
 msgid "Date"
 msgstr ""
 
@@ -4914,7 +4921,7 @@ msgid "Full Width"
 msgstr ""
 
 #: includes/public/blocks/layout-row/src/edit.js:312
-msgid "The whole row - its background too - gets the width below, centred. In the page it stays within the site’s wide width; set the row’s alignment to Full to go wider."
+msgid "The whole row - its background too - gets the width below, centered. In the page it stays within the site’s wide width; set the row’s alignment to Full to go wider."
 msgstr ""
 
 #: includes/public/blocks/layout-row/src/edit.js:314
@@ -5233,7 +5240,7 @@ msgid "Hold Ctrl (Cmd on Mac) to pick more than one."
 msgstr ""
 
 #: includes/public/blocks/post-grid/src/edit.js:293
-#: src/components/admin-components/templates.jsx:268
+#: src/components/admin-components/templates.jsx:270
 msgid "Author"
 msgstr ""
 
@@ -6683,14 +6690,6 @@ msgstr ""
 msgid "No blocks found."
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:281
-msgid "Need more blocks?"
-msgstr ""
-
-#: src/components/admin-components/blocks.jsx:283
-msgid "See ShapeBlock Pro"
-msgstr ""
-
 #: src/components/admin-components/builder-conditions-modal.jsx:17
 msgid "Specific"
 msgstr ""
@@ -6749,8 +6748,8 @@ msgid "Display Conditions — %s"
 msgstr ""
 
 #: src/components/admin-components/builder-conditions-modal.jsx:260
-#: src/components/admin-components/theme-builder.jsx:361
-#: src/components/admin-components/theme-builder.jsx:605
+#: src/components/admin-components/theme-builder.jsx:366
+#: src/components/admin-components/theme-builder.jsx:615
 msgid "Display Conditions"
 msgstr ""
 
@@ -6966,53 +6965,53 @@ msgstr ""
 msgid "Reset to Defaults"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:65
-#: src/components/admin-components/theme-builder.jsx:69
+#: src/components/admin-components/templates.jsx:67
+#: src/components/admin-components/theme-builder.jsx:74
 msgid "Failed to load templates"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:119
+#: src/components/admin-components/templates.jsx:121
 msgid "Template created. Opening editor…"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:131
+#: src/components/admin-components/templates.jsx:133
 msgid "Operation failed"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:135
-#: src/components/admin-components/theme-builder.jsx:144
+#: src/components/admin-components/templates.jsx:137
+#: src/components/admin-components/theme-builder.jsx:149
 msgid "Request failed"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:152
-#: src/components/admin-components/theme-builder.jsx:176
+#: src/components/admin-components/templates.jsx:154
+#: src/components/admin-components/theme-builder.jsx:181
 msgid "Template permanently deleted"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:152
-#: src/components/admin-components/theme-builder.jsx:158
+#: src/components/admin-components/templates.jsx:154
+#: src/components/admin-components/theme-builder.jsx:163
 msgid "Template moved to Trash"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:160
-#: src/components/admin-components/theme-builder.jsx:163
-#: src/components/admin-components/theme-builder.jsx:181
+#: src/components/admin-components/templates.jsx:162
+#: src/components/admin-components/theme-builder.jsx:168
+#: src/components/admin-components/theme-builder.jsx:186
 msgid "Delete failed"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:172
-#: src/components/admin-components/theme-builder.jsx:193
+#: src/components/admin-components/templates.jsx:174
+#: src/components/admin-components/theme-builder.jsx:198
 msgid "Template restored"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:178
-#: src/components/admin-components/theme-builder.jsx:198
+#: src/components/admin-components/templates.jsx:180
+#: src/components/admin-components/theme-builder.jsx:203
 msgid "Restore failed"
 msgstr ""
 
 #. translators: %d: number of templates.
-#: src/components/admin-components/templates.jsx:199
-#: src/components/admin-components/theme-builder.jsx:227
+#: src/components/admin-components/templates.jsx:201
+#: src/components/admin-components/theme-builder.jsx:232
 #, js-format
 msgid "%d template moved to Trash"
 msgid_plural "%d templates moved to Trash"
@@ -7020,8 +7019,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of templates.
-#: src/components/admin-components/templates.jsx:205
-#: src/components/admin-components/theme-builder.jsx:297
+#: src/components/admin-components/templates.jsx:207
+#: src/components/admin-components/theme-builder.jsx:302
 #, js-format
 msgid "%d template restored"
 msgid_plural "%d templates restored"
@@ -7029,8 +7028,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of templates.
-#: src/components/admin-components/templates.jsx:211
-#: src/components/admin-components/theme-builder.jsx:267
+#: src/components/admin-components/templates.jsx:213
+#: src/components/admin-components/theme-builder.jsx:272
 #, js-format
 msgid "%d template permanently deleted"
 msgid_plural "%d templates permanently deleted"
@@ -7038,262 +7037,262 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of templates.
-#: src/components/admin-components/templates.jsx:217
+#: src/components/admin-components/templates.jsx:219
 #, js-format
 msgid "%d template updated"
 msgid_plural "%d templates updated"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/components/admin-components/templates.jsx:230
+#: src/components/admin-components/templates.jsx:232
 msgid "Bulk action failed"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:236
-#: src/components/admin-components/theme-builder.jsx:203
-#: src/components/admin-components/theme-builder.jsx:243
-#: src/components/admin-components/theme-builder.jsx:283
+#: src/components/admin-components/templates.jsx:238
+#: src/components/admin-components/theme-builder.jsx:208
+#: src/components/admin-components/theme-builder.jsx:248
+#: src/components/admin-components/theme-builder.jsx:288
 msgid "No templates selected"
 msgstr ""
 
 #. translators: %d: number of templates.
-#: src/components/admin-components/templates.jsx:248
-#: src/components/admin-components/theme-builder.jsx:249
+#: src/components/admin-components/templates.jsx:250
+#: src/components/admin-components/theme-builder.jsx:254
 #, js-format
 msgid "Permanently delete %d template?"
 msgid_plural "Permanently delete %d templates?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/components/admin-components/templates.jsx:251
-#: src/components/admin-components/theme-builder.jsx:252
+#: src/components/admin-components/templates.jsx:253
+#: src/components/admin-components/theme-builder.jsx:257
 msgid "This action cannot be undone."
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:252
-#: src/components/admin-components/templates.jsx:394
-#: src/components/admin-components/theme-builder.jsx:253
-#: src/components/admin-components/theme-builder.jsx:508
+#: src/components/admin-components/templates.jsx:254
+#: src/components/admin-components/templates.jsx:396
+#: src/components/admin-components/theme-builder.jsx:258
+#: src/components/admin-components/theme-builder.jsx:517
 msgid "Delete Permanently"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:276
+#: src/components/admin-components/templates.jsx:278
 msgid "Shortcode"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:292
-#: src/components/admin-components/theme-builder.jsx:370
+#: src/components/admin-components/templates.jsx:294
 #: src/components/admin-components/theme-builder.jsx:375
-#: src/components/admin-components/theme-builder.jsx:444
-#: src/components/admin-components/theme-builder.jsx:445
+#: src/components/admin-components/theme-builder.jsx:380
+#: src/components/admin-components/theme-builder.jsx:449
+#: src/components/admin-components/theme-builder.jsx:450
 msgid "Copy shortcode"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:302
-#: src/components/admin-components/theme-builder.jsx:334
+#: src/components/admin-components/templates.jsx:304
+#: src/components/admin-components/theme-builder.jsx:339
 msgid "Shortcode copied"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:324
-#: src/components/admin-components/templates.jsx:355
-#: src/components/admin-components/theme-builder.jsx:410
+#: src/components/admin-components/templates.jsx:326
+#: src/components/admin-components/templates.jsx:357
+#: src/components/admin-components/theme-builder.jsx:415
 msgid "Actions"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:335
-#: src/components/admin-components/theme-builder.jsx:441
+#: src/components/admin-components/templates.jsx:337
+#: src/components/admin-components/theme-builder.jsx:446
 msgid "Edit"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:338
-#: src/components/admin-components/theme-builder.jsx:453
+#: src/components/admin-components/templates.jsx:340
+#: src/components/admin-components/theme-builder.jsx:458
 msgid "Move this template to Trash?"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:340
-#: src/components/admin-components/theme-builder.jsx:419
-#: src/components/admin-components/theme-builder.jsx:455
+#: src/components/admin-components/templates.jsx:342
+#: src/components/admin-components/theme-builder.jsx:424
+#: src/components/admin-components/theme-builder.jsx:460
 msgid "Yes"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:341
-#: src/components/admin-components/templates.jsx:372
-#: src/components/admin-components/theme-builder.jsx:420
-#: src/components/admin-components/theme-builder.jsx:456
+#: src/components/admin-components/templates.jsx:343
+#: src/components/admin-components/templates.jsx:374
+#: src/components/admin-components/theme-builder.jsx:425
+#: src/components/admin-components/theme-builder.jsx:461
 msgid "No"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:347
-#: src/components/admin-components/templates.jsx:398
-#: src/components/admin-components/theme-builder.jsx:213
-#: src/components/admin-components/theme-builder.jsx:458
+#: src/components/admin-components/templates.jsx:349
+#: src/components/admin-components/templates.jsx:400
+#: src/components/admin-components/theme-builder.jsx:218
+#: src/components/admin-components/theme-builder.jsx:463
 msgid "Move to Trash"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:365
-#: src/components/admin-components/templates.jsx:393
-#: src/components/admin-components/theme-builder.jsx:423
+#: src/components/admin-components/templates.jsx:367
+#: src/components/admin-components/templates.jsx:395
+#: src/components/admin-components/theme-builder.jsx:428
 msgid "Restore"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:368
+#: src/components/admin-components/templates.jsx:370
 msgid "Permanently delete this template? This cannot be undone."
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:370
-#: src/components/admin-components/templates.jsx:379
-#: src/components/admin-components/theme-builder.jsx:429
+#: src/components/admin-components/templates.jsx:372
+#: src/components/admin-components/templates.jsx:381
 #: src/components/admin-components/theme-builder.jsx:434
+#: src/components/admin-components/theme-builder.jsx:439
 msgid "Delete"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:392
-#: src/components/admin-components/templates.jsx:397
+#: src/components/admin-components/templates.jsx:394
+#: src/components/admin-components/templates.jsx:399
 msgid "Bulk Actions"
 msgstr ""
 
 #. translators: %d: number of trashed templates.
-#: src/components/admin-components/templates.jsx:441
-#: src/components/admin-components/theme-builder.jsx:486
+#: src/components/admin-components/templates.jsx:443
+#: src/components/admin-components/theme-builder.jsx:493
 #, js-format
 msgid "Trash (%d)"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:444
-#: src/components/admin-components/theme-builder.jsx:489
+#: src/components/admin-components/templates.jsx:446
+#: src/components/admin-components/theme-builder.jsx:496
 msgid "Trash"
 msgstr ""
 
 #. translators: %d: number of selected templates.
-#: src/components/admin-components/templates.jsx:469
-#: src/components/admin-components/theme-builder.jsx:520
+#: src/components/admin-components/templates.jsx:471
+#: src/components/admin-components/theme-builder.jsx:529
 #, js-format
 msgid "%d selected"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:477
-#: src/components/admin-components/theme-builder.jsx:528
+#: src/components/admin-components/templates.jsx:479
+#: src/components/admin-components/theme-builder.jsx:537
 msgid "Search templates..."
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:497
-#: src/components/admin-components/theme-builder.jsx:542
+#: src/components/admin-components/templates.jsx:499
+#: src/components/admin-components/theme-builder.jsx:551
 msgid "Reload"
 msgstr ""
 
 #. translators: 1: first item number on the page, 2: last item number on the page, 3: total number of items.
-#: src/components/admin-components/templates.jsx:520
-#: src/components/admin-components/theme-builder.jsx:560
+#: src/components/admin-components/templates.jsx:522
+#: src/components/admin-components/theme-builder.jsx:569
 #, js-format
 msgid "%1$d-%2$d of %3$d items"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:540
+#: src/components/admin-components/templates.jsx:542
 msgid "Create"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:545
-#: src/components/admin-components/theme-builder.jsx:583
+#: src/components/admin-components/templates.jsx:547
+#: src/components/admin-components/theme-builder.jsx:592
 msgid "Template Name"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:546
+#: src/components/admin-components/templates.jsx:548
 msgid "Please enter a template name"
 msgstr ""
 
-#: src/components/admin-components/templates.jsx:548
+#: src/components/admin-components/templates.jsx:550
 msgid "Enter template name"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:131
+#: src/components/admin-components/theme-builder.jsx:136
 msgid "Template created"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:141
+#: src/components/admin-components/theme-builder.jsx:146
 msgid "Create failed"
 msgstr ""
 
 #. translators: %d: number of templates.
-#: src/components/admin-components/theme-builder.jsx:209
+#: src/components/admin-components/theme-builder.jsx:214
 #, js-format
 msgid "Move %d template to Trash?"
 msgid_plural "Move %d templates to Trash?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/components/admin-components/theme-builder.jsx:212
+#: src/components/admin-components/theme-builder.jsx:217
 msgid "You can restore them from the Trash later."
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:236
-#: src/components/admin-components/theme-builder.jsx:276
+#: src/components/admin-components/theme-builder.jsx:241
+#: src/components/admin-components/theme-builder.jsx:281
 msgid "Bulk delete failed"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:306
+#: src/components/admin-components/theme-builder.jsx:311
 msgid "Bulk restore failed"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:385
 #: src/components/admin-components/theme-builder.jsx:390
-#: src/components/admin-components/theme-builder.jsx:448
-#: src/components/admin-components/theme-builder.jsx:449
+#: src/components/admin-components/theme-builder.jsx:395
+#: src/components/admin-components/theme-builder.jsx:453
+#: src/components/admin-components/theme-builder.jsx:454
 msgid "Edit conditions"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:400
+#: src/components/admin-components/theme-builder.jsx:405
 msgid "Modified"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:417
+#: src/components/admin-components/theme-builder.jsx:422
 msgid "Restore this template?"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:427
+#: src/components/admin-components/theme-builder.jsx:432
 msgid "Delete permanently? This cannot be undone."
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:431
+#: src/components/admin-components/theme-builder.jsx:436
 msgid "Cancel"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:474
+#: src/components/admin-components/theme-builder.jsx:480
 msgid "Build templates for your site and control exactly where they appear."
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:505
+#: src/components/admin-components/theme-builder.jsx:514
 msgid "Restore Selected"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:513
+#: src/components/admin-components/theme-builder.jsx:522
 msgid "Delete Selected"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:577
+#: src/components/admin-components/theme-builder.jsx:586
 msgid "Create & Edit"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:584
+#: src/components/admin-components/theme-builder.jsx:593
 msgid "Please enter a name"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:586
+#: src/components/admin-components/theme-builder.jsx:595
 msgid "e.g. Main Header"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:590
+#: src/components/admin-components/theme-builder.jsx:600
 msgid "Template Type"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:591
+#: src/components/admin-components/theme-builder.jsx:601
 msgid "Please choose a type"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:594
+#: src/components/admin-components/theme-builder.jsx:604
 msgid "Select type"
 msgstr ""
 
-#: src/components/admin-components/theme-builder.jsx:606
+#: src/components/admin-components/theme-builder.jsx:616
 msgid "Where this template appears. You can change it later too."
 msgstr ""
 

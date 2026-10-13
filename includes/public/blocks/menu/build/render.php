@@ -524,7 +524,7 @@ if ( ! $menu_wrap ) {
 // "mobile" applies it below the breakpoint; "always" applies it on every screen.
 if ( $mobile_on ) {
 	$off    = ( 'left' === $drawer_side ) ? '-100%' : '100%';
-	$w_css  = esc_attr( $drawer_width ) . 'px';
+	$w_css  = (int) $drawer_width . 'px';
 	$bg_css = shapeblock_menu_paint( $drawer_bg );
 	$side   = $drawer_side; // 'left' or 'right', both safe literals.
 

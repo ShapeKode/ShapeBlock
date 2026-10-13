@@ -41,7 +41,7 @@
     align-items: center;
     gap: 18px;
 
-    .bldpost-meta {
+    .shapeblock-post-meta-item {
         display: flex;
         align-items: center;
 
@@ -71,7 +71,7 @@
 
 .shapeblock-post-metas {
     &.shapeblock-post-metas-style-1 {
-        .bldpost-meta {
+        .shapeblock-post-meta-item {
             position: relative;
 
             &:not(:first-child) {
@@ -99,7 +99,7 @@
 
     &.shapeblock-post-metas-style-2,
     &.shapeblock-post-metas-style-3 {
-        .bldpost-meta {
+        .shapeblock-post-meta-item {
             img {
                 width: 24px;
                 margin-right: 10px;
@@ -117,7 +117,7 @@
     }
 
     &.shapeblock-post-metas-style-3 {
-        .bldpost-meta {
+        .shapeblock-post-meta-item {
             position: relative;
 
             &:not(:first-child) {
