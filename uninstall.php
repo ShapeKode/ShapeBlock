@@ -32,6 +32,13 @@ function shapeblock_uninstall_cleanup_site() {
 	delete_option( 'shapeblock_menu_last_items' );
 	delete_transient( 'shapeblock_menu_google_fonts' );
 
+	// Appsero usage data: the choice in its notice and its weekly send.
+	delete_option( 'shapeblock_allow_tracking' );
+	delete_option( 'shapeblock_tracking_notice' );
+	delete_option( 'shapeblock_tracking_last_send' );
+	delete_option( 'shapeblock_tracking_skipped' );
+	wp_clear_scheduled_hook( 'shapeblock_tracker_send_event' );
+
 	/*
 	 * One `shapeblock_block_<id>` option per block (~30 today). There is no
 	 * options API call that deletes by pattern, but the names can be found

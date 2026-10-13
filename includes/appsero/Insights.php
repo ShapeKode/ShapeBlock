@@ -144,6 +144,7 @@ class Insights {
     public function init_plugin() {
         add_filter( 'plugin_action_links_' . $this->client->basename, array( $this, 'plugin_action_links' ) );
         add_action( 'admin_footer', array( $this, 'deactivate_scripts' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'deactivate_assets' ) );
 
         $this->init_common();
 
@@ -159,6 +160,7 @@ class Insights {
     protected function init_common() {
         if ( $this->show_notice ) {
             add_action( 'admin_notices', array( $this, 'admin_notice' ) );
+            add_action( 'admin_enqueue_scripts', array( $this, 'notice_assets' ) );
         }
 
         add_action( 'admin_init', array( $this, 'handle_optin_optout' ) );
@@ -269,15 +271,6 @@ class Insights {
 
         if ( $extra ) {
             $data['extra'] = $extra;
-        }
-
-        // Check if tracking was previously skipped.
-        $skipped = get_option( $this->client->slug . '_tracking_skipped' );
-
-        if ( 'yes' === $skipped ) {
-            delete_option( $this->client->slug . '_tracking_skipped' );
-
-            $data['tracking_skipped'] = true;
         }
 
         return apply_filters( $this->client->slug . '_tracker_data', $data );
@@ -401,6 +394,59 @@ class Insights {
     }
 
     /**
+     * Whether the opt-in notice shows on this screen.
+     *
+     * @return bool
+     */
+    private function notice_visible() {
+        return ! $this->notice_dismissed() && ! $this->tracking_allowed() && current_user_can( 'manage_options' );
+    }
+
+    /**
+     * The opt-in notice's "what we collect" toggle, added to jQuery through
+     * the enqueue system. A delegated handler, as the notice is printed later.
+     *
+     * @return void
+     */
+    public function notice_assets() {
+        if ( ! $this->notice_visible() ) {
+            return;
+        }
+
+        wp_enqueue_script( 'jquery' );
+        wp_add_inline_script(
+            'jquery',
+            'jQuery(document).on("click", ' . wp_json_encode( '.' . $this->client->slug . '-insights-data-we-collect' ) . ', function (e) { e.preventDefault(); jQuery(this).parents(".updated").find("p.description").slideToggle("fast"); });'
+        );
+    }
+
+    /**
+     * Styles and script of the deactivation dialog on the Plugins screen,
+     * added through the enqueue system.
+     *
+     * @param string $hook_suffix Admin page.
+     * @return void
+     */
+    public function deactivate_assets( $hook_suffix ) {
+        if ( 'plugins.php' !== $hook_suffix ) {
+            return;
+        }
+
+        wp_register_style( $this->client->slug . '-deactivate', false, array(), $this->client->version );
+        wp_enqueue_style( $this->client->slug . '-deactivate' );
+        wp_add_inline_style( $this->client->slug . '-deactivate', $this->deactivation_modal_css() );
+
+        $config = array(
+            'slug'       => $this->client->slug,
+            'nonce'      => wp_create_nonce( 'appsero-security-nonce' ),
+            'processing' => $this->client->__trans( 'Processing...' ),
+        );
+
+        wp_enqueue_script( 'jquery' );
+        wp_add_inline_script( 'jquery', 'window.shapeblockAppseroDeactivate = ' . wp_json_encode( $config ) . ';' . $this->deactivation_modal_js() );
+    }
+
+    /**
      * Display the admin notice to users that have not opted-in or out
      *
      * @return void
@@ -443,11 +489,6 @@ class Insights {
         echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary button-large">' . esc_html( $this->client->__trans( 'No thanks' ) ) . '</a>';
         echo '</p></div>';
 
-        echo "<script type='text/javascript'>jQuery('." . esc_js( $this->client->slug ) . "-insights-data-we-collect').on('click', function(e) {
-                e.preventDefault();
-                jQuery(this).parents('.updated').find('p.description').slideToggle('fast');
-            });
-            </script>";
     }
 
     /**
@@ -571,8 +612,6 @@ class Insights {
         update_option( $this->client->slug . '_allow_tracking', 'no' );
         update_option( $this->client->slug . '_tracking_notice', 'hide' );
 
-        $this->send_tracking_skipped_request();
-
         $this->clear_schedule_event();
 
         do_action( $this->client->slug . '_tracker_optout' );
@@ -585,15 +624,9 @@ class Insights {
      * @return int
      */
     public function get_post_count( $post_type ) {
-        global $wpdb;
+        $counts = wp_count_posts( $post_type );
 
-        return (int) $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT count(ID) FROM $wpdb->posts WHERE post_type = %s and post_status = %s",
-                $post_type,
-                'publish'
-            )
-        );
+        return isset( $counts->publish ) ? (int) $counts->publish : 0;
     }
 
     /**
@@ -722,7 +755,7 @@ class Insights {
     public function add_weekly_schedule( $schedules ) {
         $schedules['weekly'] = array(
             'interval' => DAY_IN_SECONDS * 7,
-            'display'  => __( 'Once Weekly', 'appsero' ),
+            'display'  => __( 'Once Weekly', 'shapeblock' ),
         );
 
         return $schedules;
@@ -858,7 +891,8 @@ class Insights {
             wp_send_json_error( 'You are not allowed for this task' );
         }
 
-        $data                = $this->get_tracking_data();
+        // The site's details go along only if its owner allowed tracking.
+        $data                = $this->tracking_allowed() ? $this->get_tracking_data() : array( 'hash' => $this->client->hash );
         $data['reason_id']   = sanitize_text_field( wp_unslash( $_POST['reason_id'] ) );
         $data['reason_info'] = isset( $_REQUEST['reason_info'] ) ? trim( sanitize_text_field( wp_unslash( $_REQUEST['reason_info'] ) ) ) : '';
 
@@ -884,15 +918,14 @@ class Insights {
             return;
         }
 
-        $this->deactivation_modal_styles();
         $reasons        = $this->get_uninstall_reasons();
         $custom_reasons = apply_filters( 'appsero_custom_deactivation_reasons', [], $this->client );
         ?>
 
-        <div class="wd-dr-modal" id="<?php echo $this->client->slug; ?>-wd-dr-modal">
+        <div class="wd-dr-modal" id="<?php echo esc_attr( $this->client->slug ); ?>-wd-dr-modal">
             <div class="wd-dr-modal-wrap">
                 <div class="wd-dr-modal-header">
-                    <h3> <?php $this->client->_etrans( 'Goodbyes are always hard. If you have a moment, please let us know how we can improve.' ); ?> </h3>
+                    <h3> <?php echo esc_html( $this->client->__trans( 'Goodbyes are always hard. If you have a moment, please let us know how we can improve.' ) ); ?> </h3>
                 </div>
 
                 <div class="wd-dr-modal-body">
@@ -900,9 +933,9 @@ class Insights {
                         <?php foreach ( $reasons as $reason ) { ?>
                             <li data-placeholder="<?php echo esc_attr( $reason['placeholder'] ); ?>">
                                 <label>
-                                    <input type="radio" name="selected-reason" value="<?php echo $reason['id']; ?>">
-                                    <div class="wd-de-reason-icon"><?php echo $reason['icon']; ?></div>
-                                    <div class="wd-de-reason-text"><?php echo $reason['text']; ?></div>
+                                    <input type="radio" name="selected-reason" value="<?php echo esc_attr( $reason['id'] ); ?>">
+                                    <div class="wd-de-reason-icon"><?php echo wp_kses( $reason['icon'], $this->icon_allowed_html() ); ?></div>
+                                    <div class="wd-de-reason-text"><?php echo esc_html( $reason['text'] ); ?></div>
                                 </label>
                             </li>
                         <?php } ?>
@@ -912,9 +945,9 @@ class Insights {
                             <?php foreach ( $custom_reasons as $reason ) { ?>
                                 <li data-placeholder="<?php echo esc_attr( $reason['placeholder'] ); ?>" data-customreason="true">
                                     <label>
-                                        <input type="radio" name="selected-reason" value="<?php echo $reason['id']; ?>">
-                                        <div class="wd-de-reason-icon"><?php echo $reason['icon']; ?></div>
-                                        <div class="wd-de-reason-text"><?php echo $reason['text']; ?></div>
+                                        <input type="radio" name="selected-reason" value="<?php echo esc_attr( $reason['id'] ); ?>">
+                                        <div class="wd-de-reason-icon"><?php echo wp_kses( $reason['icon'], $this->icon_allowed_html() ); ?></div>
+                                        <div class="wd-de-reason-text"><?php echo esc_html( $reason['text'] ); ?></div>
                                     </label>
                                 </li>
                             <?php } ?>
@@ -923,105 +956,23 @@ class Insights {
                     <div class="wd-dr-modal-reason-input"><textarea></textarea></div>
                     <p class="wd-dr-modal-reasons-bottom">
                         <?php
-                        echo sprintf(
+                        echo wp_kses_post( sprintf(
                             $this->client->__trans( 'We share your data with <a href="%1$s" target="_blank">Appsero</a> to troubleshoot problems &amp; make product improvements. <a href="%2$s" target="_blank">Learn more</a> &#8599;' ),
                             esc_url( 'https://appsero.com/' ),
                             esc_url( 'https://appsero.com/privacy-policy' )
-                        );
+                        ) );
                         ?>
                     </p>
                 </div>
 
                 <div class="wd-dr-modal-footer">
-                    <a href="#" class="dont-bother-me wd-dr-button-secondary"><?php $this->client->_etrans( 'Skip & Deactivate' ); ?></a>
-                    <button class="wd-dr-button-secondary wd-dr-cancel-modal"><?php $this->client->_etrans( 'Cancel' ); ?></button>
-                    <button class="wd-dr-submit-modal"><?php $this->client->_etrans( 'Submit & Deactivate' ); ?></button>
+                    <a href="#" class="dont-bother-me wd-dr-button-secondary"><?php echo esc_html( $this->client->__trans( 'Skip & Deactivate' ) ); ?></a>
+                    <button class="wd-dr-button-secondary wd-dr-cancel-modal"><?php echo esc_html( $this->client->__trans( 'Cancel' ) ); ?></button>
+                    <button class="wd-dr-submit-modal"><?php echo esc_html( $this->client->__trans( 'Submit & Deactivate' ) ); ?></button>
                 </div>
             </div>
         </div>
 
-        <script type="text/javascript">
-            (function($) {
-                $(function() {
-                    var modal = $('#<?php echo $this->client->slug; ?>-wd-dr-modal');
-                    var deactivateLink = '';
-
-                    // Open modal
-                    $('#the-list').on('click', 'a.<?php echo $this->client->slug; ?>-deactivate-link', function(e) {
-                        e.preventDefault();
-
-                        modal.addClass('modal-active');
-                        deactivateLink = $(this).attr('href');
-                        modal.find('a.dont-bother-me').attr('href', deactivateLink).css('float', 'left');
-                    });
-
-                    // Close modal; Cancel
-                    modal.on('click', 'button.wd-dr-cancel-modal', function(e) {
-                        e.preventDefault();
-                        modal.removeClass('modal-active');
-                    });
-
-                    // Reason change
-                    modal.on('click', 'input[type="radio"]', function() {
-                        var parent = $(this).parents('li');
-                        var isCustomReason = parent.data('customreason');
-                        var inputValue = $(this).val();
-
-                        if (isCustomReason) {
-                            $('ul.wd-de-reasons.wd-de-others-reasons li').removeClass('wd-de-reason-selected');
-                        } else {
-                            $('ul.wd-de-reasons li').removeClass('wd-de-reason-selected');
-
-                            if ( "other" !== inputValue ) {
-                                $('ul.wd-de-reasons.wd-de-others-reasons').css('display', 'none');
-                            }
-                        }
-
-                        // Show if has custom reasons
-                        if ( "other" === inputValue ) {
-                            $('ul.wd-de-reasons.wd-de-others-reasons').css('display', 'flex');
-                        }
-
-                        parent.addClass('wd-de-reason-selected');
-                        $('.wd-dr-modal-reason-input').show();
-
-                        $('.wd-dr-modal-reason-input textarea').attr('placeholder', parent.data('placeholder')).focus();
-                    });
-
-                    // Submit response
-                    modal.on('click', 'button.wd-dr-submit-modal', function(e) {
-                        e.preventDefault();
-
-                        var button = $(this);
-
-                        if (button.hasClass('disabled')) {
-                            return;
-                        }
-
-                        var $radio = $('input[type="radio"]:checked', modal);
-                        var $input = $('.wd-dr-modal-reason-input textarea');
-
-                        $.ajax({
-                            url: ajaxurl,
-                            type: 'POST',
-                            data: {
-                                nonce: '<?php echo wp_create_nonce( 'appsero-security-nonce' ); ?>',
-                                action: '<?php echo $this->client->slug; ?>_submit-uninstall-reason',
-                                reason_id: (0 === $radio.length) ? 'none' : $radio.val(),
-                                reason_info: (0 !== $input.length) ? $input.val().trim() : ''
-                            },
-                            beforeSend: function() {
-                                button.addClass('disabled');
-                                button.text('Processing...');
-                            },
-                            complete: function() {
-                                window.location.href = deactivateLink;
-                            }
-                        });
-                    });
-                });
-            }(jQuery));
-        </script>
 
 		<?php
     }
@@ -1080,31 +1031,122 @@ class Insights {
     }
 
     /**
-     * Send request to appsero if user skip to send tracking data
+     * Allowed markup for a deactivation reason's icon (inline SVG).
+     *
+     * @return array
      */
-    private function send_tracking_skipped_request() {
-        $skipped = get_option( $this->client->slug . '_tracking_skipped' );
-
-        $data = [
-            'hash'               => $this->client->hash,
-            'previously_skipped' => false,
-        ];
-
-        if ( $skipped === 'yes' ) {
-            $data['previously_skipped'] = true;
-        } else {
-            update_option( $this->client->slug . '_tracking_skipped', 'yes' );
-        }
-
-        $this->client->send_request( $data, 'tracking-skipped' );
+    private function icon_allowed_html() {
+        return array(
+            'svg'      => array( 'xmlns' => true, 'width' => true, 'height' => true, 'viewbox' => true, 'fill' => true, 'class' => true ),
+            'g'        => array( 'fill' => true, 'fill-rule' => true, 'clip-path' => true, 'transform' => true ),
+            'path'     => array( 'd' => true, 'fill' => true, 'fill-rule' => true, 'clip-rule' => true, 'stroke' => true, 'stroke-width' => true, 'opacity' => true ),
+            'rect'     => array( 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true, 'fill' => true, 'transform' => true ),
+            'circle'   => array( 'cx' => true, 'cy' => true, 'r' => true, 'fill' => true, 'stroke' => true ),
+            'defs'     => array(),
+            'clippath' => array( 'id' => true ),
+        );
     }
 
     /**
-     * Deactivation modal styles
+     * The deactivation dialog's script.
+     *
+     * @return string
      */
-    private function deactivation_modal_styles() {
+    private function deactivation_modal_js() {
+        ob_start();
         ?>
-        <style type="text/css">
+            (function($, cfg) {
+                $(function() {
+                    var modal = $('#' + cfg.slug + '-wd-dr-modal');
+                    var deactivateLink = '';
+
+                    // Open modal
+                    $('#the-list').on('click', 'a.' + cfg.slug + '-deactivate-link', function(e) {
+                        e.preventDefault();
+
+                        modal.addClass('modal-active');
+                        deactivateLink = $(this).attr('href');
+                        modal.find('a.dont-bother-me').attr('href', deactivateLink).css('float', 'left');
+                    });
+
+                    // Close modal; Cancel
+                    modal.on('click', 'button.wd-dr-cancel-modal', function(e) {
+                        e.preventDefault();
+                        modal.removeClass('modal-active');
+                    });
+
+                    // Reason change
+                    modal.on('click', 'input[type="radio"]', function() {
+                        var parent = $(this).parents('li');
+                        var isCustomReason = parent.data('customreason');
+                        var inputValue = $(this).val();
+
+                        if (isCustomReason) {
+                            $('ul.wd-de-reasons.wd-de-others-reasons li').removeClass('wd-de-reason-selected');
+                        } else {
+                            $('ul.wd-de-reasons li').removeClass('wd-de-reason-selected');
+
+                            if ( "other" !== inputValue ) {
+                                $('ul.wd-de-reasons.wd-de-others-reasons').css('display', 'none');
+                            }
+                        }
+
+                        // Show if has custom reasons
+                        if ( "other" === inputValue ) {
+                            $('ul.wd-de-reasons.wd-de-others-reasons').css('display', 'flex');
+                        }
+
+                        parent.addClass('wd-de-reason-selected');
+                        $('.wd-dr-modal-reason-input').show();
+
+                        $('.wd-dr-modal-reason-input textarea').attr('placeholder', parent.data('placeholder')).focus();
+                    });
+
+                    // Submit response
+                    modal.on('click', 'button.wd-dr-submit-modal', function(e) {
+                        e.preventDefault();
+
+                        var button = $(this);
+
+                        if (button.hasClass('disabled')) {
+                            return;
+                        }
+
+                        var $radio = $('input[type="radio"]:checked', modal);
+                        var $input = $('.wd-dr-modal-reason-input textarea');
+
+                        $.ajax({
+                            url: ajaxurl,
+                            type: 'POST',
+                            data: {
+                                nonce: cfg.nonce,
+                                action: cfg.slug + '_submit-uninstall-reason',
+                                reason_id: (0 === $radio.length) ? 'none' : $radio.val(),
+                                reason_info: (0 !== $input.length) ? $input.val().trim() : ''
+                            },
+                            beforeSend: function() {
+                                button.addClass('disabled');
+                                button.text(cfg.processing);
+                            },
+                            complete: function() {
+                                window.location.href = deactivateLink;
+                            }
+                        });
+                    });
+                });
+            }(jQuery, window.shapeblockAppseroDeactivate));
+<?php
+        return (string) ob_get_clean();
+    }
+
+    /**
+     * The deactivation dialog's styles.
+     *
+     * @return string
+     */
+    private function deactivation_modal_css() {
+        ob_start();
+        ?>
             .wd-dr-modal {
                 position: fixed;
                 z-index: 99999;
@@ -1285,7 +1327,7 @@ class Insights {
                 cursor: pointer;
                 margin-left: 4px;
             }
-        </style>
         <?php
+        return (string) ob_get_clean();
     }
 }

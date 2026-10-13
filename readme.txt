@@ -1,4 +1,4 @@
-=== ShapeBlock ===
+=== ShapeBlock - Powerful Gutenberg Blocks to Build Better Websites Faster ===
 Contributors: shapekode22
 Tags: gutenberg blocks, header footer builder, block editor, gutenberg, wordpress blocks
 Requires at least: 6.6
@@ -137,6 +137,17 @@ With it switched on:
 
 Google Fonts is provided by Google LLC. Terms of service: https://policies.google.com/terms - Privacy policy: https://policies.google.com/privacy
 
+= Appsero (usage data, only if you allow it) =
+
+After activation, an admin notice asks whether you want to share usage data to help improve ShapeBlock. Nothing is sent unless you click **Allow**; **No thanks** sends nothing.
+
+With it allowed, your server sends this to Appsero right away and then once a week: the site URL and name, the admin email and name, the WordPress, PHP and MySQL versions, the server software, the site language, the number of users, posts and pages, the active theme and plugins, ShapeBlock's version and the server IP address. The IP address is looked up through `https://icanhazip.com`. Deactivating the plugin stops it.
+
+When you deactivate ShapeBlock, a dialog asks why. Only **Submit & Deactivate** sends the reason you picked to Appsero (with the site details above only if you had allowed sharing); **Skip & Deactivate** sends nothing.
+
+Appsero (https://appsero.com) - Privacy policy: https://appsero.com/privacy-policy/
+icanhazip - About and privacy: https://major.io/icanhazip-com-faq/
+
 = Gravatar (Post Grid author picture) =
 
 When a Post Grid uses meta style 2 or 3 with the author shown, it shows the author's profile picture from Gravatar. The visitor's browser loads that picture from Gravatar, which receives the visitor's IP address, user agent and the referring page, and a hash of the author's email address (WordPress' own avatars work the same way). With other meta styles, or the author hidden, nothing is loaded.
@@ -170,7 +181,8 @@ The icon fonts were made with Fontello (https://fontello.com). Our own icons are
 
 
 
-## Privacy Policy 
+==  Privacy Policy == 
+
 ShapeBlock uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
 
 Appsero SDK **does not gather any data by default.** The SDK only starts gathering basic telemetry data **when a user allows it via the admin notice**. We collect the data to ensure a great user experience for all our users. 

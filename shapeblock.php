@@ -36,10 +36,10 @@ require_once SHAPEBLOCK_PL_PATH . 'includes/autoload.php';
  *
  * @return void
  */
-function appsero_init_tracker_shapeblock() {
+function shapeblock_init_tracker() {
 
     if ( ! class_exists( 'Appsero\Client' ) ) {
-      require_once __DIR__ . '/includes/appsero/src/Client.php';
+      require_once __DIR__ . '/includes/appsero/Client.php';
     }
 
     $client = new Appsero\Client( 'c52fd8d8-8c72-45cc-9dd0-7b8f70a5ae01', 'ShapeBlock', __FILE__ );
@@ -49,6 +49,6 @@ function appsero_init_tracker_shapeblock() {
 
 }
 
-appsero_init_tracker_shapeblock();
+shapeblock_init_tracker();
 
 \ShapeBlock\Main::instance();
