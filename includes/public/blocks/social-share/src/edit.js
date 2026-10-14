@@ -11,6 +11,8 @@ import {
 	Button,
 	TabPanel,
 	__experimentalDivider as Divider,
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
@@ -39,6 +41,11 @@ const ICON_TRASH = SVG('M9 3v1H4v2h16V4h-5V3H9zM6 7l1 13h10l1-13H6zm4 2h1v9h-1V9
 const ICON_ADD = SVG('M11 5v6H5v2h6v6h2v-6h6v-2h-6V5z');
 const ICON_COPY = SVG('M5 4h10v2H7v10H5V4zM9 8h10v12H9V8zm2 2v8h6v-8h-6z');
 
+const STATE_TABS = [
+	{ name: 'normal', title: __('Normal', 'shapeblock') },
+	{ name: 'hover', title: __('Hover', 'shapeblock') },
+];
+
 const PLATFORM_OPTIONS = [
 	{ label: 'Facebook', value: 'facebook' },
 	{ label: 'Twitter/X', value: 'twitter' },
@@ -58,7 +65,8 @@ const PLATFORM_OPTIONS = [
 ];
 
 export default function Edit({ attributes, setAttributes, clientId }) {
-	const { blockId, platforms, layout, openNewTab } = attributes;
+	const { blockId, platforms, layout, openNewTab, buttonStyle } = attributes;
+	const showLabel = buttonStyle === 'icon-text' || buttonStyle === 'text';
 
 	useEffect(() => {
 		if (!blockId) {
@@ -118,7 +126,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						__next40pxDefaultSize
 						__nextHasNoMarginBottom
 					/>
-					<IconPicker label={__('Custom Icon (optional)', 'shapeblock')} value={item.customIcon || ''} onChange={(v) => update(index, 'customIcon', v)} />
+					{showLabel && (
+						<TextControl
+							label={__('Text', 'shapeblock')}
+							value={item.label || ''}
+							placeholder={item.platform === 'twitter' ? 'X' : (PLATFORM_OPTIONS.find((o) => o.value === (item.platform || 'facebook')) || {}).label}
+							onChange={(v) => update(index, 'label', v)}
+							__next40pxDefaultSize
+							__nextHasNoMarginBottom
+						/>
+					)}
+					{buttonStyle !== 'text' && (
+						<IconPicker label={__('Custom Icon (optional)', 'shapeblock')} value={item.customIcon || ''} onChange={(v) => update(index, 'customIcon', v)} />
+					)}
 				</div>
 			))}
 			<Button variant="primary" onClick={add} icon={ICON_ADD}>{__('Add Platform', 'shapeblock')}</Button>
@@ -135,6 +155,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// --- Tab 2: Layout (arrangement, size & spacing) --------------------------
 	const layoutTab = (
 		<PanelBody title={__('Layout & Size', 'shapeblock')} initialOpen={true}>
+			<ToggleGroupControl
+				label={__('Button Style', 'shapeblock')}
+				value={buttonStyle || 'icon'}
+				onChange={(v) => setAttributes({ buttonStyle: v })}
+				isBlock
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			>
+				<ToggleGroupControlOption value="icon" label={__('Icon', 'shapeblock')} />
+				<ToggleGroupControlOption value="icon-text" label={__('Icon & Text', 'shapeblock')} />
+				<ToggleGroupControlOption value="text" label={__('Text', 'shapeblock')} />
+			</ToggleGroupControl>
+			<Divider />
 			<SelectControl
 				label={__('Layout', 'shapeblock')}
 				value={layout}
@@ -148,26 +181,51 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				__nextHasNoMarginBottom
 			/>
 			<Divider />
-			{respNum(__('Button Size (px)', 'shapeblock'), 'buttonSize')}
+			{respNum(showLabel ? __('Button Height (px)', 'shapeblock') : __('Button Size (px)', 'shapeblock'), 'buttonSize')}
 			{respNum(__('Button Spacing (px)', 'shapeblock'), 'buttonSpacing')}
 		</PanelBody>
 	);
 
 	// --- Tab 3: Style (appearance) --------------------------------------------
-	const styleTab = (
-		<PanelBody title={__('Buttons', 'shapeblock')} initialOpen={true}>
+	// Background (color or gradient), icon / name color and border, for one state.
+	const colorLabel = buttonStyle === 'text' ? __('Text Color', 'shapeblock') : showLabel ? __('Icon & Text Color', 'shapeblock') : __('Icon Color', 'shapeblock');
+	const stateControls = (bg, gradient, color, border) => (
+		<>
 			<BackgroundControl
 				label={__('Background', 'shapeblock')}
-				colorValue={attributes.iconBgColor}
-				gradientValue={attributes.iconBgGradient}
-				onColorChange={(v) => setAttributes({ iconBgColor: v && typeof v === 'object' ? v.hex : v || '' })}
-				onGradientChange={(v) => setAttributes({ iconBgGradient: v || '' })}
+				colorValue={attributes[bg]}
+				gradientValue={attributes[gradient]}
+				onColorChange={(v) => setAttributes({ [bg]: v && typeof v === 'object' ? v.hex : v || '' })}
+				onGradientChange={(v) => setAttributes({ [gradient]: v || '' })}
 			/>
-			<ColorPopover label={__('Icon Color', 'shapeblock')} color={attributes.iconColor} onChange={(v) => setAttributes({ iconColor: v })} />
-			{respNum(__('Icon Size (px)', 'shapeblock'), 'iconSize')}
+			<ColorPopover label={colorLabel} color={attributes[color]} onChange={(v) => setAttributes({ [color]: v })} />
+			<BorderControl label={__('Border', 'shapeblock')} value={attributes[border]} onChange={(v) => setAttributes({ [border]: v })} />
+		</>
+	);
+
+	const styleTab = (
+		<PanelBody title={__('Buttons', 'shapeblock')} initialOpen={true}>
+			<TabPanel tabs={STATE_TABS}>
+				{(tab) =>
+					tab.name === 'normal'
+						? stateControls('iconBgColor', 'iconBgGradient', 'iconColor', 'buttonBorder')
+						: stateControls('hoverBgColor', 'hoverBgGradient', 'hoverIconColor', 'buttonBorderHover')
+				}
+			</TabPanel>
+			<Divider />
+			{buttonStyle !== 'text' && respNum(__('Icon Size (px)', 'shapeblock'), 'iconSize')}
+			{showLabel && (
+				<TextControl
+					label={__('Text Size (px)', 'shapeblock')}
+					type="number"
+					value={attributes.labelSize}
+					onChange={(v) => setAttributes({ labelSize: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+			)}
 			<Divider />
 			<BoxControl label={__('Border Radius', 'shapeblock')} values={attributes.buttonRadius} onChange={(v) => setAttributes({ buttonRadius: v })} />
-			<BorderControl label={__('Border', 'shapeblock')} value={attributes.buttonBorder} onChange={(v) => setAttributes({ buttonBorder: v })} />
 			<BoxShadowControls label={__('Box Shadow', 'shapeblock')} value={attributes.buttonBoxShadow} onChange={(v) => setAttributes({ buttonBoxShadow: v })} />
 			<Divider />
 			<HoverAnimationControl attributes={attributes} setAttributes={setAttributes} defaultLabel={__('Lift (default)', 'shapeblock')} allowNone />

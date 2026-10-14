@@ -130,3 +130,30 @@
 @media print {
 	.shapeblock-social-share-block-wrap { display: none; }
 }
+
+/* Button Style "Icon & Text" / "Text": the button is as wide as its name, a
+ * pill unless corners are set in the block. */
+.shapeblock-social-share-block-wrap {
+	.shapeblock-social-style-icon-text .shapeblock-social-button,
+	.shapeblock-social-style-text .shapeblock-social-button {
+		width: auto;
+		gap: 8px;
+		padding: 0 18px;
+		border-radius: 999px;
+	}
+
+	// Named buttons are wider than icons: equal cells wide enough for a name,
+	// and the grid is not held to 300px.
+	.shapeblock-social-layout-grid.shapeblock-social-style-icon-text .shapeblock-social-buttons,
+	.shapeblock-social-layout-grid.shapeblock-social-style-text .shapeblock-social-buttons {
+		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+		max-width: none;
+	}
+
+	.shapeblock-social-label {
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 1;
+		white-space: nowrap;
+	}
+}

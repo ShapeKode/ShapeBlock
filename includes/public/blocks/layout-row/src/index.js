@@ -1,4 +1,3 @@
-import { __ } from '@wordpress/i18n';
 import { registerBlockType, createBlock } from '@wordpress/blocks';
 import './style.scss';
 import Edit from './edit';
@@ -12,55 +11,20 @@ const shapeblockRowIcon = (
     </svg>
 );
 
-const svg = (children) => (
-    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">{children}</svg>
-);
-
-// The layout switch at the top of the sidebar, as the core Group block has
-// (Row / Stack / Grid). Each is just a setting of this block, so a Row can be
-// switched back and forth at any time and nothing else about it changes.
-const isStack = (a) => String(a.flexDirection || '').indexOf('column') === 0;
-const variations = [
-    {
-        name: 'row',
-        title: __('Row', 'shapeblock'),
-        description: __('Columns side by side.', 'shapeblock'),
-        icon: svg(<path d="M4 6h6.5v12H4V6Zm9.5 0H20v12h-6.5V6Z" fill="none" stroke="currentColor" strokeWidth="1.5" />),
-        attributes: { flexDirection: 'row', columnsDesktop: 0 },
-        isActive: (a) => !isStack(a) && !(a.columnsDesktop > 0),
-        scope: ['transform'],
-    },
-    {
-        name: 'stack',
-        title: __('Stack', 'shapeblock'),
-        description: __('Columns one under another.', 'shapeblock'),
-        icon: svg(<path d="M5 4h14v6.5H5V4Zm0 9.5h14V20H5v-6.5Z" fill="none" stroke="currentColor" strokeWidth="1.5" />),
-        attributes: { flexDirection: 'column', columnsDesktop: 0 },
-        isActive: (a) => isStack(a),
-        scope: ['transform'],
-    },
-    {
-        name: 'grid',
-        title: __('Grid', 'shapeblock'),
-        description: __('Columns in equal cells that wrap onto new lines (3 to a line; change it under Layout).', 'shapeblock'),
-        icon: svg(<path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z" fill="none" stroke="currentColor" strokeWidth="1.5" />),
-        attributes: { flexDirection: 'row', flexWrap: 'wrap', columnsDesktop: 3 },
-        isActive: (a) => !isStack(a) && a.columnsDesktop > 0,
-        scope: ['transform'],
-    },
-];
-
 // Copies of blocks, with their own inner blocks, for a new parent.
 const copy = (blocks) => blocks.map((b) => createBlock(b.name, b.attributes, copy(b.innerBlocks || [])));
 
-// One full-width column holding the given blocks.
-const rowOf = (blocks) => createBlock(metadata.name, {}, [createBlock('shapeblock/column', { width: '100%' }, blocks)]);
+// A Row with each block in a column of its own, sharing the line equally - as
+// the core Group's Row puts its blocks side by side.
+const rowOf = (blocks) => {
+    const width = `${(100 / Math.max(1, blocks.length)).toFixed(2)}%`;
+    return createBlock(metadata.name, {}, blocks.map((b) => createBlock('shapeblock/column', { width }, [b])));
+};
 
 registerBlockType(metadata.name, {
     icon: shapeblockRowIcon,
     edit: Edit,
     save,
-    variations,
     // As the core Group block: put selected blocks into a Row, turn a Group or
     // Columns block into one, and Ungroup a Row back into its blocks.
     transforms: {

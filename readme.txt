@@ -4,7 +4,7 @@ Tags: gutenberg blocks, header footer builder, block editor, gutenberg, wordpres
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Every block has the same three tabs: **Settings** for the content, **Layout** for columns, alignment and spacing, and **Style** for colours, typography, borders, shadows and hover effects. Sizes, spacing and columns can be set separately for desktop, tablet and mobile.
 
-See every block in action on the [ShapeBlock demo](https://shapekode.com/product/shapeblock/).
+[Demo](https://shapekode.com/product/shapeblock/) | [Docs](https://shapekode.com/product/shapeblock/docs/) | [Roadmap](https://shapekode.com/product/shapeblock/roadmap/)
 
 = Key Features =
 
@@ -27,7 +27,7 @@ See every block in action on the [ShapeBlock demo](https://shapekode.com/product
 * **Custom Templates** - build a layout once and reuse it anywhere with a shortcode.
 * **Lightweight** - each block loads its files only on pages that use it, and unused blocks can be switched off.
 * **Export & Import** - move your settings and templates between sites in one file.
-* **Privacy friendly** - no tracking, no CDN, and Google Fonts stays off until you turn it on.
+* **Privacy friendly** - no tracking unless you opt in, no CDN, and Google Fonts stays off until you turn it on.
 
 = Blocks =
 
@@ -119,7 +119,7 @@ It **works with classic and block themes**. Pages that match none of your condit
 
 * Duplicated or pasted blocks get a new ID, so their styles never clash.
 * Translation ready, with a `.pot` file.
-* No tracking and no licence check.
+* No tracking unless you opt in, and no licence check.
 * Deleting the plugin removes its settings and cached data, and keeps your content.
 
 == External services ==
@@ -128,7 +128,7 @@ Out of the box, **ShapeBlock** doesn't connect to any outside service. It only d
 
 = Google Fonts (optional, off by default) =
 
-When it's turned on, Google Fonts feeds the Font Family picker in the block settings and loads the fonts you pick. While it's off, the plugin doesn't talk to Google at all. To turn it on, go to **ShapeBlock > Settings > Google Fonts**. If you turn it off later, the requests stop and the cached font list is deleted.
+When it's turned on, Google Fonts feeds the Font Family picker in the block settings and loads the fonts you pick. While it's off, the plugin doesn't talk to Google at all. To turn it on, go to **ShapeBlock > General > Google Fonts**. If you turn it off later, the requests stop and the cached font list is deleted.
 
 With it switched on:
 
@@ -141,9 +141,9 @@ Google Fonts is provided by Google LLC. Terms of service: https://policies.googl
 
 After activation, an admin notice asks whether you want to share usage data to help improve ShapeBlock. Nothing is sent unless you click **Allow**; **No thanks** sends nothing.
 
-With it allowed, your server sends this to Appsero right away and then once a week: the site URL and name, the admin email and name, the WordPress, PHP and MySQL versions, the server software, the site language, the number of users, posts and pages, the active theme and plugins, ShapeBlock's version and the server IP address. The IP address is looked up through `https://icanhazip.com`. Deactivating the plugin stops it.
+With it allowed, your server sends this to Appsero right away and then once a week: the site URL and name, the admin email and name, the server software, the PHP and MySQL versions and a few PHP settings (upload size, time zone, available extensions), the WordPress version, language, memory limit, debug and multisite mode, the active theme's name, version, author and URI, the number of users per role, the number of active and inactive plugins, ShapeBlock's version, whether the site runs on a local server, and the server IP address. The IP address is looked up through `https://icanhazip.com`. Deactivating the plugin stops it.
 
-When you deactivate ShapeBlock, a dialog asks why. Only **Submit & Deactivate** sends the reason you picked to Appsero (with the site details above only if you had allowed sharing); **Skip & Deactivate** sends nothing.
+When you deactivate ShapeBlock, a dialog asks why. Only **Submit & Deactivate** sends the reason you picked to Appsero, with ShapeBlock's project key and an anonymous hash of the site address (and the site details above only if you had allowed sharing); **Skip & Deactivate** sends nothing.
 
 Appsero (https://appsero.com) - Privacy policy: https://appsero.com/privacy-policy/
 icanhazip - About and privacy: https://major.io/icanhazip-com-faq/
@@ -170,26 +170,15 @@ Built with [@wordpress/scripts](https://www.npmjs.com/package/@wordpress/scripts
 
 == Credits ==
 
-ShapeBlock is licensed GPLv2 or later and includes these MIT-licensed libraries, each with its licence file:
+ShapeBlock is licensed GPLv2 or later and includes these MIT-licensed libraries:
 
 * Swiper 12.0.3 (https://swiperjs.com) - `assets/lib/swiper/LICENSE`, unmodified release files.
 * Bootstrap 5.3 grid (https://getbootstrap.com) - `assets/lib/bootstrap/LICENSE`, only the grid, recompiled with a `shapeblock-` prefix.
 * Ant Design 6 and Ant Design Icons (https://ant.design) - `assets/lib/antd/LICENSE`, used only in the admin dashboard.
 * Bootstrap Icons 1.13.1 (https://icons.getbootstrap.com) - `includes/public/assets/font/bootstrap-icons-LICENSE.txt`, the icons of the built-in icon picker.
+* Appsero Client 2.0 (https://github.com/Appsero/client) - `includes/appsero/`, the opt-in usage data client described under External services.
 
 The icon fonts were made with Fontello (https://fontello.com). Our own icons are GPLv2 or later; three come from Font Awesome 4.7 and Elusive Icons under the SIL Open Font License 1.1 (https://openfontlicense.org), listed in `includes/public/assets/icon/config.json`.
-
-
-
-==  Privacy Policy == 
-
-ShapeBlock uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
-
-Appsero SDK **does not gather any data by default.** The SDK only starts gathering basic telemetry data **when a user allows it via the admin notice**. We collect the data to ensure a great user experience for all our users. 
-
-Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
-
-Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 == Installation ==
 
@@ -221,6 +210,23 @@ Not by default. See External services above.
 Deleting the plugin removes the options and cached data it created. Your Custom Templates, Theme Builder items and the blocks in your posts are your content, so they stay.
 
 == Changelog ==
+
+= 1.0.2 =
+* New: Row - background image from the Media Library with a focal point, a background overlay, and text, link and heading colours.
+* New: Row - typography for everything inside it, per device, and an ARIA label.
+* New: Row - Columns per row on desktop, for a grid of equal columns.
+* New: Row - select blocks and turn them into a Row (each block in its own column), turn a Group or Columns block into a Row, or Ungroup a Row.
+* New: Social Share - three button styles: icon, icon with text, or text only, with editable names.
+* New: Social Share - Normal and Hover tabs for the background (colour or gradient), the icon and text colour, and the border.
+* New: Hover animations for the Icon, Social Icon and Social Share blocks.
+* New: the Container Width can also set the theme's wide width, or its content width too, so core blocks follow it.
+* Improved: the Container Width is empty by default and follows the theme until it is set.
+* Improved: the General settings page is laid out in two cards.
+* Fix: Social Share - each network's share page opens in a share window; Instagram, YouTube, TikTok, Snapchat, Discord and Spotify, which have no share link for websites, open the device's share menu or copy the link; and blog, archive and Query Loop pages share the right address.
+* Fix: column widths set in px on tablet or mobile now apply on the front end.
+* Fix: the Menu block keeps the selected menu when the editor reloads.
+* Fix: Menu dropdown link padding no longer reaches into the links of a dropdown's content.
+* Fix: the editor no longer forces the Container Width onto all page content.
 
 = 1.0.1 =
 * New: Filterable List block - links with icons, filter buttons with item counts, badges and a search box.

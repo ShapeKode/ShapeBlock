@@ -12,8 +12,8 @@
 
 const UNRENDERED = { STYLE: 1, SCRIPT: 1, LINK: 1, TEMPLATE: 1, NOSCRIPT: 1 };
 
-// Each block prints a <style> tag alongside its markup, so the next sibling is
-// usually invisible. An unrendered element reports a zero rect, which would read
+// In the editor each block draws its CSS in a style element beside its
+// markup, so the next sibling is often invisible. An unrendered element reports a zero rect, which would read
 // as "already at the top" and shove the row out of view at once.
 const isRenderable = (el) => !UNRENDERED[el.tagName] && el.getClientRects().length > 0;
 

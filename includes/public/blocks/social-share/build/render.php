@@ -20,6 +20,10 @@ $unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $
 
 $platforms = isset( $attributes['platforms'] ) && is_array( $attributes['platforms'] ) ? $attributes['platforms'] : [];
 $layout    = isset( $attributes['layout'] ) ? $attributes['layout'] : 'horizontal';
+// Icon only, icon with the platform's name beside it, or the name only.
+$button_style = ( isset( $attributes['buttonStyle'] ) && in_array( $attributes['buttonStyle'], [ 'icon', 'icon-text', 'text' ], true ) ) ? $attributes['buttonStyle'] : 'icon';
+$show_icon    = 'text' !== $button_style;
+$show_label   = 'icon' !== $button_style;
 $target    = ! empty( $attributes['openNewTab'] ) ? '_blank' : '_self';
 
 $block_wrap_attr = get_block_wrapper_attributes( array( 'class' => 'shapeblock-block shapeblock-social-share-block-wrap ' . $unique_id ) );
@@ -33,21 +37,52 @@ if ( empty( $platforms ) ) {
 }
 
 // ---------------------------------------------------------------------------
-// Page context for share URLs.
+// What is shared: the post of a Query Loop the block sits in, else the post or
+// page being viewed, else the page's own address (a blog, archive or search
+// page). WordPress gives every block the global post as its postId, which on
+// an archive, or in a Theme Builder header or footer, is just whichever post
+// was loaded last - so postId counts only inside a Query Loop (see
+// shapeblock_social_share_in_query_loop() in social-share.php).
 // ---------------------------------------------------------------------------
-$current_url   = get_permalink();
-if ( empty( $current_url ) ) {
-	$current_url = home_url( add_query_arg( null, null ) );
+$share_post = ( ! empty( $block->context['postId'] ) && shapeblock_social_share_in_query_loop() ) ? (int) $block->context['postId'] : 0;
+if ( ! $share_post && is_singular() ) {
+	$share_post = (int) get_queried_object_id();
 }
-$current_title = get_the_title();
+// The editor's preview: the post being edited.
+if ( ! $share_post && defined( 'REST_REQUEST' ) && REST_REQUEST && get_the_ID() ) {
+	$share_post = (int) get_the_ID();
+}
+if ( $share_post ) {
+	$current_url   = get_permalink( $share_post );
+	$current_title = get_the_title( $share_post );
+	$current_desc  = get_the_excerpt( $share_post );
+	$featured      = has_post_thumbnail( $share_post ) ? get_the_post_thumbnail_url( $share_post, 'full' ) : '';
+} else {
+	global $wp;
+	$current_url   = '' !== get_option( 'permalink_structure' )
+		? home_url( user_trailingslashit( $wp->request ) )
+		: add_query_arg( $wp->query_vars, home_url( '/' ) );
+	$current_title = wp_get_document_title();
+	$current_desc  = '';
+	$featured      = '';
+}
+if ( empty( $current_url ) ) {
+	$current_url = home_url( '/' );
+}
 if ( empty( $current_title ) ) {
 	$current_title = get_bloginfo( 'name' );
 }
-$current_desc  = get_the_excerpt();
 if ( empty( $current_desc ) ) {
 	$current_desc = get_bloginfo( 'description' );
 }
-$featured = has_post_thumbnail() ? get_the_post_thumbnail_url( get_the_ID(), 'full' ) : '';
+$current_title = wp_strip_all_tags( html_entity_decode( $current_title, ENT_QUOTES, get_bloginfo( 'charset' ) ) );
+$current_desc  = wp_strip_all_tags( html_entity_decode( $current_desc, ENT_QUOTES, get_bloginfo( 'charset' ) ) );
+
+// Networks with a share page for a link, opened in a small window on a
+// desktop; and networks with none, which use the device's share sheet or copy
+// the link instead (see view.js).
+$popup_platforms  = [ 'facebook', 'twitter', 'linkedin', 'pinterest', 'whatsapp', 'telegram', 'reddit' ];
+$native_platforms = [ 'instagram', 'youtube', 'tiktok', 'snapchat', 'discord', 'spotify' ];
 
 // ---------------------------------------------------------------------------
 // Inline styles (scoped to this instance).
@@ -82,9 +117,20 @@ if ( ! empty( $attributes['iconBgGradient'] ) ) {
 } elseif ( ! empty( $attributes['iconBgColor'] ) ) {
 	$button['background'] = $attributes['iconBgColor'];
 }
-if ( '' !== $u( 'buttonSize' ) ) { $button['width'] = $u( 'buttonSize' ); $button['height'] = $u( 'buttonSize' ); }
+if ( '' !== $u( 'buttonSize' ) ) {
+	$button['height'] = $u( 'buttonSize' );
+	if ( ! $show_label ) {
+		$button['width'] = $u( 'buttonSize' );
+	}
+}
+// The default round corners (50%) would make a wide button an oval; with a
+// name it keeps the stylesheet's pill shape unless other corners are set.
+$radius = $attributes['buttonRadius'] ?? [];
+if ( $show_label && is_array( $radius ) && [ '50%' ] === array_values( array_unique( array_values( $radius ) ) ) ) {
+	$radius = [];
+}
 $hover  = $H::hover_animation( $attributes );
-$button = array_merge( $button, $hover['style'], $dims( $attributes['buttonRadius'] ?? [] ), $shadow( $attributes['buttonBoxShadow'] ?? [] ) );
+$button = array_merge( $button, $hover['style'], $dims( $radius ), $shadow( $attributes['buttonBoxShadow'] ?? [] ) );
 if ( ! empty( $attributes['buttonBorder'] ) ) $button = array_merge( $button, $H::border_to_css_props( $attributes['buttonBorder'] ) );
 
 // Button Spacing is the gap between the buttons, in every layout (a side margin
@@ -96,18 +142,43 @@ $icon_svg = [];
 if ( ! empty( $attributes['iconColor'] ) ) { $icon_i['color'] = $attributes['iconColor']; $icon_svg['fill'] = $attributes['iconColor']; }
 if ( '' !== $u( 'iconSize' ) ) { $icon_i['font-size'] = $u( 'iconSize' ); $icon_svg['width'] = $u( 'iconSize' ); $icon_svg['height'] = $u( 'iconSize' ); }
 
+// Hover: background (a color or a gradient), border, and the icon and name color.
+$button_hover = [];
+if ( ! empty( $attributes['hoverBgGradient'] ) ) {
+	$button_hover['background'] = $attributes['hoverBgGradient'];
+} elseif ( ! empty( $attributes['hoverBgColor'] ) ) {
+	$button_hover['background'] = $attributes['hoverBgColor'];
+}
+if ( ! empty( $attributes['buttonBorderHover'] ) ) {
+	$button_hover = array_merge( $button_hover, $H::border_to_css_props( $attributes['buttonBorderHover'] ) );
+}
+$hover_color = ! empty( $attributes['hoverIconColor'] ) ? $attributes['hoverIconColor'] : '';
+if ( '' !== $hover_color ) {
+	$button_hover['color'] = $hover_color;
+}
+
+// The name takes the icon color and its own size.
+$label = [];
+if ( ! empty( $attributes['iconColor'] ) ) { $label['color'] = $attributes['iconColor']; }
+if ( '' !== $u( 'labelSize' ) ) { $label['font-size'] = $u( 'labelSize' ); }
+
 // ---------------------------------------------------------------------------
 // Responsive (Tablet / Mobile) overrides. The desktop CSS above is unchanged;
 // these rules are emitted only when the matching per-device attribute is set,
 // so existing content renders identically.
 // ---------------------------------------------------------------------------
-$build_dev = function ( $suffix ) use ( $attributes, $H ) {
+$build_dev = function ( $suffix ) use ( $attributes, $H, $show_label ) {
 	$dev_u = function ( $key ) use ( $attributes, $suffix, $H ) {
 		return ( isset( $attributes[ $key . $suffix ] ) && '' !== $attributes[ $key . $suffix ] ) ? $H::ensure_unit( $attributes[ $key . $suffix ] ) : '';
 	};
 
 	$btn = [];
-	if ( '' !== $dev_u( 'buttonSize' ) ) { $btn['width'] = $dev_u( 'buttonSize' ); $btn['height'] = $dev_u( 'buttonSize' ); }
+	if ( '' !== $dev_u( 'buttonSize' ) ) {
+		$btn['height'] = $dev_u( 'buttonSize' );
+		if ( ! $show_label ) {
+			$btn['width'] = $dev_u( 'buttonSize' );
+		}
+	}
 	$gap = '' !== $dev_u( 'buttonSpacing' ) ? [ 'gap' => $dev_u( 'buttonSpacing' ) ] : [];
 
 	$i   = [];
@@ -142,6 +213,12 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-social-button i'         => $H::get_inline_styles( $icon_i ),
 	'.shapeblock-social-button svg'       => $H::get_inline_styles( $icon_svg ),
 	'.shapeblock-social-button svg path'  => ! empty( $attributes['iconColor'] ) ? 'fill:' . $attributes['iconColor'] : '',
+	'.shapeblock-social-label'            => $H::get_inline_styles( $label ),
+	'.shapeblock-social-button:hover'                          => $H::get_inline_styles( $button_hover ),
+	'.shapeblock-social-button:hover i'                        => '' !== $hover_color ? $H::get_inline_styles( [ 'color' => $hover_color ] ) : '',
+	'.shapeblock-social-button:hover svg'                      => '' !== $hover_color ? $H::get_inline_styles( [ 'fill' => $hover_color ] ) : '',
+	'.shapeblock-social-button:hover svg path'                 => '' !== $hover_color ? $H::get_inline_styles( [ 'fill' => $hover_color ] ) : '',
+	'.shapeblock-social-button:hover .shapeblock-social-label' => '' !== $hover_color ? $H::get_inline_styles( [ 'color' => $hover_color ] ) : '',
 ] );
 
 // ---------------------------------------------------------------------------
@@ -220,7 +297,7 @@ $share_url = function ( $platform ) use ( $current_url, $current_title, $current
 		case 'whatsapp':  return 'https://api.whatsapp.com/send?text=' . $title . '%20' . $url;
 		case 'telegram':  return 'https://t.me/share/url?url=' . $url . '&text=' . $title;
 		case 'reddit':    return 'https://www.reddit.com/submit?url=' . $url . '&title=' . $title;
-		case 'email':     return 'mailto:?subject=' . $title . '&body=' . $desc . '%20' . $url;
+		case 'email':     return 'mailto:?subject=' . $title . '&body=' . ( '' !== $desc ? $desc . '%20' : '' ) . $url;
 		case 'instagram': return 'https://www.instagram.com/';
 		case 'youtube':   return 'https://www.youtube.com/';
 		case 'tiktok':    return 'https://www.tiktok.com/';
@@ -232,6 +309,10 @@ $share_url = function ( $platform ) use ( $current_url, $current_title, $current
 };
 
 $layout_class = 'shapeblock-social-layout-' . ( in_array( $layout, [ 'horizontal', 'vertical', 'grid' ], true ) ? $layout : 'horizontal' );
+if ( $show_label ) {
+	$layout_class .= ' shapeblock-social-style-' . $button_style;
+}
+
 // Allow-list for the dynamic icon-font <i> tag (esc_attr'd class). The static brand
 // SVGs are written as literal markup by $echo_platform_icon() above and never passed
 // through wp_kses() -- see the comment on that function.
@@ -241,36 +322,80 @@ $icon_allowed_html = array(
 		'aria-hidden' => true,
 	),
 );
+
+// Each platform's name, shown beside or instead of its icon; the item's own
+// label wins.
+$platform_names = [
+	'facebook'  => 'Facebook',
+	'twitter'   => 'X',
+	'instagram' => 'Instagram',
+	'linkedin'  => 'LinkedIn',
+	'youtube'   => 'YouTube',
+	'tiktok'    => 'TikTok',
+	'pinterest' => 'Pinterest',
+	'whatsapp'  => 'WhatsApp',
+	'telegram'  => 'Telegram',
+	'snapchat'  => 'Snapchat',
+	'reddit'    => 'Reddit',
+	'discord'   => 'Discord',
+	'spotify'   => 'Spotify',
+	'email'     => __( 'Email', 'shapeblock' ),
+	'copy'      => __( 'Copy Link', 'shapeblock' ),
+];
+// The icon (unless the button shows its name only), then the name.
+$echo_button_content = function ( $platform, $item, $custom, $has_custom_icon ) use ( $show_icon, $show_label, $platform_names, $echo_platform_icon, $icon_allowed_html ) {
+	if ( $show_icon ) {
+		if ( $has_custom_icon ) {
+			echo wp_kses( '<i class="shapeblock-icon ' . esc_attr( $custom ) . '" aria-hidden="true"></i>', $icon_allowed_html );
+		} else {
+			$echo_platform_icon( $platform );
+		}
+	}
+	if ( $show_label ) {
+		$name = ( isset( $item['label'] ) && is_string( $item['label'] ) ) ? trim( $item['label'] ) : '';
+		if ( '' === $name ) {
+			$name = isset( $platform_names[ $platform ] ) ? $platform_names[ $platform ] : ucfirst( $platform );
+		}
+		echo '<span class="shapeblock-social-label">' . esc_html( $name ) . '</span>';
+	}
+};
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-social-share <?php echo esc_attr( $layout_class ); ?>">
 		<div class="shapeblock-social-buttons">
 			<?php
 			foreach ( $platforms as $item ) {
-				$platform = isset( $item['platform'] ) ? $item['platform'] : '';
+				$platform = ( is_array( $item ) && isset( $item['platform'] ) && is_string( $item['platform'] ) ) ? $item['platform'] : '';
 				if ( '' === $platform ) {
 					continue;
 				}
-				$custom          = isset( $item['customIcon'] ) ? $item['customIcon'] : '';
+				$custom          = ( isset( $item['customIcon'] ) && is_string( $item['customIcon'] ) ) ? $item['customIcon'] : '';
 				$has_custom_icon = ! empty( $custom ) && 'none' !== $custom;
 
 				$btn_class = trim( 'shapeblock-social-button shapeblock-' . sanitize_html_class( $platform ) . ' ' . $hover['class'] );
 
 				if ( 'copy' === $platform ) {
-					echo '<a href="#" class="' . esc_attr( $btn_class ) . ' shapeblock-social-copy" data-url="' . esc_attr( $current_url ) . '" title="' . esc_attr__( 'Copy Link', 'shapeblock' ) . '">';
-					if ( $has_custom_icon ) {
-						echo wp_kses( '<i class="shapeblock-icon ' . esc_attr( $custom ) . '" aria-hidden="true"></i>', $icon_allowed_html );
-					} else {
-						$echo_platform_icon( $platform );
-					}
+					echo '<a href="#" class="' . esc_attr( $btn_class ) . ' shapeblock-social-copy" data-url="' . esc_attr( $current_url ) . '" title="' . esc_attr__( 'Copy Link', 'shapeblock' ) . '"' . ( $show_label ? ' data-copied="' . esc_attr__( 'Copied!', 'shapeblock' ) . '"' : '' ) . '>';
+					$echo_button_content( $platform, $item, $custom, $has_custom_icon );
 					echo '</a>';
 				} else {
-					echo '<a href="' . esc_url( $share_url( $platform ) ) . '" class="' . esc_attr( $btn_class ) . '" target="' . esc_attr( $target ) . '" rel="noopener noreferrer" title="' . esc_attr( ucfirst( $platform ) ) . '">';
-					if ( $has_custom_icon ) {
-						echo wp_kses( '<i class="shapeblock-icon ' . esc_attr( $custom ) . '" aria-hidden="true"></i>', $icon_allowed_html );
-					} else {
-						$echo_platform_icon( $platform );
+					$share_data = [];
+					if ( in_array( $platform, $popup_platforms, true ) ) {
+						$share_data['data-popup'] = '1';
+					} elseif ( in_array( $platform, $native_platforms, true ) ) {
+						$share_data = [
+							'data-native' => '1',
+							'data-url'    => $current_url,
+							'data-title'  => $current_title,
+							'data-copied' => __( 'Copied!', 'shapeblock' ),
+						];
 					}
+					echo '<a href="' . esc_url( $share_url( $platform ) ) . '" class="' . esc_attr( $btn_class ) . '" target="' . esc_attr( 'email' === $platform ? '_self' : $target ) . '" rel="noopener noreferrer" title="' . esc_attr( ucfirst( $platform ) ) . '"';
+					foreach ( $share_data as $data_name => $data_value ) {
+						echo ' ' . esc_attr( $data_name ) . '="' . esc_attr( $data_value ) . '"';
+					}
+					echo '>';
+					$echo_button_content( $platform, $item, $custom, $has_custom_icon );
 					echo '</a>';
 				}
 			}

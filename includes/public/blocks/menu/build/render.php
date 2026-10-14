@@ -385,7 +385,7 @@ if ( isset( $font_stacks[ $font_family ] ) ) {
 		// The stylesheet is only requested from Google once the site owner has
 		// opted in; the family is still applied so a locally installed font works.
 		if ( function_exists( 'shapeblock_google_fonts_enabled' ) && shapeblock_google_fonts_enabled() ) {
-		$font_url = 'https://fonts.googleapis.com/css2?family=' . str_replace( '%20', '+', rawurlencode( $safe_family ) ) . ':wght@300;400;500;600;700&display=swap';
+			$font_url = 'https://fonts.googleapis.com/css2?family=' . str_replace( '%20', '+', rawurlencode( $safe_family ) ) . ':wght@300;400;500;600;700&display=swap';
 			wp_enqueue_style( 'shapeblock-menu-font-' . sanitize_title( $safe_family ), esc_url_raw( $font_url ), array(), SHAPEBLOCK_VERSION );
 		}
 		$font_css .= 'font-family:"' . $safe_family . '",sans-serif;';

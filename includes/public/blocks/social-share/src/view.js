@@ -1,5 +1,11 @@
 /**
- * Social Share — front-end behaviour (copy link).
+ * Social Share — front-end behaviour.
+ *
+ * - A network's share page opens in a small window on a desktop (a new tab
+ *   when the window is blocked, and the app or a tab on a phone).
+ * - Networks with no share link for websites (Instagram, YouTube, TikTok ...)
+ *   open the device's share sheet where there is one, or copy the link.
+ * - Copy Link copies the page address.
  *
  * Scoped, dependency-free JS.
  */
@@ -28,36 +34,86 @@
 		});
 	}
 
-	function initCopy(btn) {
-		if (btn.dataset.shapeblockCopyInit === '1') {
+	// For two seconds: a check in place of the icon, and "Copied!" in place of
+	// the name on a button that shows one.
+	function showCopied(btn) {
+		if (btn.classList.contains('shapeblock-copied')) {
 			return;
 		}
-		btn.dataset.shapeblockCopyInit = '1';
+		var original = btn.innerHTML;
+		var icon = btn.querySelector('svg, i');
+		var label = btn.querySelector('.shapeblock-social-label');
+		if (label) {
+			if (icon) {
+				icon.outerHTML = CHECK_SVG;
+			}
+			label.textContent = btn.getAttribute('data-copied') || label.textContent;
+		} else {
+			btn.innerHTML = CHECK_SVG;
+		}
+		btn.classList.add('shapeblock-copied');
+		window.setTimeout(function () {
+			btn.innerHTML = original;
+			btn.classList.remove('shapeblock-copied');
+		}, 2000);
+	}
 
-		btn.addEventListener('click', function (e) {
-			e.preventDefault();
-			var url = btn.getAttribute('data-url') || window.location.href;
-
-			copyText(url).then(function () {
-				var original = btn.innerHTML;
-				btn.innerHTML = CHECK_SVG;
-				btn.classList.add('shapeblock-copied');
-				window.setTimeout(function () {
-					btn.innerHTML = original;
-					btn.classList.remove('shapeblock-copied');
-				}, 2000);
-			});
+	function copyLink(btn) {
+		copyText(btn.getAttribute('data-url') || window.location.href).then(function () {
+			showCopied(btn);
 		});
 	}
 
-	function initAll() {
-		var buttons = document.querySelectorAll('.shapeblock-social-share-block-wrap .shapeblock-social-copy');
-		Array.prototype.forEach.call(buttons, initCopy);
+	// A share window only where there is room for one and a mouse to use it.
+	var canPopup = function () {
+		return window.innerWidth > 767 && !!window.matchMedia && window.matchMedia('(pointer: fine)').matches;
+	};
+
+	function openShareWindow(e, btn) {
+		if (!canPopup()) {
+			return;
+		}
+		var w = 640;
+		var h = 560;
+		var left = (window.screenX || 0) + Math.max(0, (window.outerWidth - w) / 2);
+		var top = (window.screenY || 0) + Math.max(0, (window.outerHeight - h) / 2);
+		var win = window.open(btn.href, 'shapeblock-share', 'width=' + w + ',height=' + h + ',left=' + Math.round(left) + ',top=' + Math.round(top) + ',resizable=yes,scrollbars=yes');
+		if (win) {
+			// The share page gets no handle back to this one.
+			win.opener = null;
+			e.preventDefault();
+		}
 	}
 
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', initAll);
-	} else {
-		initAll();
+	function shareNative(e, btn) {
+		e.preventDefault();
+		if (navigator.share) {
+			navigator
+				.share({
+					title: btn.getAttribute('data-title') || document.title,
+					url: btn.getAttribute('data-url') || window.location.href,
+				})
+				.catch(function () {
+					/* Closed by the visitor. */
+				});
+			return;
+		}
+		copyLink(btn);
 	}
+
+	document.addEventListener('click', function (e) {
+		var btn = e.target.closest ? e.target.closest('.shapeblock-social-share-block-wrap .shapeblock-social-button') : null;
+		// A modified or middle click keeps the browser's own behaviour.
+		if (!btn || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+			return;
+		}
+		if (btn.classList.contains('shapeblock-social-copy')) {
+			e.preventDefault();
+			copyLink(btn);
+		} else if (btn.hasAttribute('data-native')) {
+			shareNative(e, btn);
+		} else if (btn.hasAttribute('data-popup')) {
+			openShareWindow(e, btn);
+		}
+	});
 })();

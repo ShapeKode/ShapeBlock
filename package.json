@@ -1,6 +1,6 @@
 {
     "name": "shapeblock",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Build tooling for the ShapeBlock WordPress plugin. Every generated file the plugin ships is produced by one of the scripts below from the sources in src/ and includes/public/blocks/*/src/.",
     "license": "GPL-2.0-or-later",
     "private": true,

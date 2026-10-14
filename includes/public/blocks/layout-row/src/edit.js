@@ -311,7 +311,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 <Divider />
                 <RangeControl
                     label={__('Columns per row (Desktop)', 'shapeblock')}
-                    help={__('0 keeps each column’s own width. A number makes a grid: the columns share the line equally and wrap onto the next.', 'shapeblock')}
+                    help={__('0 keeps each column’s own width. 1 stacks the columns, full width; 2 or more makes a grid of equal columns that wrap onto the next line.', 'shapeblock')}
                     value={parseInt(attributes.columnsDesktop, 10) || 0}
                     onChange={(v) => setAttributes({ columnsDesktop: v || 0, ...(v ? { flexWrap: 'wrap' } : {}) })}
                     min={0}

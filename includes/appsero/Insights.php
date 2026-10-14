@@ -518,7 +518,7 @@ class Insights {
      * @return bool
      */
     private function is_valid_request() {
-        return isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), '_wpnonce' );
+        return isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), '_wpnonce' );
     }
 
     /**
@@ -536,7 +536,7 @@ class Insights {
      * @return bool
      */
     private function is_optin_request() {
-        return isset( $_GET[ $this->client->slug . '_tracker_optin' ] ) && 'true' === $_GET[ $this->client->slug . '_tracker_optin' ];
+        return $this->is_tracker_request( $this->client->slug . '_tracker_optin' );
     }
 
     /**
@@ -545,7 +545,20 @@ class Insights {
      * @return bool
      */
     private function is_optout_request() {
-        return isset( $_GET[ $this->client->slug . '_tracker_optout' ] ) && 'true' === $_GET[ $this->client->slug . '_tracker_optout' ];
+        return $this->is_tracker_request( $this->client->slug . '_tracker_optout' );
+    }
+
+    /**
+     * Whether this request, with a valid nonce, sets the given flag to "true".
+     *
+     * @param string $key Query argument.
+     *
+     * @return bool
+     */
+    private function is_tracker_request( $key ) {
+        return isset( $_GET['_wpnonce'], $_GET[ $key ] )
+            && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), '_wpnonce' )
+            && 'true' === sanitize_text_field( wp_unslash( $_GET[ $key ] ) );
     }
 
     /**

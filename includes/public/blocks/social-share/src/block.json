@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/social-share",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"title": "Social Share",
 	"category": "shapeblock",
 	"description": "Social share buttons for the current page — Facebook, X, LinkedIn, WhatsApp, copy link and more.",
@@ -15,6 +15,7 @@
 	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
 	"viewScript": "file:./view.js",
+	"usesContext": [ "postId" ],
 	"render": "file:./render.php",
 	"attributes": {
 		"advPadding": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
@@ -40,6 +41,8 @@
 			]
 		},
 		"layout": { "type": "string", "default": "horizontal" },
+		"buttonStyle": { "type": "string", "default": "icon" },
+		"labelSize": { "type": "string", "default": "" },
 		"openNewTab": { "type": "boolean", "default": true },
 
 		"iconSize": { "type": "string", "default": "18" },
@@ -56,6 +59,10 @@
 		"buttonSpacingMobile": { "type": "string", "default": "" },
 		"buttonRadius": { "type": "object", "default": { "top": "50%", "right": "50%", "bottom": "50%", "left": "50%" } },
 		"buttonBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
+		"hoverBgColor": { "type": "string", "default": "" },
+		"hoverBgGradient": { "type": "string", "default": "" },
+		"hoverIconColor": { "type": "string", "default": "" },
+		"buttonBorderHover": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"buttonBoxShadow": { "type": "object", "default": { "x": 0, "y": 0, "b": 0, "s": 0, "c": "rgba(0, 0, 0, 0)" } },
 		"hoverAnimation": { "type": "string", "default": "" },
 		"hoverAnimSpeed": { "type": "string", "default": "" },

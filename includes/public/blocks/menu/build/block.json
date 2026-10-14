@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/menu",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"title": "Menu",
 	"category": "shapeblock",
 	"description": "Build a navigation menu inside the block — add links and dropdowns, pick pages, descriptions, new-tab links, plus a responsive mobile menu.",

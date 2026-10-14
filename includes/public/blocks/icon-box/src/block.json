@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/icon-box",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"title": "Icon Box",
 	"category": "shapeblock",
 	"description": "Icon boxes with the icon on top, then title and description — icon, number or image supported.",

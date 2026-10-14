@@ -36,7 +36,6 @@ function shapeblock_uninstall_cleanup_site() {
 	delete_option( 'shapeblock_allow_tracking' );
 	delete_option( 'shapeblock_tracking_notice' );
 	delete_option( 'shapeblock_tracking_last_send' );
-	delete_option( 'shapeblock_tracking_skipped' );
 	wp_clear_scheduled_hook( 'shapeblock_tracker_send_event' );
 
 	/*
