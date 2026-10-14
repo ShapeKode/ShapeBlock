@@ -214,6 +214,14 @@
         "c": "rgba(0, 0, 0, 0)"
       }
     },
+    "hoverAnimation": {
+      "type": "string",
+      "default": ""
+    },
+    "hoverAnimSpeed": {
+      "type": "string",
+      "default": ""
+    },
     "hideDesktop": {
       "type": "boolean",
       "default": false

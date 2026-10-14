@@ -137,6 +137,27 @@ class Helper {
 	}
 
 	/**
+	 * A block's hover animation: the class for the element that moves, only
+	 * ever one from this list, and its speed as a custom property (100 to
+	 * 5000 ms) when one is set. The animations are in public.css.
+	 *
+	 * @param array $attributes Block attributes (hoverAnimation, hoverAnimSpeed).
+	 * @return array { class: string, style: array }
+	 */
+	public static function hover_animation( $attributes ) {
+		$names = array( 'none', 'grow', 'shrink', 'float', 'sink', 'rotate', 'spin', 'pulse', 'pop', 'bob', 'hang', 'wobble-horizontal', 'wobble-vertical', 'buzz' );
+		$name  = ( isset( $attributes['hoverAnimation'] ) && in_array( $attributes['hoverAnimation'], $names, true ) ) ? $attributes['hoverAnimation'] : '';
+		$style = array();
+		if ( '' !== $name && 'none' !== $name && isset( $attributes['hoverAnimSpeed'] ) && is_numeric( $attributes['hoverAnimSpeed'] ) ) {
+			$style['--shapeblock-hover-speed'] = min( 5000, max( 100, absint( $attributes['hoverAnimSpeed'] ) ) ) . 'ms';
+		}
+		return array(
+			'class' => '' !== $name ? 'shapeblock-hover-' . $name : '',
+			'style' => $style,
+		);
+	}
+
+	/**
 	 * Normalise a stored length.
 	 *
 	 * A bare number gains "px". Anything else has to *prove* it is a length —

@@ -59,6 +59,52 @@ function shapeblock_enqueue_block_scripts() {
 }
 
 /**
+ * The container width for the whole site, when ShapeBlock > General says so:
+ * it becomes the theme's wide width (and its content width as well), the same
+ * values a theme sets in theme.json. Core blocks, the theme's own layout and
+ * the editor then follow it, not just the ShapeBlock Row. Global Styles saved
+ * in the Site Editor still take precedence, as they do over the theme.
+ *
+ * @param WP_Theme_JSON_Data $theme_json The theme's theme.json data.
+ * @return WP_Theme_JSON_Data
+ */
+function shapeblock_apply_container_width( $theme_json ) {
+	$layout = \ShapeBlock\Admin\Api::get_saved_layout();
+	$width  = (string) $layout['container_width'];
+	if ( '' === $width || 'row' === $layout['apply_to'] ) {
+		return $theme_json;
+	}
+	$width = \ShapeBlock\Frontend\Helper::ensure_unit( $width );
+
+	// A theme that keeps its side gutters in the size itself, as
+	// min(1140px, 100% - 3rem), keeps them: only the width is replaced.
+	$data    = $theme_json->get_data();
+	$current = isset( $data['settings']['layout'] ) && is_array( $data['settings']['layout'] ) ? $data['settings']['layout'] : array();
+	$size    = function ( $key ) use ( $current, $width ) {
+		$theme_size = isset( $current[ $key ] ) && is_string( $current[ $key ] ) ? $current[ $key ] : '';
+		if ( preg_match( '/^min\(\s*[^,()]+,\s*(100%\s*-\s*[0-9.]+(?:px|rem|em|vw))\s*\)$/', $theme_size, $m ) ) {
+			return 'min(' . $width . ', ' . $m[1] . ')';
+		}
+		return $width;
+	};
+
+	$sizes = array( 'wideSize' => $size( 'wideSize' ) );
+	if ( 'all' === $layout['apply_to'] ) {
+		$sizes['contentSize'] = $size( 'contentSize' );
+	}
+
+	return $theme_json->update_with(
+		array(
+			'version'  => WP_Theme_JSON::LATEST_SCHEMA,
+			'settings' => array( 'layout' => $sizes ),
+		)
+	);
+}
+// After the theme's own filters (a theme can set these from its Customizer):
+// the site owner chose this width for the whole site.
+add_filter( 'wp_theme_json_data_theme', 'shapeblock_apply_container_width', 20 );
+
+/**
  * Register the stylesheet of the "ShapeBlock Menu" core-Navigation variation
  * ( class .shapeblock-nav ). Versioned by file modified time so CSS tweaks
  * always bust the browser cache, and small enough for WordPress to print

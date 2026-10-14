@@ -42,22 +42,18 @@
 		text-decoration: none;
 		color: #fff;
 		font-size: 18px;
-		transition: all 0.3s ease;
+		transition: all var(--shapeblock-hover-speed, 0.3s) ease;
 		position: relative;
 		border: none;
 		cursor: pointer;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
 		&:hover {
-			transform: translateY(-2px);
 			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 			color: #fff;
 			text-decoration: none;
 		}
 
-		&:active {
-			transform: translateY(0);
-		}
 
 		i {
 			font-size: 18px;
@@ -95,10 +91,11 @@
 		}
 	}
 
-	/* Layout-specific hover */
-	.shapeblock-social-layout-horizontal .shapeblock-social-button:hover { transform: translateY(-2px) scale(1.05); }
-	.shapeblock-social-layout-vertical .shapeblock-social-button:hover { transform: translateX(5px) scale(1.05); }
-	.shapeblock-social-layout-grid .shapeblock-social-button:hover { transform: scale(1.1); }
+	/* The default hover lift, per layout. A Hover Animation chosen in the block
+	   (or None) replaces it. */
+	.shapeblock-social-layout-horizontal .shapeblock-social-button:not([class*="shapeblock-hover-"]):hover { transform: translateY(-2px) scale(1.05); }
+	.shapeblock-social-layout-vertical .shapeblock-social-button:not([class*="shapeblock-hover-"]):hover { transform: translateX(5px) scale(1.05); }
+	.shapeblock-social-layout-grid .shapeblock-social-button:not([class*="shapeblock-hover-"]):hover { transform: scale(1.1); }
 
 	.shapeblock-social-button:focus { outline: 2px solid #007cba; outline-offset: 2px; }
 	.shapeblock-social-button:focus:not(:focus-visible) { outline: none; }

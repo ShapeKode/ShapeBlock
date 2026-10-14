@@ -1,7 +1,3 @@
-.block-editor-block-list__layout.is-root-container> :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
-    max-width: var(--shapeblock-layout-row-max-width, 1200px) !important;
-}
-
 .shapeblock-border-control button.components-button.is-secondary,
 .shapeblock-border-control button.components-button.is-secondary:hover {
     border: none !important;

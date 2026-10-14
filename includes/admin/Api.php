@@ -395,7 +395,8 @@ class Api {
             $sanitized = isset( $settings['layout']['container_width'] ) ? $this->sanitize_css_length( $settings['layout']['container_width'] ) : '';
             $current   = self::get_saved_layout();
             update_option( 'shapeblock_layout', array(
-                'container_width' => '' !== $sanitized ? $sanitized : $defaults['container_width'],
+                'container_width' => $sanitized,
+                'apply_to'        => self::sanitize_apply_to( $settings['layout']['apply_to'] ?? '' ),
                 // An import never switches the Google Fonts connection on or off;
                 // that consent belongs to this site, not to the file.
                 'google_fonts'    => empty( $current['google_fonts'] ) ? 0 : 1,
@@ -579,11 +580,28 @@ class Api {
 
     public static function get_layout_defaults() {
         return array(
-            'container_width' => '1200px',
+            // Empty: the Row block follows the theme's own wide width until a
+            // width is set here.
+            'container_width' => '',
+            // Where the width applies: only the ShapeBlock Row ('row'), the
+            // theme's wide width as well ('wide'), or its content width too
+            // ('all'). See shapeblock_apply_container_width().
+            'apply_to'        => 'row',
             // Off by default: the plugin makes no request to Google until the
             // site owner switches this on.
             'google_fonts'    => 0,
         );
+    }
+
+    /**
+     * Where the container width applies, from a fixed list; anything else is
+     * the ShapeBlock Row only.
+     *
+     * @param mixed $value Stored value.
+     * @return string
+     */
+    public static function sanitize_apply_to( $value ) {
+        return in_array( $value, array( 'row', 'wide', 'all' ), true ) ? $value : 'row';
     }
 
     public static function get_saved_layout() {
@@ -623,12 +641,9 @@ class Api {
 
         $clean = array();
         // container_width
-        if ( isset( $input['container_width'] ) ) {
-            $sanitized = $this->sanitize_css_length( $input['container_width'] );
-            $clean['container_width'] = $sanitized !== '' ? $sanitized : $defaults['container_width'];
-        } else {
-            $clean['container_width'] = $defaults['container_width'];
-        }
+        // Empty (or anything that is not a length) means the theme's width.
+        $clean['container_width'] = isset( $input['container_width'] ) ? $this->sanitize_css_length( $input['container_width'] ) : '';
+        $clean['apply_to']        = self::sanitize_apply_to( $input['apply_to'] ?? '' );
 
         // google_fonts — the opt-in for the Google Fonts connection.
         $clean['google_fonts'] = ( isset( $input['google_fonts'] ) && rest_sanitize_boolean( $input['google_fonts'] ) ) ? 1 : 0;

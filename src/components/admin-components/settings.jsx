@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { createInterpolateElement } from '@wordpress/element';
-import { Row, Col, Button, InputNumber, notification, Checkbox } from 'antd';
+import { Row, Col, Button, InputNumber, notification, Switch, Radio } from 'antd';
+import { ColumnWidthOutlined, FontSizeOutlined } from '@ant-design/icons';
 
 // Guarded: this runs at module-eval time, and the same bundle is also loaded in
 // the block editor where the `shapeblock` global is not localized.
-const LAYOUT_DEFAULTS = (typeof shapeblock !== 'undefined' && shapeblock.layoutDefaults) || { container_width: '1200px', google_fonts: 0 };
+const LAYOUT_DEFAULTS = (typeof shapeblock !== 'undefined' && shapeblock.layoutDefaults) || { container_width: '', apply_to: 'row', google_fonts: 0 };
 
 
 // Strip the unit suffix for the numeric input. Sanitize on save adds "px" back.
@@ -19,10 +20,15 @@ const parseContainerWidth = (value) => {
 export default function Settings() {
     const [saving, setSaving] = useState(false);
 
+    // Empty means the theme's own width.
     const initialContainerWidth = parseContainerWidth(
-        (shapeblock.layout && shapeblock.layout.container_width) || LAYOUT_DEFAULTS.container_width
+        shapeblock.layout ? shapeblock.layout.container_width : LAYOUT_DEFAULTS.container_width
     );
     const [containerWidth, setContainerWidth] = useState(initialContainerWidth);
+
+    // Where the width applies: the ShapeBlock Row only, or the theme's layout too.
+    const initialApplyTo = (shapeblock.layout && shapeblock.layout.apply_to) || LAYOUT_DEFAULTS.apply_to;
+    const [applyTo, setApplyTo] = useState(initialApplyTo);
 
     // Google Fonts is an external connection, so it stays off until it is
     // switched on here.
@@ -31,18 +37,23 @@ export default function Settings() {
     );
 
     // Last saved values: the Save button stays faded until something changes.
-    const [saved, setSaved] = useState({ containerWidth: initialContainerWidth, googleFonts: !!(shapeblock.layout && shapeblock.layout.google_fonts) });
-    const dirty = saved.containerWidth !== containerWidth || saved.googleFonts !== googleFonts;
+    const [saved, setSaved] = useState({ containerWidth: initialContainerWidth, applyTo: initialApplyTo, googleFonts: !!(shapeblock.layout && shapeblock.layout.google_fonts) });
+    const dirty = saved.containerWidth !== containerWidth || saved.applyTo !== applyTo || saved.googleFonts !== googleFonts;
 
 
     const applyContainerWidthToRoot = (px) => {
-        if (px === '' || px == null) return;
+        if (px === '' || px == null) {
+            document.documentElement.style.removeProperty('--shapeblock-layout-row-max-width');
+            return;
+        }
         document.documentElement.style.setProperty('--shapeblock-layout-row-max-width', `${px}px`);
     };
 
     const handleContainerWidthChange = (value) => {
-        setContainerWidth(value);
-        if (typeof value === 'number') applyContainerWidthToRoot(value);
+        // A cleared field is null; keep it as empty, the theme's width.
+        const width = typeof value === 'number' ? value : '';
+        setContainerWidth(width);
+        applyContainerWidthToRoot(width);
     };
 
     const postJson = (path, body) =>
@@ -60,14 +71,15 @@ export default function Settings() {
 
         const containerWidthValue = (typeof containerWidth === 'number' && containerWidth > 0)
             ? `${containerWidth}px`
-            : LAYOUT_DEFAULTS.container_width;
+            : '';
 
-        postJson('layout', { layout: { container_width: containerWidthValue, google_fonts: googleFonts ? 1 : 0 } })
+        const layout = { container_width: containerWidthValue, apply_to: applyTo, google_fonts: googleFonts ? 1 : 0 };
+        postJson('layout', { layout })
             .then((res) => {
                 const layoutOk = res && res.status === 'success';
                 if (layoutOk) {
-                    shapeblock.layout = res.layout || { container_width: containerWidthValue, google_fonts: googleFonts ? 1 : 0 };
-                    setSaved({ containerWidth, googleFonts });
+                    shapeblock.layout = res.layout || layout;
+                    setSaved({ containerWidth, applyTo, googleFonts });
                     notification.success({
                         message: __( 'Settings saved', 'shapeblock' ),
                         description: __( 'Your settings have been updated.', 'shapeblock' ),
@@ -91,71 +103,97 @@ export default function Settings() {
         const defaultWidth = parseContainerWidth(LAYOUT_DEFAULTS.container_width);
         setContainerWidth(defaultWidth);
         applyContainerWidthToRoot(defaultWidth);
+        setApplyTo(LAYOUT_DEFAULTS.apply_to);
         setGoogleFonts(false);
     };
 
 
-    // The site-wide Content Container and Google Fonts settings.
+    // The site-wide settings, one card each, side by side on a wide screen.
     const settingsPanel = (
         <>
-                    <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 0 }}>{ __( 'Content Container', 'shapeblock' ) }</h2>
-                    <p style={{ marginTop: 0, color: '#555' }}>
-                        { createInterpolateElement(
-                            __( 'Sets the boxed content max-width used by the shapeblock Row block. Stored as the CSS variable <varcode /> on <rootcode />.', 'shapeblock' ),
-                            {
-                                varcode: <code>--shapeblock-layout-row-max-width</code>,
-                                rootcode: <code>:root</code>,
-                            }
-                        ) }
-                    </p>
-
-                    <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-                        <Col xs={24} sm={12} md={8}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: '#f7f8fb', borderRadius: 8 }}>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
-                                    <strong>{ __( 'Container Width', 'shapeblock' ) }</strong>
-                                    <InputNumber
-                                        min={200}
-                                        max={3000}
-                                        step={10}
-                                        addonAfter="px"
-                                        value={containerWidth}
-                                        onChange={handleContainerWidthChange}
-                                        style={{ width: '100%' }}
-                                    />
-                                </div>
+            <Row gutter={[20, 20]} align="stretch">
+                <Col xs={24} lg={12}>
+                    <div className="shapeblock-settings-card">
+                        <div className="shapeblock-settings-card__head">
+                            <span className="shapeblock-settings-card__icon"><ColumnWidthOutlined /></span>
+                            <div>
+                                <h2>{ __( 'Content Container', 'shapeblock' ) }</h2>
+                                <p>
+                                    { createInterpolateElement(
+                                        __( 'The boxed content width of the ShapeBlock Row block, saved as the CSS variable <varcode />. Leave it empty to use your theme’s width.', 'shapeblock' ),
+                                        { varcode: <code>--shapeblock-layout-row-max-width</code> }
+                                    ) }
+                                </p>
                             </div>
-                        </Col>
-                    </Row>
-
-                    <h2 style={{ fontSize: 18, fontWeight: 600, marginTop: 32 }}>{ __( 'Google Fonts', 'shapeblock' ) }</h2>
-                    <p style={{ marginTop: 0, color: '#555' }}>
-                        { __( 'Off by default. While this is off ShapeBlock never contacts Google: the font pickers offer only the fonts already available on the visitor’s device, and no request is made to fonts.google.com or fonts.googleapis.com.', 'shapeblock' ) }
-                    </p>
-                    <p style={{ marginTop: 0, color: '#555' }}>
-                        { createInterpolateElement(
-                            __( 'Turning it on lets the editor download the Google Fonts list and lets the front end load the font files you choose from Google’s servers. Your visitors’ IP addresses are then sent to Google — see Google’s <termsLink>terms of service</termsLink> and <privacyLink>privacy policy</privacyLink>.', 'shapeblock' ),
-                            {
-                                termsLink: <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer noopener" />,
-                                privacyLink: <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer noopener" />,
-                            }
-                        ) }
-                    </p>
-
-                    <Checkbox checked={googleFonts} onChange={(e) => setGoogleFonts(e.target.checked)}>
-                        { __( 'Allow ShapeBlock to connect to Google Fonts', 'shapeblock' ) }
-                    </Checkbox>
-
-                    <div style={{ marginTop: 24, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                        <Button type="primary" onClick={handleSave} loading={saving} disabled={!dirty && !saving}>{ dirty || saving ? __( 'Save Changes', 'shapeblock' ) : __( 'Saved', 'shapeblock' ) }</Button>
-                        <Button onClick={handleReset} disabled={saving}>{ __( 'Reset to Defaults', 'shapeblock' ) }</Button>
+                        </div>
+                        <div className="shapeblock-settings-card__body">
+                            <strong>{ __( 'Container Width', 'shapeblock' ) }</strong>
+                            <InputNumber
+                                min={200}
+                                max={3000}
+                                step={10}
+                                addonAfter="px"
+                                value={containerWidth === '' ? null : containerWidth}
+                                onChange={handleContainerWidthChange}
+                                placeholder={ __( 'Theme default', 'shapeblock' ) }
+                                style={{ width: '100%' }}
+                            />
+                            <strong className="shapeblock-settings-card__label">{ __( 'Apply To', 'shapeblock' ) }</strong>
+                            <Radio.Group
+                                className="shapeblock-settings-card__choices"
+                                value={applyTo}
+                                onChange={(e) => setApplyTo(e.target.value)}
+                                disabled={containerWidth === ''}
+                            >
+                                <Radio value="row">{ __( 'ShapeBlock Row only', 'shapeblock' ) }</Radio>
+                                <Radio value="wide">{ __( 'Row and wide blocks (the theme’s wide width)', 'shapeblock' ) }</Radio>
+                                <Radio value="all">{ __( 'Whole site (the theme’s content and wide width)', 'shapeblock' ) }</Radio>
+                            </Radio.Group>
+                            <p className="shapeblock-settings-card__note">
+                                { __( 'The last two also set the width for core blocks such as Group and Columns, your page content and the theme’s own layout, in the editor as well. Widths saved in the Site Editor’s Styles still take precedence.', 'shapeblock' ) }
+                            </p>
+                        </div>
                     </div>
+                </Col>
+                <Col xs={24} lg={12}>
+                    <div className="shapeblock-settings-card">
+                        <div className="shapeblock-settings-card__head">
+                            <span className="shapeblock-settings-card__icon"><FontSizeOutlined /></span>
+                            <div>
+                                <h2>{ __( 'Google Fonts', 'shapeblock' ) }</h2>
+                                <p>{ __( 'Off by default. While this is off ShapeBlock never contacts Google: the font pickers offer only the fonts already available on the visitor’s device, and no request is made to fonts.google.com or fonts.googleapis.com.', 'shapeblock' ) }</p>
+                            </div>
+                        </div>
+                        <div className="shapeblock-settings-card__body">
+                            <label className="shapeblock-settings-card__switch">
+                                <Switch checked={googleFonts} onChange={setGoogleFonts} />
+                                <span>{ __( 'Allow ShapeBlock to connect to Google Fonts', 'shapeblock' ) }</span>
+                            </label>
+                            <p className="shapeblock-settings-card__note">
+                                { createInterpolateElement(
+                                    __( 'Turning it on lets the editor download the Google Fonts list and lets the front end load the font files you choose from Google’s servers. Your visitors’ IP addresses are then sent to Google — see Google’s <termsLink>terms of service</termsLink> and <privacyLink>privacy policy</privacyLink>.', 'shapeblock' ),
+                                    {
+                                        termsLink: <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer noopener" />,
+                                        privacyLink: <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer noopener" />,
+                                    }
+                                ) }
+                            </p>
+                        </div>
+                    </div>
+                </Col>
+            </Row>
+
+            <div className="shapeblock-settings-actions">
+                <Button type="primary" onClick={handleSave} loading={saving} disabled={!dirty && !saving}>{ dirty || saving ? __( 'Save Changes', 'shapeblock' ) : __( 'Saved', 'shapeblock' ) }</Button>
+                <Button onClick={handleReset} disabled={saving}>{ __( 'Reset to Defaults', 'shapeblock' ) }</Button>
+            </div>
         </>
     );
 
     return (
         <div className="shapeblock-options-content">
             <h1 className="shapeblock-options-title">{ __( 'General', 'shapeblock' ) }</h1>
+            <p className="shapeblock-settings-intro">{ __( 'Site-wide settings for every ShapeBlock block.', 'shapeblock' ) }</p>
             {settingsPanel}
         </div>
     );

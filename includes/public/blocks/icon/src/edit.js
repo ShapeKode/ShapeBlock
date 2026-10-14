@@ -22,6 +22,7 @@ import BorderControl from '../../custom-components/BorderControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import AdvancedControls from '../../custom-components/AdvancedControls';
+import HoverAnimationControl from '../../custom-components/HoverAnimationControl';
 
 import './editor.scss';
 
@@ -210,6 +211,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								{bg(__('Background (Hover)', 'shapeblock'), 'iconBgHover', 'iconBgHoverGradient')}
 								{border(__('Border (Hover)', 'shapeblock'), 'iconBorderHover')}
 								{num(__('Rotation Hover (deg)', 'shapeblock'), 'iconRotationHover')}
+								<Divider />
+								<HoverAnimationControl attributes={attributes} setAttributes={setAttributes} />
 							</PanelBody>
 						)
 					)}

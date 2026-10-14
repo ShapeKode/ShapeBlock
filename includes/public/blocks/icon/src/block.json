@@ -55,6 +55,9 @@
 		"iconBgHoverGradient": { "type": "string", "default": "" },
 		"iconBorderHover": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"iconRotationHover": { "type": "string", "default": "" },
+		"hoverAnimation": { "type": "string", "default": "" },
+		"hoverAnimSpeed": { "type": "string", "default": "" },
+
 	"hideDesktop": { "type": "boolean", "default": false },
 	"hideTablet": { "type": "boolean", "default": false },
 	"hideMobile": { "type": "boolean", "default": false }

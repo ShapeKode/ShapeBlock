@@ -152,6 +152,10 @@
       "type": "string",
       "default": ""
     },
+    "columnsDesktop": {
+      "type": "number",
+      "default": 0
+    },
     "columnsTablet": {
       "type": "number",
       "default": 0
@@ -352,6 +356,50 @@
     "backgroundAttachment": {
       "type": "string",
       "default": "scroll"
+    },
+    "overlayColor": {
+      "type": "string",
+      "default": ""
+    },
+    "overlayGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "overlayOpacity": {
+      "type": "number",
+      "default": 50
+    },
+    "textColor": {
+      "type": "string",
+      "default": ""
+    },
+    "linkColor": {
+      "type": "string",
+      "default": ""
+    },
+    "linkHoverColor": {
+      "type": "string",
+      "default": ""
+    },
+    "headingColor": {
+      "type": "string",
+      "default": ""
+    },
+    "typography": {
+      "type": "object",
+      "default": {}
+    },
+    "typographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "typographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "ariaLabel": {
+      "type": "string",
+      "default": ""
     },
     "border": {
       "type": "object",

@@ -83,7 +83,8 @@ if ( ! empty( $attributes['iconBgGradient'] ) ) {
 	$button['background'] = $attributes['iconBgColor'];
 }
 if ( '' !== $u( 'buttonSize' ) ) { $button['width'] = $u( 'buttonSize' ); $button['height'] = $u( 'buttonSize' ); }
-$button = array_merge( $button, $dims( $attributes['buttonRadius'] ?? [] ), $shadow( $attributes['buttonBoxShadow'] ?? [] ) );
+$hover  = $H::hover_animation( $attributes );
+$button = array_merge( $button, $hover['style'], $dims( $attributes['buttonRadius'] ?? [] ), $shadow( $attributes['buttonBoxShadow'] ?? [] ) );
 if ( ! empty( $attributes['buttonBorder'] ) ) $button = array_merge( $button, $H::border_to_css_props( $attributes['buttonBorder'] ) );
 
 // Button Spacing is the gap between the buttons, in every layout (a side margin
@@ -253,7 +254,7 @@ $icon_allowed_html = array(
 				$custom          = isset( $item['customIcon'] ) ? $item['customIcon'] : '';
 				$has_custom_icon = ! empty( $custom ) && 'none' !== $custom;
 
-				$btn_class = 'shapeblock-social-button shapeblock-' . sanitize_html_class( $platform );
+				$btn_class = trim( 'shapeblock-social-button shapeblock-' . sanitize_html_class( $platform ) . ' ' . $hover['class'] );
 
 				if ( 'copy' === $platform ) {
 					echo '<a href="#" class="' . esc_attr( $btn_class ) . ' shapeblock-social-copy" data-url="' . esc_attr( $current_url ) . '" title="' . esc_attr__( 'Copy Link', 'shapeblock' ) . '">';

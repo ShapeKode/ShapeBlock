@@ -21,6 +21,7 @@ import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import BackgroundControl from '../../custom-components/BackgroundControl';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import AdvancedControls from '../../custom-components/AdvancedControls';
+import HoverAnimationControl from '../../custom-components/HoverAnimationControl';
 
 import './editor.scss';
 
@@ -191,6 +192,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<BorderControl label={__('Border', 'shapeblock')} value={attributes.buttonBorder} onChange={(v) => setAttributes({ buttonBorder: v })} />
 			<BorderControl label={__('Border (Hover)', 'shapeblock')} value={attributes.buttonBorderHover} onChange={(v) => setAttributes({ buttonBorderHover: v })} />
 			<BoxShadowControls label={__('Box Shadow', 'shapeblock')} value={attributes.buttonBoxShadow} onChange={(v) => setAttributes({ buttonBoxShadow: v })} />
+			<Divider />
+			<HoverAnimationControl attributes={attributes} setAttributes={setAttributes} />
 
 			{colorMode === 'global' && (
 				<>

@@ -1,0 +1,148 @@
+/* --- Hover animations ----------------------------------------------------
+ * Shared by the blocks that offer a Hover Animation setting (Helper::
+ * hover_animation() picks the class). Each block's own transition uses
+ * --shapeblock-hover-speed too, so one speed drives both kinds below.
+ */
+
+// Transitions: the element eases to a new place and back.
+.shapeblock-hover-grow:hover {
+	transform: scale(1.1);
+}
+
+.shapeblock-hover-shrink:hover {
+	transform: scale(0.9);
+}
+
+.shapeblock-hover-float:hover {
+	transform: translateY(-8px);
+}
+
+.shapeblock-hover-sink:hover {
+	transform: translateY(8px);
+}
+
+.shapeblock-hover-rotate:hover {
+	transform: rotate(15deg);
+}
+
+.shapeblock-hover-spin:hover {
+	transform: rotate(360deg);
+}
+
+// Keyframes: play while the pointer stays, or once.
+.shapeblock-hover-pulse:hover {
+	animation: shapeblock-hover-pulse var(--shapeblock-hover-speed, 1s) linear infinite;
+}
+
+.shapeblock-hover-pop:hover {
+	animation: shapeblock-hover-pop var(--shapeblock-hover-speed, 0.3s) linear 1;
+}
+
+.shapeblock-hover-bob:hover {
+	animation: shapeblock-hover-bob var(--shapeblock-hover-speed, 1.5s) ease-in-out infinite;
+}
+
+.shapeblock-hover-hang:hover {
+	animation: shapeblock-hover-hang var(--shapeblock-hover-speed, 1.5s) ease-in-out infinite;
+}
+
+.shapeblock-hover-wobble-horizontal:hover {
+	animation: shapeblock-hover-wobble-x var(--shapeblock-hover-speed, 1s) ease-in-out 1;
+}
+
+.shapeblock-hover-wobble-vertical:hover {
+	animation: shapeblock-hover-wobble-y var(--shapeblock-hover-speed, 1s) ease-in-out 1;
+}
+
+.shapeblock-hover-buzz:hover {
+	animation: shapeblock-hover-buzz var(--shapeblock-hover-speed, 0.15s) linear infinite;
+}
+
+@keyframes shapeblock-hover-pulse {
+	25% {
+		transform: scale(1.1);
+	}
+
+	75% {
+		transform: scale(0.9);
+	}
+}
+
+@keyframes shapeblock-hover-pop {
+	50% {
+		transform: scale(1.2);
+	}
+}
+
+@keyframes shapeblock-hover-bob {
+	50% {
+		transform: translateY(-8px);
+	}
+}
+
+@keyframes shapeblock-hover-hang {
+	50% {
+		transform: translateY(8px);
+	}
+}
+
+@keyframes shapeblock-hover-wobble-x {
+	16.65% {
+		transform: translateX(8px);
+	}
+
+	33.3% {
+		transform: translateX(-6px);
+	}
+
+	49.95% {
+		transform: translateX(4px);
+	}
+
+	66.6% {
+		transform: translateX(-2px);
+	}
+
+	83.25% {
+		transform: translateX(1px);
+	}
+}
+
+@keyframes shapeblock-hover-wobble-y {
+	16.65% {
+		transform: translateY(8px);
+	}
+
+	33.3% {
+		transform: translateY(-6px);
+	}
+
+	49.95% {
+		transform: translateY(4px);
+	}
+
+	66.6% {
+		transform: translateY(-2px);
+	}
+
+	83.25% {
+		transform: translateY(1px);
+	}
+}
+
+@keyframes shapeblock-hover-buzz {
+	50% {
+		transform: translateX(3px) rotate(2deg);
+	}
+
+	100% {
+		transform: translateX(-3px) rotate(-2deg);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[class*="shapeblock-hover-"]:hover {
+		transform: none;
+		animation: none;
+	}
+}

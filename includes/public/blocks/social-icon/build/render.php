@@ -64,7 +64,8 @@ $u = function ( $key ) use ( $attributes, $H ) {
 // Button box.
 $button = [];
 if ( '' !== $u( 'buttonSize' ) ) { $b = $u( 'buttonSize' ); $button['width'] = $b; $button['height'] = $b; $button['line-height'] = $b; }
-$button = array_merge( $button, $dims( $attributes['buttonRadius'] ?? [] ), $shadow( $attributes['buttonBoxShadow'] ?? [] ) );
+$hover  = $H::hover_animation( $attributes );
+$button = array_merge( $button, $hover['style'], $dims( $attributes['buttonRadius'] ?? [] ), $shadow( $attributes['buttonBoxShadow'] ?? [] ) );
 if ( ! empty( $attributes['buttonBorder'] ) ) $button = array_merge( $button, $H::border_to_css_props( $attributes['buttonBorder'] ) );
 
 $button_hover = [];
@@ -187,7 +188,7 @@ $H::add_custom_style( $style_handle, $selector, $extra_css, $sub );
 					}
 				}
 
-				echo '<a href="' . esc_url( $url ) . '" class="shapeblock-si-button shapeblock-si-item-' . esc_attr( $index ) . '" target="' . esc_attr( $target ) . '"'
+				echo '<a href="' . esc_url( $url ) . '" class="' . esc_attr( trim( 'shapeblock-si-button shapeblock-si-item-' . $index . ' ' . $hover['class'] ) ) . '" target="' . esc_attr( $target ) . '"'
 					. ( ! empty( $rel ) ? ' rel="' . esc_attr( implode( ' ', $rel ) ) . '"' : '' )
 					. ' title="' . esc_attr( $title ) . '"' . ( '' !== $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>';
 				if ( ! empty( $icon ) && 'none' !== $icon ) {

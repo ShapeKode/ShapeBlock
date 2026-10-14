@@ -83,6 +83,53 @@ if ( $bg_image_url ) {
     if ( ! empty( $attributes['backgroundAttachment'] ) ) $row_responsive['desktop']['background-attachment'] = $attributes['backgroundAttachment'];
 }
 
+// Overlay over the background (image), under the content: a layer of its own
+// (style.scss), painted from these two custom properties.
+$overlay = ! empty( $attributes['overlayGradient'] ) ? $attributes['overlayGradient'] : ( ! empty( $attributes['overlayColor'] ) ? $attributes['overlayColor'] : '' );
+if ( '' !== $overlay ) {
+    $row_responsive['desktop']['--shapeblock-row-overlay']         = $overlay;
+    $row_responsive['desktop']['--shapeblock-row-overlay-opacity'] = min( 100, max( 0, (int) ( $attributes['overlayOpacity'] ?? 50 ) ) ) / 100;
+}
+
+// Colors for the content, as the core Group block has them: the text, links and
+// headings inside the Row inherit these unless a block sets its own.
+$color_css = '';
+if ( ! empty( $attributes['textColor'] ) ) {
+    $row_responsive['desktop']['color'] = $attributes['textColor'];
+    // Every ShapeBlock block starts from a color of its own (public.css); inside
+    // this Row they take the Row's instead. Their own color settings, printed
+    // with more classes, still win.
+    $color_css .= '.' . $unique_id . ' :where(.shapeblock-block){color:inherit}';
+}
+foreach ( [
+    'linkColor'      => ' a:where(:not(.wp-element-button))',
+    'linkHoverColor' => ' a:where(:not(.wp-element-button)):hover',
+    // :is() weighs as much as public.css's .shapeblock-block h2 and comes later.
+    'headingColor'   => ' :is(h1,h2,h3,h4,h5,h6)',
+] as $color_key => $color_sel ) {
+    if ( ! empty( $attributes[ $color_key ] ) ) {
+        $color_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css( $selector . $color_sel, [ 'desktop' => [ 'color' => $attributes[ $color_key ] ] ] );
+    }
+}
+
+// Typography for the content, per device; the blocks inside inherit it.
+foreach ( [ '' => 'desktop', 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $typo_sfx => $typo_dev ) {
+    $typo = $attributes[ 'typography' . $typo_sfx ] ?? [];
+    if ( empty( $typo ) || ! is_array( $typo ) ) {
+        continue;
+    }
+    foreach ( [ 'fontFamily' => 'font-family', 'fontWeight' => 'font-weight', 'fontStyle' => 'font-style', 'textTransform' => 'text-transform', 'textDecoration' => 'text-decoration', 'lineHeight' => 'line-height' ] as $typo_key => $typo_prop ) {
+        if ( ! empty( $typo[ $typo_key ] ) ) {
+            $row_responsive[ $typo_dev ][ $typo_prop ] = $typo[ $typo_key ];
+        }
+    }
+    foreach ( [ 'fontSize' => 'font-size', 'letterSpacing' => 'letter-spacing' ] as $typo_key => $typo_prop ) {
+        if ( isset( $typo[ $typo_key ] ) && '' !== $typo[ $typo_key ] ) {
+            $row_responsive[ $typo_dev ][ $typo_prop ] = \ShapeBlock\Frontend\Helper::ensure_unit( $typo[ $typo_key ] );
+        }
+    }
+}
+
 // Border.
 if ( ! empty( $attributes['border'] ) ) {
     foreach ( \ShapeBlock\Frontend\Helper::border_to_css_props( $attributes['border'] ) as $prop => $val ) {
@@ -146,7 +193,10 @@ $columns_per_row = function ( $count ) {
     $gap_share = rtrim( rtrim( number_format( ( $count - 1 ) / $count, 4, '.', '' ), '0' ), '.' );
     return 'calc(' . $pct . '% - var(--bp-gap, 0px) * ' . $gap_share . ')';
 };
-$cols_tablet = $columns_per_row( $attributes['columnsTablet'] ?? 0 );
+// Desktop (the Grid layout): every column the same width, N to a line, in
+// place of the widths the columns carry. 0 keeps those widths.
+$cols_desktop = $columns_per_row( $attributes['columnsDesktop'] ?? 0 );
+$cols_tablet  = $columns_per_row( $attributes['columnsTablet'] ?? 0 );
 $cols_mobile = $columns_per_row( $attributes['columnsMobile'] ?? 0 );
 if ( $cols_tablet ) {
     $row_responsive['desktop']['--bp-col-tablet'] = $cols_tablet;
@@ -169,7 +219,10 @@ $inner_blocks   = ( isset( $block ) && isset( $block->parsed_block['innerBlocks'
     : [];
 
 foreach ( [
-    'Tablet' => [ '@media (max-width: 1024px)', $cols_tablet ],
+    // Desktop only, so a column's own Tablet / Mobile width still wins there.
+    ''       => [ '@media (min-width: 1025px)', $cols_desktop ],
+    // A grid keeps its column count on tablet unless one is set for tablet.
+    'Tablet' => [ '@media (max-width: 1024px)', $cols_tablet ? $cols_tablet : $cols_desktop ],
     'Mobile' => [ '@media (max-width: 767px)', $cols_mobile ? $cols_mobile : '100%' ],
 ] as $suffix => $device ) {
     list( $query, $basis ) = $device;
@@ -200,7 +253,8 @@ foreach ( [
         $own_width = trim( (string) ( $col_attrs[ 'width' . $suffix ] ?? '' ) );
         $own_basis = trim( (string) ( $col_attrs[ 'flexBasis' . $suffix ] ?? '' ) );
 
-        if ( '' !== $own_width || '' !== $own_basis ) {
+        // On desktop the grid sets every width: the columns always carry one.
+        if ( '' !== $suffix && ( '' !== $own_width || '' !== $own_basis ) ) {
             continue;
         }
 
@@ -288,6 +342,7 @@ foreach ( $row_responsive as $device => $decls ) {
 $style_handle = 'shapeblock-layout-row-style';
 $css  = \ShapeBlock\Frontend\Helper::generate_responsive_css( $selector, $row_responsive );
 $css .= \ShapeBlock\Frontend\Helper::generate_responsive_css( '.shapeblock-block.shapeblock-layout-row' . $selector, $row_margin );
+$css .= $color_css;
 $css .= $per_device_css;
 
 wp_enqueue_style( $style_handle );
@@ -305,6 +360,7 @@ if ( $stretch )      $classes[] = 'is-stretch';
 if ( $cols_tablet )  $classes[] = 'has-tablet-columns';
 if ( $cols_mobile )  $classes[] = 'has-mobile-columns';
 if ( ! empty( $attributes['isSticky'] ) ) $classes[] = 'is-sticky';
+if ( '' !== $overlay ) $classes[] = 'has-overlay';
 if ( ! empty( $attributes['hideDesktop'] ) ) $classes[] = 'shapeblock-hide-desktop';
 if ( ! empty( $attributes['hideTablet'] ) )  $classes[] = 'shapeblock-hide-tablet';
 if ( ! empty( $attributes['hideMobile'] ) )  $classes[] = 'shapeblock-hide-mobile';
@@ -337,6 +393,11 @@ if ( '' !== $align && ! wp_theme_has_theme_json() ) {
 $wrapper_args = [ 'class' => implode( ' ', $classes ) ];
 if ( $sticky_styles ) {
     $wrapper_args['style'] = $sticky_styles;
+}
+// Names the Row for screen readers, as the core Group block's ARIA label does.
+$aria_label = isset( $attributes['ariaLabel'] ) ? trim( sanitize_text_field( (string) $attributes['ariaLabel'] ) ) : '';
+if ( '' !== $aria_label ) {
+    $wrapper_args['aria-label'] = $aria_label;
 }
 $wrapper_attrs = get_block_wrapper_attributes( $wrapper_args );
 

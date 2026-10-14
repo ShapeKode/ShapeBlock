@@ -114,3 +114,11 @@
         &:hover .shapeblock-preset-icon__col { background: #a216ff; }
     }
 }
+
+// Background image buttons in the sidebar.
+.shapeblock-row-bg-image {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}

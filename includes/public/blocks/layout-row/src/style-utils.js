@@ -103,7 +103,22 @@ const collectDevice = (attrs, suffix) => {
     Object.assign(decls, boxToCss(k('padding'), 'padding'));
     Object.assign(decls, boxToCss(k('margin'), 'margin'));
 
+    // Typography for the content, as render.php writes it.
+    const typo = k('typography');
+    if (typo && typeof typo === 'object') {
+        [['fontFamily', 'font-family'], ['fontWeight', 'font-weight'], ['fontStyle', 'font-style'], ['textTransform', 'text-transform'], ['textDecoration', 'text-decoration'], ['lineHeight', 'line-height']]
+            .forEach(([key, prop]) => { if (typo[key]) decls[prop] = typo[key]; });
+        [['fontSize', 'font-size'], ['letterSpacing', 'letter-spacing']]
+            .forEach(([key, prop]) => { if (typo[key] !== '' && typo[key] != null) decls[prop] = ensureUnit(typo[key]); });
+    }
+
     if (suffix === '') {
+        if (attrs.textColor) decls.color = attrs.textColor;
+        const overlay = attrs.overlayGradient || attrs.overlayColor;
+        if (overlay) {
+            decls['--shapeblock-row-overlay'] = overlay;
+            decls['--shapeblock-row-overlay-opacity'] = Math.min(100, Math.max(0, parseInt(attrs.overlayOpacity ?? 50, 10) || 0)) / 100;
+        }
         if (attrs.background) decls['background-color'] = attrs.background;
         if (attrs.backgroundGradient) decls['background-image'] = attrs.backgroundGradient;
         if (attrs.backgroundImage?.url) {
@@ -169,8 +184,11 @@ const columnsPerRowBasis = (count) => {
  * @return {string} CSS.
  */
 const columnsPerRowCss = (attrs, innerBlocks, sel) => {
+    const desktop = columnsPerRowBasis(attrs.columnsDesktop);
     const devices = [
-        { suffix: 'Tablet', query: BREAKPOINTS.tablet, basis: columnsPerRowBasis(attrs.columnsTablet) },
+        // The grid's desktop basis replaces every column's own desktop width.
+        { suffix: '', query: '@media (min-width: 1025px)', basis: desktop },
+        { suffix: 'Tablet', query: BREAKPOINTS.tablet, basis: columnsPerRowBasis(attrs.columnsTablet) || desktop },
         { suffix: 'Mobile', query: BREAKPOINTS.mobile, basis: columnsPerRowBasis(attrs.columnsMobile) || '100%' },
     ];
 
@@ -180,7 +198,7 @@ const columnsPerRowCss = (attrs, innerBlocks, sel) => {
 
             const rules = (innerBlocks || [])
                 .filter((b) => b && 'shapeblock/column' === b.name && b.attributes && b.attributes.blockId)
-                .filter((b) => !b.attributes[`width${suffix}`] && !b.attributes[`flexBasis${suffix}`])
+                .filter((b) => suffix === '' || (!b.attributes[`width${suffix}`] && !b.attributes[`flexBasis${suffix}`]))
                 .map(
                     (b) =>
                         `.shapeblock-layout-row${sel} > .shapeblock-layout-row__inner > .shapeblock-column.${b.attributes.blockId}` +
@@ -245,6 +263,18 @@ export const buildRowEditorCss = (attrs, innerBlocks = []) => {
     });
 
     css += columnsPerRowCss(attrs, innerBlocks, sel);
+
+    // Blocks inside take the Row's text color, as in render.php.
+    if (attrs.textColor) css += `${sel} :where(.shapeblock-block){color:inherit}`;
+
+    // Link and heading colors, under the same selectors as render.php.
+    [
+        ['linkColor', ' a:where(:not(.wp-element-button))'],
+        ['linkHoverColor', ' a:where(:not(.wp-element-button)):hover'],
+        ['headingColor', ' :is(h1,h2,h3,h4,h5,h6)'],
+    ].forEach(([key, child]) => {
+        if (attrs[key]) css += `${sel}${child}{color:${attrs[key]}}`;
+    });
 
     // The Advanced tab's spacing comes from a PHP filter on the page, which
     // never runs for a block the browser draws itself. Added last so it wins

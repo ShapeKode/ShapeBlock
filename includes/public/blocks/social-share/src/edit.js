@@ -20,6 +20,7 @@ import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import BackgroundControl from '../../custom-components/BackgroundControl';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import AdvancedControls from '../../custom-components/AdvancedControls';
+import HoverAnimationControl from '../../custom-components/HoverAnimationControl';
 
 import './editor.scss';
 
@@ -168,6 +169,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<BoxControl label={__('Border Radius', 'shapeblock')} values={attributes.buttonRadius} onChange={(v) => setAttributes({ buttonRadius: v })} />
 			<BorderControl label={__('Border', 'shapeblock')} value={attributes.buttonBorder} onChange={(v) => setAttributes({ buttonBorder: v })} />
 			<BoxShadowControls label={__('Box Shadow', 'shapeblock')} value={attributes.buttonBoxShadow} onChange={(v) => setAttributes({ buttonBoxShadow: v })} />
+			<Divider />
+			<HoverAnimationControl attributes={attributes} setAttributes={setAttributes} defaultLabel={__('Lift (default)', 'shapeblock')} allowNone />
 		</PanelBody>
 	);
 

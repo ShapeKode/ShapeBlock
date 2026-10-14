@@ -32,6 +32,12 @@ if ( 'default' !== $view ) {
 	$el_classes .= ' shapeblock-icon-shape-' . $shape;
 }
 
+// Hover animation: a class from a fixed list, its speed as a custom property.
+$hover = $H::hover_animation( $attributes );
+if ( '' !== $hover['class'] ) {
+	$el_classes .= ' ' . $hover['class'];
+}
+
 $block_wrap_attr = get_block_wrapper_attributes( array(
 	'class' => 'shapeblock-block shapeblock-icon-block-wrap ' . $unique_id,
 ) );
@@ -96,7 +102,7 @@ if ( ! empty( $attributes['iconBgGradient'] ) ) {
 if ( isset( $attributes['iconSize'] ) && '' !== $attributes['iconSize'] ) {
 	$box_styles['font-size'] = $H::ensure_unit( $attributes['iconSize'] );
 }
-$box_styles = array_merge( $box_styles, $dims( $attributes['iconPadding'] ?? [], 'padding' ), $dims( $attributes['iconBorderRadius'] ?? [], 'radius' ), $shadow( $attributes['iconBoxShadow'] ?? [] ) );
+$box_styles = array_merge( $box_styles, $hover['style'], $dims( $attributes['iconPadding'] ?? [], 'padding' ), $dims( $attributes['iconBorderRadius'] ?? [], 'radius' ), $shadow( $attributes['iconBoxShadow'] ?? [] ) );
 if ( ! empty( $attributes['iconBorder'] ) ) {
 	$box_styles = array_merge( $box_styles, $H::border_to_css_props( $attributes['iconBorder'] ) );
 }

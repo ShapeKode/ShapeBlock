@@ -7,6 +7,8 @@ import {
     useInnerBlocksProps,
     InspectorControls,
     BlockControls,
+    MediaUpload,
+    MediaUploadCheck,
     store as blockEditorStore,
 } from '@wordpress/block-editor';
 import {
@@ -21,6 +23,7 @@ import {
     ToolbarButton,
     Button,
     TabPanel,
+    FocalPointPicker,
     __experimentalUnitControl as UnitControl,
     __experimentalToggleGroupControl as ToggleGroupControl,
     __experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon,
@@ -35,6 +38,8 @@ import {
 } from './flexbox-icons';
 
 import BackgroundControl from '../../custom-components/BackgroundControl';
+import ColorPopover from '../../custom-components/ColorPopover';
+import TypographyControls from '../../custom-components/TypographyControls';
 import BorderControl from '../../custom-components/BorderControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
@@ -50,6 +55,23 @@ const ALLOWED_BLOCKS = ['shapeblock/column'];
 
 const getKey = (base, device) =>
     device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
+
+// Background position as the focal point picker reads it (0-1 on each axis),
+// from a saved "x% y%" or the keyword pairs older Rows were saved with.
+const AXIS = { left: 0, top: 0, center: 0.5, right: 1, bottom: 1 };
+const toFocalPoint = (position) => {
+    const [a, b = 'center'] = String(position || 'center center').trim().split(/\s+/);
+    const read = (part) => {
+        if (part in AXIS) return AXIS[part];
+        const n = parseFloat(part);
+        return Number.isNaN(n) ? 0.5 : Math.min(1, Math.max(0, n / 100));
+    };
+    // A keyword pair can name the vertical side first ("top left").
+    const vertical = (p) => p === 'top' || p === 'bottom';
+    const horizontal = (p) => p === 'left' || p === 'right';
+    return vertical(a) || horizontal(b) ? { x: read(b), y: read(a) } : { x: read(a), y: read(b) };
+};
+const fromFocalPoint = ({ x, y }) => `${Math.round(x * 100)}% ${Math.round(y * 100)}%`;
 
 const presetIcon = (preset) => {
     const total = preset.columns.reduce((a, b) => a + b, 0);
@@ -112,6 +134,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         equalHeight ? 'is-equal-height' : '',
         stretchColumns ? 'is-stretch' : '',
         attributes.isSticky ? 'is-sticky' : '',
+        attributes.overlayColor || attributes.overlayGradient ? 'has-overlay' : '',
         parseInt(attributes.columnsTablet, 10) > 0 ? 'has-tablet-columns' : '',
         parseInt(attributes.columnsMobile, 10) > 0 ? 'has-mobile-columns' : '',
         customClass,
@@ -214,6 +237,15 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     __next40pxDefaultSize
                     __nextHasNoMarginBottom
                 />
+                <Divider />
+                <TextControl
+                    label={__('ARIA Label', 'shapeblock')}
+                    help={__('A name screen readers announce for this section, for example “Our services”.', 'shapeblock')}
+                    value={attributes.ariaLabel}
+                    onChange={(v) => setAttributes({ ariaLabel: v })}
+                    __next40pxDefaultSize
+                    __nextHasNoMarginBottom
+                />
             </PanelBody>
 
             <PanelBody title={__('Sticky', 'shapeblock')} initialOpen={false}>
@@ -277,6 +309,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     ))}
                 </div>
                 <Divider />
+                <RangeControl
+                    label={__('Columns per row (Desktop)', 'shapeblock')}
+                    help={__('0 keeps each column’s own width. A number makes a grid: the columns share the line equally and wrap onto the next.', 'shapeblock')}
+                    value={parseInt(attributes.columnsDesktop, 10) || 0}
+                    onChange={(v) => setAttributes({ columnsDesktop: v || 0, ...(v ? { flexWrap: 'wrap' } : {}) })}
+                    min={0}
+                    max={6}
+                    __next40pxDefaultSize
+                    __nextHasNoMarginBottom
+                />
                 <RangeControl
                     label={__('Columns per row (Tablet)', 'shapeblock')}
                     help={__('0 keeps the desktop layout.', 'shapeblock')}
@@ -596,14 +638,29 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     onGradientChange={(v) => setAttributes({ backgroundGradient: v || '' })}
                 />
                 <Divider />
+                <MediaUploadCheck>
+                    <MediaUpload
+                        onSelect={(media) => setAttributes({ backgroundImage: { url: media.url, id: media.id } })}
+                        allowedTypes={['image']}
+                        value={attributes.backgroundImage?.id}
+                        render={({ open }) => (
+                            <div className="shapeblock-row-bg-image">
+                                <Button variant="secondary" onClick={open}>
+                                    {attributes.backgroundImage?.url ? __('Replace Image', 'shapeblock') : __('Choose Background Image', 'shapeblock')}
+                                </Button>
+                                {attributes.backgroundImage?.url && (
+                                    <Button variant="tertiary" isDestructive onClick={() => setAttributes({ backgroundImage: { url: '', id: 0 } })}>
+                                        {__('Remove', 'shapeblock')}
+                                    </Button>
+                                )}
+                            </div>
+                        )}
+                    />
+                </MediaUploadCheck>
                 <TextControl
-                    label={__('Background Image URL', 'shapeblock')}
+                    label={__('Or Image URL', 'shapeblock')}
                     value={attributes.backgroundImage?.url || ''}
-                    onChange={(v) =>
-                        setAttributes({
-                            backgroundImage: { ...attributes.backgroundImage, url: v },
-                        })
-                    }
+                    onChange={(v) => setAttributes({ backgroundImage: { url: v, id: 0 } })}
                     __next40pxDefaultSize
                     __nextHasNoMarginBottom
                 />
@@ -635,22 +692,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             __next40pxDefaultSize
                             __nextHasNoMarginBottom
                         />
-                        <SelectControl
+                        <FocalPointPicker
                             label={__('Position', 'shapeblock')}
-                            value={attributes.backgroundPosition}
-                            options={[
-                                { label: 'center center', value: 'center center' },
-                                { label: 'top left', value: 'top left' },
-                                { label: 'top center', value: 'top center' },
-                                { label: 'top right', value: 'top right' },
-                                { label: 'center left', value: 'center left' },
-                                { label: 'center right', value: 'center right' },
-                                { label: 'bottom left', value: 'bottom left' },
-                                { label: 'bottom center', value: 'bottom center' },
-                                { label: 'bottom right', value: 'bottom right' },
-                            ]}
-                            onChange={(v) => setAttributes({ backgroundPosition: v })}
-                            __next40pxDefaultSize
+                            url={attributes.backgroundImage.url}
+                            value={toFocalPoint(attributes.backgroundPosition)}
+                            onChange={(v) => setAttributes({ backgroundPosition: fromFocalPoint(v) })}
                             __nextHasNoMarginBottom
                         />
                         <SelectControl
@@ -666,6 +712,45 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                         />
                     </>
                 )}
+            </PanelBody>
+
+            <PanelBody title={__('Background Overlay', 'shapeblock')} initialOpen={false}>
+                <BackgroundControl
+                    label={__('Overlay', 'shapeblock')}
+                    colorValue={attributes.overlayColor}
+                    gradientValue={attributes.overlayGradient}
+                    onColorChange={(v) => {
+                        const hex = v && typeof v === 'object' ? v.hex : v;
+                        setAttributes({ overlayColor: hex || '' });
+                    }}
+                    onGradientChange={(v) => setAttributes({ overlayGradient: v || '' })}
+                />
+                {(attributes.overlayColor || attributes.overlayGradient) && (
+                    <RangeControl
+                        label={__('Overlay Opacity (%)', 'shapeblock')}
+                        value={attributes.overlayOpacity}
+                        onChange={(v) => setAttributes({ overlayOpacity: v ?? 50 })}
+                        min={0}
+                        max={100}
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                    />
+                )}
+            </PanelBody>
+
+            <PanelBody title={__('Colors', 'shapeblock')} initialOpen={false}>
+                <ColorPopover label={__('Text', 'shapeblock')} color={attributes.textColor} onChange={(v) => setAttributes({ textColor: v || '' })} />
+                <ColorPopover label={__('Link', 'shapeblock')} color={attributes.linkColor} onChange={(v) => setAttributes({ linkColor: v || '' })} />
+                <ColorPopover label={__('Link Hover', 'shapeblock')} color={attributes.linkHoverColor} onChange={(v) => setAttributes({ linkHoverColor: v || '' })} />
+                <ColorPopover label={__('Heading', 'shapeblock')} color={attributes.headingColor} onChange={(v) => setAttributes({ headingColor: v || '' })} />
+            </PanelBody>
+
+            <PanelBody title={__('Typography', 'shapeblock')} initialOpen={false}>
+                <ResponsiveWrapper label={__('Typography', 'shapeblock')}>
+                    {(device) => (
+                        <TypographyControls attributes={attributes} setAttributes={setAttributes} attributeKey={getKey('typography', device)} />
+                    )}
+                </ResponsiveWrapper>
             </PanelBody>
 
             <PanelBody title={__('Border', 'shapeblock')} initialOpen={false}>

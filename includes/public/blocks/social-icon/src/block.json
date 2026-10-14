@@ -58,6 +58,8 @@
 		"gHoverBgGradient": { "type": "string", "default": "" },
 		"gIconColor": { "type": "string", "default": "" },
 		"gHoverIconColor": { "type": "string", "default": "#ffffff" },
+		"hoverAnimation": { "type": "string", "default": "" },
+		"hoverAnimSpeed": { "type": "string", "default": "" },
 	"hideDesktop": { "type": "boolean", "default": false },
 	"hideTablet": { "type": "boolean", "default": false },
 	"hideMobile": { "type": "boolean", "default": false }

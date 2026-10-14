@@ -57,6 +57,8 @@
 		"buttonRadius": { "type": "object", "default": { "top": "50%", "right": "50%", "bottom": "50%", "left": "50%" } },
 		"buttonBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
 		"buttonBoxShadow": { "type": "object", "default": { "x": 0, "y": 0, "b": 0, "s": 0, "c": "rgba(0, 0, 0, 0)" } },
+		"hoverAnimation": { "type": "string", "default": "" },
+		"hoverAnimSpeed": { "type": "string", "default": "" },
 	"hideDesktop": { "type": "boolean", "default": false },
 	"hideTablet": { "type": "boolean", "default": false },
 	"hideMobile": { "type": "boolean", "default": false }
