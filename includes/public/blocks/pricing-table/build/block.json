@@ -24,6 +24,21 @@
       "full"
     ]
   },
+  "styles": [
+    {
+      "name": "default",
+      "label": "Classic",
+      "isDefault": true
+    },
+    {
+      "name": "centered",
+      "label": "Centered"
+    },
+    {
+      "name": "dark",
+      "label": "Dark"
+    }
+  ],
   "textdomain": "shapeblock",
   "editorScript": "file:./index.js",
   "render": "file:./render.php",
@@ -94,6 +109,10 @@
       "type": "string",
       "default": ""
     },
+    "planPicker": {
+      "type": "boolean",
+      "default": false
+    },
     "title": {
       "type": "string",
       "default": "Basic Plan"
@@ -136,7 +155,7 @@
     },
     "headerAlignment": {
       "type": "string",
-      "default": "left"
+      "default": ""
     },
     "headerAlignmentTablet": {
       "type": "string",
@@ -191,9 +210,13 @@
       "type": "string",
       "default": "icon-only"
     },
+    "featureIcon": {
+      "type": "string",
+      "default": "check"
+    },
     "featureTextAlignment": {
       "type": "string",
-      "default": "left"
+      "default": ""
     },
     "featureTextAlignmentTablet": {
       "type": "string",
@@ -303,7 +326,7 @@
     },
     "btnAlignment": {
       "type": "string",
-      "default": "left"
+      "default": ""
     },
     "btnAlignmentTablet": {
       "type": "string",

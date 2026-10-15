@@ -1,28 +1,36 @@
-import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
-import { useSelect } from '@wordpress/data';
+import { __, sprintf } from '@wordpress/i18n';
+import { useEffect, useMemo, useState } from '@wordpress/element';
+import { useSelect, useDispatch } from '@wordpress/data';
+import { createBlock } from '@wordpress/blocks';
 import ServerSideRender from '../../custom-components/ServerRender';
-import { useBlockProps, InspectorControls, BlockControls, AlignmentControl } from '@wordpress/block-editor';
 import {
+	useBlockProps,
+	useInnerBlocksProps,
+	InspectorControls,
+	BlockControls,
+	AlignmentControl,
+	RichText,
+	store as blockEditorStore,
+} from '@wordpress/block-editor';
+import {
+	Placeholder,
 	PanelBody,
 	SelectControl,
 	ToggleControl,
 	TextControl,
-	TextareaControl,
 	BoxControl,
-	Button,
 	TabPanel,
 	__experimentalDivider as Divider,
 } from '@wordpress/components';
 
 import ColorPopover from '../../custom-components/ColorPopover';
 import BackgroundControl from '../../custom-components/BackgroundControl';
-import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
 import BorderControl from '../../custom-components/BorderControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import AdvancedControls from '../../custom-components/AdvancedControls';
+import { PRICE_BLOCK, PRICE_KEYS } from './price';
 
 import './editor.scss';
 
@@ -30,16 +38,19 @@ import './editor.scss';
 const getKey = (base, device) =>
 	device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
 
-const SVG = (path) => (
-	<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-		<path d={path} fill="currentColor" />
-	</svg>
-);
-const ICON_ARROW_UP = SVG('M12 6.6l-6 6 1.4 1.4 4.6-4.6 4.6 4.6 1.4-1.4z');
-const ICON_ARROW_DOWN = SVG('M12 15.4l6-6-1.4-1.4-4.6 4.6-4.6-4.6-1.4 1.4z');
-const ICON_TRASH = SVG('M9 3v1H4v2h16V4h-5V3H9zM6 7l1 13h10l1-13H6zm4 2h1v9h-1V9zm3 0h1v9h-1V9z');
-const ICON_ADD = SVG('M11 5v6H5v2h6v6h2v-6h6v-2h-6V5z');
-const ICON_COPY = SVG('M5 4h10v2H7v10H5V4zM9 8h10v12H9V8zm2 2v8h6v-8h-6z');
+// Text saved as plain text, put into blocks that hold HTML. Entities are read
+// first: a site that filters what its editors save stored & as &amp;.
+const toHtml = (text) => {
+	const el = document.createElement('textarea');
+	el.innerHTML = String(text ?? '');
+	return el.value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+};
+
+const STYLES = [
+	{ name: 'default', label: __('Classic', 'shapeblock') },
+	{ name: 'centered', label: __('Centered', 'shapeblock') },
+	{ name: 'dark', label: __('Dark', 'shapeblock') },
+];
 
 const ALIGN_OPTIONS = [
 	{ label: __('Left', 'shapeblock'), value: 'left' },
@@ -47,42 +58,95 @@ const ALIGN_OPTIONS = [
 	{ label: __('Right', 'shapeblock'), value: 'right' },
 ];
 
+/**
+ * The card's blocks, from the settings a Pricing Table saved before it was
+ * made of blocks (and from the defaults, for a new one): the title, the
+ * description, the price, the features and the button.
+ *
+ * @param {Object} a Block attributes.
+ * @return {Array} Blocks.
+ */
+const cardBlocks = (a) => {
+	const blocks = [createBlock('core/heading', { level: 3, content: a.title || '', className: 'shapeblock-price-title' })];
+	if (a.description) {
+		blocks.push(createBlock('core/paragraph', { content: a.description, className: 'shapeblock-subtitle-price' }));
+	}
+	blocks.push(createBlock(PRICE_BLOCK, PRICE_KEYS.reduce((out, k) => (undefined === a[k] ? out : { ...out, [k]: a[k] }), {})));
+
+	const button = [];
+	if (false !== a.showButton) {
+		const rel = [a.buttonTarget ? 'noopener noreferrer' : '', a.buttonNofollow ? 'nofollow' : ''].filter(Boolean).join(' ');
+		button.push(
+			createBlock('core/buttons', { className: 'shapeblock-btn-part' }, [
+				createBlock('core/button', { text: toHtml(a.buttonText), url: a.buttonUrl || '#', linkTarget: a.buttonTarget ? '_blank' : undefined, rel: rel || undefined }),
+			])
+		);
+		if (a.buttonSubtext) {
+			button.push(createBlock('core/paragraph', { content: toHtml(a.buttonSubtext), className: 'shapeblock-button-subtext' }));
+		}
+	}
+	if ('in_features' === a.buttonPosition) {
+		blocks.push(...button);
+	}
+	if (a.featuresDescription) {
+		blocks.push(createBlock('core/paragraph', { content: a.featuresDescription, className: 'shapeblock-features-description' }));
+	}
+	const features = Array.isArray(a.features) ? a.features : [];
+	blocks.push(createBlock('core/list', { className: 'shapeblock-features' }, features.map((f) => createBlock('core/list-item', { content: toHtml(f.text) }))));
+	if ('in_features' !== a.buttonPosition) {
+		blocks.push(...button);
+	}
+	return blocks;
+};
+
+// The plans a new pricing table starts with, by how many there are.
+const planSets = () => {
+	const basic = { title: __('Basic', 'shapeblock'), price: '19', features: [__('1 Website', 'shapeblock'), __('10 GB Storage', 'shapeblock'), __('Free SSL Certificate', 'shapeblock'), __('Email Support', 'shapeblock')] };
+	const standard = { title: __('Standard', 'shapeblock'), price: '29', features: [__('3 Websites', 'shapeblock'), __('50 GB Storage', 'shapeblock'), __('Free SSL Certificate', 'shapeblock'), __('Email Support', 'shapeblock')] };
+	const pro = { title: __('Pro', 'shapeblock'), price: '49', featured: true, features: [__('10 Websites', 'shapeblock'), __('100 GB Storage', 'shapeblock'), __('Free SSL Certificate', 'shapeblock'), __('Priority Support', 'shapeblock')] };
+	const business = { title: __('Business', 'shapeblock'), price: '99', features: [__('Unlimited Websites', 'shapeblock'), __('1 TB Storage', 'shapeblock'), __('Free SSL Certificate', 'shapeblock'), __('24/7 Phone Support', 'shapeblock')] };
+	return { 1: [basic], 2: [basic, pro], 3: [basic, pro, business], 4: [basic, standard, pro, business] };
+};
+
 export default function Edit({ attributes, setAttributes, clientId }) {
-	const {
-		blockId,
-		title,
-		description,
-		onSale,
-		regularPrice,
-		salePrice,
-		price,
-		currency,
-		currencyPlacement,
-		period,
-		separator,
-		featuresDescription,
-		features,
-		featureIconStyle,
-		isFeatured,
-		ribbonStyle,
-		featuredText,
-		showButton,
-		buttonText,
-		buttonSubtext,
-		buttonUrl,
-		buttonTarget,
-		buttonNofollow,
-		buttonIcon,
-		buttonIconPosition,
-		buttonPosition,
-		buttonFullWidth,
-	} = attributes;
+	const { blockId, featureIconStyle, isFeatured, ribbonStyle } = attributes;
 
 	useEffect(() => {
 		if (!blockId) {
 			setAttributes({ blockId: 'shapeblock-pricing-' + clientId.slice(0, 6) });
 		}
 	}, [blockId, clientId, setAttributes]);
+
+	// The card is made of blocks. A table saved before that, and a new one,
+	// gets them once, from its settings.
+	const hasBlocks = useSelect((select) => select(blockEditorStore).getBlockCount(clientId) > 0, [clientId]);
+	const { replaceInnerBlocks, replaceBlocks, __unstableMarkNextChangeAsNotPersistent } = useDispatch(blockEditorStore);
+
+	// The plan picker: how many plans, and their look. Two or more become cards
+	// side by side in a Columns block, the middle one (or the third of four)
+	// featured; one stays this card.
+	const [pickedStyle, setPickedStyle] = useState('default');
+	const createPlans = (count) => {
+		const plans = planSets()[count];
+		const className = 'default' === pickedStyle ? undefined : `is-style-${pickedStyle}`;
+		const content = (plan) => cardBlocks({ ...attributes, title: plan.title, description: '', price: plan.price, onSale: false, features: plan.features.map((text) => ({ icon: '', text })), featuresDescription: '', buttonText: __('Get Started', 'shapeblock'), buttonUrl: '#', buttonSubtext: '', buttonPosition: 'after_features' });
+		if (1 === count) {
+			setAttributes({ planPicker: false, className });
+			replaceInnerBlocks(clientId, content(plans[0]), false);
+			return;
+		}
+		const cards = plans.map((plan) =>
+			createBlock('shapeblock/pricing-table', { className, isFeatured: !!plan.featured, featuredText: plan.featured ? __('Most Popular', 'shapeblock') : attributes.featuredText }, content(plan))
+		);
+		replaceBlocks(clientId, createBlock('core/columns', { align: 'wide' }, cards.map((card) => createBlock('core/column', {}, [card]))));
+	};
+	useEffect(() => {
+		if (hasBlocks || attributes.planPicker) {
+			return;
+		}
+		__unstableMarkNextChangeAsNotPersistent();
+		replaceInnerBlocks(clientId, cardBlocks(attributes), false);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	// Current preview device, so the toolbar alignment edits the matching
 	// per-device attribute (headerAlignment / headerAlignmentTablet / headerAlignmentMobile).
@@ -96,31 +160,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const dev = device ? device.toLowerCase() : 'desktop';
 	const alignKey = dev === 'desktop' ? 'headerAlignment' : `headerAlignment${dev.charAt(0).toUpperCase() + dev.slice(1)}`;
 
-	const items = Array.isArray(features) ? features : [];
+	// The block style (Classic, Centered, Dark): the same is-style-* class the
+	// editor's Styles tab sets, picked here too where it is easy to find.
+	const activeStyle = (/(?:^|\s)is-style-([a-z0-9-]+)/.exec(attributes.className || '') || [])[1] || 'default';
+	const setStyle = (name) => {
+		const rest = (attributes.className || '').replace(/(?:^|\s)is-style-[a-z0-9-]+/g, '').trim();
+		const next = [rest, 'default' === name ? '' : `is-style-${name}`].filter(Boolean).join(' ');
+		setAttributes({ className: next || undefined });
+	};
 
-	const updateFeature = (index, key, value) => {
-		setAttributes({ features: items.map((it, i) => (i === index ? { ...it, [key]: value } : it)) });
-	};
-	const addFeature = () => {
-		setAttributes({ features: [...items, { icon: '', text: __('New feature', 'shapeblock') }] });
-	};
-	const removeFeature = (index) => {
-		setAttributes({ features: items.filter((_, i) => i !== index) });
-	};
-	// Deep copy, so the clone's nested values are not shared with the original.
-	const duplicateFeature = (index) => {
-		const next = items.slice();
-		next.splice(index + 1, 0, JSON.parse(JSON.stringify(items[index])));
-		setAttributes({ features: next });
-	};
-	const moveFeature = (index, dir) => {
-		const target = index + dir;
-		if (target < 0 || target >= items.length) return;
-		const next = items.slice();
-		const [moved] = next.splice(index, 1);
-		next.splice(target, 0, moved);
-		setAttributes({ features: next });
-	};
+	// The design's CSS comes from the server: a hidden preview of the card's
+	// settings, not fetched again while the ribbon text is typed.
+	const styleOnly = useMemo(() => ({ ...attributes, featuredText: '' }), [JSON.stringify({ ...attributes, featuredText: '' })]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const color = (label, key) => (
 		<ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
@@ -157,122 +208,63 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// matching per-device attribute (base / baseTablet / baseMobile).
 	const respTypo = (label, base) => (
 		<ResponsiveWrapper label={label}>
-			{(device) => <TypographyControls attributes={attributes} setAttributes={setAttributes} attributeKey={getKey(base, device)} />}
+			{(d) => <TypographyControls attributes={attributes} setAttributes={setAttributes} attributeKey={getKey(base, d)} />}
 		</ResponsiveWrapper>
 	);
 	const respBox = (label, base) => (
 		<ResponsiveWrapper label={label}>
-			{(device) => <BoxControl values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
+			{(d) => <BoxControl values={attributes[getKey(base, d)]} onChange={(v) => setAttributes({ [getKey(base, d)]: v })} />}
 		</ResponsiveWrapper>
 	);
 	const respNum = (label, base) => (
 		<ResponsiveWrapper label={label}>
-			{(device) => {
-				const k = getKey(base, device);
+			{(d) => {
+				const k = getKey(base, d);
 				return <TextControl type="number" value={attributes[k]} onChange={(v) => setAttributes({ [k]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
 			}}
 		</ResponsiveWrapper>
 	);
 	const respAlign = (label, base, options) => (
 		<ResponsiveWrapper label={label}>
-			{(device) => {
-				const k = getKey(base, device);
-				return <SelectControl value={attributes[k]} options={options} onChange={(v) => setAttributes({ [k]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
+			{(d) => {
+				const k = getKey(base, d);
+				return <SelectControl value={attributes[k]} options={[{ label: __('Default', 'shapeblock'), value: '' }, ...options]} onChange={(v) => setAttributes({ [k]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
 			}}
 		</ResponsiveWrapper>
 	);
 
-	// --- Tab 1: Settings (content & behavior) ---------------------------------
+	// --- Tab 1: Settings ------------------------------------------------------
 	const settingsTab = (
 		<>
-			<PanelBody title={__('Title & Price', 'shapeblock')} initialOpen={true}>
-				<TextControl label={__('Title', 'shapeblock')} value={title} onChange={(v) => setAttributes({ title: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-				<TextControl label={__('Description', 'shapeblock')} value={description} onChange={(v) => setAttributes({ description: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-				<Divider />
-				<ToggleControl label={__('On Sale?', 'shapeblock')} checked={onSale} onChange={(v) => setAttributes({ onSale: v })} __nextHasNoMarginBottom />
-				{onSale ? (
-					<>
-						<TextControl label={__('Regular Price', 'shapeblock')} value={regularPrice} onChange={(v) => setAttributes({ regularPrice: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-						<TextControl label={__('Sale Price', 'shapeblock')} value={salePrice} onChange={(v) => setAttributes({ salePrice: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-					</>
-				) : (
-					<TextControl label={__('Price', 'shapeblock')} value={price} onChange={(v) => setAttributes({ price: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-				)}
-				<Divider />
-				<TextControl label={__('Currency', 'shapeblock')} value={currency} onChange={(v) => setAttributes({ currency: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-				<SelectControl
-					label={__('Currency Position', 'shapeblock')}
-					value={currencyPlacement}
-					options={[
-						{ label: __('Left', 'shapeblock'), value: 'left' },
-						{ label: __('Right', 'shapeblock'), value: 'right' },
-					]}
-					onChange={(v) => setAttributes({ currencyPlacement: v })}
-					__next40pxDefaultSize
-					__nextHasNoMarginBottom
-				/>
-				<TextControl label={__('Period', 'shapeblock')} value={period} onChange={(v) => setAttributes({ period: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-				<TextControl label={__('Separator', 'shapeblock')} value={separator} onChange={(v) => setAttributes({ separator: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-			</PanelBody>
-
-			<PanelBody title={__('Features', 'shapeblock')} initialOpen={false}>
-				<TextareaControl
-					label={__('Features Description (top)', 'shapeblock')}
-					value={featuresDescription}
-					onChange={(v) => setAttributes({ featuresDescription: v })}
-					__nextHasNoMarginBottom
-				/>
-				<Divider />
-				{items.map((item, index) => (
-					<div className="shapeblock-pricing-repeater-item" key={index}>
-						<div className="shapeblock-pricing-repeater-head">
-							<strong>#{index + 1}</strong>
-							<div>
-								<Button icon={ICON_ARROW_UP} label={__('Move up', 'shapeblock')} onClick={() => moveFeature(index, -1)} disabled={index === 0} size="small" />
-								<Button icon={ICON_ARROW_DOWN} label={__('Move down', 'shapeblock')} onClick={() => moveFeature(index, 1)} disabled={index === items.length - 1} size="small" />
-								<Button icon={ICON_COPY} label={__('Duplicate', 'shapeblock')} onClick={() => duplicateFeature(index)} size="small" />
-								<Button icon={ICON_TRASH} label={__('Remove', 'shapeblock')} onClick={() => removeFeature(index)} isDestructive size="small" />
-							</div>
-						</div>
-						<TextControl
-							label={__('Text', 'shapeblock')}
-							value={item.text || ''}
-							onChange={(v) => updateFeature(index, 'text', v)}
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-						/>
-						<IconPicker
-							label={__('Icon', 'shapeblock')}
-							value={item.icon || ''}
-							onChange={(v) => updateFeature(index, 'icon', v)}
-						/>
-					</div>
-				))}
-				<Button variant="primary" onClick={addFeature} icon={ICON_ADD}>
-					{__('Add Feature', 'shapeblock')}
-				</Button>
+			<PanelBody title={__('Style', 'shapeblock')} initialOpen={true}>
+				<div className="shapeblock-pricing-style-picker">
+					{STYLES.map((s) => (
+						<button
+							type="button"
+							key={s.name}
+							className={`shapeblock-pricing-style-option is-${s.name}${activeStyle === s.name ? ' is-active' : ''}`}
+							aria-pressed={activeStyle === s.name}
+							onClick={() => setStyle(s.name)}
+						>
+							<span className="shapeblock-pricing-style-thumb" aria-hidden="true">
+								<span className="t-title" />
+								<span className="t-price" />
+								<span className="t-line" />
+								<span className="t-line" />
+								<span className="t-line" />
+								<span className="t-button" />
+							</span>
+							<span className="shapeblock-pricing-style-label">{s.label}</span>
+						</button>
+					))}
+				</div>
+				<p className="components-base-control__help">
+					{__('The card is made of blocks: click the title, price, a feature or the button to edit it with its own toolbar and settings. Add any other block with the + inside the card.', 'shapeblock')}
+				</p>
 			</PanelBody>
 
 			<PanelBody title={__('Featured', 'shapeblock')} initialOpen={false}>
-				<ToggleControl label={__('Featured', 'shapeblock')} checked={isFeatured} onChange={(v) => setAttributes({ isFeatured: v })} __nextHasNoMarginBottom />
-				{isFeatured && (
-					<TextControl label={__('Featured Text', 'shapeblock')} value={featuredText} onChange={(v) => setAttributes({ featuredText: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-				)}
-			</PanelBody>
-
-			<PanelBody title={__('Button', 'shapeblock')} initialOpen={false}>
-				<ToggleControl label={__('Show Button', 'shapeblock')} checked={showButton} onChange={(v) => setAttributes({ showButton: v })} __nextHasNoMarginBottom />
-				{showButton && (
-					<>
-						<TextControl label={__('Text', 'shapeblock')} value={buttonText} onChange={(v) => setAttributes({ buttonText: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-						<TextControl label={__('Bottom Text', 'shapeblock')} value={buttonSubtext} onChange={(v) => setAttributes({ buttonSubtext: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-						<TextControl label={__('Link URL', 'shapeblock')} type="url" value={buttonUrl} onChange={(v) => setAttributes({ buttonUrl: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
-						<ToggleControl label={__('Open in new tab', 'shapeblock')} checked={buttonTarget} onChange={(v) => setAttributes({ buttonTarget: v })} __nextHasNoMarginBottom />
-						<ToggleControl label={__('Add nofollow', 'shapeblock')} checked={buttonNofollow} onChange={(v) => setAttributes({ buttonNofollow: v })} __nextHasNoMarginBottom />
-						<Divider />
-						<IconPicker label={__('Icon', 'shapeblock')} value={buttonIcon} onChange={(v) => setAttributes({ buttonIcon: v })} />
-					</>
-				)}
+				<ToggleControl label={__('Featured', 'shapeblock')} help={isFeatured ? __('Type the ribbon text in the card.', 'shapeblock') : __('Shows a ribbon on the card.', 'shapeblock')} checked={isFeatured} onChange={(v) => setAttributes({ isFeatured: v })} __nextHasNoMarginBottom />
 			</PanelBody>
 		</>
 	);
@@ -283,6 +275,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			{respAlign(__('Header Alignment', 'shapeblock'), 'headerAlignment', ALIGN_OPTIONS)}
 			<Divider />
 			{respAlign(__('Features Alignment', 'shapeblock'), 'featureTextAlignment', ALIGN_OPTIONS)}
+			<Divider />
+			{respAlign(__('Button Alignment', 'shapeblock'), 'btnAlignment', ALIGN_OPTIONS)}
 			{isFeatured && ribbonStyle === 'style2' && (
 				<>
 					<Divider />
@@ -294,23 +288,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							{ label: __('Right', 'shapeblock'), value: 'right' },
 						]
 					)}
-				</>
-			)}
-			{showButton && (
-				<>
-					<Divider />
-					<SelectControl
-						label={__('Button Position', 'shapeblock')}
-						value={buttonPosition}
-						options={[
-							{ label: __('After Features', 'shapeblock'), value: 'after_features' },
-							{ label: __('Before Features', 'shapeblock'), value: 'in_features' },
-						]}
-						onChange={(v) => setAttributes({ buttonPosition: v })}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					{respAlign(__('Button Alignment', 'shapeblock'), 'btnAlignment', ALIGN_OPTIONS)}
 				</>
 			)}
 		</PanelBody>
@@ -378,14 +355,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				{respTypo(__('Price Typography', 'shapeblock'), 'priceTypography')}
 				<Divider />
 				{respBox(__('Price Margin', 'shapeblock'), 'priceMargin')}
-				{onSale && (
-					<>
-						<Divider />
-						{color(__('Sale Price Color', 'shapeblock'), 'salePriceColor')}
-						{respTypo(__('Sale Price Typography', 'shapeblock'), 'salePriceTypography')}
-						{color(__('Regular (old) Price Color', 'shapeblock'), 'oldPriceColor')}
-					</>
-				)}
+				<Divider />
+				{color(__('Sale Price Color', 'shapeblock'), 'salePriceColor')}
+				{respTypo(__('Sale Price Typography', 'shapeblock'), 'salePriceTypography')}
+				{color(__('Regular (old) Price Color', 'shapeblock'), 'oldPriceColor')}
 			</PanelBody>
 
 			<PanelBody title={__('Period & Currency', 'shapeblock')} initialOpen={false}>
@@ -397,17 +370,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				{respTypo(__('Currency Typography', 'shapeblock'), 'currencyTypography')}
 				{respBox(__('Currency Margin', 'shapeblock'), 'currencyMargin')}
 				{num(__('Currency Vertical Position (px)', 'shapeblock'), 'currencyVerticalPosition')}
-			</PanelBody>
-
-			<PanelBody title={__('Features Description', 'shapeblock')} initialOpen={false}>
-				{color(__('Color', 'shapeblock'), 'featuresDescriptionColor')}
-				{respTypo(__('Typography', 'shapeblock'), 'featuresDescriptionTypography')}
-				<Divider />
-				{border(__('Border', 'shapeblock'), 'featuresDescriptionBorder')}
-				<Divider />
-				{respBox(__('Padding', 'shapeblock'), 'featuresDescriptionPadding')}
-				<Divider />
-				{respBox(__('Margin', 'shapeblock'), 'featuresDescriptionMargin')}
 			</PanelBody>
 
 			<PanelBody title={__('Features', 'shapeblock')} initialOpen={false}>
@@ -425,48 +387,55 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 			<PanelBody title={__('Feature Icon', 'shapeblock')} initialOpen={false}>
 				<SelectControl
-					label={__('Icon Style', 'shapeblock')}
-					value={featureIconStyle}
+					label={__('Icon', 'shapeblock')}
+					value={attributes.featureIcon || 'check'}
 					options={[
-						{ label: __('Icon Only', 'shapeblock'), value: 'icon-only' },
-						{ label: __('Icon with Background', 'shapeblock'), value: 'icon-bg' },
-						{ label: __('Icon with Border', 'shapeblock'), value: 'icon-border' },
+						{ label: __('Check', 'shapeblock'), value: 'check' },
+						{ label: __('Check in a Circle', 'shapeblock'), value: 'check-circle' },
+						{ label: __('Star', 'shapeblock'), value: 'star' },
+						{ label: __('Arrow', 'shapeblock'), value: 'arrow' },
+						{ label: __('Dot', 'shapeblock'), value: 'dot' },
+						{ label: __('None', 'shapeblock'), value: 'none' },
 					]}
-					onChange={(v) => setAttributes({ featureIconStyle: v })}
+					onChange={(v) => setAttributes({ featureIcon: v })}
 					__next40pxDefaultSize
 					__nextHasNoMarginBottom
 				/>
-				<Divider />
-				{color(__('Icon Color', 'shapeblock'), 'featuresIconColor')}
-				{num(__('Icon Size (px)', 'shapeblock'), 'featureIconSize')}
-				{featureIconStyle === 'icon-bg' && bg(__('Background', 'shapeblock'), 'featureIconBgColor', 'featureIconBgGradient')}
-				{featureIconStyle === 'icon-border' && border(__('Border', 'shapeblock'), 'featureIconBorder')}
-				{(featureIconStyle === 'icon-bg' || featureIconStyle === 'icon-border') && (
+				{'none' !== attributes.featureIcon && (
 					<>
+						<SelectControl
+							label={__('Icon Style', 'shapeblock')}
+							value={featureIconStyle}
+							options={[
+								{ label: __('Icon Only', 'shapeblock'), value: 'icon-only' },
+								{ label: __('Icon with Background', 'shapeblock'), value: 'icon-bg' },
+								{ label: __('Icon with Border', 'shapeblock'), value: 'icon-border' },
+							]}
+							onChange={(v) => setAttributes({ featureIconStyle: v })}
+							__next40pxDefaultSize
+							__nextHasNoMarginBottom
+						/>
 						<Divider />
-						{respBox(__('Icon Padding', 'shapeblock'), 'featureIconPadding')}
-						<Divider />
-						{box(__('Icon Border Radius', 'shapeblock'), 'featureIconBorderRadius')}
+						{color(__('Icon Color', 'shapeblock'), 'featuresIconColor')}
+						{num(__('Icon Size (px)', 'shapeblock'), 'featureIconSize')}
+						{featureIconStyle === 'icon-bg' && bg(__('Background', 'shapeblock'), 'featureIconBgColor', 'featureIconBgGradient')}
+						{featureIconStyle === 'icon-border' && border(__('Border', 'shapeblock'), 'featureIconBorder')}
+						{(featureIconStyle === 'icon-bg' || featureIconStyle === 'icon-border') && (
+							<>
+								<Divider />
+								{respBox(__('Icon Padding', 'shapeblock'), 'featureIconPadding')}
+								<Divider />
+								{box(__('Icon Border Radius', 'shapeblock'), 'featureIconBorderRadius')}
+							</>
+						)}
 					</>
 				)}
 			</PanelBody>
 
 			<PanelBody title={__('Button', 'shapeblock')} initialOpen={false}>
-				<ToggleControl label={__('Full Width Button', 'shapeblock')} checked={buttonFullWidth} onChange={(v) => setAttributes({ buttonFullWidth: v })} __nextHasNoMarginBottom />
-				<SelectControl
-					label={__('Icon Position', 'shapeblock')}
-					value={buttonIconPosition}
-					options={[
-						{ label: __('Before', 'shapeblock'), value: 'before' },
-						{ label: __('After', 'shapeblock'), value: 'after' },
-					]}
-					onChange={(v) => setAttributes({ buttonIconPosition: v })}
-					__next40pxDefaultSize
-					__nextHasNoMarginBottom
-				/>
+				<ToggleControl label={__('Full Width Button', 'shapeblock')} checked={!!attributes.buttonFullWidth} onChange={(v) => setAttributes({ buttonFullWidth: v })} __nextHasNoMarginBottom />
 				<Divider />
 				{color(__('Text Color', 'shapeblock'), 'buttonTextColor')}
-				{color(__('Icon Color', 'shapeblock'), 'buttonIconColor')}
 				{bg(__('Background', 'shapeblock'), 'buttonBgColor', 'buttonBgGradient')}
 				{respTypo(__('Typography', 'shapeblock'), 'buttonTypography')}
 				<Divider />
@@ -483,11 +452,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				{respBox(__('Padding', 'shapeblock'), 'buttonPadding')}
 				<Divider />
 				{respBox(__('Margin', 'shapeblock'), 'buttonMargin')}
-				<Divider />
-				{respNum(__('Icon Spacing (px)', 'shapeblock'), 'buttonIconSpacing')}
 			</PanelBody>
 
-			<PanelBody title={__('Button Subtext', 'shapeblock')} initialOpen={false}>
+			<PanelBody title={__('Text Under the Button', 'shapeblock')} initialOpen={false}>
 				{color(__('Color', 'shapeblock'), 'buttonSubtextColor')}
 				{respTypo(__('Typography', 'shapeblock'), 'buttonSubtextTypography')}
 				<Divider />
@@ -496,12 +463,70 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		</>
 	);
 
+	// ---- The card: its ribbon, then the blocks in it ---------------------------
+	const iconStyle = featureIconStyle || 'icon-only';
+	const cardClass = [
+		'shapeblock-pricing-table',
+		isFeatured ? `featured ${ribbonStyle || 'style1'}` : '',
+		'has-blocks',
+		`has-feature-icon-${attributes.featureIcon || 'check'}`,
+		'icon-bg' === iconStyle || 'icon-border' === iconStyle ? `has-feature-icon-box has-feature-${iconStyle}` : '',
+		attributes.buttonFullWidth ? 'has-full-button' : '',
+	].filter(Boolean).join(' ');
+	const { children, ...cardProps } = useInnerBlocksProps({ className: cardClass }, { templateLock: false });
+
+	const blockProps = useBlockProps({ className: `shapeblock-block shapeblock-pricing-table-block-wrap ${blockId}` });
+
+	if (attributes.planPicker) {
+		return (
+			<div {...blockProps}>
+				<Placeholder
+					className="shapeblock-pricing-plan-picker"
+					label={__('Pricing Table', 'shapeblock')}
+					instructions={__('Pick a look, then how many plans. Each plan is a card you can edit like any other blocks.', 'shapeblock')}
+				>
+					<div className="shapeblock-pricing-style-picker">
+						{STYLES.map((st) => (
+							<button
+								type="button"
+								key={st.name}
+								className={`shapeblock-pricing-style-option is-${st.name}${pickedStyle === st.name ? ' is-active' : ''}`}
+								aria-pressed={pickedStyle === st.name}
+								onClick={() => setPickedStyle(st.name)}
+							>
+								<span className="shapeblock-pricing-style-thumb" aria-hidden="true">
+									<span className="t-title" />
+									<span className="t-price" />
+									<span className="t-line" />
+									<span className="t-line" />
+									<span className="t-line" />
+									<span className="t-button" />
+								</span>
+								<span className="shapeblock-pricing-style-label">{st.label}</span>
+							</button>
+						))}
+					</div>
+					<div className="shapeblock-pricing-count">
+						{[1, 2, 3, 4].map((n) => (
+							<button type="button" key={n} className="shapeblock-pricing-count-option" onClick={() => createPlans(n)}>
+								<span className="shapeblock-pricing-count-thumb" aria-hidden="true">
+									{Array.from({ length: n }, (_, i) => <span key={i} />)}
+								</span>
+								{1 === n ? __('1 Plan', 'shapeblock') : sprintf(/* translators: %d: number of pricing plans. */ __('%d Plans', 'shapeblock'), n)}
+							</button>
+						))}
+					</div>
+				</Placeholder>
+			</div>
+		);
+	}
+
 	return (
-		<div {...useBlockProps()}>
+		<div {...blockProps}>
 			<BlockControls>
 				<AlignmentControl
 					value={attributes[alignKey]}
-					onChange={(value) => setAttributes({ [alignKey]: value || (dev === 'desktop' ? 'left' : '') })}
+					onChange={(value) => setAttributes({ [alignKey]: value || '' })}
 				/>
 			</BlockControls>
 			<InspectorControls>
@@ -524,7 +549,23 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</TabPanel>
 			</InspectorControls>
 
-			<ServerSideRender block="shapeblock/pricing-table" attributes={attributes} httpMethod="POST" />
+			<div {...cardProps}>
+				{isFeatured && (
+					<RichText
+						tagName="div"
+						className={`shapeblock-ribbon shapeblock-${attributes.ribbonAlignment || 'right'}`}
+						value={toHtml(attributes.featuredText)}
+						onChange={(v) => setAttributes({ featuredText: v.replace(/<[^>]*>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&') })}
+						allowedFormats={[]}
+						placeholder={__('Featured', 'shapeblock')}
+					/>
+				)}
+				{children}
+			</div>
+
+			<div className="shapeblock-pricing-styles" hidden>
+				<ServerSideRender block="shapeblock/pricing-table" attributes={styleOnly} httpMethod="POST" />
+			</div>
 		</div>
 	);
 }

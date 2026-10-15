@@ -3,6 +3,7 @@ import { registerBlockType } from '@wordpress/blocks';
 import './style.scss';
 
 import Edit from './edit';
+import './cells';
 import save from './save';
 import metadata from './block.json';
 
@@ -20,4 +21,18 @@ registerBlockType(metadata.name, {
 	icon: shapeblockIcon,
 	edit: Edit,
 	save,
+	// Added from the inserter, a table starts empty and asks for its column and
+	// row count, as the core Table block does. The block's own defaults stay
+	// as they were, so tables saved with them keep their cells.
+	variations: [
+		{
+			name: 'new-table',
+			title: metadata.title,
+			description: metadata.description,
+			icon: shapeblockIcon,
+			isDefault: true,
+			scope: ['inserter'],
+			attributes: { tableHeader: [], tableBody: [], tableFooter: [] },
+		},
+	],
 });

@@ -219,6 +219,14 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 * New: Social Share - three button styles: icon, icon with text, or text only, with editable names.
 * New: Social Share - Normal and Hover tabs for the background (colour or gradient), the icon and text colour, and the border.
 * New: Hover animations for the Icon, Social Icon and Social Share blocks.
+* New: Table - edited in place like the core Table block: type in the cells, add and remove rows and columns from the toolbar, and a new table asks for its column and row count.
+* New: Table - add text, heading and image blocks to a cell with its + button, or drag them in. Each cell has its own text colour, background (colour or gradient) and border. Plus fixed width cells and a caption.
+* New: Table - sidebar like the core Table: Layout (Default or Stripes) and Style with Global (text colour, background, cell border, typography, padding) for the whole table and Cell for the clicked cell; Icon List blocks in cells.
+* New: Pricing Table - the card is made of blocks (Heading, Price, List, Buttons), each edited in place with its own toolbar and settings; drag or add any other block into it. Existing tables keep their content and are converted when opened in the editor.
+* New: Pricing Table - choose the feature icon: check, check in a circle, star, arrow or dot.
+* New: Pricing Table - a new pricing table asks how many plans (1 to 4) and which style; two or more are added side by side, the same height, buttons in line.
+* New: Pricing Table - three styles, Classic, Centered and Dark, each with a preview, and three ready-made pricing patterns in the inserter.
+* Improved: the block inserter puts the cursor in its search box when it opens.
 * New: the Container Width can also set the theme's wide width, or its content width too, so core blocks follow it.
 * Improved: the Container Width is empty by default and follows the theme until it is set.
 * Improved: the General settings page is laid out in two cards.

@@ -14,6 +14,17 @@ return ( function ( $attributes, $content, $block ) {
 
 $H = '\ShapeBlock\Frontend\Helper';
 
+// Alignments left unset follow the block style: Centered and Dark centre the
+// card, Classic (and a block saved before there were styles) keeps it left.
+$block_style = preg_match( '/(?:^|\s)is-style-([a-z0-9-]+)/', isset( $attributes['className'] ) ? (string) $attributes['className'] : '', $style_match ) ? $style_match[1] : 'default';
+if ( ! in_array( $block_style, array( 'centered', 'dark' ), true ) ) {
+	foreach ( array( 'headerAlignment', 'featureTextAlignment', 'btnAlignment' ) as $align_key ) {
+		if ( empty( $attributes[ $align_key ] ) ) {
+			$attributes[ $align_key ] = 'left';
+		}
+	}
+}
+
 $unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-pricing-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $title        = isset( $attributes['title'] ) ? $attributes['title'] : '';
@@ -162,6 +173,7 @@ if ( isset( $attributes['featuresIconGap'] ) && '' !== $attributes['featuresIcon
 	$features_text_styles['display']     = 'flex';
 	$features_text_styles['align-items'] = 'center';
 	$features_text_styles['gap']         = $H::ensure_unit( $attributes['featuresIconGap'] );
+	$features_text_styles['--sb-pt-gap'] = $features_text_styles['gap'];
 }
 
 $features_icon_styles = [];
@@ -186,6 +198,24 @@ if ( ! empty( $attributes['featureIconBgGradient'] ) ) {
 }
 $feat_icon_border_styles = $feat_icon_box_styles;
 if ( ! empty( $attributes['featureIconBorder'] ) ) $feat_icon_border_styles = array_merge( $feat_icon_border_styles, $H::border_to_css_props( $attributes['featureIconBorder'] ) );
+
+// Features made of a List block draw their icon with CSS: its colour, size,
+// box background and padding as custom properties, its box border and corners
+// on the box itself.
+$feat_icon_vars = [];
+if ( ! empty( $attributes['featuresIconColor'] ) ) $feat_icon_vars['--sb-pt-icon-color'] = $attributes['featuresIconColor'];
+if ( ! empty( $attributes['featureIconSize'] ) ) $feat_icon_vars['--sb-pt-icon-size'] = $H::ensure_unit( $attributes['featureIconSize'] );
+if ( ! empty( $attributes['featureIconBgGradient'] ) ) {
+	$feat_icon_vars['--sb-pt-icon-bg'] = $attributes['featureIconBgGradient'];
+} elseif ( ! empty( $attributes['featureIconBgColor'] ) ) {
+	$feat_icon_vars['--sb-pt-icon-bg'] = 'linear-gradient(' . $attributes['featureIconBgColor'] . ',' . $attributes['featureIconBgColor'] . ')';
+}
+$feat_icon_pad = $attributes['featureIconPadding'] ?? [];
+if ( is_array( $feat_icon_pad ) && isset( $feat_icon_pad['top'] ) && '' !== $feat_icon_pad['top'] ) {
+	$feat_icon_vars['--sb-pt-icon-pad'] = $H::ensure_unit( $feat_icon_pad['top'] );
+}
+$feat_icon_frame = $dims( $attributes['featureIconBorderRadius'] ?? [], 'radius' );
+if ( ! empty( $attributes['featureIconBorder'] ) ) $feat_icon_frame = array_merge( $feat_icon_frame, $H::border_to_css_props( $attributes['featureIconBorder'] ) );
 
 // ---- Ribbon ----
 $ribbon_styles = $typo( $attributes['ribbonTypography'] ?? [] );
@@ -272,6 +302,7 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $ribbon_s
 		$features_li['display']     = 'flex';
 		$features_li['align-items'] = 'center';
 		$features_li['gap']         = $H::ensure_unit( $attributes[ 'featuresIconGap' . $suffix ] );
+		$features_li['--sb-pt-gap'] = $features_li['gap'];
 	}
 
 	// Feature icon padding (box variants).
@@ -285,6 +316,18 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $ribbon_s
 
 	// Button alignment + button.
 	$btn_align = ( ! empty( $attributes[ 'btnAlignment' . $suffix ] ) ) ? [ 'text-align' => $attributes[ 'btnAlignment' . $suffix ] ] : [];
+	// A Buttons block lines its buttons up with flex.
+	$btn_justify_map = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end' ];
+	if ( $btn_align && isset( $btn_justify_map[ $btn_align['text-align'] ] ) ) {
+		$btn_align['justify-content'] = $btn_justify_map[ $btn_align['text-align'] ];
+	}
+
+	// Feature icon box padding, for features made of a List block.
+	$feat_icon_vars = [];
+	$dev_pad        = $attributes[ 'featureIconPadding' . $suffix ] ?? [];
+	if ( is_array( $dev_pad ) && isset( $dev_pad['top'] ) && '' !== $dev_pad['top'] ) {
+		$feat_icon_vars['--sb-pt-icon-pad'] = $H::ensure_unit( $dev_pad['top'] );
+	}
 	$button    = array_merge( $typo( $attributes[ 'buttonTypography' . $suffix ] ?? [] ), $dims( $attributes[ 'buttonPadding' . $suffix ] ?? [], 'padding' ), $dims( $attributes[ 'buttonMargin' . $suffix ] ?? [], 'margin' ) );
 
 	$btn_icon_before = [];
@@ -338,6 +381,8 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $ribbon_s
 		'.featured.style2 .shapeblock-ribbon.shapeblock-ribbon' => $ribbon_side,
 		'.shapeblock-btn-part'                           => $btn_align,
 		'.shapeblock-button'                             => $button,
+		'.shapeblock-btn-part .wp-block-button__link'    => $button,
+		'.shapeblock-pricing-table.has-blocks'           => $feat_icon_vars,
 		'.shapeblock-button .shapeblock-icon-before'          => $btn_icon_before,
 		'.shapeblock-button .shapeblock-icon-after'           => $btn_icon_after,
 		'.shapeblock-button-subtext'                     => $subtext,
@@ -364,6 +409,8 @@ $resp_sub_selectors = [
 	'.featured.style2 .shapeblock-ribbon.shapeblock-ribbon',
 	'.shapeblock-btn-part',
 	'.shapeblock-button',
+	'.shapeblock-btn-part .wp-block-button__link',
+	'.shapeblock-pricing-table.has-blocks',
 	'.shapeblock-button .shapeblock-icon-before',
 	'.shapeblock-button .shapeblock-icon-after',
 	'.shapeblock-button-subtext',
@@ -379,6 +426,9 @@ foreach ( $resp_sub_selectors as $sub_sel ) {
 		$resp_css .= $H::generate_responsive_css( $selector . ' ' . $sub_sel, $rdata );
 	}
 }
+
+// A Buttons block lines its buttons up with flex.
+$btn_justify = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end' ];
 
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $resp_css, [
@@ -402,9 +452,13 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-features .feature-icon.icon-bg'           => $H::get_inline_styles( $feat_icon_bg_styles ),
 	'.shapeblock-features .feature-icon.icon-border'       => $H::get_inline_styles( $feat_icon_border_styles ),
 	'.shapeblock-ribbon'                                   => $H::get_inline_styles( $ribbon_styles ),
-	'.shapeblock-btn-part'                                 => ! empty( $attributes['btnAlignment'] ) ? 'text-align:' . $attributes['btnAlignment'] : '',
+	'.shapeblock-btn-part'                                 => ! empty( $attributes['btnAlignment'] ) ? 'text-align:' . $attributes['btnAlignment'] . ( isset( $btn_justify[ $attributes['btnAlignment'] ] ) ? ';justify-content:' . $btn_justify[ $attributes['btnAlignment'] ] : '' ) : '',
 	'.shapeblock-button'                                   => $H::get_inline_styles( $button_styles ),
 	'.shapeblock-button:hover'                             => $H::get_inline_styles( $button_hover_styles ),
+	'.shapeblock-btn-part .wp-block-button__link'         => $H::get_inline_styles( $button_styles ),
+	'.shapeblock-btn-part .wp-block-button__link:hover'   => $H::get_inline_styles( $button_hover_styles ),
+	'.shapeblock-pricing-table.has-blocks'                 => $H::get_inline_styles( $feat_icon_vars ),
+	'.has-blocks.has-feature-icon-box .shapeblock-features li::before' => $H::get_inline_styles( $feat_icon_frame ),
 	'.shapeblock-button .shapeblock-icon-before, .shapeblock-button .shapeblock-icon-after' => $H::get_inline_styles( $button_icon_styles ),
 	'.shapeblock-button .shapeblock-icon-before'                => $H::get_inline_styles( $btn_icon_before ),
 	'.shapeblock-button .shapeblock-icon-after'                 => $H::get_inline_styles( $btn_icon_after ),
@@ -470,6 +524,30 @@ $render_button = function () use ( $attributes, $H, $icon_allowed_html ) {
 $wrap_classes = 'shapeblock-pricing-table';
 if ( $is_featured ) {
 	$wrap_classes .= ' featured ' . $ribbon_style;
+}
+
+// The card made of blocks (heading, price, list, buttons ...): the card and
+// its ribbon around them, the features' icon drawn by CSS.
+if ( $block instanceof WP_Block && count( $block->inner_blocks ) ) {
+	$feature_icon = isset( $attributes['featureIcon'] ) && in_array( $attributes['featureIcon'], array( 'check', 'check-circle', 'star', 'arrow', 'dot', 'none' ), true ) ? $attributes['featureIcon'] : 'check';
+	$card_classes = $wrap_classes . ' has-blocks has-feature-icon-' . $feature_icon;
+	if ( in_array( $icon_style, array( 'icon-bg', 'icon-border' ), true ) ) {
+		$card_classes .= ' has-feature-icon-box has-feature-' . $icon_style;
+	}
+	if ( ! empty( $attributes['buttonFullWidth'] ) ) {
+		$card_classes .= ' has-full-button';
+	}
+	?>
+	<div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
+		<div class="<?php echo esc_attr( $card_classes ); ?>">
+			<?php if ( $is_featured ) : ?>
+				<div class="shapeblock-ribbon shapeblock-<?php echo esc_attr( $ribbon_align ); ?>"><?php echo esc_html( $featured_txt ); ?></div>
+			<?php endif; ?>
+			<?php echo wp_kses( $content, $H::template_allowed_html() ); ?>
+		</div>
+	</div>
+	<?php
+	return;
 }
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>

@@ -1,23 +1,128 @@
 /**
- * Editor-only styles for the Table block (sidebar repeater UI).
+ * Editor-only styles for the Table block: the cells, and the form an empty
+ * table starts with.
  */
-.shapeblock-tbl-repeater-item {
-	border: 1px solid #e0e0e0;
-	border-radius: 4px;
-	padding: 12px;
-	margin-bottom: 12px;
+.shapeblock-table-block-wrap {
+	// Sections, rows and cells are blocks, but look like a plain table while
+	// editing: no block outline on hover or when selected.
+	.wp-block-shapeblock-table-section,
+	.wp-block-shapeblock-table-row,
+	.wp-block-shapeblock-table-cell {
+		outline: none !important;
+		box-shadow: none !important;
 
-	.shapeblock-tbl-repeater-head {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		gap: 6px;
-		margin-bottom: 8px;
-
-		strong {
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
+		&::after {
+			content: none !important;
 		}
+	}
+
+	// While editing every cell has a thin black line round it, so each one -
+	// an empty one too - can be seen and clicked. Not on the site.
+	.shapeblock-table .shapeblock-th,
+	.shapeblock-table .shapeblock-td,
+	.shapeblock-table .shapeblock-tf {
+		border: 1px solid #000;
+		cursor: text;
+	}
+
+	// An empty cell is as tall as one with a line of text.
+	.shapeblock-tbl-cell-text {
+		display: inline-block;
+		min-width: 1em;
+		min-height: 1lh;
+	}
+
+	// The "Add text here" hint looks the same in every cell - light and not
+	// bold, in the header too - so it is not taken for text.
+	.shapeblock-tbl-cell-text [data-rich-text-placeholder]::after {
+		color: #a7aaad;
+		font-weight: 400;
+		opacity: 1;
+	}
+
+	// A clicked cell's + for adding a block: small, in its corner.
+	.block-list-appender {
+		position: absolute;
+		right: 2px;
+		bottom: 2px;
+		margin: 0;
+		z-index: 2;
+	}
+
+	.block-editor-button-block-appender {
+		width: 20px;
+		height: 20px;
+		min-width: 0;
+		padding: 0;
+		border-radius: 2px;
+
+		svg {
+			width: 16px;
+			height: 16px;
+		}
+	}
+}
+
+.shapeblock-table-placeholder {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	align-items: flex-end;
+
+	.components-base-control {
+		width: 120px;
+	}
+}
+
+// The Style picker: a small drawing of each style's table.
+.shapeblock-table-style-picker {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 8px;
+}
+
+.shapeblock-table-style-option {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	padding: 6px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background: #fff;
+	cursor: pointer;
+
+	&:hover {
+		border-color: #949494;
+	}
+
+	&.is-active {
+		border-color: var(--wp-admin-theme-color, #3858e9);
+		box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #3858e9);
+	}
+}
+
+.shapeblock-table-style-label {
+	font-size: 12px;
+}
+
+.shapeblock-table-style-thumb {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border: 1px solid #ccc;
+
+	span {
+		display: block;
+		height: 12px;
+		border-top: 1px solid #ccc;
+
+		&:first-child {
+			border-top: 0;
+		}
+	}
+
+	.is-stripes & span:nth-child(odd) {
+		background: #f0f0f0;
 	}
 }

@@ -1,6 +1,8 @@
+import { InnerBlocks } from '@wordpress/block-editor';
+
 /**
- * Dynamic block — rendering is handled server-side by render.php.
+ * Rendered by render.php around the blocks of the card, which are saved here.
  */
 export default function save() {
-	return null;
+	return <InnerBlocks.Content />;
 }

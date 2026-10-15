@@ -16,9 +16,55 @@ $H = '\ShapeBlock\Frontend\Helper';
 
 $unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-table-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
-$header = isset( $attributes['tableHeader'] ) && is_array( $attributes['tableHeader'] ) ? $attributes['tableHeader'] : [];
-$body   = isset( $attributes['tableBody'] ) && is_array( $attributes['tableBody'] ) ? $attributes['tableBody'] : [];
-$footer = isset( $attributes['tableFooter'] ) && is_array( $attributes['tableFooter'] ) ? $attributes['tableFooter'] : [];
+// The table as sections ( head / body / foot ) of rows of cells. Each cell is
+// its settings (text, icon, tooltip ...) plus the blocks put in it, rendered.
+$sections = array();
+if ( $block instanceof WP_Block && count( $block->inner_blocks ) ) {
+	foreach ( $block->inner_blocks as $section ) {
+		if ( 'shapeblock/table-section' !== $section->name ) {
+			continue;
+		}
+		$type = isset( $section->attributes['type'] ) && in_array( $section->attributes['type'], array( 'head', 'foot' ), true ) ? $section->attributes['type'] : 'body';
+		$rows = array();
+		foreach ( $section->inner_blocks as $row ) {
+			$cells = array();
+			foreach ( $row->inner_blocks as $cell ) {
+				$item           = isset( $cell->attributes['cell'] ) && is_array( $cell->attributes['cell'] ) ? $cell->attributes['cell'] : array();
+				$item['blocks'] = '';
+				foreach ( $cell->inner_blocks as $inner ) {
+					$item['blocks'] .= $inner->render();
+				}
+				$cells[] = $item;
+			}
+			if ( $cells ) {
+				$rows[] = $cells;
+			}
+		}
+		if ( $rows ) {
+			$sections[] = array( $type, $rows );
+		}
+	}
+} else {
+	// Saved before cells were blocks: the header, the body (one list, where a
+	// cell with "row" starts a new row) and the footer in attributes.
+	$legacy_rows = array();
+	foreach ( isset( $attributes['tableBody'] ) && is_array( $attributes['tableBody'] ) ? $attributes['tableBody'] : array() as $index => $item ) {
+		if ( 0 === $index || ! empty( $item['row'] ) ) {
+			$legacy_rows[] = array();
+		}
+		$legacy_rows[ count( $legacy_rows ) - 1 ][] = $item;
+	}
+	$legacy = array(
+		'head' => isset( $attributes['tableHeader'] ) && is_array( $attributes['tableHeader'] ) && $attributes['tableHeader'] ? array( $attributes['tableHeader'] ) : array(),
+		'body' => $legacy_rows,
+		'foot' => isset( $attributes['tableFooter'] ) && is_array( $attributes['tableFooter'] ) && $attributes['tableFooter'] ? array( $attributes['tableFooter'] ) : array(),
+	);
+	foreach ( $legacy as $type => $rows ) {
+		if ( $rows ) {
+			$sections[] = array( $type, $rows );
+		}
+	}
+}
 
 $tooltip_align = isset( $attributes['tooltipAlign'] ) ? sanitize_html_class( (string) $attributes['tooltipAlign'], 'top' ) : 'top';
 
@@ -27,7 +73,7 @@ if ( empty( $block_wrap_attr ) ) {
 	$block_wrap_attr = 'class="shapeblock-block shapeblock-table-block-wrap ' . esc_attr( $unique_id ) . '"';
 }
 
-if ( empty( $header ) && empty( $body ) && empty( $footer ) ) {
+if ( empty( $sections ) ) {
 	echo '<div ' . wp_kses_post( $block_wrap_attr ) . '><p>' . esc_html__( 'Please add table cells.', 'shapeblock' ) . '</p></div>';
 	return;
 }
@@ -76,6 +122,18 @@ $table_box    = array_merge( $dims( $attributes['tableMargin'] ?? [], 'margin' )
 $cell_padding = $dims( $attributes['tablePadding'] ?? [], 'padding' );
 $tbody_border = ! empty( $attributes['tableBorder'] ) ? $H::border_to_css_props( $attributes['tableBorder'] ) : [];
 
+// The whole table: its text colour and background, and a border on every
+// cell. The header, body and footer settings, then each cell's own, win.
+$table_colors = [];
+if ( ! empty( $attributes['textColor'] ) ) $table_colors['color'] = $attributes['textColor'];
+if ( ! empty( $attributes['bgGradient'] ) ) {
+	$table_colors['background'] = $attributes['bgGradient'];
+} elseif ( ! empty( $attributes['bgColor'] ) ) {
+	$table_colors['background-color'] = $attributes['bgColor'];
+}
+$cell_border = ! empty( $attributes['cellBorder'] ) ? $H::border_to_css_props( $attributes['cellBorder'] ) : [];
+$cell_typo   = $typo( $attributes['tableTypography'] ?? [] );
+
 // Header.
 $head = [];
 if ( ! empty( $attributes['headerAlign'] ) ) $head['text-align'] = $attributes['headerAlign'];
@@ -105,7 +163,11 @@ if ( ! empty( $attributes['bodyBgColorGradient'] ) ) {
 }
 $bd = array_merge( $bd, $typo( $attributes['bodyTypography'] ?? [] ) );
 $bd_striped = [];
-if ( ! empty( $attributes['stripedBg'] ) ) {
+// Stripes: the Stripes style shades every other row from the first, the
+// older "Striped Background" setting every second row.
+$is_stripes  = (bool) preg_match( '/(?:^|\s)is-style-stripes(?:\s|$)/', isset( $attributes['className'] ) ? (string) $attributes['className'] : '' );
+$stripe_rows = $is_stripes ? '.shapeblock-table-body tr:nth-child(odd)' : '.shapeblock-table-body tr:nth-of-type(2n)';
+if ( $is_stripes || ! empty( $attributes['stripedBg'] ) ) {
 	if ( ! empty( $attributes['stripedBgColorGradient'] ) ) {
 		$bd_striped['background'] = $attributes['stripedBgColorGradient'];
 	} elseif ( ! empty( $attributes['stripedBgColor'] ) ) {
@@ -142,8 +204,9 @@ $ft_th = array_merge( $dims( $attributes['tfootRadius'] ?? [], 'radius' ), $dims
 if ( ! empty( $attributes['footBorder'] ) ) $ft_th = array_merge( $ft_th, $H::border_to_css_props( $attributes['footBorder'] ) );
 
 $sub = [
-	'.shapeblock-table'                          => $H::get_inline_styles( $table_box ),
-	'.shapeblock-table-header th, ' . $selector . ' .shapeblock-table-body td' => $H::get_inline_styles( $cell_padding ),
+	'.shapeblock-table'                          => $H::get_inline_styles( array_merge( $table_box, $table_colors ) ),
+	'.shapeblock-table th, ' . $selector . ' .shapeblock-table td' => $H::get_inline_styles( array_merge( $cell_border, $cell_typo ) ),
+	'.shapeblock-table-header th, ' . $selector . ' .shapeblock-table-body td, ' . $selector . ' .shapeblock-table-footer th' => $H::get_inline_styles( $cell_padding ),
 	'.shapeblock-table-body'                     => $H::get_inline_styles( array_merge( $tbody_border, $bd ) ),
 
 	'.shapeblock-table-header'                   => $H::get_inline_styles( $head ),
@@ -151,7 +214,7 @@ $sub = [
 	'.shapeblock-header-icon'                    => $H::get_inline_styles( $head_icon_wrap ),
 	'.shapeblock-header-icon i'                  => $H::get_inline_styles( $head_icon ),
 
-	'.shapeblock-table-body tr:nth-of-type(2n)'  => $H::get_inline_styles( $bd_striped ),
+	$stripe_rows                                 => $H::get_inline_styles( $bd_striped ),
 	'.shapeblock-table-body td i'                => $H::get_inline_styles( $bd_icon ),
 	'.shapeblock-table-body td'                  => $H::get_inline_styles( $bd_td ),
 	'.shapeblock-table .shapeblock-tbl-tooltip i'   => $H::get_inline_styles( $tip_icon ),
@@ -175,6 +238,7 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $selector
 	// General.
 	$valign       = ! empty( $attributes[ 'verticalAlignTable' . $suffix ] ) ? [ 'vertical-align' => $attributes[ 'verticalAlignTable' . $suffix ] ] : [];
 	$table_box    = $dims( $attributes[ 'tableMargin' . $suffix ] ?? [], 'margin' );
+	$cell_typo    = $typo( $attributes[ 'tableTypography' . $suffix ] ?? [] );
 	$cell_padding = $dims( $attributes[ 'tablePadding' . $suffix ] ?? [], 'padding' );
 
 	// Header.
@@ -207,7 +271,8 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $selector
 
 	return [
 		'.shapeblock-table'                                                   => $table_box,
-		'.shapeblock-table-header th, ' . $selector . ' .shapeblock-table-body td' => $cell_padding,
+		'.shapeblock-table th, ' . $selector . ' .shapeblock-table td'        => $cell_typo,
+		'.shapeblock-table-header th, ' . $selector . ' .shapeblock-table-body td, ' . $selector . ' .shapeblock-table-footer th' => $cell_padding,
 		'.shapeblock-table-body'                                              => $bd,
 		'.shapeblock-table-header'                                            => $head,
 		'.shapeblock-table-header th'                                         => $head_th,
@@ -345,6 +410,9 @@ $cell_style = function ( $item ) use ( $H ) {
 			$styles[] = 'background-color:' . $H::sanitize_css_value( $item['bgColor'] );
 		}
 		if ( '' !== $H::sanitize_css_value( $item['textColor'] ?? '' ) ) $styles[] = 'color:' . $H::sanitize_css_value( $item['textColor'] );
+		foreach ( $H::border_to_css_props( $item['border'] ?? null ) as $border_prop => $border_value ) {
+			$styles[] = $border_prop . ':' . $border_value;
+		}
 		if ( ! empty( $item['dataFlex'] ) ) {
 			if ( ! empty( $item['flexAlign'] ) && in_array( $item['flexAlign'], array( 'flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly', 'start', 'end', 'left', 'right' ), true ) ) $styles[] = 'justify-content:' . $item['flexAlign'];
 			if ( '' !== ( $item['flexGap'] ?? '' ) ) $styles[] = 'gap:' . $H::ensure_unit( $item['flexGap'] );
@@ -384,77 +452,56 @@ $render_tooltip = function ( $item ) use ( $render_icon, $tooltip_align, $table_
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<?php // A table cannot shrink past its own content, so it gets a box to scroll in. ?>
 	<div class="shapeblock-table-scroll">
-	<table class="shapeblock-table">
-		<?php if ( ! empty( $header ) ) : ?>
-			<thead class="shapeblock-table-header">
-				<tr>
-					<?php
-					foreach ( $header as $item ) {
-						$style = $cell_style( $item );
-						$icon  = ( ! empty( $item['headerIcon'] ) ) ? $render_icon( $item['headIcon'] ?? '' ) : '';
-						echo wp_kses( '<th class="shapeblock-th"' . $cell_attrs( $item ) . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>', $table_allowed_html );
+	<table class="shapeblock-table<?php echo ! empty( $attributes['fixedLayout'] ) ? ' is-fixed-layout' : ''; ?>">
+		<?php
+		$section_tags = array(
+			'head' => array( 'thead', 'shapeblock-table-header', 'th', 'shapeblock-th' ),
+			'body' => array( 'tbody', 'shapeblock-table-body', 'td', 'shapeblock-td' ),
+			'foot' => array( 'tfoot', 'shapeblock-table-footer', 'th', 'shapeblock-tf' ),
+		);
+		foreach ( $sections as $section ) {
+			list( $tag, $section_class, $cell_tag, $cell_class ) = $section_tags[ $section[0] ];
+			echo '<' . tag_escape( $tag ) . ' class="' . esc_attr( $section_class ) . '">';
+			foreach ( $section[1] as $cells ) {
+				echo '<tr>';
+				foreach ( $cells as $item ) {
+					$style = $cell_style( $item );
+					$flex  = 'body' === $section[0] && ! empty( $item['dataFlex'] ) ? ' shapeblock-data-flex' : '';
+					echo wp_kses( '<' . $cell_tag . ' class="' . esc_attr( $cell_class . $flex ) . '"' . $cell_attrs( $item ) . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>', $table_allowed_html );
+
+					if ( 'head' === $section[0] && ! empty( $item['headerIcon'] ) ) {
+						$icon = $render_icon( $item['headIcon'] ?? '' );
 						if ( '' !== $icon ) {
 							echo wp_kses( '<span class="shapeblock-header-icon">' . $icon . '</span>', $table_allowed_html );
 						}
-						echo wp_kses_post( $item['text'] ?? '' );
-						$render_tooltip( $item );
-						echo '</th>';
-					}
-					?>
-				</tr>
-			</thead>
-		<?php endif; ?>
-
-		<?php if ( ! empty( $body ) ) : ?>
-			<tbody class="shapeblock-table-body">
-				<tr>
-					<?php
-					foreach ( $body as $index => $item ) {
-						if ( $index > 0 && ! empty( $item['row'] ) ) {
-							echo '</tr><tr>';
-						}
-						$type      = isset( $item['type'] ) ? $item['type'] : 'icon';
-						$flex      = ! empty( $item['dataFlex'] ) ? ' shapeblock-data-flex' : '';
-						$style     = $cell_style( $item );
-						$icon_color_val = ! empty( $item['advance'] ) ? $H::sanitize_css_value( $item['iconColor'] ?? '' ) : '';
-						$icon_color     = '' !== $icon_color_val ? ' style="color:' . esc_attr( $icon_color_val ) . '"' : '';
-
-						echo wp_kses( '<td class="shapeblock-td' . esc_attr( $flex ) . '"' . $cell_attrs( $item ) . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>', $table_allowed_html );
-
+					} elseif ( 'body' === $section[0] ) {
+						$type = isset( $item['type'] ) ? $item['type'] : 'icon';
 						if ( 'image' === $type && ! empty( $item['image']['url'] ) ) {
 							echo '<img src="' . esc_url( $item['image']['url'] ) . '" class="shapeblock-table-image" alt="' . esc_attr( $item['image']['alt'] ?? '' ) . '">';
 						} elseif ( 'icon' === $type ) {
-							$ic = $render_icon( $item['icon'] ?? '' );
+							$ic             = $render_icon( $item['icon'] ?? '' );
+							$icon_color_val = ! empty( $item['advance'] ) ? $H::sanitize_css_value( $item['iconColor'] ?? '' ) : '';
 							if ( '' !== $ic ) {
-								echo wp_kses( '<span' . $icon_color . '>' . $ic . '</span>', $table_allowed_html );
+								echo wp_kses( '<span' . ( '' !== $icon_color_val ? ' style="color:' . esc_attr( $icon_color_val ) . '"' : '' ) . '>' . $ic . '</span>', $table_allowed_html );
 							}
 						}
-
-						echo wp_kses_post( $item['text'] ?? '' );
-						$render_tooltip( $item );
-						echo '</td>';
 					}
-					?>
-				</tr>
-			</tbody>
-		<?php endif; ?>
 
-		<?php if ( ! empty( $footer ) ) : ?>
-			<tfoot class="shapeblock-table-footer">
-				<tr>
-					<?php
-					foreach ( $footer as $item ) {
-						$style = $cell_style( $item );
-						echo wp_kses( '<th class="shapeblock-tf"' . $cell_attrs( $item ) . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>', $table_allowed_html );
-						echo wp_kses_post( $item['text'] ?? '' );
-						$render_tooltip( $item );
-						echo '</th>';
-					}
-					?>
-				</tr>
-			</tfoot>
-		<?php endif; ?>
+					echo wp_kses_post( $item['text'] ?? '' );
+					// The blocks put in the cell: text, images and icon lists.
+					echo wp_kses( $item['blocks'] ?? '', $H::template_allowed_html() );
+					$render_tooltip( $item );
+					echo '</' . tag_escape( $cell_tag ) . '>';
+				}
+				echo '</tr>';
+			}
+			echo '</' . tag_escape( $tag ) . '>';
+		}
+		?>
 	</table>
 	</div>
+	<?php if ( isset( $attributes['caption'] ) && '' !== trim( (string) $attributes['caption'] ) ) : ?>
+		<div class="shapeblock-table-caption"><?php echo wp_kses_post( $attributes['caption'] ); ?></div>
+	<?php endif; ?>
 </div>
 <?php } )( $attributes, $content, $block );

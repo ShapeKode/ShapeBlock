@@ -216,3 +216,295 @@ li.icon-bg svg {
 		overflow-wrap: break-word;
 	}
 }
+
+/* --- A card made of blocks ------------------------------------------------
+ * The title, price, features and button are blocks (Heading, Price, List,
+ * Buttons ...). These rules give them the card's look; the block's own
+ * settings, printed per block, still win.
+ */
+.shapeblock-pricing-table.has-blocks {
+	--sb-pt-icon-size: 22px;
+
+	> * {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	> .shapeblock-price-title {
+		display: block;
+		margin-bottom: 15px;
+	}
+
+	> .shapeblock-subtitle-price,
+	> .shapeblock-features-description {
+		margin-bottom: 15px;
+	}
+
+	> .shapeblock-price {
+		margin-bottom: 20px;
+	}
+
+	> .shapeblock-features {
+		margin-bottom: 20px;
+		padding: 0;
+		list-style: none;
+	}
+
+	> .shapeblock-button-subtext {
+		margin-top: 8px;
+	}
+
+	// Each feature's icon, drawn from the chosen shape in the icon colour.
+	.shapeblock-features li {
+		display: flex;
+		align-items: center;
+	}
+
+	.shapeblock-features li::after {
+		content: "";
+		order: -2;
+		flex: none;
+		width: var(--sb-pt-icon-size);
+		height: var(--sb-pt-icon-size);
+		margin-right: 10px;
+		background-color: var(--sb-pt-icon-color, #1e1e1e);
+		-webkit-mask: var(--sb-pt-icon-mask) center / contain no-repeat;
+		mask: var(--sb-pt-icon-mask) center / contain no-repeat;
+	}
+
+	&.has-feature-icon-none .shapeblock-features li::after {
+		content: none;
+	}
+
+	&.has-feature-icon-check {
+		--sb-pt-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.2l-3.5-3.5L4 14.2l5 5 11-11-1.5-1.5z'/%3E%3C/svg%3E");
+	}
+
+	&.has-feature-icon-check-circle {
+		--sb-pt-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.5 14.5-4-4 1.4-1.4 2.6 2.6 5.6-5.6 1.4 1.4-7 7z'/%3E%3C/svg%3E");
+	}
+
+	&.has-feature-icon-star {
+		--sb-pt-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z'/%3E%3C/svg%3E");
+	}
+
+	&.has-feature-icon-arrow {
+		--sb-pt-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 11h10.2l-3.6-3.6L13 6l6 6-6 6-1.4-1.4 3.6-3.6H5z'/%3E%3C/svg%3E");
+	}
+
+	&.has-feature-icon-dot {
+		--sb-pt-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z'/%3E%3C/svg%3E");
+	}
+
+	// Icon with a background or a border: the box behind the icon.
+	&.has-feature-icon-box {
+		--sb-pt-icon-size: 16px;
+
+		.shapeblock-features li::after {
+			position: relative;
+			z-index: 1;
+			margin: 0 0 0 var(--sb-pt-icon-pad, 5px);
+			background-color: var(--sb-pt-icon-color, var(--shapeblock-preset-color-secondary, #0b3665));
+		}
+
+		.shapeblock-features li::before {
+			content: "";
+			order: -1;
+			flex: none;
+			box-sizing: content-box;
+			width: var(--sb-pt-icon-size);
+			height: var(--sb-pt-icon-size);
+			padding: var(--sb-pt-icon-pad, 5px);
+			margin-left: calc(-1 * (var(--sb-pt-icon-size) + var(--sb-pt-icon-pad, 5px)) - var(--sb-pt-gap, 0px));
+			margin-right: 10px;
+			border-radius: 50%;
+		}
+	}
+
+	&.has-feature-icon-bg .shapeblock-features li::before {
+		background: var(--sb-pt-icon-bg, #f1f1f1);
+	}
+
+	&.has-feature-icon-border .shapeblock-features li::before {
+		border: 1px solid #ccc;
+	}
+
+	// The button: a Buttons block, looking like the card's own button.
+	.shapeblock-btn-part .wp-block-button__link {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 10px 26px;
+		background-color: var(--shapeblock-preset-color-primary, #ffd012);
+		color: #fff;
+		border-radius: 6px;
+		text-decoration: none;
+		transition: all 0.3s ease;
+	}
+
+	&.has-full-button .shapeblock-btn-part .wp-block-button,
+	&.has-full-button .shapeblock-btn-part .wp-block-button__link {
+		display: flex;
+		width: 100%;
+	}
+}
+
+/* --- Block styles --------------------------------------------------------
+ * Picked in the block's Styles panel. Classic is the card above. The colours
+ * and sizes set in the block's own settings still win over these.
+ */
+
+// Centered: everything in the middle, a coloured bar on top, a bigger price
+// and a round button across the card.
+.is-style-centered .shapeblock-pricing-table {
+	padding: 40px 32px;
+	border: 1px solid #ececf3;
+	border-top: 6px solid var(--shapeblock-preset-color-primary, #ffd012);
+	border-radius: 20px;
+	box-shadow: 0 18px 40px rgba(18, 16, 42, 0.08);
+	text-align: center;
+
+	.shapeblock-price-title-wrap,
+	.shapeblock-price-title,
+	.shapeblock-subtitle-price,
+	.shapeblock-price,
+	.shapeblock-features-description,
+	.shapeblock-btn-part,
+	.shapeblock-button-subtext {
+		text-align: center;
+	}
+
+	.shapeblock-btn-part {
+		justify-content: center;
+	}
+
+	.shapeblock-price {
+		font-size: 48px;
+		font-weight: 700;
+		line-height: 1.1;
+		margin-bottom: 24px;
+	}
+
+	.shapeblock-features li {
+		justify-content: center;
+	}
+
+	.shapeblock-features li + li {
+		border-top-style: dashed;
+	}
+
+	.shapeblock-btn-part .shapeblock-button,
+	.shapeblock-btn-part .wp-block-button,
+	.shapeblock-btn-part .wp-block-button__link {
+		display: flex;
+		width: 100%;
+	}
+
+	.shapeblock-btn-part .shapeblock-button,
+	.shapeblock-btn-part .wp-block-button__link {
+		padding: 14px 28px;
+		border-radius: 999px;
+	}
+}
+
+// Dark: a deep background with light text, the price and checks in the
+// accent colour.
+.is-style-dark .shapeblock-pricing-table {
+	padding: 40px 32px;
+	border: 0;
+	border-radius: 20px;
+	background: linear-gradient(160deg, #1d1a3f 0%, #12102a 100%);
+	box-shadow: 0 24px 48px rgba(18, 16, 42, 0.28);
+	color: rgba(255, 255, 255, 0.78);
+	text-align: center;
+
+	.shapeblock-price-title-wrap,
+	.shapeblock-price-title,
+	.shapeblock-subtitle-price,
+	.shapeblock-price,
+	.shapeblock-features-description,
+	.shapeblock-btn-part,
+	.shapeblock-button-subtext {
+		text-align: center;
+	}
+
+	.shapeblock-btn-part {
+		justify-content: center;
+	}
+
+	.shapeblock-price-title,
+	.shapeblock-price {
+		color: #fff;
+	}
+
+	.shapeblock-price {
+		font-size: 48px;
+		font-weight: 700;
+		line-height: 1.1;
+		margin-bottom: 24px;
+	}
+
+	.shapeblock-old-price {
+		color: rgba(255, 255, 255, 0.5);
+	}
+
+	.shapeblock-features li {
+		justify-content: center;
+	}
+
+	.shapeblock-features li + li {
+		border-top-color: rgba(255, 255, 255, 0.12);
+	}
+
+	// The check marks in the accent colour, light on the dark card.
+	--sb-pt-icon-color: var(--shapeblock-preset-color-primary, #ffd012);
+
+	.shapeblock-features svg.feature-icon,
+	.shapeblock-features i.feature-icon {
+		color: var(--shapeblock-preset-color-primary, #ffd012);
+		fill: currentColor;
+	}
+
+	.feature-icon.icon-bg {
+		background-color: rgba(255, 255, 255, 0.1);
+		color: var(--shapeblock-preset-color-primary, #ffd012);
+	}
+
+	.feature-icon.icon-border {
+		border-color: rgba(255, 255, 255, 0.3);
+	}
+
+	.shapeblock-btn-part .shapeblock-button,
+	.shapeblock-btn-part .wp-block-button,
+	.shapeblock-btn-part .wp-block-button__link {
+		display: flex;
+		width: 100%;
+	}
+
+	.shapeblock-btn-part .shapeblock-button,
+	.shapeblock-btn-part .wp-block-button__link {
+		padding: 14px 28px;
+		border-radius: 999px;
+	}
+
+	.shapeblock-button-subtext {
+		color: rgba(255, 255, 255, 0.6);
+	}
+}
+
+// Plans side by side (in Columns): every card as tall as the tallest, with
+// its button at the bottom.
+.wp-block-column > .shapeblock-pricing-table-block-wrap {
+	height: 100%;
+}
+
+.shapeblock-pricing-table-block-wrap > .shapeblock-pricing-table.has-blocks {
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	height: 100%;
+
+	> .shapeblock-btn-part {
+		margin-top: auto;
+	}
+}

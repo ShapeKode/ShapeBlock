@@ -5,17 +5,22 @@
 	"version": "1.0.2",
 	"title": "Table",
 	"category": "shapeblock",
-	"description": "A data table with header, body and footer cells — icons, images, tooltips, colspan/rowspan and full styling.",
+	"description": "A table edited in place, with a header, body and footer. Cells take text, images and icon lists; colours and borders for the whole table or each cell.",
 	"keywords": [ "table", "data", "grid", "rows", "columns" ],
 	"example": {},
 	"supports": {
 		"html": false,
 		"align": [ "left", "center", "right", "wide", "full" ]
 	},
+	"styles": [
+		{ "name": "default", "label": "Default", "isDefault": true },
+		{ "name": "stripes", "label": "Stripes" }
+	],
 	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
 	"viewScript": "file:./view.js",
 	"render": "file:./render.php",
+	"providesContext": { "shapeblock/tableTooltipAlign": "tooltipAlign" },
 	"attributes": {
 		"advPadding": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 		"advPaddingTablet": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
@@ -69,6 +74,13 @@
 		"tablePaddingTablet": { "type": "object" },
 		"tablePaddingMobile": { "type": "object" },
 		"tableBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
+		"textColor": { "type": "string", "default": "" },
+		"bgColor": { "type": "string", "default": "" },
+		"bgGradient": { "type": "string", "default": "" },
+		"cellBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
+		"tableTypography": { "type": "object", "default": {} },
+		"tableTypographyTablet": { "type": "object", "default": {} },
+		"tableTypographyMobile": { "type": "object", "default": {} },
 		"tableRadius": { "type": "object", "default": { "top": "", "right": "", "bottom": "", "left": "" } },
 
 		"headerAlign": { "type": "string", "default": "" },
@@ -152,6 +164,8 @@
 		"tfootPaddingTablet": { "type": "object" },
 		"tfootPaddingMobile": { "type": "object" },
 		"footBorder": { "type": "object", "default": { "width": 0, "color": "", "style": "solid" } },
+		"fixedLayout": { "type": "boolean", "default": false },
+		"caption": { "type": "string", "default": "" },
 	"hideDesktop": { "type": "boolean", "default": false },
 	"hideTablet": { "type": "boolean", "default": false },
 	"hideMobile": { "type": "boolean", "default": false }

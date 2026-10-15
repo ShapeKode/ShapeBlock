@@ -12,6 +12,11 @@
 		"html": false,
 		"align": [ "left", "center", "right", "wide", "full" ]
 	},
+	"styles": [
+		{ "name": "default", "label": "Classic", "isDefault": true },
+		{ "name": "centered", "label": "Centered" },
+		{ "name": "dark", "label": "Dark" }
+	],
 	"textdomain": "shapeblock",
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php",
@@ -25,6 +30,7 @@
 		"advBgColor": { "type": "string", "default": "" },
 		"advBgGradient": { "type": "string", "default": "" },
 		"blockId": { "type": "string", "default": "" },
+		"planPicker": { "type": "boolean", "default": false },
 
 		"title": { "type": "string", "default": "Basic Plan" },
 		"description": { "type": "string", "default": "" },
@@ -36,7 +42,7 @@
 		"currencyPlacement": { "type": "string", "default": "left" },
 		"period": { "type": "string", "default": "month" },
 		"separator": { "type": "string", "default": "/" },
-		"headerAlignment": { "type": "string", "default": "left" },
+		"headerAlignment": { "type": "string", "default": "" },
 		"headerAlignmentTablet": { "type": "string", "default": "" },
 		"headerAlignmentMobile": { "type": "string", "default": "" },
 
@@ -55,7 +61,8 @@
 			]
 		},
 		"featureIconStyle": { "type": "string", "default": "icon-only" },
-		"featureTextAlignment": { "type": "string", "default": "left" },
+		"featureIcon": { "type": "string", "default": "check" },
+		"featureTextAlignment": { "type": "string", "default": "" },
 		"featureTextAlignmentTablet": { "type": "string", "default": "" },
 		"featureTextAlignmentMobile": { "type": "string", "default": "" },
 		"featureIconBgColor": { "type": "string", "default": "" },
@@ -83,7 +90,7 @@
 		"buttonIcon": { "type": "string", "default": "" },
 		"buttonIconPosition": { "type": "string", "default": "after" },
 		"buttonPosition": { "type": "string", "default": "after_features" },
-		"btnAlignment": { "type": "string", "default": "left" },
+		"btnAlignment": { "type": "string", "default": "" },
 		"btnAlignmentTablet": { "type": "string", "default": "" },
 		"btnAlignmentMobile": { "type": "string", "default": "" },
 		"buttonFullWidth": { "type": "boolean", "default": false },

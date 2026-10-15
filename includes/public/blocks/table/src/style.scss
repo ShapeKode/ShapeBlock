@@ -24,6 +24,20 @@
 		text-align: inherit;
 		font-weight: inherit;
 		vertical-align: top;
+
+		// Blocks put in a cell sit close, the first and last without outer space.
+		> :is(p, h1, h2, h3, h4, h5, h6, figure) {
+			margin: 0.5em 0 0;
+		}
+
+		> :is(p, h1, h2, h3, h4, h5, h6, figure):first-child {
+			margin-top: 0;
+		}
+
+		img {
+			max-width: 100%;
+			height: auto;
+		}
 	}
 
 	.shapeblock-table-header {
@@ -148,4 +162,21 @@
 	max-width: 100%;
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
+}
+
+/* "Fixed width table cells": the columns share the width equally. */
+.shapeblock-table-block-wrap .shapeblock-table.is-fixed-layout {
+	table-layout: fixed;
+	width: 100%;
+}
+
+.shapeblock-table-block-wrap .shapeblock-table-caption {
+	margin-top: 8px;
+	font-size: 13px;
+	text-align: center;
+}
+
+// The Stripes style: every other row shaded, from the first.
+.is-style-stripes .shapeblock-table-body tr:nth-child(odd) {
+	background-color: #f0f0f0;
 }

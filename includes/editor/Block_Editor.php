@@ -40,6 +40,15 @@ class Block_Editor {
             \shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'assets/css/editor.css' )
         );
 
+        // The inserter's search box gets the cursor when the inserter opens.
+        wp_enqueue_script(
+            'shapeblock-editor-inserter',
+            SHAPEBLOCK_PL_URL . 'includes/public/assets/js/editor-inserter.js',
+            array( 'wp-data' ),
+            \shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/js/editor-inserter.js' ),
+            true
+        );
+
         wp_localize_script(
             'shapeblock-block-editor-js',
             'shapeblockEditor',

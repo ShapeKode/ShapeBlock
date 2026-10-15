@@ -1,76 +1,38 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState, useRef } from '@wordpress/element';
-import { useSelect } from '@wordpress/data';
+import { useEffect, useRef, useMemo } from '@wordpress/element';
+import { useSelect, useDispatch } from '@wordpress/data';
 import ServerSideRender from '../../custom-components/ServerRender';
 import {
 	useBlockProps,
+	useInnerBlocksProps,
 	InspectorControls,
 	BlockControls,
 	AlignmentControl,
-	MediaUpload,
-	MediaUploadCheck,
+	RichText,
+	store as blockEditorStore,
 } from '@wordpress/block-editor';
-import {
-	PanelBody,
-	SelectControl,
-	ToggleControl,
-	TextControl,
-	TextareaControl,
-	BoxControl,
-	Button,
-	TabPanel,
-	__experimentalDivider as Divider,
-} from '@wordpress/components';
 
-import ColorPopover from '../../custom-components/ColorPopover';
-import BackgroundControl from '../../custom-components/BackgroundControl';
-import IconPicker from '../../custom-components/IconPicker';
-import TypographyControls from '../../custom-components/TypographyControls';
-import BorderControl from '../../custom-components/BorderControl';
-import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
-import AdvancedControls from '../../custom-components/AdvancedControls';
+import { TablePlaceholder, tableBlocks, emptyRows } from '../../custom-components/TableEditing';
+import { NAMES, newCellAttrs } from './names';
+import TableSidebar from './sidebar';
 
 import './editor.scss';
 
-// Map a base attribute name to its per-device key (desktop uses the base name).
-const getKey = (base, device) =>
-	device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
+// Tables saved before cells were blocks keep their cells in attributes: the
+// body as one list where a cell with `row` starts a new row.
+const rowsOf = (body) => {
+	const rows = [];
+	(Array.isArray(body) ? body : []).forEach((cell, i) => {
+		if (0 === i || cell.row) {
+			rows.push([]);
+		}
+		const { row, ...rest } = cell;
+		rows[rows.length - 1].push({ cell: rest });
+	});
+	return rows;
+};
 
-const SVG = (path) => (
-	<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-		<path d={path} fill="currentColor" />
-	</svg>
-);
-const ICON_UP = SVG('M12 6.6l-6 6 1.4 1.4 4.6-4.6 4.6 4.6 1.4-1.4z');
-const ICON_DOWN = SVG('M12 15.4l6-6-1.4-1.4-4.6 4.6-4.6-4.6-1.4 1.4z');
-const ICON_TRASH = SVG('M9 3v1H4v2h16V4h-5V3H9zM6 7l1 13h10l1-13H6zm4 2h1v9h-1V9zm3 0h1v9h-1V9z');
-const ICON_ADD = SVG('M11 5v6H5v2h6v6h2v-6h6v-2h-6V5z');
-const ICON_COPY = SVG('M5 4h10v2H7v10H5V4zM9 8h10v12H9V8zm2 2v8h6v-8h-6z');
-const ICON_MINUS = SVG('M5 11h14v2H5z');
-const ICON_PLUS = SVG('M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z');
-
-const ALIGN_OPTIONS = [
-	{ label: __('Default', 'shapeblock'), value: '' },
-	{ label: __('Left', 'shapeblock'), value: 'left' },
-	{ label: __('Center', 'shapeblock'), value: 'center' },
-	{ label: __('Right', 'shapeblock'), value: 'right' },
-	{ label: __('Justify', 'shapeblock'), value: 'justify' },
-];
-const VALIGN_OPTIONS = [
-	{ label: __('Default', 'shapeblock'), value: '' },
-	{ label: __('Top', 'shapeblock'), value: 'top' },
-	{ label: __('Middle', 'shapeblock'), value: 'middle' },
-	{ label: __('Bottom', 'shapeblock'), value: 'bottom' },
-];
-const DECORATION_OPTIONS = [
-	{ label: __('Default', 'shapeblock'), value: '' },
-	{ label: __('Underline', 'shapeblock'), value: 'underline' },
-	{ label: __('Overline', 'shapeblock'), value: 'overline' },
-	{ label: __('Line Through', 'shapeblock'), value: 'line-through' },
-	{ label: __('None', 'shapeblock'), value: 'none' },
-];
-
-export default function Edit({ attributes, setAttributes, clientId }) {
+export default function Edit({ attributes, setAttributes, clientId, isSelected }) {
 	const { blockId } = attributes;
 
 	useEffect(() => {
@@ -91,6 +53,54 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const dev = device ? device.toLowerCase() : 'desktop';
 	const alignKey = dev === 'desktop' ? 'bodyAlign' : `bodyAlign${dev.charAt(0).toUpperCase() + dev.slice(1)}`;
 
+	// ---- The table: sections of rows of cells, each cell a block -------------
+	const hasSections = useSelect((select) => select(blockEditorStore).getBlockCount(clientId) > 0, [clientId]);
+	const { replaceInnerBlocks, __unstableMarkNextChangeAsNotPersistent } = useDispatch(blockEditorStore);
+	const legacyHead = Array.isArray(attributes.tableHeader) ? attributes.tableHeader : [];
+	const legacyFoot = Array.isArray(attributes.tableFooter) ? attributes.tableFooter : [];
+	const legacyBody = Array.isArray(attributes.tableBody) ? attributes.tableBody : [];
+	const hasLegacy = legacyHead.length > 0 || legacyBody.length > 0 || legacyFoot.length > 0;
+	const isEmpty = !hasSections && !hasLegacy;
+
+	// A table saved with its cells in attributes gets them as blocks, once.
+	useEffect(() => {
+		if (hasSections || !hasLegacy) {
+			return;
+		}
+		__unstableMarkNextChangeAsNotPersistent();
+		replaceInnerBlocks(
+			clientId,
+			tableBlocks(NAMES, [
+				{ type: 'head', rows: legacyHead.length ? [legacyHead.map((cell) => ({ cell }))] : [] },
+				{ type: 'body', rows: rowsOf(legacyBody) },
+				{ type: 'foot', rows: legacyFoot.length ? [legacyFoot.map((cell) => ({ cell }))] : [] },
+			]),
+			false
+		);
+		__unstableMarkNextChangeAsNotPersistent();
+		setAttributes({ tableHeader: [], tableBody: [], tableFooter: [] });
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+	// A new table has columns of equal width, so a column does not grow and
+	// push the others while it is typed in.
+	const createTable = (columns, count) => {
+		replaceInnerBlocks(clientId, tableBlocks(NAMES, [{ type: 'body', rows: emptyRows(columns, count, newCellAttrs) }]), false);
+		setAttributes({ fixedLayout: true });
+	};
+
+	// The table's own styles come from the server (colors, typography,
+	// borders ...): a preview of one cell, hidden, supplies them. It does not
+	// change while the text is typed, so it is not fetched again for that.
+	const styleOnly = useMemo(() => {
+		const { tableHeader, tableBody, tableFooter, caption, ...rest } = attributes;
+		return { ...rest, tableHeader: [{ text: '' }], tableBody: [{ text: '' }], tableFooter: [{ text: '' }] };
+	}, [JSON.stringify({ ...attributes, tableHeader: 0, tableBody: 0, tableFooter: 0, caption: 0 })]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	const tableProps = useInnerBlocksProps(
+		{ className: attributes.fixedLayout ? 'shapeblock-table is-fixed-layout' : 'shapeblock-table' },
+		{ allowedBlocks: [NAMES.section], renderAppender: false, templateLock: false }
+	);
+
 	// Editor preview tooltip interactivity (front-end view.js doesn't run in SSR).
 	const previewRef = useRef(null);
 	useEffect(() => {
@@ -110,338 +120,48 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			root.removeEventListener('mouseover', over);
 			root.removeEventListener('mouseout', out);
 		};
-	}, []);
+		// Again once a table is created in an empty block.
+	}, [isEmpty]);
 
-	const color = (label, key) => <ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const bg = (label, c, g) => (
-		<BackgroundControl
-			label={label}
-			colorValue={attributes[c]}
-			gradientValue={attributes[g]}
-			onColorChange={(v) => setAttributes({ [c]: v && typeof v === 'object' ? v.hex : v || '' })}
-			onGradientChange={(v) => setAttributes({ [g]: v || '' })}
-		/>
-	);
-	const border = (label, key) => <BorderControl label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const box = (label, key) => <BoxControl label={label} values={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />;
-	const num = (label, key) => <TextControl label={label} type="number" value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
-
-	// Responsive variants — a device switcher above the control, editing the
-	// matching per-device attribute (base / baseTablet / baseMobile).
-	const respTypo = (label, base) => (
-		<ResponsiveWrapper label={label}>
-			{(device) => <TypographyControls attributes={attributes} setAttributes={setAttributes} attributeKey={getKey(base, device)} />}
-		</ResponsiveWrapper>
-	);
-	const respBox = (label, base) => (
-		<ResponsiveWrapper label={label}>
-			{(device) => <BoxControl values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
-		</ResponsiveWrapper>
-	);
-	const respNum = (label, base) => (
-		<ResponsiveWrapper label={label}>
-			{(device) => {
-				const k = getKey(base, device);
-				return <TextControl type="number" value={attributes[k]} onChange={(v) => setAttributes({ [k]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
-			}}
-		</ResponsiveWrapper>
-	);
-	const respAlign = (label, base, options) => (
-		<ResponsiveWrapper label={label}>
-			{(device) => {
-				const k = getKey(base, device);
-				return <SelectControl value={attributes[k]} options={options} onChange={(v) => setAttributes({ [k]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
-			}}
-		</ResponsiveWrapper>
-	);
-
-	// ---- Generic repeater management -------------------------------------------
-	// BackgroundControl clears the other field with a second call in the same
-	// tick, before this render's list updates - so update() builds on the latest
-	// list rather than the one this render started with.
-	const latestItems = useRef({});
-	const makeRepeater = (attrKey, newItem) => {
-		const items = Array.isArray(attributes[attrKey]) ? attributes[attrKey] : [];
-		latestItems.current[attrKey] = items;
-		const update = (i, key, val) => {
-			const next = latestItems.current[attrKey].map((it, idx) => (idx === i ? { ...it, [key]: val } : it));
-			latestItems.current[attrKey] = next;
-			setAttributes({ [attrKey]: next });
-		};
-		const add = () => setAttributes({ [attrKey]: [...items, { ...newItem }] });
-		const remove = (i) => setAttributes({ [attrKey]: items.filter((_, idx) => idx !== i) });
-		// Deep copy, so the clone's nested values are not shared with the original.
-		const duplicate = (i) => {
-			const next = items.slice();
-			next.splice(i + 1, 0, JSON.parse(JSON.stringify(items[i])));
-			setAttributes({ [attrKey]: next });
-		};
-		const move = (i, dir) => {
-			const t = i + dir;
-			if (t < 0 || t >= items.length) return;
-			const next = items.slice();
-			const [m] = next.splice(i, 1);
-			next.splice(t, 0, m);
-			setAttributes({ [attrKey]: next });
-		};
-		return { items, update, add, remove, duplicate, move };
-	};
-
-	const [collapsed, setCollapsed] = useState({});
-	const cKey = (section, i) => `${section}-${i}`;
-	const isCollapsed = (section, i) => !!collapsed[cKey(section, i)];
-	const toggleCollapsed = (section, i) => setCollapsed((cur) => ({ ...cur, [cKey(section, i)]: !cur[cKey(section, i)] }));
-
-	const ItemHead = ({ section, index, label, rep }) => (
-		<div className="shapeblock-tbl-repeater-head">
-			<strong>{label || `#${index + 1}`}</strong>
-			<div>
-				<Button icon={isCollapsed(section, index) ? ICON_PLUS : ICON_MINUS} label={isCollapsed(section, index) ? __('Expand', 'shapeblock') : __('Collapse', 'shapeblock')} onClick={() => toggleCollapsed(section, index)} size="small" />
-				<Button icon={ICON_UP} label={__('Move up', 'shapeblock')} onClick={() => rep.move(index, -1)} disabled={index === 0} size="small" />
-				<Button icon={ICON_DOWN} label={__('Move down', 'shapeblock')} onClick={() => rep.move(index, 1)} disabled={index === rep.items.length - 1} size="small" />
-				<Button icon={ICON_COPY} label={__('Duplicate', 'shapeblock')} onClick={() => rep.duplicate(index)} size="small" />
-				<Button icon={ICON_TRASH} label={__('Remove', 'shapeblock')} onClick={() => rep.remove(index)} isDestructive size="small" />
-			</div>
-		</div>
-	);
-
-	const cellAdvanced = (item, index, update, opts = {}) => (
-		<>
-			<ToggleControl label={__('Advance Settings', 'shapeblock')} checked={!!item.advance} onChange={(v) => update(index, 'advance', v)} __nextHasNoMarginBottom />
-			{item.advance && (
-				<>
-					<ToggleControl label={__('colSpan', 'shapeblock')} checked={!!item.colspan} onChange={(v) => update(index, 'colspan', v)} __nextHasNoMarginBottom />
-					{item.colspan && <TextControl label={__('colSpan Number', 'shapeblock')} type="number" value={item.colspanNumber || ''} onChange={(v) => update(index, 'colspanNumber', v)} __next40pxDefaultSize __nextHasNoMarginBottom />}
-					{opts.rowspan && (
-						<>
-							<ToggleControl label={__('rowSpan', 'shapeblock')} checked={!!item.rowspan} onChange={(v) => update(index, 'rowspan', v)} __nextHasNoMarginBottom />
-							{item.rowspan && <TextControl label={__('rowSpan Number', 'shapeblock')} type="number" value={item.rowspanNumber || ''} onChange={(v) => update(index, 'rowspanNumber', v)} __next40pxDefaultSize __nextHasNoMarginBottom />}
-						</>
-					)}
-					{opts.flex && (
-						<>
-							<ToggleControl label={__('Data Flex', 'shapeblock')} checked={!!item.dataFlex} onChange={(v) => update(index, 'dataFlex', v)} __nextHasNoMarginBottom />
-							{item.dataFlex && (
-								<>
-									<SelectControl label={__('Flex Alignment', 'shapeblock')} value={item.flexAlign || ''} options={[{ label: __('Left', 'shapeblock'), value: 'start' }, { label: __('Center', 'shapeblock'), value: 'center' }, { label: __('Right', 'shapeblock'), value: 'end' }, { label: __('Justify', 'shapeblock'), value: 'space-between' }]} onChange={(v) => update(index, 'flexAlign', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
-									<TextControl label={__('Middle Gap (px)', 'shapeblock')} type="number" value={item.flexGap || ''} onChange={(v) => update(index, 'flexGap', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
-								</>
-							)}
-						</>
-					)}
-					{!(opts.flex && item.dataFlex) && <SelectControl label={__('Alignment', 'shapeblock')} value={item.align || ''} options={ALIGN_OPTIONS} onChange={(v) => update(index, 'align', v)} __next40pxDefaultSize __nextHasNoMarginBottom />}
-					<SelectControl label={__('Vertical Alignment', 'shapeblock')} value={item.verticalAlign || ''} options={VALIGN_OPTIONS} onChange={(v) => update(index, 'verticalAlign', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
-					<TextControl label={__('Custom Width (e.g. 30% or 200px)', 'shapeblock')} value={item.width || ''} onChange={(v) => update(index, 'width', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
-					<SelectControl label={__('Decoration', 'shapeblock')} value={item.decoration || ''} options={DECORATION_OPTIONS} onChange={(v) => update(index, 'decoration', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
-					{opts.colors && (
-						<>
-							<BackgroundControl
-								label={__('Background Color', 'shapeblock')}
-								colorValue={item.bgColor || ''}
-								gradientValue={item.bgGradient || ''}
-								onColorChange={(v) => update(index, 'bgColor', (v && typeof v === 'object' ? v.hex : v) || '')}
-								onGradientChange={(v) => update(index, 'bgGradient', v || '')}
-							/>
-							<ColorPopover label={__('Text Color', 'shapeblock')} color={item.textColor || ''} onChange={(v) => update(index, 'textColor', v)} />
-							<ColorPopover label={__('Icon Color', 'shapeblock')} color={item.iconColor || ''} onChange={(v) => update(index, 'iconColor', v)} />
-						</>
-					)}
-				</>
-			)}
-		</>
-	);
-
-	const cellTooltip = (item, index, update) => (
-		<>
-			<ToggleControl label={__('Tooltip', 'shapeblock')} checked={!!item.tooltip} onChange={(v) => update(index, 'tooltip', v)} __nextHasNoMarginBottom />
-			{item.tooltip && (
-				<>
-					<IconPicker label={__('Tooltip Icon', 'shapeblock')} value={item.tooltipIcon || ''} onChange={(v) => update(index, 'tooltipIcon', v)} />
-					<TextareaControl label={__('Tooltip Description', 'shapeblock')} value={item.tooltipDesc || ''} onChange={(v) => update(index, 'tooltipDesc', v)} __nextHasNoMarginBottom />
-				</>
-			)}
-		</>
-	);
-
-	const headerRep = makeRepeater('tableHeader', { text: __('Table Header', 'shapeblock') });
-	const bodyRep = makeRepeater('tableBody', { text: __('Table Data', 'shapeblock'), type: 'icon' });
-	const footerRep = makeRepeater('tableFooter', { text: __('Table Footer', 'shapeblock') });
-
-	// --- Tab 1: Settings (content / data) -------------------------------------
-	const settingsTab = (
-		<>
-			<PanelBody title={__('Header Cells', 'shapeblock')} initialOpen={true}>
-				{headerRep.items.map((item, index) => (
-					<div className="shapeblock-tbl-repeater-item" key={index}>
-						<ItemHead section="header" index={index} label={item.text} rep={headerRep} />
-						{!isCollapsed('header', index) && (
-							<>
-								<TextControl label={__('Text', 'shapeblock')} value={item.text || ''} onChange={(v) => headerRep.update(index, 'text', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
-								<ToggleControl label={__('Icon', 'shapeblock')} checked={!!item.headerIcon} onChange={(v) => headerRep.update(index, 'headerIcon', v)} __nextHasNoMarginBottom />
-								{item.headerIcon && <IconPicker label={__('Icon', 'shapeblock')} value={item.headIcon || ''} onChange={(v) => headerRep.update(index, 'headIcon', v)} />}
-								{cellAdvanced(item, index, headerRep.update)}
-								{cellTooltip(item, index, headerRep.update)}
-							</>
-						)}
-					</div>
-				))}
-				<Button variant="primary" onClick={headerRep.add} icon={ICON_ADD}>{__('Add Header Cell', 'shapeblock')}</Button>
-			</PanelBody>
-
-			<PanelBody title={__('Body Cells', 'shapeblock')} initialOpen={false}>
-				{bodyRep.items.map((item, index) => (
-					<div className="shapeblock-tbl-repeater-item" key={index}>
-						<ItemHead section="body" index={index} label={item.text} rep={bodyRep} />
-						{!isCollapsed('body', index) && (
-							<>
-								<ToggleControl label={__('New Row (start a new row at this cell)', 'shapeblock')} checked={!!item.row} onChange={(v) => bodyRep.update(index, 'row', v)} __nextHasNoMarginBottom />
-								<SelectControl label={__('Select Type', 'shapeblock')} value={item.type || 'icon'} options={[{ label: __('Icon', 'shapeblock'), value: 'icon' }, { label: __('Image', 'shapeblock'), value: 'image' }]} onChange={(v) => bodyRep.update(index, 'type', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
-								{(item.type || 'icon') === 'icon' && <IconPicker label={__('Icon', 'shapeblock')} value={item.icon || ''} onChange={(v) => bodyRep.update(index, 'icon', v)} />}
-								{item.type === 'image' && (
-									<MediaUploadCheck>
-										<MediaUpload
-											onSelect={(media) => bodyRep.update(index, 'image', { id: media.id, url: media.url, alt: media.alt })}
-											allowedTypes={['image']}
-											value={item.image?.id}
-											render={({ open }) => (
-												<div style={{ marginBottom: '8px' }}>
-													{item.image?.url && <img src={item.image.url} alt="" style={{ maxWidth: '100%', marginBottom: '6px' }} />}
-													<Button variant="secondary" size="small" onClick={open}>{item.image?.url ? __('Replace', 'shapeblock') : __('Select Image', 'shapeblock')}</Button>
-												</div>
-											)}
-										/>
-									</MediaUploadCheck>
-								)}
-								<TextareaControl label={__('Text', 'shapeblock')} value={item.text || ''} onChange={(v) => bodyRep.update(index, 'text', v)} __nextHasNoMarginBottom />
-								{cellAdvanced(item, index, bodyRep.update, { rowspan: true, flex: true, colors: true })}
-								{cellTooltip(item, index, bodyRep.update)}
-							</>
-						)}
-					</div>
-				))}
-				<Button variant="primary" onClick={bodyRep.add} icon={ICON_ADD}>{__('Add Body Cell', 'shapeblock')}</Button>
-			</PanelBody>
-
-			<PanelBody title={__('Footer Cells', 'shapeblock')} initialOpen={false}>
-				{footerRep.items.map((item, index) => (
-					<div className="shapeblock-tbl-repeater-item" key={index}>
-						<ItemHead section="footer" index={index} label={item.text} rep={footerRep} />
-						{!isCollapsed('footer', index) && (
-							<>
-								<TextControl label={__('Text', 'shapeblock')} value={item.text || ''} onChange={(v) => footerRep.update(index, 'text', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
-								{cellAdvanced(item, index, footerRep.update)}
-								{cellTooltip(item, index, footerRep.update)}
-							</>
-						)}
-					</div>
-				))}
-				<Button variant="primary" onClick={footerRep.add} icon={ICON_ADD}>{__('Add Footer Cell', 'shapeblock')}</Button>
-			</PanelBody>
-		</>
-	);
-
-	// --- Tab 2: Layout (alignment, spacing, sizes) ----------------------------
-	const layoutTab = (
-		<>
-			<PanelBody title={__('Alignment', 'shapeblock')} initialOpen={true}>
-				{respAlign(__('Vertical Alignment', 'shapeblock'), 'verticalAlignTable', VALIGN_OPTIONS)}
-				{respAlign(__('Header Alignment', 'shapeblock'), 'headerAlign', ALIGN_OPTIONS)}
-				{respAlign(__('Body Alignment', 'shapeblock'), 'bodyAlign', ALIGN_OPTIONS)}
-				{respAlign(__('Footer Alignment', 'shapeblock'), 'footerAlign', ALIGN_OPTIONS)}
-				{respAlign(__('Tooltip Align', 'shapeblock'), 'tooltipAlign', [{ label: __('Left', 'shapeblock'), value: 'left' }, { label: __('Top', 'shapeblock'), value: 'top' }, { label: __('Right', 'shapeblock'), value: 'right' }, { label: __('Bottom', 'shapeblock'), value: 'bottom' }])}
-			</PanelBody>
-		</>
-	);
-
-	// --- Tab 3: Style (colors, typography, border, background, radius) --------
-	const styleTab = (
-		<>
-			<PanelBody title={__('General', 'shapeblock')} initialOpen={true}>
-				{border(__('Table Border', 'shapeblock'), 'tableBorder')}
-				{box(__('Table Border Radius', 'shapeblock'), 'tableRadius')}
-				{respBox(__('Table Margin', 'shapeblock'), 'tableMargin')}
-				{respBox(__('Cell Padding', 'shapeblock'), 'tablePadding')}
-			</PanelBody>
-
-			<PanelBody title={__('Table Header', 'shapeblock')} initialOpen={false}>
-				{color(__('Text Color', 'shapeblock'), 'headerTextColor')}
-				{respTypo(__('Typography', 'shapeblock'), 'headerTypography')}
-				{bg(__('Background Color', 'shapeblock'), 'headerBgColor', 'headerBgColorGradient')}
-				{border(__('Border', 'shapeblock'), 'headBorder')}
-				{box(__('Border Radius', 'shapeblock'), 'theadRadius')}
-				{respBox(__('Padding', 'shapeblock'), 'theadPadding')}
-				<Divider />
-				{color(__('Icon Color', 'shapeblock'), 'headerIconColor')}
-				{respNum(__('Icon Size (px)', 'shapeblock'), 'headerIconSize')}
-				{num(__('Icon Vertical Position (px)', 'shapeblock'), 'headerIconYPos')}
-				{box(__('Icon Margin', 'shapeblock'), 'headerIconMargin')}
-			</PanelBody>
-
-			<PanelBody title={__('Table Body', 'shapeblock')} initialOpen={false}>
-				{color(__('Text Color', 'shapeblock'), 'bodyTextColor')}
-				{respTypo(__('Typography', 'shapeblock'), 'bodyTypography')}
-				{bg(__('Background Color', 'shapeblock'), 'bodyBgColor', 'bodyBgColorGradient')}
-				<ToggleControl label={__('Striped Background', 'shapeblock')} checked={attributes.stripedBg} onChange={(v) => setAttributes({ stripedBg: v })} __nextHasNoMarginBottom />
-				{attributes.stripedBg && bg(__('Secondary Background Color', 'shapeblock'), 'stripedBgColor', 'stripedBgColorGradient')}
-				<Divider />
-				{color(__('Icon Color', 'shapeblock'), 'bodyIconColor')}
-				{respNum(__('Icon Size (px)', 'shapeblock'), 'bodyIconSize')}
-				{respBox(__('Icon Margin', 'shapeblock'), 'bodyIconGap')}
-				<Divider />
-				{box(__('Border Radius', 'shapeblock'), 'tbodyRadius')}
-				{border(__('Border', 'shapeblock'), 'bodyBorder')}
-				{respBox(__('Padding', 'shapeblock'), 'tbodyPadding')}
-				<Divider />
-				{color(__('Tooltip Icon Color', 'shapeblock'), 'tooltipIconColor')}
-				{respNum(__('Tooltip Icon Size (px)', 'shapeblock'), 'tooltipIconSize')}
-				{box(__('Tooltip Icon Margin', 'shapeblock'), 'tooltipIconMargin')}
-				<Divider />
-				{respNum(__('Image Size (px)', 'shapeblock'), 'imgSize')}
-				{box(__('Image Border Radius', 'shapeblock'), 'imgRadius')}
-			</PanelBody>
-
-			<PanelBody title={__('Table Footer', 'shapeblock')} initialOpen={false}>
-				{color(__('Text Color', 'shapeblock'), 'footerTextColor')}
-				{respTypo(__('Typography', 'shapeblock'), 'footerTypography')}
-				{bg(__('Background Color', 'shapeblock'), 'footerBgColor', 'footerBgColorGradient')}
-				{box(__('Border Radius', 'shapeblock'), 'tfootRadius')}
-				{border(__('Border', 'shapeblock'), 'footBorder')}
-				{respBox(__('Padding', 'shapeblock'), 'tfootPadding')}
-			</PanelBody>
-		</>
-	);
+	const wrapClass = ['shapeblock-block', 'shapeblock-table-block-wrap', blockId].filter(Boolean).join(' ');
 
 	return (
 		<div {...useBlockProps()}>
-			<BlockControls>
-				<AlignmentControl
-					value={attributes[alignKey]}
-					onChange={(value) => setAttributes({ [alignKey]: value || '' })}
-				/>
-			</BlockControls>
+			{!isEmpty && (
+				<BlockControls>
+					<AlignmentControl
+						value={attributes[alignKey]}
+						onChange={(value) => setAttributes({ [alignKey]: value || '' })}
+					/>
+				</BlockControls>
+			)}
 			<InspectorControls>
-				<TabPanel
-					className="shapeblock-inspector-tabs"
-					activeClass="is-active"
-					tabs={[
-						{ name: 'settings', title: __('Settings', 'shapeblock') },
-						{ name: 'layout', title: __('Layout', 'shapeblock') },
-						{ name: 'style', title: __('Style', 'shapeblock') },
-						{ name: 'advanced', title: __('Advanced', 'shapeblock') },
-					]}
-				>
-					{(tab) => (
-						tab.name === 'settings' ? settingsTab :
-						tab.name === 'advanced' ? <AdvancedControls attributes={attributes} setAttributes={setAttributes} /> :
-						tab.name === 'layout' ? layoutTab :
-						styleTab
-					)}
-				</TabPanel>
+				<TableSidebar tableId={clientId} attributes={attributes} setAttributes={setAttributes} />
 			</InspectorControls>
 
-			<div ref={previewRef}>
-				<ServerSideRender block="shapeblock/table" attributes={attributes} httpMethod="POST" />
-			</div>
+			{isEmpty ? (
+				<TablePlaceholder onCreate={createTable} />
+			) : (
+				<>
+					<div className={wrapClass} ref={previewRef}>
+						<div className="shapeblock-table-scroll">
+							<table {...tableProps} />
+						</div>
+						{(isSelected || !!attributes.caption) && (
+							<RichText
+								tagName="div"
+								className="shapeblock-table-caption"
+								value={attributes.caption || ''}
+								onChange={(v) => setAttributes({ caption: v })}
+								placeholder={__('Add caption', 'shapeblock')}
+							/>
+						)}
+					</div>
+					<div className="shapeblock-table-styles" hidden>
+						<ServerSideRender block="shapeblock/table" attributes={styleOnly} httpMethod="POST" />
+					</div>
+				</>
+			)}
 		</div>
 	);
 }

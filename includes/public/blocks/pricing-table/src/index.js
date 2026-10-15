@@ -3,6 +3,7 @@ import { registerBlockType } from '@wordpress/blocks';
 import './style.scss';
 
 import Edit from './edit';
+import './price';
 import save from './save';
 import metadata from './block.json';
 
@@ -20,4 +21,17 @@ registerBlockType(metadata.name, {
 	icon: shapeblockIcon,
 	edit: Edit,
 	save,
+	// Added from the inserter, a pricing table first asks how many plans, as
+	// the core Table asks for its size.
+	variations: [
+		{
+			name: 'new-pricing-table',
+			title: metadata.title,
+			description: metadata.description,
+			icon: shapeblockIcon,
+			isDefault: true,
+			scope: ['inserter'],
+			attributes: { planPicker: true },
+		},
+	],
 });

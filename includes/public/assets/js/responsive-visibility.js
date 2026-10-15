@@ -61,7 +61,8 @@
 
 	addFilter( 'editor.BlockEdit', 'shapeblock/responsive-visibility', createHigherOrderComponent( function ( BlockEdit ) {
 		return function ( props ) {
-			if ( ! isShapeBlock( props.name ) || SKIP.indexOf( props.name ) !== -1 || ! props.isSelected ) {
+			// A block can opt out (a table cell, a part of a card): supports.shapeblockExtensions false.
+			if ( ! isShapeBlock( props.name ) || SKIP.indexOf( props.name ) !== -1 || ! props.isSelected || ! wp.blocks.hasBlockSupport( props.name, 'shapeblockExtensions', true ) ) {
 				return el( BlockEdit, props );
 			}
 			return el( Fragment, {},
