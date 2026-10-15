@@ -508,3 +508,26 @@ li.icon-bg svg {
 		margin-top: auto;
 	}
 }
+
+// Plans side by side on tablets: two to a row, so each card has room - four
+// plans below 1024px, any number below 782px (where Columns would otherwise
+// give each plan the whole width). Phones keep one plan per row.
+@media (min-width: 600px) and (max-width: 1023px) {
+	.wp-block-columns:has(> .wp-block-column:nth-child(4) > .shapeblock-pricing-table-block-wrap) {
+		flex-wrap: wrap !important;
+
+		> .wp-block-column {
+			flex: 1 1 40% !important;
+		}
+	}
+}
+
+@media (min-width: 600px) and (max-width: 781px) {
+	.wp-block-columns:has(> .wp-block-column > .shapeblock-pricing-table-block-wrap) {
+		flex-wrap: wrap !important;
+
+		> .wp-block-column {
+			flex: 1 1 40% !important;
+		}
+	}
+}

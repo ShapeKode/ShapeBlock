@@ -225,6 +225,7 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 * New: Pricing Table - the card is made of blocks (Heading, Price, List, Buttons), each edited in place with its own toolbar and settings; drag or add any other block into it. Existing tables keep their content and are converted when opened in the editor.
 * New: Pricing Table - choose the feature icon: check, check in a circle, star, arrow or dot.
 * New: Pricing Table - a new pricing table asks how many plans (1 to 4) and which style; two or more are added side by side, the same height, buttons in line.
+* New: Tabs - each tab's content is blocks: type in it, or add or drag in any block. Tab titles are typed in the tab bar, and the + at its end adds a tab. Existing tabs keep their content.
 * New: Pricing Table - three styles, Classic, Centered and Dark, each with a preview, and three ready-made pricing patterns in the inserter.
 * Improved: the block inserter puts the cursor in its search box when it opens.
 * New: the Container Width can also set the theme's wide width, or its content width too, so core blocks follow it.

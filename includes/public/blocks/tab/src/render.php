@@ -17,6 +17,27 @@ $H = '\ShapeBlock\Frontend\Helper';
 $unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-tab-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $tabs      = isset( $attributes['tabs'] ) && is_array( $attributes['tabs'] ) ? $attributes['tabs'] : [];
+
+// Tabs made of blocks: each its title and icon, its content the blocks in it.
+if ( $block instanceof WP_Block && count( $block->inner_blocks ) ) {
+	$tabs = array();
+	foreach ( $block->inner_blocks as $tab_block ) {
+		if ( 'shapeblock/tab-item' !== $tab_block->name ) {
+			continue;
+		}
+		$tab_html = '';
+		foreach ( $tab_block->inner_blocks as $inner ) {
+			$tab_html .= $inner->render();
+		}
+		$tabs[] = array(
+			'tabTitle' => isset( $tab_block->attributes['tabTitle'] ) ? (string) $tab_block->attributes['tabTitle'] : '',
+			'iconType' => isset( $tab_block->attributes['iconType'] ) ? (string) $tab_block->attributes['iconType'] : 'icon',
+			'icon'     => isset( $tab_block->attributes['icon'] ) ? (string) $tab_block->attributes['icon'] : '',
+			'image'    => isset( $tab_block->attributes['image'] ) && is_array( $tab_block->attributes['image'] ) ? $tab_block->attributes['image'] : array(),
+			'html'     => $tab_html,
+		);
+	}
+}
 $allowed   = [ 'left', 'top', 'right' ];
 $direction = isset( $attributes['layoutDirection'] ) && in_array( $attributes['layoutDirection'], $allowed, true ) ? $attributes['layoutDirection'] : 'top';
 $icon_pos  = isset( $attributes['iconPosition'] ) && in_array( $attributes['iconPosition'], $allowed, true ) ? $attributes['iconPosition'] : 'left';
@@ -305,6 +326,9 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 				$active            = 0 === $index ? ' active' : '';
 				?>
 				<div class="shapeblock-tab-content<?php echo esc_attr( $active ); ?>" id="<?php echo esc_attr( $unique_id . '-tab-' . $index ); ?>">
+					<?php if ( isset( $item['html'] ) ) : ?>
+						<?php echo wp_kses( $item['html'], $H::template_allowed_html() ); ?>
+					<?php else : ?>
 					<?php if ( '' !== $content_title_txt ) : ?>
 						<h4 class="shapeblock-content-title"><?php echo esc_html( $content_title_txt ); ?></h4>
 					<?php endif; ?>
@@ -316,6 +340,7 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 							<?php echo esc_html( $btn_text ); ?>
 							<svg class="shapeblock-read-more-icon" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
 						</a>
+					<?php endif; ?>
 					<?php endif; ?>
 				</div>
 			<?php endforeach; ?>

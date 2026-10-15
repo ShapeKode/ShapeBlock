@@ -14,3 +14,18 @@
 		margin-bottom: 8px;
 	}
 }
+
+// The "+" at the end of the tab bar, for a new tab.
+.shapeblock-tab-block-wrap .shapeblock-tab-titles li.shapeblock-tab-add {
+	display: flex;
+	flex: 0 0 auto;
+	align-items: center;
+	padding: 0;
+	background: transparent;
+}
+
+// A tab title is typed in place.
+.shapeblock-tab-block-wrap .shapeblock-tab-title-text[contenteditable] {
+	min-width: 2em;
+	cursor: text;
+}

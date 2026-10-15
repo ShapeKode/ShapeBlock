@@ -1,21 +1,23 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState, useRef } from '@wordpress/element';
-import { useSelect } from '@wordpress/data';
+import { useEffect, useState, useMemo } from '@wordpress/element';
+import { useSelect, useDispatch } from '@wordpress/data';
+import { createBlock } from '@wordpress/blocks';
 import ServerSideRender from '../../custom-components/ServerRender';
 import {
 	useBlockProps,
+	useInnerBlocksProps,
 	InspectorControls,
 	BlockControls,
 	AlignmentControl,
 	MediaUpload,
 	MediaUploadCheck,
+	RichText,
+	store as blockEditorStore,
 } from '@wordpress/block-editor';
 import {
 	PanelBody,
 	SelectControl,
-	ToggleControl,
 	TextControl,
-	TextareaControl,
 	BoxControl,
 	Button,
 	TabPanel,
@@ -29,6 +31,7 @@ import TypographyControls from '../../custom-components/TypographyControls';
 import BorderControl from '../../custom-components/BorderControl';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import AdvancedControls from '../../custom-components/AdvancedControls';
+import { TAB_ITEM, ActiveTab } from './item';
 
 import './editor.scss';
 
@@ -48,6 +51,25 @@ const ICON_ADD = SVG('M11 5v6H5v2h6v6h2v-6h6v-2h-6V5z');
 const ICON_COPY = SVG('M5 4h10v2H7v10H5V4zM9 8h10v12H9V8zm2 2v8h6v-8h-6z');
 const ICON_COLLAPSE = SVG('M5 11h14v2H5z'); // minus (shown when expanded — click to collapse)
 const ICON_EXPAND = SVG('M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z'); // plus (shown when collapsed — click to expand)
+const HEART = <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 21s-6.7-4.3-9.3-8.5C1 9.6 2 6 5.3 5.2 7.3 4.7 9 5.8 12 8.6c3-2.8 4.7-3.9 6.7-3.4C22 6 23 9.6 21.3 12.5 18.7 16.7 12 21 12 21z" /></svg>;
+
+// A tab saved before tabs held blocks: its title, description and link as
+// blocks (a heading, paragraphs and a link), with the same classes.
+const toHtml = (text) => String(text ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const tabContent = (t) => {
+	const blocks = [];
+	if (t.contentTitle) {
+		blocks.push(createBlock('core/heading', { level: 4, content: toHtml(t.contentTitle), className: 'shapeblock-content-title' }));
+	}
+	String(t.contentDescription || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean).forEach((p) => {
+		blocks.push(createBlock('core/paragraph', { content: p.replace(/\n/g, '<br>'), className: 'shapeblock-content-description' }));
+	});
+	if (t.readMoreText && t.readMoreUrl) {
+		const target = t.readMoreNewTab ? ' target="_blank" rel="noopener noreferrer"' : '';
+		blocks.push(createBlock('core/paragraph', { content: `<a href="${toHtml(t.readMoreUrl)}"${target}>${toHtml(t.readMoreText)}</a>` }));
+	}
+	return blocks;
+};
 
 const STATE_TABS = [
 	{ name: 'normal', title: __('Normal', 'shapeblock') },
@@ -81,91 +103,84 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const dev = device ? device.toLowerCase() : 'desktop';
 	const alignKey = dev === 'desktop' ? 'descriptionAlignment' : `descriptionAlignment${dev.charAt(0).toUpperCase() + dev.slice(1)}`;
 
-	const items = Array.isArray(tabs) ? tabs : [];
+	// ---- The tabs: each a block, its content any blocks ----------------------
+	const items = useSelect((select) => select(blockEditorStore).getBlocks(clientId), [clientId]);
+	const { replaceInnerBlocks, insertBlock, removeBlock, moveBlocksToPosition, updateBlockAttributes, duplicateBlocks, __unstableMarkNextChangeAsNotPersistent } = useDispatch(blockEditorStore);
+	const [active, setActive] = useState(0);
+	const shown = Math.min(active, Math.max(0, items.length - 1));
 
-	// Editor-only: track which repeater items are collapsed (by index).
-	// First item starts expanded, all others collapsed.
-	const [collapsed, setCollapsed] = useState(() => {
-		const init = {};
-		items.forEach((_, i) => {
-			if (i !== 0) init[i] = true;
-		});
-		return init;
-	});
-	const toggleCollapsed = (i) => setCollapsed((cur) => ({ ...cur, [i]: !cur[i] }));
-
-	// Editor preview interactivity: the front-end view.js doesn't run inside the
-	// ServerSideRender output, so wire up tab switching here. We delegate clicks
-	// on a persistent wrapper (the SSR markup is replaced on every re-render).
-	const previewRef = useRef(null);
+	// Tabs saved before tabs held blocks (and a new Tabs block) get theirs
+	// once, from the settings.
 	useEffect(() => {
-		const root = previewRef.current;
-		if (!root) {
-			return undefined;
+		if (items.length) {
+			return;
 		}
-		const onClick = (e) => {
-			const li = e.target.closest('.shapeblock-tab-titles li');
-			if (!li || !root.contains(li)) {
-				return;
-			}
-			const wrapper = li.closest('.shapeblock-tabs-wrapper');
-			if (!wrapper) {
-				return;
-			}
-			const tabId = li.getAttribute('data-tab');
-			wrapper.querySelectorAll('.shapeblock-tab-titles li').forEach((t) => t.classList.remove('active'));
-			li.classList.add('active');
-			// Toggle the `active` class only and strip any inline styles so the
-			// stylesheet is the single source of truth (avoids a stale inline
-			// `display:block` keeping a previously-shown panel visible).
-			wrapper.querySelectorAll('.shapeblock-tab-content').forEach((c) => {
-				c.classList.toggle('active', c.id === tabId);
-				c.style.removeProperty('display');
-				c.style.removeProperty('opacity');
-				c.style.removeProperty('transform');
-			});
+		const saved = Array.isArray(tabs) ? tabs : [];
+		__unstableMarkNextChangeAsNotPersistent();
+		replaceInnerBlocks(
+			clientId,
+			saved.map((t) => createBlock(TAB_ITEM, { tabTitle: t.tabTitle || '', iconType: t.iconType || 'icon', icon: t.icon || '', image: t.image || {} }, tabContent(t))),
+			false
+		);
+		__unstableMarkNextChangeAsNotPersistent();
+		setAttributes({ tabs: [] });
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+	// A block chosen inside a tab (from the List View, say) shows that tab.
+	const selectedTab = useSelect(
+		(select) => {
+			const be = select(blockEditorStore);
+			const sel = be.getSelectedBlockClientId();
+			if (!sel) return -1;
+			const tabId = be.getBlockName(sel) === TAB_ITEM ? sel : be.getBlockParentsByBlockName(sel, TAB_ITEM, true)[0];
+			return tabId && be.getBlockRootClientId(tabId) === clientId ? be.getBlockIndex(tabId) : -1;
+		},
+		[clientId]
+	);
+	useEffect(() => {
+		if (selectedTab >= 0) setActive(selectedTab);
+	}, [selectedTab]);
+
+	// Whether the tabs still use the blocks made from tabs saved before (their
+	// title, description and link styles show only then).
+	const legacyClasses = useMemo(() => {
+		const found = { title: false, desc: false };
+		const walk = (b) => {
+			const cls = b.attributes.className || '';
+			if (/shapeblock-content-title/.test(cls)) found.title = true;
+			if (/shapeblock-content-description/.test(cls)) found.desc = true;
+			b.innerBlocks.forEach(walk);
 		};
-		root.addEventListener('click', onClick);
-		return () => root.removeEventListener('click', onClick);
-	}, []);
+		items.forEach(walk);
+		return found;
+	}, [items]);
 
-	const updateItem = (i, key, val) =>
-		setAttributes({ tabs: items.map((it, idx) => (idx === i ? { ...it, [key]: val } : it)) });
-
-	const addItem = () =>
-		setAttributes({
-			tabs: [
-				...items,
-				{
-					tabTitle: __('New Tab', 'shapeblock'),
-					iconType: 'icon',
-					icon: '',
-					image: {},
-					contentTitle: '',
-					contentDescription: '',
-					readMoreText: '',
-					readMoreUrl: '#',
-					readMoreNewTab: false,
-				},
-			],
-		});
-
-	const removeItem = (i) => setAttributes({ tabs: items.filter((_, idx) => idx !== i) });
-	// Deep copy, so the clone's nested objects are not shared with the original.
-	const duplicateItem = (i) => {
-		const next = items.slice();
-		next.splice(i + 1, 0, JSON.parse(JSON.stringify(items[i])));
-		setAttributes({ tabs: next });
+	const updateItem = (i, key, val) => items[i] && updateBlockAttributes(items[i].clientId, { [key]: val });
+	const addItem = () => {
+		insertBlock(createBlock(TAB_ITEM, { tabTitle: __('New Tab', 'shapeblock') }, [createBlock('core/paragraph')]), items.length, clientId, false);
+		setActive(items.length);
 	};
-
+	const removeItem = (i) => {
+		removeBlock(items[i].clientId, false);
+		setActive(Math.max(0, i - 1));
+	};
+	const duplicateItem = (i) => duplicateBlocks([items[i].clientId], false);
 	const moveItem = (i, dir) => {
 		const t = i + dir;
 		if (t < 0 || t >= items.length) return;
-		const next = items.slice();
-		const [m] = next.splice(i, 1);
-		next.splice(t, 0, m);
-		setAttributes({ tabs: next });
+		moveBlocksToPosition([items[i].clientId], clientId, clientId, t);
+		setActive(t);
 	};
+
+	// Editor-only: which tabs are folded in the sidebar list.
+	const [collapsed, setCollapsed] = useState({});
+	const toggleCollapsed = (i) => setCollapsed((cur) => ({ ...cur, [i]: !cur[i] }));
+
+	// The block's own CSS (colours, sizes ...) comes from the server: a hidden
+	// preview of its settings, not fetched again while the tabs are typed in.
+	const styleOnly = useMemo(() => ({ ...attributes, tabs: [{ tabTitle: '' }] }), [JSON.stringify({ ...attributes, tabs: 0 })]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	const contentProps = useInnerBlocksProps({ className: 'shapeblock-tab-contents' }, { allowedBlocks: [TAB_ITEM], renderAppender: false, templateLock: false, orientation: 'horizontal' });
 
 	const color = (label, key) => (
 		<ColorPopover label={label} color={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
@@ -217,8 +232,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// --- Tab 1: Settings (content) --------------------------------------------
 	const settingsTab = (
 		<PanelBody title={__('Tabs', 'shapeblock')} initialOpen={true}>
-			{items.map((item, index) => { const isCollapsed = !!collapsed[index]; return (
-				<div className="shapeblock-tab-repeater-item" key={index}>
+			<p className="components-base-control__help">
+				{__('Click a tab in the block to show it, and type its title there. Its content is blocks: type, or add or drag in any block.', 'shapeblock')}
+			</p>
+			{items.map((block, index) => { const item = block.attributes; const isCollapsed = collapsed[index] ?? index !== shown; return (
+				<div className="shapeblock-tab-repeater-item" key={block.clientId}>
 					<div className="shapeblock-tab-repeater-head">
 						<strong>{item.tabTitle || `#${index + 1}`}</strong>
 						<div>
@@ -269,40 +287,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							/>
 						</MediaUploadCheck>
 					)}
-					<TextControl
-						label={__('Content Title', 'shapeblock')}
-						value={item.contentTitle || ''}
-						onChange={(v) => updateItem(index, 'contentTitle', v)}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					<TextareaControl
-						label={__('Description', 'shapeblock')}
-						value={item.contentDescription || ''}
-						onChange={(v) => updateItem(index, 'contentDescription', v)}
-						__nextHasNoMarginBottom
-					/>
-					<TextControl
-						label={__('Button Text', 'shapeblock')}
-						value={item.readMoreText || ''}
-						onChange={(v) => updateItem(index, 'readMoreText', v)}
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					<TextControl
-						label={__('Button URL', 'shapeblock')}
-						value={item.readMoreUrl || ''}
-						onChange={(v) => updateItem(index, 'readMoreUrl', v)}
-						placeholder="https://your-link.com"
-						__next40pxDefaultSize
-						__nextHasNoMarginBottom
-					/>
-					<ToggleControl
-						label={__('Open in new tab', 'shapeblock')}
-						checked={!!item.readMoreNewTab}
-						onChange={(v) => updateItem(index, 'readMoreNewTab', v)}
-						__nextHasNoMarginBottom
-					/>
 						</>
 						)}
 				</div>
@@ -379,17 +363,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				{respBox(__('Margin', 'shapeblock'), 'contentMargin')}
 			</PanelBody>
 
-			<PanelBody title={__('Content Title', 'shapeblock')} initialOpen={false}>
+			{legacyClasses.title && <PanelBody title={__('Content Title', 'shapeblock')} initialOpen={false}>
 				{respTypo(__('Typography', 'shapeblock'), 'contentTitleTypography')}
 				{color(__('Color', 'shapeblock'), 'contentTitleColor')}
 				{respBox(__('Margin', 'shapeblock'), 'contentTitleMargin')}
-			</PanelBody>
+			</PanelBody>}
 
-			<PanelBody title={__('Description', 'shapeblock')} initialOpen={false}>
+			{legacyClasses.desc && <PanelBody title={__('Description', 'shapeblock')} initialOpen={false}>
 				{respTypo(__('Typography', 'shapeblock'), 'descTypography')}
 				{color(__('Color', 'shapeblock'), 'descColor')}
 				{respBox(__('Margin', 'shapeblock'), 'descMargin')}
-			</PanelBody>
+			</PanelBody>}
 
 			<PanelBody title={__('Button', 'shapeblock')} initialOpen={false}>
 				{respTypo(__('Typography', 'shapeblock'), 'btnTypography')}
@@ -446,8 +430,38 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</TabPanel>
 			</InspectorControls>
 
-			<div ref={previewRef}>
-				<ServerSideRender block="shapeblock/tab" attributes={attributes} httpMethod="POST" />
+			<div className={`shapeblock-block shapeblock-tab-block-wrap ${blockId}`}>
+				<div className="shapeblock-tabs-wrapper" data-tab-direction={layoutDirection || 'top'} data-icon-position={iconPosition || 'left'}>
+					<ul className="shapeblock-tab-titles">
+						{items.map((block, index) => {
+							const item = block.attributes;
+							const type = item.iconType || 'icon';
+							return (
+								<li key={block.clientId} className={`shapeblock-tab-nav-item${index === shown ? ' active' : ''}`} onClick={() => setActive(index)}>
+									{'icon' === type && <span className="shapeblock-tab-icon">{item.icon && 'none' !== item.icon ? <i className={`shapeblock-icon ${item.icon}`} aria-hidden="true" /> : HEART}</span>}
+									{'image' === type && item.image?.url && <span className="shapeblock-tab-image"><img src={item.image.url} alt={item.image.alt || ''} /></span>}
+									<RichText
+										tagName="span"
+										className="shapeblock-tab-title-text"
+										value={toHtml(item.tabTitle)}
+										onChange={(v) => updateItem(index, 'tabTitle', v.replace(/<[^>]*>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&'))}
+										allowedFormats={[]}
+										placeholder={__('Tab title', 'shapeblock')}
+									/>
+								</li>
+							);
+						})}
+						<li className="shapeblock-tab-add">
+							<Button icon={ICON_ADD} label={__('Add Tab', 'shapeblock')} onClick={addItem} />
+						</li>
+					</ul>
+					<ActiveTab.Provider value={shown}>
+						<div {...contentProps} />
+					</ActiveTab.Provider>
+				</div>
+			</div>
+			<div className="shapeblock-tab-styles" hidden>
+				<ServerSideRender block="shapeblock/tab" attributes={styleOnly} httpMethod="POST" />
 			</div>
 		</div>
 	);

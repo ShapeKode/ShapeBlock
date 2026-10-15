@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-15T11:00:26+00:00\n"
+"POT-Creation-Date: 2026-10-15T11:45:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: shapeblock\n"
@@ -155,7 +155,7 @@ msgstr ""
 #: includes/public/blocks/scroll-to-top/src/edit.js:117
 #: includes/public/blocks/sticky-stack/src/edit.js:263
 #: includes/public/blocks/sticky-stack/src/edit.js:464
-#: includes/public/blocks/tab/src/edit.js:394
+#: includes/public/blocks/tab/src/edit.js:378
 msgid "Button"
 msgstr ""
 
@@ -199,8 +199,8 @@ msgstr ""
 #: includes/public/blocks/social-share/src/edit.js:166
 #: includes/public/blocks/sticky-stack/src/edit.js:227
 #: includes/public/blocks/sticky-stack/src/edit.js:442
-#: includes/public/blocks/tab/src/edit.js:245
-#: includes/public/blocks/tab/src/edit.js:253
+#: includes/public/blocks/tab/src/edit.js:263
+#: includes/public/blocks/tab/src/edit.js:271
 #: includes/public/blocks/team-grid/src/edit.js:247
 msgid "Icon"
 msgstr ""
@@ -278,7 +278,7 @@ msgid "Animated number counter."
 msgstr ""
 
 #: includes/admin/Blocks.php:115
-#: includes/public/blocks/tab/src/edit.js:219
+#: includes/public/blocks/tab/src/edit.js:234
 msgid "Tabs"
 msgstr ""
 
@@ -471,8 +471,8 @@ msgstr ""
 #: includes/public/blocks/social-share/src/edit.js:172
 #: includes/public/blocks/social-share/src/edit.js:243
 #: includes/public/blocks/sticky-stack/src/edit.js:531
-#: includes/public/blocks/tab/src/edit.js:326
-#: includes/public/blocks/tab/src/edit.js:435
+#: includes/public/blocks/tab/src/edit.js:310
+#: includes/public/blocks/tab/src/edit.js:419
 #: includes/public/blocks/table/src/sidebar.js:139
 #: includes/public/blocks/table/src/sidebar.js:252
 #: includes/public/blocks/team-grid/src/edit.js:484
@@ -782,7 +782,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:246
 #: includes/public/blocks/social-share/src/edit.js:242
 #: includes/public/blocks/sticky-stack/src/edit.js:530
-#: includes/public/blocks/tab/src/edit.js:434
+#: includes/public/blocks/tab/src/edit.js:418
 #: includes/public/blocks/table/src/sidebar.js:251
 #: includes/public/blocks/team-grid/src/edit.js:483
 #: includes/public/blocks/testimonials-grid/src/edit.js:293
@@ -1117,7 +1117,7 @@ msgstr ""
 msgid "Add a card to show here."
 msgstr ""
 
-#: includes/public/blocks/tab/src/render.php:30
+#: includes/public/blocks/tab/src/render.php:51
 msgid "Please add tab items."
 msgstr ""
 
@@ -1261,8 +1261,8 @@ msgstr ""
 #: includes/public/blocks/search/src/edit.js:194
 #: includes/public/blocks/sticky-stack/src/edit.js:364
 #: includes/public/blocks/sticky-stack/src/edit.js:388
-#: includes/public/blocks/tab/src/edit.js:58
-#: includes/public/blocks/tab/src/edit.js:334
+#: includes/public/blocks/tab/src/edit.js:80
+#: includes/public/blocks/tab/src/edit.js:318
 #: includes/public/blocks/table/src/sidebar.js:208
 #: includes/public/blocks/team-grid/src/edit.js:53
 #: includes/public/blocks/team-grid/src/edit.js:316
@@ -1293,7 +1293,7 @@ msgstr ""
 #: includes/public/blocks/layout-row/src/edit.js:478
 #: includes/public/blocks/pricing-table/src/edit.js:57
 #: includes/public/blocks/sticky-stack/src/edit.js:389
-#: includes/public/blocks/tab/src/edit.js:335
+#: includes/public/blocks/tab/src/edit.js:319
 #: includes/public/blocks/team-grid/src/edit.js:54
 #: includes/public/blocks/team-grid/src/edit.js:316
 #: includes/public/blocks/testimonials-grid/src/edit.js:49
@@ -1333,8 +1333,8 @@ msgstr ""
 #: includes/public/blocks/search/src/edit.js:195
 #: includes/public/blocks/sticky-stack/src/edit.js:363
 #: includes/public/blocks/sticky-stack/src/edit.js:390
-#: includes/public/blocks/tab/src/edit.js:60
-#: includes/public/blocks/tab/src/edit.js:336
+#: includes/public/blocks/tab/src/edit.js:82
+#: includes/public/blocks/tab/src/edit.js:320
 #: includes/public/blocks/table/src/sidebar.js:208
 #: includes/public/blocks/team-grid/src/edit.js:55
 #: includes/public/blocks/team-grid/src/edit.js:316
@@ -1360,7 +1360,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:44
 #: includes/public/blocks/social-share/src/edit.js:45
 #: includes/public/blocks/sticky-stack/src/edit.js:54
-#: includes/public/blocks/tab/src/edit.js:53
+#: includes/public/blocks/tab/src/edit.js:75
 #: includes/public/blocks/team-grid/src/edit.js:281
 msgid "Normal"
 msgstr ""
@@ -1383,7 +1383,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:45
 #: includes/public/blocks/social-share/src/edit.js:46
 #: includes/public/blocks/sticky-stack/src/edit.js:55
-#: includes/public/blocks/tab/src/edit.js:54
+#: includes/public/blocks/tab/src/edit.js:76
 msgid "Hover"
 msgstr ""
 
@@ -1593,9 +1593,9 @@ msgstr ""
 #: includes/public/blocks/social-share/src/edit.js:202
 #: includes/public/blocks/sticky-stack/src/edit.js:427
 #: includes/public/blocks/sticky-stack/src/edit.js:479
-#: includes/public/blocks/tab/src/edit.js:353
-#: includes/public/blocks/tab/src/edit.js:376
-#: includes/public/blocks/tab/src/edit.js:413
+#: includes/public/blocks/tab/src/edit.js:337
+#: includes/public/blocks/tab/src/edit.js:360
+#: includes/public/blocks/tab/src/edit.js:397
 #: includes/public/blocks/table/src/cells.js:156
 #: includes/public/blocks/team-grid/src/edit.js:328
 #: includes/public/blocks/testimonials-grid/src/edit.js:224
@@ -1653,9 +1653,9 @@ msgstr ""
 #: includes/public/blocks/sticky-stack/src/edit.js:438
 #: includes/public/blocks/sticky-stack/src/edit.js:486
 #: includes/public/blocks/sticky-stack/src/edit.js:501
-#: includes/public/blocks/tab/src/edit.js:354
-#: includes/public/blocks/tab/src/edit.js:377
-#: includes/public/blocks/tab/src/edit.js:414
+#: includes/public/blocks/tab/src/edit.js:338
+#: includes/public/blocks/tab/src/edit.js:361
+#: includes/public/blocks/tab/src/edit.js:398
 #: includes/public/blocks/table/src/sidebar.js:184
 #: includes/public/blocks/team-grid/src/edit.js:327
 #: includes/public/blocks/team-grid/src/edit.js:337
@@ -1706,9 +1706,9 @@ msgstr ""
 #: includes/public/blocks/search/src/edit.js:230
 #: includes/public/blocks/search/src/edit.js:238
 #: includes/public/blocks/sticky-stack/src/edit.js:485
-#: includes/public/blocks/tab/src/edit.js:355
-#: includes/public/blocks/tab/src/edit.js:378
-#: includes/public/blocks/tab/src/edit.js:415
+#: includes/public/blocks/tab/src/edit.js:339
+#: includes/public/blocks/tab/src/edit.js:362
+#: includes/public/blocks/tab/src/edit.js:399
 #: includes/public/blocks/team-grid/src/edit.js:332
 #: includes/public/blocks/team-grid/src/edit.js:338
 #: includes/public/blocks/team-grid/src/edit.js:349
@@ -1739,7 +1739,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:212
 #: includes/public/blocks/social-icon/src/edit.js:223
 #: includes/public/blocks/social-share/src/edit.js:191
-#: includes/public/blocks/tab/src/edit.js:357
+#: includes/public/blocks/tab/src/edit.js:341
 #: includes/public/blocks/table/src/sidebar.js:200
 #: includes/public/blocks/team-grid/src/edit.js:399
 msgid "Icon Color"
@@ -1841,10 +1841,10 @@ msgstr ""
 #: includes/public/blocks/sticky-stack/src/edit.js:454
 #: includes/public/blocks/sticky-stack/src/edit.js:461
 #: includes/public/blocks/sticky-stack/src/edit.js:465
-#: includes/public/blocks/tab/src/edit.js:346
-#: includes/public/blocks/tab/src/edit.js:383
-#: includes/public/blocks/tab/src/edit.js:389
-#: includes/public/blocks/tab/src/edit.js:395
+#: includes/public/blocks/tab/src/edit.js:330
+#: includes/public/blocks/tab/src/edit.js:367
+#: includes/public/blocks/tab/src/edit.js:373
+#: includes/public/blocks/tab/src/edit.js:379
 #: includes/public/blocks/table/src/sidebar.js:182
 #: includes/public/blocks/team-grid/src/edit.js:378
 #: includes/public/blocks/team-grid/src/edit.js:384
@@ -1920,10 +1920,10 @@ msgstr ""
 #: includes/public/blocks/sticky-stack/src/edit.js:458
 #: includes/public/blocks/sticky-stack/src/edit.js:471
 #: includes/public/blocks/sticky-stack/src/edit.js:477
-#: includes/public/blocks/tab/src/edit.js:351
-#: includes/public/blocks/tab/src/edit.js:362
-#: includes/public/blocks/tab/src/edit.js:400
-#: includes/public/blocks/tab/src/edit.js:405
+#: includes/public/blocks/tab/src/edit.js:335
+#: includes/public/blocks/tab/src/edit.js:346
+#: includes/public/blocks/tab/src/edit.js:384
+#: includes/public/blocks/tab/src/edit.js:389
 #: includes/public/blocks/table/src/cells.js:148
 #: includes/public/blocks/table/src/sidebar.js:177
 #: includes/public/blocks/table/src/sidebar.js:225
@@ -1970,7 +1970,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:248
 #: includes/public/blocks/social-share/src/edit.js:244
 #: includes/public/blocks/sticky-stack/src/edit.js:532
-#: includes/public/blocks/tab/src/edit.js:436
+#: includes/public/blocks/tab/src/edit.js:420
 #: includes/public/blocks/table/src/sidebar.js:253
 #: includes/public/blocks/team-grid/src/edit.js:485
 #: includes/public/blocks/testimonials-grid/src/edit.js:195
@@ -2007,7 +2007,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:249
 #: includes/public/blocks/social-share/src/edit.js:245
 #: includes/public/blocks/sticky-stack/src/edit.js:533
-#: includes/public/blocks/tab/src/edit.js:437
+#: includes/public/blocks/tab/src/edit.js:421
 #: includes/public/blocks/table/src/sidebar.js:254
 #: includes/public/blocks/team-grid/src/edit.js:486
 #: includes/public/blocks/testimonials-grid/src/edit.js:296
@@ -2033,12 +2033,10 @@ msgstr ""
 #: includes/public/blocks/button/src/edit.js:159
 #: includes/public/blocks/icon-box/src/edit.js:169
 #: includes/public/blocks/post-grid/src/edit.js:352
-#: includes/public/blocks/tab/src/edit.js:286
 msgid "Button Text"
 msgstr ""
 
 #: includes/public/blocks/button/src/edit.js:166
-#: includes/public/blocks/tab/src/edit.js:293
 msgid "Button URL"
 msgstr ""
 
@@ -2047,7 +2045,6 @@ msgstr ""
 #: includes/public/blocks/heading/src/edit.js:264
 #: includes/public/blocks/icon/src/edit.js:161
 #: includes/public/blocks/social-icon/src/edit.js:129
-#: includes/public/blocks/tab/src/edit.js:301
 #: includes/public/blocks/team-grid/src/edit.js:210
 msgid "Open in new tab"
 msgstr ""
@@ -2071,7 +2068,7 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:496
 #: includes/public/blocks/post-grid/src/edit.js:364
 #: includes/public/blocks/search/src/edit.js:191
-#: includes/public/blocks/tab/src/edit.js:318
+#: includes/public/blocks/tab/src/edit.js:302
 #: includes/public/blocks/team-grid/src/edit.js:299
 msgid "Icon Position"
 msgstr ""
@@ -2102,7 +2099,7 @@ msgstr ""
 #: includes/public/blocks/icon-box/src/edit.js:220
 #: includes/public/blocks/isotope/src/edit.js:476
 #: includes/public/blocks/sticky-stack/src/edit.js:376
-#: includes/public/blocks/tab/src/edit.js:333
+#: includes/public/blocks/tab/src/edit.js:317
 #: includes/public/blocks/team-grid/src/edit.js:288
 msgid "Content Alignment"
 msgstr ""
@@ -2167,11 +2164,11 @@ msgstr ""
 #: includes/public/blocks/pricing-table/src/edit.js:350
 #: includes/public/blocks/pricing-table/src/edit.js:454
 #: includes/public/blocks/pricing-table/src/edit.js:461
-#: includes/public/blocks/tab/src/edit.js:356
-#: includes/public/blocks/tab/src/edit.js:379
-#: includes/public/blocks/tab/src/edit.js:385
-#: includes/public/blocks/tab/src/edit.js:391
-#: includes/public/blocks/tab/src/edit.js:416
+#: includes/public/blocks/tab/src/edit.js:340
+#: includes/public/blocks/tab/src/edit.js:363
+#: includes/public/blocks/tab/src/edit.js:369
+#: includes/public/blocks/tab/src/edit.js:375
+#: includes/public/blocks/tab/src/edit.js:400
 #: includes/public/blocks/table/src/sidebar.js:186
 #: includes/public/blocks/team-grid/src/edit.js:350
 #: includes/public/blocks/team-grid/src/edit.js:411
@@ -2259,8 +2256,8 @@ msgstr ""
 #: includes/public/blocks/sticky-stack/src/edit.js:443
 #: includes/public/blocks/sticky-stack/src/edit.js:448
 #: includes/public/blocks/sticky-stack/src/edit.js:453
-#: includes/public/blocks/tab/src/edit.js:384
-#: includes/public/blocks/tab/src/edit.js:390
+#: includes/public/blocks/tab/src/edit.js:368
+#: includes/public/blocks/tab/src/edit.js:374
 #: includes/public/blocks/team-grid/src/edit.js:377
 #: includes/public/blocks/team-grid/src/edit.js:383
 #: includes/public/blocks/team-grid/src/edit.js:409
@@ -2310,7 +2307,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:121
 #: includes/public/blocks/social-share/src/edit.js:115
 #: includes/public/blocks/sticky-stack/src/edit.js:279
-#: includes/public/blocks/tab/src/edit.js:226
+#: includes/public/blocks/tab/src/edit.js:244
 #: includes/public/blocks/team-grid/src/edit.js:240
 #: includes/public/blocks/testimonials-grid/src/edit.js:167
 msgid "Move up"
@@ -2328,7 +2325,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:122
 #: includes/public/blocks/social-share/src/edit.js:116
 #: includes/public/blocks/sticky-stack/src/edit.js:280
-#: includes/public/blocks/tab/src/edit.js:227
+#: includes/public/blocks/tab/src/edit.js:245
 #: includes/public/blocks/team-grid/src/edit.js:241
 #: includes/public/blocks/testimonials-grid/src/edit.js:168
 msgid "Move down"
@@ -2347,7 +2344,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:123
 #: includes/public/blocks/social-share/src/edit.js:117
 #: includes/public/blocks/sticky-stack/src/edit.js:281
-#: includes/public/blocks/tab/src/edit.js:228
+#: includes/public/blocks/tab/src/edit.js:246
 #: includes/public/blocks/team-grid/src/edit.js:242
 #: includes/public/blocks/testimonials-grid/src/edit.js:169
 msgid "Duplicate"
@@ -2371,7 +2368,7 @@ msgstr ""
 #: includes/public/blocks/social-share/src/edit.js:118
 #: includes/public/blocks/sticky-stack/src/edit.js:252
 #: includes/public/blocks/sticky-stack/src/edit.js:282
-#: includes/public/blocks/tab/src/edit.js:229
+#: includes/public/blocks/tab/src/edit.js:247
 #: includes/public/blocks/team-grid/src/edit.js:243
 #: includes/public/blocks/testimonials-grid/src/edit.js:170
 msgid "Remove"
@@ -2580,7 +2577,7 @@ msgstr ""
 #: includes/public/blocks/layout-row/src/edit.js:580
 #: includes/public/blocks/sticky-stack/src/edit.js:365
 #: includes/public/blocks/sticky-stack/src/edit.js:399
-#: includes/public/blocks/tab/src/edit.js:59
+#: includes/public/blocks/tab/src/edit.js:81
 #: includes/public/blocks/table/src/sidebar.js:208
 #: includes/public/blocks/team-grid/src/edit.js:342
 msgid "Top"
@@ -3041,7 +3038,7 @@ msgstr ""
 #: includes/public/blocks/counter/src/edit.js:418
 #: includes/public/blocks/custom-components/TextAlignControl.js:19
 #: includes/public/blocks/heading/src/edit.js:277
-#: includes/public/blocks/tab/src/edit.js:337
+#: includes/public/blocks/tab/src/edit.js:321
 msgid "Justify"
 msgstr ""
 
@@ -3146,7 +3143,7 @@ msgstr ""
 #: includes/public/blocks/post-grid/src/edit.js:399
 #: includes/public/blocks/post-grid/src/edit.js:601
 #: includes/public/blocks/pricing-table/src/edit.js:398
-#: includes/public/blocks/tab/src/edit.js:244
+#: includes/public/blocks/tab/src/edit.js:262
 msgid "None"
 msgstr ""
 
@@ -3515,8 +3512,7 @@ msgstr ""
 #: includes/public/blocks/pricing-table/src/edit.js:342
 #: includes/public/blocks/sticky-stack/src/edit.js:229
 #: includes/public/blocks/sticky-stack/src/edit.js:452
-#: includes/public/blocks/tab/src/edit.js:280
-#: includes/public/blocks/tab/src/edit.js:388
+#: includes/public/blocks/tab/src/edit.js:372
 #: includes/public/blocks/team-grid/src/edit.js:176
 #: includes/public/blocks/team-grid/src/edit.js:408
 #: includes/public/blocks/team-grid/src/edit.js:417
@@ -3538,8 +3534,8 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:756
 #: includes/public/blocks/post-grid/src/edit.js:524
 #: includes/public/blocks/sticky-stack/src/edit.js:473
-#: includes/public/blocks/tab/src/edit.js:364
-#: includes/public/blocks/tab/src/edit.js:407
+#: includes/public/blocks/tab/src/edit.js:348
+#: includes/public/blocks/tab/src/edit.js:391
 msgid "Border Color"
 msgstr ""
 
@@ -3594,7 +3590,7 @@ msgstr ""
 #: includes/public/blocks/slider/src/edit.js:177
 #: includes/public/blocks/sticky-stack/src/edit.js:238
 #: includes/public/blocks/sticky-stack/src/edit.js:489
-#: includes/public/blocks/tab/src/edit.js:246
+#: includes/public/blocks/tab/src/edit.js:264
 #: includes/public/blocks/team-grid/src/edit.js:335
 msgid "Image"
 msgstr ""
@@ -3602,7 +3598,7 @@ msgstr ""
 #: includes/public/blocks/feature-list/src/edit.js:188
 #: includes/public/blocks/icon-box/src/edit.js:153
 #: includes/public/blocks/image-comparison/src/edit.js:82
-#: includes/public/blocks/tab/src/edit.js:265
+#: includes/public/blocks/tab/src/edit.js:283
 #: includes/public/blocks/testimonials-grid/src/edit.js:150
 msgid "Replace"
 msgstr ""
@@ -3613,7 +3609,7 @@ msgstr ""
 #: includes/public/blocks/image-carousel/src/edit.js:227
 #: includes/public/blocks/image-comparison/src/edit.js:82
 #: includes/public/blocks/slider/src/edit.js:195
-#: includes/public/blocks/tab/src/edit.js:265
+#: includes/public/blocks/tab/src/edit.js:283
 #: includes/public/blocks/team-grid/src/edit.js:168
 msgid "Select Image"
 msgstr ""
@@ -5060,6 +5056,7 @@ msgid "Ribbon"
 msgstr ""
 
 #: includes/public/blocks/isotope/src/edit.js:733
+#: includes/public/blocks/tab/src/item.js:36
 msgid "Tab"
 msgstr ""
 
@@ -6308,65 +6305,77 @@ msgstr ""
 msgid "Image fit"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:140
+#: includes/public/blocks/tab/src/edit.js:160
 msgid "New Tab"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:225
+#: includes/public/blocks/tab/src/edit.js:236
+msgid "Click a tab in the block to show it, and type its title there. Its content is blocks: type, or add or drag in any block."
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:243
 msgid "Expand"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:225
+#: includes/public/blocks/tab/src/edit.js:243
 msgid "Collapse"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:234
+#: includes/public/blocks/tab/src/edit.js:252
 msgid "Tab Title"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:241
+#: includes/public/blocks/tab/src/edit.js:259
 msgid "Icon / Image"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:273
-#: includes/public/blocks/tab/src/edit.js:382
-msgid "Content Title"
-msgstr ""
-
-#: includes/public/blocks/tab/src/edit.js:310
+#: includes/public/blocks/tab/src/edit.js:294
+#: includes/public/blocks/tab/src/edit.js:455
 msgid "Add Tab"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:316
+#: includes/public/blocks/tab/src/edit.js:300
 msgid "Tab Title Settings"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:345
+#: includes/public/blocks/tab/src/edit.js:329
 msgid "Tab Nav"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:352
-#: includes/public/blocks/tab/src/edit.js:363
-#: includes/public/blocks/tab/src/edit.js:375
-#: includes/public/blocks/tab/src/edit.js:401
-#: includes/public/blocks/tab/src/edit.js:406
+#: includes/public/blocks/tab/src/edit.js:336
+#: includes/public/blocks/tab/src/edit.js:347
+#: includes/public/blocks/tab/src/edit.js:359
+#: includes/public/blocks/tab/src/edit.js:385
+#: includes/public/blocks/tab/src/edit.js:390
 msgid "Background Color"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:358
+#: includes/public/blocks/tab/src/edit.js:342
 msgid "Icon / Image Bg Color"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:370
+#: includes/public/blocks/tab/src/edit.js:354
 msgid "Bottom Spacing (px)"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:371
+#: includes/public/blocks/tab/src/edit.js:355
 msgid "Bottom Border (top layout)"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:374
+#: includes/public/blocks/tab/src/edit.js:358
 msgid "Tab Content Area"
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:366
+msgid "Content Title"
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:449
+msgid "Tab title"
+msgstr ""
+
+#: includes/public/blocks/tab/src/item.js:28
+msgid "Write the tab content, or add any block with +"
 msgstr ""
 
 #. translators: %d: column number.
