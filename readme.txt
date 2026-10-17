@@ -215,12 +215,26 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 * **New:** Table - edited in place like the core Table block: type in the cells, add and remove rows and columns from the toolbar, and a new table asks for its column and row count.
 * **New:** Table - add text, heading and image blocks to a cell with its + button, or drag them in. Each cell has its own text colour, background (colour or gradient) and border. Plus fixed width cells and a caption.
 * **New:** Table - sidebar like the core Table: Layout (Default or Stripes) and Style with Global (text colour, background, cell border, typography, padding) for the whole table and Cell for the clicked cell; Icon List blocks in cells.
+* **Improved:** Table - the List View names each section Header, Body or Footer.
+* **Improved:** Table - a simpler sidebar: Settings and Style, in plain words; a clicked cell's own settings come first.
+* **New:** Table - a tooltip for any cell, set in the cell's settings; a new table has a light border round every cell.
+* **Improved:** Table - turning a cell's Tooltip on opens all its settings right there: text, icon, position, icon colour, size and margin, background and text colour. The tooltip's icon colour, size and margin work with its default icon too, the tooltip has its own background and text colour, and it is never cut off by the table's edge.
+* **Fix:** Table - an Icon List in a cell keeps its own icon size; a border with no colour picked shows in light grey instead of not at all; a cell holding a block no longer shows an empty "Add text here" line in the editor.
 * **New:** Pricing Table - the card is made of blocks (Heading, Price, List, Buttons), each edited in place with its own toolbar and settings; drag or add any other block into it. Existing tables keep their content and are converted when opened in the editor.
 * **New:** Pricing Table - choose the feature icon: check, check in a circle, star, arrow or dot.
 * **New:** Pricing Table - a new pricing table asks how many plans (1 to 4) and which style; two or more are added side by side, the same height, buttons in line.
 * **New:** Pricing Table - three styles, Classic, Centered and Dark, each with a preview, and three ready-made pricing patterns in the inserter.
+* **New:** Tabs - more tab bar settings: alignment (fill, left, centre, right), space between tabs, the width of side tabs (in Layout, under Tabs Position), background, padding and corners; tab buttons with Normal, Hover and Active colours, shadows and text alignment; icon and image size, icon box on or off with its size and corners, and the space to the title.
 * **New:** Tabs - each tab's content is blocks: type in it, or add or drag in any block. Tab titles are typed in the tab bar, and the + at its end adds a tab. Existing tabs keep their content.
+* **New:** Team Member - edited in place: type the name, designation, bio, email and phone in the card, click the photo to change it, click a social icon to change its link or icon (the + adds one), and pick a skin from pictures; the text can also be changed in the sidebar, and the parts that show on hover stay open in the editor.
+* **New:** Team Member - email and phone in every skin, as links that open the email app or the phone dialer; social icons in Skin 05 too.
+* **New:** Team Member - an Icon Size option for the social icons.
+* **Improved:** Team Member - the sidebar in plain words and order: Settings (Content, Email & Phone, Social Icons, When Clicked), Layout (Skin, Alignment, Photo Size) and Style from the card inwards (Card, Photo, Text Area, Name, Designation, Bio, Email & Phone, Social Icons).
+* **Fix:** Team Member - on the Hover Overlay skin, the Name and Designation colours now win over the overlay's Text Color; a click anywhere on the photo opens the Media Library.
+* **Fix:** Team Member - a short photo no longer pushes the name and details off the card, and the editor matches the page; Items Gap, Name & Designation Area Margin (Inside Image), Social Icon Area Padding (Skin 04, Skin 05), Social Icon Alignment and Text Color (Skin 04 round overlay) now apply; Skin 05 shows its description on hover.
+* **Improved:** Team Member - social icons line up with the text, fit in narrow cards, open in a new tab and have names for screen readers; a new Team Member starts with its icons, email and phone filled in.
 * **Improved:** the block inserter puts the cursor in its search box when it opens.
+* **Changed:** a new install starts with five blocks on (Row, Column, Heading, Button, Icon Box); the others are switched on in ShapeBlock > Blocks. Sites already using ShapeBlock keep every block on.
 * **Fix:** Social Share - each network's share page opens in a share window; Instagram, YouTube, TikTok, Snapchat, Discord and Spotify, which have no share link for websites, open the device's share menu or copy the link; and blog, archive and Query Loop pages share the right address.
 
 = 1.0.2 =

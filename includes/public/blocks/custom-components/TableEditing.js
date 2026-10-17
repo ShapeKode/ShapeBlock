@@ -63,10 +63,12 @@ export function TablePlaceholder({ onCreate, extra = null }) {
 
 // A border setting as CSS, as Helper::border_to_css_props() writes it.
 const unit = (v) => (/^-?[0-9.]+$/.test(String(v ?? 0)) ? `${v || 0}px` : v);
+// A table border with no colour picked is a light grey (as render.php draws it).
+export const BORDER_GREY = '#dcdcde';
 export const borderStyle = (b) => {
 	if (!b || 'object' !== typeof b) return {};
 	const style = b.style || 'solid';
-	const color = b.color || 'rgba(0,0,0,0)';
+	const color = b.color || BORDER_GREY;
 	if (b.width && 'object' === typeof b.width) {
 		const w = ['top', 'right', 'bottom', 'left'].map((k) => unit(b.width[k]));
 		return w.every((v) => 0 === parseInt(v, 10)) ? {} : { borderStyle: style, borderColor: color, borderWidth: w.join(' ') };

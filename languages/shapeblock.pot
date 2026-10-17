@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-17T02:58:47+00:00\n"
+"POT-Creation-Date: 2026-10-17T06:56:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: shapeblock\n"
@@ -43,108 +43,108 @@ msgstr ""
 msgid "https://profiles.wordpress.org/shapekode22/"
 msgstr ""
 
-#: includes/admin/Api.php:334
+#: includes/admin/Api.php:333
 msgid "The import file could not be read."
 msgstr ""
 
-#: includes/admin/Api.php:339
+#: includes/admin/Api.php:338
 msgid "This is not a ShapeBlock export file."
 msgstr ""
 
-#: includes/admin/Api.php:344
+#: includes/admin/Api.php:343
 msgid "This file was created by a newer version of ShapeBlock."
 msgstr ""
 
-#: includes/admin/Api.php:639
+#: includes/admin/Api.php:638
 msgid "Layout payload must be an object."
 msgstr ""
 
-#: includes/admin/Api.php:670
-#: includes/admin/Api.php:696
+#: includes/admin/Api.php:669
+#: includes/admin/Api.php:695
 msgid "Invalid status value."
 msgstr ""
 
-#: includes/admin/Api.php:674
+#: includes/admin/Api.php:673
 msgid "No block provided."
 msgstr ""
 
-#: includes/admin/Api.php:679
+#: includes/admin/Api.php:678
 msgid "Unknown block."
 msgstr ""
 
-#: includes/admin/Api.php:700
+#: includes/admin/Api.php:699
 msgid "No blocks provided."
 msgstr ""
 
-#: includes/admin/Api.php:769
+#: includes/admin/Api.php:768
 msgid "Template title is required"
 msgstr ""
 
-#: includes/admin/Api.php:792
-#: includes/admin/Api.php:812
+#: includes/admin/Api.php:791
+#: includes/admin/Api.php:811
 msgid "Template not found"
 msgstr ""
 
-#: includes/admin/Api.php:832
+#: includes/admin/Api.php:831
 msgid "Template IDs are required"
 msgstr ""
 
-#: includes/admin/Blocks.php:19
+#: includes/admin/Blocks.php:32
 msgid "Post Grid"
 msgstr ""
 
-#: includes/admin/Blocks.php:21
+#: includes/admin/Blocks.php:34
 msgid "Posts in a customizable grid."
 msgstr ""
 
-#: includes/admin/Blocks.php:25
+#: includes/admin/Blocks.php:38
 #: includes/public/blocks/column/src/edit.js:308
 #: includes/public/blocks/layout-row/src/edit.js:459
 msgid "Row"
 msgstr ""
 
-#: includes/admin/Blocks.php:27
+#: includes/admin/Blocks.php:40
 msgid "Section that holds columns."
 msgstr ""
 
-#: includes/admin/Blocks.php:31
+#: includes/admin/Blocks.php:44
 #: includes/public/blocks/column/src/edit.js:310
 #: includes/public/blocks/layout-row/src/edit.js:461
 #: includes/public/blocks/testimonials-grid/src/edit.js:52
 msgid "Column"
 msgstr ""
 
-#: includes/admin/Blocks.php:33
+#: includes/admin/Blocks.php:46
 msgid "A column inside a Row."
 msgstr ""
 
-#: includes/admin/Blocks.php:37
+#: includes/admin/Blocks.php:50
 #: includes/public/blocks/gallery/src/edit.js:590
 msgid "Simple Gallery"
 msgstr ""
 
-#: includes/admin/Blocks.php:39
+#: includes/admin/Blocks.php:52
 msgid "Image gallery with lightbox."
 msgstr ""
 
-#: includes/admin/Blocks.php:43
+#: includes/admin/Blocks.php:56
 msgid "Accordion"
 msgstr ""
 
-#: includes/admin/Blocks.php:45
+#: includes/admin/Blocks.php:58
 msgid "Collapsible FAQ with schema."
 msgstr ""
 
-#: includes/admin/Blocks.php:49
+#: includes/admin/Blocks.php:62
 #: includes/public/blocks/pricing-table/src/edit.js:485
 msgid "Pricing Table"
 msgstr ""
 
-#: includes/admin/Blocks.php:51
+#: includes/admin/Blocks.php:64
 msgid "Pricing plans with features."
 msgstr ""
 
-#: includes/admin/Blocks.php:55
+#: includes/admin/Blocks.php:68
 #: includes/public/blocks/button/src/edit.js:209
 #: includes/public/blocks/icon-box/src/edit.js:164
 #: includes/public/blocks/icon-box/src/edit.js:311
@@ -155,15 +155,14 @@ msgstr ""
 #: includes/public/blocks/scroll-to-top/src/edit.js:117
 #: includes/public/blocks/sticky-stack/src/edit.js:263
 #: includes/public/blocks/sticky-stack/src/edit.js:464
-#: includes/public/blocks/tab/src/edit.js:378
 msgid "Button"
 msgstr ""
 
-#: includes/admin/Blocks.php:57
+#: includes/admin/Blocks.php:70
 msgid "Button with icon and styles."
 msgstr ""
 
-#: includes/admin/Blocks.php:61
+#: includes/admin/Blocks.php:74
 #: includes/public/blocks/breadcrumb/src/edit.js:118
 #: includes/public/blocks/button/src/edit.js:176
 #: includes/public/blocks/button/src/edit.js:216
@@ -199,242 +198,243 @@ msgstr ""
 #: includes/public/blocks/social-share/src/edit.js:166
 #: includes/public/blocks/sticky-stack/src/edit.js:227
 #: includes/public/blocks/sticky-stack/src/edit.js:442
-#: includes/public/blocks/tab/src/edit.js:263
 #: includes/public/blocks/tab/src/edit.js:271
-#: includes/public/blocks/team-grid/src/edit.js:247
+#: includes/public/blocks/tab/src/edit.js:279
+#: includes/public/blocks/team-grid/src/card.js:155
 msgid "Icon"
 msgstr ""
 
-#: includes/admin/Blocks.php:63
+#: includes/admin/Blocks.php:76
 msgid "A single icon with a link."
 msgstr ""
 
-#: includes/admin/Blocks.php:67
+#: includes/admin/Blocks.php:80
 #: includes/public/blocks/heading/src/edit.js:282
 #: includes/public/blocks/layout-row/src/edit.js:745
 msgid "Heading"
 msgstr ""
 
-#: includes/admin/Blocks.php:69
+#: includes/admin/Blocks.php:82
 msgid "Heading with a sub-heading."
 msgstr ""
 
-#: includes/admin/Blocks.php:73
+#: includes/admin/Blocks.php:86
+#: includes/public/blocks/team-grid/src/index.js:27
 msgid "Team Member"
 msgstr ""
 
-#: includes/admin/Blocks.php:75
+#: includes/admin/Blocks.php:88
 msgid "Team members with socials."
 msgstr ""
 
-#: includes/admin/Blocks.php:79
+#: includes/admin/Blocks.php:92
 msgid "Testimonial"
 msgstr ""
 
-#: includes/admin/Blocks.php:81
+#: includes/admin/Blocks.php:94
 msgid "Client reviews with ratings."
 msgstr ""
 
-#: includes/admin/Blocks.php:85
+#: includes/admin/Blocks.php:98
 msgid "Feature List"
 msgstr ""
 
-#: includes/admin/Blocks.php:87
+#: includes/admin/Blocks.php:100
 msgid "Feature list with icons."
 msgstr ""
 
-#: includes/admin/Blocks.php:91
+#: includes/admin/Blocks.php:104
 msgid "Hover Box"
 msgstr ""
 
-#: includes/admin/Blocks.php:93
+#: includes/admin/Blocks.php:106
 msgid "Box that shows text on hover."
 msgstr ""
 
-#: includes/admin/Blocks.php:97
+#: includes/admin/Blocks.php:110
 #: includes/public/blocks/icon-box/src/edit.js:246
+#: includes/public/blocks/tab/src/edit.js:420
 msgid "Icon Box"
 msgstr ""
 
-#: includes/admin/Blocks.php:99
+#: includes/admin/Blocks.php:112
 msgid "Icon, title and text box."
 msgstr ""
 
-#: includes/admin/Blocks.php:103
+#: includes/admin/Blocks.php:116
 msgid "Icon List"
 msgstr ""
 
-#: includes/admin/Blocks.php:105
+#: includes/admin/Blocks.php:118
 msgid "List of rows with icons."
 msgstr ""
 
-#: includes/admin/Blocks.php:109
+#: includes/admin/Blocks.php:122
 #: includes/public/blocks/counter/src/edit.js:292
 msgid "Counter"
 msgstr ""
 
-#: includes/admin/Blocks.php:111
+#: includes/admin/Blocks.php:124
 msgid "Animated number counter."
 msgstr ""
 
-#: includes/admin/Blocks.php:115
-#: includes/public/blocks/tab/src/edit.js:234
+#: includes/admin/Blocks.php:128
+#: includes/public/blocks/tab/src/edit.js:242
 msgid "Tabs"
 msgstr ""
 
-#: includes/admin/Blocks.php:117
+#: includes/admin/Blocks.php:130
 msgid "Content in tabbed panels."
 msgstr ""
 
-#: includes/admin/Blocks.php:121
+#: includes/admin/Blocks.php:134
 msgid "Countdown"
 msgstr ""
 
-#: includes/admin/Blocks.php:123
+#: includes/admin/Blocks.php:136
 msgid "Countdown timer to a date."
 msgstr ""
 
-#: includes/admin/Blocks.php:127
+#: includes/admin/Blocks.php:140
 #: includes/public/blocks/custom-components/TableEditing.js:45
-#: includes/public/blocks/table/src/sidebar.js:127
+#: includes/public/blocks/table/src/sidebar.js:126
 msgid "Table"
 msgstr ""
 
-#: includes/admin/Blocks.php:129
+#: includes/admin/Blocks.php:142
 msgid "Data table with icons."
 msgstr ""
 
-#: includes/admin/Blocks.php:133
+#: includes/admin/Blocks.php:146
 #: includes/public/blocks/social-share/src/edit.js:109
 msgid "Social Share"
 msgstr ""
 
-#: includes/admin/Blocks.php:135
+#: includes/admin/Blocks.php:148
 msgid "Share buttons for socials."
 msgstr ""
 
-#: includes/admin/Blocks.php:139
-#: includes/public/blocks/team-grid/src/edit.js:429
+#: includes/admin/Blocks.php:152
 msgid "Social Icon"
 msgstr ""
 
-#: includes/admin/Blocks.php:141
+#: includes/admin/Blocks.php:154
 msgid "Linked social media icons."
 msgstr ""
 
-#: includes/admin/Blocks.php:145
+#: includes/admin/Blocks.php:158
 #: includes/public/blocks/progress/src/edit.js:97
 msgid "Progress Bar"
 msgstr ""
 
-#: includes/admin/Blocks.php:147
+#: includes/admin/Blocks.php:160
 msgid "Progress and skill bars."
 msgstr ""
 
-#: includes/admin/Blocks.php:151
+#: includes/admin/Blocks.php:164
 msgid "Client Logo"
 msgstr ""
 
-#: includes/admin/Blocks.php:153
+#: includes/admin/Blocks.php:166
 msgid "A grid of client logos."
 msgstr ""
 
-#: includes/admin/Blocks.php:157
+#: includes/admin/Blocks.php:170
 msgid "Image Comparison"
 msgstr ""
 
-#: includes/admin/Blocks.php:159
+#: includes/admin/Blocks.php:172
 msgid "Before / after image slider."
 msgstr ""
 
-#: includes/admin/Blocks.php:163
+#: includes/admin/Blocks.php:176
 #: includes/public/blocks/scroll-to-top/src/edit.js:87
 msgid "Scroll to Top"
 msgstr ""
 
-#: includes/admin/Blocks.php:165
+#: includes/admin/Blocks.php:178
 msgid "Button back to page top."
 msgstr ""
 
-#: includes/admin/Blocks.php:169
+#: includes/admin/Blocks.php:182
 msgid "Offcanvas"
 msgstr ""
 
-#: includes/admin/Blocks.php:171
+#: includes/admin/Blocks.php:184
 msgid "Button that opens a panel."
 msgstr ""
 
-#: includes/admin/Blocks.php:175
+#: includes/admin/Blocks.php:188
 #: includes/public/blocks/filter-list/src/edit.js:314
 #: includes/public/blocks/isotope/src/edit.js:361
 msgid "Search"
 msgstr ""
 
-#: includes/admin/Blocks.php:177
+#: includes/admin/Blocks.php:190
 msgid "Search popup or search field."
 msgstr ""
 
-#: includes/admin/Blocks.php:181
+#: includes/admin/Blocks.php:194
 msgid "Breadcrumb"
 msgstr ""
 
-#: includes/admin/Blocks.php:183
+#: includes/admin/Blocks.php:196
 msgid "Breadcrumb trail for pages."
 msgstr ""
 
-#: includes/admin/Blocks.php:187
+#: includes/admin/Blocks.php:200
 msgid "Menu"
 msgstr ""
 
-#: includes/admin/Blocks.php:189
+#: includes/admin/Blocks.php:202
 msgid "Navigation menu with styles."
 msgstr ""
 
-#: includes/admin/Blocks.php:193
+#: includes/admin/Blocks.php:206
 msgid "Slider"
 msgstr ""
 
-#: includes/admin/Blocks.php:195
+#: includes/admin/Blocks.php:208
 msgid "Full-width image slider."
 msgstr ""
 
-#: includes/admin/Blocks.php:199
+#: includes/admin/Blocks.php:212
 msgid "Image Carousel"
 msgstr ""
 
-#: includes/admin/Blocks.php:201
+#: includes/admin/Blocks.php:214
 msgid "Images in a carousel."
 msgstr ""
 
-#: includes/admin/Blocks.php:205
+#: includes/admin/Blocks.php:218
 msgid "Isotope Filter"
 msgstr ""
 
-#: includes/admin/Blocks.php:207
+#: includes/admin/Blocks.php:220
 msgid "Filterable grid by category."
 msgstr ""
 
-#: includes/admin/Blocks.php:211
+#: includes/admin/Blocks.php:224
 msgid "Filterable List"
 msgstr ""
 
-#: includes/admin/Blocks.php:213
+#: includes/admin/Blocks.php:226
 msgid "Links with icons, filter buttons and search."
 msgstr ""
 
-#: includes/admin/Blocks.php:217
+#: includes/admin/Blocks.php:230
 msgid "Sticky Stack"
 msgstr ""
 
-#: includes/admin/Blocks.php:219
+#: includes/admin/Blocks.php:232
 msgid "Cards that stack on scroll."
 msgstr ""
 
-#: includes/admin/Blocks.php:267
+#: includes/admin/Blocks.php:283
 msgid "Free"
 msgstr ""
 
-#: includes/admin/Blocks.php:285
+#: includes/admin/Blocks.php:343
 #: includes/public/blocks/breadcrumb/src/edit.js:241
 #: includes/public/blocks/button/src/edit.js:182
 #: includes/public/blocks/button/src/edit.js:332
@@ -471,16 +471,14 @@ msgstr ""
 #: includes/public/blocks/social-share/src/edit.js:172
 #: includes/public/blocks/social-share/src/edit.js:243
 #: includes/public/blocks/sticky-stack/src/edit.js:531
-#: includes/public/blocks/tab/src/edit.js:310
-#: includes/public/blocks/tab/src/edit.js:419
-#: includes/public/blocks/table/src/sidebar.js:139
-#: includes/public/blocks/table/src/sidebar.js:252
-#: includes/public/blocks/team-grid/src/edit.js:484
+#: includes/public/blocks/tab/src/edit.js:308
+#: includes/public/blocks/tab/src/edit.js:467
+#: includes/public/blocks/team-grid/src/edit.js:456
 #: includes/public/blocks/testimonials-grid/src/edit.js:294
 msgid "Layout"
 msgstr ""
 
-#: includes/admin/Blocks.php:286
+#: includes/admin/Blocks.php:344
 #: includes/public/blocks/breadcrumb/src/edit.js:98
 #: includes/public/blocks/button/src/edit.js:157
 #: includes/public/blocks/countdown/src/edit.js:149
@@ -491,31 +489,32 @@ msgstr ""
 #: includes/public/blocks/icon/src/edit.js:147
 #: includes/public/blocks/isotope/src/edit.js:408
 #: includes/public/blocks/sticky-stack/src/edit.js:333
+#: includes/public/blocks/team-grid/src/edit.js:144
 msgid "Content"
 msgstr ""
 
-#: includes/admin/Blocks.php:287
+#: includes/admin/Blocks.php:345
 #: includes/public/blocks/hover-box/src/edit.js:155
 msgid "Media"
 msgstr ""
 
-#: includes/admin/Blocks.php:288
+#: includes/admin/Blocks.php:346
 msgid "Header Footer"
 msgstr ""
 
-#: includes/admin/Blocks.php:289
+#: includes/admin/Blocks.php:347
 msgid "Showcase"
 msgstr ""
 
-#: includes/admin/Blocks.php:290
+#: includes/admin/Blocks.php:348
 msgid "Posts & Site"
 msgstr ""
 
-#: includes/admin/Blocks.php:291
+#: includes/admin/Blocks.php:349
 msgid "Form"
 msgstr ""
 
-#: includes/admin/Blocks.php:292
+#: includes/admin/Blocks.php:350
 msgid "Feed"
 msgstr ""
 
@@ -649,7 +648,7 @@ msgid "(no title)"
 msgstr ""
 
 #: includes/extension/theme-builder/Theme_Builder.php:107
-#: includes/public/blocks/table/src/sidebar.js:224
+#: includes/public/blocks/table/src/cells.js:249
 msgid "Header"
 msgstr ""
 
@@ -658,7 +657,7 @@ msgid "Headers"
 msgstr ""
 
 #: includes/extension/theme-builder/Theme_Builder.php:113
-#: includes/public/blocks/table/src/sidebar.js:231
+#: includes/public/blocks/table/src/cells.js:249
 msgid "Footer"
 msgstr ""
 
@@ -780,9 +779,9 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:246
 #: includes/public/blocks/social-share/src/edit.js:242
 #: includes/public/blocks/sticky-stack/src/edit.js:530
-#: includes/public/blocks/tab/src/edit.js:418
-#: includes/public/blocks/table/src/sidebar.js:251
-#: includes/public/blocks/team-grid/src/edit.js:483
+#: includes/public/blocks/tab/src/edit.js:466
+#: includes/public/blocks/table/src/sidebar.js:247
+#: includes/public/blocks/team-grid/src/edit.js:455
 #: includes/public/blocks/testimonials-grid/src/edit.js:293
 #: src/components/admin-components/export-import.jsx:30
 msgid "Settings"
@@ -1094,7 +1093,7 @@ msgstr ""
 
 #: includes/public/blocks/social-share/src/render.php:342
 #: includes/public/blocks/social-share/src/edit.js:63
-#: includes/public/blocks/team-grid/src/edit.js:186
+#: includes/public/blocks/team-grid/src/edit.js:167
 msgid "Email"
 msgstr ""
 
@@ -1121,11 +1120,11 @@ msgstr ""
 msgid "Please add table cells."
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/render.php:522
+#: includes/public/blocks/team-grid/src/render.php:591
 msgid "Team Image"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/render.php:694
+#: includes/public/blocks/team-grid/src/render.php:744
 msgid "No additional details available."
 msgstr ""
 
@@ -1213,11 +1212,10 @@ msgstr ""
 #: includes/public/blocks/post-grid/src/edit.js:753
 #: includes/public/blocks/pricing-table/src/edit.js:231
 #: includes/public/blocks/sticky-stack/src/edit.js:362
+#: includes/public/blocks/tab/src/edit.js:376
 #: includes/public/blocks/table/src/sidebar.js:34
-#: includes/public/blocks/team-grid/src/edit.js:264
-#: includes/public/blocks/team-grid/src/edit.js:288
-#: includes/public/blocks/team-grid/src/edit.js:302
-#: includes/public/blocks/team-grid/src/edit.js:316
+#: includes/public/blocks/team-grid/src/edit.js:47
+#: includes/public/blocks/team-grid/src/edit.js:290
 #: includes/public/blocks/testimonials-grid/src/edit.js:213
 msgid "Default"
 msgstr ""
@@ -1255,11 +1253,13 @@ msgstr ""
 #: includes/public/blocks/search/src/edit.js:194
 #: includes/public/blocks/sticky-stack/src/edit.js:364
 #: includes/public/blocks/sticky-stack/src/edit.js:388
-#: includes/public/blocks/tab/src/edit.js:80
-#: includes/public/blocks/tab/src/edit.js:318
-#: includes/public/blocks/table/src/sidebar.js:208
-#: includes/public/blocks/team-grid/src/edit.js:53
-#: includes/public/blocks/team-grid/src/edit.js:316
+#: includes/public/blocks/tab/src/edit.js:85
+#: includes/public/blocks/tab/src/edit.js:347
+#: includes/public/blocks/tab/src/edit.js:361
+#: includes/public/blocks/tab/src/edit.js:377
+#: includes/public/blocks/table/src/cells.js:94
+#: includes/public/blocks/team-grid/src/edit.js:40
+#: includes/public/blocks/team-grid/src/edit.js:193
 #: includes/public/blocks/testimonials-grid/src/edit.js:48
 msgid "Left"
 msgstr ""
@@ -1287,9 +1287,11 @@ msgstr ""
 #: includes/public/blocks/layout-row/src/edit.js:478
 #: includes/public/blocks/pricing-table/src/edit.js:57
 #: includes/public/blocks/sticky-stack/src/edit.js:389
-#: includes/public/blocks/tab/src/edit.js:319
-#: includes/public/blocks/team-grid/src/edit.js:54
-#: includes/public/blocks/team-grid/src/edit.js:316
+#: includes/public/blocks/tab/src/edit.js:348
+#: includes/public/blocks/tab/src/edit.js:362
+#: includes/public/blocks/tab/src/edit.js:378
+#: includes/public/blocks/team-grid/src/edit.js:41
+#: includes/public/blocks/team-grid/src/edit.js:193
 #: includes/public/blocks/testimonials-grid/src/edit.js:49
 #: includes/public/blocks/testimonials-grid/src/edit.js:56
 msgid "Center"
@@ -1327,11 +1329,13 @@ msgstr ""
 #: includes/public/blocks/search/src/edit.js:195
 #: includes/public/blocks/sticky-stack/src/edit.js:363
 #: includes/public/blocks/sticky-stack/src/edit.js:390
-#: includes/public/blocks/tab/src/edit.js:82
-#: includes/public/blocks/tab/src/edit.js:320
-#: includes/public/blocks/table/src/sidebar.js:208
-#: includes/public/blocks/team-grid/src/edit.js:55
-#: includes/public/blocks/team-grid/src/edit.js:316
+#: includes/public/blocks/tab/src/edit.js:87
+#: includes/public/blocks/tab/src/edit.js:349
+#: includes/public/blocks/tab/src/edit.js:363
+#: includes/public/blocks/tab/src/edit.js:379
+#: includes/public/blocks/table/src/cells.js:95
+#: includes/public/blocks/team-grid/src/edit.js:42
+#: includes/public/blocks/team-grid/src/edit.js:193
 #: includes/public/blocks/testimonials-grid/src/edit.js:50
 msgid "Right"
 msgstr ""
@@ -1354,8 +1358,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:44
 #: includes/public/blocks/social-share/src/edit.js:45
 #: includes/public/blocks/sticky-stack/src/edit.js:54
-#: includes/public/blocks/tab/src/edit.js:75
-#: includes/public/blocks/team-grid/src/edit.js:281
+#: includes/public/blocks/tab/src/edit.js:79
 msgid "Normal"
 msgstr ""
 
@@ -1377,7 +1380,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:45
 #: includes/public/blocks/social-share/src/edit.js:46
 #: includes/public/blocks/sticky-stack/src/edit.js:55
-#: includes/public/blocks/tab/src/edit.js:76
+#: includes/public/blocks/tab/src/edit.js:80
 msgid "Hover"
 msgstr ""
 
@@ -1451,6 +1454,8 @@ msgstr ""
 #: includes/public/blocks/icon/src/edit.js:170
 #: includes/public/blocks/isotope/src/edit.js:508
 #: includes/public/blocks/isotope/src/edit.js:569
+#: includes/public/blocks/team-grid/src/edit.js:193
+#: includes/public/blocks/team-grid/src/edit.js:289
 #: includes/public/blocks/testimonials-grid/src/edit.js:213
 msgid "Alignment"
 msgstr ""
@@ -1531,16 +1536,21 @@ msgstr ""
 #: includes/public/blocks/sticky-stack/src/edit.js:436
 #: includes/public/blocks/sticky-stack/src/edit.js:472
 #: includes/public/blocks/sticky-stack/src/edit.js:478
-#: includes/public/blocks/table/src/cells.js:150
-#: includes/public/blocks/table/src/sidebar.js:178
-#: includes/public/blocks/table/src/sidebar.js:226
-#: includes/public/blocks/table/src/sidebar.js:233
-#: includes/public/blocks/team-grid/src/edit.js:326
-#: includes/public/blocks/team-grid/src/edit.js:347
-#: includes/public/blocks/team-grid/src/edit.js:366
+#: includes/public/blocks/tab/src/edit.js:366
+#: includes/public/blocks/tab/src/edit.js:386
+#: includes/public/blocks/tab/src/edit.js:396
+#: includes/public/blocks/tab/src/edit.js:402
+#: includes/public/blocks/table/src/cells.js:196
+#: includes/public/blocks/table/src/sidebar.js:186
+#: includes/public/blocks/table/src/sidebar.js:225
+#: includes/public/blocks/table/src/sidebar.js:232
+#: includes/public/blocks/team-grid/src/edit.js:305
+#: includes/public/blocks/team-grid/src/edit.js:327
+#: includes/public/blocks/team-grid/src/edit.js:335
+#: includes/public/blocks/team-grid/src/edit.js:361
+#: includes/public/blocks/team-grid/src/edit.js:383
+#: includes/public/blocks/team-grid/src/edit.js:402
 #: includes/public/blocks/team-grid/src/edit.js:419
-#: includes/public/blocks/team-grid/src/edit.js:431
-#: includes/public/blocks/team-grid/src/edit.js:447
 #: includes/public/blocks/testimonials-grid/src/edit.js:223
 msgid "Background"
 msgstr ""
@@ -1587,11 +1597,11 @@ msgstr ""
 #: includes/public/blocks/social-share/src/edit.js:202
 #: includes/public/blocks/sticky-stack/src/edit.js:427
 #: includes/public/blocks/sticky-stack/src/edit.js:479
-#: includes/public/blocks/tab/src/edit.js:337
-#: includes/public/blocks/tab/src/edit.js:360
-#: includes/public/blocks/tab/src/edit.js:397
-#: includes/public/blocks/table/src/cells.js:156
-#: includes/public/blocks/team-grid/src/edit.js:328
+#: includes/public/blocks/tab/src/edit.js:369
+#: includes/public/blocks/tab/src/edit.js:387
+#: includes/public/blocks/tab/src/edit.js:432
+#: includes/public/blocks/table/src/cells.js:202
+#: includes/public/blocks/team-grid/src/edit.js:306
 #: includes/public/blocks/testimonials-grid/src/edit.js:224
 msgid "Border"
 msgstr ""
@@ -1647,15 +1657,15 @@ msgstr ""
 #: includes/public/blocks/sticky-stack/src/edit.js:438
 #: includes/public/blocks/sticky-stack/src/edit.js:486
 #: includes/public/blocks/sticky-stack/src/edit.js:501
-#: includes/public/blocks/tab/src/edit.js:338
-#: includes/public/blocks/tab/src/edit.js:361
-#: includes/public/blocks/tab/src/edit.js:398
-#: includes/public/blocks/table/src/sidebar.js:184
-#: includes/public/blocks/team-grid/src/edit.js:327
-#: includes/public/blocks/team-grid/src/edit.js:337
-#: includes/public/blocks/team-grid/src/edit.js:348
-#: includes/public/blocks/team-grid/src/edit.js:371
-#: includes/public/blocks/team-grid/src/edit.js:435
+#: includes/public/blocks/tab/src/edit.js:368
+#: includes/public/blocks/tab/src/edit.js:412
+#: includes/public/blocks/tab/src/edit.js:433
+#: includes/public/blocks/team-grid/src/edit.js:308
+#: includes/public/blocks/team-grid/src/edit.js:315
+#: includes/public/blocks/team-grid/src/edit.js:328
+#: includes/public/blocks/team-grid/src/edit.js:340
+#: includes/public/blocks/team-grid/src/edit.js:387
+#: includes/public/blocks/team-grid/src/edit.js:409
 #: includes/public/blocks/testimonials-grid/src/edit.js:225
 msgid "Border Radius"
 msgstr ""
@@ -1700,16 +1710,17 @@ msgstr ""
 #: includes/public/blocks/search/src/edit.js:230
 #: includes/public/blocks/search/src/edit.js:238
 #: includes/public/blocks/sticky-stack/src/edit.js:485
-#: includes/public/blocks/tab/src/edit.js:339
-#: includes/public/blocks/tab/src/edit.js:362
-#: includes/public/blocks/tab/src/edit.js:399
-#: includes/public/blocks/team-grid/src/edit.js:332
-#: includes/public/blocks/team-grid/src/edit.js:338
-#: includes/public/blocks/team-grid/src/edit.js:349
-#: includes/public/blocks/team-grid/src/edit.js:370
-#: includes/public/blocks/team-grid/src/edit.js:379
-#: includes/public/blocks/team-grid/src/edit.js:412
-#: includes/public/blocks/team-grid/src/edit.js:424
+#: includes/public/blocks/tab/src/edit.js:367
+#: includes/public/blocks/tab/src/edit.js:413
+#: includes/public/blocks/tab/src/edit.js:434
+#: includes/public/blocks/team-grid/src/edit.js:310
+#: includes/public/blocks/team-grid/src/edit.js:316
+#: includes/public/blocks/team-grid/src/edit.js:329
+#: includes/public/blocks/team-grid/src/edit.js:339
+#: includes/public/blocks/team-grid/src/edit.js:348
+#: includes/public/blocks/team-grid/src/edit.js:366
+#: includes/public/blocks/team-grid/src/edit.js:373
+#: includes/public/blocks/team-grid/src/edit.js:388
 #: includes/public/blocks/testimonials-grid/src/edit.js:227
 msgid "Padding"
 msgstr ""
@@ -1733,9 +1744,12 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:212
 #: includes/public/blocks/social-icon/src/edit.js:223
 #: includes/public/blocks/social-share/src/edit.js:191
-#: includes/public/blocks/tab/src/edit.js:341
-#: includes/public/blocks/table/src/sidebar.js:200
-#: includes/public/blocks/team-grid/src/edit.js:399
+#: includes/public/blocks/tab/src/edit.js:389
+#: includes/public/blocks/tab/src/edit.js:405
+#: includes/public/blocks/table/src/cells.js:104
+#: includes/public/blocks/table/src/sidebar.js:208
+#: includes/public/blocks/team-grid/src/edit.js:390
+#: includes/public/blocks/team-grid/src/edit.js:400
 msgid "Icon Color"
 msgstr ""
 
@@ -1835,17 +1849,15 @@ msgstr ""
 #: includes/public/blocks/sticky-stack/src/edit.js:454
 #: includes/public/blocks/sticky-stack/src/edit.js:461
 #: includes/public/blocks/sticky-stack/src/edit.js:465
-#: includes/public/blocks/tab/src/edit.js:330
-#: includes/public/blocks/tab/src/edit.js:367
-#: includes/public/blocks/tab/src/edit.js:373
-#: includes/public/blocks/tab/src/edit.js:379
-#: includes/public/blocks/table/src/sidebar.js:182
-#: includes/public/blocks/team-grid/src/edit.js:378
-#: includes/public/blocks/team-grid/src/edit.js:384
-#: includes/public/blocks/team-grid/src/edit.js:395
-#: includes/public/blocks/team-grid/src/edit.js:410
-#: includes/public/blocks/team-grid/src/edit.js:423
-#: includes/public/blocks/team-grid/src/edit.js:434
+#: includes/public/blocks/tab/src/edit.js:374
+#: includes/public/blocks/tab/src/edit.js:439
+#: includes/public/blocks/tab/src/edit.js:445
+#: includes/public/blocks/team-grid/src/edit.js:347
+#: includes/public/blocks/team-grid/src/edit.js:353
+#: includes/public/blocks/team-grid/src/edit.js:365
+#: includes/public/blocks/team-grid/src/edit.js:371
+#: includes/public/blocks/team-grid/src/edit.js:385
+#: includes/public/blocks/team-grid/src/edit.js:408
 #: includes/public/blocks/testimonials-grid/src/edit.js:233
 #: includes/public/blocks/testimonials-grid/src/edit.js:239
 #: includes/public/blocks/testimonials-grid/src/edit.js:244
@@ -1914,16 +1926,16 @@ msgstr ""
 #: includes/public/blocks/sticky-stack/src/edit.js:458
 #: includes/public/blocks/sticky-stack/src/edit.js:471
 #: includes/public/blocks/sticky-stack/src/edit.js:477
-#: includes/public/blocks/tab/src/edit.js:335
-#: includes/public/blocks/tab/src/edit.js:346
-#: includes/public/blocks/tab/src/edit.js:384
-#: includes/public/blocks/tab/src/edit.js:389
-#: includes/public/blocks/table/src/cells.js:148
-#: includes/public/blocks/table/src/sidebar.js:177
-#: includes/public/blocks/table/src/sidebar.js:225
-#: includes/public/blocks/table/src/sidebar.js:232
-#: includes/public/blocks/team-grid/src/edit.js:368
-#: includes/public/blocks/team-grid/src/edit.js:391
+#: includes/public/blocks/tab/src/edit.js:385
+#: includes/public/blocks/tab/src/edit.js:395
+#: includes/public/blocks/tab/src/edit.js:401
+#: includes/public/blocks/table/src/cells.js:194
+#: includes/public/blocks/table/src/sidebar.js:185
+#: includes/public/blocks/table/src/sidebar.js:224
+#: includes/public/blocks/table/src/sidebar.js:231
+#: includes/public/blocks/team-grid/src/edit.js:336
+#: includes/public/blocks/team-grid/src/edit.js:381
+#: includes/public/blocks/team-grid/src/edit.js:424
 msgid "Text Color"
 msgstr ""
 
@@ -1964,9 +1976,9 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:248
 #: includes/public/blocks/social-share/src/edit.js:244
 #: includes/public/blocks/sticky-stack/src/edit.js:532
-#: includes/public/blocks/tab/src/edit.js:420
-#: includes/public/blocks/table/src/sidebar.js:253
-#: includes/public/blocks/team-grid/src/edit.js:485
+#: includes/public/blocks/tab/src/edit.js:468
+#: includes/public/blocks/table/src/sidebar.js:248
+#: includes/public/blocks/team-grid/src/edit.js:457
 #: includes/public/blocks/testimonials-grid/src/edit.js:195
 #: includes/public/blocks/testimonials-grid/src/edit.js:295
 msgid "Style"
@@ -2001,9 +2013,9 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:249
 #: includes/public/blocks/social-share/src/edit.js:245
 #: includes/public/blocks/sticky-stack/src/edit.js:533
-#: includes/public/blocks/tab/src/edit.js:421
-#: includes/public/blocks/table/src/sidebar.js:254
-#: includes/public/blocks/team-grid/src/edit.js:486
+#: includes/public/blocks/tab/src/edit.js:469
+#: includes/public/blocks/table/src/sidebar.js:249
+#: includes/public/blocks/team-grid/src/edit.js:458
 #: includes/public/blocks/testimonials-grid/src/edit.js:296
 msgid "Advanced"
 msgstr ""
@@ -2039,7 +2051,7 @@ msgstr ""
 #: includes/public/blocks/heading/src/edit.js:264
 #: includes/public/blocks/icon/src/edit.js:161
 #: includes/public/blocks/social-icon/src/edit.js:129
-#: includes/public/blocks/team-grid/src/edit.js:210
+#: includes/public/blocks/team-grid/src/edit.js:231
 msgid "Open in new tab"
 msgstr ""
 
@@ -2048,7 +2060,7 @@ msgstr ""
 #: includes/public/blocks/heading/src/edit.js:265
 #: includes/public/blocks/icon/src/edit.js:162
 #: includes/public/blocks/social-icon/src/edit.js:130
-#: includes/public/blocks/team-grid/src/edit.js:211
+#: includes/public/blocks/team-grid/src/edit.js:232
 msgid "Add nofollow"
 msgstr ""
 
@@ -2062,8 +2074,7 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:496
 #: includes/public/blocks/post-grid/src/edit.js:364
 #: includes/public/blocks/search/src/edit.js:191
-#: includes/public/blocks/tab/src/edit.js:302
-#: includes/public/blocks/team-grid/src/edit.js:299
+#: includes/public/blocks/tab/src/edit.js:310
 msgid "Icon Position"
 msgstr ""
 
@@ -2093,8 +2104,7 @@ msgstr ""
 #: includes/public/blocks/icon-box/src/edit.js:220
 #: includes/public/blocks/isotope/src/edit.js:476
 #: includes/public/blocks/sticky-stack/src/edit.js:376
-#: includes/public/blocks/tab/src/edit.js:317
-#: includes/public/blocks/team-grid/src/edit.js:288
+#: includes/public/blocks/tab/src/edit.js:346
 msgid "Content Alignment"
 msgstr ""
 
@@ -2136,8 +2146,6 @@ msgstr ""
 #: includes/public/blocks/social-share/src/edit.js:229
 #: includes/public/blocks/sticky-stack/src/edit.js:428
 #: includes/public/blocks/sticky-stack/src/edit.js:502
-#: includes/public/blocks/team-grid/src/edit.js:330
-#: includes/public/blocks/team-grid/src/edit.js:437
 #: includes/public/blocks/testimonials-grid/src/edit.js:226
 msgid "Box Shadow"
 msgstr ""
@@ -2158,14 +2166,13 @@ msgstr ""
 #: includes/public/blocks/pricing-table/src/edit.js:350
 #: includes/public/blocks/pricing-table/src/edit.js:454
 #: includes/public/blocks/pricing-table/src/edit.js:461
-#: includes/public/blocks/tab/src/edit.js:340
-#: includes/public/blocks/tab/src/edit.js:363
-#: includes/public/blocks/tab/src/edit.js:369
-#: includes/public/blocks/tab/src/edit.js:375
-#: includes/public/blocks/tab/src/edit.js:400
-#: includes/public/blocks/table/src/sidebar.js:186
-#: includes/public/blocks/team-grid/src/edit.js:350
-#: includes/public/blocks/team-grid/src/edit.js:411
+#: includes/public/blocks/tab/src/edit.js:414
+#: includes/public/blocks/tab/src/edit.js:435
+#: includes/public/blocks/tab/src/edit.js:441
+#: includes/public/blocks/tab/src/edit.js:447
+#: includes/public/blocks/table/src/sidebar.js:194
+#: includes/public/blocks/team-grid/src/edit.js:330
+#: includes/public/blocks/team-grid/src/edit.js:372
 #: includes/public/blocks/testimonials-grid/src/edit.js:234
 #: includes/public/blocks/testimonials-grid/src/edit.js:245
 msgid "Margin"
@@ -2196,6 +2203,7 @@ msgid "Box Height (px)"
 msgstr ""
 
 #: includes/public/blocks/button/src/edit.js:286
+#: includes/public/blocks/tab/src/edit.js:424
 msgid "Box Border Radius"
 msgstr ""
 
@@ -2250,13 +2258,12 @@ msgstr ""
 #: includes/public/blocks/sticky-stack/src/edit.js:443
 #: includes/public/blocks/sticky-stack/src/edit.js:448
 #: includes/public/blocks/sticky-stack/src/edit.js:453
-#: includes/public/blocks/tab/src/edit.js:368
-#: includes/public/blocks/tab/src/edit.js:374
-#: includes/public/blocks/team-grid/src/edit.js:377
-#: includes/public/blocks/team-grid/src/edit.js:383
-#: includes/public/blocks/team-grid/src/edit.js:409
-#: includes/public/blocks/team-grid/src/edit.js:418
-#: includes/public/blocks/team-grid/src/edit.js:430
+#: includes/public/blocks/tab/src/edit.js:440
+#: includes/public/blocks/tab/src/edit.js:446
+#: includes/public/blocks/team-grid/src/edit.js:346
+#: includes/public/blocks/team-grid/src/edit.js:352
+#: includes/public/blocks/team-grid/src/edit.js:360
+#: includes/public/blocks/team-grid/src/edit.js:370
 #: includes/public/blocks/testimonials-grid/src/edit.js:232
 #: includes/public/blocks/testimonials-grid/src/edit.js:238
 #: includes/public/blocks/testimonials-grid/src/edit.js:243
@@ -2301,8 +2308,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:121
 #: includes/public/blocks/social-share/src/edit.js:115
 #: includes/public/blocks/sticky-stack/src/edit.js:279
-#: includes/public/blocks/tab/src/edit.js:244
-#: includes/public/blocks/team-grid/src/edit.js:240
+#: includes/public/blocks/tab/src/edit.js:252
 #: includes/public/blocks/testimonials-grid/src/edit.js:167
 msgid "Move up"
 msgstr ""
@@ -2319,8 +2325,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:122
 #: includes/public/blocks/social-share/src/edit.js:116
 #: includes/public/blocks/sticky-stack/src/edit.js:280
-#: includes/public/blocks/tab/src/edit.js:245
-#: includes/public/blocks/team-grid/src/edit.js:241
+#: includes/public/blocks/tab/src/edit.js:253
 #: includes/public/blocks/testimonials-grid/src/edit.js:168
 msgid "Move down"
 msgstr ""
@@ -2338,8 +2343,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:123
 #: includes/public/blocks/social-share/src/edit.js:117
 #: includes/public/blocks/sticky-stack/src/edit.js:281
-#: includes/public/blocks/tab/src/edit.js:246
-#: includes/public/blocks/team-grid/src/edit.js:242
+#: includes/public/blocks/tab/src/edit.js:254
 #: includes/public/blocks/testimonials-grid/src/edit.js:169
 msgid "Duplicate"
 msgstr ""
@@ -2362,8 +2366,8 @@ msgstr ""
 #: includes/public/blocks/social-share/src/edit.js:118
 #: includes/public/blocks/sticky-stack/src/edit.js:252
 #: includes/public/blocks/sticky-stack/src/edit.js:282
-#: includes/public/blocks/tab/src/edit.js:247
-#: includes/public/blocks/team-grid/src/edit.js:243
+#: includes/public/blocks/tab/src/edit.js:255
+#: includes/public/blocks/team-grid/src/card.js:159
 #: includes/public/blocks/testimonials-grid/src/edit.js:170
 msgid "Remove"
 msgstr ""
@@ -2393,7 +2397,8 @@ msgstr ""
 #: includes/public/blocks/hover-box/src/edit.js:247
 #: includes/public/blocks/icon-box/src/edit.js:176
 #: includes/public/blocks/layout-row/src/edit.js:743
-#: includes/public/blocks/team-grid/src/edit.js:200
+#: includes/public/blocks/team-grid/src/card.js:147
+#: includes/public/blocks/team-grid/src/edit.js:230
 msgid "Link"
 msgstr ""
 
@@ -2421,7 +2426,6 @@ msgid "Columns"
 msgstr ""
 
 #: includes/public/blocks/clients-logo-grid/src/edit.js:225
-#: includes/public/blocks/team-grid/src/edit.js:292
 msgid "Image Width (px)"
 msgstr ""
 
@@ -2481,7 +2485,6 @@ msgstr ""
 
 #: includes/public/blocks/clients-logo-grid/src/edit.js:262
 #: includes/public/blocks/countdown/src/edit.js:193
-#: includes/public/blocks/team-grid/src/edit.js:392
 msgid "Item Background"
 msgstr ""
 
@@ -2571,9 +2574,9 @@ msgstr ""
 #: includes/public/blocks/layout-row/src/edit.js:580
 #: includes/public/blocks/sticky-stack/src/edit.js:365
 #: includes/public/blocks/sticky-stack/src/edit.js:399
-#: includes/public/blocks/tab/src/edit.js:81
-#: includes/public/blocks/table/src/sidebar.js:208
-#: includes/public/blocks/team-grid/src/edit.js:342
+#: includes/public/blocks/tab/src/edit.js:86
+#: includes/public/blocks/table/src/cells.js:92
+#: includes/public/blocks/team-grid/src/edit.js:321
 msgid "Top"
 msgstr ""
 
@@ -2608,8 +2611,8 @@ msgstr ""
 #: includes/public/blocks/layout-row/src/edit.js:582
 #: includes/public/blocks/sticky-stack/src/edit.js:366
 #: includes/public/blocks/sticky-stack/src/edit.js:401
-#: includes/public/blocks/table/src/sidebar.js:208
-#: includes/public/blocks/team-grid/src/edit.js:342
+#: includes/public/blocks/table/src/cells.js:93
+#: includes/public/blocks/team-grid/src/edit.js:321
 msgid "Bottom"
 msgstr ""
 
@@ -2820,14 +2823,12 @@ msgid "Item Box Shadow"
 msgstr ""
 
 #: includes/public/blocks/countdown/src/edit.js:196
-#: includes/public/blocks/team-grid/src/edit.js:396
 msgid "Item Border Radius"
 msgstr ""
 
 #: includes/public/blocks/countdown/src/edit.js:197
 #: includes/public/blocks/faq/src/edit.js:363
 #: includes/public/blocks/pricing-table/src/edit.js:381
-#: includes/public/blocks/team-grid/src/edit.js:397
 msgid "Item Padding"
 msgstr ""
 
@@ -3026,13 +3027,15 @@ msgid "Suffix"
 msgstr ""
 
 #: includes/public/blocks/counter/src/edit.js:418
+#: includes/public/blocks/tab/src/edit.js:375
+#: includes/public/blocks/team-grid/src/edit.js:290
 msgid "Text Alignment"
 msgstr ""
 
 #: includes/public/blocks/counter/src/edit.js:418
 #: includes/public/blocks/custom-components/TextAlignControl.js:19
 #: includes/public/blocks/heading/src/edit.js:277
-#: includes/public/blocks/tab/src/edit.js:321
+#: includes/public/blocks/tab/src/edit.js:350
 msgid "Justify"
 msgstr ""
 
@@ -3041,6 +3044,7 @@ msgstr ""
 #: includes/public/blocks/feature-list/src/edit.js:267
 #: includes/public/blocks/icon-box/src/edit.js:289
 #: includes/public/blocks/isotope/src/edit.js:698
+#: includes/public/blocks/tab/src/edit.js:423
 msgid "Box Size (px)"
 msgstr ""
 
@@ -3055,8 +3059,10 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:189
 #: includes/public/blocks/social-share/src/edit.js:216
 #: includes/public/blocks/sticky-stack/src/edit.js:444
-#: includes/public/blocks/table/src/sidebar.js:201
-#: includes/public/blocks/team-grid/src/edit.js:401
+#: includes/public/blocks/table/src/cells.js:105
+#: includes/public/blocks/table/src/sidebar.js:209
+#: includes/public/blocks/team-grid/src/edit.js:392
+#: includes/public/blocks/team-grid/src/edit.js:404
 msgid "Icon Size (px)"
 msgstr ""
 
@@ -3076,8 +3082,7 @@ msgstr ""
 #: includes/public/blocks/post-grid/src/edit.js:963
 #: includes/public/blocks/sticky-stack/src/edit.js:340
 #: includes/public/blocks/sticky-stack/src/edit.js:516
-#: includes/public/blocks/team-grid/src/edit.js:174
-#: includes/public/blocks/team-grid/src/edit.js:469
+#: includes/public/blocks/team-grid/src/edit.js:441
 msgid "Title HTML Tag"
 msgstr ""
 
@@ -3137,7 +3142,7 @@ msgstr ""
 #: includes/public/blocks/post-grid/src/edit.js:399
 #: includes/public/blocks/post-grid/src/edit.js:601
 #: includes/public/blocks/pricing-table/src/edit.js:398
-#: includes/public/blocks/tab/src/edit.js:262
+#: includes/public/blocks/tab/src/edit.js:270
 msgid "None"
 msgstr ""
 
@@ -3303,31 +3308,31 @@ msgstr ""
 msgid "Create Table"
 msgstr ""
 
-#: includes/public/blocks/custom-components/TableEditing.js:271
+#: includes/public/blocks/custom-components/TableEditing.js:273
 msgid "Edit table"
 msgstr ""
 
-#: includes/public/blocks/custom-components/TableEditing.js:273
+#: includes/public/blocks/custom-components/TableEditing.js:275
 msgid "Insert row before"
 msgstr ""
 
-#: includes/public/blocks/custom-components/TableEditing.js:274
+#: includes/public/blocks/custom-components/TableEditing.js:276
 msgid "Insert row after"
 msgstr ""
 
-#: includes/public/blocks/custom-components/TableEditing.js:275
+#: includes/public/blocks/custom-components/TableEditing.js:277
 msgid "Delete row"
 msgstr ""
 
-#: includes/public/blocks/custom-components/TableEditing.js:276
+#: includes/public/blocks/custom-components/TableEditing.js:278
 msgid "Insert column before"
 msgstr ""
 
-#: includes/public/blocks/custom-components/TableEditing.js:277
+#: includes/public/blocks/custom-components/TableEditing.js:279
 msgid "Insert column after"
 msgstr ""
 
-#: includes/public/blocks/custom-components/TableEditing.js:278
+#: includes/public/blocks/custom-components/TableEditing.js:280
 msgid "Delete column"
 msgstr ""
 
@@ -3398,6 +3403,7 @@ msgstr ""
 #: includes/public/blocks/faq/src/edit.js:37
 #: includes/public/blocks/filter-list/src/edit.js:54
 #: includes/public/blocks/isotope/src/edit.js:61
+#: includes/public/blocks/tab/src/edit.js:81
 #: src/components/admin-components/templates.jsx:437
 #: src/components/admin-components/theme-builder.jsx:488
 msgid "Active"
@@ -3505,10 +3511,7 @@ msgstr ""
 #: includes/public/blocks/pricing-table/src/edit.js:342
 #: includes/public/blocks/sticky-stack/src/edit.js:229
 #: includes/public/blocks/sticky-stack/src/edit.js:452
-#: includes/public/blocks/tab/src/edit.js:372
-#: includes/public/blocks/team-grid/src/edit.js:176
-#: includes/public/blocks/team-grid/src/edit.js:408
-#: includes/public/blocks/team-grid/src/edit.js:417
+#: includes/public/blocks/tab/src/edit.js:444
 #: includes/public/blocks/testimonials-grid/src/edit.js:176
 #: includes/public/blocks/testimonials-grid/src/edit.js:242
 msgid "Description"
@@ -3527,8 +3530,8 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:756
 #: includes/public/blocks/post-grid/src/edit.js:524
 #: includes/public/blocks/sticky-stack/src/edit.js:473
-#: includes/public/blocks/tab/src/edit.js:348
-#: includes/public/blocks/tab/src/edit.js:391
+#: includes/public/blocks/tab/src/edit.js:397
+#: includes/public/blocks/tab/src/edit.js:403
 msgid "Border Color"
 msgstr ""
 
@@ -3583,15 +3586,14 @@ msgstr ""
 #: includes/public/blocks/slider/src/edit.js:177
 #: includes/public/blocks/sticky-stack/src/edit.js:238
 #: includes/public/blocks/sticky-stack/src/edit.js:489
-#: includes/public/blocks/tab/src/edit.js:264
-#: includes/public/blocks/team-grid/src/edit.js:335
+#: includes/public/blocks/tab/src/edit.js:272
 msgid "Image"
 msgstr ""
 
 #: includes/public/blocks/feature-list/src/edit.js:188
 #: includes/public/blocks/icon-box/src/edit.js:153
 #: includes/public/blocks/image-comparison/src/edit.js:82
-#: includes/public/blocks/tab/src/edit.js:283
+#: includes/public/blocks/tab/src/edit.js:291
 #: includes/public/blocks/testimonials-grid/src/edit.js:150
 msgid "Replace"
 msgstr ""
@@ -3602,8 +3604,7 @@ msgstr ""
 #: includes/public/blocks/image-carousel/src/edit.js:227
 #: includes/public/blocks/image-comparison/src/edit.js:82
 #: includes/public/blocks/slider/src/edit.js:195
-#: includes/public/blocks/tab/src/edit.js:283
-#: includes/public/blocks/team-grid/src/edit.js:168
+#: includes/public/blocks/tab/src/edit.js:291
 msgid "Select Image"
 msgstr ""
 
@@ -3915,6 +3916,7 @@ msgstr ""
 #: includes/public/blocks/image-comparison/src/edit.js:145
 #: includes/public/blocks/progress/src/edit.js:131
 #: includes/public/blocks/search/src/edit.js:208
+#: includes/public/blocks/team-grid/src/edit.js:295
 msgid "Height (px)"
 msgstr ""
 
@@ -3951,8 +3953,6 @@ msgstr ""
 #: includes/public/blocks/filter-list/src/edit.js:530
 #: includes/public/blocks/filter-list/src/edit.js:538
 #: includes/public/blocks/icon/src/edit.js:210
-#: includes/public/blocks/team-grid/src/edit.js:420
-#: includes/public/blocks/team-grid/src/edit.js:432
 msgid "Color (Hover)"
 msgstr ""
 
@@ -4069,6 +4069,7 @@ msgid "Flip"
 msgstr ""
 
 #: includes/public/blocks/gallery/src/edit.js:303
+#: includes/public/blocks/team-grid/src/edit.js:50
 msgid "Caption"
 msgstr ""
 
@@ -4105,7 +4106,6 @@ msgid "Hover Text"
 msgstr ""
 
 #: includes/public/blocks/gallery/src/edit.js:358
-#: includes/public/blocks/team-grid/src/edit.js:231
 msgid "Hover Icon"
 msgstr ""
 
@@ -4158,7 +4158,6 @@ msgstr ""
 #: includes/public/blocks/image-carousel/src/edit.js:249
 #: includes/public/blocks/post-grid/src/edit.js:471
 #: includes/public/blocks/sticky-stack/src/edit.js:416
-#: includes/public/blocks/team-grid/src/edit.js:291
 msgid "Image Size"
 msgstr ""
 
@@ -4184,7 +4183,8 @@ msgid "Description Color"
 msgstr ""
 
 #: includes/public/blocks/gallery/src/edit.js:464
-#: includes/public/blocks/team-grid/src/edit.js:354
+#: includes/public/blocks/team-grid/src/edit.js:51
+#: includes/public/blocks/team-grid/src/edit.js:334
 msgid "Hover Overlay"
 msgstr ""
 
@@ -4209,8 +4209,6 @@ msgstr ""
 #: includes/public/blocks/heading/src/edit.js:261
 #: includes/public/blocks/icon/src/edit.js:151
 #: includes/public/blocks/social-icon/src/edit.js:128
-#: includes/public/blocks/team-grid/src/edit.js:209
-#: includes/public/blocks/team-grid/src/edit.js:246
 msgid "Link URL"
 msgstr ""
 
@@ -4313,7 +4311,6 @@ msgstr ""
 #: includes/public/blocks/layout-row/src/edit.js:649
 #: includes/public/blocks/search/src/edit.js:125
 #: includes/public/blocks/slider/src/edit.js:195
-#: includes/public/blocks/team-grid/src/edit.js:168
 msgid "Replace Image"
 msgstr ""
 
@@ -4434,6 +4431,8 @@ msgstr ""
 #: includes/public/blocks/icon-list/src/edit.js:183
 #: includes/public/blocks/image-carousel/src/edit.js:301
 #: includes/public/blocks/slider/src/edit.js:241
+#: includes/public/blocks/team-grid/src/edit.js:386
+#: includes/public/blocks/team-grid/src/edit.js:406
 msgid "Space Between (px)"
 msgstr ""
 
@@ -4464,7 +4463,6 @@ msgstr ""
 #: includes/public/blocks/icon/src/edit.js:211
 #: includes/public/blocks/pricing-table/src/edit.js:446
 #: includes/public/blocks/scroll-to-top/src/edit.js:124
-#: includes/public/blocks/team-grid/src/edit.js:433
 msgid "Background (Hover)"
 msgstr ""
 
@@ -4603,7 +4601,6 @@ msgid "Images Per View"
 msgstr ""
 
 #: includes/public/blocks/image-carousel/src/edit.js:302
-#: includes/public/blocks/team-grid/src/edit.js:293
 msgid "Image Height (px)"
 msgstr ""
 
@@ -4639,7 +4636,6 @@ msgstr ""
 
 #: includes/public/blocks/image-carousel/src/edit.js:327
 #: includes/public/blocks/slider/src/edit.js:262
-#: includes/public/blocks/team-grid/src/edit.js:336
 msgid "Image Overlay"
 msgstr ""
 
@@ -4790,6 +4786,10 @@ msgid "Knob Size (px)"
 msgstr ""
 
 #: includes/public/blocks/image-comparison/src/edit.js:255
+#: includes/public/blocks/tab/src/edit.js:388
+#: includes/public/blocks/tab/src/edit.js:404
+#: includes/public/blocks/team-grid/src/edit.js:309
+#: includes/public/blocks/team-grid/src/edit.js:410
 msgid "Shadow"
 msgstr ""
 
@@ -4883,6 +4883,7 @@ msgid "Hidden: visitors see the items chosen under \"Show\" below, with no butto
 msgstr ""
 
 #: includes/public/blocks/isotope/src/edit.js:349
+#: includes/public/blocks/team-grid/src/edit.js:201
 msgid "Show"
 msgstr ""
 
@@ -4958,6 +4959,7 @@ msgstr ""
 #: includes/public/blocks/layout-row/src/edit.js:408
 #: includes/public/blocks/layout-row/src/edit.js:696
 #: includes/public/blocks/post-grid/src/edit.js:313
+#: includes/public/blocks/team-grid/src/edit.js:179
 msgid "Position"
 msgstr ""
 
@@ -4966,12 +4968,10 @@ msgid "Add a badge to a card under Settings > Categories > Items."
 msgstr ""
 
 #: includes/public/blocks/isotope/src/edit.js:544
-#: includes/public/blocks/team-grid/src/edit.js:304
 msgid "Top Right"
 msgstr ""
 
 #: includes/public/blocks/isotope/src/edit.js:545
-#: includes/public/blocks/team-grid/src/edit.js:303
 msgid "Top Left"
 msgstr ""
 
@@ -5019,6 +5019,7 @@ msgstr ""
 #: includes/public/blocks/post-grid/src/edit.js:498
 #: includes/public/blocks/sticky-stack/src/edit.js:221
 #: includes/public/blocks/sticky-stack/src/edit.js:425
+#: includes/public/blocks/team-grid/src/edit.js:304
 msgid "Card"
 msgstr ""
 
@@ -5383,8 +5384,9 @@ msgid "Order of items to display."
 msgstr ""
 
 #: includes/public/blocks/post-grid/src/edit.js:210
-#: includes/public/blocks/team-grid/src/edit.js:173
-#: includes/public/blocks/team-grid/src/edit.js:376
+#: includes/public/blocks/team-grid/src/card.js:78
+#: includes/public/blocks/team-grid/src/edit.js:148
+#: includes/public/blocks/team-grid/src/edit.js:345
 #: includes/public/blocks/testimonials-grid/src/edit.js:174
 #: includes/public/blocks/testimonials-grid/src/edit.js:231
 msgid "Name"
@@ -5742,6 +5744,7 @@ msgid "Features"
 msgstr ""
 
 #: includes/public/blocks/pricing-table/src/edit.js:377
+#: includes/public/blocks/team-grid/src/edit.js:425
 msgid "Text Typography"
 msgstr ""
 
@@ -5790,7 +5793,7 @@ msgid "Icon Padding"
 msgstr ""
 
 #: includes/public/blocks/pricing-table/src/edit.js:428
-#: includes/public/blocks/team-grid/src/edit.js:403
+#: includes/public/blocks/team-grid/src/edit.js:394
 msgid "Icon Border Radius"
 msgstr ""
 
@@ -5799,7 +5802,6 @@ msgid "Full Width Button"
 msgstr ""
 
 #: includes/public/blocks/pricing-table/src/edit.js:445
-#: includes/public/blocks/team-grid/src/edit.js:393
 msgid "Text Color (Hover)"
 msgstr ""
 
@@ -5891,6 +5893,7 @@ msgstr ""
 #: includes/public/blocks/scroll-to-top/src/edit.js:97
 #: includes/public/blocks/social-icon/src/edit.js:170
 #: includes/public/blocks/social-share/src/edit.js:184
+#: includes/public/blocks/team-grid/src/edit.js:405
 msgid "Button Size (px)"
 msgstr ""
 
@@ -6017,7 +6020,6 @@ msgid "Title Typography"
 msgstr ""
 
 #: includes/public/blocks/search/src/edit.js:248
-#: includes/public/blocks/team-grid/src/edit.js:454
 msgid "Close Icon Color"
 msgstr ""
 
@@ -6046,7 +6048,6 @@ msgid "Social Link"
 msgstr ""
 
 #: includes/public/blocks/social-icon/src/edit.js:115
-#: includes/public/blocks/team-grid/src/edit.js:217
 msgid "Social Settings"
 msgstr ""
 
@@ -6055,7 +6056,6 @@ msgid "Link Title"
 msgstr ""
 
 #: includes/public/blocks/social-icon/src/edit.js:163
-#: includes/public/blocks/team-grid/src/edit.js:250
 msgid "Add Social Link"
 msgstr ""
 
@@ -6294,72 +6294,122 @@ msgstr ""
 msgid "Image fit"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:160
+#: includes/public/blocks/tab/src/edit.js:165
 msgid "New Tab"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:236
+#: includes/public/blocks/tab/src/edit.js:244
 msgid "Click a tab in the block to show it, and type its title there. Its content is blocks: type, or add or drag in any block."
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:243
+#: includes/public/blocks/tab/src/edit.js:251
 msgid "Expand"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:243
+#: includes/public/blocks/tab/src/edit.js:251
 msgid "Collapse"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:252
+#: includes/public/blocks/tab/src/edit.js:260
 msgid "Tab Title"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:259
+#: includes/public/blocks/tab/src/edit.js:267
 msgid "Icon / Image"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:294
-#: includes/public/blocks/tab/src/edit.js:455
+#: includes/public/blocks/tab/src/edit.js:302
+#: includes/public/blocks/tab/src/edit.js:503
 msgid "Add Tab"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:300
-msgid "Tab Title Settings"
+#: includes/public/blocks/tab/src/edit.js:311
+msgid "Where the icon sits next to the tab title."
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:329
-msgid "Tab Nav"
+#: includes/public/blocks/tab/src/edit.js:319
+msgid "Tabs Position"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:336
-#: includes/public/blocks/tab/src/edit.js:347
-#: includes/public/blocks/tab/src/edit.js:359
-#: includes/public/blocks/tab/src/edit.js:385
-#: includes/public/blocks/tab/src/edit.js:390
-msgid "Background Color"
+#: includes/public/blocks/tab/src/edit.js:320
+msgid "The tabs above the content, or beside it."
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:342
-msgid "Icon / Image Bg Color"
+#: includes/public/blocks/tab/src/edit.js:328
+msgid "Tabs Width (%)"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:354
-msgid "Bottom Spacing (px)"
-msgstr ""
-
-#: includes/public/blocks/tab/src/edit.js:355
-msgid "Bottom Border (top layout)"
+#: includes/public/blocks/tab/src/edit.js:333
+msgid "The column of tabs; the content takes the rest. Empty: about a third."
 msgstr ""
 
 #: includes/public/blocks/tab/src/edit.js:358
+msgid "Tab Bar"
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:359
+msgid "Tabs Alignment"
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:360
+msgid "Fill the row"
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:365
+msgid "Space Between Tabs (px)"
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:370
+msgid "Space Below the Tabs (px)"
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:373
+msgid "Tab Buttons"
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:390
+#: includes/public/blocks/tab/src/edit.js:406
+#: includes/public/blocks/team-grid/src/edit.js:391
+msgid "Icon Background"
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:394
+msgid "Empty: a tab under the mouse looks like the active tab."
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:417
+msgid "Icon & Image"
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:418
+msgid "Icon / Image Size (px)"
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:419
+msgid "Space to the Title (px)"
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:420
+msgid "A shaded box round the icon."
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:427
+msgid "Icon colors are under Tab Buttons, for each state."
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:430
 msgid "Tab Content Area"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:366
+#: includes/public/blocks/tab/src/edit.js:431
+msgid "Background Color"
+msgstr ""
+
+#: includes/public/blocks/tab/src/edit.js:438
 msgid "Content Title"
 msgstr ""
 
-#: includes/public/blocks/tab/src/edit.js:449
+#: includes/public/blocks/tab/src/edit.js:497
 msgid "Tab title"
 msgstr ""
 
@@ -6367,46 +6417,91 @@ msgstr ""
 msgid "Write the tab content, or add any block with +"
 msgstr ""
 
+#: includes/public/blocks/table/src/cells.js:83
+msgid "The look of every tooltip in this table:"
+msgstr ""
+
+#: includes/public/blocks/table/src/cells.js:84
+msgid "Tooltip Position"
+msgstr ""
+
+#: includes/public/blocks/table/src/cells.js:91
+msgid "Same as desktop"
+msgstr ""
+
+#: includes/public/blocks/table/src/cells.js:111
+#: includes/public/blocks/table/src/sidebar.js:210
+msgid "Icon Margin"
+msgstr ""
+
+#: includes/public/blocks/table/src/cells.js:112
+msgid "Tooltip Background"
+msgstr ""
+
+#: includes/public/blocks/table/src/cells.js:113
+msgid "Tooltip Text Color"
+msgstr ""
+
 #. translators: %d: column number.
-#: includes/public/blocks/table/src/cells.js:122
+#: includes/public/blocks/table/src/cells.js:168
 msgid "Header, column %d"
 msgstr ""
 
 #. translators: %d: column number.
-#: includes/public/blocks/table/src/cells.js:124
+#: includes/public/blocks/table/src/cells.js:170
 msgid "Footer, column %d"
 msgstr ""
 
 #. translators: 1: row number, 2: column number.
-#: includes/public/blocks/table/src/cells.js:125
+#: includes/public/blocks/table/src/cells.js:171
 msgid "Row %1$d, column %2$d"
 msgstr ""
 
-#: includes/public/blocks/table/src/cells.js:172
+#: includes/public/blocks/table/src/cells.js:203
+msgid "Tooltip"
+msgstr ""
+
+#: includes/public/blocks/table/src/cells.js:206
+msgid "Tooltip Text"
+msgstr ""
+
+#: includes/public/blocks/table/src/cells.js:206
+msgid "Shown when the icon after the cell text is hovered."
+msgstr ""
+
+#: includes/public/blocks/table/src/cells.js:207
+msgid "Tooltip Icon"
+msgstr ""
+
+#: includes/public/blocks/table/src/cells.js:227
 msgid "Header text"
 msgstr ""
 
-#: includes/public/blocks/table/src/cells.js:172
+#: includes/public/blocks/table/src/cells.js:227
 msgid "Footer text"
 msgstr ""
 
-#: includes/public/blocks/table/src/cells.js:172
+#: includes/public/blocks/table/src/cells.js:227
 msgid "Add text here"
 msgstr ""
 
-#: includes/public/blocks/table/src/cells.js:192
+#: includes/public/blocks/table/src/cells.js:247
 msgid "Table Section"
 msgstr ""
 
-#: includes/public/blocks/table/src/cells.js:201
+#: includes/public/blocks/table/src/cells.js:249
+msgid "Body"
+msgstr ""
+
+#: includes/public/blocks/table/src/cells.js:258
 msgid "Table Row"
 msgstr ""
 
-#: includes/public/blocks/table/src/cells.js:208
+#: includes/public/blocks/table/src/cells.js:265
 msgid "Table Cell"
 msgstr ""
 
-#: includes/public/blocks/table/src/edit.js:156
+#: includes/public/blocks/table/src/edit.js:163
 msgid "Add caption"
 msgstr ""
 
@@ -6415,357 +6510,452 @@ msgid "Stripes"
 msgstr ""
 
 #: includes/public/blocks/table/src/sidebar.js:128
-msgid "Header section"
-msgstr ""
-
-#: includes/public/blocks/table/src/sidebar.js:129
-msgid "Footer section"
+msgid "Click a cell to type in it, or click its + to add text, an image or an icon list. Add or remove rows and columns with the Edit table button in the toolbar."
 msgstr ""
 
 #: includes/public/blocks/table/src/sidebar.js:130
-msgid "Fixed width table cells"
+msgid "Header row"
+msgstr ""
+
+#: includes/public/blocks/table/src/sidebar.js:130
+msgid "A first row for column titles."
+msgstr ""
+
+#: includes/public/blocks/table/src/sidebar.js:131
+msgid "Footer row"
+msgstr ""
+
+#: includes/public/blocks/table/src/sidebar.js:131
+msgid "A last row, for totals or notes."
 msgstr ""
 
 #: includes/public/blocks/table/src/sidebar.js:132
-msgid "Click a cell to type in it, or click its + to add text, an image or an icon list. Rows and columns are added and removed from the Edit table button in the toolbar."
+msgid "Equal column widths"
 msgstr ""
 
-#: includes/public/blocks/table/src/sidebar.js:159
-#: includes/public/blocks/table/src/sidebar.js:164
+#: includes/public/blocks/table/src/sidebar.js:132
+msgid "Off: each column is as wide as its text."
+msgstr ""
+
+#: includes/public/blocks/table/src/sidebar.js:138
+msgid "Table Style"
+msgstr ""
+
+#: includes/public/blocks/table/src/sidebar.js:158
+#: includes/public/blocks/table/src/sidebar.js:163
 msgid "Stripe Color"
 msgstr ""
 
-#: includes/public/blocks/table/src/sidebar.js:163
+#: includes/public/blocks/table/src/sidebar.js:162
 msgid "Striped Background"
 msgstr ""
 
+#: includes/public/blocks/table/src/sidebar.js:172
+msgid "This Cell"
+msgstr ""
+
+#: includes/public/blocks/table/src/sidebar.js:172
+msgid "One Cell"
+msgstr ""
+
 #: includes/public/blocks/table/src/sidebar.js:173
-msgid "Global"
-msgstr ""
-
-#: includes/public/blocks/table/src/sidebar.js:175
-msgid "For every cell of the table. A cell can have its own: click it and use Cell below."
-msgstr ""
-
-#: includes/public/blocks/table/src/sidebar.js:179
-msgid "Cell Border"
+msgid "Click a cell in the table to give it its own text color, background, border or tooltip."
 msgstr ""
 
 #: includes/public/blocks/table/src/sidebar.js:181
-msgid "Body Outline"
+msgid "Whole Table"
 msgstr ""
 
 #: includes/public/blocks/table/src/sidebar.js:183
-msgid "Cell Padding"
+msgid "For every cell. To style one cell, click it."
+msgstr ""
+
+#: includes/public/blocks/table/src/sidebar.js:187
+msgid "Lines Between Cells"
+msgstr ""
+
+#: includes/public/blocks/table/src/sidebar.js:189
+msgid "Body Outline"
+msgstr ""
+
+#: includes/public/blocks/table/src/sidebar.js:190
+msgid "Text Size & Font"
 msgstr ""
 
 #: includes/public/blocks/table/src/sidebar.js:191
-msgid "Header Icon Color"
+msgid "Space Inside Cells"
 msgstr ""
 
 #: includes/public/blocks/table/src/sidebar.js:192
+msgid "Rounded Corners"
+msgstr ""
+
+#: includes/public/blocks/table/src/sidebar.js:199
+msgid "Header Icon Color"
+msgstr ""
+
+#: includes/public/blocks/table/src/sidebar.js:200
 msgid "Header Icon Size (px)"
 msgstr ""
 
-#: includes/public/blocks/table/src/sidebar.js:193
+#: includes/public/blocks/table/src/sidebar.js:201
 msgid "Header Icon Vertical Position (px)"
 msgstr ""
 
-#: includes/public/blocks/table/src/sidebar.js:194
+#: includes/public/blocks/table/src/sidebar.js:202
 msgid "Header Icon Margin"
 msgstr ""
 
-#: includes/public/blocks/table/src/sidebar.js:202
-msgid "Icon Margin"
-msgstr ""
-
-#: includes/public/blocks/table/src/sidebar.js:208
-msgid "Tooltip Align"
-msgstr ""
-
-#: includes/public/blocks/table/src/sidebar.js:209
-msgid "Tooltip Icon Color"
-msgstr ""
-
-#: includes/public/blocks/table/src/sidebar.js:210
-msgid "Tooltip Icon Size (px)"
-msgstr ""
-
-#: includes/public/blocks/table/src/sidebar.js:211
-msgid "Tooltip Icon Margin"
-msgstr ""
-
-#: includes/public/blocks/table/src/sidebar.js:217
+#: includes/public/blocks/table/src/sidebar.js:216
 #: includes/public/blocks/testimonials-grid/src/edit.js:253
 msgid "Image Size (px)"
 msgstr ""
 
-#: includes/public/blocks/table/src/sidebar.js:218
+#: includes/public/blocks/table/src/sidebar.js:217
 #: includes/public/blocks/testimonials-grid/src/edit.js:254
 msgid "Image Border Radius"
 msgstr ""
 
-#: includes/public/blocks/table/src/sidebar.js:237
-msgid "Cell"
+#: includes/public/blocks/table/src/sidebar.js:223
+msgid "Header Row"
 msgstr ""
 
-#: includes/public/blocks/table/src/sidebar.js:238
-msgid "Click a cell in the table to give it its own text color, background and border."
+#: includes/public/blocks/table/src/sidebar.js:230
+msgid "Footer Row"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:159
-msgid "Team Settings"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:175
-#: includes/public/blocks/team-grid/src/edit.js:382
+#: includes/public/blocks/team-grid/src/card.js:81
+#: includes/public/blocks/team-grid/src/edit.js:149
+#: includes/public/blocks/team-grid/src/edit.js:351
 #: includes/public/blocks/testimonials-grid/src/edit.js:175
 #: includes/public/blocks/testimonials-grid/src/edit.js:237
 msgid "Designation"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:178
-msgid "Show Social Icon"
+#: includes/public/blocks/team-grid/src/card.js:90
+msgid "Write a short bio…"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:182
-msgid "Contact Details"
+#: includes/public/blocks/team-grid/src/card.js:99
+msgid "Email address"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:183
-msgid "Show Contact Info"
+#: includes/public/blocks/team-grid/src/card.js:105
+msgid "Phone number"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:187
+#: includes/public/blocks/team-grid/src/card.js:125
+msgid "Change this social link"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/card.js:139
+msgid "Add a social link"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/card.js:157
+msgid "Move left"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/card.js:158
+msgid "Move right"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/card.js:188
+msgid "Replace photo"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/card.js:188
+msgid "Choose photo"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:48
+msgid "Side by Side"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:49
+msgid "Color Back"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:52
+msgid "Hover Details"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:146
+msgid "Type in the card itself, or here. Click the photo in the card to change it."
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:152
+#: includes/public/blocks/team-grid/src/edit.js:357
+msgid "Bio"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:159
+msgid "Popup Text"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:160
+msgid "Name HTML Tag"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:163
+#: includes/public/blocks/team-grid/src/edit.js:380
+msgid "Email & Phone"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:164
+msgid "Show Email & Phone"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:164
+msgid "Shown when the card is hovered."
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:164
+msgid "Each opens the email app or the phone dialer."
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:168
 msgid "Phone"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:188
+#: includes/public/blocks/team-grid/src/edit.js:169
 msgid "Email Icon"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:189
+#: includes/public/blocks/team-grid/src/edit.js:170
 msgid "Phone Icon"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:195
-msgid "Action"
+#: includes/public/blocks/team-grid/src/edit.js:175
+#: includes/public/blocks/team-grid/src/edit.js:399
+msgid "Social Icons"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:176
+msgid "Show Social Icons"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:176
+msgid "Click an icon in the card to change its link or icon; the + adds one."
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:182
+msgid "Under the text"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:183
+msgid "Photo corner: top left"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:184
+msgid "Photo corner: top right"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:185
+msgid "Photo corner: bottom left"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:186
+msgid "Photo corner: bottom right"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:193
+msgid "Like the text"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:196
+msgid "From the Top (px)"
 msgstr ""
 
 #: includes/public/blocks/team-grid/src/edit.js:197
-msgid "Action Type"
+msgid "From the Bottom (px)"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:201
-msgid "Popup"
+#: includes/public/blocks/team-grid/src/edit.js:198
+msgid "From the Left (px)"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:199
+msgid "From the Right (px)"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:204
+msgid "Always"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:205
+msgid "When one icon is hovered"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:211
+msgid "That Icon"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:216
+msgid "When Clicked"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:218
+msgid "A click on the photo"
 msgstr ""
 
 #: includes/public/blocks/team-grid/src/edit.js:221
-msgid "Icon Show"
+msgid "Opens a link"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:224
-msgid "Default Show"
+#: includes/public/blocks/team-grid/src/edit.js:222
+msgid "Opens a popup with the bio"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:225
-msgid "Icon Hover Show"
+#: includes/public/blocks/team-grid/src/edit.js:230
+msgid "Empty: the photo is not a link."
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:259
-msgid "Skin & Alignment"
+#: includes/public/blocks/team-grid/src/edit.js:242
+#: includes/public/blocks/team-grid/src/edit.js:243
+msgid "Skin"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:261
-msgid "Skin Type"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:265
-msgid "Skin 01"
+#: includes/public/blocks/team-grid/src/edit.js:263
+msgid "Text Position"
 msgstr ""
 
 #: includes/public/blocks/team-grid/src/edit.js:266
-msgid "Skin 02"
+msgid "On the photo"
 msgstr ""
 
 #: includes/public/blocks/team-grid/src/edit.js:267
-msgid "Skin 03"
+msgid "Under the photo"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:268
-msgid "Skin 04 (Hover Overlay)"
+#: includes/public/blocks/team-grid/src/edit.js:276
+msgid "Overlay Shape"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:269
-msgid "Skin 05"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:277
-msgid "Content Show"
+#: includes/public/blocks/team-grid/src/edit.js:279
+msgid "A bar at the bottom"
 msgstr ""
 
 #: includes/public/blocks/team-grid/src/edit.js:280
-msgid "Inside Image"
+msgid "A circle in the middle"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:297
-msgid "Social Icon Position"
+#: includes/public/blocks/team-grid/src/edit.js:293
+msgid "Photo Size"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:305
-msgid "Bottom Left"
+#: includes/public/blocks/team-grid/src/edit.js:294
+msgid "Width (px)"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:306
-msgid "Bottom Right"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:312
-msgid "Top Position (px)"
+#: includes/public/blocks/team-grid/src/edit.js:307
+msgid "Border Color on Hover"
 msgstr ""
 
 #: includes/public/blocks/team-grid/src/edit.js:313
-msgid "Bottom Position (px)"
+msgid "Photo"
 msgstr ""
 
 #: includes/public/blocks/team-grid/src/edit.js:314
-msgid "Left Position (px)"
+msgid "Color Over the Photo"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:315
-msgid "Right Position (px)"
+#: includes/public/blocks/team-grid/src/edit.js:318
+msgid "A shape behind the photo:"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:316
-msgid "Social Icon Alignment"
+#: includes/public/blocks/team-grid/src/edit.js:319
+msgid "Shape Color"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:320
+msgid "Shape Height (%)"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:321
+msgid "Shape Position"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:322
+msgid "Shape Border Radius"
 msgstr ""
 
 #: includes/public/blocks/team-grid/src/edit.js:325
-msgid "Team Item"
+msgid "Text Area"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:329
-msgid "Hover Border Color"
+#: includes/public/blocks/team-grid/src/edit.js:326
+msgid "The box holding the name, designation and bio."
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:340
-msgid "Below Background"
+#: includes/public/blocks/team-grid/src/edit.js:337
+msgid "Background Blur (px)"
+msgstr ""
+
+#: includes/public/blocks/team-grid/src/edit.js:338
+msgid "Circle Size (px)"
 msgstr ""
 
 #: includes/public/blocks/team-grid/src/edit.js:341
-msgid "Below BG Height (%)"
+msgid "Fade Time (s)"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:342
-msgid "Below BG Position"
+#: includes/public/blocks/team-grid/src/edit.js:362
+msgid "Color on Hover"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:343
-msgid "Below BG Border Radius"
+#: includes/public/blocks/team-grid/src/edit.js:363
+#: includes/public/blocks/team-grid/src/edit.js:384
+#: includes/public/blocks/team-grid/src/edit.js:403
+msgid "Background on Hover"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:346
-msgid "Name & Designation Area"
+#: includes/public/blocks/team-grid/src/edit.js:364
+msgid "Hover Background Opacity (0-1)"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:356
-msgid "Hover Overlay Style"
+#: includes/public/blocks/team-grid/src/edit.js:382
+msgid "Text Color on Hover"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:359
-msgid "Hover Overlay 1"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:360
-msgid "Hover Overlay 2"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:367
-msgid "Backdrop Blur (px)"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:369
-msgid "Overlay 2 Circle Size (px)"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:372
-msgid "Transition Duration (s)"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:388
-msgid "Contact Info"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:389
-msgid "Items Gap (px)"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:394
-msgid "Item Background (Hover)"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:400
-msgid "Icon Background"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:402
+#: includes/public/blocks/team-grid/src/edit.js:393
 msgid "Icon Box Size (px)"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:417
-msgid "Description (Overlay)"
+#: includes/public/blocks/team-grid/src/edit.js:401
+msgid "Icon Color on Hover"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:421
-msgid "Hover Background"
+#: includes/public/blocks/team-grid/src/edit.js:412
+msgid "Line Above the Icons"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:422
-msgid "Hover BG Opacity (0-1)"
+#: includes/public/blocks/team-grid/src/edit.js:413
+msgid "Padding Round the Icons"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:436
-msgid "Area Border"
+#: includes/public/blocks/team-grid/src/edit.js:418
+msgid "Popup"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:439
-msgid "Social Icon Gap (px)"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:440
-msgid "Social Button Size (px)"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:441
-msgid "Social Icon Area Padding"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:446
-msgid "Popup Style"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:448
+#: includes/public/blocks/team-grid/src/edit.js:420
 msgid "Name Color"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:449
+#: includes/public/blocks/team-grid/src/edit.js:421
 msgid "Name Typography"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:450
+#: includes/public/blocks/team-grid/src/edit.js:422
 msgid "Designation Color"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:451
+#: includes/public/blocks/team-grid/src/edit.js:423
 msgid "Designation Typography"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:452
-msgid "Details Color"
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:453
-msgid "Details Typography"
+#: includes/public/blocks/team-grid/src/edit.js:426
+msgid "Close Button Color"
 msgstr ""
 
 #: includes/public/blocks/testimonials-grid/src/edit.js:87
@@ -8476,7 +8666,7 @@ msgstr ""
 
 #: includes/public/blocks/team-grid/src/block.json
 msgctxt "block description"
-msgid "A team member card with 5 skins, social icons, contact info and an optional popup."
+msgid "A team member card typed in place, with 6 skins, social icons, email and phone, and an optional popup."
 msgstr ""
 
 #: includes/public/blocks/team-grid/src/block.json

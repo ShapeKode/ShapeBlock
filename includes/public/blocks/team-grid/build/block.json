@@ -5,7 +5,7 @@
   "version": "1.0.3",
   "title": "Team Member",
   "category": "shapeblock",
-  "description": "A team member card with 5 skins, social icons, contact info and an optional popup.",
+  "description": "A team member card typed in place, with 6 skins, social icons, email and phone, and an optional popup.",
   "keywords": [
     "team",
     "member",
@@ -728,6 +728,18 @@
       "default": ""
     },
     "sIconButtonSizeMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "sIconSize": {
+      "type": "string",
+      "default": ""
+    },
+    "sIconSizeTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "sIconSizeMobile": {
       "type": "string",
       "default": ""
     },

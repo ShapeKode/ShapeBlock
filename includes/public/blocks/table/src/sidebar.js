@@ -1,8 +1,8 @@
 /**
  * The Table's sidebar, the same whether the table or one of its cells is
- * selected, as the core Table's: Settings, Layout (Default or Stripes), Style
- * (Global for the whole table, the Header's and Footer's colours, Cell for the
- * selected cell) and Advanced.
+ * selected: Settings (header, footer, column widths), Style (the table's look,
+ * then the whole table, the header and footer rows, and the clicked cell - that
+ * one first when a cell is clicked) and Advanced.
  */
 import { __ } from '@wordpress/i18n';
 import { useSelect, useDispatch } from '@wordpress/data';
@@ -60,14 +60,13 @@ export default function TableSidebar({ tableId, attributes, setAttributes, cell 
 		insertBlock(section, 'head' === type ? 0 : sections.length, tableId, false);
 	};
 
-	// Cells saved before cells held blocks can have an icon, an image or a
-	// tooltip; their settings show only for a table that has them.
+	// Cells saved before cells held blocks can have an icon or an image; their
+	// settings show only for a table that has them.
 	const cellItems = sections.flatMap((sec) => sec.innerBlocks.flatMap((row) => row.innerBlocks.map((c) => ({ section: sec.attributes.type || 'body', item: c.attributes.cell || {} }))));
 	const uses = {
 		headIcons: cellItems.some(({ section, item }) => 'head' === section && item.headerIcon && item.headIcon && 'none' !== item.headIcon),
 		bodyIcons: cellItems.some(({ section, item }) => 'body' === section && 'image' !== item.type && item.icon && 'none' !== item.icon),
 		images: cellItems.some(({ section, item }) => 'body' === section && 'image' === item.type && item.image && item.image.url),
-		tooltips: cellItems.some(({ item }) => item.tooltip && item.tooltipDesc),
 	};
 
 	// The block style (Default, Stripes): the same is-style-* class the
@@ -102,7 +101,7 @@ export default function TableSidebar({ tableId, attributes, setAttributes, cell 
 	);
 	const respBox = (label, base) => (
 		<ResponsiveWrapper label={label}>
-			{(device) => <BoxControl values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
+			{(device) => <BoxControl label="" values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
 		</ResponsiveWrapper>
 	);
 	const respNum = (label, base) => (
@@ -125,18 +124,18 @@ export default function TableSidebar({ tableId, attributes, setAttributes, cell 
 	// --- Settings ---------------------------------------------------------------
 	const settingsTab = (
 		<PanelBody title={__('Table', 'shapeblock')} initialOpen={true}>
-			<ToggleControl label={__('Header section', 'shapeblock')} checked={!!sectionOf('head')} onChange={(on) => toggleSection('head', on)} __nextHasNoMarginBottom />
-			<ToggleControl label={__('Footer section', 'shapeblock')} checked={!!sectionOf('foot')} onChange={(on) => toggleSection('foot', on)} __nextHasNoMarginBottom />
-			<ToggleControl label={__('Fixed width table cells', 'shapeblock')} checked={!!attributes.fixedLayout} onChange={(v) => setAttributes({ fixedLayout: v })} __nextHasNoMarginBottom />
 			<p className="components-base-control__help">
-				{__('Click a cell to type in it, or click its + to add text, an image or an icon list. Rows and columns are added and removed from the Edit table button in the toolbar.', 'shapeblock')}
+				{__('Click a cell to type in it, or click its + to add text, an image or an icon list. Add or remove rows and columns with the Edit table button in the toolbar.', 'shapeblock')}
 			</p>
+			<ToggleControl label={__('Header row', 'shapeblock')} help={__('A first row for column titles.', 'shapeblock')} checked={!!sectionOf('head')} onChange={(on) => toggleSection('head', on)} __nextHasNoMarginBottom />
+			<ToggleControl label={__('Footer row', 'shapeblock')} help={__('A last row, for totals or notes.', 'shapeblock')} checked={!!sectionOf('foot')} onChange={(on) => toggleSection('foot', on)} __nextHasNoMarginBottom />
+			<ToggleControl label={__('Equal column widths', 'shapeblock')} help={__('Off: each column is as wide as its text.', 'shapeblock')} checked={!!attributes.fixedLayout} onChange={(v) => setAttributes({ fixedLayout: v })} __nextHasNoMarginBottom />
 		</PanelBody>
 	);
 
-	// --- Layout: Default or Stripes ------------------------------------------------
-	const layoutTab = (
-		<PanelBody title={__('Layout', 'shapeblock')} initialOpen={true}>
+	// --- The look: Default or Stripes -------------------------------------------------
+	const lookPanel = (
+		<PanelBody title={__('Table Style', 'shapeblock')} initialOpen={!cell}>
 			<div className="shapeblock-table-style-picker">
 				{TABLE_STYLES.map((st) => (
 					<button
@@ -168,23 +167,32 @@ export default function TableSidebar({ tableId, attributes, setAttributes, cell 
 	);
 
 	// --- Style: the whole table, then the selected cell ------------------------------
+	// The clicked cell's own settings.
+	const cellPanel = (
+		<PanelBody title={cell ? `${__('This Cell', 'shapeblock')}: ${cellLabel}` : __('One Cell', 'shapeblock')} initialOpen={!!cell}>
+			{cell || <p className="components-base-control__help">{__('Click a cell in the table to give it its own text color, background, border or tooltip.', 'shapeblock')}</p>}
+		</PanelBody>
+	);
+
 	const styleTab = (
 		<>
-			<PanelBody title={__('Global', 'shapeblock')} initialOpen={true}>
+			{cell && cellPanel}
+			{lookPanel}
+			<PanelBody title={__('Whole Table', 'shapeblock')} initialOpen={!cell}>
 				<p className="components-base-control__help">
-					{__('For every cell of the table. A cell can have its own: click it and use Cell below.', 'shapeblock')}
+					{__('For every cell. To style one cell, click it.', 'shapeblock')}
 				</p>
 				{color(__('Text Color', 'shapeblock'), 'textColor')}
 				{bg(__('Background', 'shapeblock'), 'bgColor', 'bgGradient')}
-				{border(__('Cell Border', 'shapeblock'), 'cellBorder')}
+				{border(__('Lines Between Cells', 'shapeblock'), 'cellBorder')}
 				{/* A border round the body, set on tables before Cell Border. */}
 				{!!(attributes.tableBorder && parseInt(attributes.tableBorder.width, 10)) && border(__('Body Outline', 'shapeblock'), 'tableBorder')}
-				{respTypo(__('Typography', 'shapeblock'), 'tableTypography')}
-				{respBox(__('Cell Padding', 'shapeblock'), 'tablePadding')}
-				{box(__('Border Radius', 'shapeblock'), 'tableRadius')}
+				{respTypo(__('Text Size & Font', 'shapeblock'), 'tableTypography')}
+				{respBox(__('Space Inside Cells', 'shapeblock'), 'tablePadding')}
+				{box(__('Rounded Corners', 'shapeblock'), 'tableRadius')}
 				{/* Margin is in Advanced; a table saved with its own margin keeps it here. */}
 				{['', 'Tablet', 'Mobile'].some((d) => Object.values(attributes['tableMargin' + d] || {}).some((v) => '' !== v && undefined !== v)) && respBox(__('Margin', 'shapeblock'), 'tableMargin')}
-				{/* Icons, images and tooltips of cells saved before cells held blocks. */}
+				{/* Icons and images of cells saved before cells held blocks. */}
 				{uses.headIcons && (
 					<>
 						<Divider />
@@ -202,15 +210,6 @@ export default function TableSidebar({ tableId, attributes, setAttributes, cell 
 						{respBox(__('Icon Margin', 'shapeblock'), 'bodyIconGap')}
 					</>
 				)}
-				{uses.tooltips && (
-					<>
-						<Divider />
-						{respAlign(__('Tooltip Align', 'shapeblock'), 'tooltipAlign', [{ label: __('Left', 'shapeblock'), value: 'left' }, { label: __('Top', 'shapeblock'), value: 'top' }, { label: __('Right', 'shapeblock'), value: 'right' }, { label: __('Bottom', 'shapeblock'), value: 'bottom' }])}
-						{color(__('Tooltip Icon Color', 'shapeblock'), 'tooltipIconColor')}
-						{respNum(__('Tooltip Icon Size (px)', 'shapeblock'), 'tooltipIconSize')}
-						{box(__('Tooltip Icon Margin', 'shapeblock'), 'tooltipIconMargin')}
-					</>
-				)}
 				{uses.images && (
 					<>
 						<Divider />
@@ -221,23 +220,20 @@ export default function TableSidebar({ tableId, attributes, setAttributes, cell 
 			</PanelBody>
 
 			{sectionOf('head') && (
-				<PanelBody title={__('Header', 'shapeblock')} initialOpen={false}>
+				<PanelBody title={__('Header Row', 'shapeblock')} initialOpen={false}>
 					{color(__('Text Color', 'shapeblock'), 'headerTextColor')}
 					{bg(__('Background', 'shapeblock'), 'headerBgColor', 'headerBgColorGradient')}
 				</PanelBody>
 			)}
 
 			{sectionOf('foot') && (
-				<PanelBody title={__('Footer', 'shapeblock')} initialOpen={false}>
+				<PanelBody title={__('Footer Row', 'shapeblock')} initialOpen={false}>
 					{color(__('Text Color', 'shapeblock'), 'footerTextColor')}
 					{bg(__('Background', 'shapeblock'), 'footerBgColor', 'footerBgColorGradient')}
 				</PanelBody>
 			)}
 
-			<PanelBody title={cell ? `${__('Cell', 'shapeblock')}: ${cellLabel}` : __('Cell', 'shapeblock')} initialOpen={true}>
-				{cell || <p className="components-base-control__help">{__('Click a cell in the table to give it its own text color, background and border.', 'shapeblock')}</p>}
-			</PanelBody>
-
+			{!cell && cellPanel}
 		</>
 	);
 
@@ -249,14 +245,12 @@ export default function TableSidebar({ tableId, attributes, setAttributes, cell 
 			initialTabName={cell ? 'style' : 'settings'}
 			tabs={[
 				{ name: 'settings', title: __('Settings', 'shapeblock') },
-				{ name: 'layout', title: __('Layout', 'shapeblock') },
 				{ name: 'style', title: __('Style', 'shapeblock') },
 				{ name: 'advanced', title: __('Advanced', 'shapeblock') },
 			]}
 		>
 			{(tab) => (
 				tab.name === 'settings' ? settingsTab :
-				tab.name === 'layout' ? layoutTab :
 				tab.name === 'advanced' ? <AdvancedControls attributes={attributes} setAttributes={setAttributes} /> :
 				styleTab
 			)}

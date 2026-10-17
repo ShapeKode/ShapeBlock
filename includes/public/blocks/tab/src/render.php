@@ -262,14 +262,141 @@ foreach ( [
 	}
 }
 
+// ---- Tab bar, tab buttons and their icons: desktop and per device ----------
+// Each rule lists its own full selector (some target several elements), with
+// the desktop value and the Tablet / Mobile ones in one media-query set.
+$flex_of  = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end' ];
+$nav_part = function ( $sfx ) use ( $attributes, $dims, $H, $flex_of ) {
+	$v   = function ( $key ) use ( $attributes, $sfx ) {
+		return isset( $attributes[ $key . $sfx ] ) ? (string) $attributes[ $key . $sfx ] : '';
+	};
+	$px  = function ( $key ) use ( $v, $H ) {
+		return '' !== $v( $key ) ? $H::ensure_unit( $v( $key ) ) : '';
+	};
+	$out = [];
+
+	// The bar: space between the tabs, its padding.
+	$bar = $dims( $attributes[ 'navPadding' . $sfx ] ?? [], 'padding' );
+	if ( '' !== $px( 'navGap' ) ) $bar['gap'] = $px( 'navGap' );
+	$out['bar'] = $bar;
+
+	// Tabs on top: stretched to fill the row (the default), or at its left,
+	// centre or right at their own width.
+	$align = $v( 'navAlign' );
+	if ( 'stretch' === $align ) {
+		$out['top_li'] = [ 'flex' => '1 1 0' ];
+	} elseif ( isset( $flex_of[ $align ] ) ) {
+		$out['top_bar'] = [ 'justify-content' => $flex_of[ $align ] ];
+		$out['top_li']  = [ 'flex' => '0 0 auto' ];
+	}
+
+	// Tabs at a side: the width of their column.
+	if ( '' !== $v( 'navWidth' ) && is_numeric( $v( 'navWidth' ) ) ) {
+		$w              = max( 5, min( 95, (float) $v( 'navWidth' ) ) ) . '%';
+		$out['side_bar'] = [ 'flex' => '0 0 ' . $w, 'max-width' => $w, 'min-width' => '0' ];
+	}
+
+	// Inside a tab: its icon and title to the left, centre or right; the space
+	// between them.
+	$li   = [];
+	$item = $v( 'titleItemAlign' );
+	if ( isset( $flex_of[ $item ] ) ) {
+		$li['justify-content'] = $flex_of[ $item ];
+		$li['justify-items']   = $flex_of[ $item ];
+		$li['text-align']      = $item;
+	}
+	if ( '' !== $px( 'tabIconGap' ) ) $li['gap'] = $px( 'tabIconGap' );
+	$out['li'] = $li;
+
+	// Icon size; the box round it.
+	if ( '' !== $px( 'tabIconSize' ) ) {
+		$out['icon_i']   = [ 'font-size' => $px( 'tabIconSize' ) ];
+		$out['icon_svg'] = [ 'width' => $px( 'tabIconSize' ), 'height' => $px( 'tabIconSize' ) ];
+		$out['icon_img'] = [ 'height' => $px( 'tabIconSize' ) ];
+	}
+	if ( '' !== $px( 'tabIconBoxSize' ) ) {
+		$out['icon_box'] = [ 'width' => $px( 'tabIconBoxSize' ), 'min-width' => $px( 'tabIconBoxSize' ), 'height' => $px( 'tabIconBoxSize' ) ];
+	}
+	return $out;
+};
+$nav_targets = [
+	'bar'      => [ '.shapeblock-tabs-wrapper .shapeblock-tab-titles' ],
+	'top_bar'  => [ '.shapeblock-tabs-wrapper[data-tab-direction="top"] .shapeblock-tab-titles' ],
+	'top_li'   => [ '.shapeblock-tabs-wrapper[data-tab-direction="top"] .shapeblock-tab-titles li' ],
+	'side_bar' => [ '.shapeblock-tabs-wrapper[data-tab-direction="left"] .shapeblock-tab-titles', '.shapeblock-tabs-wrapper[data-tab-direction="right"] .shapeblock-tab-titles' ],
+	'li'       => [ '.shapeblock-tabs-wrapper .shapeblock-tab-titles li' ],
+	'icon_i'   => [ '.shapeblock-tab-titles .shapeblock-tab-icon i' ],
+	'icon_svg' => [ '.shapeblock-tab-titles .shapeblock-tab-icon svg' ],
+	'icon_img' => [ '.shapeblock-tab-titles .shapeblock-tab-image img' ],
+	'icon_box' => [ '.shapeblock-tab-titles .shapeblock-tab-icon', '.shapeblock-tab-titles .shapeblock-tab-image' ],
+];
+$nav_sets = [ 'desktop' => $nav_part( '' ), 'tablet' => $nav_part( 'Tablet' ), 'mobile' => $nav_part( 'Mobile' ) ];
+foreach ( $nav_targets as $part => $targets ) {
+	$data = [];
+	foreach ( $nav_sets as $device => $set ) {
+		if ( ! empty( $set[ $part ] ) ) {
+			$data[ $device ] = $set[ $part ];
+		}
+	}
+	if ( $data ) {
+		$full = implode( ', ', array_map( function ( $t ) use ( $selector ) { return $selector . ' ' . $t; }, $targets ) );
+		$resp_css .= $H::generate_responsive_css( $full, $data );
+	}
+}
+
+// The bar's background and corners.
+$nav_box = [];
+if ( ! empty( $attributes['navBgGradient'] ) ) {
+	$nav_box['background'] = $attributes['navBgGradient'];
+} elseif ( ! empty( $attributes['navBgColor'] ) ) {
+	$nav_box['background-color'] = $attributes['navBgColor'];
+}
+$nav_box = array_merge( $nav_box, $dims( $attributes['navRadius'] ?? [], 'radius' ) );
+
+// Shadows: every tab, and the open one (also on hover).
+$tab_shadow    = ! empty( $attributes['titleShadow'] ) ? [ 'box-shadow' => $H::box_shadow_to_css( $attributes['titleShadow'] ) ] : [];
+$active_shadow = ! empty( $attributes['titleActiveShadow'] ) ? [ 'box-shadow' => $H::box_shadow_to_css( $attributes['titleActiveShadow'] ) ] : [];
+
+// Hover, when it is not the same as the open tab.
+$title_li_hover = [];
+if ( ! empty( $attributes['titleHoverBgColorGradient'] ) ) {
+	$title_li_hover['background'] = $attributes['titleHoverBgColorGradient'];
+} elseif ( ! empty( $attributes['titleHoverBgColor'] ) ) {
+	$title_li_hover['background'] = $attributes['titleHoverBgColor'];
+}
+if ( ! empty( $attributes['titleHoverBorderColor'] ) ) $title_li_hover['border-color'] = $attributes['titleHoverBorderColor'];
+$title_text_hover = ! empty( $attributes['titleHoverColor'] ) ? [ 'color' => $attributes['titleHoverColor'] ] : [];
+
+// The icon box: switched off, or its corners.
+$icon_box = array_merge( $icon_box, $dims( $attributes['tabIconRadius'] ?? [], 'radius' ) );
+if ( isset( $attributes['tabIconBox'] ) && false === $attributes['tabIconBox'] ) {
+	$icon_box = [ 'background' => 'none', 'min-width' => '0', 'width' => 'auto', 'height' => 'auto', 'padding' => '0' ];
+}
+
+// The open tab's icon (also on hover).
+$icon_active = [];
+if ( ! empty( $attributes['tabIconActiveColor'] ) ) { $icon_active['color'] = $attributes['tabIconActiveColor']; $icon_active['fill'] = $attributes['tabIconActiveColor']; }
+$icon_box_active = [];
+if ( ! empty( $attributes['tabIconActiveBgGradient'] ) ) {
+	$icon_box_active['background'] = $attributes['tabIconActiveBgGradient'];
+} elseif ( ! empty( $attributes['tabIconActiveBgColor'] ) ) {
+	$icon_box_active['background'] = $attributes['tabIconActiveBgColor'];
+}
+
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $resp_css, [
-	'.shapeblock-tab-titles li'                                        => $H::get_inline_styles( $title_li ),
+	'.shapeblock-tab-titles'                                           => $H::get_inline_styles( $nav_box ),
+	'.shapeblock-tab-titles li'                                        => $H::get_inline_styles( array_merge( $title_li, $tab_shadow ) ),
 	'.shapeblock-tab-title-text'                                       => $H::get_inline_styles( $title_text ),
 	'.shapeblock-tab-titles i, ' . $selector . ' .shapeblock-tab-titles svg' => $H::get_inline_styles( $icon_color ),
 	'.shapeblock-tab-image, ' . $selector . ' .shapeblock-tab-icon'         => $H::get_inline_styles( $icon_box ),
 	'.shapeblock-tab-titles li.active, ' . $selector . ' .shapeblock-tab-titles li:hover' => $H::get_inline_styles( $title_li_active ),
 	'.shapeblock-tab-titles li.active .shapeblock-tab-title-text, ' . $selector . ' .shapeblock-tab-titles li:hover .shapeblock-tab-title-text' => $H::get_inline_styles( $title_text_active ),
+	'.shapeblock-tab-titles li.active, ' . $selector . ' .shapeblock-tab-titles li:hover ' => $H::get_inline_styles( $active_shadow ),
+	'.shapeblock-tab-titles li:hover:not(.active)'                     => $H::get_inline_styles( $title_li_hover ),
+	'.shapeblock-tab-titles li:hover:not(.active) .shapeblock-tab-title-text' => $H::get_inline_styles( $title_text_hover ),
+	'.shapeblock-tab-titles li.active i, ' . $selector . ' .shapeblock-tab-titles li.active svg, ' . $selector . ' .shapeblock-tab-titles li:hover i, ' . $selector . ' .shapeblock-tab-titles li:hover svg' => $H::get_inline_styles( $icon_active ),
+	'.shapeblock-tab-titles li.active .shapeblock-tab-icon, ' . $selector . ' .shapeblock-tab-titles li.active .shapeblock-tab-image, ' . $selector . ' .shapeblock-tab-titles li:hover .shapeblock-tab-icon, ' . $selector . ' .shapeblock-tab-titles li:hover .shapeblock-tab-image' => $H::get_inline_styles( $icon_box_active ),
 	'.shapeblock-tabs-wrapper[data-tab-direction="top"] .shapeblock-tab-titles' => $H::get_inline_styles( $nav ),
 	'.shapeblock-tab-content'                                          => $H::get_inline_styles( $content ),
 	'.shapeblock-tab-contents'                                         => $H::get_inline_styles( $contents_align ),

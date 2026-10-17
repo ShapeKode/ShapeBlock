@@ -17,11 +17,14 @@ import {
 	RichText,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
+import { ToggleControl, TextControl, SelectControl, BoxControl } from '@wordpress/components';
+import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 
 import ColorPopover from '../../custom-components/ColorPopover';
 import BackgroundControl from '../../custom-components/BackgroundControl';
 import { registerTableToolbar, typeOnClick, borderStyle, ICON_TABLE } from '../../custom-components/TableEditing';
 import BorderControl from '../../custom-components/BorderControl';
+import IconPicker from '../../custom-components/IconPicker';
 import { NAMES, newCellAttrs } from './names';
 import TableSidebar from './sidebar';
 
@@ -70,6 +73,48 @@ function RowEdit() {
 	return <tr {...props} />;
 }
 
+// The look of the table's tooltips (the same for every cell), shown under a
+// cell's Tooltip switch as soon as it is on.
+const deviceKey = (base, device) => ('desktop' === device ? base : base + device.charAt(0).toUpperCase() + device.slice(1));
+function TooltipStyle({ attributes, setAttributes }) {
+	const set = (key) => (v) => setAttributes({ [key]: v });
+	return (
+		<div className="shapeblock-tbl-tooltip-style">
+			<p className="components-base-control__help">{__('The look of every tooltip in this table:', 'shapeblock')}</p>
+			<ResponsiveWrapper label={__('Tooltip Position', 'shapeblock')}>
+				{(device) => {
+					const k = deviceKey('tooltipAlign', device);
+					return (
+						<SelectControl
+							value={attributes[k] || ('desktop' === device ? 'top' : '')}
+							options={[
+								...('desktop' === device ? [] : [{ label: __('Same as desktop', 'shapeblock'), value: '' }]),
+								{ label: __('Top', 'shapeblock'), value: 'top' },
+								{ label: __('Bottom', 'shapeblock'), value: 'bottom' },
+								{ label: __('Left', 'shapeblock'), value: 'left' },
+								{ label: __('Right', 'shapeblock'), value: 'right' },
+							]}
+							onChange={set(k)}
+							__next40pxDefaultSize
+							__nextHasNoMarginBottom
+						/>
+					);
+				}}
+			</ResponsiveWrapper>
+			<ColorPopover label={__('Icon Color', 'shapeblock')} color={attributes.tooltipIconColor || ''} onChange={(v) => setAttributes({ tooltipIconColor: v || '' })} />
+			<ResponsiveWrapper label={__('Icon Size (px)', 'shapeblock')}>
+				{(device) => {
+					const k = deviceKey('tooltipIconSize', device);
+					return <TextControl type="number" value={attributes[k] || ''} onChange={set(k)} __next40pxDefaultSize __nextHasNoMarginBottom />;
+				}}
+			</ResponsiveWrapper>
+			<BoxControl label={__('Icon Margin', 'shapeblock')} values={attributes.tooltipIconMargin} onChange={set('tooltipIconMargin')} />
+			<ColorPopover label={__('Tooltip Background', 'shapeblock')} color={attributes.tooltipBg || ''} onChange={(v) => setAttributes({ tooltipBg: v || '' })} />
+			<ColorPopover label={__('Tooltip Text Color', 'shapeblock')} color={attributes.tooltipTextColor || ''} onChange={(v) => setAttributes({ tooltipTextColor: v || '' })} />
+		</div>
+	);
+}
+
 function CellEdit({ attributes, setAttributes, clientId, context, isSelected }) {
 	const section = context['shapeblock/tableSection'] || 'body';
 	const item = attributes.cell && 'object' === typeof attributes.cell ? attributes.cell : {};
@@ -83,13 +128,14 @@ function CellEdit({ attributes, setAttributes, clientId, context, isSelected }) 
 		setAttributes({ cell: latest.current });
 	};
 
-	const { inCell, row, col, tableId, tableAttributes } = useSelect(
+	const { inCell, hasBlocks, row, col, tableId, tableAttributes } = useSelect(
 		(select) => {
 			const be = select(blockEditorStore);
 			const rowId = be.getBlockRootClientId(clientId);
 			const table = be.getBlockParentsByBlockName(clientId, NAMES.table, true)[0] || null;
 			return {
 				inCell: be.hasSelectedInnerBlock(clientId, true),
+				hasBlocks: be.getBlockCount(clientId) > 0,
 				row: rowId ? be.getBlockIndex(rowId) : 0,
 				col: be.getBlockIndex(clientId),
 				tableId: table,
@@ -154,6 +200,14 @@ function CellEdit({ attributes, setAttributes, clientId, context, isSelected }) 
 									onGradientChange={(v) => setStyle('bgGradient', v || '')}
 								/>
 								<BorderControl label={__('Border', 'shapeblock')} value={item.border} onChange={(v) => setStyle('border', v)} />
+								<ToggleControl label={__('Tooltip', 'shapeblock')} checked={!!item.tooltip} onChange={(v) => update('tooltip', v)} __nextHasNoMarginBottom />
+								{item.tooltip && (
+									<>
+										<TextControl label={__('Tooltip Text', 'shapeblock')} value={item.tooltipDesc || ''} onChange={(v) => update('tooltipDesc', v)} help={__('Shown when the icon after the cell text is hovered.', 'shapeblock')} __next40pxDefaultSize __nextHasNoMarginBottom />
+										<IconPicker label={__('Tooltip Icon', 'shapeblock')} value={item.tooltipIcon || ''} onChange={(v) => update('tooltipIcon', v)} />
+										<TooltipStyle attributes={tableAttributes} setAttributes={(next) => updateBlockAttributes(tableId, next)} />
+									</>
+								)}
 							</>
 						}
 					/>
@@ -162,15 +216,16 @@ function CellEdit({ attributes, setAttributes, clientId, context, isSelected }) 
 			<Tag {...cellProps}>
 				{'head' === section && item.headerIcon && item.headIcon && <span className="shapeblock-header-icon"><Icon name={item.headIcon} /></span>}
 				{'body' === section && 'image' === item.type && item.image?.url && <img src={item.image.url} className="shapeblock-table-image" alt={item.image.alt || ''} />}
-				{'body' === section && 'image' !== item.type && item.icon && 'none' !== item.icon && <span style={iconColor}><Icon name={item.icon} /></span>}
-				<RichText
+				{'body' === section && 'image' !== item.type && item.icon && 'none' !== item.icon && <span className="shapeblock-table-icon" style={iconColor}><Icon name={item.icon} /></span>}
+				{/* The cell's own text line; a cell holding blocks shows it only when it has text. */}
+				{(!hasBlocks || item.text) && <RichText
 					ref={textRef}
 					tagName="span"
 					className="shapeblock-tbl-cell-text"
 					value={item.text || ''}
 					onChange={(v) => update('text', v)}
 					placeholder={'head' === section ? __('Header text', 'shapeblock') : 'foot' === section ? __('Footer text', 'shapeblock') : __('Add text here', 'shapeblock')}
-				/>
+				/>}
 				{children}
 				{item.tooltip && item.tooltipDesc && (
 					<span className="shapeblock-tbl-tooltip" data-placement={context['shapeblock/tableTooltipAlign'] || 'top'}>
@@ -190,6 +245,8 @@ const common = { apiVersion: 3, category: 'shapeblock', textdomain: 'shapeblock'
 registerBlockType(NAMES.section, {
 	...common,
 	title: __('Table Section', 'shapeblock'),
+	// The List View and breadcrumb name each section for what it is.
+	__experimentalLabel: ({ type }) => ('head' === type ? __('Header', 'shapeblock') : 'foot' === type ? __('Footer', 'shapeblock') : __('Body', 'shapeblock')),
 	parent: [NAMES.table],
 	attributes: { type: { type: 'string', default: 'body' } },
 	providesContext: { 'shapeblock/tableSection': 'type' },

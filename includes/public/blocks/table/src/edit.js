@@ -13,6 +13,7 @@ import {
 } from '@wordpress/block-editor';
 
 import { TablePlaceholder, tableBlocks, emptyRows } from '../../custom-components/TableEditing';
+import { placeTooltip, resetTooltip } from './tooltip-position';
 import { NAMES, newCellAttrs } from './names';
 import TableSidebar from './sidebar';
 
@@ -85,7 +86,7 @@ export default function Edit({ attributes, setAttributes, clientId, isSelected }
 	// push the others while it is typed in.
 	const createTable = (columns, count) => {
 		replaceInnerBlocks(clientId, tableBlocks(NAMES, [{ type: 'body', rows: emptyRows(columns, count, newCellAttrs) }]), false);
-		setAttributes({ fixedLayout: true });
+		setAttributes({ fixedLayout: true, cellBorder: { width: 1, style: 'solid', color: '' } });
 	};
 
 	// The table's own styles come from the server (colors, typography,
@@ -108,11 +109,17 @@ export default function Edit({ attributes, setAttributes, clientId, isSelected }
 		if (!root) return undefined;
 		const over = (e) => {
 			const tip = e.target.closest('.shapeblock-tbl-tooltip');
-			if (tip && root.contains(tip)) tip.classList.add('show');
+			if (tip && root.contains(tip)) {
+				placeTooltip(tip);
+				tip.classList.add('show');
+			}
 		};
 		const out = (e) => {
 			const tip = e.target.closest('.shapeblock-tbl-tooltip');
-			if (tip) tip.classList.remove('show');
+			if (tip) {
+				tip.classList.remove('show');
+				resetTooltip(tip);
+			}
 		};
 		root.addEventListener('mouseover', over);
 		root.addEventListener('mouseout', out);

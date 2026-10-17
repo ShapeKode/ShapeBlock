@@ -1,3 +1,4 @@
+import { __ } from '@wordpress/i18n';
 import { registerBlockType } from '@wordpress/blocks';
 
 import './style.scss';
@@ -18,4 +19,24 @@ registerBlockType(metadata.name, {
 	icon: shapeblockIcon,
 	edit: Edit,
 	save,
+	// A new Team Member comes with its social icons, email and phone filled in,
+	// ready to edit; ones already on a page keep what they have.
+	variations: [
+		{
+			name: 'team-member',
+			title: __('Team Member', 'shapeblock'),
+			isDefault: true,
+			scope: ['inserter'],
+			attributes: {
+				showSocialIcon: true,
+				socialLinks: [
+					{ url: '#', icon: 'shapeblock-icon-logo-facebook' },
+					{ url: '#', icon: 'shapeblock-icon-twitter-x' },
+					{ url: '#', icon: 'shapeblock-icon-logo-linkedin' },
+				],
+				teamEmail: 'harry@example.com',
+				teamPhone: '+1 555 123 4567',
+			},
+		},
+	],
 });

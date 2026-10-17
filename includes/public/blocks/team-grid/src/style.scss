@@ -67,11 +67,11 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 				border-radius: 8px;
 				text-align: center;
 
+				// Laid over the photo in the same grid cell (below), so a short
+				// photo makes the card taller instead of hiding the name.
 				&.inside {
-					position: absolute;
-					bottom: 24px;
-					left: 24px;
-					right: 24px;
+					position: relative;
+					align-self: end;
 					z-index: 2;
 				}
 
@@ -132,6 +132,51 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 	}
 }
 
+:where(.shapeblock-team-grid.skin1 .shapeblock-team-right) .shapeblock-team-social.default ul {
+	gap: 8px;
+}
+.shapeblock-team-grid.skin1 .shapeblock-team-card .shapeblock-team-right .shapeblock-author-contact {
+	margin-top: 0;
+	font-size: 14px;
+}
+.shapeblock-team-grid.skin1 :where(.shapeblock-team-card .shapeblock-team-right) .shapeblock-author-contact .shapeblock-contact-inner {
+	align-items: flex-start;
+}
+
+/* Text laid over the photo (Default and Skin 02 "Inside Image", Skin 04, Skin 05): the
+ * photo and the text share one grid cell. The card is as tall as the taller of
+ * the two, and the photo fills it. */
+.shapeblock-team-grid .shapeblock-team-img-area:has(> .shapeblock-name-deg-wrap.inside),
+.shapeblock-team-grid.skin4 .shapeblock-team-card:has(> .shapeblock-team-hover-content:not(.overlay2)),
+.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-team-img-area {
+	display: grid;
+
+	> * {
+		grid-area: 1 / 1;
+		min-width: 0;
+	}
+
+	> a,
+	.shapeblock-team-img-area,
+	.shapeblock-team-img-box {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.shapeblock-team-img {
+		height: 100%;
+	}
+}
+.shapeblock-team-grid.skin4 .shapeblock-grid-item .shapeblock-team-card .shapeblock-team-hover-content:not(.overlay2) {
+	position: relative;
+	align-self: end;
+}
+/* :where() keeps this below the Name & Designation Area Margin setting. */
+:where(.shapeblock-team-grid .shapeblock-team-card .shapeblock-name-deg-wrap.inside) {
+	margin: 24px;
+}
+
 /* Social */
 .shapeblock-team-social {
 	position: relative;
@@ -170,6 +215,7 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 	ul {
 		list-style: none;
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: 1em;
 		margin: 0;
@@ -198,6 +244,10 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 
 	&.default {
 		padding-top: 20px;
+
+		ul {
+			justify-content: center;
+		}
 	}
 
 	&.posi_left,
@@ -246,6 +296,13 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 	&.posi_botttom_right {
 		right: 16px;
 	}
+}
+
+/* Skin 1's half-width column: slightly smaller icons, so four fit on a line.
+ * :where() keeps this below the block's own Social Button Size. */
+:where(.shapeblock-team-grid.skin1 .shapeblock-team-right) .shapeblock-team-social ul li a:not(.shapeblock-popup-trigger) {
+	width: 30px;
+	height: 30px;
 }
 
 /* Popup */
@@ -346,9 +403,16 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 		}
 
 		.shapeblock-team-deg-content .shapeblock-name-deg-wrap {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
+			padding-bottom: 0;
+		}
+
+		.shapeblock-social-media {
+			padding: 0 24px 24px;
+			text-align: center;
+
+			.shapeblock-author-contact {
+				margin-top: 0;
+			}
 		}
 	}
 
@@ -386,6 +450,14 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 .shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-name-deg-wrap {
 	background: transparent;
 }
+/* :where() keeps these below the block's own Name and Designation colours. */
+:where(.shapeblock-team-grid.skin4 .shapeblock-team-hover-content:not(.overlay2)) .shapeblock-name-deg-wrap .shapeblock-name,
+:where(.shapeblock-team-grid.skin4 .shapeblock-team-hover-content:not(.overlay2)) .shapeblock-name-deg-wrap .shapeblock-designation {
+	color: inherit;
+}
+:where(.shapeblock-team-grid.skin4 .shapeblock-team-hover-content:not(.overlay2)) > .shapeblock-team-social.default {
+	padding: 0 24px 24px;
+}
 .shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-name-deg-wrap .shapeblock-name {
 	margin: 0 0 4px;
 }
@@ -419,16 +491,29 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 	border-radius: 0;
 	text-align: center;
 }
-.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-name {
+:where(.shapeblock-team-grid.skin4 .shapeblock-team-hover-content.overlay2) .shapeblock-name-deg-wrap .shapeblock-name {
 	color: #111827;
+}
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-name {
 	font-size: 15px;
 	font-weight: 700;
 	line-height: 1.2;
 }
-.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-designation {
+:where(.shapeblock-team-grid.skin4 .shapeblock-team-hover-content.overlay2) .shapeblock-name-deg-wrap .shapeblock-designation {
 	color: #6b7280;
+}
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-designation {
 	font-size: 12px;
 	line-height: 1.3;
+}
+/* The round overlay is small: a compact email and phone. */
+.shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-author-contact {
+	margin-top: 8px;
+	font-size: 12px;
+
+	.shapeblock-contact-inner {
+		gap: 2px;
+	}
 }
 .shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-team-social {
 	position: relative;
@@ -443,7 +528,6 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 	opacity: 1;
 	transform: none;
 	flex-direction: row;
-	justify-content: center;
 	gap: 8px;
 }
 .shapeblock-team-grid.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2 .shapeblock-team-social ul li a:not(.shapeblock-popup-trigger) {
@@ -459,6 +543,49 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 	color: #ffffff;
 }
 
+/* Contact info */
+.shapeblock-team-grid .shapeblock-author-contact {
+	margin-top: 14px;
+
+	.shapeblock-contact-inner {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 6px;
+	}
+
+	.shapeblock-contact-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		max-width: 100%;
+		color: inherit;
+		text-decoration: none;
+		overflow-wrap: anywhere;
+		transition: color 0.3s ease;
+
+		&:hover {
+			color: $primary;
+		}
+	}
+
+	.shapeblock-contact-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		color: $primary;
+		font-size: 16px;
+		line-height: 1;
+
+		svg {
+			width: 1em;
+			height: 1em;
+			fill: currentColor;
+		}
+	}
+}
+
 /* Skin 05 */
 .shapeblock-team-grid .shapeblock-team-card.skin5 {
 	position: relative;
@@ -472,10 +599,8 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 	transition: transform 1.3s ease;
 }
 .shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-name-deg-wrap {
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
+	position: relative;
+	align-self: end;
 	background: #fff;
 	text-align: center;
 	border-radius: 0;
@@ -484,7 +609,7 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 .shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-designation {
 	color: #6e777d;
 }
-.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact {
+.shapeblock-team-grid :where(.shapeblock-team-card.skin5) .shapeblock-author-contact {
 	margin-top: 0;
 	max-height: 0;
 	opacity: 0;
@@ -493,14 +618,19 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 	display: grid;
 	justify-content: center;
 }
-.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-inner {
+:where(.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact) .shapeblock-team-social.default {
+	padding-top: 16px;
+}
+.shapeblock-team-grid :where(.shapeblock-team-card.skin5) .shapeblock-author-contact .shapeblock-contact-inner {
 	display: flex;
 	flex-direction: column;
+	// The pills as wide as the widest.
+	align-items: stretch;
 	gap: 14px;
 	transform: translateY(12px);
 	transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item {
+.shapeblock-team-grid :where(.shapeblock-team-card.skin5) .shapeblock-author-contact .shapeblock-contact-item {
 	display: flex;
 	align-items: center;
 	gap: 12px;
@@ -508,15 +638,16 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 	color: #6e777d;
 	font-weight: 500;
 	border-radius: 100px;
-	min-width: 215px;
-	max-width: max-content;
+	min-width: min(215px, 100%);
+	max-width: 100%;
 	padding-right: 28px;
+	text-decoration: none;
 	transition: all 0.3s ease;
 }
-.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item:hover {
+.shapeblock-team-grid :where(.shapeblock-team-card.skin5) .shapeblock-author-contact .shapeblock-contact-item:hover {
 	color: #2563eb;
 }
-.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon {
+.shapeblock-team-grid :where(.shapeblock-team-card.skin5) .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon {
 	flex-shrink: 0;
 	height: 50px;
 	width: 50px;
@@ -527,8 +658,8 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 	align-items: center;
 	justify-content: center;
 }
-.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon i,
-.shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon svg {
+.shapeblock-team-grid :where(.shapeblock-team-card.skin5) .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon i,
+.shapeblock-team-grid :where(.shapeblock-team-card.skin5) .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon svg {
 	height: 1em;
 	fill: currentColor;
 	font-size: 16px;
@@ -536,13 +667,16 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 .shapeblock-team-grid .shapeblock-team-card.skin5:hover .shapeblock-team-img-area .shapeblock-team-img {
 	transform: scale(1.15);
 }
-.shapeblock-team-grid .shapeblock-team-card.skin5:hover .shapeblock-author-contact {
-	max-height: 200px;
+.shapeblock-team-grid :where(.shapeblock-team-card.skin5:hover) .shapeblock-author-contact {
+	max-height: 480px;
 	margin-top: 20px;
 	opacity: 1;
 }
-.shapeblock-team-grid .shapeblock-team-card.skin5:hover .shapeblock-author-contact .shapeblock-contact-inner {
+.shapeblock-team-grid :where(.shapeblock-team-card.skin5:hover) .shapeblock-author-contact .shapeblock-contact-inner {
 	transform: translateY(0);
+}
+.shapeblock-team-grid :where(.shapeblock-team-card.skin5) .shapeblock-author-contact .shapeblock-image-content {
+	margin-bottom: 16px;
 }
 /* Layer behind the description, shown by the Hover Background setting. */
 .shapeblock-team-grid .shapeblock-team-card.skin5 .shapeblock-image-content {

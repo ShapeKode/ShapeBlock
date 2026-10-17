@@ -139,6 +139,8 @@
 		"tooltipIconSizeTablet": { "type": "string", "default": "" },
 		"tooltipIconSizeMobile": { "type": "string", "default": "" },
 		"tooltipIconMargin": { "type": "object" },
+		"tooltipBg": { "type": "string", "default": "" },
+		"tooltipTextColor": { "type": "string", "default": "" },
 		"tooltipAlign": { "type": "string", "default": "top" },
 		"tooltipAlignTablet": { "type": "string", "default": "" },
 		"tooltipAlignMobile": { "type": "string", "default": "" },

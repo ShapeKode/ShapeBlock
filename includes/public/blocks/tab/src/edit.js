@@ -17,7 +17,9 @@ import {
 import {
 	PanelBody,
 	SelectControl,
+	ToggleControl,
 	TextControl,
+	RangeControl,
 	BoxControl,
 	Button,
 	TabPanel,
@@ -29,6 +31,7 @@ import BackgroundControl from '../../custom-components/BackgroundControl';
 import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
 import BorderControl from '../../custom-components/BorderControl';
+import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import AdvancedControls from '../../custom-components/AdvancedControls';
 import { TAB_ITEM, ActiveTab } from './item';
@@ -71,9 +74,11 @@ const tabContent = (t) => {
 	return blocks;
 };
 
-const STATE_TABS = [
+// A tab's three looks: normal, under the mouse, and open.
+const TAB_STATES = [
 	{ name: 'normal', title: __('Normal', 'shapeblock') },
 	{ name: 'hover', title: __('Hover', 'shapeblock') },
+	{ name: 'active', title: __('Active', 'shapeblock') },
 ];
 
 const POSITION_OPTIONS = [
@@ -209,7 +214,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	);
 	const respBox = (label, base) => (
 		<ResponsiveWrapper label={label}>
-			{(device) => <BoxControl values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
+			{(device) => <BoxControl label="" values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
 		</ResponsiveWrapper>
 	);
 	const respNum = (label, base) => (
@@ -219,6 +224,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				return <TextControl type="number" value={attributes[k]} onChange={(v) => setAttributes({ [k]: v })} __next40pxDefaultSize __nextHasNoMarginBottom />;
 			}}
 		</ResponsiveWrapper>
+	);
+	const shadow = (label, key) => (
+		<BoxShadowControls label={label} value={attributes[key]} onChange={(v) => setAttributes({ [key]: v })} />
 	);
 	const respSelect = (label, base, options) => (
 		<ResponsiveWrapper label={label}>
@@ -297,9 +305,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 	// --- Tab 2: Layout (orientation & position) -------------------------------
 	const layoutTab = (
-		<PanelBody title={__('Tab Title Settings', 'shapeblock')} initialOpen={true}>
+		<PanelBody title={__('Layout', 'shapeblock')} initialOpen={true}>
 			<SelectControl
 				label={__('Icon Position', 'shapeblock')}
+				help={__('Where the icon sits next to the tab title.', 'shapeblock')}
 				value={iconPosition}
 				options={POSITION_OPTIONS}
 				onChange={(v) => setAttributes({ iconPosition: v })}
@@ -307,13 +316,33 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				__nextHasNoMarginBottom
 			/>
 			<SelectControl
-				label={__('Layout', 'shapeblock')}
+				label={__('Tabs Position', 'shapeblock')}
+				help={__('The tabs above the content, or beside it.', 'shapeblock')}
 				value={layoutDirection}
 				options={POSITION_OPTIONS}
 				onChange={(v) => setAttributes({ layoutDirection: v })}
 				__next40pxDefaultSize
 				__nextHasNoMarginBottom
 			/>
+			{('left' === layoutDirection || 'right' === layoutDirection) && (
+				<ResponsiveWrapper label={__('Tabs Width (%)', 'shapeblock')}>
+					{(device) => {
+						const k = getKey('navWidth', device);
+						return (
+							<RangeControl
+								help={__('The column of tabs; the content takes the rest. Empty: about a third.', 'shapeblock')}
+								value={'' === (attributes[k] ?? '') ? undefined : Number(attributes[k])}
+								onChange={(v) => setAttributes({ [k]: undefined === v || null === v ? '' : String(v) })}
+								min={10}
+								max={80}
+								allowReset
+								__next40pxDefaultSize
+								__nextHasNoMarginBottom
+							/>
+						);
+					}}
+				</ResponsiveWrapper>
+			)}
 			{respSelect(__('Content Alignment', 'shapeblock'), 'descriptionAlignment', [
 				{ label: __('Left', 'shapeblock'), value: 'left' },
 				{ label: __('Center', 'shapeblock'), value: 'center' },
@@ -326,33 +355,76 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// --- Tab 3: Style (appearance) --------------------------------------------
 	const styleTab = (
 		<>
-			<PanelBody title={__('Tab Nav', 'shapeblock')} initialOpen={true}>
+			<PanelBody title={__('Tab Bar', 'shapeblock')} initialOpen={true}>
+				{'left' !== layoutDirection && 'right' !== layoutDirection && respSelect(__('Tabs Alignment', 'shapeblock'), 'navAlign', [
+					{ label: __('Fill the row', 'shapeblock'), value: '' },
+					{ label: __('Left', 'shapeblock'), value: 'left' },
+					{ label: __('Center', 'shapeblock'), value: 'center' },
+					{ label: __('Right', 'shapeblock'), value: 'right' },
+				])}
+				{respNum(__('Space Between Tabs (px)', 'shapeblock'), 'navGap')}
+				{bg(__('Background', 'shapeblock'), 'navBgColor', 'navBgGradient')}
+				{respBox(__('Padding', 'shapeblock'), 'navPadding')}
+				{box(__('Border Radius', 'shapeblock'), 'navRadius')}
+				{border(__('Border', 'shapeblock'), 'navBorder')}
+				{respNum(__('Space Below the Tabs (px)', 'shapeblock'), 'titleBottomSpacing')}
+			</PanelBody>
+
+			<PanelBody title={__('Tab Buttons', 'shapeblock')} initialOpen={false}>
 				{respTypo(__('Typography', 'shapeblock'), 'titleTypography')}
-				<TabPanel tabs={STATE_TABS}>
+				{respSelect(__('Text Alignment', 'shapeblock'), 'titleItemAlign', [
+					{ label: __('Default', 'shapeblock'), value: '' },
+					{ label: __('Left', 'shapeblock'), value: 'left' },
+					{ label: __('Center', 'shapeblock'), value: 'center' },
+					{ label: __('Right', 'shapeblock'), value: 'right' },
+				])}
+				<TabPanel className="shapeblock-tab-state-tabs" tabs={TAB_STATES}>
 					{(tab) =>
-						tab.name === 'normal' ? (
+						'normal' === tab.name ? (
 							<>
 								{color(__('Text Color', 'shapeblock'), 'titleColor')}
-								{bg(__('Background Color', 'shapeblock'), 'titleBgColor', 'titleBgColorGradient')}
+								{bg(__('Background', 'shapeblock'), 'titleBgColor', 'titleBgColorGradient')}
 								{border(__('Border', 'shapeblock'), 'titleBorder')}
-								{box(__('Border Radius', 'shapeblock'), 'titleBorderRadius')}
-								{respBox(__('Padding', 'shapeblock'), 'titlePadding')}
-								{respBox(__('Margin', 'shapeblock'), 'titleMargin')}
+								{shadow(__('Shadow', 'shapeblock'), 'titleShadow')}
 								{color(__('Icon Color', 'shapeblock'), 'tabIconColor')}
-								{bg(__('Icon / Image Bg Color', 'shapeblock'), 'tabIconBgColor', 'tabIconBgColorGradient')}
+								{bg(__('Icon Background', 'shapeblock'), 'tabIconBgColor', 'tabIconBgColorGradient')}
+							</>
+						) : 'hover' === tab.name ? (
+							<>
+								<p className="components-base-control__help">{__('Empty: a tab under the mouse looks like the active tab.', 'shapeblock')}</p>
+								{color(__('Text Color', 'shapeblock'), 'titleHoverColor')}
+								{bg(__('Background', 'shapeblock'), 'titleHoverBgColor', 'titleHoverBgColorGradient')}
+								{color(__('Border Color', 'shapeblock'), 'titleHoverBorderColor')}
 							</>
 						) : (
 							<>
 								{color(__('Text Color', 'shapeblock'), 'titleActiveColor')}
-								{bg(__('Background Color', 'shapeblock'), 'titleActiveBgColor', 'titleActiveBgColorGradient')}
+								{bg(__('Background', 'shapeblock'), 'titleActiveBgColor', 'titleActiveBgColorGradient')}
 								{color(__('Border Color', 'shapeblock'), 'titleActiveBorderColor')}
+								{shadow(__('Shadow', 'shapeblock'), 'titleActiveShadow')}
+								{color(__('Icon Color', 'shapeblock'), 'tabIconActiveColor')}
+								{bg(__('Icon Background', 'shapeblock'), 'tabIconActiveBgColor', 'tabIconActiveBgGradient')}
 							</>
 						)
 					}
 				</TabPanel>
 				<Divider />
-				{respNum(__('Bottom Spacing (px)', 'shapeblock'), 'titleBottomSpacing')}
-				{border(__('Bottom Border (top layout)', 'shapeblock'), 'navBorder')}
+				{box(__('Border Radius', 'shapeblock'), 'titleBorderRadius')}
+				{respBox(__('Padding', 'shapeblock'), 'titlePadding')}
+				{respBox(__('Margin', 'shapeblock'), 'titleMargin')}
+			</PanelBody>
+
+			<PanelBody title={__('Icon & Image', 'shapeblock')} initialOpen={false}>
+				{respNum(__('Icon / Image Size (px)', 'shapeblock'), 'tabIconSize')}
+				{respNum(__('Space to the Title (px)', 'shapeblock'), 'tabIconGap')}
+				<ToggleControl label={__('Icon Box', 'shapeblock')} help={__('A shaded box round the icon.', 'shapeblock')} checked={false !== attributes.tabIconBox} onChange={(v) => setAttributes({ tabIconBox: v })} __nextHasNoMarginBottom />
+				{false !== attributes.tabIconBox && (
+					<>
+						{respNum(__('Box Size (px)', 'shapeblock'), 'tabIconBoxSize')}
+						{box(__('Box Border Radius', 'shapeblock'), 'tabIconRadius')}
+					</>
+				)}
+				<p className="components-base-control__help">{__('Icon colors are under Tab Buttons, for each state.', 'shapeblock')}</p>
 			</PanelBody>
 
 			<PanelBody title={__('Tab Content Area', 'shapeblock')} initialOpen={false}>
@@ -375,30 +447,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				{respBox(__('Margin', 'shapeblock'), 'descMargin')}
 			</PanelBody>}
 
-			<PanelBody title={__('Button', 'shapeblock')} initialOpen={false}>
-				{respTypo(__('Typography', 'shapeblock'), 'btnTypography')}
-				<TabPanel tabs={STATE_TABS}>
-					{(tab) =>
-						tab.name === 'normal' ? (
-							<>
-								{color(__('Text Color', 'shapeblock'), 'btnColor')}
-								{bg(__('Background Color', 'shapeblock'), 'btnBgColor', 'btnBgColorGradient')}
-							</>
-						) : (
-							<>
-								{color(__('Text Color', 'shapeblock'), 'btnHoverColor')}
-								{bg(__('Background Color', 'shapeblock'), 'btnHoverBgColor', 'btnHoverBgColorGradient')}
-								{color(__('Border Color', 'shapeblock'), 'btnHoverBorderColor')}
-							</>
-						)
-					}
-				</TabPanel>
-				<Divider />
-				{border(__('Border', 'shapeblock'), 'btnBorder')}
-				{box(__('Border Radius', 'shapeblock'), 'btnBorderRadius')}
-				{respBox(__('Padding', 'shapeblock'), 'btnPadding')}
-				{respBox(__('Margin', 'shapeblock'), 'btnMargin')}
-			</PanelBody>
 		</>
 	);
 

@@ -1,16 +1,219 @@
 /**
  * Editor-only styles for the Team Member block.
  */
-.shapeblock-team-grid-repeater-item {
-	border: 1px solid #e0e0e0;
-	border-radius: 4px;
-	padding: 12px;
-	margin-bottom: 12px;
 
-	.shapeblock-team-grid-repeater-head {
-		display: flex;
-		justify-content: space-between;
+// In the editor the parts that show only on hover on the site are always
+// open, so every text can be seen and typed in.
+.shapeblock-team-grid.is-team-editor {
+	&.skin4 .shapeblock-grid-item .shapeblock-team-card .shapeblock-team-hover-content {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	&.skin4 .shapeblock-grid-item .shapeblock-team-card .shapeblock-team-hover-content.overlay2 {
+		transform: translate(-50%, -50%) scale(1);
+	}
+
+	.shapeblock-team-card.skin5 .shapeblock-author-contact {
+		max-height: none;
+		margin-top: 20px;
+		opacity: 1;
+
+		.shapeblock-contact-inner {
+			transform: none;
+		}
+	}
+
+	&.skin3 .shapeblock-team-img-box .shapeblock-image-content .shapeblock-description {
+		opacity: 1;
+	}
+
+	.shapeblock-team-social.hover_show ul {
+		opacity: 1;
+		z-index: 2;
+	}
+
+	// Clicking the photo opens the Media Library: no zoom in the way.
+	.shapeblock-team-card:hover img {
+		transform: none;
+	}
+
+	.shapeblock-team-img-box {
+		cursor: pointer;
+	}
+}
+
+// The photo's Replace button, in its corner.
+.shapeblock-team-img-box {
+	position: relative;
+
+	.shapeblock-team-img-replace {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		z-index: 4;
+	}
+}
+
+// A hint in an empty field looks like a hint, not text.
+.shapeblock-team-grid [data-rich-text-placeholder]::after {
+	opacity: 0.55;
+}
+
+// The icon being changed, and the + that adds one.
+.shapeblock-team-social ul li a.is-editing-link {
+	outline: 2px solid var(--wp-admin-theme-color, #3858e9);
+	outline-offset: 2px;
+}
+
+.shapeblock-team-social ul li.shapeblock-team-social-add a:not(.shapeblock-popup-trigger) {
+	background: transparent;
+	color: currentColor;
+	border: 1px dashed currentColor;
+	opacity: 0.6;
+
+	&:hover {
+		opacity: 1;
+		background: transparent;
+		transform: none;
+	}
+
+	svg {
+		width: 1em;
+		height: 1em;
+	}
+}
+
+.shapeblock-team-social-popover__inner {
+	display: grid;
+	gap: 12px;
+	width: 260px;
+	padding: 12px;
+}
+
+.shapeblock-team-social-popover__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+// The Skin picker: a small drawing of each card.
+.shapeblock-team-skin-picker {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 8px;
+	margin-bottom: 16px;
+}
+
+.shapeblock-team-skin-option {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	padding: 6px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background: #fff;
+	cursor: pointer;
+
+	&:hover {
+		border-color: #949494;
+	}
+
+	&.is-active {
+		border-color: var(--wp-admin-theme-color, #3858e9);
+		box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #3858e9);
+	}
+}
+
+.shapeblock-team-skin-label {
+	font-size: 11px;
+	line-height: 1.2;
+	text-align: center;
+}
+
+.shapeblock-team-skin-thumb {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	width: 100%;
+	height: 52px;
+	padding: 4px;
+	box-sizing: border-box;
+	border-radius: 3px;
+	background: #f6f7f7;
+
+	.t-photo {
+		flex: 1;
+		border-radius: 2px;
+		background: #c3c4c7;
+	}
+
+	.t-text {
+		height: 9px;
+		margin: 0 25%;
+		border-radius: 2px;
+		background: #757575;
+	}
+
+	// Text on the photo.
+	.is-default & .t-text {
+		position: absolute;
+		left: 10px;
+		right: 10px;
+		bottom: 8px;
+		margin: 0;
+		background: #fff;
+		box-shadow: 0 0 0 2px #757575;
+	}
+
+	// Photo beside the text.
+	.is-skin1 & {
+		flex-direction: row;
 		align-items: center;
-		margin-bottom: 8px;
+
+		.t-photo {
+			height: 100%;
+		}
+
+		.t-text {
+			flex: 1;
+			margin: 0;
+		}
+	}
+
+	// A coloured block behind the photo.
+	.is-skin2 & {
+		background: linear-gradient(#5933ff 70%, #f6f7f7 70%);
+	}
+
+	// Photo, then a caption bar.
+	.is-skin3 & .t-text {
+		margin: 0;
+		background: #1e1e1e;
+	}
+
+	// Text over the photo, on hover.
+	.is-skin4 & .t-text {
+		position: absolute;
+		left: 4px;
+		right: 4px;
+		bottom: 4px;
+		height: 16px;
+		margin: 0;
+		background: rgba(17, 17, 17, 0.7);
+	}
+
+	// A white bar that grows on hover.
+	.is-skin5 & .t-text {
+		position: absolute;
+		left: 4px;
+		right: 4px;
+		bottom: 4px;
+		height: 14px;
+		margin: 0;
+		background: #fff;
+		box-shadow: 0 -6px 0 #fff;
 	}
 }

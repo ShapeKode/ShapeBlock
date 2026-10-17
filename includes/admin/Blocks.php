@@ -5,6 +5,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 class Blocks {
+    /**
+     * The blocks a new install starts with switched on; the rest are off until
+     * they are switched on in ShapeBlock > Blocks. (Row needs Column.)
+     */
+    const STARTER = array( 'layout-row', 'column', 'heading', 'button', 'icon-box' );
+
+    /**
+     * How a block with no saved on/off state is treated: 'starter' on a new
+     * install (only the STARTER blocks on), 'all' on a site that used ShapeBlock
+     * before this choice existed, so nothing it uses is switched off.
+     */
+    const DEFAULTS_OPTION = 'shapeblock_default_blocks';
+
     public static function instance() {
         static $instance = null;
         if ( null === $instance ) {
@@ -259,11 +272,14 @@ class Blocks {
             'social-share'      => 'posts',
         );
 
-        // Merge status from DB. Every block is enabled until it is switched off.
-        // Every block in this plugin is free; the dashboard shows that as a tag.
+        // Merge status from DB; a block never switched either way takes the
+        // install's default. Every block in this plugin is free; the dashboard
+        // shows that as a tag.
+        $starter = 'starter' === $this->defaults_mode( wp_list_pluck( $blocks, 'id' ) );
         foreach ($blocks as &$block) {
+            $default            = ( ! $starter || in_array( $block['id'], self::STARTER, true ) ) ? 'enable' : 'disable';
             $block['category']  = isset( $categories[ $block['id'] ] ) ? $categories[ $block['id'] ] : '';
-            $block['status']    = get_option('shapeblock_block_' . $block['id'], 'enable');
+            $block['status']    = 'disable' === get_option( 'shapeblock_block_' . $block['id'], $default ) ? 'disable' : 'enable';
             $block['badge']     = __( 'Free', 'shapeblock' );
             $block['badgeType'] = 'free';
         }
@@ -272,6 +288,48 @@ class Blocks {
         $blocks = apply_filters('shapeblock_blocks', $blocks);
 
         return $blocks;
+    }
+
+    /**
+     * 'starter' or 'all' (see DEFAULTS_OPTION), worked out once and stored.
+     *
+     * A site counts as already using ShapeBlock when it has any of its
+     * settings saved or any content with one of its blocks in it.
+     *
+     * @param string[] $ids Block ids.
+     * @return string
+     */
+    private function defaults_mode( $ids ) {
+        $mode = get_option( self::DEFAULTS_OPTION );
+        if ( 'starter' === $mode || 'all' === $mode ) {
+            return $mode;
+        }
+
+        $used = false !== get_option( 'shapeblock_colors' ) || false !== get_option( 'shapeblock_layout' );
+        foreach ( $ids as $id ) {
+            if ( $used ) {
+                break;
+            }
+            $used = false !== get_option( 'shapeblock_block_' . $id );
+        }
+        if ( ! $used ) {
+            $found = get_posts(
+                array(
+                    'post_type'        => array( 'post', 'page', 'wp_block', 'wp_template', 'wp_template_part', 'wp_navigation', 'shapeblock-template', 'shapeblock-builder' ),
+                    'post_status'      => array( 'publish', 'draft', 'pending', 'private', 'future' ),
+                    's'                => 'wp:shapeblock/',
+                    'numberposts'      => 1,
+                    'fields'           => 'ids',
+                    'no_found_rows'    => true,
+                    'suppress_filters' => true,
+                )
+            );
+            $used = ! empty( $found );
+        }
+
+        $mode = $used ? 'all' : 'starter';
+        update_option( self::DEFAULTS_OPTION, $mode );
+        return $mode;
     }
 
     /**

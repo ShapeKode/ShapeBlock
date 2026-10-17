@@ -479,6 +479,14 @@
     "tooltipIconMargin": {
       "type": "object"
     },
+    "tooltipBg": {
+      "type": "string",
+      "default": ""
+    },
+    "tooltipTextColor": {
+      "type": "string",
+      "default": ""
+    },
     "tooltipAlign": {
       "type": "string",
       "default": "top"

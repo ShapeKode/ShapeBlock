@@ -131,7 +131,7 @@ if ( ! empty( $attributes['bgGradient'] ) ) {
 } elseif ( ! empty( $attributes['bgColor'] ) ) {
 	$table_colors['background-color'] = $attributes['bgColor'];
 }
-$cell_border = ! empty( $attributes['cellBorder'] ) ? $H::border_to_css_props( $attributes['cellBorder'] ) : [];
+$cell_border = ! empty( $attributes['cellBorder'] ) ? $H::border_to_css_props( $attributes['cellBorder'], '#dcdcde' ) : [];
 $cell_typo   = $typo( $attributes['tableTypography'] ?? [] );
 
 // Header.
@@ -184,9 +184,10 @@ $tip_icon = [];
 if ( ! empty( $attributes['tooltipIconColor'] ) ) $tip_icon['color'] = $attributes['tooltipIconColor'];
 if ( '' !== $u( 'tooltipIconSize' ) ) $tip_icon['font-size'] = $u( 'tooltipIconSize' );
 $tip_icon = array_merge( $tip_icon, $dims( $attributes['tooltipIconMargin'] ?? [], 'margin' ) );
-$tip_icon_svg = [];
-if ( ! empty( $attributes['tooltipIconColor'] ) ) $tip_icon_svg['fill'] = $attributes['tooltipIconColor'];
-if ( '' !== $u( 'tooltipIconSize' ) ) { $tip_icon_svg['width'] = $u( 'tooltipIconSize' ); $tip_icon_svg['height'] = $u( 'tooltipIconSize' ); }
+// The box that opens: its background and text colour.
+$tip_box = [];
+if ( ! empty( $attributes['tooltipBg'] ) ) $tip_box['background'] = $attributes['tooltipBg'];
+if ( ! empty( $attributes['tooltipTextColor'] ) ) $tip_box['color'] = $attributes['tooltipTextColor'];
 $img = ( '' !== $u( 'imgSize' ) ) ? [ 'max-width' => $u( 'imgSize' ), 'height' => $u( 'imgSize' ) ] : [];
 $img = array_merge( $img, $dims( $attributes['imgRadius'] ?? [], 'radius' ) );
 
@@ -215,10 +216,10 @@ $sub = [
 	'.shapeblock-header-icon i'                  => $H::get_inline_styles( $head_icon ),
 
 	$stripe_rows                                 => $H::get_inline_styles( $bd_striped ),
-	'.shapeblock-table-body td i'                => $H::get_inline_styles( $bd_icon ),
+	'.shapeblock-table-body td .shapeblock-table-icon i' => $H::get_inline_styles( $bd_icon ),
 	'.shapeblock-table-body td'                  => $H::get_inline_styles( $bd_td ),
-	'.shapeblock-table .shapeblock-tbl-tooltip i'   => $H::get_inline_styles( $tip_icon ),
-	'.shapeblock-table .shapeblock-tbl-tooltip svg' => $H::get_inline_styles( $tip_icon_svg ),
+	'.shapeblock-table .shapeblock-tbl-tooltip'     => $H::get_inline_styles( $tip_icon ),
+	'.shapeblock-table .shapeblock-tbl-tooltip-content' => $H::get_inline_styles( $tip_box ),
 	'.shapeblock-table-image'                    => $H::get_inline_styles( $img ),
 
 	'.shapeblock-table-footer'                   => $H::get_inline_styles( $ft ),
@@ -259,8 +260,6 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $selector
 	$bd_td = array_merge( $valign, $dims( $attributes[ 'tbodyPadding' . $suffix ] ?? [], 'padding' ) );
 	$tip_icon = [];
 	if ( '' !== $uu( 'tooltipIconSize' . $suffix ) ) $tip_icon['font-size'] = $uu( 'tooltipIconSize' . $suffix );
-	$tip_icon_svg = [];
-	if ( '' !== $uu( 'tooltipIconSize' . $suffix ) ) { $tip_icon_svg['width'] = $uu( 'tooltipIconSize' . $suffix ); $tip_icon_svg['height'] = $uu( 'tooltipIconSize' . $suffix ); }
 	$img = ( '' !== $uu( 'imgSize' . $suffix ) ) ? [ 'max-width' => $uu( 'imgSize' . $suffix ), 'height' => $uu( 'imgSize' . $suffix ) ] : [];
 
 	// Footer.
@@ -277,10 +276,9 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $selector
 		'.shapeblock-table-header'                                            => $head,
 		'.shapeblock-table-header th'                                         => $head_th,
 		'.shapeblock-header-icon i'                                           => $head_icon,
-		'.shapeblock-table-body td i'                                         => $bd_icon,
+		'.shapeblock-table-body td .shapeblock-table-icon i'                  => $bd_icon,
 		'.shapeblock-table-body td'                                           => $bd_td,
-		'.shapeblock-table .shapeblock-tbl-tooltip i'                         => $tip_icon,
-		'.shapeblock-table .shapeblock-tbl-tooltip svg'                       => $tip_icon_svg,
+		'.shapeblock-table .shapeblock-tbl-tooltip'                           => $tip_icon,
 		'.shapeblock-table-image'                                             => $img,
 		'.shapeblock-table-footer'                                            => $ft,
 		'.shapeblock-table-footer th'                                         => $ft_th,
@@ -331,7 +329,7 @@ $tip_placement = function ( $align ) {
 	return [ 'box' => [], 'show' => [] ];
 };
 
-$tip_resp = [ 'box' => [], 'show' => [] ];
+$tip_resp = [ 'box' => [], 'show' => [], 'place' => [] ];
 foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
 	$align = isset( $attributes[ 'tooltipAlign' . $suffix ] ) ? $attributes[ 'tooltipAlign' . $suffix ] : '';
 	if ( '' === $align ) {
@@ -341,11 +339,13 @@ foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_k
 	if ( ! empty( $rules['box'] ) ) {
 		$tip_resp['box'][ $device_key ]  = $rules['box'];
 		$tip_resp['show'][ $device_key ] = $rules['show'];
+		$tip_resp['place'][ $device_key ] = [ '--sb-tip-place' => $align ];
 	}
 }
 if ( ! empty( $tip_resp['box'] ) ) {
 	$resp_css .= $H::generate_responsive_css( $selector . ' .shapeblock-tbl-tooltip .shapeblock-tbl-tooltip-content', $tip_resp['box'] );
 	$resp_css .= $H::generate_responsive_css( $selector . ' .shapeblock-tbl-tooltip.show .shapeblock-tbl-tooltip-content', $tip_resp['show'] );
+	$resp_css .= $H::generate_responsive_css( $selector . ' .shapeblock-table .shapeblock-tbl-tooltip', $tip_resp['place'] );
 }
 
 wp_enqueue_style( $style_handle );
@@ -410,7 +410,7 @@ $cell_style = function ( $item ) use ( $H ) {
 			$styles[] = 'background-color:' . $H::sanitize_css_value( $item['bgColor'] );
 		}
 		if ( '' !== $H::sanitize_css_value( $item['textColor'] ?? '' ) ) $styles[] = 'color:' . $H::sanitize_css_value( $item['textColor'] );
-		foreach ( $H::border_to_css_props( $item['border'] ?? null ) as $border_prop => $border_value ) {
+		foreach ( $H::border_to_css_props( $item['border'] ?? null, '#dcdcde' ) as $border_prop => $border_value ) {
 			$styles[] = $border_prop . ':' . $border_value;
 		}
 		if ( ! empty( $item['dataFlex'] ) ) {
@@ -482,7 +482,7 @@ $render_tooltip = function ( $item ) use ( $render_icon, $tooltip_align, $table_
 							$ic             = $render_icon( $item['icon'] ?? '' );
 							$icon_color_val = ! empty( $item['advance'] ) ? $H::sanitize_css_value( $item['iconColor'] ?? '' ) : '';
 							if ( '' !== $ic ) {
-								echo wp_kses( '<span' . ( '' !== $icon_color_val ? ' style="color:' . esc_attr( $icon_color_val ) . '"' : '' ) . '>' . $ic . '</span>', $table_allowed_html );
+								echo wp_kses( '<span class="shapeblock-table-icon"' . ( '' !== $icon_color_val ? ' style="color:' . esc_attr( $icon_color_val ) . '"' : '' ) . '>' . $ic . '</span>', $table_allowed_html );
 							}
 						}
 					}

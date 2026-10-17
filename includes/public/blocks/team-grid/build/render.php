@@ -36,6 +36,13 @@ $content_show = isset( $attributes['contentShow'] ) ? $attributes['contentShow']
 $show_social  = ! empty( $attributes['showSocialIcon'] );
 $social_pos   = isset( $attributes['socialIconPosition'] ) ? sanitize_html_class( (string) $attributes['socialIconPosition'], 'default' ) : 'default';
 $social_show  = isset( $attributes['socialIconShow'] ) ? sanitize_html_class( (string) $attributes['socialIconShow'], 'dafault_show' ) : 'dafault_show';
+if ( 'skin4' === $skin && 'overlay2' === $overlay4 ) {
+	$social_pos = 'default';
+}
+// A corner choice switched back to Default leaves its settings saved: ignore them.
+if ( 'default' === $social_pos ) {
+	$social_show = 'dafault_show';
+}
 $social_hover_icon = isset( $attributes['socialHoverIcon'] ) ? $attributes['socialHoverIcon'] : '';
 $social_links = isset( $attributes['socialLinks'] ) && is_array( $attributes['socialLinks'] ) ? $attributes['socialLinks'] : [];
 
@@ -153,7 +160,7 @@ $name_styles = array_merge( $name_styles, $dims( $attributes['namePadding'] ?? [
 $deg_styles = $typo( $attributes['designationTypography'] ?? [] );
 if ( ! empty( $attributes['designationColor'] ) ) $deg_styles['color'] = $attributes['designationColor'];
 
-// Contact (skin5).
+// Contact info.
 $contact_wrap = ( '' !== $u( 'contactGap' ) ) ? [ 'gap' => $u( 'contactGap' ) ] : [];
 $contact_item = $typo( $attributes['contactTypography'] ?? [] );
 if ( ! empty( $attributes['contactTextColor'] ) ) $contact_item['color'] = $attributes['contactTextColor'];
@@ -194,19 +201,26 @@ if ( ! empty( $attributes['sIconColor'] ) ) $soc['color'] = $attributes['sIconCo
 $soc = array_merge( $soc, $bg( 'sIconBgColor', 'sIconBgGradient' ) );
 $soc = array_merge( $soc, $typo( $attributes['sIconTypography'] ?? [] ), $dims( $attributes['sIconRadius'] ?? [], 'radius' ), $shadow( $attributes['socialBoxShadow'] ?? [] ) );
 if ( '' !== $u( 'sIconButtonSize' ) ) { $soc['width'] = $u( 'sIconButtonSize' ); $soc['height'] = $u( 'sIconButtonSize' ); }
+if ( '' !== $u( 'sIconSize' ) ) $soc['font-size'] = $u( 'sIconSize' );
 $soc_hover = [];
 if ( ! empty( $attributes['sIconHoverColor'] ) ) $soc_hover['color'] = $attributes['sIconHoverColor'];
 $soc_hover = array_merge( $soc_hover, $bg( 'sIconHoverBgColor', 'sIconHoverBgGradient' ) );
 $soc_ul = ( '' !== $u( 'sIconGap' ) ) ? [ 'gap' => $u( 'sIconGap' ) ] : [];
 $soc_area = $dims( $attributes['sIconAreaPadding'] ?? [], 'padding' );
 if ( ! empty( $attributes['socialItemBorder'] ) ) $soc_area = array_merge( $soc_area, $H::border_to_css_props( $attributes['socialItemBorder'] ) );
-$soc_align = ! empty( $attributes['teamSocialIconAlignment'] ) ? [ 'justify-content' => $attributes['teamSocialIconAlignment'] ] : [];
+// The icons line up with the text unless they have an alignment of their own.
+$flex_of   = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end' ];
+$soc_align = ! empty( $attributes['teamSocialIconAlignment'] ) ? [ 'justify-content' => $attributes['teamSocialIconAlignment'] ] : ( isset( $flex_of[ $attributes['teamContentAlignment'] ?? '' ] ) ? [ 'justify-content' => $flex_of[ $attributes['teamContentAlignment'] ] ] : [] );
+// The email and phone line up with the text too.
+$contact_align = isset( $flex_of[ $attributes['teamContentAlignment'] ?? '' ] ) ? [ 'align-items' => $flex_of[ $attributes['teamContentAlignment'] ] ] : [];
+$contact_align = array_merge( $contact_align, $contact_wrap );
 // Social position offsets.
 $soc_pos = [];
-if ( '' !== $u( 'sIconPosiTop' ) ) $soc_pos['top'] = $u( 'sIconPosiTop' );
-if ( '' !== $u( 'sIconPosiBottom' ) ) $soc_pos['bottom'] = $u( 'sIconPosiBottom' );
-if ( '' !== $u( 'sIconPosiLeft' ) ) $soc_pos['left'] = $u( 'sIconPosiLeft' );
-if ( '' !== $u( 'sIconPosiRight' ) ) $soc_pos['right'] = $u( 'sIconPosiRight' );
+if ( 'default' !== $social_pos ) {
+	foreach ( [ 'top' => 'sIconPosiTop', 'bottom' => 'sIconPosiBottom', 'left' => 'sIconPosiLeft', 'right' => 'sIconPosiRight' ] as $side => $key ) {
+		if ( '' !== $u( $key ) ) $soc_pos[ $side ] = $u( $key );
+	}
+}
 
 // Popup.
 $pop_content = [];
@@ -234,7 +248,7 @@ $pop_close = ! empty( $attributes['popupCloseColor'] ) ? [ 'color' => $attribute
 // wrapper, matches nothing, and the skin 4 overlay silently keeps the defaults.
 $name_sel        = '.shapeblock-name, ' . $selector . '.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-name';
 $deg_sel         = '.shapeblock-designation, ' . $selector . '.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-designation';
-$cicon_glyph_sel = '.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon i, ' . $selector . ' .shapeblock-team-card.skin5 .shapeblock-contact-icon svg';
+$cicon_glyph_sel = '.shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon i, ' . $selector . ' .shapeblock-author-contact .shapeblock-contact-icon svg';
 $soc_sel         = '.shapeblock-team-social ul li a, ' . $selector . ' .shapeblock-team-social .shapeblock-team-social-hover a';
 
 // Several skins style these parts with longer selectors in style.scss (skin 1's
@@ -253,7 +267,7 @@ $k_soc        = '.shapeblock-team-social, ' . $selector . ' .shapeblock-team-car
 $k_soc_align  = '.shapeblock-team-card .shapeblock-team-social.default ul, ' . $selector . ' .shapeblock-team-card .shapeblock-team-right .shapeblock-team-social.default ul';
 $k_desc3_box  = '.shapeblock-image-content, ' . $selector . ' .shapeblock-team-img-box .shapeblock-image-content';
 
-$build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $name_sel, $deg_sel, $cicon_glyph_sel, $soc_sel, $k_wrap, $k_img_box, $k_img_el, $k_soc_ul, $k_soc, $k_soc_align ) {
+$build_dev = function ( $suffix ) use ( $flex_of, $attributes, $typo, $dims, $H, $name_sel, $deg_sel, $cicon_glyph_sel, $soc_sel, $k_wrap, $k_img_box, $k_img_el, $k_soc_ul, $k_soc, $k_soc_align ) {
 	$ru = function ( $key ) use ( $attributes, $H ) {
 		return ( isset( $attributes[ $key ] ) && '' !== $attributes[ $key ] ) ? $H::ensure_unit( $attributes[ $key ] ) : '';
 	};
@@ -275,10 +289,12 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $name_sel
 	$name_styles = $typo( $attributes[ 'nameTypography' . $suffix ] ?? [] );
 	$deg_styles  = $typo( $attributes[ 'designationTypography' . $suffix ] ?? [] );
 
-	// Contact (skin5).
+	// Contact info.
 	$contact_wrap       = ( '' !== $ru( 'contactGap' . $suffix ) ) ? [ 'gap' => $ru( 'contactGap' . $suffix ) ] : [];
 	$contact_item       = $typo( $attributes[ 'contactTypography' . $suffix ] ?? [] );
 	$contact_icon       = ( '' !== $ru( 'contactIconBoxSize' . $suffix ) ) ? [ 'width' => $ru( 'contactIconBoxSize' . $suffix ), 'height' => $ru( 'contactIconBoxSize' . $suffix ) ] : [];
+	$contact_align      = isset( $flex_of[ $attributes[ 'teamContentAlignment' . $suffix ] ?? '' ] ) ? [ 'align-items' => $flex_of[ $attributes[ 'teamContentAlignment' . $suffix ] ] ] : [];
+	$contact_align      = array_merge( $contact_align, $contact_wrap );
 	$contact_icon_glyph = ( '' !== $ru( 'contactIconSize' . $suffix ) ) ? [ 'font-size' => $ru( 'contactIconSize' . $suffix ) ] : [];
 
 	// Description.
@@ -288,9 +304,10 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $name_sel
 	// Social.
 	$soc = $typo( $attributes[ 'sIconTypography' . $suffix ] ?? [] );
 	if ( '' !== $ru( 'sIconButtonSize' . $suffix ) ) { $soc['width'] = $ru( 'sIconButtonSize' . $suffix ); $soc['height'] = $ru( 'sIconButtonSize' . $suffix ); }
+	if ( '' !== $ru( 'sIconSize' . $suffix ) ) $soc['font-size'] = $ru( 'sIconSize' . $suffix );
 	$soc_ul    = ( '' !== $ru( 'sIconGap' . $suffix ) ) ? [ 'gap' => $ru( 'sIconGap' . $suffix ) ] : [];
 	$soc_area  = $dims( $attributes[ 'sIconAreaPadding' . $suffix ] ?? [], 'padding' );
-	$soc_align = ! empty( $attributes[ 'teamSocialIconAlignment' . $suffix ] ) ? [ 'justify-content' => $attributes[ 'teamSocialIconAlignment' . $suffix ] ] : [];
+	$soc_align = ! empty( $attributes[ 'teamSocialIconAlignment' . $suffix ] ) ? [ 'justify-content' => $attributes[ 'teamSocialIconAlignment' . $suffix ] ] : ( isset( $flex_of[ $attributes[ 'teamContentAlignment' . $suffix ] ?? '' ] ) ? [ 'justify-content' => $flex_of[ $attributes[ 'teamContentAlignment' . $suffix ] ] ] : [] );
 
 	// Popup typography.
 	$pop_name = $typo( $attributes[ 'popupNameTypography' . $suffix ] ?? [] );
@@ -306,9 +323,9 @@ $build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $name_sel
 		'.shapeblock-team-card .shapeblock-team-img-area .shapeblock-image-below-bg'                         => $below,
 		$name_sel                                                                             => $name_styles,
 		$deg_sel                                                                              => $deg_styles,
-		'.shapeblock-team-card.skin5 .shapeblock-author-contact'                                        => $contact_wrap,
-		'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item'                    => $contact_item,
-		'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon' => $contact_icon,
+		'.shapeblock-author-contact .shapeblock-contact-inner'              => $contact_align,
+		'.shapeblock-author-contact .shapeblock-contact-item'                    => $contact_item,
+		'.shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon' => $contact_icon,
 		$cicon_glyph_sel                                                                      => $contact_icon_glyph,
 		'.shapeblock-team-description'                                                             => $tdesc,
 		'.shapeblock-image-content .shapeblock-description'                                             => $desc3,
@@ -331,9 +348,9 @@ $sub_selectors = [
 	'.shapeblock-team-card .shapeblock-team-img-area .shapeblock-image-below-bg',
 	$name_sel,
 	$deg_sel,
-	'.shapeblock-team-card.skin5 .shapeblock-author-contact',
-	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item',
-	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon',
+	'.shapeblock-author-contact .shapeblock-contact-inner',
+	'.shapeblock-author-contact .shapeblock-contact-item',
+	'.shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon',
 	$cicon_glyph_sel,
 	'.shapeblock-team-description',
 	'.shapeblock-image-content .shapeblock-description',
@@ -363,6 +380,12 @@ wp_enqueue_style( $style_handle );
 // onto $selector directly; going through the list below would put a space
 // between them and look for a skin4 element inside the wrapper instead.
 $ov_decls = $H::get_inline_styles( $ov );
+if ( ! empty( $attributes['skin4OverlayTextColor'] ) ) {
+	$ov_text   = $H::get_inline_styles( [ 'color' => $attributes['skin4OverlayTextColor'] ] );
+	// :where() keeps this below the Name and Designation colours of their own.
+	$resp_css .= ':where(' . $selector . '.skin4 .shapeblock-team-hover-content) .shapeblock-name-deg-wrap .shapeblock-name,'
+		. ':where(' . $selector . '.skin4 .shapeblock-team-hover-content) .shapeblock-name-deg-wrap .shapeblock-designation{' . $ov_text . '}';
+}
 if ( $ov_decls ) {
 	$resp_css .= $selector . '.skin4 .shapeblock-team-hover-content,'
 		. $selector . '.skin4 .shapeblock-team-card .shapeblock-team-hover-content.overlay2{' . $ov_decls . '}';
@@ -390,11 +413,11 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	// are written straight into $resp_css above instead.
 	$name_sel                                                       => $H::get_inline_styles( $name_styles ),
 	$deg_sel                                                        => $H::get_inline_styles( $deg_styles ),
-	'.shapeblock-team-card.skin5 .shapeblock-author-contact'       => $H::get_inline_styles( $contact_wrap ),
-	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item' => $H::get_inline_styles( $contact_item ),
-	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item:hover' => $H::get_inline_styles( $contact_item_hover ),
-	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon' => $H::get_inline_styles( $contact_icon ),
-	'.shapeblock-team-card.skin5 .shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon i, ' . $selector . ' .shapeblock-team-card.skin5 .shapeblock-contact-icon svg' => $H::get_inline_styles( array_merge( $contact_icon_glyph, $contact_icon_fill ) ),
+	'.shapeblock-author-contact .shapeblock-contact-inner' => $H::get_inline_styles( $contact_align ),
+	'.shapeblock-author-contact .shapeblock-contact-item' => $H::get_inline_styles( $contact_item ),
+	'.shapeblock-author-contact .shapeblock-contact-item:hover' => $H::get_inline_styles( $contact_item_hover ),
+	'.shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon' => $H::get_inline_styles( $contact_icon ),
+	'.shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon i, ' . $selector . ' .shapeblock-author-contact .shapeblock-contact-icon svg' => $H::get_inline_styles( array_merge( $contact_icon_glyph, $contact_icon_fill ) ),
 	'.shapeblock-team-description'                            => $H::get_inline_styles( $tdesc ),
 	'.shapeblock-image-content .shapeblock-description'            => $H::get_inline_styles( $desc3 ),
 	$k_desc3_box                               => $H::get_inline_styles( $desc3_box ),
@@ -501,8 +524,14 @@ $render_social = function () use ( $icon_i, $shapeblock_allowed_html, $social_sh
 			</a></div>
 		<?php endif; ?>
 		<ul>
-			<?php foreach ( $social_links as $s ) : $su = isset( $s['url'] ) ? $s['url'] : '#'; ?>
-				<li><a href="<?php echo esc_url( $su ); ?>">
+			<?php
+			foreach ( $social_links as $s ) :
+				$su = isset( $s['url'] ) && '' !== $s['url'] ? $s['url'] : '#';
+				// A name for screen readers, from the icon: "logo-linkedin" -> "Linkedin".
+				$sn = preg_replace( '/^(shapeblock-icon-|shapeblock-bi-)(logo-)?|-(f|square|fill|circle)$/', '', (string) ( $s['icon'] ?? '' ) );
+				$sn = 'twitter-x' === $sn ? 'X' : ucwords( str_replace( '-', ' ', $sn ) );
+				?>
+				<li><a href="<?php echo esc_url( $su ); ?>"<?php echo '#' !== $su ? ' target="_blank" rel="noopener noreferrer"' : ''; ?><?php echo '' !== $sn ? ' aria-label="' . esc_attr( $sn ) . '"' : ''; ?>>
 					<?php
 					$link_icon_html = $icon_i( isset( $s['icon'] ) ? $s['icon'] : '' );
 					if ( '' !== $link_icon_html ) {
@@ -518,6 +547,46 @@ $render_social = function () use ( $icon_i, $shapeblock_allowed_html, $social_sh
 	<?php
 };
 
+// Contact markup: the email and phone, as links. Echoes directly (see comment above).
+$tel           = preg_replace( '/[^0-9+]/', '', (string) $phone );
+$has_contact   = $show_contact && ( $email || $phone );
+$render_contact = function () use ( $attributes, $icon_i, $shapeblock_allowed_html, $email, $phone, $tel ) {
+	?>
+	<div class="shapeblock-contact-inner">
+		<?php if ( $email ) : ?>
+			<a class="shapeblock-team-email shapeblock-contact-item" href="<?php echo esc_url( 'mailto:' . antispambot( sanitize_email( $email ) ) ); ?>">
+				<span class="shapeblock-contact-icon">
+					<?php
+					$email_icon_html = $icon_i( $attributes['teamEmailIcon'] ?? '' );
+					if ( '' !== $email_icon_html ) {
+						echo wp_kses( $email_icon_html, $shapeblock_allowed_html );
+					} else {
+						?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M3 5h18v14H3V5zm9 7L4 7v1l8 5 8-5V7l-8 5z"/></svg><?php
+					}
+					?>
+				</span>
+				<span class="shapeblock-contact-text"><?php echo esc_html( antispambot( $email ) ); ?></span>
+			</a>
+		<?php endif; ?>
+		<?php if ( $phone ) : ?>
+			<a class="shapeblock-team-phone shapeblock-contact-item" href="<?php echo esc_url( 'tel:' . $tel ); ?>">
+				<span class="shapeblock-contact-icon">
+					<?php
+					$phone_icon_html = $icon_i( $attributes['teamPhoneIcon'] ?? '' );
+					if ( '' !== $phone_icon_html ) {
+						echo wp_kses( $phone_icon_html, $shapeblock_allowed_html );
+					} else {
+						?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M6.6 10.8a15 15 0 006.6 6.6l2.2-2.2a1 1 0 011-.24 11 11 0 003.4.55 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11 11 0 00.55 3.4 1 1 0 01-.24 1l-2.2 2.4z"/></svg><?php
+					}
+					?>
+				</span>
+				<span class="shapeblock-contact-text"><?php echo esc_html( $phone ); ?></span>
+			</a>
+		<?php endif; ?>
+	</div>
+	<?php
+};
+
 // Image markup.
 $img_alt_text = $img_url ? ( $image['alt'] ?? '' ) : __( 'Team Image', 'shapeblock' );
 $placeholder = SHAPEBLOCK_PL_URL . 'includes/public/assets/img/placeholder.png';
@@ -528,7 +597,7 @@ ob_start();
 	<img class="shapeblock-team-img" src="<?php echo esc_url( $img_src ); ?>" alt="<?php echo esc_attr( $img_alt_text ); ?>" loading="lazy" decoding="async">
 	<div class="shapeblock-image-below-bg"></div>
 	<div class="shapeblock-image-overlay"></div>
-	<?php if ( in_array( $skin, [ 'skin3', 'skin5' ], true ) && $details ) : ?>
+	<?php if ( 'skin3' === $skin && $details ) : ?>
 		<div class="shapeblock-image-content">
 			<div class="shapeblock-description"><?php echo wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></div>
 		</div>
@@ -539,12 +608,13 @@ $img_box_html = ob_get_clean();
 
 // Name-deg-wrap (with optional details + default social). Echoes directly (see
 // comment above) instead of returning a string.
-$build_name_wrap = function ( $extra_class = '', $with_details = true, $with_social = true ) use ( $name_html, $designation, $details, $shapeblock_allowed_html, $render_social, $has_social, $social_pos ) {
+$build_name_wrap = function ( $extra_class = '', $with_details = true, $with_social = true ) use ( $name_html, $designation, $details, $shapeblock_allowed_html, $render_social, $has_social, $social_pos, $render_contact, $has_contact ) {
 	?>
 	<div class="shapeblock-name-deg-wrap <?php echo esc_attr( $extra_class ); ?>">
 		<?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?>
 		<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
 		<?php if ( $with_details && $details ) : ?><div class="shapeblock-team-description"><?php echo wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></div><?php endif; ?>
+		<?php if ( $has_contact ) : ?><div class="shapeblock-author-contact"><?php $render_contact(); ?></div><?php endif; ?>
 		<?php if ( $with_social && $has_social && 'default' === $social_pos ) : ?>
 			<?php $render_social(); ?>
 		<?php endif; ?>
@@ -586,11 +656,14 @@ $build_name_wrap = function ( $extra_class = '', $with_details = true, $with_soc
 						</div>
 					</div>
 					<?php echo wp_kses( $close_link, $shapeblock_allowed_html ); ?>
-					<div class="shapeblock-social-media">
-						<?php if ( $has_social && 'default' === $social_pos ) : ?>
-							<?php $render_social(); ?>
-						<?php endif; ?>
-					</div>
+					<?php if ( $has_contact || ( $has_social && 'default' === $social_pos ) ) : ?>
+						<div class="shapeblock-social-media">
+							<?php if ( $has_contact ) : ?><div class="shapeblock-author-contact"><?php $render_contact(); ?></div><?php endif; ?>
+							<?php if ( $has_social && 'default' === $social_pos ) : ?>
+								<?php $render_social(); ?>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
 					<?php if ( $has_social && 'default' !== $social_pos ) : ?>
 						<?php $render_social(); ?>
 					<?php endif; ?>
@@ -606,6 +679,7 @@ $build_name_wrap = function ( $extra_class = '', $with_details = true, $with_soc
 						<div class="shapeblock-name-deg-wrap">
 							<?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?>
 							<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
+							<?php if ( $has_contact ) : ?><div class="shapeblock-author-contact"><?php $render_contact(); ?></div><?php endif; ?>
 						</div>
 						<?php if ( $has_social ) : ?>
 							<?php $render_social(); ?>
@@ -625,44 +699,20 @@ $build_name_wrap = function ( $extra_class = '', $with_details = true, $with_soc
 								<?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?>
 								<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
 							</div>
-							<?php if ( $show_contact && ( $email || $phone ) ) : ?>
+							<?php if ( $details || $has_contact || ( $has_social && 'default' === $social_pos ) ) : ?>
 								<div class="shapeblock-author-contact">
-									<div class="shapeblock-contact-inner">
-										<?php if ( $email ) : ?>
-											<div class="shapeblock-team-email shapeblock-contact-item">
-												<div class="shapeblock-contact-icon">
-													<?php
-													$email_icon_html = $icon_i( $attributes['teamEmailIcon'] ?? '' );
-													if ( '' !== $email_icon_html ) {
-														echo wp_kses( $email_icon_html, $shapeblock_allowed_html );
-													} else {
-														?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M3 5h18v14H3V5zm9 7L4 7v1l8 5 8-5V7l-8 5z"/></svg><?php
-													}
-													?>
-												</div>
-												<?php echo esc_html( $email ); ?>
-											</div>
-										<?php endif; ?>
-										<?php if ( $phone ) : ?>
-											<div class="shapeblock-team-phone shapeblock-contact-item">
-												<div class="shapeblock-contact-icon">
-													<?php
-													$phone_icon_html = $icon_i( $attributes['teamPhoneIcon'] ?? '' );
-													if ( '' !== $phone_icon_html ) {
-														echo wp_kses( $phone_icon_html, $shapeblock_allowed_html );
-													} else {
-														?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M6.6 10.8a15 15 0 006.6 6.6l2.2-2.2a1 1 0 011-.24 11 11 0 003.4.55 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11 11 0 00.55 3.4 1 1 0 01-.24 1l-2.2 2.4z"/></svg><?php
-													}
-													?>
-												</div>
-												<?php echo esc_html( $phone ); ?>
-											</div>
-										<?php endif; ?>
-									</div>
+									<?php if ( $details ) : ?>
+										<div class="shapeblock-image-content"><div class="shapeblock-description"><?php echo wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></div></div>
+									<?php endif; ?>
+									<?php if ( $has_contact ) { $render_contact(); } ?>
+									<?php if ( $has_social && 'default' === $social_pos ) { $render_social(); } ?>
 								</div>
 							<?php endif; ?>
 						</div>
 					</div>
+					<?php if ( $has_social && 'default' !== $social_pos ) : ?>
+						<?php $render_social(); ?>
+					<?php endif; ?>
 				</div>
 			</div>
 		<?php else : // default + skin2 ?>

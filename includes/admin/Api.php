@@ -226,8 +226,7 @@ class Api {
             if ( '' === $id ) {
                 continue;
             }
-            $saved = get_option( 'shapeblock_block_' . $id );
-            $statuses[ $id ] = ( 'disable' === $saved ) ? 'disable' : 'enable';
+            $statuses[ $id ] = ( 'disable' === $block['status'] ) ? 'disable' : 'enable';
         }
         return $statuses;
     }

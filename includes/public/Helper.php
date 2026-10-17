@@ -646,12 +646,12 @@ class Helper {
 		return "$inset$x $y $b $s $c";
 	}
 
-	public static function border_to_css_props($border) {
+	public static function border_to_css_props( $border, $default_color = 'rgba(0,0,0,0)' ) {
 		if ( ! is_array( $border ) ) {
 			return [];
 		}
 		$style = self::sanitize_css_border_style( $border['style'] ?? 'solid' );
-		$color = self::sanitize_css_color( $border['color'] ?? 'rgba(0,0,0,0)' );
+		$color = self::sanitize_css_color( ! empty( $border['color'] ) ? $border['color'] : $default_color );
 		$width = $border['width'] ?? 0;
 
 		if ( is_array( $width ) ) {
