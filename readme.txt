@@ -4,7 +4,7 @@ Tags: gutenberg blocks, header footer builder, block editor, gutenberg, wordpres
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -211,45 +211,47 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 
 == Changelog ==
 
+= 1.0.3 =
+* **New:** Table - edited in place like the core Table block: type in the cells, add and remove rows and columns from the toolbar, and a new table asks for its column and row count.
+* **New:** Table - add text, heading and image blocks to a cell with its + button, or drag them in. Each cell has its own text colour, background (colour or gradient) and border. Plus fixed width cells and a caption.
+* **New:** Table - sidebar like the core Table: Layout (Default or Stripes) and Style with Global (text colour, background, cell border, typography, padding) for the whole table and Cell for the clicked cell; Icon List blocks in cells.
+* **New:** Pricing Table - the card is made of blocks (Heading, Price, List, Buttons), each edited in place with its own toolbar and settings; drag or add any other block into it. Existing tables keep their content and are converted when opened in the editor.
+* **New:** Pricing Table - choose the feature icon: check, check in a circle, star, arrow or dot.
+* **New:** Pricing Table - a new pricing table asks how many plans (1 to 4) and which style; two or more are added side by side, the same height, buttons in line.
+* **New:** Pricing Table - three styles, Classic, Centered and Dark, each with a preview, and three ready-made pricing patterns in the inserter.
+* **New:** Tabs - each tab's content is blocks: type in it, or add or drag in any block. Tab titles are typed in the tab bar, and the + at its end adds a tab. Existing tabs keep their content.
+* **Improved:** the block inserter puts the cursor in its search box when it opens.
+* **Fix:** Social Share - each network's share page opens in a share window; Instagram, YouTube, TikTok, Snapchat, Discord and Spotify, which have no share link for websites, open the device's share menu or copy the link; and blog, archive and Query Loop pages share the right address.
+
 = 1.0.2 =
-* New: Row - background image from the Media Library with a focal point, a background overlay, and text, link and heading colours.
-* New: Row - typography for everything inside it, per device, and an ARIA label.
-* New: Row - Columns per row on desktop, for a grid of equal columns.
-* New: Row - select blocks and turn them into a Row (each block in its own column), turn a Group or Columns block into a Row, or Ungroup a Row.
-* New: Social Share - three button styles: icon, icon with text, or text only, with editable names.
-* New: Social Share - Normal and Hover tabs for the background (colour or gradient), the icon and text colour, and the border.
-* New: Hover animations for the Icon, Social Icon and Social Share blocks.
-* New: Table - edited in place like the core Table block: type in the cells, add and remove rows and columns from the toolbar, and a new table asks for its column and row count.
-* New: Table - add text, heading and image blocks to a cell with its + button, or drag them in. Each cell has its own text colour, background (colour or gradient) and border. Plus fixed width cells and a caption.
-* New: Table - sidebar like the core Table: Layout (Default or Stripes) and Style with Global (text colour, background, cell border, typography, padding) for the whole table and Cell for the clicked cell; Icon List blocks in cells.
-* New: Pricing Table - the card is made of blocks (Heading, Price, List, Buttons), each edited in place with its own toolbar and settings; drag or add any other block into it. Existing tables keep their content and are converted when opened in the editor.
-* New: Pricing Table - choose the feature icon: check, check in a circle, star, arrow or dot.
-* New: Pricing Table - a new pricing table asks how many plans (1 to 4) and which style; two or more are added side by side, the same height, buttons in line.
-* New: Tabs - each tab's content is blocks: type in it, or add or drag in any block. Tab titles are typed in the tab bar, and the + at its end adds a tab. Existing tabs keep their content.
-* New: Pricing Table - three styles, Classic, Centered and Dark, each with a preview, and three ready-made pricing patterns in the inserter.
-* Improved: the block inserter puts the cursor in its search box when it opens.
-* New: the Container Width can also set the theme's wide width, or its content width too, so core blocks follow it.
-* Improved: the Container Width is empty by default and follows the theme until it is set.
-* Improved: the General settings page is laid out in two cards.
-* Fix: Social Share - each network's share page opens in a share window; Instagram, YouTube, TikTok, Snapchat, Discord and Spotify, which have no share link for websites, open the device's share menu or copy the link; and blog, archive and Query Loop pages share the right address.
-* Fix: column widths set in px on tablet or mobile now apply on the front end.
-* Fix: the Menu block keeps the selected menu when the editor reloads.
-* Fix: Menu dropdown link padding no longer reaches into the links of a dropdown's content.
-* Fix: the editor no longer forces the Container Width onto all page content.
+* **New:** Row - background image from the Media Library with a focal point, a background overlay, and text, link and heading colours.
+* **New:** Row - typography for everything inside it, per device, and an ARIA label.
+* **New:** Row - Columns per row on desktop, for a grid of equal columns.
+* **New:** Row - select blocks and turn them into a Row (each block in its own column), turn a Group or Columns block into a Row, or Ungroup a Row.
+* **New:** Social Share - three button styles: icon, icon with text, or text only, with editable names.
+* **New:** Social Share - Normal and Hover tabs for the background (colour or gradient), the icon and text colour, and the border.
+* **New:** Hover animations for the Icon, Social Icon and Social Share blocks.
+* **New:** the Container Width can also set the theme's wide width, or its content width too, so core blocks follow it.
+* **Improved:** the Container Width is empty by default and follows the theme until it is set.
+* **Improved:** the General settings page is laid out in two cards.
+* **Fix:** column widths set in px on tablet or mobile now apply on the front end.
+* **Fix:** the Menu block keeps the selected menu when the editor reloads.
+* **Fix:** Menu dropdown link padding no longer reaches into the links of a dropdown's content.
+* **Fix:** the editor no longer forces the Container Width onto all page content.
 
 = 1.0.1 =
-* New: Filterable List block - links with icons, filter buttons with item counts, badges and a search box.
-* New: Isotope Filter - an optional search box beside the filter buttons, with a line below them.
-* New: Row - a Custom content width, set per device.
-* New: Icon Box - an optional button (text, text with icon, or icon only with its own size).
-* New: Image Comparison - Before / After labels, a corner-to-corner direction and more handle styles.
-* New: Simple Gallery - popup animations.
-* New: Post Grid - more style and hover options, laid out more clearly.
-* New: a gradient option on background colours.
-* New: Theme Builder templates offer Wide and Full alignment in every theme.
-* Fix: column widths in a Row now add up correctly whatever the number of columns, and a gap of 0 works.
-* Fix: Row margin now applies in the editor and is no longer lost to the order stylesheets load in.
-* Fix: colours can be cleared again, and Post Grid colour changes show in the editor.
+* **New:** Filterable List block - links with icons, filter buttons with item counts, badges and a search box.
+* **New:** Isotope Filter - an optional search box beside the filter buttons, with a line below them.
+* **New:** Row - a Custom content width, set per device.
+* **New:** Icon Box - an optional button (text, text with icon, or icon only with its own size).
+* **New:** Image Comparison - Before / After labels, a corner-to-corner direction and more handle styles.
+* **New:** Simple Gallery - popup animations.
+* **New:** Post Grid - more style and hover options, laid out more clearly.
+* **New:** a gradient option on background colours.
+* **New:** Theme Builder templates offer Wide and Full alignment in every theme.
+* **Fix:** column widths in a Row now add up correctly whatever the number of columns, and a gap of 0 works.
+* **Fix:** Row margin now applies in the editor and is no longer lost to the order stylesheets load in.
+* **Fix:** colours can be cleared again, and Post Grid colour changes show in the editor.
 
 = 1.0.0 =
 * Initial release.

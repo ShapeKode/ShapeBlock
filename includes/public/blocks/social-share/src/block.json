@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/social-share",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"title": "Social Share",
 	"category": "shapeblock",
 	"description": "Social share buttons for the current page — Facebook, X, LinkedIn, WhatsApp, copy link and more.",

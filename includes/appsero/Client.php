@@ -2,6 +2,10 @@
 
 namespace Appsero;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 /**
  * Appsero Client
  *

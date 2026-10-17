@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/team-grid",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"title": "Team Member",
 	"category": "shapeblock",
 	"description": "A team member card with 5 skins, social icons, contact info and an optional popup.",

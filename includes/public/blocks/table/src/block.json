@@ -2,10 +2,10 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/table",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"title": "Table",
 	"category": "shapeblock",
-	"description": "A table edited in place, with a header, body and footer. Cells take text, images and icon lists; colours and borders for the whole table or each cell.",
+	"description": "A table edited in place, with a header, body and footer. Cells can hold text, images and icon lists, with colors and borders for the whole table or for each cell.",
 	"keywords": [ "table", "data", "grid", "rows", "columns" ],
 	"example": {},
 	"supports": {

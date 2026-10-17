@@ -711,6 +711,7 @@
   background-size: 100% 1px;
   background-position: 0% 100%;
   background-image: linear-gradient(to right, currentColor 100%, transparent 100%);
+  width: -moz-fit-content;
   width: fit-content;
 }
 

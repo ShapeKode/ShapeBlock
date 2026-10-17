@@ -137,7 +137,7 @@ function shapeblock_register_pricing_patterns() {
 		),
 		'centered' => array(
 			'title'       => __( 'Pricing Table: Centered', 'shapeblock' ),
-			'description' => __( 'Three centred pricing plans with a coloured top bar and round buttons.', 'shapeblock' ),
+			'description' => __( 'Three centered pricing plans with a colored top bar and round buttons.', 'shapeblock' ),
 		),
 		'dark'     => array(
 			'title'       => __( 'Pricing Table: Dark', 'shapeblock' ),

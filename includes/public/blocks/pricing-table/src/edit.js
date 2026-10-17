@@ -1,4 +1,4 @@
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { createBlock } from '@wordpress/blocks';
@@ -326,7 +326,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
 			<PanelBody title={__('Title', 'shapeblock')} initialOpen={!isFeatured}>
 				{color(__('Color', 'shapeblock'), 'titleColor')}
-				{color(__('Highlight Color (span)', 'shapeblock'), 'titleHighlightColor')}
+				{color(__('Highlight Color', 'shapeblock'), 'titleHighlightColor')}
 				{bg(__('Background', 'shapeblock'), 'titleBgColor', 'titleBgGradient')}
 				{respTypo(__('Typography', 'shapeblock'), 'titleTypography')}
 				<Divider />
@@ -358,7 +358,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<Divider />
 				{color(__('Sale Price Color', 'shapeblock'), 'salePriceColor')}
 				{respTypo(__('Sale Price Typography', 'shapeblock'), 'salePriceTypography')}
-				{color(__('Regular (old) Price Color', 'shapeblock'), 'oldPriceColor')}
+				{color(__('Old Price Color', 'shapeblock'), 'oldPriceColor')}
 			</PanelBody>
 
 			<PanelBody title={__('Period & Currency', 'shapeblock')} initialOpen={false}>
@@ -512,7 +512,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								<span className="shapeblock-pricing-count-thumb" aria-hidden="true">
 									{Array.from({ length: n }, (_, i) => <span key={i} />)}
 								</span>
-								{1 === n ? __('1 Plan', 'shapeblock') : sprintf(/* translators: %d: number of pricing plans. */ __('%d Plans', 'shapeblock'), n)}
+								{sprintf(/* translators: %d: number of pricing plans. */ _n('%d Plan', '%d Plans', n, 'shapeblock'), n)}
 							</button>
 						))}
 					</div>

@@ -2,20 +2,20 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: ShapeBlock 1.0.2\n"
+"Project-Id-Version: ShapeBlock 1.0.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/shapeblock\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-15T11:45:23+00:00\n"
+"POT-Creation-Date: 2026-10-17T02:58:47+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.12.0\n"
+"X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: shapeblock\n"
 
 #. Plugin Name of the plugin
-#: shapeblock.php
+#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
 #: includes/public/blocks/blocks.php:753
 #: includes/public/blocks/pricing-table/pricing-table.php:130
 #: includes/public/blocks/custom-components/IconPicker.js:29
@@ -24,22 +24,22 @@ msgid "ShapeBlock"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: shapeblock.php
+#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
 msgid "https://shapekode.com/product/shapeblock/"
 msgstr ""
 
 #. Description of the plugin
-#: shapeblock.php
+#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
 msgid "A library of 34 Gutenberg blocks - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls."
 msgstr ""
 
 #. Author of the plugin
-#: shapeblock.php
+#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
 msgid "ShapeKode"
 msgstr ""
 
 #. Author URI of the plugin
-#: shapeblock.php
+#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
 msgid "https://profiles.wordpress.org/shapekode22/"
 msgstr ""
 
@@ -578,7 +578,7 @@ msgstr ""
 msgid "No templates found in Trash."
 msgstr ""
 
-#: includes/appsero/Insights.php:771
+#: includes/appsero/Insights.php:775
 msgid "Once Weekly"
 msgstr ""
 
@@ -639,7 +639,6 @@ msgstr ""
 
 #. translators: 1: template type, e.g. Header. 2: template title.
 #: includes/extension/theme-builder/Builder_Render.php:120
-#, php-format
 msgid "%1$s: %2$s"
 msgstr ""
 
@@ -748,7 +747,6 @@ msgstr ""
 
 #. translators: %s: name of the ShapeBlock admin page.
 #: includes/Main.php:193
-#, php-format
 msgid "ShapeBlock - %s"
 msgstr ""
 
@@ -834,7 +832,6 @@ msgstr ""
 
 #. translators: %d: filter number.
 #: includes/public/blocks/filter-list/src/render.php:37
-#, php-format
 msgid "Filter %d"
 msgstr ""
 
@@ -929,7 +926,6 @@ msgstr ""
 
 #. translators: %d: category number.
 #: includes/public/blocks/isotope/src/render.php:407
-#, php-format
 msgid "Category %d"
 msgstr ""
 
@@ -1036,7 +1032,7 @@ msgid "Pricing Table: Centered"
 msgstr ""
 
 #: includes/public/blocks/pricing-table/pricing-table.php:140
-msgid "Three centred pricing plans with a coloured top bar and round buttons."
+msgid "Three centered pricing plans with a colored top bar and round buttons."
 msgstr ""
 
 #: includes/public/blocks/pricing-table/pricing-table.php:143
@@ -1139,7 +1135,6 @@ msgstr ""
 
 #. translators: %d: star rating, a whole number from 1 to 5.
 #: includes/public/blocks/testimonials-grid/src/render.php:293
-#, php-format
 msgid "Rating: %d out of 5"
 msgstr ""
 
@@ -1161,7 +1156,6 @@ msgstr ""
 
 #. translators: %s: Tablet or Mobile.
 #: includes/public/assets/js/responsive-spacing.js:243
-#, js-format
 msgid "Editing %s padding / margin. Empty sides use the larger screen."
 msgstr ""
 
@@ -3249,7 +3243,6 @@ msgstr ""
 
 #. translators: %d: number of icons found.
 #: includes/public/blocks/custom-components/IconPicker.js:193
-#, js-format
 msgid "%d icon"
 msgid_plural "%d icons"
 msgstr[0] ""
@@ -3777,7 +3770,6 @@ msgstr ""
 
 #. translators: %d: number of items under this filter.
 #: includes/public/blocks/filter-list/src/edit.js:275
-#, js-format
 msgid "%d item"
 msgid_plural "%d items"
 msgstr[0] ""
@@ -5680,7 +5672,7 @@ msgid "Ribbon Style"
 msgstr ""
 
 #: includes/public/blocks/pricing-table/src/edit.js:329
-msgid "Highlight Color (span)"
+msgid "Highlight Color"
 msgstr ""
 
 #: includes/public/blocks/pricing-table/src/edit.js:353
@@ -5710,7 +5702,7 @@ msgid "Sale Price Typography"
 msgstr ""
 
 #: includes/public/blocks/pricing-table/src/edit.js:361
-msgid "Regular (old) Price Color"
+msgid "Old Price Color"
 msgstr ""
 
 #: includes/public/blocks/pricing-table/src/edit.js:364
@@ -5823,15 +5815,12 @@ msgstr ""
 msgid "Pick a look, then how many plans. Each plan is a card you can edit like any other blocks."
 msgstr ""
 
-#: includes/public/blocks/pricing-table/src/edit.js:515
-msgid "1 Plan"
-msgstr ""
-
 #. translators: %d: number of pricing plans.
 #: includes/public/blocks/pricing-table/src/edit.js:515
-#, js-format
-msgid "%d Plans"
-msgstr ""
+msgid "%d Plan"
+msgid_plural "%d Plans"
+msgstr[0] ""
+msgstr[1] ""
 
 #: includes/public/blocks/pricing-table/src/price.js:43
 msgid "Type the price, currency and period in the card."
@@ -6380,19 +6369,16 @@ msgstr ""
 
 #. translators: %d: column number.
 #: includes/public/blocks/table/src/cells.js:122
-#, js-format
 msgid "Header, column %d"
 msgstr ""
 
 #. translators: %d: column number.
 #: includes/public/blocks/table/src/cells.js:124
-#, js-format
 msgid "Footer, column %d"
 msgstr ""
 
 #. translators: 1: row number, 2: column number.
 #: includes/public/blocks/table/src/cells.js:125
-#, js-format
 msgid "Row %1$d, column %2$d"
 msgstr ""
 
@@ -6524,7 +6510,7 @@ msgid "Cell"
 msgstr ""
 
 #: includes/public/blocks/table/src/sidebar.js:238
-msgid "Click a cell in the table to give it its own text colour, background and border."
+msgid "Click a cell in the table to give it its own text color, background and border."
 msgstr ""
 
 #: includes/public/blocks/team-grid/src/edit.js:159
@@ -6932,7 +6918,6 @@ msgstr ""
 
 #. translators: %s: search term entered by the user.
 #: src/components/admin-components/blocks.jsx:256
-#, js-format
 msgid "No blocks found for “%s”."
 msgstr ""
 
@@ -6993,7 +6978,6 @@ msgstr ""
 
 #. translators: %s: template title.
 #: src/components/admin-components/builder-conditions-modal.jsx:257
-#, js-format
 msgid "Display Conditions — %s"
 msgstr ""
 
@@ -7021,7 +7005,6 @@ msgstr ""
 
 #. translators: %d: number of custom templates in the export file.
 #: src/components/admin-components/export-import.jsx:34
-#, js-format
 msgid "%d Custom Template"
 msgid_plural "%d Custom Templates"
 msgstr[0] ""
@@ -7029,7 +7012,6 @@ msgstr[1] ""
 
 #. translators: %d: number of theme builder templates in the export file.
 #: src/components/admin-components/export-import.jsx:41
-#, js-format
 msgid "%d Theme Builder Template"
 msgid_plural "%d Theme Builder Templates"
 msgstr[0] ""
@@ -7091,13 +7073,11 @@ msgstr ""
 
 #. translators: 1: number of custom templates imported, 2: number of custom templates skipped.
 #: src/components/admin-components/export-import.jsx:182
-#, js-format
 msgid "Custom Templates: %1$d imported, %2$d skipped"
 msgstr ""
 
 #. translators: 1: number of theme builder templates imported, 2: number of theme builder templates skipped.
 #: src/components/admin-components/export-import.jsx:190
-#, js-format
 msgid "Theme Builder: %1$d imported, %2$d skipped"
 msgstr ""
 
@@ -7107,7 +7087,6 @@ msgstr ""
 
 #. translators: %s: summary of what was imported.
 #: src/components/admin-components/export-import.jsx:200
-#, js-format
 msgid "%s. Reload the page to see everything."
 msgstr ""
 
@@ -7290,7 +7269,6 @@ msgstr ""
 #. translators: %d: number of templates.
 #: src/components/admin-components/templates.jsx:201
 #: src/components/admin-components/theme-builder.jsx:232
-#, js-format
 msgid "%d template moved to Trash"
 msgid_plural "%d templates moved to Trash"
 msgstr[0] ""
@@ -7299,7 +7277,6 @@ msgstr[1] ""
 #. translators: %d: number of templates.
 #: src/components/admin-components/templates.jsx:207
 #: src/components/admin-components/theme-builder.jsx:302
-#, js-format
 msgid "%d template restored"
 msgid_plural "%d templates restored"
 msgstr[0] ""
@@ -7308,7 +7285,6 @@ msgstr[1] ""
 #. translators: %d: number of templates.
 #: src/components/admin-components/templates.jsx:213
 #: src/components/admin-components/theme-builder.jsx:272
-#, js-format
 msgid "%d template permanently deleted"
 msgid_plural "%d templates permanently deleted"
 msgstr[0] ""
@@ -7316,7 +7292,6 @@ msgstr[1] ""
 
 #. translators: %d: number of templates.
 #: src/components/admin-components/templates.jsx:219
-#, js-format
 msgid "%d template updated"
 msgid_plural "%d templates updated"
 msgstr[0] ""
@@ -7336,7 +7311,6 @@ msgstr ""
 #. translators: %d: number of templates.
 #: src/components/admin-components/templates.jsx:250
 #: src/components/admin-components/theme-builder.jsx:254
-#, js-format
 msgid "Permanently delete %d template?"
 msgid_plural "Permanently delete %d templates?"
 msgstr[0] ""
@@ -7432,7 +7406,6 @@ msgstr ""
 #. translators: %d: number of trashed templates.
 #: src/components/admin-components/templates.jsx:443
 #: src/components/admin-components/theme-builder.jsx:493
-#, js-format
 msgid "Trash (%d)"
 msgstr ""
 
@@ -7444,7 +7417,6 @@ msgstr ""
 #. translators: %d: number of selected templates.
 #: src/components/admin-components/templates.jsx:471
 #: src/components/admin-components/theme-builder.jsx:529
-#, js-format
 msgid "%d selected"
 msgstr ""
 
@@ -7461,7 +7433,6 @@ msgstr ""
 #. translators: 1: first item number on the page, 2: last item number on the page, 3: total number of items.
 #: src/components/admin-components/templates.jsx:522
 #: src/components/admin-components/theme-builder.jsx:569
-#, js-format
 msgid "%1$d-%2$d of %3$d items"
 msgstr ""
 
@@ -7492,7 +7463,6 @@ msgstr ""
 
 #. translators: %d: number of templates.
 #: src/components/admin-components/theme-builder.jsx:214
-#, js-format
 msgid "Move %d template to Trash?"
 msgid_plural "Move %d templates to Trash?"
 msgstr[0] ""
@@ -8451,7 +8421,7 @@ msgstr ""
 
 #: includes/public/blocks/tab/src/block.json
 msgctxt "block description"
-msgid "Tabbed content with icon/image titles, content title, description and a button — horizontal or vertical layouts."
+msgid "Tabbed content with icon or image titles. Each tab holds any blocks, in a horizontal or vertical layout."
 msgstr ""
 
 #: includes/public/blocks/tab/src/block.json
@@ -8476,7 +8446,7 @@ msgstr ""
 
 #: includes/public/blocks/table/src/block.json
 msgctxt "block description"
-msgid "A table edited in place, with a header, body and footer. Cells take text, images and icon lists; colours and borders for the whole table or each cell."
+msgid "A table edited in place, with a header, body and footer. Cells can hold text, images and icon lists, with colors and borders for the whole table or for each cell."
 msgstr ""
 
 #: includes/public/blocks/table/src/block.json

@@ -38,7 +38,7 @@ add_action( 'init', 'shapeblock_create_block_menu_block_init' );
  */
 function shapeblock_menu_get_google_fonts() {
 	// The catalogue is only fetched once the site owner has switched the
-	// Google Fonts connection on in ShapeBlock > Settings ( off by default ).
+	// Google Fonts connection on in ShapeBlock > General ( off by default ).
 	if ( ! shapeblock_google_fonts_enabled() ) {
 		return array();
 	}

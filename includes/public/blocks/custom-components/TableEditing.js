@@ -4,8 +4,8 @@
  * the cell being edited.
  *
  * A table is a tree of blocks: table > section (thead / tbody / tfoot) > row
- * > cell, and a cell holds the blocks put in it. Used by the Table block and
- * Pro's Data Table, each with its own block names.
+ * > cell, and a cell holds the blocks put in it. Used by the Table block, with its
+ * own block names.
  */
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';

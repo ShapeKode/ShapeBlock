@@ -413,7 +413,7 @@ class Api {
                     continue;
                 }
                 $status = ( 'disable' === $status ) ? 'disable' : 'enable';
-                update_option( 'shapeblock_block_' . $block_id, $status );
+                update_option( 'shapeblock_block_' . $block_id, $status, false );
             }
         }
     }
@@ -680,7 +680,7 @@ class Api {
         }
 
         // Update the block status in the database
-        update_option( 'shapeblock_block_' . $block_id, $status );
+        update_option( 'shapeblock_block_' . $block_id, $status, false );
 
         $saved_status = get_option( 'shapeblock_block_' . $block_id );
 
@@ -705,7 +705,7 @@ class Api {
             if ( ! is_string( $block_id ) || ! in_array( $block_id, $known, true ) ) {
                 continue;
             }
-            update_option( 'shapeblock_block_' . $block_id, $status );
+            update_option( 'shapeblock_block_' . $block_id, $status, false );
         }
 
         return rest_ensure_response( array( 'status' => 'success' ) );

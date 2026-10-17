@@ -235,7 +235,7 @@ export default function TableSidebar({ tableId, attributes, setAttributes, cell 
 			)}
 
 			<PanelBody title={cell ? `${__('Cell', 'shapeblock')}: ${cellLabel}` : __('Cell', 'shapeblock')} initialOpen={true}>
-				{cell || <p className="components-base-control__help">{__('Click a cell in the table to give it its own text colour, background and border.', 'shapeblock')}</p>}
+				{cell || <p className="components-base-control__help">{__('Click a cell in the table to give it its own text color, background and border.', 'shapeblock')}</p>}
 			</PanelBody>
 
 		</>
