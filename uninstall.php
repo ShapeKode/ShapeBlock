@@ -9,7 +9,7 @@
  * - shapeblock_default_blocks
  * - every shapeblock_block_<id> option (one per block; deleted by pattern so
  *   future blocks are cleaned up too, not just the ones that exist today)
- * - the shapeblock_menu_google_fonts transient
+ * - the shapeblock_menu_google_fonts and shapeblock_activation_redirect transients
  *
  * Deliberately NOT removed: content in the `shapeblock-template` and
  * `shapeblock-builder` post types. Those are the site owner's authored work
@@ -33,6 +33,7 @@ function shapeblock_uninstall_cleanup_site() {
 	delete_option( 'shapeblock_menu_last_items' );
 	delete_option( 'shapeblock_default_blocks' );
 	delete_transient( 'shapeblock_menu_google_fonts' );
+	delete_transient( 'shapeblock_activation_redirect' );
 
 	// Appsero usage data: the choice in its notice and its weekly send.
 	delete_option( 'shapeblock_allow_tracking' );

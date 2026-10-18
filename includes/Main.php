@@ -19,9 +19,56 @@ class Main {
     public function init() {
         // Initialize the plugin
         add_action( 'admin_menu', array( $this, 'add_menu' ) );
+        add_action( 'admin_init', array( $this, 'activation_redirect' ) );
         add_filter( 'plugin_action_links_' . SHAPEBLOCK_PLUGIN_BASE, array( $this, 'plugin_action_links' ) );
 
         $this->includes();
+    }
+
+    /**
+     * Transient set on activation: the next admin page opens the Blocks page.
+     */
+    const REDIRECT_FLAG = 'shapeblock_activation_redirect';
+
+    /**
+     * On activation from the Plugins screen, note that the Blocks page should
+     * open next. Not from WP-CLI, and not network-wide.
+     *
+     * @param bool $network_wide Activated for the whole network.
+     * @return void
+     */
+    public static function on_activate( $network_wide = false ) {
+        if ( $network_wide || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+            return;
+        }
+        set_transient( self::REDIRECT_FLAG, get_current_user_id(), 60 );
+    }
+
+    /**
+     * Once, right after activation, take the person who activated ShapeBlock to
+     * its Blocks page. Several plugins activated together stay on the Plugins
+     * screen, as do AJAX requests and the network admin.
+     *
+     * @return void
+     */
+    public function activation_redirect() {
+        $user = get_transient( self::REDIRECT_FLAG );
+        if ( false === $user ) {
+            return;
+        }
+        if ( wp_doing_ajax() || is_network_admin() || (int) $user !== get_current_user_id() ) {
+            return;
+        }
+        delete_transient( self::REDIRECT_FLAG );
+
+        // A display flag WordPress adds after a bulk activation; nothing is
+        // changed by it, so there is no form to verify.
+        if ( null !== filter_input( INPUT_GET, 'activate-multi' ) || ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        wp_safe_redirect( admin_url( 'admin.php?page=shapeblock-blocks' ) );
+        exit;
     }
 
     public function includes() {

@@ -4,7 +4,8 @@
  * Most ShapeBlock blocks are previewed with their real front-end markup, so a
  * breadcrumb, a button, a team member or a post card holds working links. A
  * click on one of them in the editor canvas would leave the page being edited;
- * here it only selects the block, the same as core's own blocks.
+ * here it only selects the block, the same as core's own blocks. Ctrl+click
+ * (Cmd+click on a Mac) opens the link in a new tab, to check where it goes.
  *
  * Loaded inside the editor canvas only (see shapeblock_editor_links_script()).
  */
@@ -21,6 +22,9 @@
 			var link = target.closest('a[href]');
 			if (link && link.closest('[data-type^="shapeblock/"]')) {
 				e.preventDefault();
+				if ((e.ctrlKey || e.metaKey) && /^https?:/i.test(link.href)) {
+					window.open(link.href, '_blank', 'noopener');
+				}
 			}
 		},
 		true

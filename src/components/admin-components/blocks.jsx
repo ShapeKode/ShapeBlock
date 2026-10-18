@@ -8,6 +8,10 @@ import { SearchOutlined } from '@ant-design/icons';
 // only when a block is in it; a block with no category is under All only.
 const CATEGORIES = Object.entries(shapeblock.blockCategories || {}).map(([value, label]) => ({ value, label }));
 
+// Is a block in a tab? Its category, or one of the other tabs it also shows
+// under (its "tabs" list, which an add-on can give its blocks).
+const inTab = (block, tab) => block.category === tab || (Array.isArray(block.tabs) && block.tabs.includes(tab));
+
 export default function Blocks() {
     const [blocks, setBlocks] = useState(shapeblock.blocks);
     const [bulkLoading, setBulkLoading] = useState(false);
@@ -139,7 +143,7 @@ export default function Blocks() {
     // Apply the search term (title + description).
     const term = search.trim().toLowerCase();
     const filteredBlocks = blocks.filter(block => {
-        if (category && block.category !== category) return false;
+        if (category && !inTab(block, category)) return false;
         if (term) {
             const haystack = `${block.title || ''} ${block.description || ''}`.toLowerCase();
             if (!haystack.includes(term)) return false;
@@ -173,7 +177,7 @@ export default function Blocks() {
             <div className="shapeblock-options-content-header">
                 <h1 className='shapeblock-options-title'>{ __( 'Blocks', 'shapeblock' ) }</h1>
                 <div className="shapeblock-blocks-tabs" role="tablist" aria-label={ __( 'Block categories', 'shapeblock' ) }>
-                    {[{ value: '', label: __( 'All', 'shapeblock' ) }, ...CATEGORIES.filter((c) => blocks.some((b) => b.category === c.value))].map((c) => (
+                    {[{ value: '', label: __( 'All', 'shapeblock' ) }, ...CATEGORIES.filter((c) => blocks.some((b) => inTab(b, c.value)))].map((c) => (
                         <button
                             key={c.value || 'all'}
                             type="button"
@@ -184,7 +188,7 @@ export default function Blocks() {
                         >
                             {c.label}
                             <span className="shapeblock-blocks-tab-count">
-                                {c.value ? blocks.filter((b) => b.category === c.value).length : blocks.length}
+                                {c.value ? blocks.filter((b) => inTab(b, c.value)).length : blocks.length}
                             </span>
                         </button>
                     ))}

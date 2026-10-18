@@ -52,3 +52,6 @@ function shapeblock_init_tracker() {
 shapeblock_init_tracker();
 
 \ShapeBlock\Main::instance();
+
+// Right after activation, ShapeBlock opens its Blocks page (once).
+register_activation_hook( __FILE__, array( '\ShapeBlock\Main', 'on_activate' ) );

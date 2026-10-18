@@ -212,6 +212,7 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 == Changelog ==
 
 = 1.0.3 =
+* **Improved:** In the editor, Ctrl+click (Cmd+click on a Mac) on a link inside a ShapeBlock block opens it in a new tab; a plain click still only selects the block.
 * **New:** Table - edited in place like the core Table block: type in the cells, add and remove rows and columns from the toolbar, and a new table asks for its column and row count.
 * **New:** Table - add text, heading and image blocks to a cell with its + button, or drag them in. Each cell has its own text colour, background (colour or gradient) and border. Plus fixed width cells and a caption.
 * **New:** Table - sidebar like the core Table: Layout (Default or Stripes) and Style with Global (text colour, background, cell border, typography, padding) for the whole table and Cell for the clicked cell; Icon List blocks in cells.
@@ -234,6 +235,7 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 * **Fix:** Team Member - a short photo no longer pushes the name and details off the card, and the editor matches the page; Items Gap, Name & Designation Area Margin (Inside Image), Social Icon Area Padding (Skin 04, Skin 05), Social Icon Alignment and Text Color (Skin 04 round overlay) now apply; Skin 05 shows its description on hover.
 * **Improved:** Team Member - social icons line up with the text, fit in narrow cards, open in a new tab and have names for screen readers; a new Team Member starts with its icons, email and phone filled in.
 * **Improved:** the block inserter puts the cursor in its search box when it opens.
+* **Changed:** right after ShapeBlock is activated on its own from the Plugins screen, its Blocks page opens (once), to switch on the blocks you need. Activating several plugins together, or from WP-CLI, stays where it was.
 * **Changed:** a new install starts with five blocks on (Row, Column, Heading, Button, Icon Box); the others are switched on in ShapeBlock > Blocks. Sites already using ShapeBlock keep every block on.
 * **Fix:** Social Share - each network's share page opens in a share window; Instagram, YouTube, TikTok, Snapchat, Discord and Spotify, which have no share link for websites, open the device's share menu or copy the link; and blog, archive and Query Loop pages share the right address.
 
