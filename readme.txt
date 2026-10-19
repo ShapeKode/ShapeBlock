@@ -212,6 +212,7 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 == Changelog ==
 
 = 1.0.3 =
+* **Fixed:** The Advanced tab's padding, margin and background now show in the editor for every ShapeBlock block, not only on the page.
 * **Improved:** In the editor, Ctrl+click (Cmd+click on a Mac) on a link inside a ShapeBlock block opens it in a new tab; a plain click still only selects the block.
 * **New:** Table - edited in place like the core Table block: type in the cells, add and remove rows and columns from the toolbar, and a new table asks for its column and row count.
 * **New:** Table - add text, heading and image blocks to a cell with its + button, or drag them in. Each cell has its own text colour, background (colour or gradient) and border. Plus fixed width cells and a caption.

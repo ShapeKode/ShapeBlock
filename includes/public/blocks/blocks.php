@@ -700,6 +700,23 @@ function shapeblock_advanced_block_css( $parsed_block ) {
 add_filter( 'render_block_data', 'shapeblock_advanced_block_css' );
 
 /**
+ * The same Advanced tab spacing and background in the editor canvas, for the
+ * blocks the editor draws itself (see assets/js/advanced-css-editor.js).
+ *
+ * @return void
+ */
+function shapeblock_advanced_css_editor_script() {
+	wp_enqueue_script(
+		'shapeblock-advanced-css-editor',
+		SHAPEBLOCK_PL_URL . 'includes/public/assets/js/advanced-css-editor.js',
+		array( 'wp-hooks', 'wp-compose', 'wp-element', 'wp-block-editor' ),
+		shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/js/advanced-css-editor.js' ),
+		true
+	);
+}
+add_action( 'enqueue_block_editor_assets', 'shapeblock_advanced_css_editor_script' );
+
+/**
  * Keep a block's `blockId` a plain CSS class name.
  *
  * Every ShapeBlock block builds its CSS selector from `blockId`, and it is a

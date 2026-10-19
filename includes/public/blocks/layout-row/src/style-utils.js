@@ -3,7 +3,6 @@
  * the editor shows what the visitor will see. Returns a single <style> body.
  */
 
-import { buildAdvancedCss } from '../../custom-components/advancedCss';
 
 const BREAKPOINTS = {
     tablet: '@media (max-width: 1024px)',
@@ -276,11 +275,6 @@ export const buildRowEditorCss = (attrs, innerBlocks = []) => {
         if (attrs[key]) css += `${sel}${child}{color:${attrs[key]}}`;
     });
 
-    // The Advanced tab's spacing comes from a PHP filter on the page, which
-    // never runs for a block the browser draws itself. Added last so it wins
-    // over the block's own padding and margin, exactly as it does on the page.
-    css += buildAdvancedCss(attrs);
-
     return css;
 };
 
@@ -393,10 +387,6 @@ export const buildColumnEditorCss = (attrs) => {
     if (itt) css += `${BREAKPOINTS.tablet}{${innerSel}{${itt}}}`;
     const imm = renderDecls(iM);
     if (imm) css += `${BREAKPOINTS.mobile}{${innerSel}{${imm}}}`;
-
-    // As on the row: the Advanced tab's spacing is applied by PHP on the page,
-    // and has to be repeated here for the canvas.
-    css += buildAdvancedCss(attrs);
 
     return css;
 };
