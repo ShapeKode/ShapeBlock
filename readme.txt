@@ -4,15 +4,15 @@ Tags: gutenberg blocks, header footer builder, block editor, gutenberg, wordpres
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-30+ Gutenberg blocks - sliders, grids, tabs, counters and more - plus a Header & Footer Builder, with per-device controls.
+40+ Gutenberg blocks - sliders, grids, tabs, counters and more - plus a Header & Footer Builder, with per-device controls.
 
 == Description ==
 
-**ShapeBlock adds 30+** blocks to the WordPress block editor, plus a **Header & Footer Builder**.
+**ShapeBlock adds 40+** blocks to the WordPress block editor, plus a **Header & Footer Builder**.
 
 Every block has the same three tabs: **Settings** for the content, **Layout** for columns, alignment and spacing, and **Style** for colours, typography, borders, shadows and hover effects. Sizes, spacing and columns can be set separately for desktop, tablet and mobile.
 
@@ -20,7 +20,7 @@ Every block has the same three tabs: **Settings** for the content, **Layout** fo
 
 = Key Features =
 
-* **30+ blocks** for layouts, content, media, navigation and marketing.
+* **40+ blocks** for layouts, content, media, navigation and marketing.
 * **Header & Footer Builder** with Include and Exclude display conditions, for classic and block themes.
 * **Fully responsive** - separate desktop, tablet and mobile values, and hide any block per device.
 * **Full design control** - typography, gradients, borders, shadows, spacing and a built-in icon picker.
@@ -210,6 +210,13 @@ Not by default. See External services above.
 Deleting the plugin removes the options and cached data it created. Your Custom Templates, Theme Builder items and the blocks in your posts are your content, so they stay.
 
 == Changelog ==
+
+= 1.0.4 =
+* **Security:** Pricing Table - the old price colour and the features and button alignment are checked before they go into the page's styles.
+* **Security:** the optional feedback form shown when the plugin is deactivated only accepts its own reasons.
+* **Improved:** FAQ - the title's HTML tag is printed with WordPress's tag escaping, like every other block.
+* **Improved:** the check for a bulk plugin activation reads its flag through a filter.
+* **Improved:** the bundled usage-data client (Appsero) has its own ShapeBlock namespace and hook names, so it no longer clashes with another plugin's copy.
 
 = 1.0.3 =
 * **Fixed:** The Advanced tab's padding, margin and background now show in the editor for every ShapeBlock block, not only on the page.

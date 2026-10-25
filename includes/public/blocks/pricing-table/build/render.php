@@ -429,6 +429,10 @@ foreach ( $resp_sub_selectors as $sub_sel ) {
 
 // A Buttons block lines its buttons up with flex.
 $btn_justify = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end' ];
+// Colours checked; alignments only from their own list.
+$old_price_color = ! empty( $attributes['oldPriceColor'] ) ? $H::sanitize_css_color( (string) $attributes['oldPriceColor'], '' ) : '';
+$feature_align   = isset( $attributes['featureTextAlignment'] ) && in_array( $attributes['featureTextAlignment'], [ 'left', 'center', 'right' ], true ) ? $attributes['featureTextAlignment'] : '';
+$btn_align       = isset( $attributes['btnAlignment'] ) && isset( $btn_justify[ $attributes['btnAlignment'] ] ) ? $attributes['btnAlignment'] : '';
 
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $resp_css, [
@@ -439,11 +443,11 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-price'                                    => $H::get_inline_styles( $price_wrap_styles ),
 	'.shapeblock-price .shapeblock-amount'                      => $H::get_inline_styles( $amount_styles ),
 	'.shapeblock-price .shapeblock-sale-price'                  => $H::get_inline_styles( $sale_styles ),
-	'.shapeblock-old-price'                                => ! empty( $attributes['oldPriceColor'] ) ? 'color:' . $attributes['oldPriceColor'] : '',
+	'.shapeblock-old-price'                                => '' !== $old_price_color ? 'color:' . $old_price_color : '',
 	'.shapeblock-price .shapeblock-period'                      => $H::get_inline_styles( $period_styles ),
 	'.shapeblock-currency'                                 => $H::get_inline_styles( $currency_styles ),
 	'.shapeblock-features-description'                     => $H::get_inline_styles( $fdesc_styles ),
-	'ul.shapeblock-features'                               => ! empty( $attributes['featureTextAlignment'] ) ? 'text-align:' . $attributes['featureTextAlignment'] : '',
+	'ul.shapeblock-features'                               => '' !== $feature_align ? 'text-align:' . $feature_align : '',
 	'.shapeblock-features li'                              => $H::get_inline_styles( $features_text_styles ),
 	'.shapeblock-features li .feature-icon'                => $H::get_inline_styles( $features_icon_styles ),
 	'.shapeblock-features li svg path'                     => $H::get_inline_styles( $features_icon_fill ),
@@ -452,7 +456,7 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-features .feature-icon.icon-bg'           => $H::get_inline_styles( $feat_icon_bg_styles ),
 	'.shapeblock-features .feature-icon.icon-border'       => $H::get_inline_styles( $feat_icon_border_styles ),
 	'.shapeblock-ribbon'                                   => $H::get_inline_styles( $ribbon_styles ),
-	'.shapeblock-btn-part'                                 => ! empty( $attributes['btnAlignment'] ) ? 'text-align:' . $attributes['btnAlignment'] . ( isset( $btn_justify[ $attributes['btnAlignment'] ] ) ? ';justify-content:' . $btn_justify[ $attributes['btnAlignment'] ] : '' ) : '',
+	'.shapeblock-btn-part'                                 => '' !== $btn_align ? 'text-align:' . $btn_align . ';justify-content:' . $btn_justify[ $btn_align ] : '',
 	'.shapeblock-button'                                   => $H::get_inline_styles( $button_styles ),
 	'.shapeblock-button:hover'                             => $H::get_inline_styles( $button_hover_styles ),
 	'.shapeblock-btn-part .wp-block-button__link'         => $H::get_inline_styles( $button_styles ),

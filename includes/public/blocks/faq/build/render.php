@@ -360,9 +360,9 @@ $H::add_custom_style( $style_handle, $selector, $full_responsive_css, [
 			?>
 			<div class="shapeblock-faq-item <?php echo esc_attr( $is_active ); ?>">
 				<div class="shapeblock-faq-question">
-					<<?php echo esc_html( $title_tag ); ?> class="shapeblock-faq-title"<?php if ( ! $open_all ) : ?> role="button" tabindex="0" aria-expanded="<?php echo $is_active ? 'true' : 'false'; ?>"<?php endif; ?>>
+					<<?php echo tag_escape( $title_tag ); ?> class="shapeblock-faq-title"<?php if ( ! $open_all ) : ?> role="button" tabindex="0" aria-expanded="<?php echo $is_active ? 'true' : 'false'; ?>"<?php endif; ?>>
 						<?php echo wp_kses_post( $title ); ?>
-					</<?php echo esc_html( $title_tag ); ?>>
+					</<?php echo tag_escape( $title_tag ); ?>>
 					<span class="shapeblock-faq-icon shapeblock-faq-icon-open">
 						<?php
 						if ( ! empty( $icon_open ) && 'none' !== $icon_open ) {

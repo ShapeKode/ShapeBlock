@@ -1,6 +1,6 @@
 <?php
 
-namespace Appsero;
+namespace ShapeBlock\Appsero;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -62,7 +62,7 @@ class Insights {
             $client = new Client( $client, $name, $file );
         }
 
-        if ( is_object( $client ) && is_a( $client, 'Appsero\Client' ) ) {
+        if ( is_object( $client ) && is_a( $client, __NAMESPACE__ . '\Client' ) ) {
             $this->client = $client;
         }
     }
@@ -277,7 +277,7 @@ class Insights {
             $data['extra'] = $extra;
         }
 
-        return apply_filters( $this->client->slug . '_tracker_data', $data );
+        return apply_filters( 'shapeblock_tracker_data', $data );
     }
 
     /**
@@ -372,7 +372,7 @@ class Insights {
             $is_local = true;
         }
 
-        return apply_filters( 'appsero_is_local', $is_local );
+        return apply_filters( 'shapeblock_appsero_is_local', $is_local );
     }
 
     /**
@@ -617,7 +617,7 @@ class Insights {
         $this->schedule_event();
         $this->send_tracking_data();
 
-        do_action( $this->client->slug . '_tracker_optin', $this->get_tracking_data() );
+        do_action( 'shapeblock_tracker_optin', $this->get_tracking_data() );
     }
 
     /**
@@ -631,7 +631,7 @@ class Insights {
 
         $this->clear_schedule_event();
 
-        do_action( $this->client->slug . '_tracker_optout' );
+        do_action( 'shapeblock_tracker_optout' );
     }
 
     /**
@@ -910,15 +910,20 @@ class Insights {
 
         // The site's details go along only if its owner allowed tracking.
         $data                = $this->tracking_allowed() ? $this->get_tracking_data() : array( 'hash' => $this->client->hash );
-        $data['reason_id']   = sanitize_text_field( wp_unslash( $_POST['reason_id'] ) );
-        $data['reason_info'] = isset( $_REQUEST['reason_info'] ) ? trim( sanitize_text_field( wp_unslash( $_REQUEST['reason_info'] ) ) ) : '';
+        // Only one of the reasons the form offers.
+        $reason_id = sanitize_key( wp_unslash( $_POST['reason_id'] ) );
+        if ( ! in_array( $reason_id, wp_list_pluck( $this->get_uninstall_reasons(), 'id' ), true ) ) {
+            wp_send_json_error();
+        }
+        $data['reason_id']   = $reason_id;
+        $data['reason_info'] = isset( $_POST['reason_info'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['reason_info'] ) ) ) : '';
 
         $this->client->send_request( $data, 'deactivate' );
 
         /*
          * Fire after the plugin _uninstall_reason_submitted
          */
-        do_action( $this->client->slug . '_uninstall_reason_submitted', $data );
+        do_action( 'shapeblock_uninstall_reason_submitted', $data );
 
         wp_send_json_success();
     }
@@ -936,7 +941,7 @@ class Insights {
         }
 
         $reasons        = $this->get_uninstall_reasons();
-        $custom_reasons = apply_filters( 'appsero_custom_deactivation_reasons', [], $this->client );
+        $custom_reasons = apply_filters( 'shapeblock_appsero_custom_deactivation_reasons', [], $this->client );
         ?>
 
         <div class="wd-dr-modal" id="<?php echo esc_attr( $this->client->slug ); ?>-wd-dr-modal">

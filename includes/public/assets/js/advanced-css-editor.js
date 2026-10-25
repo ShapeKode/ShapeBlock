@@ -5,7 +5,7 @@
  * A block the editor draws itself (most blocks, as opposed to those rendered
  * by the server) never passes through it, so what an author typed into
  * Advanced showed only on the page. This writes the same rules into the
- * canvas for every ShapeBlock block, ShapeBlock Pro's included: the block's
+ * canvas for every ShapeBlock block, add-on blocks included: the block's
  * own class three times over (as the PHP does, so the value wins over the
  * block's own spacing), with the tablet and phone values in media queries.
  */

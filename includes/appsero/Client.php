@@ -1,6 +1,6 @@
 <?php
 
-namespace Appsero;
+namespace ShapeBlock\Appsero;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -133,7 +133,7 @@ class Client {
      * @return string
      */
     public function endpoint() {
-        $endpoint = apply_filters( 'appsero_endpoint', 'https://api.appsero.com' );
+        $endpoint = apply_filters( 'shapeblock_appsero_endpoint', 'https://api.appsero.com' );
 
         return trailingslashit( $endpoint );
     }
@@ -210,7 +210,7 @@ class Client {
     public function is_local_server() {
         $is_local = isset( $_SERVER['REMOTE_ADDR'] ) && in_array( sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ), [ '127.0.0.1', '::1' ], true );
 
-        return apply_filters( 'appsero_is_local', $is_local );
+        return apply_filters( 'shapeblock_appsero_is_local', $is_local );
     }
 
     /**

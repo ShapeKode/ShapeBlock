@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/tab",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "title": "Tabs",
   "category": "shapeblock",
   "description": "Tabbed content with icon or image titles. Each tab holds any blocks, in a horizontal or vertical layout.",

@@ -321,7 +321,6 @@ class Blocks {
                     'numberposts'      => 1,
                     'fields'           => 'ids',
                     'no_found_rows'    => true,
-                    'suppress_filters' => true,
                 )
             );
             $used = ! empty( $found );

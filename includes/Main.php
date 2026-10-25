@@ -63,7 +63,7 @@ class Main {
 
         // A display flag WordPress adds after a bulk activation; nothing is
         // changed by it, so there is no form to verify.
-        if ( null !== filter_input( INPUT_GET, 'activate-multi' ) || ! current_user_can( 'manage_options' ) ) {
+        if ( null !== filter_input( INPUT_GET, 'activate-multi', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) || ! current_user_can( 'manage_options' ) ) {
             return;
         }
 
