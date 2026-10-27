@@ -97,6 +97,12 @@
 # Fade — the overlay simply appears
 --------------------------------------------------------------*/
 
+/* A box without a link takes focus when tapped (render.php); the tap shows its
+ * text without drawing a focus ring, which the keyboard still gets. */
+.shapeblock-hover-box:focus:not(:focus-visible) {
+	outline: none;
+}
+
 .shapeblock-hover-box-effect-fade .shapeblock-hover-box:hover .shapeblock-hover-box-overlay,
 .shapeblock-hover-box-effect-fade .shapeblock-hover-box:focus-within .shapeblock-hover-box-overlay {
 	opacity: 1;

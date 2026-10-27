@@ -21,20 +21,13 @@
 	list-style: none;
 }
 
-/* Inline layout - all items sit side by side on a single line. */
+/* Inline layout - the items side by side, each kept whole: when the line runs
+   out (a tablet, a phone, a narrow column) the next item starts a new line
+   instead of spilling past the edge. */
 .shapeblock-icon-list-layout-inline {
 	flex-direction: row;
-	flex-wrap: nowrap;
+	flex-wrap: wrap;
 	align-items: center;
-}
-
-/* On a phone one line is rarely wide enough: held to nowrap the items shrink
-   until the text breaks mid-word or spills past the edge. Letting them wrap
-   keeps each one whole and simply starts a new line when the row runs out. */
-@media (max-width: 767px) {
-	.shapeblock-icon-list-layout-inline {
-		flex-wrap: wrap;
-	}
 }
 .shapeblock-icon-list-layout-inline .shapeblock-icon-list {
 	flex: 0 0 auto;

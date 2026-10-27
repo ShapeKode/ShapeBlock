@@ -140,6 +140,19 @@ $inner_responsive = [ 'desktop' => [], 'tablet' => [], 'mobile' => [] ];
 \ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $inner_responsive, 'alignContent',   'align-content' );
 \ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $inner_responsive, 'flexWrap',       'flex-wrap' );
 \ShapeBlock\Frontend\Helper::add_responsive_vars( $attributes, $inner_responsive, 'contentGap',     'gap' );
+// Blocks side by side (direction Row) move onto more lines on a phone when they
+// do not fit, instead of being squeezed past their content and out of the
+// column - unless a wrap setting was chosen for some device.
+$dir_on_phone = '';
+foreach ( [ 'flexDirectionMobile', 'flexDirectionTablet', 'flexDirection' ] as $dir_key ) {
+    if ( ! empty( $attributes[ $dir_key ] ) ) {
+        $dir_on_phone = (string) $attributes[ $dir_key ];
+        break;
+    }
+}
+if ( 0 === strpos( $dir_on_phone, 'row' ) && empty( $attributes['flexWrap'] ) && empty( $attributes['flexWrapTablet'] ) && empty( $attributes['flexWrapMobile'] ) ) {
+    $inner_responsive['mobile']['flex-wrap'] = 'wrap';
+}
 if ( ! empty( $inner_responsive['desktop'] ) || ! empty( $inner_responsive['tablet'] ) || ! empty( $inner_responsive['mobile'] ) ) {
     // Stack vertically from the top unless the user picked a direction, so turning on a
     // single option (gap, align, justify) does not flip content into a horizontal row

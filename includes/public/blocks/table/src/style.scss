@@ -7,6 +7,11 @@
  * reproduced here so the block is self-contained.
  */
 .shapeblock-table-block-wrap {
+	// Never wider than the place it sits in (a column of a row, say): a wide
+	// table scrolls inside its own box instead of pushing the block out.
+	min-width: 0;
+	max-width: 100%;
+
 	.shapeblock-table {
 		width: 100%;
 		overflow: hidden;
@@ -24,6 +29,12 @@
 		text-align: inherit;
 		font-weight: inherit;
 		vertical-align: top;
+		// Each column keeps room for a few words, so a table too wide for its
+		// place scrolls sideways instead of squeezing its text; a word or link
+		// longer than that breaks onto the next line instead of stretching
+		// its column.
+		min-width: 100px;
+		overflow-wrap: anywhere;
 
 		// Blocks put in a cell sit close, the first and last without outer space.
 		> :is(p, h1, h2, h3, h4, h5, h6, figure) {
@@ -42,6 +53,11 @@
 
 	.shapeblock-table-header {
 		font-weight: 700;
+	}
+
+	// A column name breaks only between words.
+	.shapeblock-table .shapeblock-table-header th {
+		overflow-wrap: break-word;
 	}
 
 	.shapeblock-table-footer {
@@ -182,6 +198,33 @@
 	max-width: 100%;
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
+}
+
+/* The sideways scrollbar shows all the time, thin: phones otherwise hide it
+ * until the table is touched, and nothing tells the visitor that it scrolls. */
+.shapeblock-table-scroll,
+.shapeblock-table-block-wrap .shapeblock-table {
+	&::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: #f0f0f1;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		border-radius: 8px;
+		background: #a7aaad;
+	}
+}
+
+/* Firefox has no ::-webkit-scrollbar; its own properties do the same. */
+@supports not selector(::-webkit-scrollbar) {
+	.shapeblock-table-scroll {
+		scrollbar-width: thin;
+		scrollbar-color: #a7aaad #f0f0f1;
+	}
 }
 
 /* "Fixed width table cells": the columns share the width equally. */

@@ -373,6 +373,12 @@ export const buildColumnEditorCss = (attrs) => {
         return dcl;
     };
     const iD = innerOf(''), iT = innerOf('Tablet'), iM = innerOf('Mobile');
+    // Blocks side by side wrap onto more lines on a phone, unless a wrap setting
+    // was chosen (matches render.php).
+    const phoneDir = attrs.flexDirectionMobile || attrs.flexDirectionTablet || attrs.flexDirection || '';
+    if (0 === phoneDir.indexOf('row') && !attrs.flexWrap && !attrs.flexWrapTablet && !attrs.flexWrapMobile) {
+        iM['flex-wrap'] = 'wrap';
+    }
     // Flex only when the user set at least one flex option (keeps empty/default columns as normal block flow).
     if (Object.keys(iD).length || Object.keys(iT).length || Object.keys(iM).length) {
         // Stack vertically from the top unless a direction was picked, so a single option

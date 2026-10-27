@@ -188,6 +188,9 @@
 		.shapeblock-tab-titles {
 			gap: 10px;
 		}
+		/* One tab to a line. The icon-position rules above (flex: 1) are more
+		 * specific than a plain list item, so this names the wrapper too. */
+		.shapeblock-tabs-wrapper[data-icon-position] .shapeblock-tab-titles li,
 		.shapeblock-tab-titles li {
 			flex: 1 1 100%;
 			padding: 12px;

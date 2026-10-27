@@ -240,7 +240,8 @@ $link_url = isset( $attributes['linkUrl'] ) ? trim( (string) $attributes['linkUr
 $new_tab  = ! empty( $attributes['linkNewTab'] );
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="shapeblock-hover-box">
+	<?php // Without a link the box takes focus, so a tap on a phone (where there is no hover) or the Tab key shows its text. ?>
+	<div class="shapeblock-hover-box"<?php echo '' === $link_url ? ' tabindex="0"' : ''; ?>>
 		<div class="shapeblock-hover-box-media">
 			<?php
 			if ( 'image' === $media_type ) {
