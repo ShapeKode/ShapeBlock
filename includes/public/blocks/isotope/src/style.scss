@@ -8,8 +8,12 @@
 .shapeblock-iso {
 	--shapeblock-iso-cols: 3;
 	--shapeblock-iso-gap: 24px;
-	width: 100%;
 	box-sizing: border-box;
+
+	/* Wide and full width: the theme sizes it, as it does a core block. */
+	&:where(:not(.alignfull):not(.alignwide)) {
+		width: 100%;
+	}
 }
 
 /* ---- Filter bar ---------------------------------------------------------- */

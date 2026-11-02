@@ -938,6 +938,40 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					values={attributes.paginationBtnBorderRadius}
 					onChange={(value) => setAttributes({ paginationBtnBorderRadius: value })}
 				/>
+				<BoxControl
+					label={__('Padding', 'shapeblock')}
+					values={attributes.paginationPadding}
+					onChange={(value) => setAttributes({ paginationPadding: value })}
+				/>
+				<Divider />
+				<SelectControl
+					label={__('Alignment', 'shapeblock')}
+					value={attributes.paginationAlign}
+					options={[
+						{ label: __('Default (Center)', 'shapeblock'), value: '' },
+						{ label: __('Left', 'shapeblock'), value: 'left' },
+						{ label: __('Right', 'shapeblock'), value: 'right' },
+					]}
+					onChange={(value) => setAttributes({ paginationAlign: value })}
+					__next40pxDefaultSize={true}
+					__nextHasNoMarginBottom={true}
+				/>
+				<NumberControl
+					label={__('Space Between (px)', 'shapeblock')}
+					value={attributes.paginationGap}
+					min={0}
+					max={60}
+					placeholder="8"
+					onChange={(value) => setAttributes({ paginationGap: value ?? '' })}
+				/>
+				<NumberControl
+					label={__('Space Above (px)', 'shapeblock')}
+					value={attributes.paginationSpacing}
+					min={0}
+					max={200}
+					placeholder="40"
+					onChange={(value) => setAttributes({ paginationSpacing: value ?? '' })}
+				/>
 				<Divider />
 				<TypographyControls
 					label={__('Typography', 'shapeblock')}

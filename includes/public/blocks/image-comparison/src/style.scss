@@ -7,8 +7,10 @@
  */
 .shapeblock-image-comparison-block-wrap {
 	/* The images are absolutely placed, so the block has no width of its own: it takes the full width
-	   (in a centred column it would otherwise shrink to nothing). */
-	width: 100%;
+	   (in a centred column it would otherwise shrink to nothing). Wide and full width: the theme sizes it, as it does a core block. */
+	&:where(:not(.alignfull):not(.alignwide)) {
+		width: 100%;
+	}
 
 	.shapeblock-comparison-container {
 		/* A border sits inside the width, so the box never grows past 100%. */

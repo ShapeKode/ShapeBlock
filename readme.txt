@@ -4,7 +4,7 @@ Tags: gutenberg blocks, header footer builder, block editor, gutenberg, wordpres
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -219,10 +219,33 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 
 == Changelog ==
 
-= 1.0.4 =
+= 1.0.5 =
 * **New:** Google Map block - one place or several, with the places listed beside, under or over the map (click one to show it), directions and phone links, a gray, dark, warm or soft look, and Load on Click for privacy.
 * **New:** Drop Caps block - a large first letter across 2 to 8 lines, plain, in a box, outlined or as an outlined letter, with text columns and a line between them.
+* **New:** Advanced tab - a Position panel on every block: Absolute or Fixed, lined up with an edge or centred, with top, right, bottom and left offsets, width and z-index for each device.
+* **New:** Column - a background image, with its size, position, repeat and attachment, as on the Row.
+* **New:** Icon List - a link for each item (new tab and nofollow), an icon box with its own background, size and corner radius, items that slide towards their text when pointed at, and title typography.
 * **New:** Filterable List - Mark as Hot adds a Hot label to an item.
+* **New:** Clients Logo - Add Logos picks several logos from the Media Library at once; the old button is now Add Empty Logo.
+* **Improved:** Row - Position is Default or Sticky, with the sticky top offset right under it; margins can be negative, to pull a row up over the one above.
+* **Improved:** Column - blocks side by side move onto more lines on a phone when they do not fit, instead of being squeezed out of the column.
+* **Improved:** Blocks page - All, Free, Pro and Upcoming tabs; a block still to come has no switch.
+* **Improved:** Post Grid - the page links have padding, alignment (left, center or right), the space between them and the space above; the hover colours also reach a Load More button.
+* **Improved:** Image Carousel and Slider - images picked from the Media Library take the place of the empty starting slides.
+* **Improved:** Table, Image Comparison and Isotope Filter - Wide and Full width follow the theme, as core blocks do; a wide table scrolls inside its own box instead of pushing out of a column.
+* **Improved:** Countdown - the digits keep one width, so the timer does not shift as they change.
+* **Fixed:** Theme Builder - when several templates of one kind fit a page, the most specific display condition now wins (a Front Page header over an Entire Site one, Category Pages over All Archives); before, the one edited last was used everywhere.
+* **Fixed:** Theme Builder - a template saved before it had conditions still shows on the whole site; one whose conditions were all removed shows nowhere, and the list says so.
+* **Fixed:** Typing in a block's text on the canvas no longer loses the cursor or the last letters when another field of the block is saved.
+* **Fixed:** Hover Box - without a link it can be tapped on a phone or reached with the Tab key to show its text, and its image fills the box.
+* **Fixed:** Search - the icon colours now reach the built-in icons.
+* **Fixed:** Team Member and Simple Gallery - captions are no longer cut off; Team Member's first style stacks properly on a phone.
+* **Fixed:** Testimonial - the third style's stars, logo and author follow the alignment.
+* **Fixed:** Progress Bar - the title and the percent line up; Feature List - the connector line shows over a section's background.
+* **Fixed:** Google Map, Icon List, Row and Post Grid - Wide and Full width follow the theme on every theme: they no longer stop short of the screen edge or run past a sidebar; Post Grid is no wider than the content on block themes, and the theme's list indent no longer reaches the Google Map places.
+* **Fixed:** Row - the layout picker reads "Choose a Layout".
+
+= 1.0.4 =
 * **Security:** Pricing Table - the old price colour and the features and button alignment are checked before they go into the page's styles.
 * **Security:** the optional feedback form shown when the plugin is deactivated only accepts its own reasons.
 * **Improved:** FAQ - the title's HTML tag is printed with WordPress's tag escaping, like every other block.

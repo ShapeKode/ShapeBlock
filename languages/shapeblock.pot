@@ -2,21 +2,21 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: ShapeBlock 1.0.3\n"
+"Project-Id-Version: ShapeBlock 1.0.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/shapeblock\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-17T06:56:22+00:00\n"
+"POT-Creation-Date: 2026-11-02T03:52:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.10.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: shapeblock\n"
 
 #. Plugin Name of the plugin
-#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
-#: includes/public/blocks/blocks.php:753
+#: shapeblock.php
+#: includes/public/blocks/blocks.php:835
 #: includes/public/blocks/pricing-table/pricing-table.php:130
 #: includes/public/blocks/custom-components/IconPicker.js:29
 #: includes/public/blocks/custom-components/IconPicker.js:36
@@ -24,68 +24,68 @@ msgid "ShapeBlock"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
+#: shapeblock.php
 msgid "https://shapekode.com/product/shapeblock/"
 msgstr ""
 
 #. Description of the plugin
-#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
+#: shapeblock.php
 msgid "A library of 34 Gutenberg blocks - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls."
 msgstr ""
 
 #. Author of the plugin
-#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
+#: shapeblock.php
 msgid "ShapeKode"
 msgstr ""
 
 #. Author URI of the plugin
-#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
+#: shapeblock.php
 msgid "https://profiles.wordpress.org/shapekode22/"
 msgstr ""
 
-#: includes/admin/Api.php:333
+#: includes/admin/Api.php:334
 msgid "The import file could not be read."
 msgstr ""
 
-#: includes/admin/Api.php:338
+#: includes/admin/Api.php:339
 msgid "This is not a ShapeBlock export file."
 msgstr ""
 
-#: includes/admin/Api.php:343
+#: includes/admin/Api.php:344
 msgid "This file was created by a newer version of ShapeBlock."
 msgstr ""
 
-#: includes/admin/Api.php:638
+#: includes/admin/Api.php:639
 msgid "Layout payload must be an object."
 msgstr ""
 
-#: includes/admin/Api.php:669
-#: includes/admin/Api.php:695
+#: includes/admin/Api.php:670
+#: includes/admin/Api.php:696
 msgid "Invalid status value."
 msgstr ""
 
-#: includes/admin/Api.php:673
+#: includes/admin/Api.php:674
 msgid "No block provided."
 msgstr ""
 
-#: includes/admin/Api.php:678
+#: includes/admin/Api.php:679
 msgid "Unknown block."
 msgstr ""
 
-#: includes/admin/Api.php:699
+#: includes/admin/Api.php:700
 msgid "No blocks provided."
 msgstr ""
 
-#: includes/admin/Api.php:768
+#: includes/admin/Api.php:769
 msgid "Template title is required"
 msgstr ""
 
-#: includes/admin/Api.php:791
-#: includes/admin/Api.php:811
+#: includes/admin/Api.php:792
+#: includes/admin/Api.php:812
 msgid "Template not found"
 msgstr ""
 
-#: includes/admin/Api.php:831
+#: includes/admin/Api.php:832
 msgid "Template IDs are required"
 msgstr ""
 
@@ -98,8 +98,8 @@ msgid "Posts in a customizable grid."
 msgstr ""
 
 #: includes/admin/Blocks.php:38
-#: includes/public/blocks/column/src/edit.js:308
-#: includes/public/blocks/layout-row/src/edit.js:459
+#: includes/public/blocks/column/src/edit.js:309
+#: includes/public/blocks/layout-row/src/edit.js:424
 msgid "Row"
 msgstr ""
 
@@ -108,8 +108,8 @@ msgid "Section that holds columns."
 msgstr ""
 
 #: includes/admin/Blocks.php:44
-#: includes/public/blocks/column/src/edit.js:310
-#: includes/public/blocks/layout-row/src/edit.js:461
+#: includes/public/blocks/column/src/edit.js:311
+#: includes/public/blocks/layout-row/src/edit.js:426
 #: includes/public/blocks/testimonials-grid/src/edit.js:52
 msgid "Column"
 msgstr ""
@@ -173,8 +173,8 @@ msgstr ""
 #: includes/public/blocks/feature-list/src/edit.js:177
 #: includes/public/blocks/feature-list/src/edit.js:208
 #: includes/public/blocks/feature-list/src/edit.js:261
-#: includes/public/blocks/filter-list/src/edit.js:221
-#: includes/public/blocks/filter-list/src/edit.js:528
+#: includes/public/blocks/filter-list/src/edit.js:222
+#: includes/public/blocks/filter-list/src/edit.js:530
 #: includes/public/blocks/gallery/src/edit.js:340
 #: includes/public/blocks/hover-box/src/edit.js:163
 #: includes/public/blocks/hover-box/src/edit.js:190
@@ -183,9 +183,9 @@ msgstr ""
 #: includes/public/blocks/icon-box/src/edit.js:133
 #: includes/public/blocks/icon-box/src/edit.js:142
 #: includes/public/blocks/icon-box/src/edit.js:283
-#: includes/public/blocks/icon-list/src/edit.js:147
-#: includes/public/blocks/icon-list/src/edit.js:162
-#: includes/public/blocks/icon-list/src/edit.js:218
+#: includes/public/blocks/icon-list/src/edit.js:152
+#: includes/public/blocks/icon-list/src/edit.js:174
+#: includes/public/blocks/icon-list/src/edit.js:230
 #: includes/public/blocks/icon/src/edit.js:148
 #: includes/public/blocks/icon/src/edit.js:174
 #: includes/public/blocks/image-comparison/src/edit.js:236
@@ -210,7 +210,7 @@ msgstr ""
 
 #: includes/admin/Blocks.php:80
 #: includes/public/blocks/heading/src/edit.js:282
-#: includes/public/blocks/layout-row/src/edit.js:745
+#: includes/public/blocks/layout-row/src/edit.js:639
 msgid "Heading"
 msgstr ""
 
@@ -244,229 +244,249 @@ msgid "Feature list with icons."
 msgstr ""
 
 #: includes/admin/Blocks.php:104
-msgid "Hover Box"
+msgid "Google Map"
 msgstr ""
 
 #: includes/admin/Blocks.php:106
-msgid "Box that shows text on hover."
+msgid "A map of one place or several, with directions."
 msgstr ""
 
 #: includes/admin/Blocks.php:110
+msgid "Drop Caps"
+msgstr ""
+
+#: includes/admin/Blocks.php:112
+msgid "A paragraph that opens with a large first letter."
+msgstr ""
+
+#: includes/admin/Blocks.php:116
+msgid "Hover Box"
+msgstr ""
+
+#: includes/admin/Blocks.php:118
+msgid "Box that shows text on hover."
+msgstr ""
+
+#: includes/admin/Blocks.php:122
 #: includes/public/blocks/icon-box/src/edit.js:246
 #: includes/public/blocks/tab/src/edit.js:420
 msgid "Icon Box"
 msgstr ""
 
-#: includes/admin/Blocks.php:112
+#: includes/admin/Blocks.php:124
 msgid "Icon, title and text box."
 msgstr ""
 
-#: includes/admin/Blocks.php:116
+#: includes/admin/Blocks.php:128
 msgid "Icon List"
 msgstr ""
 
-#: includes/admin/Blocks.php:118
+#: includes/admin/Blocks.php:130
 msgid "List of rows with icons."
 msgstr ""
 
-#: includes/admin/Blocks.php:122
+#: includes/admin/Blocks.php:134
 #: includes/public/blocks/counter/src/edit.js:292
 msgid "Counter"
 msgstr ""
 
-#: includes/admin/Blocks.php:124
+#: includes/admin/Blocks.php:136
 msgid "Animated number counter."
 msgstr ""
 
-#: includes/admin/Blocks.php:128
+#: includes/admin/Blocks.php:140
 #: includes/public/blocks/tab/src/edit.js:242
 msgid "Tabs"
 msgstr ""
 
-#: includes/admin/Blocks.php:130
+#: includes/admin/Blocks.php:142
 msgid "Content in tabbed panels."
 msgstr ""
 
-#: includes/admin/Blocks.php:134
+#: includes/admin/Blocks.php:146
 msgid "Countdown"
 msgstr ""
 
-#: includes/admin/Blocks.php:136
+#: includes/admin/Blocks.php:148
 msgid "Countdown timer to a date."
 msgstr ""
 
-#: includes/admin/Blocks.php:140
+#: includes/admin/Blocks.php:152
 #: includes/public/blocks/custom-components/TableEditing.js:45
 #: includes/public/blocks/table/src/sidebar.js:126
 msgid "Table"
 msgstr ""
 
-#: includes/admin/Blocks.php:142
+#: includes/admin/Blocks.php:154
 msgid "Data table with icons."
 msgstr ""
 
-#: includes/admin/Blocks.php:146
+#: includes/admin/Blocks.php:158
 #: includes/public/blocks/social-share/src/edit.js:109
 msgid "Social Share"
 msgstr ""
 
-#: includes/admin/Blocks.php:148
+#: includes/admin/Blocks.php:160
 msgid "Share buttons for socials."
 msgstr ""
 
-#: includes/admin/Blocks.php:152
+#: includes/admin/Blocks.php:164
 msgid "Social Icon"
 msgstr ""
 
-#: includes/admin/Blocks.php:154
+#: includes/admin/Blocks.php:166
 msgid "Linked social media icons."
 msgstr ""
 
-#: includes/admin/Blocks.php:158
+#: includes/admin/Blocks.php:170
 #: includes/public/blocks/progress/src/edit.js:97
 msgid "Progress Bar"
 msgstr ""
 
-#: includes/admin/Blocks.php:160
+#: includes/admin/Blocks.php:172
 msgid "Progress and skill bars."
 msgstr ""
 
-#: includes/admin/Blocks.php:164
+#: includes/admin/Blocks.php:176
 msgid "Client Logo"
 msgstr ""
 
-#: includes/admin/Blocks.php:166
+#: includes/admin/Blocks.php:178
 msgid "A grid of client logos."
 msgstr ""
 
-#: includes/admin/Blocks.php:170
+#: includes/admin/Blocks.php:182
 msgid "Image Comparison"
 msgstr ""
 
-#: includes/admin/Blocks.php:172
+#: includes/admin/Blocks.php:184
 msgid "Before / after image slider."
 msgstr ""
 
-#: includes/admin/Blocks.php:176
+#: includes/admin/Blocks.php:188
 #: includes/public/blocks/scroll-to-top/src/edit.js:87
 msgid "Scroll to Top"
 msgstr ""
 
-#: includes/admin/Blocks.php:178
+#: includes/admin/Blocks.php:190
 msgid "Button back to page top."
 msgstr ""
 
-#: includes/admin/Blocks.php:182
+#: includes/admin/Blocks.php:194
 msgid "Offcanvas"
 msgstr ""
 
-#: includes/admin/Blocks.php:184
+#: includes/admin/Blocks.php:196
 msgid "Button that opens a panel."
 msgstr ""
 
-#: includes/admin/Blocks.php:188
-#: includes/public/blocks/filter-list/src/edit.js:314
+#: includes/admin/Blocks.php:200
+#: includes/public/blocks/filter-list/src/edit.js:316
 #: includes/public/blocks/isotope/src/edit.js:361
 msgid "Search"
 msgstr ""
 
-#: includes/admin/Blocks.php:190
+#: includes/admin/Blocks.php:202
 msgid "Search popup or search field."
 msgstr ""
 
-#: includes/admin/Blocks.php:194
+#: includes/admin/Blocks.php:206
 msgid "Breadcrumb"
 msgstr ""
 
-#: includes/admin/Blocks.php:196
+#: includes/admin/Blocks.php:208
 msgid "Breadcrumb trail for pages."
 msgstr ""
 
-#: includes/admin/Blocks.php:200
+#: includes/admin/Blocks.php:212
 msgid "Menu"
 msgstr ""
 
-#: includes/admin/Blocks.php:202
+#: includes/admin/Blocks.php:214
 msgid "Navigation menu with styles."
 msgstr ""
 
-#: includes/admin/Blocks.php:206
+#: includes/admin/Blocks.php:218
 msgid "Slider"
 msgstr ""
 
-#: includes/admin/Blocks.php:208
+#: includes/admin/Blocks.php:220
 msgid "Full-width image slider."
 msgstr ""
 
-#: includes/admin/Blocks.php:212
+#: includes/admin/Blocks.php:224
 msgid "Image Carousel"
 msgstr ""
 
-#: includes/admin/Blocks.php:214
+#: includes/admin/Blocks.php:226
 msgid "Images in a carousel."
 msgstr ""
 
-#: includes/admin/Blocks.php:218
+#: includes/admin/Blocks.php:230
 msgid "Isotope Filter"
 msgstr ""
 
-#: includes/admin/Blocks.php:220
+#: includes/admin/Blocks.php:232
 msgid "Filterable grid by category."
 msgstr ""
 
-#: includes/admin/Blocks.php:224
+#: includes/admin/Blocks.php:236
 msgid "Filterable List"
 msgstr ""
 
-#: includes/admin/Blocks.php:226
+#: includes/admin/Blocks.php:238
 msgid "Links with icons, filter buttons and search."
 msgstr ""
 
-#: includes/admin/Blocks.php:230
+#: includes/admin/Blocks.php:242
 msgid "Sticky Stack"
 msgstr ""
 
-#: includes/admin/Blocks.php:232
+#: includes/admin/Blocks.php:244
 msgid "Cards that stack on scroll."
 msgstr ""
 
-#: includes/admin/Blocks.php:283
+#: includes/admin/Blocks.php:297
+#: src/components/admin-components/blocks.jsx:14
 msgid "Free"
 msgstr ""
 
-#: includes/admin/Blocks.php:343
+#: includes/admin/Blocks.php:356
 #: includes/public/blocks/breadcrumb/src/edit.js:241
 #: includes/public/blocks/button/src/edit.js:182
 #: includes/public/blocks/button/src/edit.js:332
-#: includes/public/blocks/clients-logo-grid/src/edit.js:290
-#: includes/public/blocks/column/src/edit.js:463
+#: includes/public/blocks/clients-logo-grid/src/edit.js:309
+#: includes/public/blocks/column/src/edit.js:468
 #: includes/public/blocks/countdown/src/edit.js:169
 #: includes/public/blocks/countdown/src/edit.js:241
 #: includes/public/blocks/counter/src/edit.js:462
+#: includes/public/blocks/drop-caps/src/edit.js:89
 #: includes/public/blocks/faq/src/edit.js:548
 #: includes/public/blocks/feature-list/src/edit.js:320
-#: includes/public/blocks/filter-list/src/edit.js:566
+#: includes/public/blocks/filter-list/src/edit.js:568
 #: includes/public/blocks/gallery/src/edit.js:508
+#: includes/public/blocks/google-map/src/edit.js:134
+#: includes/public/blocks/google-map/src/edit.js:182
 #: includes/public/blocks/heading/src/edit.js:244
 #: includes/public/blocks/hover-box/src/edit.js:351
 #: includes/public/blocks/icon-box/src/edit.js:205
 #: includes/public/blocks/icon-box/src/edit.js:452
-#: includes/public/blocks/icon-list/src/edit.js:171
-#: includes/public/blocks/icon-list/src/edit.js:279
+#: includes/public/blocks/icon-list/src/edit.js:183
+#: includes/public/blocks/icon-list/src/edit.js:332
 #: includes/public/blocks/icon/src/edit.js:140
-#: includes/public/blocks/image-carousel/src/edit.js:362
+#: includes/public/blocks/image-carousel/src/edit.js:364
 #: includes/public/blocks/image-comparison/src/edit.js:134
 #: includes/public/blocks/image-comparison/src/edit.js:281
 #: includes/public/blocks/isotope/src/edit.js:800
-#: includes/public/blocks/layout-row/src/edit.js:800
+#: includes/public/blocks/layout-row/src/edit.js:694
 #: includes/public/blocks/offcanvas/src/edit.js:285
-#: includes/public/blocks/post-grid/src/edit.js:978
+#: includes/public/blocks/post-grid/src/edit.js:1012
 #: includes/public/blocks/pricing-table/src/edit.js:538
 #: includes/public/blocks/progress/src/edit.js:179
 #: includes/public/blocks/scroll-to-top/src/edit.js:140
 #: includes/public/blocks/search/src/edit.js:263
-#: includes/public/blocks/slider/src/edit.js:239
-#: includes/public/blocks/slider/src/edit.js:297
+#: includes/public/blocks/slider/src/edit.js:241
+#: includes/public/blocks/slider/src/edit.js:299
 #: includes/public/blocks/social-icon/src/edit.js:247
 #: includes/public/blocks/social-share/src/edit.js:172
 #: includes/public/blocks/social-share/src/edit.js:243
@@ -478,11 +498,11 @@ msgstr ""
 msgid "Layout"
 msgstr ""
 
-#: includes/admin/Blocks.php:344
+#: includes/admin/Blocks.php:357
 #: includes/public/blocks/breadcrumb/src/edit.js:98
 #: includes/public/blocks/button/src/edit.js:157
 #: includes/public/blocks/countdown/src/edit.js:149
-#: includes/public/blocks/filter-list/src/edit.js:336
+#: includes/public/blocks/filter-list/src/edit.js:338
 #: includes/public/blocks/heading/src/edit.js:251
 #: includes/public/blocks/hover-box/src/edit.js:153
 #: includes/public/blocks/icon-box/src/edit.js:126
@@ -493,28 +513,28 @@ msgstr ""
 msgid "Content"
 msgstr ""
 
-#: includes/admin/Blocks.php:345
+#: includes/admin/Blocks.php:358
 #: includes/public/blocks/hover-box/src/edit.js:155
 msgid "Media"
 msgstr ""
 
-#: includes/admin/Blocks.php:346
+#: includes/admin/Blocks.php:359
 msgid "Header Footer"
 msgstr ""
 
-#: includes/admin/Blocks.php:347
+#: includes/admin/Blocks.php:360
 msgid "Showcase"
 msgstr ""
 
-#: includes/admin/Blocks.php:348
+#: includes/admin/Blocks.php:361
 msgid "Posts & Site"
 msgstr ""
 
-#: includes/admin/Blocks.php:349
+#: includes/admin/Blocks.php:362
 msgid "Form"
 msgstr ""
 
-#: includes/admin/Blocks.php:350
+#: includes/admin/Blocks.php:363
 msgid "Feed"
 msgstr ""
 
@@ -598,46 +618,50 @@ msgstr ""
 msgid "Builder template not found."
 msgstr ""
 
-#: includes/extension/theme-builder/Builder_Conditions.php:41
-#: includes/extension/theme-builder/Builder_Conditions.php:223
-#: src/components/admin-components/theme-builder.jsx:388
+#: includes/extension/theme-builder/Builder_Conditions.php:42
 msgid "Entire Site"
 msgstr ""
 
-#: includes/extension/theme-builder/Builder_Conditions.php:42
+#: includes/extension/theme-builder/Builder_Conditions.php:43
 msgid "Front Page"
 msgstr ""
 
-#: includes/extension/theme-builder/Builder_Conditions.php:43
+#: includes/extension/theme-builder/Builder_Conditions.php:44
 msgid "All Pages"
 msgstr ""
 
-#: includes/extension/theme-builder/Builder_Conditions.php:44
+#: includes/extension/theme-builder/Builder_Conditions.php:45
 msgid "All Posts"
 msgstr ""
 
-#: includes/extension/theme-builder/Builder_Conditions.php:45
+#: includes/extension/theme-builder/Builder_Conditions.php:46
 msgid "All Archives"
 msgstr ""
 
-#: includes/extension/theme-builder/Builder_Conditions.php:46
+#: includes/extension/theme-builder/Builder_Conditions.php:47
 msgid "Search Results"
 msgstr ""
 
-#: includes/extension/theme-builder/Builder_Conditions.php:47
+#: includes/extension/theme-builder/Builder_Conditions.php:48
 msgid "404 Page"
 msgstr ""
 
-#: includes/extension/theme-builder/Builder_Conditions.php:50
+#: includes/extension/theme-builder/Builder_Conditions.php:51
 msgid "Specific Pages"
 msgstr ""
 
-#: includes/extension/theme-builder/Builder_Conditions.php:51
+#: includes/extension/theme-builder/Builder_Conditions.php:52
 msgid "Specific Posts"
+msgstr ""
+
+#: includes/extension/theme-builder/Builder_Conditions.php:246
+#: src/components/admin-components/theme-builder.jsx:388
+msgid "Not shown anywhere"
 msgstr ""
 
 #. translators: 1: template type, e.g. Header. 2: template title.
 #: includes/extension/theme-builder/Builder_Render.php:120
+#, php-format
 msgid "%1$s: %2$s"
 msgstr ""
 
@@ -710,72 +734,75 @@ msgstr ""
 msgid "No builder templates found in Trash"
 msgstr ""
 
-#: includes/Main.php:51
-#: includes/public/blocks/column/src/edit.js:169
+#: includes/Main.php:98
+#: includes/public/blocks/column/src/edit.js:170
 #: includes/public/blocks/faq/src/edit.js:255
-#: includes/public/blocks/layout-row/src/edit.js:215
+#: includes/public/blocks/layout-row/src/edit.js:196
 #: src/app.js:23
 #: src/components/admin-components/builder-conditions-modal.jsx:17
 #: src/components/admin-components/settings.jsx:195
 msgid "General"
 msgstr ""
 
-#: includes/Main.php:52
+#: includes/Main.php:99
 #: src/app.js:28
-#: src/components/admin-components/blocks.jsx:174
+#: src/components/admin-components/blocks.jsx:186
 msgid "Blocks"
 msgstr ""
 
-#: includes/Main.php:53
+#: includes/Main.php:100
 #: src/app.js:33
 #: src/components/admin-components/theme-builder.jsx:474
 msgid "Theme Builder"
 msgstr ""
 
-#: includes/Main.php:54
+#: includes/Main.php:101
 #: src/app.js:38
 #: src/components/admin-components/export-import.jsx:10
 msgid "Custom Templates"
 msgstr ""
 
-#: includes/Main.php:78
+#: includes/Main.php:125
 #: src/app.js:45
 #: src/components/admin-components/export-import.jsx:219
 msgid "Export & Import"
 msgstr ""
 
 #. translators: %s: name of the ShapeBlock admin page.
-#: includes/Main.php:193
+#: includes/Main.php:240
+#, php-format
 msgid "ShapeBlock - %s"
 msgstr ""
 
-#: includes/Main.php:219
+#: includes/Main.php:266
 #: includes/public/blocks/breadcrumb/src/edit.js:240
 #: includes/public/blocks/button/src/edit.js:331
-#: includes/public/blocks/clients-logo-grid/src/edit.js:289
-#: includes/public/blocks/column/src/edit.js:462
+#: includes/public/blocks/clients-logo-grid/src/edit.js:308
+#: includes/public/blocks/column/src/edit.js:467
 #: includes/public/blocks/countdown/src/edit.js:240
 #: includes/public/blocks/counter/src/edit.js:461
+#: includes/public/blocks/drop-caps/src/edit.js:88
 #: includes/public/blocks/faq/src/edit.js:547
 #: includes/public/blocks/feature-list/src/edit.js:319
-#: includes/public/blocks/filter-list/src/edit.js:565
+#: includes/public/blocks/filter-list/src/edit.js:567
 #: includes/public/blocks/gallery/src/edit.js:507
+#: includes/public/blocks/google-map/src/edit.js:181
 #: includes/public/blocks/heading/src/edit.js:243
 #: includes/public/blocks/hover-box/src/edit.js:350
 #: includes/public/blocks/icon-box/src/edit.js:451
-#: includes/public/blocks/icon-list/src/edit.js:278
+#: includes/public/blocks/icon-list/src/edit.js:331
 #: includes/public/blocks/icon/src/edit.js:139
-#: includes/public/blocks/image-carousel/src/edit.js:361
+#: includes/public/blocks/image-carousel/src/edit.js:363
 #: includes/public/blocks/image-comparison/src/edit.js:280
 #: includes/public/blocks/isotope/src/edit.js:799
-#: includes/public/blocks/layout-row/src/edit.js:799
+#: includes/public/blocks/layout-row/src/edit.js:693
 #: includes/public/blocks/offcanvas/src/edit.js:284
-#: includes/public/blocks/post-grid/src/edit.js:977
+#: includes/public/blocks/post-grid/src/edit.js:1011
 #: includes/public/blocks/pricing-table/src/edit.js:537
 #: includes/public/blocks/progress/src/edit.js:178
 #: includes/public/blocks/scroll-to-top/src/edit.js:139
 #: includes/public/blocks/search/src/edit.js:262
-#: includes/public/blocks/slider/src/edit.js:296
+#: includes/public/blocks/slider/src/edit.js:298
 #: includes/public/blocks/social-icon/src/edit.js:246
 #: includes/public/blocks/social-share/src/edit.js:242
 #: includes/public/blocks/sticky-stack/src/edit.js:530
@@ -831,30 +858,31 @@ msgstr ""
 
 #. translators: %d: filter number.
 #: includes/public/blocks/filter-list/src/render.php:37
+#, php-format
 msgid "Filter %d"
 msgstr ""
 
 #: includes/public/blocks/filter-list/src/render.php:57
 #: includes/public/blocks/isotope/src/render.php:24
-#: includes/public/blocks/filter-list/src/edit.js:291
-#: includes/public/blocks/filter-list/src/edit.js:298
+#: includes/public/blocks/filter-list/src/edit.js:293
+#: includes/public/blocks/filter-list/src/edit.js:300
 #: includes/public/blocks/isotope/src/edit.js:352
 #: includes/public/blocks/post-grid/src/edit.js:148
-#: src/components/admin-components/blocks.jsx:176
+#: src/components/admin-components/blocks.jsx:188
 #: src/components/admin-components/theme-builder.jsx:324
 msgid "All"
 msgstr ""
 
 #: includes/public/blocks/filter-list/src/render.php:60
 #: includes/public/blocks/isotope/src/render.php:29
-#: includes/public/blocks/filter-list/src/edit.js:323
+#: includes/public/blocks/filter-list/src/edit.js:325
 #: includes/public/blocks/isotope/src/edit.js:371
 msgid "Search…"
 msgstr ""
 
 #: includes/public/blocks/filter-list/src/render.php:61
 #: includes/public/blocks/isotope/src/render.php:30
-#: includes/public/blocks/filter-list/src/edit.js:328
+#: includes/public/blocks/filter-list/src/edit.js:330
 #: includes/public/blocks/isotope/src/edit.js:374
 msgid "Nothing found. Try another word."
 msgstr ""
@@ -866,15 +894,45 @@ msgstr ""
 #: includes/public/blocks/filter-list/src/render.php:286
 #: includes/public/blocks/isotope/src/render.php:398
 #: includes/public/blocks/filter-list/src/edit.js:88
-#: includes/public/blocks/filter-list/src/edit.js:270
+#: includes/public/blocks/filter-list/src/edit.js:272
 msgid "Filter"
+msgstr ""
+
+#: includes/public/blocks/filter-list/src/render.php:347
+#: includes/public/blocks/filter-list/src/edit.js:216
+msgid "Hot"
 msgstr ""
 
 #: includes/public/blocks/gallery/src/render.php:158
 msgid "Please select images to display the gallery."
 msgstr ""
 
-#: includes/public/blocks/hover-box/src/render.php:269
+#: includes/public/blocks/google-map/src/render.php:36
+#: includes/public/blocks/google-map/src/edit.js:125
+msgid "Get Directions"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/render.php:44
+msgid "Please add an address."
+msgstr ""
+
+#. translators: %s: the name or address of the place on the map.
+#: includes/public/blocks/google-map/src/render.php:159
+#: includes/public/blocks/google-map/src/render.php:179
+#, php-format
+msgid "Map: %s"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/render.php:161
+#: includes/public/blocks/google-map/src/edit.js:116
+msgid "Show the Map"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/render.php:162
+msgid "The map is loaded from Google Maps, which receives your IP address when it loads."
+msgstr ""
+
+#: includes/public/blocks/hover-box/src/render.php:270
 msgid "Read more"
 msgstr ""
 
@@ -925,6 +983,7 @@ msgstr ""
 
 #. translators: %d: category number.
 #: includes/public/blocks/isotope/src/render.php:407
+#, php-format
 msgid "Category %d"
 msgstr ""
 
@@ -933,7 +992,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: includes/public/blocks/post-grid/src/render.php:579
+#: includes/public/blocks/post-grid/src/render.php:604
 msgid "No posts found."
 msgstr ""
 
@@ -970,6 +1029,7 @@ msgstr ""
 
 #: includes/public/blocks/pricing-table/pricing-table.php:84
 #: includes/public/blocks/pricing-table/src/edit.js:106
+#: src/components/admin-components/blocks.jsx:15
 msgid "Pro"
 msgstr ""
 
@@ -1062,16 +1122,16 @@ msgstr ""
 msgid "What are you looking for?"
 msgstr ""
 
-#: includes/public/blocks/search/src/render.php:274
-#: includes/public/blocks/search/src/render.php:315
+#: includes/public/blocks/search/src/render.php:275
+#: includes/public/blocks/search/src/render.php:316
 msgid "Submit Search"
 msgstr ""
 
-#: includes/public/blocks/search/src/render.php:288
+#: includes/public/blocks/search/src/render.php:289
 msgid "Open Search"
 msgstr ""
 
-#: includes/public/blocks/search/src/render.php:300
+#: includes/public/blocks/search/src/render.php:301
 msgid "Close Search"
 msgstr ""
 
@@ -1133,12 +1193,13 @@ msgid "Please add testimonials."
 msgstr ""
 
 #. translators: %d: star rating, a whole number from 1 to 5.
-#: includes/public/blocks/testimonials-grid/src/render.php:293
+#: includes/public/blocks/testimonials-grid/src/render.php:299
+#, php-format
 msgid "Rating: %d out of 5"
 msgstr ""
 
 #: includes/public/template-parts/post-grid/style-1.php:13
-#: includes/public/blocks/filter-list/src/edit.js:323
+#: includes/public/blocks/filter-list/src/edit.js:325
 #: includes/public/blocks/isotope/src/edit.js:371
 msgid "Placeholder"
 msgstr ""
@@ -1155,58 +1216,60 @@ msgstr ""
 
 #. translators: %s: Tablet or Mobile.
 #: includes/public/assets/js/responsive-spacing.js:243
+#, js-format
 msgid "Editing %s padding / margin. Empty sides use the larger screen."
 msgstr ""
 
 #: includes/public/assets/js/responsive-visibility.js:34
-#: includes/public/blocks/column/src/edit.js:195
-#: includes/public/blocks/layout-row/src/edit.js:273
+#: includes/public/blocks/column/src/edit.js:196
+#: includes/public/blocks/layout-row/src/edit.js:234
 msgid "Hide on Desktop"
 msgstr ""
 
 #: includes/public/assets/js/responsive-visibility.js:35
-#: includes/public/blocks/column/src/edit.js:201
-#: includes/public/blocks/layout-row/src/edit.js:279
+#: includes/public/blocks/column/src/edit.js:202
+#: includes/public/blocks/layout-row/src/edit.js:240
 msgid "Hide on Tablet"
 msgstr ""
 
 #: includes/public/assets/js/responsive-visibility.js:36
-#: includes/public/blocks/column/src/edit.js:207
-#: includes/public/blocks/layout-row/src/edit.js:285
+#: includes/public/blocks/column/src/edit.js:208
+#: includes/public/blocks/layout-row/src/edit.js:246
 msgid "Hide on Mobile"
 msgstr ""
 
 #: includes/public/assets/js/responsive-visibility.js:71
-#: includes/public/blocks/column/src/edit.js:193
-#: includes/public/blocks/layout-row/src/edit.js:271
+#: includes/public/blocks/column/src/edit.js:194
+#: includes/public/blocks/layout-row/src/edit.js:232
 msgid "Responsive"
 msgstr ""
 
 #: includes/public/blocks/breadcrumb/src/edit.js:29
 #: includes/public/blocks/button/src/edit.js:41
-#: includes/public/blocks/column/src/edit.js:282
+#: includes/public/blocks/column/src/edit.js:283
 #: includes/public/blocks/counter/src/edit.js:302
 #: includes/public/blocks/counter/src/edit.js:352
 #: includes/public/blocks/counter/src/edit.js:376
 #: includes/public/blocks/counter/src/edit.js:383
 #: includes/public/blocks/counter/src/edit.js:418
+#: includes/public/blocks/custom-components/AdvancedControls.js:133
 #: includes/public/blocks/custom-components/TextAlignControl.js:15
 #: includes/public/blocks/custom-components/TypographyControls.js:8
 #: includes/public/blocks/custom-components/TypographyControls.js:213
 #: includes/public/blocks/custom-components/TypographyControls.js:280
 #: includes/public/blocks/feature-list/src/edit.js:262
-#: includes/public/blocks/filter-list/src/edit.js:404
+#: includes/public/blocks/filter-list/src/edit.js:406
 #: includes/public/blocks/gallery/src/edit.js:251
 #: includes/public/blocks/gallery/src/edit.js:339
 #: includes/public/blocks/gallery/src/edit.js:432
 #: includes/public/blocks/icon-box/src/edit.js:284
-#: includes/public/blocks/icon-list/src/edit.js:172
+#: includes/public/blocks/icon-list/src/edit.js:184
 #: includes/public/blocks/icon/src/edit.js:179
 #: includes/public/blocks/isotope/src/edit.js:514
 #: includes/public/blocks/isotope/src/edit.js:575
-#: includes/public/blocks/layout-row/src/edit.js:411
-#: includes/public/blocks/layout-row/src/edit.js:427
-#: includes/public/blocks/layout-row/src/edit.js:579
+#: includes/public/blocks/layout-row/src/edit.js:372
+#: includes/public/blocks/layout-row/src/edit.js:392
+#: includes/public/blocks/layout-row/src/edit.js:544
 #: includes/public/blocks/post-grid/src/edit.js:317
 #: includes/public/blocks/post-grid/src/edit.js:438
 #: includes/public/blocks/post-grid/src/edit.js:753
@@ -1228,6 +1291,8 @@ msgstr ""
 #: includes/public/blocks/counter/src/edit.js:361
 #: includes/public/blocks/counter/src/edit.js:383
 #: includes/public/blocks/counter/src/edit.js:418
+#: includes/public/blocks/custom-components/AdvancedControls.js:151
+#: includes/public/blocks/custom-components/AdvancedControls.js:168
 #: includes/public/blocks/custom-components/SpacingControl.js:43
 #: includes/public/blocks/custom-components/TextAlignControl.js:16
 #: includes/public/blocks/faq/src/edit.js:314
@@ -1238,14 +1303,15 @@ msgstr ""
 #: includes/public/blocks/heading/src/edit.js:274
 #: includes/public/blocks/hover-box/src/edit.js:278
 #: includes/public/blocks/icon-box/src/edit.js:225
-#: includes/public/blocks/icon-list/src/edit.js:178
 #: includes/public/blocks/icon-list/src/edit.js:190
+#: includes/public/blocks/icon-list/src/edit.js:202
 #: includes/public/blocks/icon/src/edit.js:117
 #: includes/public/blocks/image-comparison/src/edit.js:156
 #: includes/public/blocks/isotope/src/edit.js:65
 #: includes/public/blocks/isotope/src/edit.js:488
 #: includes/public/blocks/isotope/src/edit.js:498
 #: includes/public/blocks/offcanvas/src/edit.js:185
+#: includes/public/blocks/post-grid/src/edit.js:952
 #: includes/public/blocks/pricing-table/src/edit.js:56
 #: includes/public/blocks/pricing-table/src/edit.js:287
 #: includes/public/blocks/pricing-table/src/price.js:49
@@ -1267,11 +1333,12 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/src/edit.js:31
 #: includes/public/blocks/button/src/edit.js:30
 #: includes/public/blocks/button/src/edit.js:43
-#: includes/public/blocks/column/src/edit.js:319
+#: includes/public/blocks/column/src/edit.js:320
 #: includes/public/blocks/countdown/src/edit.js:181
 #: includes/public/blocks/counter/src/edit.js:30
 #: includes/public/blocks/counter/src/edit.js:383
 #: includes/public/blocks/counter/src/edit.js:418
+#: includes/public/blocks/custom-components/AdvancedControls.js:152
 #: includes/public/blocks/custom-components/TextAlignControl.js:17
 #: includes/public/blocks/feature-list/src/edit.js:268
 #: includes/public/blocks/filter-list/src/edit.js:59
@@ -1279,12 +1346,12 @@ msgstr ""
 #: includes/public/blocks/heading/src/edit.js:275
 #: includes/public/blocks/hover-box/src/edit.js:279
 #: includes/public/blocks/icon-box/src/edit.js:226
-#: includes/public/blocks/icon-list/src/edit.js:179
+#: includes/public/blocks/icon-list/src/edit.js:191
 #: includes/public/blocks/icon/src/edit.js:118
 #: includes/public/blocks/image-comparison/src/edit.js:157
 #: includes/public/blocks/isotope/src/edit.js:66
 #: includes/public/blocks/isotope/src/edit.js:489
-#: includes/public/blocks/layout-row/src/edit.js:478
+#: includes/public/blocks/layout-row/src/edit.js:443
 #: includes/public/blocks/pricing-table/src/edit.js:57
 #: includes/public/blocks/sticky-stack/src/edit.js:389
 #: includes/public/blocks/tab/src/edit.js:348
@@ -1305,6 +1372,8 @@ msgstr ""
 #: includes/public/blocks/counter/src/edit.js:364
 #: includes/public/blocks/counter/src/edit.js:383
 #: includes/public/blocks/counter/src/edit.js:418
+#: includes/public/blocks/custom-components/AdvancedControls.js:153
+#: includes/public/blocks/custom-components/AdvancedControls.js:166
 #: includes/public/blocks/custom-components/SpacingControl.js:41
 #: includes/public/blocks/custom-components/TextAlignControl.js:18
 #: includes/public/blocks/faq/src/edit.js:313
@@ -1315,13 +1384,14 @@ msgstr ""
 #: includes/public/blocks/heading/src/edit.js:276
 #: includes/public/blocks/hover-box/src/edit.js:280
 #: includes/public/blocks/icon-box/src/edit.js:227
-#: includes/public/blocks/icon-list/src/edit.js:180
-#: includes/public/blocks/icon-list/src/edit.js:191
+#: includes/public/blocks/icon-list/src/edit.js:192
+#: includes/public/blocks/icon-list/src/edit.js:203
 #: includes/public/blocks/icon/src/edit.js:119
 #: includes/public/blocks/image-comparison/src/edit.js:158
 #: includes/public/blocks/isotope/src/edit.js:67
 #: includes/public/blocks/isotope/src/edit.js:490
 #: includes/public/blocks/offcanvas/src/edit.js:186
+#: includes/public/blocks/post-grid/src/edit.js:953
 #: includes/public/blocks/pricing-table/src/edit.js:58
 #: includes/public/blocks/pricing-table/src/edit.js:288
 #: includes/public/blocks/pricing-table/src/price.js:50
@@ -1348,6 +1418,7 @@ msgstr ""
 #: includes/public/blocks/filter-list/src/edit.js:49
 #: includes/public/blocks/icon-box/src/edit.js:251
 #: includes/public/blocks/icon-box/src/edit.js:327
+#: includes/public/blocks/icon-list/src/edit.js:38
 #: includes/public/blocks/isotope/src/edit.js:56
 #: includes/public/blocks/post-grid/src/edit.js:503
 #: includes/public/blocks/post-grid/src/edit.js:620
@@ -1371,6 +1442,8 @@ msgstr ""
 #: includes/public/blocks/hover-box/src/edit.js:208
 #: includes/public/blocks/icon-box/src/edit.js:252
 #: includes/public/blocks/icon-box/src/edit.js:328
+#: includes/public/blocks/icon-list/src/edit.js:39
+#: includes/public/blocks/icon-list/src/edit.js:260
 #: includes/public/blocks/isotope/src/edit.js:57
 #: includes/public/blocks/post-grid/src/edit.js:504
 #: includes/public/blocks/post-grid/src/edit.js:621
@@ -1450,10 +1523,11 @@ msgstr ""
 #: includes/public/blocks/heading/src/edit.js:272
 #: includes/public/blocks/heading/src/edit.js:273
 #: includes/public/blocks/hover-box/src/edit.js:271
-#: includes/public/blocks/icon-list/src/edit.js:177
+#: includes/public/blocks/icon-list/src/edit.js:189
 #: includes/public/blocks/icon/src/edit.js:170
 #: includes/public/blocks/isotope/src/edit.js:508
 #: includes/public/blocks/isotope/src/edit.js:569
+#: includes/public/blocks/post-grid/src/edit.js:948
 #: includes/public/blocks/team-grid/src/edit.js:193
 #: includes/public/blocks/team-grid/src/edit.js:289
 #: includes/public/blocks/testimonials-grid/src/edit.js:213
@@ -1461,7 +1535,7 @@ msgid "Alignment"
 msgstr ""
 
 #: includes/public/blocks/breadcrumb/src/edit.js:155
-#: includes/public/blocks/layout-row/src/edit.js:297
+#: includes/public/blocks/layout-row/src/edit.js:258
 msgid "Container"
 msgstr ""
 
@@ -1473,11 +1547,11 @@ msgstr ""
 #: includes/public/blocks/button/src/edit.js:236
 #: includes/public/blocks/button/src/edit.js:293
 #: includes/public/blocks/button/src/edit.js:299
-#: includes/public/blocks/column/src/edit.js:396
-#: includes/public/blocks/column/src/edit.js:398
+#: includes/public/blocks/column/src/edit.js:399
+#: includes/public/blocks/column/src/edit.js:401
 #: includes/public/blocks/counter/src/edit.js:426
-#: includes/public/blocks/custom-components/AdvancedControls.js:62
-#: includes/public/blocks/custom-components/AdvancedControls.js:64
+#: includes/public/blocks/custom-components/AdvancedControls.js:231
+#: includes/public/blocks/custom-components/AdvancedControls.js:233
 #: includes/public/blocks/faq/src/edit.js:330
 #: includes/public/blocks/faq/src/edit.js:331
 #: includes/public/blocks/faq/src/edit.js:332
@@ -1485,13 +1559,14 @@ msgstr ""
 #: includes/public/blocks/faq/src/edit.js:464
 #: includes/public/blocks/feature-list/src/edit.js:254
 #: includes/public/blocks/feature-list/src/edit.js:270
-#: includes/public/blocks/filter-list/src/edit.js:440
-#: includes/public/blocks/filter-list/src/edit.js:446
-#: includes/public/blocks/filter-list/src/edit.js:453
-#: includes/public/blocks/filter-list/src/edit.js:472
-#: includes/public/blocks/filter-list/src/edit.js:511
-#: includes/public/blocks/filter-list/src/edit.js:516
-#: includes/public/blocks/filter-list/src/edit.js:545
+#: includes/public/blocks/filter-list/src/edit.js:442
+#: includes/public/blocks/filter-list/src/edit.js:448
+#: includes/public/blocks/filter-list/src/edit.js:455
+#: includes/public/blocks/filter-list/src/edit.js:474
+#: includes/public/blocks/filter-list/src/edit.js:513
+#: includes/public/blocks/filter-list/src/edit.js:518
+#: includes/public/blocks/filter-list/src/edit.js:547
+#: includes/public/blocks/google-map/src/edit.js:153
 #: includes/public/blocks/heading/src/edit.js:294
 #: includes/public/blocks/hover-box/src/edit.js:303
 #: includes/public/blocks/hover-box/src/edit.js:310
@@ -1500,9 +1575,10 @@ msgstr ""
 #: includes/public/blocks/icon-box/src/edit.js:292
 #: includes/public/blocks/icon-box/src/edit.js:335
 #: includes/public/blocks/icon-box/src/edit.js:341
+#: includes/public/blocks/icon-list/src/edit.js:236
 #: includes/public/blocks/icon/src/edit.js:204
-#: includes/public/blocks/image-carousel/src/edit.js:320
-#: includes/public/blocks/image-carousel/src/edit.js:338
+#: includes/public/blocks/image-carousel/src/edit.js:322
+#: includes/public/blocks/image-carousel/src/edit.js:340
 #: includes/public/blocks/image-comparison/src/edit.js:264
 #: includes/public/blocks/isotope/src/edit.js:600
 #: includes/public/blocks/isotope/src/edit.js:606
@@ -1513,8 +1589,8 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:696
 #: includes/public/blocks/isotope/src/edit.js:755
 #: includes/public/blocks/isotope/src/edit.js:761
-#: includes/public/blocks/layout-row/src/edit.js:629
-#: includes/public/blocks/layout-row/src/edit.js:631
+#: includes/public/blocks/layout-row/src/edit.js:596
+#: includes/public/blocks/layout-row/src/edit.js:598
 #: includes/public/blocks/offcanvas/src/edit.js:270
 #: includes/public/blocks/post-grid/src/edit.js:512
 #: includes/public/blocks/post-grid/src/edit.js:740
@@ -1526,7 +1602,7 @@ msgstr ""
 #: includes/public/blocks/pricing-table/src/edit.js:439
 #: includes/public/blocks/progress/src/edit.js:147
 #: includes/public/blocks/scroll-to-top/src/edit.js:119
-#: includes/public/blocks/slider/src/edit.js:273
+#: includes/public/blocks/slider/src/edit.js:275
 #: includes/public/blocks/social-icon/src/edit.js:138
 #: includes/public/blocks/social-icon/src/edit.js:149
 #: includes/public/blocks/social-icon/src/edit.js:206
@@ -1558,10 +1634,10 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/src/edit.js:158
 #: includes/public/blocks/button/src/edit.js:231
 #: includes/public/blocks/button/src/edit.js:237
-#: includes/public/blocks/clients-logo-grid/src/edit.js:263
-#: includes/public/blocks/clients-logo-grid/src/edit.js:271
-#: includes/public/blocks/column/src/edit.js:409
-#: includes/public/blocks/column/src/edit.js:411
+#: includes/public/blocks/clients-logo-grid/src/edit.js:282
+#: includes/public/blocks/clients-logo-grid/src/edit.js:290
+#: includes/public/blocks/column/src/edit.js:414
+#: includes/public/blocks/column/src/edit.js:416
 #: includes/public/blocks/counter/src/edit.js:431
 #: includes/public/blocks/custom-components/BorderControl.js:97
 #: includes/public/blocks/faq/src/edit.js:335
@@ -1569,22 +1645,23 @@ msgstr ""
 #: includes/public/blocks/faq/src/edit.js:467
 #: includes/public/blocks/feature-list/src/edit.js:255
 #: includes/public/blocks/feature-list/src/edit.js:272
-#: includes/public/blocks/filter-list/src/edit.js:454
-#: includes/public/blocks/filter-list/src/edit.js:473
-#: includes/public/blocks/filter-list/src/edit.js:517
+#: includes/public/blocks/filter-list/src/edit.js:456
+#: includes/public/blocks/filter-list/src/edit.js:475
+#: includes/public/blocks/filter-list/src/edit.js:519
+#: includes/public/blocks/google-map/src/edit.js:146
 #: includes/public/blocks/hover-box/src/edit.js:304
 #: includes/public/blocks/icon-box/src/edit.js:271
 #: includes/public/blocks/icon-box/src/edit.js:294
 #: includes/public/blocks/icon-box/src/edit.js:342
 #: includes/public/blocks/icon/src/edit.js:206
-#: includes/public/blocks/image-carousel/src/edit.js:321
+#: includes/public/blocks/image-carousel/src/edit.js:323
 #: includes/public/blocks/image-comparison/src/edit.js:214
 #: includes/public/blocks/isotope/src/edit.js:613
 #: includes/public/blocks/isotope/src/edit.js:663
 #: includes/public/blocks/isotope/src/edit.js:682
 #: includes/public/blocks/isotope/src/edit.js:762
-#: includes/public/blocks/layout-row/src/edit.js:756
-#: includes/public/blocks/layout-row/src/edit.js:758
+#: includes/public/blocks/layout-row/src/edit.js:650
+#: includes/public/blocks/layout-row/src/edit.js:652
 #: includes/public/blocks/post-grid/src/edit.js:565
 #: includes/public/blocks/post-grid/src/edit.js:878
 #: includes/public/blocks/post-grid/src/edit.js:932
@@ -1611,26 +1688,29 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/src/edit.js:202
 #: includes/public/blocks/breadcrumb/src/edit.js:213
 #: includes/public/blocks/button/src/edit.js:244
-#: includes/public/blocks/clients-logo-grid/src/edit.js:254
-#: includes/public/blocks/column/src/edit.js:417
+#: includes/public/blocks/clients-logo-grid/src/edit.js:273
+#: includes/public/blocks/column/src/edit.js:422
 #: includes/public/blocks/counter/src/edit.js:429
 #: includes/public/blocks/faq/src/edit.js:358
 #: includes/public/blocks/faq/src/edit.js:449
 #: includes/public/blocks/faq/src/edit.js:517
 #: includes/public/blocks/feature-list/src/edit.js:256
 #: includes/public/blocks/feature-list/src/edit.js:273
-#: includes/public/blocks/filter-list/src/edit.js:461
-#: includes/public/blocks/filter-list/src/edit.js:475
-#: includes/public/blocks/filter-list/src/edit.js:523
-#: includes/public/blocks/filter-list/src/edit.js:548
+#: includes/public/blocks/filter-list/src/edit.js:463
+#: includes/public/blocks/filter-list/src/edit.js:477
+#: includes/public/blocks/filter-list/src/edit.js:525
+#: includes/public/blocks/filter-list/src/edit.js:550
 #: includes/public/blocks/gallery/src/edit.js:420
+#: includes/public/blocks/google-map/src/edit.js:147
+#: includes/public/blocks/google-map/src/edit.js:158
 #: includes/public/blocks/hover-box/src/edit.js:305
 #: includes/public/blocks/icon-box/src/edit.js:277
 #: includes/public/blocks/icon-box/src/edit.js:295
 #: includes/public/blocks/icon-box/src/edit.js:347
+#: includes/public/blocks/icon-list/src/edit.js:238
 #: includes/public/blocks/icon/src/edit.js:208
-#: includes/public/blocks/image-carousel/src/edit.js:322
-#: includes/public/blocks/image-carousel/src/edit.js:340
+#: includes/public/blocks/image-carousel/src/edit.js:324
+#: includes/public/blocks/image-carousel/src/edit.js:342
 #: includes/public/blocks/image-comparison/src/edit.js:215
 #: includes/public/blocks/image-comparison/src/edit.js:267
 #: includes/public/blocks/isotope/src/edit.js:619
@@ -1639,7 +1719,7 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:699
 #: includes/public/blocks/isotope/src/edit.js:743
 #: includes/public/blocks/isotope/src/edit.js:768
-#: includes/public/blocks/layout-row/src/edit.js:764
+#: includes/public/blocks/layout-row/src/edit.js:658
 #: includes/public/blocks/post-grid/src/edit.js:571
 #: includes/public/blocks/post-grid/src/edit.js:610
 #: includes/public/blocks/post-grid/src/edit.js:872
@@ -1649,8 +1729,8 @@ msgstr ""
 #: includes/public/blocks/pricing-table/src/edit.js:450
 #: includes/public/blocks/scroll-to-top/src/edit.js:126
 #: includes/public/blocks/search/src/edit.js:227
-#: includes/public/blocks/slider/src/edit.js:260
-#: includes/public/blocks/slider/src/edit.js:275
+#: includes/public/blocks/slider/src/edit.js:262
+#: includes/public/blocks/slider/src/edit.js:277
 #: includes/public/blocks/social-icon/src/edit.js:191
 #: includes/public/blocks/social-share/src/edit.js:228
 #: includes/public/blocks/sticky-stack/src/edit.js:430
@@ -1674,34 +1754,36 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/src/edit.js:177
 #: includes/public/blocks/breadcrumb/src/edit.js:205
 #: includes/public/blocks/button/src/edit.js:246
-#: includes/public/blocks/clients-logo-grid/src/edit.js:255
-#: includes/public/blocks/column/src/edit.js:377
+#: includes/public/blocks/clients-logo-grid/src/edit.js:274
+#: includes/public/blocks/column/src/edit.js:378
 #: includes/public/blocks/counter/src/edit.js:430
-#: includes/public/blocks/custom-components/AdvancedControls.js:37
+#: includes/public/blocks/custom-components/AdvancedControls.js:202
 #: includes/public/blocks/faq/src/edit.js:454
 #: includes/public/blocks/feature-list/src/edit.js:257
 #: includes/public/blocks/feature-list/src/edit.js:280
-#: includes/public/blocks/filter-list/src/edit.js:462
-#: includes/public/blocks/filter-list/src/edit.js:524
-#: includes/public/blocks/filter-list/src/edit.js:547
+#: includes/public/blocks/filter-list/src/edit.js:464
+#: includes/public/blocks/filter-list/src/edit.js:526
+#: includes/public/blocks/filter-list/src/edit.js:549
+#: includes/public/blocks/google-map/src/edit.js:157
 #: includes/public/blocks/hover-box/src/edit.js:311
 #: includes/public/blocks/icon-box/src/edit.js:278
 #: includes/public/blocks/icon-box/src/edit.js:290
 #: includes/public/blocks/icon-box/src/edit.js:302
 #: includes/public/blocks/icon-box/src/edit.js:358
 #: includes/public/blocks/icon/src/edit.js:201
-#: includes/public/blocks/image-carousel/src/edit.js:323
+#: includes/public/blocks/image-carousel/src/edit.js:325
 #: includes/public/blocks/image-comparison/src/edit.js:266
 #: includes/public/blocks/isotope/src/edit.js:690
 #: includes/public/blocks/isotope/src/edit.js:742
 #: includes/public/blocks/isotope/src/edit.js:769
-#: includes/public/blocks/layout-row/src/edit.js:610
+#: includes/public/blocks/layout-row/src/edit.js:575
 #: includes/public/blocks/offcanvas/src/edit.js:271
 #: includes/public/blocks/post-grid/src/edit.js:576
 #: includes/public/blocks/post-grid/src/edit.js:592
 #: includes/public/blocks/post-grid/src/edit.js:643
 #: includes/public/blocks/post-grid/src/edit.js:693
 #: includes/public/blocks/post-grid/src/edit.js:860
+#: includes/public/blocks/post-grid/src/edit.js:942
 #: includes/public/blocks/pricing-table/src/edit.js:319
 #: includes/public/blocks/pricing-table/src/edit.js:337
 #: includes/public/blocks/pricing-table/src/edit.js:348
@@ -1727,9 +1809,9 @@ msgstr ""
 
 #: includes/public/blocks/breadcrumb/src/edit.js:167
 #: includes/public/blocks/breadcrumb/src/edit.js:171
-#: includes/public/blocks/filter-list/src/edit.js:471
+#: includes/public/blocks/filter-list/src/edit.js:473
 #: includes/public/blocks/gallery/src/edit.js:483
-#: includes/public/blocks/image-carousel/src/edit.js:337
+#: includes/public/blocks/image-carousel/src/edit.js:339
 #: includes/public/blocks/image-comparison/src/edit.js:251
 #: includes/public/blocks/isotope/src/edit.js:262
 #: includes/public/blocks/isotope/src/edit.js:661
@@ -1738,7 +1820,7 @@ msgstr ""
 #: includes/public/blocks/pricing-table/src/edit.js:419
 #: includes/public/blocks/scroll-to-top/src/edit.js:118
 #: includes/public/blocks/search/src/edit.js:218
-#: includes/public/blocks/slider/src/edit.js:272
+#: includes/public/blocks/slider/src/edit.js:274
 #: includes/public/blocks/social-icon/src/edit.js:144
 #: includes/public/blocks/social-icon/src/edit.js:155
 #: includes/public/blocks/social-icon/src/edit.js:212
@@ -1757,16 +1839,16 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/src/edit.js:203
 #: includes/public/blocks/button/src/edit.js:283
 #: includes/public/blocks/feature-list/src/edit.js:266
-#: includes/public/blocks/filter-list/src/edit.js:531
+#: includes/public/blocks/filter-list/src/edit.js:533
 #: includes/public/blocks/hover-box/src/edit.js:282
 #: includes/public/blocks/hover-box/src/edit.js:315
 #: includes/public/blocks/icon-box/src/edit.js:288
-#: includes/public/blocks/icon-list/src/edit.js:219
+#: includes/public/blocks/icon-list/src/edit.js:231
 #: includes/public/blocks/icon/src/edit.js:171
-#: includes/public/blocks/image-carousel/src/edit.js:339
-#: includes/public/blocks/image-carousel/src/edit.js:348
-#: includes/public/blocks/slider/src/edit.js:274
-#: includes/public/blocks/slider/src/edit.js:283
+#: includes/public/blocks/image-carousel/src/edit.js:341
+#: includes/public/blocks/image-carousel/src/edit.js:350
+#: includes/public/blocks/slider/src/edit.js:276
+#: includes/public/blocks/slider/src/edit.js:285
 #: includes/public/blocks/sticky-stack/src/edit.js:437
 #: includes/public/blocks/testimonials-grid/src/edit.js:267
 #: includes/public/blocks/testimonials-grid/src/edit.js:274
@@ -1789,10 +1871,12 @@ msgid "Horizontal Offset (px)"
 msgstr ""
 
 #: includes/public/blocks/breadcrumb/src/edit.js:183
+#: includes/public/blocks/drop-caps/src/edit.js:72
 #: includes/public/blocks/gallery/src/edit.js:341
-#: includes/public/blocks/icon-list/src/edit.js:149
-#: includes/public/blocks/icon-list/src/edit.js:226
-#: includes/public/blocks/layout-row/src/edit.js:742
+#: includes/public/blocks/google-map/src/edit.js:164
+#: includes/public/blocks/icon-list/src/edit.js:154
+#: includes/public/blocks/icon-list/src/edit.js:242
+#: includes/public/blocks/layout-row/src/edit.js:636
 #: includes/public/blocks/post-grid/src/edit.js:762
 #: includes/public/blocks/social-share/src/edit.js:131
 #: includes/public/blocks/social-share/src/edit.js:168
@@ -1805,13 +1889,16 @@ msgstr ""
 #: includes/public/blocks/counter/src/edit.js:401
 #: includes/public/blocks/counter/src/edit.js:409
 #: includes/public/blocks/counter/src/edit.js:417
+#: includes/public/blocks/drop-caps/src/edit.js:74
 #: includes/public/blocks/faq/src/edit.js:367
 #: includes/public/blocks/faq/src/edit.js:426
 #: includes/public/blocks/feature-list/src/edit.js:279
 #: includes/public/blocks/feature-list/src/edit.js:285
 #: includes/public/blocks/filter-list/src/edit.js:162
-#: includes/public/blocks/filter-list/src/edit.js:433
-#: includes/public/blocks/filter-list/src/edit.js:539
+#: includes/public/blocks/filter-list/src/edit.js:435
+#: includes/public/blocks/filter-list/src/edit.js:541
+#: includes/public/blocks/google-map/src/edit.js:162
+#: includes/public/blocks/google-map/src/edit.js:167
 #: includes/public/blocks/heading/src/edit.js:284
 #: includes/public/blocks/heading/src/edit.js:295
 #: includes/public/blocks/hover-box/src/edit.js:321
@@ -1819,15 +1906,15 @@ msgstr ""
 #: includes/public/blocks/icon-box/src/edit.js:301
 #: includes/public/blocks/icon-box/src/edit.js:307
 #: includes/public/blocks/icon-box/src/edit.js:348
-#: includes/public/blocks/icon-list/src/edit.js:228
+#: includes/public/blocks/icon-list/src/edit.js:253
 #: includes/public/blocks/isotope/src/edit.js:593
 #: includes/public/blocks/isotope/src/edit.js:658
 #: includes/public/blocks/isotope/src/edit.js:707
 #: includes/public/blocks/isotope/src/edit.js:713
 #: includes/public/blocks/isotope/src/edit.js:741
 #: includes/public/blocks/isotope/src/edit.js:748
-#: includes/public/blocks/layout-row/src/edit.js:748
-#: includes/public/blocks/layout-row/src/edit.js:749
+#: includes/public/blocks/layout-row/src/edit.js:642
+#: includes/public/blocks/layout-row/src/edit.js:643
 #: includes/public/blocks/offcanvas/src/edit.js:253
 #: includes/public/blocks/post-grid/src/edit.js:671
 #: includes/public/blocks/post-grid/src/edit.js:674
@@ -1835,7 +1922,7 @@ msgstr ""
 #: includes/public/blocks/post-grid/src/edit.js:724
 #: includes/public/blocks/post-grid/src/edit.js:814
 #: includes/public/blocks/post-grid/src/edit.js:894
-#: includes/public/blocks/post-grid/src/edit.js:943
+#: includes/public/blocks/post-grid/src/edit.js:977
 #: includes/public/blocks/pricing-table/src/edit.js:315
 #: includes/public/blocks/pricing-table/src/edit.js:331
 #: includes/public/blocks/pricing-table/src/edit.js:344
@@ -1866,6 +1953,7 @@ msgstr ""
 
 #: includes/public/blocks/breadcrumb/src/edit.js:187
 #: includes/public/blocks/breadcrumb/src/edit.js:191
+#: includes/public/blocks/google-map/src/edit.js:166
 msgid "Link Color"
 msgstr ""
 
@@ -1901,11 +1989,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/src/edit.js:211
 #: includes/public/blocks/button/src/edit.js:229
 #: includes/public/blocks/button/src/edit.js:235
-#: includes/public/blocks/filter-list/src/edit.js:439
-#: includes/public/blocks/filter-list/src/edit.js:445
-#: includes/public/blocks/filter-list/src/edit.js:452
-#: includes/public/blocks/filter-list/src/edit.js:469
-#: includes/public/blocks/filter-list/src/edit.js:544
+#: includes/public/blocks/filter-list/src/edit.js:441
+#: includes/public/blocks/filter-list/src/edit.js:447
+#: includes/public/blocks/filter-list/src/edit.js:454
+#: includes/public/blocks/filter-list/src/edit.js:471
+#: includes/public/blocks/filter-list/src/edit.js:546
 #: includes/public/blocks/gallery/src/edit.js:491
 #: includes/public/blocks/icon-box/src/edit.js:334
 #: includes/public/blocks/icon-box/src/edit.js:340
@@ -1945,34 +2033,37 @@ msgstr ""
 
 #: includes/public/blocks/breadcrumb/src/edit.js:242
 #: includes/public/blocks/button/src/edit.js:333
-#: includes/public/blocks/clients-logo-grid/src/edit.js:291
-#: includes/public/blocks/column/src/edit.js:464
+#: includes/public/blocks/clients-logo-grid/src/edit.js:310
+#: includes/public/blocks/column/src/edit.js:469
 #: includes/public/blocks/countdown/src/edit.js:242
 #: includes/public/blocks/counter/src/edit.js:463
 #: includes/public/blocks/custom-components/BorderControl.js:120
+#: includes/public/blocks/drop-caps/src/edit.js:46
+#: includes/public/blocks/drop-caps/src/edit.js:90
 #: includes/public/blocks/faq/src/edit.js:549
 #: includes/public/blocks/feature-list/src/edit.js:321
-#: includes/public/blocks/filter-list/src/edit.js:567
+#: includes/public/blocks/filter-list/src/edit.js:569
 #: includes/public/blocks/gallery/src/edit.js:509
+#: includes/public/blocks/google-map/src/edit.js:183
 #: includes/public/blocks/heading/src/edit.js:245
 #: includes/public/blocks/hover-box/src/edit.js:352
 #: includes/public/blocks/icon-box/src/edit.js:453
-#: includes/public/blocks/icon-list/src/edit.js:280
+#: includes/public/blocks/icon-list/src/edit.js:333
 #: includes/public/blocks/icon/src/edit.js:141
-#: includes/public/blocks/image-carousel/src/edit.js:363
+#: includes/public/blocks/image-carousel/src/edit.js:365
 #: includes/public/blocks/image-comparison/src/edit.js:220
 #: includes/public/blocks/image-comparison/src/edit.js:282
 #: includes/public/blocks/isotope/src/edit.js:718
 #: includes/public/blocks/isotope/src/edit.js:801
-#: includes/public/blocks/layout-row/src/edit.js:801
+#: includes/public/blocks/layout-row/src/edit.js:695
 #: includes/public/blocks/offcanvas/src/edit.js:286
-#: includes/public/blocks/post-grid/src/edit.js:979
+#: includes/public/blocks/post-grid/src/edit.js:1013
 #: includes/public/blocks/pricing-table/src/edit.js:239
 #: includes/public/blocks/pricing-table/src/edit.js:539
 #: includes/public/blocks/progress/src/edit.js:180
 #: includes/public/blocks/scroll-to-top/src/edit.js:141
 #: includes/public/blocks/search/src/edit.js:264
-#: includes/public/blocks/slider/src/edit.js:298
+#: includes/public/blocks/slider/src/edit.js:300
 #: includes/public/blocks/social-icon/src/edit.js:248
 #: includes/public/blocks/social-share/src/edit.js:244
 #: includes/public/blocks/sticky-stack/src/edit.js:532
@@ -1986,30 +2077,32 @@ msgstr ""
 
 #: includes/public/blocks/breadcrumb/src/edit.js:243
 #: includes/public/blocks/button/src/edit.js:334
-#: includes/public/blocks/clients-logo-grid/src/edit.js:292
-#: includes/public/blocks/column/src/edit.js:465
+#: includes/public/blocks/clients-logo-grid/src/edit.js:311
+#: includes/public/blocks/column/src/edit.js:470
 #: includes/public/blocks/countdown/src/edit.js:243
 #: includes/public/blocks/counter/src/edit.js:464
+#: includes/public/blocks/drop-caps/src/edit.js:91
 #: includes/public/blocks/faq/src/edit.js:550
 #: includes/public/blocks/feature-list/src/edit.js:322
-#: includes/public/blocks/filter-list/src/edit.js:568
+#: includes/public/blocks/filter-list/src/edit.js:570
 #: includes/public/blocks/gallery/src/edit.js:510
+#: includes/public/blocks/google-map/src/edit.js:184
 #: includes/public/blocks/heading/src/edit.js:246
 #: includes/public/blocks/hover-box/src/edit.js:353
 #: includes/public/blocks/icon-box/src/edit.js:454
-#: includes/public/blocks/icon-list/src/edit.js:281
+#: includes/public/blocks/icon-list/src/edit.js:334
 #: includes/public/blocks/icon/src/edit.js:142
-#: includes/public/blocks/image-carousel/src/edit.js:364
+#: includes/public/blocks/image-carousel/src/edit.js:366
 #: includes/public/blocks/image-comparison/src/edit.js:283
 #: includes/public/blocks/isotope/src/edit.js:802
-#: includes/public/blocks/layout-row/src/edit.js:802
+#: includes/public/blocks/layout-row/src/edit.js:696
 #: includes/public/blocks/offcanvas/src/edit.js:287
-#: includes/public/blocks/post-grid/src/edit.js:980
+#: includes/public/blocks/post-grid/src/edit.js:1014
 #: includes/public/blocks/pricing-table/src/edit.js:540
 #: includes/public/blocks/progress/src/edit.js:181
 #: includes/public/blocks/scroll-to-top/src/edit.js:142
 #: includes/public/blocks/search/src/edit.js:265
-#: includes/public/blocks/slider/src/edit.js:299
+#: includes/public/blocks/slider/src/edit.js:301
 #: includes/public/blocks/social-icon/src/edit.js:249
 #: includes/public/blocks/social-share/src/edit.js:245
 #: includes/public/blocks/sticky-stack/src/edit.js:533
@@ -2037,6 +2130,7 @@ msgid "Peach"
 msgstr ""
 
 #: includes/public/blocks/button/src/edit.js:159
+#: includes/public/blocks/google-map/src/edit.js:116
 #: includes/public/blocks/icon-box/src/edit.js:169
 #: includes/public/blocks/post-grid/src/edit.js:352
 msgid "Button Text"
@@ -2047,7 +2141,7 @@ msgid "Button URL"
 msgstr ""
 
 #: includes/public/blocks/button/src/edit.js:173
-#: includes/public/blocks/clients-logo-grid/src/edit.js:209
+#: includes/public/blocks/clients-logo-grid/src/edit.js:217
 #: includes/public/blocks/heading/src/edit.js:264
 #: includes/public/blocks/icon/src/edit.js:161
 #: includes/public/blocks/social-icon/src/edit.js:129
@@ -2056,7 +2150,7 @@ msgid "Open in new tab"
 msgstr ""
 
 #: includes/public/blocks/button/src/edit.js:174
-#: includes/public/blocks/clients-logo-grid/src/edit.js:210
+#: includes/public/blocks/clients-logo-grid/src/edit.js:218
 #: includes/public/blocks/heading/src/edit.js:265
 #: includes/public/blocks/icon/src/edit.js:162
 #: includes/public/blocks/social-icon/src/edit.js:130
@@ -2069,8 +2163,8 @@ msgstr ""
 #: includes/public/blocks/faq/src/edit.js:310
 #: includes/public/blocks/icon-box/src/edit.js:186
 #: includes/public/blocks/icon-box/src/edit.js:207
-#: includes/public/blocks/icon-list/src/edit.js:187
-#: includes/public/blocks/icon-list/src/edit.js:189
+#: includes/public/blocks/icon-list/src/edit.js:199
+#: includes/public/blocks/icon-list/src/edit.js:201
 #: includes/public/blocks/isotope/src/edit.js:496
 #: includes/public/blocks/post-grid/src/edit.js:364
 #: includes/public/blocks/search/src/edit.js:191
@@ -2122,13 +2216,14 @@ msgid "Outline"
 msgstr ""
 
 #: includes/public/blocks/button/src/edit.js:238
-#: includes/public/blocks/clients-logo-grid/src/edit.js:264
-#: includes/public/blocks/clients-logo-grid/src/edit.js:272
-#: includes/public/blocks/column/src/edit.js:423
+#: includes/public/blocks/clients-logo-grid/src/edit.js:283
+#: includes/public/blocks/clients-logo-grid/src/edit.js:291
+#: includes/public/blocks/column/src/edit.js:428
 #: includes/public/blocks/counter/src/edit.js:432
 #: includes/public/blocks/custom-components/BoxShadowControls.js:76
 #: includes/public/blocks/faq/src/edit.js:345
 #: includes/public/blocks/feature-list/src/edit.js:271
+#: includes/public/blocks/google-map/src/edit.js:148
 #: includes/public/blocks/hover-box/src/edit.js:306
 #: includes/public/blocks/icon-box/src/edit.js:260
 #: includes/public/blocks/icon-box/src/edit.js:272
@@ -2137,7 +2232,7 @@ msgstr ""
 #: includes/public/blocks/image-comparison/src/edit.js:216
 #: includes/public/blocks/isotope/src/edit.js:677
 #: includes/public/blocks/isotope/src/edit.js:683
-#: includes/public/blocks/layout-row/src/edit.js:770
+#: includes/public/blocks/layout-row/src/edit.js:664
 #: includes/public/blocks/post-grid/src/edit.js:529
 #: includes/public/blocks/post-grid/src/edit.js:559
 #: includes/public/blocks/pricing-table/src/edit.js:443
@@ -2151,12 +2246,12 @@ msgid "Box Shadow"
 msgstr ""
 
 #: includes/public/blocks/button/src/edit.js:248
-#: includes/public/blocks/column/src/edit.js:386
-#: includes/public/blocks/custom-components/AdvancedControls.js:50
+#: includes/public/blocks/column/src/edit.js:387
+#: includes/public/blocks/custom-components/AdvancedControls.js:215
 #: includes/public/blocks/feature-list/src/edit.js:243
 #: includes/public/blocks/hover-box/src/edit.js:283
 #: includes/public/blocks/icon-box/src/edit.js:279
-#: includes/public/blocks/layout-row/src/edit.js:619
+#: includes/public/blocks/layout-row/src/edit.js:584
 #: includes/public/blocks/post-grid/src/edit.js:577
 #: includes/public/blocks/post-grid/src/edit.js:652
 #: includes/public/blocks/post-grid/src/edit.js:702
@@ -2215,6 +2310,7 @@ msgstr ""
 #: includes/public/blocks/counter/src/edit.js:416
 #: includes/public/blocks/counter/src/edit.js:425
 #: includes/public/blocks/custom-components/BorderControl.js:137
+#: includes/public/blocks/drop-caps/src/edit.js:73
 #: includes/public/blocks/faq/src/edit.js:373
 #: includes/public/blocks/faq/src/edit.js:390
 #: includes/public/blocks/faq/src/edit.js:402
@@ -2224,9 +2320,11 @@ msgstr ""
 #: includes/public/blocks/feature-list/src/edit.js:278
 #: includes/public/blocks/feature-list/src/edit.js:284
 #: includes/public/blocks/feature-list/src/edit.js:294
-#: includes/public/blocks/filter-list/src/edit.js:529
-#: includes/public/blocks/filter-list/src/edit.js:537
-#: includes/public/blocks/filter-list/src/edit.js:552
+#: includes/public/blocks/filter-list/src/edit.js:531
+#: includes/public/blocks/filter-list/src/edit.js:539
+#: includes/public/blocks/filter-list/src/edit.js:554
+#: includes/public/blocks/google-map/src/edit.js:161
+#: includes/public/blocks/google-map/src/edit.js:165
 #: includes/public/blocks/heading/src/edit.js:283
 #: includes/public/blocks/heading/src/edit.js:293
 #: includes/public/blocks/hover-box/src/edit.js:316
@@ -2235,10 +2333,11 @@ msgstr ""
 #: includes/public/blocks/icon-box/src/edit.js:291
 #: includes/public/blocks/icon-box/src/edit.js:300
 #: includes/public/blocks/icon-box/src/edit.js:306
-#: includes/public/blocks/icon-list/src/edit.js:221
-#: includes/public/blocks/icon-list/src/edit.js:227
+#: includes/public/blocks/icon-list/src/edit.js:234
+#: includes/public/blocks/icon-list/src/edit.js:247
+#: includes/public/blocks/icon-list/src/edit.js:252
 #: includes/public/blocks/icon/src/edit.js:203
-#: includes/public/blocks/image-carousel/src/edit.js:346
+#: includes/public/blocks/image-carousel/src/edit.js:348
 #: includes/public/blocks/isotope/src/edit.js:695
 #: includes/public/blocks/isotope/src/edit.js:705
 #: includes/public/blocks/isotope/src/edit.js:712
@@ -2254,7 +2353,7 @@ msgstr ""
 #: includes/public/blocks/pricing-table/src/edit.js:458
 #: includes/public/blocks/progress/src/edit.js:160
 #: includes/public/blocks/progress/src/edit.js:165
-#: includes/public/blocks/slider/src/edit.js:281
+#: includes/public/blocks/slider/src/edit.js:283
 #: includes/public/blocks/sticky-stack/src/edit.js:443
 #: includes/public/blocks/sticky-stack/src/edit.js:448
 #: includes/public/blocks/sticky-stack/src/edit.js:453
@@ -2286,25 +2385,26 @@ msgstr ""
 msgid "Replace logo"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:162
+#: includes/public/blocks/clients-logo-grid/src/edit.js:170
 msgid "Logo Settings"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:166
+#: includes/public/blocks/clients-logo-grid/src/edit.js:174
 #: includes/public/blocks/testimonials-grid/src/edit.js:181
 #: includes/public/blocks/testimonials-grid/src/edit.js:259
 msgid "Logo"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:168
+#: includes/public/blocks/clients-logo-grid/src/edit.js:176
 #: includes/public/blocks/faq/src/edit.js:234
 #: includes/public/blocks/faq/src/edit.js:573
 #: includes/public/blocks/feature-list/src/edit.js:197
 #: includes/public/blocks/filter-list/src/edit.js:201
-#: includes/public/blocks/icon-list/src/edit.js:151
-#: includes/public/blocks/image-carousel/src/edit.js:211
+#: includes/public/blocks/google-map/src/edit.js:98
+#: includes/public/blocks/icon-list/src/edit.js:163
+#: includes/public/blocks/image-carousel/src/edit.js:213
 #: includes/public/blocks/isotope/src/edit.js:274
-#: includes/public/blocks/slider/src/edit.js:179
+#: includes/public/blocks/slider/src/edit.js:181
 #: includes/public/blocks/social-icon/src/edit.js:121
 #: includes/public/blocks/social-share/src/edit.js:115
 #: includes/public/blocks/sticky-stack/src/edit.js:279
@@ -2313,15 +2413,16 @@ msgstr ""
 msgid "Move up"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:169
+#: includes/public/blocks/clients-logo-grid/src/edit.js:177
 #: includes/public/blocks/faq/src/edit.js:235
 #: includes/public/blocks/faq/src/edit.js:580
 #: includes/public/blocks/feature-list/src/edit.js:198
 #: includes/public/blocks/filter-list/src/edit.js:202
-#: includes/public/blocks/icon-list/src/edit.js:152
-#: includes/public/blocks/image-carousel/src/edit.js:212
+#: includes/public/blocks/google-map/src/edit.js:99
+#: includes/public/blocks/icon-list/src/edit.js:164
+#: includes/public/blocks/image-carousel/src/edit.js:214
 #: includes/public/blocks/isotope/src/edit.js:275
-#: includes/public/blocks/slider/src/edit.js:180
+#: includes/public/blocks/slider/src/edit.js:182
 #: includes/public/blocks/social-icon/src/edit.js:122
 #: includes/public/blocks/social-share/src/edit.js:116
 #: includes/public/blocks/sticky-stack/src/edit.js:280
@@ -2330,16 +2431,16 @@ msgstr ""
 msgid "Move down"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:170
-#: includes/public/blocks/column/src/edit.js:439
+#: includes/public/blocks/clients-logo-grid/src/edit.js:178
+#: includes/public/blocks/column/src/edit.js:444
 #: includes/public/blocks/faq/src/edit.js:236
 #: includes/public/blocks/faq/src/edit.js:594
 #: includes/public/blocks/feature-list/src/edit.js:199
 #: includes/public/blocks/filter-list/src/edit.js:203
-#: includes/public/blocks/icon-list/src/edit.js:153
-#: includes/public/blocks/image-carousel/src/edit.js:213
+#: includes/public/blocks/icon-list/src/edit.js:165
+#: includes/public/blocks/image-carousel/src/edit.js:215
 #: includes/public/blocks/isotope/src/edit.js:276
-#: includes/public/blocks/slider/src/edit.js:181
+#: includes/public/blocks/slider/src/edit.js:183
 #: includes/public/blocks/social-icon/src/edit.js:123
 #: includes/public/blocks/social-share/src/edit.js:117
 #: includes/public/blocks/sticky-stack/src/edit.js:281
@@ -2348,20 +2449,21 @@ msgstr ""
 msgid "Duplicate"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:171
-#: includes/public/blocks/clients-logo-grid/src/edit.js:199
-#: includes/public/blocks/column/src/edit.js:441
+#: includes/public/blocks/clients-logo-grid/src/edit.js:179
+#: includes/public/blocks/clients-logo-grid/src/edit.js:207
+#: includes/public/blocks/column/src/edit.js:446
+#: includes/public/blocks/custom-components/BackgroundImageControls.js:50
 #: includes/public/blocks/faq/src/edit.js:237
 #: includes/public/blocks/faq/src/edit.js:600
 #: includes/public/blocks/feature-list/src/edit.js:200
 #: includes/public/blocks/filter-list/src/edit.js:204
+#: includes/public/blocks/google-map/src/edit.js:100
 #: includes/public/blocks/hover-box/src/edit.js:180
-#: includes/public/blocks/icon-list/src/edit.js:154
-#: includes/public/blocks/image-carousel/src/edit.js:214
+#: includes/public/blocks/icon-list/src/edit.js:166
+#: includes/public/blocks/image-carousel/src/edit.js:216
 #: includes/public/blocks/isotope/src/edit.js:277
-#: includes/public/blocks/layout-row/src/edit.js:653
 #: includes/public/blocks/search/src/edit.js:129
-#: includes/public/blocks/slider/src/edit.js:182
+#: includes/public/blocks/slider/src/edit.js:184
 #: includes/public/blocks/social-icon/src/edit.js:124
 #: includes/public/blocks/social-share/src/edit.js:118
 #: includes/public/blocks/sticky-stack/src/edit.js:252
@@ -2372,31 +2474,32 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:182
+#: includes/public/blocks/clients-logo-grid/src/edit.js:190
 msgid "Replace Logo"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:182
+#: includes/public/blocks/clients-logo-grid/src/edit.js:190
 msgid "Select Logo"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:195
+#: includes/public/blocks/clients-logo-grid/src/edit.js:203
 msgid "Hover Image"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:197
+#: includes/public/blocks/clients-logo-grid/src/edit.js:205
 msgid "Replace Hover Image"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:197
+#: includes/public/blocks/clients-logo-grid/src/edit.js:205
 msgid "Select Hover Image"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:206
-#: includes/public/blocks/filter-list/src/edit.js:223
+#: includes/public/blocks/clients-logo-grid/src/edit.js:214
+#: includes/public/blocks/filter-list/src/edit.js:224
 #: includes/public/blocks/hover-box/src/edit.js:247
 #: includes/public/blocks/icon-box/src/edit.js:176
-#: includes/public/blocks/layout-row/src/edit.js:743
+#: includes/public/blocks/icon-list/src/edit.js:155
+#: includes/public/blocks/layout-row/src/edit.js:637
 #: includes/public/blocks/team-grid/src/card.js:147
 #: includes/public/blocks/team-grid/src/edit.js:230
 msgid "Link"
@@ -2410,17 +2513,18 @@ msgstr ""
 msgid "Add Empty Logo"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:217
+#: includes/public/blocks/clients-logo-grid/src/edit.js:236
 msgid "Image Hover Swap Effect"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:217
+#: includes/public/blocks/clients-logo-grid/src/edit.js:236
 msgid "On hover the logo slides away and a second image slides in. Pick that image per logo above (the logo itself is used when none is set)."
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:224
-#: includes/public/blocks/clients-logo-grid/src/edit.js:226
-#: includes/public/blocks/filter-list/src/edit.js:365
+#: includes/public/blocks/clients-logo-grid/src/edit.js:243
+#: includes/public/blocks/clients-logo-grid/src/edit.js:245
+#: includes/public/blocks/drop-caps/src/edit.js:53
+#: includes/public/blocks/filter-list/src/edit.js:367
 #: includes/public/blocks/gallery/src/edit.js:371
 #: includes/public/blocks/isotope/src/edit.js:453
 #: includes/public/blocks/post-grid/src/edit.js:446
@@ -2429,153 +2533,156 @@ msgstr ""
 msgid "Columns"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:225
+#: includes/public/blocks/clients-logo-grid/src/edit.js:244
 msgid "Image Width (px)"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:227
+#: includes/public/blocks/clients-logo-grid/src/edit.js:246
 #: includes/public/blocks/testimonials-grid/src/edit.js:209
 msgid "Columns (Tablet)"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:228
+#: includes/public/blocks/clients-logo-grid/src/edit.js:247
 #: includes/public/blocks/testimonials-grid/src/edit.js:210
 msgid "Columns (Mobile)"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:229
+#: includes/public/blocks/clients-logo-grid/src/edit.js:248
 msgid "Item Max Width (px)"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:230
+#: includes/public/blocks/clients-logo-grid/src/edit.js:249
 msgid "Item Height (px)"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:231
+#: includes/public/blocks/clients-logo-grid/src/edit.js:250
 msgid "Item Space"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:237
+#: includes/public/blocks/clients-logo-grid/src/edit.js:256
 #: includes/public/blocks/countdown/src/edit.js:192
-#: includes/public/blocks/filter-list/src/edit.js:506
+#: includes/public/blocks/filter-list/src/edit.js:508
 #: includes/public/blocks/testimonials-grid/src/edit.js:222
 msgid "Item"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:238
+#: includes/public/blocks/clients-logo-grid/src/edit.js:257
 msgid "Image Grayscale"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:241
+#: includes/public/blocks/clients-logo-grid/src/edit.js:260
 #: includes/public/blocks/hover-box/src/edit.js:84
 msgid "Grayscale"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:244
+#: includes/public/blocks/clients-logo-grid/src/edit.js:263
 msgid "Default Grayscale"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:245
+#: includes/public/blocks/clients-logo-grid/src/edit.js:264
 msgid "Hover Grayscale"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:246
+#: includes/public/blocks/clients-logo-grid/src/edit.js:265
 msgid "Hover to Default Image"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:256
+#: includes/public/blocks/clients-logo-grid/src/edit.js:275
 msgid "Transition (seconds)"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:262
+#: includes/public/blocks/clients-logo-grid/src/edit.js:281
 #: includes/public/blocks/countdown/src/edit.js:193
 msgid "Item Background"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:265
-#: includes/public/blocks/clients-logo-grid/src/edit.js:273
+#: includes/public/blocks/clients-logo-grid/src/edit.js:284
+#: includes/public/blocks/clients-logo-grid/src/edit.js:292
 msgid "Opacity (0–1)"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:266
+#: includes/public/blocks/clients-logo-grid/src/edit.js:285
 msgid "Transform Scale (e.g. 1)"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:270
+#: includes/public/blocks/clients-logo-grid/src/edit.js:289
 msgid "Item Hover Background"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:274
+#: includes/public/blocks/clients-logo-grid/src/edit.js:293
 msgid "Transform Scale (e.g. 1.1)"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:171
+#: includes/public/blocks/column/src/edit.js:172
 #: includes/public/blocks/heading/src/edit.js:253
-#: includes/public/blocks/layout-row/src/edit.js:217
+#: includes/public/blocks/layout-row/src/edit.js:198
 msgid "HTML Tag"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:185
-#: includes/public/blocks/layout-row/src/edit.js:234
+#: includes/public/blocks/column/src/edit.js:186
+#: includes/public/blocks/layout-row/src/edit.js:215
 msgid "Custom CSS Class"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:219
-#: includes/public/blocks/column/src/edit.js:234
+#: includes/public/blocks/column/src/edit.js:220
+#: includes/public/blocks/column/src/edit.js:235
+#: includes/public/blocks/custom-components/AdvancedControls.js:169
 #: includes/public/blocks/custom-components/BorderControl.js:113
-#: includes/public/blocks/layout-row/src/edit.js:365
+#: includes/public/blocks/layout-row/src/edit.js:326
 msgid "Width"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:221
+#: includes/public/blocks/column/src/edit.js:222
 msgid "Width Type"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:224
+#: includes/public/blocks/column/src/edit.js:225
 msgid "Percentage"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:225
+#: includes/public/blocks/column/src/edit.js:226
 msgid "Flex"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:226
-#: includes/public/blocks/layout-row/src/edit.js:350
+#: includes/public/blocks/column/src/edit.js:227
+#: includes/public/blocks/layout-row/src/edit.js:311
 msgid "Custom"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:252
+#: includes/public/blocks/column/src/edit.js:253
 msgid "Flex Grow"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:264
+#: includes/public/blocks/column/src/edit.js:265
 msgid "Flex Basis"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:277
+#: includes/public/blocks/column/src/edit.js:278
 #: includes/public/blocks/icon/src/edit.js:169
 msgid "Alignment & Size"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:279
+#: includes/public/blocks/column/src/edit.js:280
 msgid "Vertical Align (Self)"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:283
-#: includes/public/blocks/column/src/edit.js:331
-#: includes/public/blocks/column/src/edit.js:342
+#: includes/public/blocks/column/src/edit.js:284
+#: includes/public/blocks/column/src/edit.js:332
+#: includes/public/blocks/column/src/edit.js:343
 #: includes/public/blocks/counter/src/edit.js:35
 #: includes/public/blocks/counter/src/edit.js:340
 #: includes/public/blocks/counter/src/edit.js:362
+#: includes/public/blocks/custom-components/AdvancedControls.js:156
+#: includes/public/blocks/custom-components/AdvancedControls.js:165
 #: includes/public/blocks/custom-components/SpacingControl.js:40
 #: includes/public/blocks/feature-list/src/edit.js:234
 #: includes/public/blocks/icon-box/src/edit.js:234
-#: includes/public/blocks/icon-list/src/edit.js:196
+#: includes/public/blocks/icon-list/src/edit.js:208
 #: includes/public/blocks/image-comparison/src/edit.js:161
 #: includes/public/blocks/isotope/src/edit.js:498
-#: includes/public/blocks/layout-row/src/edit.js:498
-#: includes/public/blocks/layout-row/src/edit.js:517
-#: includes/public/blocks/layout-row/src/edit.js:580
+#: includes/public/blocks/layout-row/src/edit.js:463
+#: includes/public/blocks/layout-row/src/edit.js:482
+#: includes/public/blocks/layout-row/src/edit.js:545
 #: includes/public/blocks/sticky-stack/src/edit.js:365
 #: includes/public/blocks/sticky-stack/src/edit.js:399
 #: includes/public/blocks/tab/src/edit.js:86
@@ -2584,35 +2691,38 @@ msgstr ""
 msgid "Top"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:284
-#: includes/public/blocks/column/src/edit.js:332
-#: includes/public/blocks/column/src/edit.js:343
+#: includes/public/blocks/column/src/edit.js:285
+#: includes/public/blocks/column/src/edit.js:333
+#: includes/public/blocks/column/src/edit.js:344
 #: includes/public/blocks/counter/src/edit.js:36
+#: includes/public/blocks/custom-components/AdvancedControls.js:157
 #: includes/public/blocks/feature-list/src/edit.js:235
 #: includes/public/blocks/icon-box/src/edit.js:235
-#: includes/public/blocks/icon-list/src/edit.js:197
+#: includes/public/blocks/icon-list/src/edit.js:209
 #: includes/public/blocks/image-comparison/src/edit.js:162
-#: includes/public/blocks/layout-row/src/edit.js:499
-#: includes/public/blocks/layout-row/src/edit.js:518
-#: includes/public/blocks/layout-row/src/edit.js:581
+#: includes/public/blocks/layout-row/src/edit.js:464
+#: includes/public/blocks/layout-row/src/edit.js:483
+#: includes/public/blocks/layout-row/src/edit.js:546
 #: includes/public/blocks/sticky-stack/src/edit.js:400
 msgid "Middle"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:285
-#: includes/public/blocks/column/src/edit.js:333
-#: includes/public/blocks/column/src/edit.js:344
+#: includes/public/blocks/column/src/edit.js:286
+#: includes/public/blocks/column/src/edit.js:334
+#: includes/public/blocks/column/src/edit.js:345
 #: includes/public/blocks/counter/src/edit.js:37
 #: includes/public/blocks/counter/src/edit.js:341
 #: includes/public/blocks/counter/src/edit.js:363
+#: includes/public/blocks/custom-components/AdvancedControls.js:158
+#: includes/public/blocks/custom-components/AdvancedControls.js:167
 #: includes/public/blocks/custom-components/SpacingControl.js:42
 #: includes/public/blocks/feature-list/src/edit.js:236
 #: includes/public/blocks/icon-box/src/edit.js:236
-#: includes/public/blocks/icon-list/src/edit.js:198
+#: includes/public/blocks/icon-list/src/edit.js:210
 #: includes/public/blocks/image-comparison/src/edit.js:163
-#: includes/public/blocks/layout-row/src/edit.js:500
-#: includes/public/blocks/layout-row/src/edit.js:519
-#: includes/public/blocks/layout-row/src/edit.js:582
+#: includes/public/blocks/layout-row/src/edit.js:465
+#: includes/public/blocks/layout-row/src/edit.js:484
+#: includes/public/blocks/layout-row/src/edit.js:547
 #: includes/public/blocks/sticky-stack/src/edit.js:366
 #: includes/public/blocks/sticky-stack/src/edit.js:401
 #: includes/public/blocks/table/src/cells.js:93
@@ -2620,150 +2730,150 @@ msgstr ""
 msgid "Bottom"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:286
-#: includes/public/blocks/column/src/edit.js:330
-#: includes/public/blocks/column/src/edit.js:341
-#: includes/public/blocks/column/src/edit.js:451
-#: includes/public/blocks/layout-row/src/edit.js:497
-#: includes/public/blocks/layout-row/src/edit.js:516
+#: includes/public/blocks/column/src/edit.js:287
+#: includes/public/blocks/column/src/edit.js:331
+#: includes/public/blocks/column/src/edit.js:342
+#: includes/public/blocks/column/src/edit.js:456
+#: includes/public/blocks/layout-row/src/edit.js:462
+#: includes/public/blocks/layout-row/src/edit.js:481
 msgid "Stretch"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:293
-#: includes/public/blocks/layout-row/src/edit.js:395
+#: includes/public/blocks/column/src/edit.js:294
+#: includes/public/blocks/layout-row/src/edit.js:356
 msgid "Min Height"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:304
-#: includes/public/blocks/layout-row/src/edit.js:448
+#: includes/public/blocks/column/src/edit.js:305
+#: includes/public/blocks/layout-row/src/edit.js:413
 msgid "Flexbox"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:305
+#: includes/public/blocks/column/src/edit.js:306
 #: includes/public/blocks/hover-box/src/edit.js:226
-#: includes/public/blocks/layout-row/src/edit.js:449
+#: includes/public/blocks/layout-row/src/edit.js:414
 msgid "Direction"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:309
-#: includes/public/blocks/layout-row/src/edit.js:460
+#: includes/public/blocks/column/src/edit.js:310
+#: includes/public/blocks/layout-row/src/edit.js:425
 msgid "Row reverse"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:311
-#: includes/public/blocks/layout-row/src/edit.js:462
+#: includes/public/blocks/column/src/edit.js:312
+#: includes/public/blocks/layout-row/src/edit.js:427
 msgid "Column reverse"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:315
-#: includes/public/blocks/layout-row/src/edit.js:467
+#: includes/public/blocks/column/src/edit.js:316
+#: includes/public/blocks/layout-row/src/edit.js:432
 msgid "Justify Content"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:318
+#: includes/public/blocks/column/src/edit.js:319
 #: includes/public/blocks/counter/src/edit.js:29
-#: includes/public/blocks/layout-row/src/edit.js:477
+#: includes/public/blocks/layout-row/src/edit.js:442
 #: includes/public/blocks/testimonials-grid/src/edit.js:55
 msgid "Start"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:320
+#: includes/public/blocks/column/src/edit.js:321
 #: includes/public/blocks/counter/src/edit.js:31
-#: includes/public/blocks/layout-row/src/edit.js:479
+#: includes/public/blocks/layout-row/src/edit.js:444
 #: includes/public/blocks/testimonials-grid/src/edit.js:57
 msgid "End"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:321
-#: includes/public/blocks/column/src/edit.js:345
-#: includes/public/blocks/layout-row/src/edit.js:480
-#: includes/public/blocks/layout-row/src/edit.js:520
+#: includes/public/blocks/column/src/edit.js:322
+#: includes/public/blocks/column/src/edit.js:346
+#: includes/public/blocks/layout-row/src/edit.js:445
+#: includes/public/blocks/layout-row/src/edit.js:485
 msgid "Space between"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:322
-#: includes/public/blocks/column/src/edit.js:346
-#: includes/public/blocks/layout-row/src/edit.js:481
-#: includes/public/blocks/layout-row/src/edit.js:521
+#: includes/public/blocks/column/src/edit.js:323
+#: includes/public/blocks/column/src/edit.js:347
+#: includes/public/blocks/layout-row/src/edit.js:446
+#: includes/public/blocks/layout-row/src/edit.js:486
 msgid "Space around"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:323
-#: includes/public/blocks/layout-row/src/edit.js:482
+#: includes/public/blocks/column/src/edit.js:324
+#: includes/public/blocks/layout-row/src/edit.js:447
 msgid "Space evenly"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:327
-#: includes/public/blocks/layout-row/src/edit.js:487
+#: includes/public/blocks/column/src/edit.js:328
+#: includes/public/blocks/layout-row/src/edit.js:452
 msgid "Align Items"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:334
-#: includes/public/blocks/layout-row/src/edit.js:501
+#: includes/public/blocks/column/src/edit.js:335
+#: includes/public/blocks/layout-row/src/edit.js:466
 msgid "Baseline"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:338
-#: includes/public/blocks/layout-row/src/edit.js:506
+#: includes/public/blocks/column/src/edit.js:339
+#: includes/public/blocks/layout-row/src/edit.js:471
 msgid "Align Content"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:350
-#: includes/public/blocks/column/src/edit.js:354
-#: includes/public/blocks/layout-row/src/edit.js:526
-#: includes/public/blocks/layout-row/src/edit.js:537
+#: includes/public/blocks/column/src/edit.js:351
+#: includes/public/blocks/column/src/edit.js:355
+#: includes/public/blocks/layout-row/src/edit.js:491
+#: includes/public/blocks/layout-row/src/edit.js:502
 msgid "Wrap"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:353
-#: includes/public/blocks/layout-row/src/edit.js:536
+#: includes/public/blocks/column/src/edit.js:354
+#: includes/public/blocks/layout-row/src/edit.js:501
 msgid "No wrap"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:355
-#: includes/public/blocks/layout-row/src/edit.js:538
+#: includes/public/blocks/column/src/edit.js:356
+#: includes/public/blocks/layout-row/src/edit.js:503
 msgid "Wrap reverse"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:359
-#: includes/public/blocks/layout-row/src/edit.js:543
+#: includes/public/blocks/column/src/edit.js:360
+#: includes/public/blocks/layout-row/src/edit.js:508
 msgid "Gap"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:376
-#: includes/public/blocks/custom-components/AdvancedControls.js:36
+#: includes/public/blocks/column/src/edit.js:377
+#: includes/public/blocks/custom-components/AdvancedControls.js:201
 #: includes/public/blocks/feature-list/src/edit.js:242
-#: includes/public/blocks/layout-row/src/edit.js:609
+#: includes/public/blocks/layout-row/src/edit.js:574
 #: includes/public/blocks/sticky-stack/src/edit.js:409
 msgid "Spacing"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:437
+#: includes/public/blocks/column/src/edit.js:442
 msgid "Move Left"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:438
+#: includes/public/blocks/column/src/edit.js:443
 msgid "Move Right"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:440
-#: includes/public/blocks/layout-row/src/edit.js:784
+#: includes/public/blocks/column/src/edit.js:445
+#: includes/public/blocks/layout-row/src/edit.js:678
 msgid "Add Column"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:446
+#: includes/public/blocks/column/src/edit.js:451
 msgid "Content Align"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:448
+#: includes/public/blocks/column/src/edit.js:453
 msgid "Align Left"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:449
+#: includes/public/blocks/column/src/edit.js:454
 msgid "Align Center"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:450
+#: includes/public/blocks/column/src/edit.js:455
 msgid "Align Right"
 msgstr ""
 
@@ -2772,8 +2882,8 @@ msgid "Number Typography"
 msgstr ""
 
 #: includes/public/blocks/countdown/src/edit.js:140
-#: includes/public/blocks/filter-list/src/edit.js:448
-#: includes/public/blocks/filter-list/src/edit.js:455
+#: includes/public/blocks/filter-list/src/edit.js:450
+#: includes/public/blocks/filter-list/src/edit.js:457
 msgid "Number Color"
 msgstr ""
 
@@ -2922,6 +3032,7 @@ msgid "Dot"
 msgstr ""
 
 #: includes/public/blocks/counter/src/edit.js:306
+#: includes/public/blocks/icon-list/src/edit.js:248
 msgid "Underline"
 msgstr ""
 
@@ -2942,8 +3053,8 @@ msgstr ""
 #: includes/public/blocks/faq/src/edit.js:366
 #: includes/public/blocks/feature-list/src/edit.js:194
 #: includes/public/blocks/feature-list/src/edit.js:277
-#: includes/public/blocks/filter-list/src/edit.js:222
-#: includes/public/blocks/filter-list/src/edit.js:536
+#: includes/public/blocks/filter-list/src/edit.js:223
+#: includes/public/blocks/filter-list/src/edit.js:538
 #: includes/public/blocks/gallery/src/edit.js:252
 #: includes/public/blocks/hover-box/src/edit.js:194
 #: includes/public/blocks/hover-box/src/edit.js:319
@@ -3047,6 +3158,7 @@ msgstr ""
 #: includes/public/blocks/faq/src/edit.js:508
 #: includes/public/blocks/feature-list/src/edit.js:267
 #: includes/public/blocks/icon-box/src/edit.js:289
+#: includes/public/blocks/icon-list/src/edit.js:237
 #: includes/public/blocks/isotope/src/edit.js:698
 #: includes/public/blocks/tab/src/edit.js:423
 msgid "Box Size (px)"
@@ -3079,20 +3191,64 @@ msgstr ""
 #: includes/public/blocks/hover-box/src/edit.js:336
 #: includes/public/blocks/icon-box/src/edit.js:162
 #: includes/public/blocks/icon-box/src/edit.js:437
-#: includes/public/blocks/icon-list/src/edit.js:264
+#: includes/public/blocks/icon-list/src/edit.js:317
 #: includes/public/blocks/isotope/src/edit.js:411
 #: includes/public/blocks/isotope/src/edit.js:785
 #: includes/public/blocks/post-grid/src/edit.js:237
-#: includes/public/blocks/post-grid/src/edit.js:963
+#: includes/public/blocks/post-grid/src/edit.js:997
 #: includes/public/blocks/sticky-stack/src/edit.js:340
 #: includes/public/blocks/sticky-stack/src/edit.js:516
 #: includes/public/blocks/team-grid/src/edit.js:441
 msgid "Title HTML Tag"
 msgstr ""
 
+#: includes/public/blocks/custom-components/AdvancedControls.js:128
+#: includes/public/blocks/custom-components/AdvancedControls.js:130
+#: includes/public/blocks/custom-components/BackgroundImageControls.js:93
+#: includes/public/blocks/isotope/src/edit.js:540
+#: includes/public/blocks/layout-row/src/edit.js:369
+#: includes/public/blocks/post-grid/src/edit.js:313
+#: includes/public/blocks/team-grid/src/edit.js:179
+msgid "Position"
+msgstr ""
+
+#: includes/public/blocks/custom-components/AdvancedControls.js:134
+msgid "Absolute"
+msgstr ""
+
+#: includes/public/blocks/custom-components/AdvancedControls.js:135
+msgid "Fixed"
+msgstr ""
+
+#: includes/public/blocks/custom-components/AdvancedControls.js:139
+msgid "Placed in the browser window; stays there on scroll."
+msgstr ""
+
+#: includes/public/blocks/custom-components/AdvancedControls.js:140
+msgid "Placed in the nearest Row or Column."
+msgstr ""
+
+#: includes/public/blocks/custom-components/AdvancedControls.js:150
+msgid "Horizontal Align"
+msgstr ""
+
+#: includes/public/blocks/custom-components/AdvancedControls.js:155
+#: includes/public/blocks/layout-row/src/edit.js:541
+msgid "Vertical Align"
+msgstr ""
+
+#: includes/public/blocks/custom-components/AdvancedControls.js:161
+msgid "Offset & Width"
+msgstr ""
+
+#: includes/public/blocks/custom-components/AdvancedControls.js:187
+#: includes/public/blocks/layout-row/src/edit.js:404
+msgid "Z-Index"
+msgstr ""
+
 #: includes/public/blocks/custom-components/BackgroundControl.js:66
 #: includes/public/blocks/custom-components/BorderControl.js:123
-#: includes/public/blocks/filter-list/src/edit.js:490
+#: includes/public/blocks/filter-list/src/edit.js:492
 #: includes/public/blocks/isotope/src/edit.js:641
 msgid "Solid"
 msgstr ""
@@ -3101,20 +3257,49 @@ msgstr ""
 msgid "Gradient"
 msgstr ""
 
+#: includes/public/blocks/custom-components/BackgroundImageControls.js:46
+#: includes/public/blocks/hover-box/src/edit.js:176
+#: includes/public/blocks/image-carousel/src/edit.js:229
+#: includes/public/blocks/search/src/edit.js:125
+#: includes/public/blocks/slider/src/edit.js:197
+msgid "Replace Image"
+msgstr ""
+
+#: includes/public/blocks/custom-components/BackgroundImageControls.js:46
+msgid "Choose Background Image"
+msgstr ""
+
+#: includes/public/blocks/custom-components/BackgroundImageControls.js:58
+msgid "Or Image URL"
+msgstr ""
+
+#: includes/public/blocks/custom-components/BackgroundImageControls.js:68
+#: includes/public/blocks/custom-components/RangeControlWithUnit.js:11
+msgid "Size"
+msgstr ""
+
+#: includes/public/blocks/custom-components/BackgroundImageControls.js:80
+msgid "Repeat"
+msgstr ""
+
+#: includes/public/blocks/custom-components/BackgroundImageControls.js:100
+msgid "Attachment"
+msgstr ""
+
 #: includes/public/blocks/custom-components/BorderControl.js:124
-#: includes/public/blocks/filter-list/src/edit.js:489
+#: includes/public/blocks/filter-list/src/edit.js:491
 #: includes/public/blocks/isotope/src/edit.js:642
 msgid "Dashed"
 msgstr ""
 
 #: includes/public/blocks/custom-components/BorderControl.js:125
-#: includes/public/blocks/filter-list/src/edit.js:491
+#: includes/public/blocks/filter-list/src/edit.js:493
 #: includes/public/blocks/isotope/src/edit.js:643
 msgid "Dotted"
 msgstr ""
 
 #: includes/public/blocks/custom-components/BorderControl.js:126
-#: includes/public/blocks/filter-list/src/edit.js:492
+#: includes/public/blocks/filter-list/src/edit.js:494
 #: includes/public/blocks/isotope/src/edit.js:644
 msgid "Double"
 msgstr ""
@@ -3252,6 +3437,7 @@ msgstr ""
 
 #. translators: %d: number of icons found.
 #: includes/public/blocks/custom-components/IconPicker.js:193
+#, js-format
 msgid "%d icon"
 msgid_plural "%d icons"
 msgstr[0] ""
@@ -3259,11 +3445,6 @@ msgstr[1] ""
 
 #: includes/public/blocks/custom-components/IconPicker.js:220
 msgid "Show more"
-msgstr ""
-
-#: includes/public/blocks/custom-components/RangeControlWithUnit.js:11
-#: includes/public/blocks/layout-row/src/edit.js:671
-msgid "Size"
 msgstr ""
 
 #: includes/public/blocks/custom-components/ResponsiveWrapper.js:38
@@ -3361,6 +3542,7 @@ msgid "Include unit (e.g., 14px, 1.2rem)"
 msgstr ""
 
 #: includes/public/blocks/custom-components/TypographyControls.js:277
+#: includes/public/blocks/drop-caps/src/edit.js:69
 msgid "Font Weight"
 msgstr ""
 
@@ -3404,6 +3586,110 @@ msgstr ""
 msgid "Reset typography"
 msgstr ""
 
+#: includes/public/blocks/drop-caps/src/edit.js:44
+#: includes/public/blocks/drop-caps/src/edit.js:64
+msgid "Drop Cap"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:45
+msgid "Type the paragraph right on the block. Its first letter becomes the drop cap."
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:46
+msgid "Plain Letter"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:46
+msgid "Letter in a Box"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:46
+msgid "Letter in an Outline"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:46
+msgid "Outlined Letter"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:47
+msgid "Lines Tall"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:47
+msgid "How many lines of text the letter spans."
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:54
+msgid "Text Columns"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:54
+msgid "Newspaper columns. Phones show one unless set."
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:55
+#: includes/public/blocks/layout-row/src/edit.js:528
+msgid "Column Gap"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:56
+msgid "Line Between Columns"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:57
+#: includes/public/blocks/filter-list/src/edit.js:500
+#: includes/public/blocks/isotope/src/edit.js:636
+msgid "Line Color"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:65
+msgid "Outline Color"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:65
+msgid "Letter Color"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:66
+msgid "Box Color"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:66
+msgid "Box Outline Color"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:66
+msgid "Inside Color"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:67
+msgid "Box Radius"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:67
+msgid "A box is a little wider than tall, so a large radius such as 50% makes an oval."
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:68
+msgid "Font Family"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:68
+msgid "e.g. Georgia, serif"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:68
+msgid "Empty: the paragraph font. A serif face gives a classic book look."
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:69
+msgid "Default (700)"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/edit.js:70
+msgid "Space to the Text"
+msgstr ""
+
 #: includes/public/blocks/faq/src/edit.js:37
 #: includes/public/blocks/filter-list/src/edit.js:54
 #: includes/public/blocks/isotope/src/edit.js:61
@@ -3419,7 +3705,7 @@ msgstr ""
 
 #: includes/public/blocks/faq/src/edit.js:194
 #: includes/public/blocks/faq/src/edit.js:326
-#: includes/public/blocks/filter-list/src/edit.js:309
+#: includes/public/blocks/filter-list/src/edit.js:311
 #: includes/public/blocks/isotope/src/edit.js:312
 msgid "Items"
 msgstr ""
@@ -3444,8 +3730,8 @@ msgstr ""
 #: includes/public/blocks/faq/src/edit.js:246
 #: includes/public/blocks/faq/src/edit.js:654
 #: includes/public/blocks/feature-list/src/edit.js:206
-#: includes/public/blocks/filter-list/src/edit.js:311
-#: includes/public/blocks/icon-list/src/edit.js:160
+#: includes/public/blocks/filter-list/src/edit.js:313
+#: includes/public/blocks/icon-list/src/edit.js:172
 #: includes/public/blocks/isotope/src/edit.js:316
 msgid "Add Item"
 msgstr ""
@@ -3523,9 +3809,9 @@ msgstr ""
 
 #: includes/public/blocks/faq/src/edit.js:441
 #: includes/public/blocks/faq/src/edit.js:472
-#: includes/public/blocks/filter-list/src/edit.js:441
-#: includes/public/blocks/filter-list/src/edit.js:447
-#: includes/public/blocks/filter-list/src/edit.js:512
+#: includes/public/blocks/filter-list/src/edit.js:443
+#: includes/public/blocks/filter-list/src/edit.js:449
+#: includes/public/blocks/filter-list/src/edit.js:514
 #: includes/public/blocks/icon-box/src/edit.js:259
 #: includes/public/blocks/icon-box/src/edit.js:336
 #: includes/public/blocks/isotope/src/edit.js:601
@@ -3585,9 +3871,9 @@ msgstr ""
 #: includes/public/blocks/gallery/src/edit.js:418
 #: includes/public/blocks/hover-box/src/edit.js:162
 #: includes/public/blocks/icon-box/src/edit.js:135
-#: includes/public/blocks/image-carousel/src/edit.js:209
+#: includes/public/blocks/image-carousel/src/edit.js:211
 #: includes/public/blocks/post-grid/src/edit.js:469
-#: includes/public/blocks/slider/src/edit.js:177
+#: includes/public/blocks/slider/src/edit.js:179
 #: includes/public/blocks/sticky-stack/src/edit.js:238
 #: includes/public/blocks/sticky-stack/src/edit.js:489
 #: includes/public/blocks/tab/src/edit.js:272
@@ -3605,9 +3891,9 @@ msgstr ""
 #: includes/public/blocks/feature-list/src/edit.js:188
 #: includes/public/blocks/hover-box/src/edit.js:176
 #: includes/public/blocks/icon-box/src/edit.js:153
-#: includes/public/blocks/image-carousel/src/edit.js:227
+#: includes/public/blocks/image-carousel/src/edit.js:229
 #: includes/public/blocks/image-comparison/src/edit.js:82
-#: includes/public/blocks/slider/src/edit.js:195
+#: includes/public/blocks/slider/src/edit.js:197
 #: includes/public/blocks/tab/src/edit.js:291
 msgid "Select Image"
 msgstr ""
@@ -3627,7 +3913,7 @@ msgstr ""
 
 #: includes/public/blocks/feature-list/src/edit.js:233
 #: includes/public/blocks/icon-box/src/edit.js:233
-#: includes/public/blocks/icon-list/src/edit.js:195
+#: includes/public/blocks/icon-list/src/edit.js:207
 msgid "Vertical Alignment"
 msgstr ""
 
@@ -3709,214 +3995,223 @@ msgstr ""
 msgid "New Filter"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:223
+#: includes/public/blocks/filter-list/src/edit.js:224
 msgid "Leave empty for plain text."
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:225
+#: includes/public/blocks/filter-list/src/edit.js:226
 #: includes/public/blocks/icon-box/src/edit.js:179
 #: includes/public/blocks/isotope/src/edit.js:269
 #: includes/public/blocks/social-share/src/edit.js:147
 msgid "Open in New Tab"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:226
+#: includes/public/blocks/filter-list/src/edit.js:227
 msgid "On for every link (Settings > Content)."
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:232
+#: includes/public/blocks/filter-list/src/edit.js:233
 #: includes/public/blocks/icon-box/src/edit.js:180
 #: includes/public/blocks/isotope/src/edit.js:270
 msgid "Add Nofollow"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:233
+#: includes/public/blocks/filter-list/src/edit.js:234
 msgid "Shown under these filters"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:239
+#: includes/public/blocks/filter-list/src/edit.js:240
 msgid "Add filters under Settings > Filters first."
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:241
-#: includes/public/blocks/filter-list/src/edit.js:542
+#: includes/public/blocks/filter-list/src/edit.js:242
+msgid "Mark as Hot"
+msgstr ""
+
+#: includes/public/blocks/filter-list/src/edit.js:242
+msgid "Adds an orange Hot label after the title, before the badge."
+msgstr ""
+
+#: includes/public/blocks/filter-list/src/edit.js:243
+#: includes/public/blocks/filter-list/src/edit.js:544
 #: includes/public/blocks/isotope/src/edit.js:245
 #: includes/public/blocks/isotope/src/edit.js:716
 msgid "Badge"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:241
-msgid "A short label after the title, such as New or Hot. Leave empty for none."
+#: includes/public/blocks/filter-list/src/edit.js:243
+msgid "A short label after the title, such as New or Pro. Leave empty for none."
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:245
+#: includes/public/blocks/filter-list/src/edit.js:247
 msgid "Badge Background (this item)"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:251
+#: includes/public/blocks/filter-list/src/edit.js:253
 msgid "Badge Text Color (this item)"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:254
+#: includes/public/blocks/filter-list/src/edit.js:256
 msgid "Extra Search Words"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:254
+#: includes/public/blocks/filter-list/src/edit.js:256
 msgid "Other words that should find this item, separated by spaces. Visitors do not see them."
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:265
+#: includes/public/blocks/filter-list/src/edit.js:267
 msgid "Filters"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:266
+#: includes/public/blocks/filter-list/src/edit.js:268
 msgid "Show filter buttons"
 msgstr ""
 
 #. translators: %d: number of items under this filter.
-#: includes/public/blocks/filter-list/src/edit.js:275
+#: includes/public/blocks/filter-list/src/edit.js:277
+#, js-format
 msgid "%d item"
 msgid_plural "%d items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/public/blocks/filter-list/src/edit.js:284
+#: includes/public/blocks/filter-list/src/edit.js:286
 msgid "Add Filter"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:285
+#: includes/public/blocks/filter-list/src/edit.js:287
 msgid "Then choose which filters each item belongs to, under Items below."
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:289
+#: includes/public/blocks/filter-list/src/edit.js:291
 #: includes/public/blocks/isotope/src/edit.js:342
 msgid "Show \"All\" button"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:291
+#: includes/public/blocks/filter-list/src/edit.js:293
 #: includes/public/blocks/isotope/src/edit.js:344
 msgid "\"All\" Label"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:293
+#: includes/public/blocks/filter-list/src/edit.js:295
 msgid "Show the number of items"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:295
+#: includes/public/blocks/filter-list/src/edit.js:297
 #: includes/public/blocks/isotope/src/edit.js:349
 msgid "Show First"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:316
+#: includes/public/blocks/filter-list/src/edit.js:318
 #: includes/public/blocks/isotope/src/edit.js:363
 msgid "Show search box"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:317
+#: includes/public/blocks/filter-list/src/edit.js:319
 msgid "Visitors type to find an item by its title, badge or extra search words."
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:326
-#: includes/public/blocks/filter-list/src/edit.js:551
+#: includes/public/blocks/filter-list/src/edit.js:328
+#: includes/public/blocks/filter-list/src/edit.js:553
 #: includes/public/blocks/isotope/src/edit.js:373
 msgid "No Results Text"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:327
+#: includes/public/blocks/filter-list/src/edit.js:329
 msgid "Shown when no item matches the search or the filter."
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:337
+#: includes/public/blocks/filter-list/src/edit.js:339
 #: includes/public/blocks/isotope/src/edit.js:409
 msgid "Show icons"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:339
+#: includes/public/blocks/filter-list/src/edit.js:341
 msgid "Open every link in a new tab"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:340
+#: includes/public/blocks/filter-list/src/edit.js:342
 msgid "Off: each item decides for itself (Settings > Items)."
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:353
-#: includes/public/blocks/icon-list/src/edit.js:210
+#: includes/public/blocks/filter-list/src/edit.js:355
+#: includes/public/blocks/icon-list/src/edit.js:222
 msgid "List"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:355
+#: includes/public/blocks/filter-list/src/edit.js:357
 #: includes/public/blocks/post-grid/src/edit.js:192
 msgid "Order"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:358
+#: includes/public/blocks/filter-list/src/edit.js:360
 msgid "Down the columns"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:359
+#: includes/public/blocks/filter-list/src/edit.js:361
 msgid "Across the rows"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:377
+#: includes/public/blocks/filter-list/src/edit.js:379
 msgid "Space Between Rows (px)"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:378
+#: includes/public/blocks/filter-list/src/edit.js:380
 msgid "Space Between Columns (px)"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:382
+#: includes/public/blocks/filter-list/src/edit.js:384
 msgid "Filters & Search"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:385
+#: includes/public/blocks/filter-list/src/edit.js:387
 msgid "Arrangement"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:388
+#: includes/public/blocks/filter-list/src/edit.js:390
 msgid "Filters left, search right"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:389
+#: includes/public/blocks/filter-list/src/edit.js:391
 msgid "Search above filters"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:398
+#: includes/public/blocks/filter-list/src/edit.js:400
 msgid "Filter Alignment"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:412
+#: includes/public/blocks/filter-list/src/edit.js:414
 msgid "Space Between Buttons (px)"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:416
+#: includes/public/blocks/filter-list/src/edit.js:418
 #: includes/public/blocks/isotope/src/edit.js:528
 msgid "Search Box Width"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:432
+#: includes/public/blocks/filter-list/src/edit.js:434
 #: includes/public/blocks/isotope/src/edit.js:592
 msgid "Filter Buttons"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:467
+#: includes/public/blocks/filter-list/src/edit.js:469
 #: includes/public/blocks/isotope/src/edit.js:657
 msgid "Search Box"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:470
+#: includes/public/blocks/filter-list/src/edit.js:472
 #: includes/public/blocks/isotope/src/edit.js:660
 #: includes/public/blocks/search/src/edit.js:225
 msgid "Placeholder Color"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:474
+#: includes/public/blocks/filter-list/src/edit.js:476
 #: includes/public/blocks/isotope/src/edit.js:664
 #: includes/public/blocks/search/src/edit.js:229
 msgid "Border Color (Focus)"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:476
+#: includes/public/blocks/filter-list/src/edit.js:478
 #: includes/public/blocks/image-comparison/src/edit.js:145
 #: includes/public/blocks/progress/src/edit.js:131
 #: includes/public/blocks/search/src/edit.js:208
@@ -3924,47 +4219,42 @@ msgstr ""
 msgid "Height (px)"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:481
+#: includes/public/blocks/filter-list/src/edit.js:483
 #: includes/public/blocks/isotope/src/edit.js:626
 msgid "Line Below Filters"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:482
+#: includes/public/blocks/filter-list/src/edit.js:484
 #: includes/public/blocks/isotope/src/edit.js:628
 msgid "Show a line"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:486
+#: includes/public/blocks/filter-list/src/edit.js:488
 #: includes/public/blocks/isotope/src/edit.js:638
 msgid "Line Style"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:498
-#: includes/public/blocks/isotope/src/edit.js:636
-msgid "Line Color"
-msgstr ""
-
-#: includes/public/blocks/filter-list/src/edit.js:499
+#: includes/public/blocks/filter-list/src/edit.js:501
 #: includes/public/blocks/image-comparison/src/edit.js:253
 #: includes/public/blocks/isotope/src/edit.js:650
 msgid "Line Width (px)"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:502
+#: includes/public/blocks/filter-list/src/edit.js:504
 msgid "Space Below Filters (px)"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:530
-#: includes/public/blocks/filter-list/src/edit.js:538
+#: includes/public/blocks/filter-list/src/edit.js:532
+#: includes/public/blocks/filter-list/src/edit.js:540
 #: includes/public/blocks/icon/src/edit.js:210
 msgid "Color (Hover)"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:532
+#: includes/public/blocks/filter-list/src/edit.js:534
 msgid "Space Between Icon and Title (px)"
 msgstr ""
 
-#: includes/public/blocks/filter-list/src/edit.js:543
+#: includes/public/blocks/filter-list/src/edit.js:545
 msgid "Add a badge to an item under Settings > Items."
 msgstr ""
 
@@ -3977,8 +4267,8 @@ msgid "Edit / Replace Images"
 msgstr ""
 
 #: includes/public/blocks/gallery/src/edit.js:219
-#: includes/public/blocks/image-carousel/src/edit.js:243
-#: includes/public/blocks/slider/src/edit.js:211
+#: includes/public/blocks/image-carousel/src/edit.js:245
+#: includes/public/blocks/slider/src/edit.js:213
 msgid "Add Images"
 msgstr ""
 
@@ -4152,14 +4442,14 @@ msgstr ""
 
 #: includes/public/blocks/gallery/src/edit.js:390
 #: includes/public/blocks/icon-box/src/edit.js:239
-#: includes/public/blocks/icon-list/src/edit.js:220
+#: includes/public/blocks/icon-list/src/edit.js:232
 #: includes/public/blocks/isotope/src/edit.js:471
 #: includes/public/blocks/testimonials-grid/src/edit.js:228
 msgid "Gap (px)"
 msgstr ""
 
 #: includes/public/blocks/gallery/src/edit.js:403
-#: includes/public/blocks/image-carousel/src/edit.js:249
+#: includes/public/blocks/image-carousel/src/edit.js:251
 #: includes/public/blocks/post-grid/src/edit.js:471
 #: includes/public/blocks/sticky-stack/src/edit.js:416
 msgid "Image Size"
@@ -4202,6 +4492,211 @@ msgstr ""
 
 #: includes/public/blocks/gallery/src/edit.js:591
 msgid "Select images to build your gallery."
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:82
+msgid "Places"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:87
+#, js-format
+msgid "Place %d"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:93
+msgid "Address"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:93
+msgid "A street address, a place name, or coordinates such as 40.7580, -73.9855."
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:94
+#: includes/public/blocks/google-map/src/edit.js:160
+#: includes/public/blocks/post-grid/src/edit.js:210
+#: includes/public/blocks/team-grid/src/card.js:78
+#: includes/public/blocks/team-grid/src/edit.js:148
+#: includes/public/blocks/team-grid/src/edit.js:345
+#: includes/public/blocks/testimonials-grid/src/edit.js:174
+#: includes/public/blocks/testimonials-grid/src/edit.js:231
+msgid "Name"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:94
+msgid "e.g. Downtown Office"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:95
+msgid "Details"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:95
+msgid "e.g. Open daily, 8am to 6pm"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:96
+#: includes/public/blocks/team-grid/src/edit.js:168
+msgid "Phone"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:106
+msgid "Add Place"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:107
+msgid "On the page, clicking a place in the list shows it on the map."
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:110
+#: includes/public/blocks/google-map/src/edit.js:145
+msgid "Map"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:111
+#: includes/public/blocks/hover-box/src/edit.js:71
+#: includes/public/blocks/post-grid/src/edit.js:604
+msgid "Zoom"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:111
+msgid "1 shows the world, 15 a few streets, 20 a single building."
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:112
+msgid "Map Type"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:112
+msgid "Road Map"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:112
+msgid "Satellite"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:113
+msgid "Look"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:113
+#: includes/public/blocks/pricing-table/src/edit.js:105
+msgid "Standard"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:113
+msgid "Gray"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:113
+#: includes/public/blocks/pricing-table/src/edit.js:52
+msgid "Dark"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:113
+msgid "Warm"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:113
+#: includes/public/blocks/isotope/src/edit.js:730
+msgid "Soft"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:114
+msgid "Full Color on Hover"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:115
+msgid "Load on Click"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:115
+msgid "Nothing is loaded from Google until the visitor clicks the button. Good for privacy and page speed."
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:119
+msgid "Place List"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:120
+msgid "Show the List"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:120
+msgid "Left of the Map"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:120
+msgid "Right of the Map"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:120
+msgid "Under the Map"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:120
+msgid "On a Card over the Map"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:120
+msgid "Hide"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:123
+#: includes/public/blocks/team-grid/src/edit.js:160
+msgid "Name HTML Tag"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:124
+msgid "Directions Link"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:124
+msgid "Opens Google Maps with the route to the place."
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:125
+msgid "Link Text"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:135
+msgid "Map Height"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:135
+msgid "Empty: 460px, 340px on phones."
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:136
+msgid "List Width"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:136
+msgid "Empty: 340px. In a narrow space the list goes under the map."
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:137
+msgid "Space Between Map and List"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:138
+msgid "Space Between Places"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:152
+msgid "Place"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:154
+msgid "Chosen Place Background"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:155
+msgid "Chosen Place Line"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/edit.js:156
+#: includes/public/blocks/isotope/src/edit.js:255
+msgid "Card Background"
 msgstr ""
 
 #: includes/public/blocks/heading/src/edit.js:19
@@ -4261,7 +4756,7 @@ msgid "From Right"
 msgstr ""
 
 #: includes/public/blocks/hover-box/src/edit.js:66
-#: includes/public/blocks/slider/src/edit.js:259
+#: includes/public/blocks/slider/src/edit.js:261
 msgid "Slide"
 msgstr ""
 
@@ -4275,11 +4770,6 @@ msgstr ""
 
 #: includes/public/blocks/hover-box/src/edit.js:69
 msgid "Shutter"
-msgstr ""
-
-#: includes/public/blocks/hover-box/src/edit.js:71
-#: includes/public/blocks/post-grid/src/edit.js:604
-msgid "Zoom"
 msgstr ""
 
 #: includes/public/blocks/hover-box/src/edit.js:72
@@ -4310,20 +4800,13 @@ msgstr ""
 msgid "Curtain"
 msgstr ""
 
-#: includes/public/blocks/hover-box/src/edit.js:176
-#: includes/public/blocks/image-carousel/src/edit.js:227
-#: includes/public/blocks/layout-row/src/edit.js:649
-#: includes/public/blocks/search/src/edit.js:125
-#: includes/public/blocks/slider/src/edit.js:195
-msgid "Replace Image"
-msgstr ""
-
 #: includes/public/blocks/hover-box/src/edit.js:210
 #: includes/public/blocks/isotope/src/edit.js:422
 msgid "Effect"
 msgstr ""
 
 #: includes/public/blocks/hover-box/src/edit.js:235
+#: includes/public/blocks/icon-list/src/edit.js:272
 msgid "Speed (ms)"
 msgstr ""
 
@@ -4345,7 +4828,7 @@ msgid "Box"
 msgstr ""
 
 #: includes/public/blocks/hover-box/src/edit.js:309
-#: includes/public/blocks/layout-row/src/edit.js:719
+#: includes/public/blocks/layout-row/src/edit.js:613
 #: includes/public/blocks/post-grid/src/edit.js:543
 msgid "Overlay"
 msgstr ""
@@ -4415,45 +4898,66 @@ msgstr ""
 msgid "Space Between Icon and Text"
 msgstr ""
 
-#: includes/public/blocks/icon-list/src/edit.js:81
-#: includes/public/blocks/icon-list/src/edit.js:246
+#: includes/public/blocks/icon-list/src/edit.js:86
+#: includes/public/blocks/icon-list/src/edit.js:299
 msgid "List item"
 msgstr ""
 
-#: includes/public/blocks/icon-list/src/edit.js:130
+#: includes/public/blocks/icon-list/src/edit.js:135
 msgid "Add List"
 msgstr ""
 
-#: includes/public/blocks/icon-list/src/edit.js:169
+#: includes/public/blocks/icon-list/src/edit.js:155
+msgid "Empty: no link."
+msgstr ""
+
+#: includes/public/blocks/icon-list/src/edit.js:158
+msgid "Open in a New Tab"
+msgstr ""
+
+#: includes/public/blocks/icon-list/src/edit.js:159
+msgid "Add rel=\"nofollow\""
+msgstr ""
+
+#: includes/public/blocks/icon-list/src/edit.js:181
 msgid "List Layout"
 msgstr ""
 
-#: includes/public/blocks/icon-list/src/edit.js:173
+#: includes/public/blocks/icon-list/src/edit.js:185
 msgid "Inline"
 msgstr ""
 
-#: includes/public/blocks/icon-list/src/edit.js:183
-#: includes/public/blocks/image-carousel/src/edit.js:301
-#: includes/public/blocks/slider/src/edit.js:241
+#: includes/public/blocks/icon-list/src/edit.js:195
+#: includes/public/blocks/image-carousel/src/edit.js:303
+#: includes/public/blocks/post-grid/src/edit.js:960
+#: includes/public/blocks/slider/src/edit.js:243
 #: includes/public/blocks/team-grid/src/edit.js:386
 #: includes/public/blocks/team-grid/src/edit.js:406
 msgid "Space Between (px)"
 msgstr ""
 
-#: includes/public/blocks/icon-list/src/edit.js:201
+#: includes/public/blocks/icon-list/src/edit.js:213
 msgid "Adjust Vertical Position (px)"
 msgstr ""
 
-#: includes/public/blocks/icon-list/src/edit.js:211
+#: includes/public/blocks/icon-list/src/edit.js:223
 msgid "Divider"
 msgstr ""
 
-#: includes/public/blocks/icon-list/src/edit.js:213
+#: includes/public/blocks/icon-list/src/edit.js:225
 msgid "Divider Color"
 msgstr ""
 
-#: includes/public/blocks/icon-list/src/edit.js:222
-msgid "Hover Color"
+#: includes/public/blocks/icon-list/src/edit.js:238
+msgid "Empty: a circle (50%)."
+msgstr ""
+
+#: includes/public/blocks/icon-list/src/edit.js:262
+msgid "Move Sideways (px)"
+msgstr ""
+
+#: includes/public/blocks/icon-list/src/edit.js:263
+msgid "The item slides a little towards its text when pointed at. 0: still."
 msgstr ""
 
 #: includes/public/blocks/icon/src/edit.js:176
@@ -4513,148 +5017,148 @@ msgstr ""
 msgid "Full Size"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:205
+#: includes/public/blocks/image-carousel/src/edit.js:207
 #: includes/public/blocks/image-comparison/src/edit.js:103
-#: includes/public/blocks/slider/src/edit.js:173
+#: includes/public/blocks/slider/src/edit.js:175
 msgid "Images"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:247
+#: includes/public/blocks/image-carousel/src/edit.js:249
 msgid "Add Empty Item"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:252
+#: includes/public/blocks/image-carousel/src/edit.js:254
 msgid "Several images show at once, so a smaller size loads faster. Pick a larger one if they look soft."
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:259
-#: includes/public/blocks/slider/src/edit.js:218
+#: includes/public/blocks/image-carousel/src/edit.js:261
+#: includes/public/blocks/slider/src/edit.js:220
 msgid "Playback"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:261
+#: includes/public/blocks/image-carousel/src/edit.js:263
 msgid "Continuous Scroll"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:262
+#: includes/public/blocks/image-carousel/src/edit.js:264
 msgid "Slides glide without stopping, like a marquee."
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:267
-#: includes/public/blocks/slider/src/edit.js:219
+#: includes/public/blocks/image-carousel/src/edit.js:269
+#: includes/public/blocks/slider/src/edit.js:221
 msgid "Loop"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:269
+#: includes/public/blocks/image-carousel/src/edit.js:271
 msgid "Centered Slides"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:270
+#: includes/public/blocks/image-carousel/src/edit.js:272
 msgid "Keeps the active image in the middle, with its neighbors peeking in."
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:276
-#: includes/public/blocks/slider/src/edit.js:220
+#: includes/public/blocks/image-carousel/src/edit.js:278
+#: includes/public/blocks/slider/src/edit.js:222
 msgid "Autoplay"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:280
-#: includes/public/blocks/slider/src/edit.js:223
+#: includes/public/blocks/image-carousel/src/edit.js:282
+#: includes/public/blocks/slider/src/edit.js:225
 msgid "Autoplay Delay (ms)"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:281
-#: includes/public/blocks/slider/src/edit.js:224
+#: includes/public/blocks/image-carousel/src/edit.js:283
+#: includes/public/blocks/slider/src/edit.js:226
 msgid "Pause on hover"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:285
+#: includes/public/blocks/image-carousel/src/edit.js:287
 msgid "Scroll Speed (ms)"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:285
+#: includes/public/blocks/image-carousel/src/edit.js:287
 msgid "How long one image takes to travel. A larger number scrolls more slowly."
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:286
-#: includes/public/blocks/slider/src/edit.js:227
+#: includes/public/blocks/image-carousel/src/edit.js:288
+#: includes/public/blocks/slider/src/edit.js:229
 msgid "Transition Speed (ms)"
-msgstr ""
-
-#: includes/public/blocks/image-carousel/src/edit.js:289
-#: includes/public/blocks/slider/src/edit.js:230
-msgid "Navigation"
-msgstr ""
-
-#: includes/public/blocks/image-carousel/src/edit.js:290
-#: includes/public/blocks/slider/src/edit.js:231
-msgid "Show Arrows"
 msgstr ""
 
 #: includes/public/blocks/image-carousel/src/edit.js:291
 #: includes/public/blocks/slider/src/edit.js:232
+msgid "Navigation"
+msgstr ""
+
+#: includes/public/blocks/image-carousel/src/edit.js:292
+#: includes/public/blocks/slider/src/edit.js:233
+msgid "Show Arrows"
+msgstr ""
+
+#: includes/public/blocks/image-carousel/src/edit.js:293
+#: includes/public/blocks/slider/src/edit.js:234
 msgid "Show Dots"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:299
+#: includes/public/blocks/image-carousel/src/edit.js:301
 msgid "Slides"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:300
+#: includes/public/blocks/image-carousel/src/edit.js:302
 msgid "Images Per View"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:302
+#: includes/public/blocks/image-carousel/src/edit.js:304
 msgid "Image Height (px)"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:310
+#: includes/public/blocks/image-carousel/src/edit.js:312
 #: includes/public/blocks/image-comparison/src/edit.js:213
 msgid "Image Box"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:312
-#: includes/public/blocks/slider/src/edit.js:245
+#: includes/public/blocks/image-carousel/src/edit.js:314
+#: includes/public/blocks/slider/src/edit.js:247
 msgid "Image Fit"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:315
+#: includes/public/blocks/image-carousel/src/edit.js:317
 msgid "Cover fills the box and crops; Contain shows the whole image."
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:324
+#: includes/public/blocks/image-carousel/src/edit.js:326
 msgid "Inactive Image Scale (%)"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:324
+#: includes/public/blocks/image-carousel/src/edit.js:326
 msgid "Shrinks every image except the active one, so the active image stands out. Leave empty to keep them all the same size."
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:325
+#: includes/public/blocks/image-carousel/src/edit.js:327
 msgid "Inactive Image Opacity (%)"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:325
+#: includes/public/blocks/image-carousel/src/edit.js:327
 msgid "Leave empty to keep every image fully opaque."
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:327
-#: includes/public/blocks/slider/src/edit.js:262
+#: includes/public/blocks/image-carousel/src/edit.js:329
+#: includes/public/blocks/slider/src/edit.js:264
 msgid "Image Overlay"
 msgstr ""
 
-#: includes/public/blocks/image-carousel/src/edit.js:336
-#: includes/public/blocks/slider/src/edit.js:271
+#: includes/public/blocks/image-carousel/src/edit.js:338
+#: includes/public/blocks/slider/src/edit.js:273
 msgid "Arrows"
-msgstr ""
-
-#: includes/public/blocks/image-carousel/src/edit.js:345
-#: includes/public/blocks/slider/src/edit.js:280
-msgid "Dots"
 msgstr ""
 
 #: includes/public/blocks/image-carousel/src/edit.js:347
 #: includes/public/blocks/slider/src/edit.js:282
+msgid "Dots"
+msgstr ""
+
+#: includes/public/blocks/image-carousel/src/edit.js:349
+#: includes/public/blocks/slider/src/edit.js:284
 msgid "Active Color"
 msgstr ""
 
@@ -4822,10 +5326,6 @@ msgstr ""
 msgid "Only for this card. Leave empty to use the colors under Style."
 msgstr ""
 
-#: includes/public/blocks/isotope/src/edit.js:255
-msgid "Card Background"
-msgstr ""
-
 #: includes/public/blocks/isotope/src/edit.js:264
 #: includes/public/blocks/search/src/edit.js:245
 msgid "Title Color"
@@ -4959,14 +5459,6 @@ msgstr ""
 msgid "Badge Position"
 msgstr ""
 
-#: includes/public/blocks/isotope/src/edit.js:540
-#: includes/public/blocks/layout-row/src/edit.js:408
-#: includes/public/blocks/layout-row/src/edit.js:696
-#: includes/public/blocks/post-grid/src/edit.js:313
-#: includes/public/blocks/team-grid/src/edit.js:179
-msgid "Position"
-msgstr ""
-
 #: includes/public/blocks/isotope/src/edit.js:541
 msgid "Add a badge to a card under Settings > Categories > Items."
 msgstr ""
@@ -5043,10 +5535,6 @@ msgstr ""
 msgid "A tab sits on the top edge; above the title it shows as a square."
 msgstr ""
 
-#: includes/public/blocks/isotope/src/edit.js:730
-msgid "Soft"
-msgstr ""
-
 #: includes/public/blocks/isotope/src/edit.js:732
 #: includes/public/blocks/pricing-table/src/edit.js:300
 msgid "Ribbon"
@@ -5066,154 +5554,123 @@ msgid "Load More Button"
 msgstr ""
 
 #: includes/public/blocks/isotope/src/edit.js:770
+#: includes/public/blocks/post-grid/src/edit.js:968
 msgid "Space Above (px)"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:242
+#: includes/public/blocks/layout-row/src/edit.js:223
 msgid "ARIA Label"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:243
+#: includes/public/blocks/layout-row/src/edit.js:224
 msgid "A name screen readers announce for this section, for example “Our services”."
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:251
-msgid "Sticky"
-msgstr ""
-
-#: includes/public/blocks/layout-row/src/edit.js:253
-msgid "Make Sticky"
-msgstr ""
-
-#: includes/public/blocks/layout-row/src/edit.js:263
-msgid "Sticky Top Offset"
-msgstr ""
-
-#: includes/public/blocks/layout-row/src/edit.js:313
+#: includes/public/blocks/layout-row/src/edit.js:274
 msgid "Columns per row (Desktop)"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:314
+#: includes/public/blocks/layout-row/src/edit.js:275
 msgid "0 keeps each column’s own width. 1 stacks the columns, full width; 2 or more makes a grid of equal columns that wrap onto the next line."
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:323
+#: includes/public/blocks/layout-row/src/edit.js:284
 msgid "Columns per row (Tablet)"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:324
+#: includes/public/blocks/layout-row/src/edit.js:285
 msgid "0 keeps the desktop layout."
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:333
+#: includes/public/blocks/layout-row/src/edit.js:294
 msgid "Columns per row (Mobile)"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:334
+#: includes/public/blocks/layout-row/src/edit.js:295
 msgid "0 stacks the columns, one per row."
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:345
+#: includes/public/blocks/layout-row/src/edit.js:306
 msgid "Content Width"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:348
+#: includes/public/blocks/layout-row/src/edit.js:309
 msgid "Boxed"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:349
+#: includes/public/blocks/layout-row/src/edit.js:310
 msgid "Full Width"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:354
+#: includes/public/blocks/layout-row/src/edit.js:315
 msgid "The whole row - its background too - gets the width below, centered. In the page it stays within the site’s wide width; set the row’s alignment to Full to go wider."
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:356
+#: includes/public/blocks/layout-row/src/edit.js:317
 msgid "The content fills the whole row."
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:357
+#: includes/public/blocks/layout-row/src/edit.js:318
 msgid "The background fills the row; the content stays within the Max Width."
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:384
+#: includes/public/blocks/layout-row/src/edit.js:345
 msgid "Max Width"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:406
+#: includes/public/blocks/layout-row/src/edit.js:367
 msgid "Position & Z-Index"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:424
+#: includes/public/blocks/layout-row/src/edit.js:373
+msgid "Sticky"
+msgstr ""
+
+#: includes/public/blocks/layout-row/src/edit.js:381
+msgid "Sticky Top Offset"
+msgstr ""
+
+#: includes/public/blocks/layout-row/src/edit.js:389
 msgid "Overflow"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:439
-msgid "Z-Index"
-msgstr ""
-
-#: includes/public/blocks/layout-row/src/edit.js:553
+#: includes/public/blocks/layout-row/src/edit.js:518
 msgid "Row Gap"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:563
-msgid "Column Gap"
-msgstr ""
-
-#: includes/public/blocks/layout-row/src/edit.js:574
+#: includes/public/blocks/layout-row/src/edit.js:539
 msgid "Advanced Layout"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:576
-msgid "Vertical Align"
-msgstr ""
-
-#: includes/public/blocks/layout-row/src/edit.js:590
+#: includes/public/blocks/layout-row/src/edit.js:555
 msgid "Equal Height Columns"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:597
+#: includes/public/blocks/layout-row/src/edit.js:562
 msgid "Stretch Columns"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:649
-msgid "Choose Background Image"
-msgstr ""
-
-#: includes/public/blocks/layout-row/src/edit.js:661
-msgid "Or Image URL"
-msgstr ""
-
-#: includes/public/blocks/layout-row/src/edit.js:683
-msgid "Repeat"
-msgstr ""
-
-#: includes/public/blocks/layout-row/src/edit.js:703
-msgid "Attachment"
-msgstr ""
-
-#: includes/public/blocks/layout-row/src/edit.js:717
+#: includes/public/blocks/layout-row/src/edit.js:611
 msgid "Background Overlay"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:730
+#: includes/public/blocks/layout-row/src/edit.js:624
 msgid "Overlay Opacity (%)"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:741
+#: includes/public/blocks/layout-row/src/edit.js:635
 msgid "Colors"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:744
+#: includes/public/blocks/layout-row/src/edit.js:638
 msgid "Link Hover"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:787
+#: includes/public/blocks/layout-row/src/edit.js:681
 msgid "Remove Column"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:820
+#: includes/public/blocks/layout-row/src/edit.js:714
 msgid "Choose a Layout"
 msgstr ""
 
@@ -5385,15 +5842,6 @@ msgstr ""
 #: includes/public/blocks/post-grid/src/edit.js:199
 #: includes/public/blocks/post-grid/src/edit.js:214
 msgid "Order of items to display."
-msgstr ""
-
-#: includes/public/blocks/post-grid/src/edit.js:210
-#: includes/public/blocks/team-grid/src/card.js:78
-#: includes/public/blocks/team-grid/src/edit.js:148
-#: includes/public/blocks/team-grid/src/edit.js:345
-#: includes/public/blocks/testimonials-grid/src/edit.js:174
-#: includes/public/blocks/testimonials-grid/src/edit.js:231
-msgid "Name"
 msgstr ""
 
 #: includes/public/blocks/post-grid/src/edit.js:219
@@ -5623,16 +6071,12 @@ msgstr ""
 msgid "Hover / Active"
 msgstr ""
 
+#: includes/public/blocks/post-grid/src/edit.js:951
+msgid "Default (Center)"
+msgstr ""
+
 #: includes/public/blocks/pricing-table/src/edit.js:51
 msgid "Centered"
-msgstr ""
-
-#: includes/public/blocks/pricing-table/src/edit.js:52
-msgid "Dark"
-msgstr ""
-
-#: includes/public/blocks/pricing-table/src/edit.js:105
-msgid "Standard"
 msgstr ""
 
 #: includes/public/blocks/pricing-table/src/edit.js:105
@@ -5823,6 +6267,7 @@ msgstr ""
 
 #. translators: %d: number of pricing plans.
 #: includes/public/blocks/pricing-table/src/edit.js:515
+#, js-format
 msgid "%d Plan"
 msgid_plural "%d Plans"
 msgstr[0] ""
@@ -6031,19 +6476,19 @@ msgstr ""
 msgid "Close Icon Size (px)"
 msgstr ""
 
-#: includes/public/blocks/slider/src/edit.js:215
+#: includes/public/blocks/slider/src/edit.js:217
 msgid "Add Empty Slide"
 msgstr ""
 
-#: includes/public/blocks/slider/src/edit.js:240
+#: includes/public/blocks/slider/src/edit.js:242
 msgid "Slides Per View"
 msgstr ""
 
-#: includes/public/blocks/slider/src/edit.js:243
+#: includes/public/blocks/slider/src/edit.js:245
 msgid "Slide Height (px)"
 msgstr ""
 
-#: includes/public/blocks/slider/src/edit.js:248
+#: includes/public/blocks/slider/src/edit.js:250
 msgid "Cover fills the slide and crops; Contain shows the whole image."
 msgstr ""
 
@@ -6448,16 +6893,19 @@ msgstr ""
 
 #. translators: %d: column number.
 #: includes/public/blocks/table/src/cells.js:168
+#, js-format
 msgid "Header, column %d"
 msgstr ""
 
 #. translators: %d: column number.
 #: includes/public/blocks/table/src/cells.js:170
+#, js-format
 msgid "Footer, column %d"
 msgstr ""
 
 #. translators: 1: row number, 2: column number.
 #: includes/public/blocks/table/src/cells.js:171
+#, js-format
 msgid "Row %1$d, column %2$d"
 msgstr ""
 
@@ -6697,10 +7145,6 @@ msgstr ""
 msgid "Popup Text"
 msgstr ""
 
-#: includes/public/blocks/team-grid/src/edit.js:160
-msgid "Name HTML Tag"
-msgstr ""
-
 #: includes/public/blocks/team-grid/src/edit.js:163
 #: includes/public/blocks/team-grid/src/edit.js:380
 msgid "Email & Phone"
@@ -6716,10 +7160,6 @@ msgstr ""
 
 #: includes/public/blocks/team-grid/src/edit.js:164
 msgid "Each opens the email app or the phone dialer."
-msgstr ""
-
-#: includes/public/blocks/team-grid/src/edit.js:168
-msgid "Phone"
 msgstr ""
 
 #: includes/public/blocks/team-grid/src/edit.js:169
@@ -7036,86 +7476,91 @@ msgstr ""
 msgid "ShapeBlock logo"
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:55
-msgid "Block status updated"
-msgstr ""
-
-#: src/components/admin-components/blocks.jsx:56
-msgid "Block status has been updated successfully."
-msgstr ""
-
-#: src/components/admin-components/blocks.jsx:66
-msgid "Block status update failed"
+#: src/components/admin-components/blocks.jsx:16
+msgid "Upcoming"
 msgstr ""
 
 #: src/components/admin-components/blocks.jsx:67
+msgid "Block status updated"
+msgstr ""
+
+#: src/components/admin-components/blocks.jsx:68
+msgid "Block status has been updated successfully."
+msgstr ""
+
+#: src/components/admin-components/blocks.jsx:78
+msgid "Block status update failed"
+msgstr ""
+
+#: src/components/admin-components/blocks.jsx:79
 msgid "Block status update failed. Please try again."
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:109
+#: src/components/admin-components/blocks.jsx:121
 msgid "All blocks activated"
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:109
+#: src/components/admin-components/blocks.jsx:121
 msgid "All blocks deactivated"
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:110
+#: src/components/admin-components/blocks.jsx:122
 msgid "Block statuses have been updated successfully."
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:118
-#: src/components/admin-components/blocks.jsx:129
+#: src/components/admin-components/blocks.jsx:130
+#: src/components/admin-components/blocks.jsx:141
 msgid "Bulk update failed"
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:119
-#: src/components/admin-components/blocks.jsx:130
+#: src/components/admin-components/blocks.jsx:131
+#: src/components/admin-components/blocks.jsx:142
 msgid "Updating all blocks failed. Please try again."
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:175
+#: src/components/admin-components/blocks.jsx:187
 msgid "Block categories"
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:207
+#: src/components/admin-components/blocks.jsx:219
 msgid "Search blocks..."
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:220
+#: src/components/admin-components/blocks.jsx:232
 msgid "Sort: Default"
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:221
+#: src/components/admin-components/blocks.jsx:233
 msgid "Name (A–Z)"
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:222
+#: src/components/admin-components/blocks.jsx:234
 msgid "Name (Z–A)"
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:223
+#: src/components/admin-components/blocks.jsx:235
 msgid "Active first"
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:224
+#: src/components/admin-components/blocks.jsx:236
 msgid "Inactive first"
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:237
+#: src/components/admin-components/blocks.jsx:249
 msgid "Activate All"
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:246
+#: src/components/admin-components/blocks.jsx:258
 msgid "Deactivate All"
 msgstr ""
 
 #. translators: %s: search term entered by the user.
-#: src/components/admin-components/blocks.jsx:256
+#: src/components/admin-components/blocks.jsx:268
+#, js-format
 msgid "No blocks found for “%s”."
 msgstr ""
 
-#: src/components/admin-components/blocks.jsx:259
+#: src/components/admin-components/blocks.jsx:271
 msgid "No blocks found."
 msgstr ""
 
@@ -7155,37 +7600,38 @@ msgstr ""
 msgid "Add Condition"
 msgstr ""
 
-#: src/components/admin-components/builder-conditions-modal.jsx:223
+#: src/components/admin-components/builder-conditions-modal.jsx:224
 msgid "Failed to load conditions"
 msgstr ""
 
-#: src/components/admin-components/builder-conditions-modal.jsx:241
+#: src/components/admin-components/builder-conditions-modal.jsx:242
 msgid "Conditions saved"
 msgstr ""
 
-#: src/components/admin-components/builder-conditions-modal.jsx:245
-#: src/components/admin-components/builder-conditions-modal.jsx:248
+#: src/components/admin-components/builder-conditions-modal.jsx:246
+#: src/components/admin-components/builder-conditions-modal.jsx:249
 #: src/components/admin-components/settings.jsx:90
 #: src/components/admin-components/settings.jsx:97
 msgid "Save failed"
 msgstr ""
 
 #. translators: %s: template title.
-#: src/components/admin-components/builder-conditions-modal.jsx:257
+#: src/components/admin-components/builder-conditions-modal.jsx:258
+#, js-format
 msgid "Display Conditions — %s"
 msgstr ""
 
-#: src/components/admin-components/builder-conditions-modal.jsx:260
+#: src/components/admin-components/builder-conditions-modal.jsx:261
 #: src/components/admin-components/theme-builder.jsx:366
 #: src/components/admin-components/theme-builder.jsx:615
 msgid "Display Conditions"
 msgstr ""
 
-#: src/components/admin-components/builder-conditions-modal.jsx:265
+#: src/components/admin-components/builder-conditions-modal.jsx:266
 msgid "Save Conditions"
 msgstr ""
 
-#: src/components/admin-components/builder-conditions-modal.jsx:270
+#: src/components/admin-components/builder-conditions-modal.jsx:271
 msgid "Choose where this template should appear. Include rules add locations; exclude rules remove them (exclude always wins)."
 msgstr ""
 
@@ -7199,6 +7645,7 @@ msgstr ""
 
 #. translators: %d: number of custom templates in the export file.
 #: src/components/admin-components/export-import.jsx:34
+#, js-format
 msgid "%d Custom Template"
 msgid_plural "%d Custom Templates"
 msgstr[0] ""
@@ -7206,6 +7653,7 @@ msgstr[1] ""
 
 #. translators: %d: number of theme builder templates in the export file.
 #: src/components/admin-components/export-import.jsx:41
+#, js-format
 msgid "%d Theme Builder Template"
 msgid_plural "%d Theme Builder Templates"
 msgstr[0] ""
@@ -7267,11 +7715,13 @@ msgstr ""
 
 #. translators: 1: number of custom templates imported, 2: number of custom templates skipped.
 #: src/components/admin-components/export-import.jsx:182
+#, js-format
 msgid "Custom Templates: %1$d imported, %2$d skipped"
 msgstr ""
 
 #. translators: 1: number of theme builder templates imported, 2: number of theme builder templates skipped.
 #: src/components/admin-components/export-import.jsx:190
+#, js-format
 msgid "Theme Builder: %1$d imported, %2$d skipped"
 msgstr ""
 
@@ -7281,6 +7731,7 @@ msgstr ""
 
 #. translators: %s: summary of what was imported.
 #: src/components/admin-components/export-import.jsx:200
+#, js-format
 msgid "%s. Reload the page to see everything."
 msgstr ""
 
@@ -7463,6 +7914,7 @@ msgstr ""
 #. translators: %d: number of templates.
 #: src/components/admin-components/templates.jsx:201
 #: src/components/admin-components/theme-builder.jsx:232
+#, js-format
 msgid "%d template moved to Trash"
 msgid_plural "%d templates moved to Trash"
 msgstr[0] ""
@@ -7471,6 +7923,7 @@ msgstr[1] ""
 #. translators: %d: number of templates.
 #: src/components/admin-components/templates.jsx:207
 #: src/components/admin-components/theme-builder.jsx:302
+#, js-format
 msgid "%d template restored"
 msgid_plural "%d templates restored"
 msgstr[0] ""
@@ -7479,6 +7932,7 @@ msgstr[1] ""
 #. translators: %d: number of templates.
 #: src/components/admin-components/templates.jsx:213
 #: src/components/admin-components/theme-builder.jsx:272
+#, js-format
 msgid "%d template permanently deleted"
 msgid_plural "%d templates permanently deleted"
 msgstr[0] ""
@@ -7486,6 +7940,7 @@ msgstr[1] ""
 
 #. translators: %d: number of templates.
 #: src/components/admin-components/templates.jsx:219
+#, js-format
 msgid "%d template updated"
 msgid_plural "%d templates updated"
 msgstr[0] ""
@@ -7505,6 +7960,7 @@ msgstr ""
 #. translators: %d: number of templates.
 #: src/components/admin-components/templates.jsx:250
 #: src/components/admin-components/theme-builder.jsx:254
+#, js-format
 msgid "Permanently delete %d template?"
 msgid_plural "Permanently delete %d templates?"
 msgstr[0] ""
@@ -7600,6 +8056,7 @@ msgstr ""
 #. translators: %d: number of trashed templates.
 #: src/components/admin-components/templates.jsx:443
 #: src/components/admin-components/theme-builder.jsx:493
+#, js-format
 msgid "Trash (%d)"
 msgstr ""
 
@@ -7611,6 +8068,7 @@ msgstr ""
 #. translators: %d: number of selected templates.
 #: src/components/admin-components/templates.jsx:471
 #: src/components/admin-components/theme-builder.jsx:529
+#, js-format
 msgid "%d selected"
 msgstr ""
 
@@ -7627,6 +8085,7 @@ msgstr ""
 #. translators: 1: first item number on the page, 2: last item number on the page, 3: total number of items.
 #: src/components/admin-components/templates.jsx:522
 #: src/components/admin-components/theme-builder.jsx:569
+#, js-format
 msgid "%1$d-%2$d of %3$d items"
 msgstr ""
 
@@ -7657,6 +8116,7 @@ msgstr ""
 
 #. translators: %d: number of templates.
 #: src/components/admin-components/theme-builder.jsx:214
+#, js-format
 msgid "Move %d template to Trash?"
 msgid_plural "Move %d templates to Trash?"
 msgstr[0] ""
@@ -7939,6 +8399,47 @@ msgctxt "block keyword"
 msgid "animated"
 msgstr ""
 
+#: includes/public/blocks/drop-caps/src/block.json
+msgctxt "block title"
+msgid "Drop Caps"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/block.json
+msgctxt "block description"
+msgid "A paragraph that opens with a large first letter across several lines, plain, in a box, outlined or as an outlined letter, with optional newspaper columns."
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/block.json
+msgctxt "block keyword"
+msgid "drop cap"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/block.json
+msgctxt "block keyword"
+msgid "initial"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/block.json
+msgctxt "block keyword"
+msgid "first letter"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/block.json
+msgctxt "block keyword"
+msgid "paragraph"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/block.json
+#: includes/public/blocks/heading/src/block.json
+msgctxt "block keyword"
+msgid "text"
+msgstr ""
+
+#: includes/public/blocks/drop-caps/src/block.json
+msgctxt "block keyword"
+msgid "editorial"
+msgstr ""
+
 #: includes/public/blocks/faq/src/block.json
 msgctxt "block title"
 msgid "Accordion"
@@ -8099,6 +8600,46 @@ msgctxt "block keyword"
 msgid "lightbox"
 msgstr ""
 
+#: includes/public/blocks/google-map/src/block.json
+msgctxt "block title"
+msgid "Google Map"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/block.json
+msgctxt "block description"
+msgid "A Google map of one place or several, with a list of the places beside it, directions links and a look that suits the page."
+msgstr ""
+
+#: includes/public/blocks/google-map/src/block.json
+msgctxt "block keyword"
+msgid "map"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/block.json
+msgctxt "block keyword"
+msgid "google"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/block.json
+msgctxt "block keyword"
+msgid "location"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/block.json
+msgctxt "block keyword"
+msgid "address"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/block.json
+msgctxt "block keyword"
+msgid "directions"
+msgstr ""
+
+#: includes/public/blocks/google-map/src/block.json
+msgctxt "block keyword"
+msgid "contact"
+msgstr ""
+
 #: includes/public/blocks/heading/src/block.json
 msgctxt "block title"
 msgid "Heading"
@@ -8122,11 +8663,6 @@ msgstr ""
 #: includes/public/blocks/heading/src/block.json
 msgctxt "block keyword"
 msgid "subtitle"
-msgstr ""
-
-#: includes/public/blocks/heading/src/block.json
-msgctxt "block keyword"
-msgid "text"
 msgstr ""
 
 #: includes/public/blocks/hover-box/src/block.json

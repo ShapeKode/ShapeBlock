@@ -8,7 +8,11 @@
 	--shapeblock-gm-list-w: 340px;
 	--shapeblock-gm-gap: 24px;
 	container-type: inline-size;
-	width: 100%;
+
+	// Wide and full width: the theme sizes it, as it does a core block.
+	&:where(:not(.alignfull):not(.alignwide)) {
+		width: 100%;
+	}
 }
 
 .shapeblock-gm__inner {
@@ -112,8 +116,9 @@
 	}
 }
 
-// The places.
-.shapeblock-gm__list {
+// The places. Under the block class, so a theme's content list padding
+// and margins (`.entry-content ul`) do not reach the list.
+.shapeblock-gm .shapeblock-gm__list {
 	display: flex;
 	flex-direction: column;
 	gap: var(--shapeblock-gm-item-gap, 10px);

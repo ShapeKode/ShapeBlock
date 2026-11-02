@@ -10,7 +10,11 @@
 	// Never wider than the place it sits in (a column of a row, say): a wide
 	// table scrolls inside its own box instead of pushing the block out.
 	min-width: 0;
-	max-width: 100%;
+
+	// Wide and full width: the theme sizes it, as it does a core block.
+	&:where(:not(.alignfull):not(.alignwide)) {
+		max-width: 100%;
+	}
 
 	.shapeblock-table {
 		width: 100%;

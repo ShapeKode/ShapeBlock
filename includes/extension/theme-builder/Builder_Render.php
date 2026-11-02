@@ -190,8 +190,8 @@ class Builder_Render {
 	}
 
 	/**
-	 * Find the most recently modified published builder post of $type whose
-	 * display conditions match the current request.
+	 * Find the published builder post of $type whose display conditions fit the
+	 * current request most closely (most recently modified among equals).
 	 *
 	 * @return int|false
 	 */
@@ -226,18 +226,25 @@ class Builder_Render {
 
 		update_meta_cache( 'post', $query->posts );
 
+		// The most specific match wins (a Front Page header over an Entire Site
+		// one); among equally specific ones, the most recently modified, as the
+		// list is ordered.
+		$best      = false;
+		$best_rank = 0;
 		foreach ( $query->posts as $post_id ) {
 			if ( $type !== get_post_meta( $post_id, \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE, true ) ) {
 				continue;
 			}
 
 			$conditions = \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_post_conditions( $post_id );
-			if ( \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::matches_current_request( $conditions ) ) {
-				return (int) $post_id;
+			$rank       = \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::match_rank( $conditions );
+			if ( $rank > $best_rank ) {
+				$best      = (int) $post_id;
+				$best_rank = $rank;
 			}
 		}
 
-		return false;
+		return $best;
 	}
 
 	public function maybe_override_header() {

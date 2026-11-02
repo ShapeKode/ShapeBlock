@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/google-map",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"title": "Google Map",
 	"category": "shapeblock",
 	"description": "A Google map of one place or several, with a list of the places beside it, directions links and a look that suits the page.",

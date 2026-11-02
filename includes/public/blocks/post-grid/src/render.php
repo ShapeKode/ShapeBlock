@@ -380,6 +380,28 @@ if ( ( isset( $pagination_btn_border_radius['right'] ) && '' !== (string) $pagin
 if ( ( isset( $pagination_btn_border_radius['bottom'] ) && '' !== (string) $pagination_btn_border_radius['bottom'] ) ) $pag_styles['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pagination_btn_border_radius['bottom'] );
 if ( ( isset( $pagination_btn_border_radius['left'] ) && '' !== (string) $pagination_btn_border_radius['left'] ) ) $pag_styles['border-bottom-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pagination_btn_border_radius['left'] );
 
+// Pagination padding: the buttons then size to their text (the default is a
+// 30px circle), never smaller than that circle.
+$pagination_padding = $attributes['paginationPadding'] ?? [];
+$pag_pad_sides      = [];
+foreach ( [ 'top', 'right', 'bottom', 'left' ] as $pag_side ) {
+    $pag_pad_sides[] = ( isset( $pagination_padding[ $pag_side ] ) && '' !== (string) $pagination_padding[ $pag_side ] ) ? \ShapeBlock\Frontend\Helper::ensure_unit( $pagination_padding[ $pag_side ] ) : '';
+}
+if ( array_filter( $pag_pad_sides, 'strlen' ) ) {
+    $pag_styles['padding']    = implode( ' ', array_map( function ( $v ) { return '' !== $v ? $v : '0'; }, $pag_pad_sides ) );
+    $pag_styles['width']      = 'auto';
+    $pag_styles['height']     = 'auto';
+    $pag_styles['min-width']  = '30px';
+    $pag_styles['min-height'] = '30px';
+}
+
+// The row of page links: its alignment, the space between them and above.
+$pag_row       = [];
+$pag_justify   = [ 'left' => 'flex-start', 'right' => 'flex-end' ];
+if ( isset( $attributes['paginationAlign'], $pag_justify[ $attributes['paginationAlign'] ] ) ) $pag_row['justify-content'] = $pag_justify[ $attributes['paginationAlign'] ];
+if ( isset( $attributes['paginationGap'] ) && '' !== (string) $attributes['paginationGap'] ) $pag_row['gap'] = max( 0, min( 60, (int) $attributes['paginationGap'] ) ) . 'px';
+if ( isset( $attributes['paginationSpacing'] ) && '' !== (string) $attributes['paginationSpacing'] ) $pag_row['margin-top'] = max( 0, min( 200, (int) $attributes['paginationSpacing'] ) ) . 'px';
+
 
 $thumbnail_height_responsive = ['desktop' => [], 'tablet' => [], 'mobile' => []];
 \ShapeBlock\Frontend\Helper::add_responsive_vars($attributes, $thumbnail_height_responsive, 'thumbnailHeight', 'height', [], false);
@@ -424,9 +446,12 @@ wp_enqueue_style( $style_handle );
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas a:hover'             => \ShapeBlock\Frontend\Helper::get_inline_styles($meta_hover),
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas .shapeblock-meta-icon'                     => \ShapeBlock\Frontend\Helper::get_inline_styles($meta_icon_styles),
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-post-metas .shapeblock-post-meta-item:hover .shapeblock-meta-icon' => \ShapeBlock\Frontend\Helper::get_inline_styles($meta_icon_hover),
+    '.shapeblock-pagination' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_row),
     '.shapeblock-pagination .page-numbers' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_styles),
     '.shapeblock-pagination .page-numbers.current' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
-    '.shapeblock-pagination a:hover' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
+    // Links and the Load More button (Pro) alike.
+    '.shapeblock-pagination .page-numbers:hover' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
+    '.shapeblock-pagination .page-numbers:focus-visible' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-blog-img'   => \ShapeBlock\Frontend\Helper::get_inline_styles($thumbnail_border_radius_styles),
 ] );
 

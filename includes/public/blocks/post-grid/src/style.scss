@@ -1,4 +1,9 @@
 .shapeblock-post-grid-block-wrap {
+	// The half-gutter padding render.php adds stays inside the block's width,
+	// so the grid is as wide as the content on themes without a global
+	// border-box (block themes), not a gutter wider on each side.
+	box-sizing: border-box;
+
 	.shapeblock-post-grid {
 		// Grid handled by Bootstrap classes
 

@@ -134,36 +134,62 @@ class Builder_Conditions {
 	 * @param array $conditions Sanitised conditions list.
 	 */
 	public static function matches_current_request( $conditions ) {
+		return self::match_rank( $conditions ) > 0;
+	}
+
+	/**
+	 * How closely a conditions set fits the current request: 0 when it does not
+	 * display here, else the rank of its most specific matching INCLUDE row
+	 * (see rule_rank()). When several templates of one type display on a page,
+	 * the most specific one is used, so a Front Page header keeps the front
+	 * page even after an Entire Site header is edited later.
+	 *
+	 * @param array $conditions Sanitised conditions list.
+	 * @return int
+	 */
+	public static function match_rank( $conditions ) {
 		if ( ! is_array( $conditions ) || empty( $conditions ) ) {
 			// No conditions: the template is shown nowhere.
-			return false;
+			return 0;
 		}
 
-		$included = false;
-		$has_include = false;
+		$rank = 0;
 
 		foreach ( $conditions as $row ) {
 			$rule = isset( $row['rule'] ) ? $row['rule'] : '';
 			$ids  = isset( $row['ids'] ) && is_array( $row['ids'] ) ? $row['ids'] : array();
 			$type = isset( $row['type'] ) ? $row['type'] : 'include';
 
-			$matches = self::rule_matches_request( $rule, $ids );
-
-			if ( 'exclude' === $type ) {
-				if ( $matches ) {
-					return false; // Exclude always wins.
-				}
+			if ( ! self::rule_matches_request( $rule, $ids ) ) {
 				continue;
 			}
-
-			$has_include = true;
-			if ( $matches ) {
-				$included = true;
+			if ( 'exclude' === $type ) {
+				return 0; // Exclude always wins.
 			}
+			$rank = max( $rank, self::rule_rank( $rule ) );
 		}
 
-		// Only exclude rows: nothing is included, so it is shown nowhere.
-		return $has_include && $included;
+		// Only exclude rows (or none matching): shown nowhere.
+		return $rank;
+	}
+
+	/**
+	 * How specific a rule is: chosen pages or posts (4) over a single kind of
+	 * page such as the front page or category pages (3), over a whole group
+	 * such as all pages or all archives (2), over the entire site (1).
+	 *
+	 * @param string $rule Rule slug.
+	 * @return int
+	 */
+	protected static function rule_rank( $rule ) {
+		if ( 'entire_site' === $rule ) {
+			return 1;
+		}
+		$flat = self::get_rules_flat();
+		if ( ! empty( $flat[ $rule ]['needsObject'] ) ) {
+			return 4;
+		}
+		return 0 === strpos( $rule, 'all_' ) ? 2 : 3;
 	}
 
 	/**
