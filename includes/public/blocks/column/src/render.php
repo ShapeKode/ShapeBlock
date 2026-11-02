@@ -98,12 +98,9 @@ foreach ( $devices as $suffix => $device ) {
     'left'   => 'margin-left',
 ], true );
 
-// Background.
-if ( ! empty( $attributes['background'] ) ) {
-    $col_responsive['desktop']['background-color'] = $attributes['background'];
-}
-if ( ! empty( $attributes['backgroundGradient'] ) ) {
-    $col_responsive['desktop']['background-image'] = $attributes['backgroundGradient'];
+// Background: colour, gradient and image.
+foreach ( \ShapeBlock\Frontend\Helper::background_to_css_props( $attributes ) as $prop => $val ) {
+    $col_responsive['desktop'][ $prop ] = $val;
 }
 
 // Border.

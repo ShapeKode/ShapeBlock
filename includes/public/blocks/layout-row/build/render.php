@@ -60,27 +60,9 @@ foreach ( [ 'gap', 'rowGap', 'columnGap' ] as $gap_key ) {
     'left'   => 'margin-left',
 ], true );
 
-// Background.
-if ( ! empty( $attributes['background'] ) ) {
-    $row_responsive['desktop']['background-color'] = $attributes['background'];
-}
-
-$bg_image_url = ! empty( $attributes['backgroundImage']['url'] ) ? esc_url_raw( $attributes['backgroundImage']['url'] ) : '';
-$bg_gradient  = ! empty( $attributes['backgroundGradient'] ) ? $attributes['backgroundGradient'] : '';
-
-if ( $bg_image_url && $bg_gradient ) {
-    $row_responsive['desktop']['background-image'] = $bg_gradient . ', url(' . $bg_image_url . ')';
-} elseif ( $bg_image_url ) {
-    $row_responsive['desktop']['background-image'] = 'url(' . $bg_image_url . ')';
-} elseif ( $bg_gradient ) {
-    $row_responsive['desktop']['background-image'] = $bg_gradient;
-}
-
-if ( $bg_image_url ) {
-    if ( ! empty( $attributes['backgroundSize'] ) )       $row_responsive['desktop']['background-size']       = $attributes['backgroundSize'];
-    if ( ! empty( $attributes['backgroundPosition'] ) )   $row_responsive['desktop']['background-position']   = $attributes['backgroundPosition'];
-    if ( ! empty( $attributes['backgroundRepeat'] ) )     $row_responsive['desktop']['background-repeat']     = $attributes['backgroundRepeat'];
-    if ( ! empty( $attributes['backgroundAttachment'] ) ) $row_responsive['desktop']['background-attachment'] = $attributes['backgroundAttachment'];
+// Background: colour, gradient and image.
+foreach ( \ShapeBlock\Frontend\Helper::background_to_css_props( $attributes ) as $prop => $val ) {
+    $row_responsive['desktop'][ $prop ] = $val;
 }
 
 // Overlay over the background (image), under the content: a layer of its own
@@ -151,7 +133,6 @@ if ( ! empty( $attributes['boxShadow'] ) && ! empty( $attributes['boxShadow']['c
 
 // Advanced.
 if ( isset( $attributes['overflow'] ) && in_array( $attributes['overflow'], [ 'visible', 'hidden', 'auto', 'scroll' ], true ) ) $row_responsive['desktop']['overflow'] = $attributes['overflow'];
-if ( isset( $attributes['position'] ) && in_array( $attributes['position'], [ 'static', 'relative', 'absolute', 'fixed' ], true ) ) $row_responsive['desktop']['position'] = $attributes['position'];
 if ( isset( $attributes['zIndex'] ) && $attributes['zIndex'] !== '' ) {
     $z = trim( (string) $attributes['zIndex'] );
     if ( $z !== '' ) $row_responsive['desktop']['z-index'] = (int) $z;

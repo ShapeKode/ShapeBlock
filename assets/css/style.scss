@@ -319,6 +319,10 @@ body textarea.ant-input:focus {
         &.is-free {
             background: #00a32a;
         }
+
+        &.is-upcoming {
+            background: #2271b1;
+        }
     }
 }
 

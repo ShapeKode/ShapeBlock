@@ -7,6 +7,8 @@
 
 .shapeblock-fea-list-wrapper {
 	position: relative;
+	/* The connector line (z-index: -1) stays behind the items but in front of a section's background. */
+	isolation: isolate;
 }
 
 .shapeblock-fea-list-wrapper.shapeblock-fea-list-connector::before {

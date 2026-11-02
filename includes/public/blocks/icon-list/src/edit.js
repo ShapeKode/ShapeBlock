@@ -34,6 +34,11 @@ const getKey = (base, device) =>
 
 import './editor.scss';
 
+const STATE_TABS = [
+	{ name: 'normal', title: __('Normal', 'shapeblock'), className: 'shapeblock-tab-normal' },
+	{ name: 'hover', title: __('Hover', 'shapeblock'), className: 'shapeblock-tab-hover' },
+];
+
 const SVG = (path) => (
 	<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 		<path d={path} fill="currentColor" />
@@ -147,6 +152,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<IconPicker label={__('Icon', 'shapeblock')} value={item.icon || ''} onChange={(v) => updateItem(index, 'icon', v)} />
 					)}
 					<TextControl label={__('Text', 'shapeblock')} value={item.title || ''} onChange={(v) => updateItem(index, 'title', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
+					<TextControl label={__('Link', 'shapeblock')} type="url" placeholder="https://" help={__('Empty: no link.', 'shapeblock')} value={item.url || ''} onChange={(v) => updateItem(index, 'url', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
+					{!!item.url && (
+						<>
+							<ToggleControl label={__('Open in a New Tab', 'shapeblock')} checked={!!item.newTab} onChange={(v) => updateItem(index, 'newTab', v)} __nextHasNoMarginBottom />
+							<ToggleControl label={__('Add rel="nofollow"', 'shapeblock')} checked={!!item.nofollow} onChange={(v) => updateItem(index, 'nofollow', v)} __nextHasNoMarginBottom />
+						</>
+					)}
 						<div className="shapeblock-icon-list-repeater-actions">
 							<Button icon={ICON_UP} label={__('Move up', 'shapeblock')} onClick={() => moveItem(index, -1)} disabled={index === 0} size="small" />
 							<Button icon={ICON_DOWN} label={__('Move down', 'shapeblock')} onClick={() => moveItem(index, 1)} disabled={index === items.length - 1} size="small" />
@@ -218,14 +230,55 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<PanelBody title={__('Icon', 'shapeblock')} initialOpen={false}>
 				{num(__('Size (px)', 'shapeblock'), 'iconSize', 200)}
 				{num(__('Gap (px)', 'shapeblock'), 'feaMiddleGap')}
-				{color(__('Color', 'shapeblock'), 'iconColor')}
-				{color(__('Hover Color', 'shapeblock'), 'iconColorHover')}
+				<TabPanel className="shapeblock-tab-panel" activeClass="is-active" tabs={STATE_TABS}>
+					{(tab) => (tab.name === 'hover' ? color(__('Color', 'shapeblock'), 'iconColorHover') : color(__('Color', 'shapeblock'), 'iconColor'))}
+				</TabPanel>
+				{color(__('Background', 'shapeblock'), 'iconBg')}
+				{attributes.iconBg && num(__('Box Size (px)', 'shapeblock'), 'iconBoxSize', 120)}
+				{attributes.iconBg && <TextControl label={__('Border Radius', 'shapeblock')} help={__('Empty: a circle (50%).', 'shapeblock')} value={attributes.iconRadius || ''} onChange={(v) => setAttributes({ iconRadius: v })} __next40pxDefaultSize __nextHasNoMarginBottom />}
 			</PanelBody>
 			)}
 
 			<PanelBody title={__('Text', 'shapeblock')} initialOpen={false}>
-				{color(__('Color', 'shapeblock'), 'titleColor')}
-				{respTypo(__('Typography', 'shapeblock'), 'titleTypography')}
+				<TabPanel className="shapeblock-tab-panel" activeClass="is-active" tabs={STATE_TABS}>
+					{(tab) =>
+						tab.name === 'hover' ? (
+							<>
+								{color(__('Color', 'shapeblock'), 'titleColorHover')}
+								<ToggleControl label={__('Underline', 'shapeblock')} checked={!!attributes.hoverUnderline} onChange={(v) => setAttributes({ hoverUnderline: v })} __nextHasNoMarginBottom />
+							</>
+						) : (
+							<>
+								{color(__('Color', 'shapeblock'), 'titleColor')}
+								{respTypo(__('Typography', 'shapeblock'), 'titleTypography')}
+							</>
+						)
+					}
+				</TabPanel>
+			</PanelBody>
+
+			<PanelBody title={__('Hover', 'shapeblock')} initialOpen={false}>
+				<RangeControl
+					label={__('Move Sideways (px)', 'shapeblock')}
+					help={__('The item slides a little towards its text when pointed at. 0: still.', 'shapeblock')}
+					value={attributes.hoverShift !== '' && attributes.hoverShift != null ? Number(attributes.hoverShift) : undefined}
+					onChange={(v) => setAttributes({ hoverShift: v == null ? '' : String(v) })}
+					min={0}
+					max={30}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+				<RangeControl
+					label={__('Speed (ms)', 'shapeblock')}
+					value={attributes.hoverDuration !== '' && attributes.hoverDuration != null ? Number(attributes.hoverDuration) : undefined}
+					initialPosition={250}
+					onChange={(v) => setAttributes({ hoverDuration: v == null ? '' : String(v) })}
+					min={0}
+					max={1500}
+					step={50}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
 			</PanelBody>
 		</>
 	);
@@ -290,7 +343,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				</TabPanel>
 			</InspectorControls>
 
-			<div ref={inlineRef}>
+			{/* A linked item is edited here, not followed. */}
+			<div ref={inlineRef} onClickCapture={(e) => e.target.closest('a[href]') && e.preventDefault()}>
 				<ServerSideRender block="shapeblock/icon-list" attributes={attributes} httpMethod="POST" />
 			</div>
 		</div>

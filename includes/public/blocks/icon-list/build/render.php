@@ -79,6 +79,14 @@ $icon_color = [];
 if ( ! empty( $attributes['iconColor'] ) ) { $icon_color['color'] = $attributes['iconColor']; $icon_color['fill'] = $attributes['iconColor']; }
 // Adjust vertical position - nudge the icon up/down without affecting the text.
 $icon_box = ( '' !== $u( 'iconOffsetY' ) ) ? [ 'transform' => 'translateY(' . $u( 'iconOffsetY' ) . ')' ] : [];
+// A soft round (or rounded) background behind the icon, sized by Box Size.
+if ( ! empty( $attributes['iconBg'] ) ) {
+	$icon_box['background']    = $H::sanitize_css_color( (string) $attributes['iconBg'], '' );
+	$icon_box['border-radius'] = '' !== $u( 'iconRadius' ) ? $u( 'iconRadius' ) : '50%';
+	$icon_box['width']         = '' !== $u( 'iconBoxSize' ) ? $u( 'iconBoxSize' ) : '28px';
+	$icon_box['height']        = $icon_box['width'];
+	$icon_box['flex-shrink']   = '0';
+}
 // Icon hover colour.
 if ( ! empty( $attributes['iconColorHover'] ) ) {
 	$hover_decls = $H::get_inline_styles( [ 'color' => $attributes['iconColorHover'], 'fill' => $attributes['iconColorHover'] ] );
@@ -86,6 +94,29 @@ if ( ! empty( $attributes['iconColorHover'] ) ) {
 		. $selector . ' .shapeblock-icon-list:hover .shapeblock-icon-list-icon svg,'
 		. $selector . ' .shapeblock-icon-list:hover .shapeblock-icon-list-icon svg path{' . $hover_decls . '}';
 }
+// Text hover: colour and underline; the item shifts sideways (towards the
+// text, so a right-hand icon moves the other way) over the chosen time.
+$hover_title = [];
+if ( ! empty( $attributes['titleColorHover'] ) ) $hover_title['color'] = $attributes['titleColorHover'];
+if ( ! empty( $attributes['hoverUnderline'] ) ) {
+	$hover_title['text-decoration']       = 'underline';
+	$hover_title['text-underline-offset'] = '3px';
+}
+if ( $hover_title ) {
+	$extra_css .= $selector . ' .shapeblock-icon-list:hover .shapeblock-icon-list-title,'
+		. $selector . ' .shapeblock-icon-list-link:focus-visible .shapeblock-icon-list-title{' . $H::get_inline_styles( $hover_title ) . '}';
+}
+$shift = ( '' !== $u( 'hoverShift' ) ) ? $u( 'hoverShift' ) : '';
+if ( '' !== $shift ) {
+	$moved      = 'right' === $dir ? 'translateX(calc(-1 * ' . $shift . '))' : 'translateX(' . $shift . ')';
+	$extra_css .= $selector . ' .shapeblock-icon-list:hover > .shapeblock-icon-list-link,'
+		. $selector . ' .shapeblock-icon-list:hover > .shapeblock-icon-list-icon,'
+		. $selector . ' .shapeblock-icon-list:hover > .shapeblock-icon-list-info{transform:' . $moved . '}';
+}
+if ( isset( $attributes['hoverDuration'] ) && is_numeric( $attributes['hoverDuration'] ) ) {
+	$extra_css .= $selector . '{--shapeblock-list-speed:' . max( 0, min( 3000, (int) $attributes['hoverDuration'] ) ) . 'ms}';
+}
+
 $icon_svg = ( '' !== $u( 'iconSize' ) ) ? [ 'width' => $u( 'iconSize' ), 'height' => $u( 'iconSize' ) ] : [];
 $icon_i   = ( '' !== $u( 'iconSize' ) ) ? [ 'font-size' => $u( 'iconSize' ) ] : [];
 
@@ -117,6 +148,10 @@ $resp = function ( $suffix ) use ( $attributes, $selector, $typo, $H ) {
 	$list     = ( '' !== $uu( 'feaMiddleGap' ) ) ? [ 'gap' => $uu( 'feaMiddleGap' ) ] : [];
 	$wrap_v   = ( '' !== $uu( 'feaItemGap' ) ) ? [ '--shapeblock-list-gap' => $uu( 'feaItemGap' ) ] : [];
 	$icon_box = ( '' !== $uu( 'iconOffsetY' ) ) ? [ 'transform' => 'translateY(' . $uu( 'iconOffsetY' ) . ')' ] : [];
+	if ( ! empty( $attributes['iconBg'] ) && '' !== $uu( 'iconBoxSize' ) ) {
+		$icon_box['width']  = $uu( 'iconBoxSize' );
+		$icon_box['height'] = $uu( 'iconBoxSize' );
+	}
 	$icon_svg = ( '' !== $uu( 'iconSize' ) ) ? [ 'width' => $uu( 'iconSize' ), 'height' => $uu( 'iconSize' ) ] : [];
 	$icon_i   = ( '' !== $uu( 'iconSize' ) ) ? [ 'font-size' => $uu( 'iconSize' ) ] : [];
 	$title_r  = $typo( $attributes[ 'titleTypography' . $suffix ] ?? [] );
@@ -174,8 +209,16 @@ if ( '' !== $responsive_media ) {
 	foreach ( $features as $item ) :
 		$icon = isset( $item['icon'] ) ? $item['icon'] : '';
 		$ttl  = isset( $item['title'] ) ? $item['title'] : '';
+		$url  = isset( $item['url'] ) && is_string( $item['url'] ) ? trim( $item['url'] ) : '';
+		// A linked item: the icon and the text inside one link.
+		$rel = [];
+		if ( ! empty( $item['newTab'] ) ) $rel[] = 'noopener';
+		if ( ! empty( $item['nofollow'] ) ) $rel[] = 'nofollow';
 		?>
 		<li class="shapeblock-icon-list shapeblock-icon-list-dir-<?php echo esc_attr( $dir ); ?>">
+			<?php if ( '' !== $url ) : ?>
+			<a class="shapeblock-icon-list-link" href="<?php echo esc_url( $url ); ?>"<?php echo ! empty( $item['newTab'] ) ? ' target="_blank"' : ''; ?><?php echo $rel ? ' rel="' . esc_attr( implode( ' ', $rel ) ) . '"' : ''; ?>>
+			<?php endif; ?>
 			<?php if ( $show_icon ) : ?>
 			<span class="shapeblock-icon-list-icon">
 				<?php if ( ! empty( $icon ) && 'none' !== $icon ) : ?>
@@ -189,6 +232,9 @@ if ( '' !== $responsive_media ) {
 				<span class="shapeblock-icon-list-info">
 					<?php printf( '<%1$s class="shapeblock-icon-list-title">%2$s</%1$s>', tag_escape( $title_tag ), wp_kses_post( $ttl ) ); ?>
 				</span>
+			<?php endif; ?>
+			<?php if ( '' !== $url ) : ?>
+			</a>
 			<?php endif; ?>
 		</li>
 	<?php endforeach; ?>

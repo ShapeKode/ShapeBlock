@@ -4,13 +4,21 @@ import BlockItem from './blockItem';
 import { Space, Button, notification, Input, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
-// The tabs above the list, in order (Blocks::get_categories()). A tab shows
-// only when a block is in it; a block with no category is under All only.
+// The kinds of block (Blocks::get_categories()), in order: the default sort
+// groups the blocks by kind.
 const CATEGORIES = Object.entries(shapeblock.blockCategories || {}).map(([value, label]) => ({ value, label }));
 
-// Is a block in a tab? Its category, or one of the other tabs it also shows
-// under (its "tabs" list, which an add-on can give its blocks).
-const inTab = (block, tab) => block.category === tab || (Array.isArray(block.tabs) && block.tabs.includes(tab));
+// The tabs above the list: All, then Free, Pro and Upcoming, each by its
+// blocks' tag (badgeType). A tab shows only when a block is in it.
+const TABS = [
+    { value: 'free', label: __( 'Free', 'shapeblock' ) },
+    { value: 'pro', label: __( 'Pro', 'shapeblock' ) },
+    { value: 'upcoming', label: __( 'Upcoming', 'shapeblock' ) },
+];
+const inTab = (block, tab) => block.badgeType === tab;
+
+// A block still to come is listed, with no switch to turn it on.
+const canSwitch = (block) => 'upcoming' !== block.status;
 
 export default function Blocks() {
     const [blocks, setBlocks] = useState(shapeblock.blocks);
@@ -87,10 +95,10 @@ export default function Blocks() {
     const updateAllBlockStatus = (newStatus) => {
         // Keep a snapshot of the current blocks so we can revert on failure
         const previousBlocks = blocks;
-        const blockIds = blocks.map(block => block.id);
+        const blockIds = blocks.filter(canSwitch).map(block => block.id);
 
         // Optimistic Update — flip every block to the new status
-        setBlocks(prevBlocks => prevBlocks.map(block => ({ ...block, status: newStatus })));
+        setBlocks(prevBlocks => prevBlocks.map(block => (canSwitch(block) ? { ...block, status: newStatus } : block)));
         setBulkLoading(true);
 
         const data = {
@@ -177,7 +185,7 @@ export default function Blocks() {
             <div className="shapeblock-options-content-header">
                 <h1 className='shapeblock-options-title'>{ __( 'Blocks', 'shapeblock' ) }</h1>
                 <div className="shapeblock-blocks-tabs" role="tablist" aria-label={ __( 'Block categories', 'shapeblock' ) }>
-                    {[{ value: '', label: __( 'All', 'shapeblock' ) }, ...CATEGORIES.filter((c) => blocks.some((b) => inTab(b, c.value)))].map((c) => (
+                    {[{ value: '', label: __( 'All', 'shapeblock' ) }, ...TABS.filter((c) => blocks.some((b) => inTab(b, c.value)))].map((c) => (
                         <button
                             key={c.value || 'all'}
                             type="button"
@@ -235,7 +243,7 @@ export default function Blocks() {
                             size="large"
                             type="primary"
                             loading={bulkLoading}
-                            disabled={blocks.every(block => block.status === 'enable')}
+                            disabled={blocks.filter(canSwitch).every(block => block.status === 'enable')}
                             onClick={() => updateAllBlockStatus('enable')}
                         >
                             { __( 'Activate All', 'shapeblock' ) }
@@ -244,7 +252,7 @@ export default function Blocks() {
                             size="large"
                             danger
                             loading={bulkLoading}
-                            disabled={blocks.every(block => block.status === 'disable')}
+                            disabled={blocks.filter(canSwitch).every(block => block.status === 'disable')}
                             onClick={() => updateAllBlockStatus('disable')}
                         >
                             { __( 'Deactivate All', 'shapeblock' ) }

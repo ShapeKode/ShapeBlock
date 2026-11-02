@@ -136,7 +136,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			.filter((m) => m && m.url)
 			.map((m) => ({ image: { id: m.id, url: m.url, alt: m.alt || '' } }));
 		if (picked.length) {
-			setAttributes({ slides: [...items, ...picked] });
+			// The empty stand-in slides a new block starts with make way for real images.
+			const kept = items.some((it) => it.image && it.image.url) ? items : [];
+			setAttributes({ slides: [...kept, ...picked] });
 		}
 	};
 

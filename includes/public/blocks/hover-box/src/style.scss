@@ -44,7 +44,8 @@
 	transition: transform 0.45s ease, opacity 0.45s ease, filter 0.45s ease;
 }
 
-.shapeblock-hover-box-img {
+/* Two classes, so it fills the box over the general `.shapeblock-block img { height: auto }`. */
+.shapeblock-hover-box-media .shapeblock-hover-box-img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;

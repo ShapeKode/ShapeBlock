@@ -7,6 +7,9 @@
 
     > .shapeblock-column__inner {
         min-height: 40px;
+        // The editor's block list positions this wrapper; unpositioned, a block
+        // set to Absolute is placed in the Column itself, as on the page.
+        position: static;
     }
 
     /* Width-label badge (e.g. "50%"). Hidden by default; shown on selection /

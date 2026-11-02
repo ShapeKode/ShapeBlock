@@ -101,6 +101,18 @@ class Blocks {
                 'iconClass'    => 'shapeblock-icon-service-list',
             ],
             [
+                'title'       => __( 'Google Map', 'shapeblock' ),
+                'id'          => 'google-map',
+                'description' => __( 'A map of one place or several, with directions.', 'shapeblock' ),
+                'iconClass'    => 'shapeblock-icon-map-o',
+            ],
+            [
+                'title'       => __( 'Drop Caps', 'shapeblock' ),
+                'id'          => 'drop-caps',
+                'description' => __( 'A paragraph that opens with a large first letter.', 'shapeblock' ),
+                'iconClass'    => 'shapeblock-icon-heading',
+            ],
+            [
                 'title'       => __( 'Hover Box', 'shapeblock' ),
                 'id'          => 'hover-box',
                 'description' => __( 'Box that shows text on hover.', 'shapeblock' ),
@@ -245,6 +257,7 @@ class Blocks {
             'icon-box'          => 'content',
             'icon-list'         => 'content',
             'feature-list'      => 'content',
+            'drop-caps'         => 'content',
             'faq'               => 'content',
             'tab'               => 'content',
             'table'             => 'content',
@@ -254,6 +267,7 @@ class Blocks {
             'gallery'           => 'media',
             'image-comparison'  => 'media',
             'clients-logo-grid' => 'media',
+            'google-map'        => 'media',
             'team-grid'         => 'showcase',
             'testimonials-grid' => 'showcase',
             'pricing-table'     => 'showcase',
@@ -332,8 +346,8 @@ class Blocks {
     }
 
     /**
-     * The tabs of the Blocks page, in order: slug => label. A tab shows only
-     * when a block is in it.
+     * The kinds of block, in order: slug => label. The Blocks page groups its
+     * list by them (its tabs are All, Free, Pro and Upcoming).
      *
      * @return array<string,string>
      */
@@ -350,7 +364,7 @@ class Blocks {
         );
 
         /**
-         * Filter the tabs of the Blocks page.
+         * Filter the kinds of block on the Blocks page.
          *
          * @param array<string,string> $categories Slug => label.
          */

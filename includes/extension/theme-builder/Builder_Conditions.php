@@ -15,8 +15,9 @@ namespace ShapeBlock\Extension\ThemeBuilder;
  *     )
  *
  * Display logic: an item shows when at least one INCLUDE row matches the
- * request and no EXCLUDE row matches (exclude always wins). An empty set is
- * treated as "entire site" so a freshly created template is visible.
+ * request and no EXCLUDE row matches (exclude always wins). Without an
+ * INCLUDE row it shows nowhere: removing "Entire Site" hides the template.
+ * A new template starts with "Entire Site" (Builder_API::create_item()).
  *
  * @package ShapeBlock
  */
@@ -134,8 +135,8 @@ class Builder_Conditions {
 	 */
 	public static function matches_current_request( $conditions ) {
 		if ( ! is_array( $conditions ) || empty( $conditions ) ) {
-			// No conditions configured → behave like "entire site".
-			return true;
+			// No conditions: the template is shown nowhere.
+			return false;
 		}
 
 		$included = false;
@@ -161,12 +162,8 @@ class Builder_Conditions {
 			}
 		}
 
-		// If the user only set exclude rows, default the base to "shown everywhere".
-		if ( ! $has_include ) {
-			return true;
-		}
-
-		return $included;
+		// Only exclude rows: nothing is included, so it is shown nowhere.
+		return $has_include && $included;
 	}
 
 	/**
@@ -220,7 +217,7 @@ class Builder_Conditions {
 	 */
 	public static function summarize( $conditions ) {
 		if ( ! is_array( $conditions ) || empty( $conditions ) ) {
-			return __( 'Entire Site', 'shapeblock' );
+			return __( 'Not shown anywhere', 'shapeblock' );
 		}
 
 		$flat  = self::get_rules_flat();

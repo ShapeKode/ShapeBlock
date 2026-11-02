@@ -213,6 +213,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<div className="shapeblock-fl-repeater-item" key={i}>
 				<button type="button" className="shapeblock-fl-repeater-toggle" onClick={() => setOpenItem(open ? null : i)} aria-expanded={open}>
 					<strong>{item.title || `#${i + 1}`}</strong>
+					{item.hot && <span className="shapeblock-fl-repeater-tag">{__('Hot', 'shapeblock')}</span>}
 					{item.badge && <span className="shapeblock-fl-repeater-tag">{item.badge}</span>}
 					<span className="shapeblock-fl-caret" style={{ transform: open ? 'rotate(180deg)' : 'none' }}>{ICON_CARET}</span>
 				</button>
@@ -238,7 +239,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						) : (
 							<p className="components-base-control__help">{__('Add filters under Settings > Filters first.', 'shapeblock')}</p>
 						)}
-						<TextControl label={__('Badge', 'shapeblock')} help={__('A short label after the title, such as New or Hot. Leave empty for none.', 'shapeblock')} value={item.badge || ''} onChange={(v) => updateItem(i, { badge: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+						<ToggleControl label={__('Mark as Hot', 'shapeblock')} help={__('Adds an orange Hot label after the title, before the badge.', 'shapeblock')} checked={!!item.hot} onChange={(v) => updateItem(i, { hot: v })} __nextHasNoMarginBottom />
+						<TextControl label={__('Badge', 'shapeblock')} help={__('A short label after the title, such as New or Pro. Leave empty for none.', 'shapeblock')} value={item.badge || ''} onChange={(v) => updateItem(i, { badge: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
 						{item.badge && (
 							<>
 								<BackgroundControl

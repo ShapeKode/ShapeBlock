@@ -7,8 +7,6 @@ import {
     useInnerBlocksProps,
     InspectorControls,
     BlockControls,
-    MediaUpload,
-    MediaUploadCheck,
     store as blockEditorStore,
 } from '@wordpress/block-editor';
 import {
@@ -23,7 +21,6 @@ import {
     ToolbarButton,
     Button,
     TabPanel,
-    FocalPointPicker,
     __experimentalUnitControl as UnitControl,
     __experimentalToggleGroupControl as ToggleGroupControl,
     __experimentalToggleGroupControlOptionIcon as ToggleGroupControlOptionIcon,
@@ -38,6 +35,7 @@ import {
 } from './flexbox-icons';
 
 import BackgroundControl from '../../custom-components/BackgroundControl';
+import BackgroundImageControls from '../../custom-components/BackgroundImageControls';
 import ColorPopover from '../../custom-components/ColorPopover';
 import TypographyControls from '../../custom-components/TypographyControls';
 import BorderControl from '../../custom-components/BorderControl';
@@ -55,23 +53,6 @@ const ALLOWED_BLOCKS = ['shapeblock/column'];
 
 const getKey = (base, device) =>
     device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
-
-// Background position as the focal point picker reads it (0-1 on each axis),
-// from a saved "x% y%" or the keyword pairs older Rows were saved with.
-const AXIS = { left: 0, top: 0, center: 0.5, right: 1, bottom: 1 };
-const toFocalPoint = (position) => {
-    const [a, b = 'center'] = String(position || 'center center').trim().split(/\s+/);
-    const read = (part) => {
-        if (part in AXIS) return AXIS[part];
-        const n = parseFloat(part);
-        return Number.isNaN(n) ? 0.5 : Math.min(1, Math.max(0, n / 100));
-    };
-    // A keyword pair can name the vertical side first ("top left").
-    const vertical = (p) => p === 'top' || p === 'bottom';
-    const horizontal = (p) => p === 'left' || p === 'right';
-    return vertical(a) || horizontal(b) ? { x: read(b), y: read(a) } : { x: read(a), y: read(b) };
-};
-const fromFocalPoint = ({ x, y }) => `${Math.round(x * 100)}% ${Math.round(y * 100)}%`;
 
 const presetIcon = (preset) => {
     const total = preset.columns.reduce((a, b) => a + b, 0);
@@ -248,26 +229,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 />
             </PanelBody>
 
-            <PanelBody title={__('Sticky', 'shapeblock')} initialOpen={false}>
-                <ToggleControl
-                    label={__('Make Sticky', 'shapeblock')}
-                    checked={attributes.isSticky}
-                    onChange={(v) => setAttributes({ isSticky: v })}
-                    __nextHasNoMarginBottom
-                />
-
-                {attributes.isSticky && (
-                    <>
-                        <Divider />
-                        <UnitControl
-                            label={__('Sticky Top Offset', 'shapeblock')}
-                            value={attributes.stickyTop}
-                            onChange={(v) => setAttributes({ stickyTop: v })}
-                        />
-                    </>
-                )}
-            </PanelBody>
-
             <PanelBody title={__('Responsive', 'shapeblock')} initialOpen={false}>
                 <ToggleControl
                     label={__('Hide on Desktop', 'shapeblock')}
@@ -406,18 +367,22 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             <PanelBody title={__('Position & Z-Index', 'shapeblock')} initialOpen={false}>
                 <SelectControl
                     label={__('Position', 'shapeblock')}
-                    value={attributes.position}
+                    value={attributes.isSticky ? 'sticky' : ''}
                     options={[
                         { label: __('Default', 'shapeblock'), value: '' },
-                        { label: 'static', value: 'static' },
-                        { label: 'relative', value: 'relative' },
-                        { label: 'absolute', value: 'absolute' },
-                        { label: 'fixed', value: 'fixed' },
+                        { label: __('Sticky', 'shapeblock'), value: 'sticky' },
                     ]}
-                    onChange={(v) => setAttributes({ position: v })}
+                    onChange={(v) => setAttributes({ isSticky: v === 'sticky' })}
                     __next40pxDefaultSize
                     __nextHasNoMarginBottom
                 />
+                {attributes.isSticky && (
+                    <UnitControl
+                        label={__('Sticky Top Offset', 'shapeblock')}
+                        value={attributes.stickyTop}
+                        onChange={(v) => setAttributes({ stickyTop: v })}
+                    />
+                )}
 
                 <Divider />
                 <SelectControl
@@ -620,6 +585,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     {(device) => (
                         <BoxControl
                             values={attributes[getKey('margin', device)]}
+                            // Margins may be negative, e.g. -50px to pull a row up over the one above.
+                            inputProps={{ min: -1000, max: 1000 }}
                             onChange={(v) => setAttributes({ [getKey('margin', device)]: v })}
                         />
                     )}
@@ -638,80 +605,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     onGradientChange={(v) => setAttributes({ backgroundGradient: v || '' })}
                 />
                 <Divider />
-                <MediaUploadCheck>
-                    <MediaUpload
-                        onSelect={(media) => setAttributes({ backgroundImage: { url: media.url, id: media.id } })}
-                        allowedTypes={['image']}
-                        value={attributes.backgroundImage?.id}
-                        render={({ open }) => (
-                            <div className="shapeblock-row-bg-image">
-                                <Button variant="secondary" onClick={open}>
-                                    {attributes.backgroundImage?.url ? __('Replace Image', 'shapeblock') : __('Choose Background Image', 'shapeblock')}
-                                </Button>
-                                {attributes.backgroundImage?.url && (
-                                    <Button variant="tertiary" isDestructive onClick={() => setAttributes({ backgroundImage: { url: '', id: 0 } })}>
-                                        {__('Remove', 'shapeblock')}
-                                    </Button>
-                                )}
-                            </div>
-                        )}
-                    />
-                </MediaUploadCheck>
-                <TextControl
-                    label={__('Or Image URL', 'shapeblock')}
-                    value={attributes.backgroundImage?.url || ''}
-                    onChange={(v) => setAttributes({ backgroundImage: { url: v, id: 0 } })}
-                    __next40pxDefaultSize
-                    __nextHasNoMarginBottom
-                />
-                {attributes.backgroundImage?.url && (
-                    <>
-                        <Divider />
-                        <SelectControl
-                            label={__('Size', 'shapeblock')}
-                            value={attributes.backgroundSize}
-                            options={[
-                                { label: 'auto', value: 'auto' },
-                                { label: 'cover', value: 'cover' },
-                                { label: 'contain', value: 'contain' },
-                            ]}
-                            onChange={(v) => setAttributes({ backgroundSize: v })}
-                            __next40pxDefaultSize
-                            __nextHasNoMarginBottom
-                        />
-                        <SelectControl
-                            label={__('Repeat', 'shapeblock')}
-                            value={attributes.backgroundRepeat}
-                            options={[
-                                { label: 'no-repeat', value: 'no-repeat' },
-                                { label: 'repeat', value: 'repeat' },
-                                { label: 'repeat-x', value: 'repeat-x' },
-                                { label: 'repeat-y', value: 'repeat-y' },
-                            ]}
-                            onChange={(v) => setAttributes({ backgroundRepeat: v })}
-                            __next40pxDefaultSize
-                            __nextHasNoMarginBottom
-                        />
-                        <FocalPointPicker
-                            label={__('Position', 'shapeblock')}
-                            url={attributes.backgroundImage.url}
-                            value={toFocalPoint(attributes.backgroundPosition)}
-                            onChange={(v) => setAttributes({ backgroundPosition: fromFocalPoint(v) })}
-                            __nextHasNoMarginBottom
-                        />
-                        <SelectControl
-                            label={__('Attachment', 'shapeblock')}
-                            value={attributes.backgroundAttachment}
-                            options={[
-                                { label: 'scroll', value: 'scroll' },
-                                { label: 'fixed', value: 'fixed' },
-                            ]}
-                            onChange={(v) => setAttributes({ backgroundAttachment: v })}
-                            __next40pxDefaultSize
-                            __nextHasNoMarginBottom
-                        />
-                    </>
-                )}
+                <BackgroundImageControls attributes={attributes} setAttributes={setAttributes} />
             </PanelBody>
 
             <PanelBody title={__('Background Overlay', 'shapeblock')} initialOpen={false}>
@@ -804,7 +698,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 >
                     {(tab) => (
                         tab.name === 'settings' ? settingsTab :
-                        tab.name === 'advanced' ? <AdvancedControls attributes={attributes} setAttributes={setAttributes} /> :
+                        tab.name === 'advanced' ? <AdvancedControls attributes={attributes} setAttributes={setAttributes} hideZIndex /> :
                         tab.name === 'layout' ? layoutTab :
                         styleTab
                     )}
@@ -817,7 +711,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 ) : (
                     <div className="shapeblock-layout-row__layout-picker">
                         <div className="shapeblock-layout-row__layout-picker__title">
-                            {__('Chose a Layout', 'shapeblock')}
+                            {__('Choose a Layout', 'shapeblock')}
                         </div>
                         <div className="shapeblock-layout-row__layout-picker__grid">
                             {LAYOUT_PRESETS.map((p) => (

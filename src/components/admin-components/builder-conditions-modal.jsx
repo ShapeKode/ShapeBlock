@@ -217,7 +217,8 @@ export default function BuilderConditionsModal({ open, item, onClose, onSaved })
                     rule: c.rule || '',
                     ids: c.ids || [],
                 }));
-                setRows(loaded.length ? loaded : defaultConditionRows());
+                // Saved with none: shown as none (the template displays nowhere).
+                setRows(loaded);
             })
             .catch(() => {
                 notification.error({ message: __( 'Failed to load conditions', 'shapeblock' ) });

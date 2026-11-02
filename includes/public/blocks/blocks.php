@@ -608,7 +608,8 @@ add_action( 'enqueue_block_editor_assets', function () {
  * CSS for the shared "Advanced" inspector tab.
  *
  * Every ShapeBlock block offers the same Advanced tab — responsive padding and
- * margin plus a background colour — through the AdvancedControls component. The
+ * margin, a background colour, and Position (absolute or fixed, with offsets,
+ * width and z-index) — through the AdvancedControls component. The
  * values live in attributes prefixed `adv`, declared in each block.json.
  *
  * Producing the CSS here rather than in each block's render.php keeps the
@@ -684,6 +685,54 @@ function shapeblock_advanced_block_css( $parsed_block ) {
 		$responsive['desktop']['background-image'] = $attrs['advBgGradient'];
 	}
 
+	// Position, as Elementor's Advanced tab has it: absolute or fixed. The
+	// alignment picks the edge the block sticks to (0 from it; Center / Middle
+	// center it with auto margins), and the sliders, per device, move it from
+	// there or set a side of their own. Every other side is auto, so a block's
+	// own offsets can't pull it elsewhere.
+	$position = isset( $attrs['advPosition'] ) ? (string) $attrs['advPosition'] : '';
+	if ( in_array( $position, [ 'absolute', 'fixed' ], true ) ) {
+		$desktop = [ 'position' => $position, 'top' => 'auto', 'right' => 'auto', 'bottom' => 'auto', 'left' => 'auto' ];
+		$h_align = isset( $attrs['advHAlign'] ) ? (string) $attrs['advHAlign'] : '';
+		$v_align = isset( $attrs['advVAlign'] ) ? (string) $attrs['advVAlign'] : '';
+		if ( 'left' === $h_align || 'center' === $h_align ) {
+			$desktop['left'] = '0px';
+		}
+		if ( 'right' === $h_align || 'center' === $h_align ) {
+			$desktop['right'] = '0px';
+		}
+		if ( 'center' === $h_align ) {
+			$desktop['margin-left']  = 'auto';
+			$desktop['margin-right'] = 'auto';
+			$desktop['width']        = 'fit-content';
+		}
+		if ( 'top' === $v_align || 'middle' === $v_align ) {
+			$desktop['top'] = '0px';
+		}
+		if ( 'bottom' === $v_align || 'middle' === $v_align ) {
+			$desktop['bottom'] = '0px';
+		}
+		if ( 'middle' === $v_align ) {
+			$desktop['margin-top']    = 'auto';
+			$desktop['margin-bottom'] = 'auto';
+			$desktop['height']        = 'fit-content';
+		}
+		$responsive['desktop'] = array_merge( isset( $responsive['desktop'] ) ? $responsive['desktop'] : [], $desktop );
+
+		foreach ( [ '' => 'desktop', 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device ) {
+			foreach ( [ 'advTop' => 'top', 'advRight' => 'right', 'advBottom' => 'bottom', 'advLeft' => 'left', 'advWidth' => 'width' ] as $base => $prop ) {
+				$length = shapeblock_advanced_length( isset( $attrs[ $base . $suffix ] ) ? $attrs[ $base . $suffix ] : '' );
+				if ( '' !== $length ) {
+					$responsive[ $device ][ $prop ] = $length;
+				}
+			}
+		}
+	}
+
+	if ( isset( $attrs['advZIndex'] ) && is_numeric( trim( (string) $attrs['advZIndex'] ) ) ) {
+		$responsive['desktop']['z-index'] = (int) $attrs['advZIndex'];
+	}
+
 	if ( empty( $responsive ) ) {
 		return $parsed_block;
 	}
@@ -698,6 +747,22 @@ function shapeblock_advanced_block_css( $parsed_block ) {
 	return $parsed_block;
 }
 add_filter( 'render_block_data', 'shapeblock_advanced_block_css' );
+
+/**
+ * A Position side or width from the Advanced tab as CSS: a number with
+ * px, %, vw or vh (a bare number is pixels), negative allowed; anything else
+ * is dropped.
+ *
+ * @param mixed $value Stored value.
+ * @return string
+ */
+function shapeblock_advanced_length( $value ) {
+	$value = is_scalar( $value ) ? trim( (string) $value ) : '';
+	if ( ! preg_match( '/^(-?\d*\.?\d+)(px|%|vw|vh)?$/', $value, $m ) ) {
+		return '';
+	}
+	return $m[1] . ( isset( $m[2] ) && '' !== $m[2] ? $m[2] : 'px' );
+}
 
 /**
  * The same Advanced tab spacing and background in the editor canvas, for the

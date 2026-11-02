@@ -1,0 +1,256 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "shapeblock/drop-caps",
+	"version": "1.0.1",
+	"title": "Drop Caps",
+	"category": "shapeblock",
+	"description": "A paragraph that opens with a large first letter across several lines, plain, in a box, outlined or as an outlined letter, with optional newspaper columns.",
+	"keywords": [
+		"drop cap",
+		"initial",
+		"first letter",
+		"paragraph",
+		"text",
+		"editorial"
+	],
+	"example": {},
+	"supports": {
+		"html": false,
+		"align": [
+			"wide",
+			"full"
+		]
+	},
+	"textdomain": "shapeblock",
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"attributes": {
+		"advPadding": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advPaddingTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advPaddingMobile": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMargin": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMarginTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMarginMobile": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advBgColor": {
+			"type": "string",
+			"default": ""
+		},
+		"advBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"advPosition": {
+			"type": "string",
+			"default": ""
+		},
+		"advHAlign": {
+			"type": "string",
+			"default": ""
+		},
+		"advVAlign": {
+			"type": "string",
+			"default": ""
+		},
+		"advTop": {
+			"type": "string",
+			"default": ""
+		},
+		"advTopTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advTopMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advRight": {
+			"type": "string",
+			"default": ""
+		},
+		"advRightTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advRightMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottom": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottomTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottomMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeft": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeftTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeftMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidth": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidthTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidthMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advZIndex": {
+			"type": "string",
+			"default": ""
+		},
+		"blockId": {
+			"type": "string",
+			"default": ""
+		},
+		"text": {
+			"type": "string",
+			"default": "When the first shipment of walnut came in from a mill outside Lancaster, nobody at the shop had built anything bigger than a bookshelf. Three years and four hundred tables later, the same sawhorses still stand by the loading door, and we still check every board by hand before it goes on the bench."
+		},
+		"capStyle": {
+			"type": "string",
+			"default": "plain"
+		},
+		"lines": {
+			"type": "number",
+			"default": 3
+		},
+		"linesTablet": {
+			"type": "number",
+			"default": 0
+		},
+		"linesMobile": {
+			"type": "number",
+			"default": 0
+		},
+		"capColor": {
+			"type": "string",
+			"default": ""
+		},
+		"capBg": {
+			"type": "string",
+			"default": ""
+		},
+		"capFontFamily": {
+			"type": "string",
+			"default": ""
+		},
+		"capFontWeight": {
+			"type": "string",
+			"default": ""
+		},
+		"capRadius": {
+			"type": "string",
+			"default": ""
+		},
+		"capGap": {
+			"type": "string",
+			"default": ""
+		},
+		"textColor": {
+			"type": "string",
+			"default": ""
+		},
+		"textTypography": {
+			"type": "object",
+			"default": {}
+		},
+		"textTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"textTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"columns": {
+			"type": "number",
+			"default": 1
+		},
+		"columnsTablet": {
+			"type": "number",
+			"default": 0
+		},
+		"columnsMobile": {
+			"type": "number",
+			"default": 0
+		},
+		"columnGap": {
+			"type": "string",
+			"default": ""
+		},
+		"columnRule": {
+			"type": "boolean",
+			"default": false
+		},
+		"columnRuleColor": {
+			"type": "string",
+			"default": ""
+		}
+	}
+}

@@ -223,7 +223,8 @@ class Api {
         $statuses = array();
         foreach ( Blocks::instance()->get_blocks() as $block ) {
             $id = isset( $block['id'] ) ? (string) $block['id'] : '';
-            if ( '' === $id ) {
+            // A block still to come (an add-on's "upcoming" entry) has no switch.
+            if ( '' === $id || ( isset( $block['status'] ) && 'upcoming' === $block['status'] ) ) {
                 continue;
             }
             $statuses[ $id ] = ( 'disable' === $block['status'] ) ? 'disable' : 'enable';
@@ -528,11 +529,11 @@ class Api {
 
             update_post_meta( $post_id, \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE, $type );
 
-            $conditions = isset( $item['conditions'] ) ? $item['conditions'] : array();
-            $conditions = \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::sanitize( $conditions );
-            if ( empty( $conditions ) ) {
-                $conditions = array( array( 'type' => 'include', 'rule' => 'entire_site', 'ids' => array() ) );
-            }
+            // An export without conditions comes in on the whole site; one whose
+            // conditions were all removed stays shown nowhere, as it was.
+            $conditions = isset( $item['conditions'] )
+                ? \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::sanitize( $item['conditions'] )
+                : array( array( 'type' => 'include', 'rule' => 'entire_site', 'ids' => array() ) );
             update_post_meta( $post_id, \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_CONDITIONS, $conditions );
 
             $summary['imported']++;

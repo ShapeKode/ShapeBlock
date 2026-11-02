@@ -29,7 +29,8 @@ export default function BlockItem(
                 </div>
             </div>
             <div className='switch'>
-                <Switch size="small" onChange={onChangeHandler} checked={status === 'enable'} />
+                {/* A block still to come has nothing to switch yet. */}
+                {'upcoming' === status ? null : <Switch size="small" onChange={onChangeHandler} checked={status === 'enable'} />}
             </div>
         </div>
     );

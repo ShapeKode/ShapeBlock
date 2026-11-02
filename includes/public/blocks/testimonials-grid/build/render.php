@@ -107,6 +107,10 @@ if ( 'default' !== $skin ) {
 
 $align       = ! empty( $attributes['testimonialsAlignment'] ) ? $attributes['testimonialsAlignment'] : '';
 $align_styles = $align ? [ 'text-align' => $align ] : [];
+// Style 3 (skin6) centres its stars, logo and author row; they follow the alignment when one is set.
+$flex_align  = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end' ];
+$skin6_align = ( 'skin6' === $skin && isset( $flex_align[ $align ] ) ) ? [ 'justify-content' => $flex_align[ $align ] ] : [];
+$skin6_logo  = $skin6_align ? [ 'text-align' => $align ] : [];
 
 $item_pad = $dims( $attributes['itemPadding'] ?? [], 'padding' );
 $inner = $bg( 'bgColor', 'bgGradient' );
@@ -235,6 +239,8 @@ $H::add_custom_style( $style_handle, $selector, $col_css . $resp_css, [
 	'.shapeblock-author-wrap .shapeblock-picture img, ' . $selector . ' .shapeblock-picture img' => $H::get_inline_styles( $img_styles ),
 	'.shapeblock-company-logo img'                   => $H::get_inline_styles( $logo_styles ),
 	'.shapeblock-quote i'                            => $H::get_inline_styles( $quote_icon ),
+	'.shapeblock-tstml-inner.skin6 .shapeblock-author-wrap, ' . $selector . ' .shapeblock-tstml-inner.skin6 .shapeblock-rating' => $H::get_inline_styles( $skin6_align ),
+	'.shapeblock-tstml-inner.skin6 .shapeblock-company-logo' => $H::get_inline_styles( $skin6_logo ),
 ] );
 
 // ---------------------------------------------------------------------------

@@ -49,6 +49,10 @@ export default function useInlineText(fields) {
 		if (!root) {
 			return undefined;
 		}
+		// The field being typed in. Saving another field redraws the whole
+		// preview a moment later; the new copy of this field then gets the
+		// text typed so far and the cursor back.
+		let typing = null;
 		const attach = () => {
 			fieldsRef.current.forEach(({ selector, multiline }, fieldIndex) => {
 				root.querySelectorAll(selector).forEach((el, position) => {
@@ -66,6 +70,22 @@ export default function useInlineText(fields) {
 						el.style.outline = '1px dashed rgba(162, 22, 255, 0.6)';
 						el.style.outlineOffset = '2px';
 					});
+					el.addEventListener('input', () => {
+						typing = { fieldIndex, position, el };
+					});
+					if (typing && !typing.el.isConnected && typing.fieldIndex === fieldIndex && typing.position === position) {
+						const saved = el.innerHTML;
+						el.innerHTML = typing.el.innerHTML;
+						typing.el = el;
+						el.focus();
+						before = saved; // Still to be saved when the field is left.
+						const range = el.ownerDocument.createRange();
+						range.selectNodeContents(el);
+						range.collapse(false);
+						const selection = el.ownerDocument.defaultView.getSelection();
+						selection.removeAllRanges();
+						selection.addRange(range);
+					}
 					el.addEventListener('keydown', (e) => {
 						if (e.key === 'Escape') {
 							el.innerHTML = before;
@@ -88,9 +108,20 @@ export default function useInlineText(fields) {
 					el.addEventListener('blur', () => {
 						el.style.outline = '';
 						el.style.outlineOffset = '';
-						if (el.innerHTML !== before) {
-							field().save(at(), readValue(el, multiline));
-						}
+						// The browser blurs a field just before the redraw takes it
+						// away, so look again a moment later: a field that is gone
+						// was not left, and its new copy saves when that one is.
+						setTimeout(() => {
+							if (!el.isConnected) {
+								return;
+							}
+							if (typing && typing.el === el) {
+								typing = null;
+							}
+							if (el.innerHTML !== before) {
+								field().save(at(), readValue(el, multiline));
+							}
+						}, 0);
 					});
 					// A field just added (Enter in the one before): cursor in, text selected.
 					const focus = field().focus;

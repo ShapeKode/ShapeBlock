@@ -159,7 +159,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const addFromLibrary = (media) => {
 		const picked = (Array.isArray(media) ? media : [media]).filter((m) => m && m.url).map(toItem);
 		if (picked.length) {
-			setAttributes({ images: [...items, ...picked] });
+			// The empty stand-in slides a new block starts with make way for real images.
+			const kept = items.some((it) => it.image && it.image.url) ? items : [];
+			setAttributes({ images: [...kept, ...picked] });
 		}
 	};
 

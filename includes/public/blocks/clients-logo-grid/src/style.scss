@@ -62,6 +62,9 @@
 		top: 0;
 		left: 0;
 		right: 0;
+		/* The tile's padding, so it lines up with the normal image and starts fully out of view. */
+		padding: inherit;
+		box-sizing: border-box;
 		transform: translateY(100%);
 	}
 	.shapeblock-logo-img:hover .shapeblock-logo-img-normal {

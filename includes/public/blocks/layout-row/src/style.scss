@@ -119,13 +119,16 @@ body {
     }
 }
 
-/* Overlay: a layer between the Row's background and its content, painted from
- * the custom properties render.php writes. The Row becomes the layer's
- * containing block only when nothing else positions it (:where keeps this at
- * zero specificity, so Sticky or a Position setting still wins). */
-:where(.shapeblock-layout-row.has-overlay) {
+/* Every Row is a containing block: for its overlay layer, and for a Column
+ * set to Absolute in the Advanced tab, which is then placed in this Row.
+ * :where keeps it at zero specificity, so Sticky or a Position setting on the
+ * Row itself still wins. */
+:where(.shapeblock-layout-row) {
     position: relative;
 }
+
+/* Overlay: a layer between the Row's background and its content, painted from
+ * the custom properties render.php writes. */
 
 .shapeblock-layout-row.has-overlay::before {
     content: "";

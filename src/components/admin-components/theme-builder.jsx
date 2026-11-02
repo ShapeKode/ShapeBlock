@@ -385,7 +385,7 @@ export default function ThemeBuilder({ group = 'theme', fixedType = '', title = 
                     </Space>
                 ) : (
                     <Space size={4}>
-                        <Tag color="default">{summary || __( 'Entire Site', 'shapeblock' )}</Tag>
+                        <Tag color={summary === __( 'Not shown anywhere', 'shapeblock' ) ? 'warning' : 'default'}>{summary}</Tag>
                         {!isTrashView && (
                             <Tooltip title={ __( 'Edit conditions', 'shapeblock' ) }>
                                 <Button

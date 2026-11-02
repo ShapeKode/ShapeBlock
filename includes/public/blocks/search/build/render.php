@@ -69,7 +69,8 @@ $icon_glyph = [];
 if ( '' !== $u( 'iconSize' ) ) { $s = $u( 'iconSize' ); $icon_glyph['font-size'] = $s; $icon_glyph['width'] = $s; $icon_glyph['height'] = $s; }
 $open_i  = $icon_glyph;
 $open_svg = $icon_glyph;
-if ( ! empty( $attributes['iconColor'] ) ) { $open_i['color'] = $attributes['iconColor']; $open_svg['fill'] = $attributes['iconColor']; }
+// The built-in icons draw in currentColor, so the colour goes on the svg as well as its fill.
+if ( ! empty( $attributes['iconColor'] ) ) { $open_i['color'] = $attributes['iconColor']; $open_svg['fill'] = $attributes['iconColor']; $open_svg['color'] = $attributes['iconColor']; }
 $open_btn = ( '' !== $u( 'iconVerticalPosition' ) ) ? [ 'transform' => 'translateY(' . $u( 'iconVerticalPosition' ) . ')' ] : [];
 
 // Style 2 submit icon position.
@@ -126,7 +127,7 @@ $popup_title = $typo( $attributes['popupTitleTypography'] ?? [] );
 if ( ! empty( $attributes['popupTitleColor'] ) ) $popup_title['color'] = $attributes['popupTitleColor'];
 $close_styles = [];
 if ( ! empty( $attributes['closeIconColor'] ) ) $close_styles['color'] = $attributes['closeIconColor'];
-$close_svg = ! empty( $attributes['closeIconColor'] ) ? [ 'fill' => $attributes['closeIconColor'] ] : [];
+$close_svg = ! empty( $attributes['closeIconColor'] ) ? [ 'fill' => $attributes['closeIconColor'], 'color' => $attributes['closeIconColor'] ] : [];
 $close_glyph = ( '' !== $u( 'closeIconSize' ) ) ? [ 'font-size' => $u( 'closeIconSize' ), 'width' => $u( 'closeIconSize' ), 'height' => $u( 'closeIconSize' ) ] : [];
 
 // Custom-image icon sizing. SVGs have no intrinsic size, so always emit a size

@@ -84,6 +84,8 @@
 	position: absolute;
 	bottom: 0;
 	width: 100%;
+	/* Its padding stays inside the image, so right-aligned or long captions are not cut off. */
+	box-sizing: border-box;
 	background: rgba(0, 0, 0, 0.6);
 	color: #fff;
 	text-align: center;

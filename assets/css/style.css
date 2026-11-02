@@ -283,6 +283,9 @@ body textarea.ant-input:focus {
 .shapeblock-block-item .shapeblock-block-badge.is-free {
   background: #00a32a;
 }
+.shapeblock-block-item .shapeblock-block-badge.is-upcoming {
+  background: #2271b1;
+}
 
 .shapeblock-options-content-header {
   margin-bottom: 20px;

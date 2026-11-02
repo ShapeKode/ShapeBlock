@@ -570,7 +570,13 @@ class Helper {
 		}
 
 		// This block's own CSS, plus any that names no block.
-		$name  = is_array( $block ) && isset( $block['blockName'] ) ? (string) $block['blockName'] : '';
+		$name = is_array( $block ) && isset( $block['blockName'] ) ? (string) $block['blockName'] : '';
+		// Classic content rendered inside a block (a WooCommerce short
+		// description, say) passes through here as a nameless block; CSS put
+		// there would be escaped into text. The block around it comes next.
+		if ( '' === $name ) {
+			return $content;
+		}
 		$parts = [];
 		foreach ( array_unique( [ '', $name ] ) as $owner ) {
 			if ( isset( self::$pending_css[ $owner ] ) ) {
@@ -644,6 +650,35 @@ class Helper {
 		// Absent or false keeps the outer shadow every saved block already has.
 		$inset = empty($shadow['inset']) ? '' : 'inset ';
 		return "$inset$x $y $b $s $c";
+	}
+
+	/**
+	 * A Row's or Column's background as CSS properties: colour, gradient and
+	 * image (the gradient painted over the image), with the image's size,
+	 * position, repeat and attachment.
+	 *
+	 * @param array $attributes Block attributes.
+	 * @return array Property => value.
+	 */
+	public static function background_to_css_props( $attributes ) {
+		$props = [];
+		if ( ! empty( $attributes['background'] ) ) {
+			$props['background-color'] = $attributes['background'];
+		}
+
+		$image    = ! empty( $attributes['backgroundImage']['url'] ) ? esc_url_raw( $attributes['backgroundImage']['url'] ) : '';
+		$gradient = ! empty( $attributes['backgroundGradient'] ) ? $attributes['backgroundGradient'] : '';
+		if ( $image ) {
+			$props['background-image'] = ( $gradient ? $gradient . ', ' : '' ) . 'url(' . $image . ')';
+			foreach ( [ 'backgroundSize' => 'background-size', 'backgroundPosition' => 'background-position', 'backgroundRepeat' => 'background-repeat', 'backgroundAttachment' => 'background-attachment' ] as $key => $prop ) {
+				if ( ! empty( $attributes[ $key ] ) ) {
+					$props[ $prop ] = $attributes[ $key ];
+				}
+			}
+		} elseif ( $gradient ) {
+			$props['background-image'] = $gradient;
+		}
+		return $props;
 	}
 
 	public static function border_to_css_props( $border, $default_color = 'rgba(0,0,0,0)' ) {
@@ -772,6 +807,8 @@ class Helper {
             'stop'           => array( 'offset' => true, 'stop-color' => true, 'stop-opacity' => true ),
             'text'           => array( 'x' => true, 'y' => true, 'dx' => true, 'dy' => true, 'text-anchor' => true, 'font-size' => true, 'font-family' => true, 'font-weight' => true ),
             'tspan'          => array( 'x' => true, 'y' => true, 'dx' => true, 'dy' => true ),
+            // Text set along a path (circular badges); without it the text falls back to a straight line.
+            'textpath'       => array( 'href' => true, 'xlink:href' => true, 'startoffset' => true, 'textlength' => true, 'lengthadjust' => true, 'method' => true, 'spacing' => true, 'side' => true ),
         );
 
         foreach ( $svg_elements as $tag => $attrs ) {

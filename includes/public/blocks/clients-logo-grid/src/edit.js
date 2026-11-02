@@ -120,6 +120,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const update = (i, key, val) => setAttributes({ logos: items.map((it, idx) => (idx === i ? { ...it, [key]: val } : it)) });
 	const add = () => setAttributes({ logos: [...items, { image: {}, link: '', linkNewTab: false, linkNofollow: false }] });
 	const remove = (i) => setAttributes({ logos: items.filter((_, idx) => idx !== i) });
+	// Several logos picked at once; the empty stand-ins a new block starts with make way for them.
+	const addFromLibrary = (media) => {
+		const picked = (Array.isArray(media) ? media : [media]).filter((m) => m && m.url).map((m) => ({ image: { id: m.id, url: m.url, alt: m.alt || '' }, link: '', linkNewTab: false, linkNofollow: false }));
+		if (picked.length) {
+			const kept = items.some((it) => it.image && it.image.url) ? items : [];
+			setAttributes({ logos: [...kept, ...picked] });
+		}
+	};
 	// Deep copy, so the clone's image object is not shared with the original.
 	const duplicate = (i) => {
 		const next = items.slice();
@@ -212,7 +220,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						)}
 					</div>
 				))}
-				<Button variant="primary" onClick={add} icon={ICON_ADD}>{__('Add Logo', 'shapeblock')}</Button>
+				<MediaUploadCheck>
+					<MediaUpload
+						multiple
+						gallery={false}
+						allowedTypes={['image']}
+						onSelect={addFromLibrary}
+						render={({ open }) => (
+							<Button variant="primary" onClick={open} icon={ICON_ADD}>{__('Add Logos', 'shapeblock')}</Button>
+						)}
+					/>
+				</MediaUploadCheck>
+				<Button variant="secondary" onClick={add} style={{ marginLeft: '8px' }}>{__('Add Empty Logo', 'shapeblock')}</Button>
 				<Divider />
 				<ToggleControl label={__('Image Hover Swap Effect', 'shapeblock')} help={__('On hover the logo slides away and a second image slides in. Pick that image per logo above (the logo itself is used when none is set).', 'shapeblock')} checked={hoverSwap} onChange={(v) => setAttributes({ hoverSwap: v })} __nextHasNoMarginBottom />
 			</PanelBody>

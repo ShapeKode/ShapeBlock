@@ -2402,8 +2402,12 @@ msgstr ""
 msgid "Link"
 msgstr ""
 
-#: includes/public/blocks/clients-logo-grid/src/edit.js:215
-msgid "Add Logo"
+#: includes/public/blocks/clients-logo-grid/src/edit.js:230
+msgid "Add Logos"
+msgstr ""
+
+#: includes/public/blocks/clients-logo-grid/src/edit.js:234
+msgid "Add Empty Logo"
 msgstr ""
 
 #: includes/public/blocks/clients-logo-grid/src/edit.js:217
@@ -5210,7 +5214,7 @@ msgid "Remove Column"
 msgstr ""
 
 #: includes/public/blocks/layout-row/src/edit.js:820
-msgid "Chose a Layout"
+msgid "Choose a Layout"
 msgstr ""
 
 #: includes/public/blocks/offcanvas/src/edit.js:105

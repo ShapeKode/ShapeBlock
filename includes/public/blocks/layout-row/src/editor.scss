@@ -2,6 +2,13 @@
 
 .wp-block-shapeblock-layout-row {
     min-height: 60px;
+
+    // The editor's block list positions this wrapper; unpositioned, a Column set
+    // to Absolute is placed in the Row itself, as on the page. With an overlay
+    // the wrapper is positioned on the page too (style.scss), so it stays.
+    &:not(.has-overlay) > .shapeblock-layout-row__inner {
+        position: static;
+    }
 }
 
 .shapeblock-preset-grid {
@@ -113,12 +120,4 @@
 
         &:hover .shapeblock-preset-icon__col { background: #a216ff; }
     }
-}
-
-// Background image buttons in the sidebar.
-.shapeblock-row-bg-image {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
 }

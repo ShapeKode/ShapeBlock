@@ -16,6 +16,24 @@ const ensureUnit = (v) => {
     return v;
 };
 
+// A Row's or Column's background, as Helper::background_to_css_props() writes
+// it: colour, gradient and image (the gradient painted over the image).
+const backgroundToCss = (attrs) => {
+    const decls = {};
+    if (attrs.background) decls['background-color'] = attrs.background;
+    const url = attrs.backgroundImage?.url;
+    if (url) {
+        decls['background-image'] = attrs.backgroundGradient ? `${attrs.backgroundGradient}, url(${url})` : `url(${url})`;
+        if (attrs.backgroundSize) decls['background-size'] = attrs.backgroundSize;
+        if (attrs.backgroundPosition) decls['background-position'] = attrs.backgroundPosition;
+        if (attrs.backgroundRepeat) decls['background-repeat'] = attrs.backgroundRepeat;
+        if (attrs.backgroundAttachment) decls['background-attachment'] = attrs.backgroundAttachment;
+    } else if (attrs.backgroundGradient) {
+        decls['background-image'] = attrs.backgroundGradient;
+    }
+    return decls;
+};
+
 const boxToCss = (box, prop) => {
     if (!box || typeof box !== 'object') return {};
     const map = {};
@@ -118,24 +136,12 @@ const collectDevice = (attrs, suffix) => {
             decls['--shapeblock-row-overlay'] = overlay;
             decls['--shapeblock-row-overlay-opacity'] = Math.min(100, Math.max(0, parseInt(attrs.overlayOpacity ?? 50, 10) || 0)) / 100;
         }
-        if (attrs.background) decls['background-color'] = attrs.background;
-        if (attrs.backgroundGradient) decls['background-image'] = attrs.backgroundGradient;
-        if (attrs.backgroundImage?.url) {
-            const url = attrs.backgroundImage.url;
-            decls['background-image'] = attrs.backgroundGradient
-                ? `${attrs.backgroundGradient}, url(${url})`
-                : `url(${url})`;
-            if (attrs.backgroundSize) decls['background-size'] = attrs.backgroundSize;
-            if (attrs.backgroundPosition) decls['background-position'] = attrs.backgroundPosition;
-            if (attrs.backgroundRepeat) decls['background-repeat'] = attrs.backgroundRepeat;
-            if (attrs.backgroundAttachment) decls['background-attachment'] = attrs.backgroundAttachment;
-        }
+        Object.assign(decls, backgroundToCss(attrs));
         Object.assign(decls, borderToCss(attrs.border));
         Object.assign(decls, radiusToCss(attrs.borderRadius));
         const sh = shadowToCss(attrs.boxShadow);
         if (sh) decls['box-shadow'] = sh;
         if (attrs.overflow) decls.overflow = attrs.overflow;
-        if (attrs.position) decls.position = attrs.position;
         if (attrs.zIndex !== '' && attrs.zIndex != null) decls['z-index'] = attrs.zIndex;
 
         // Mirrors the sticky branch in render.php so the editor previews it too.
@@ -322,8 +328,7 @@ const collectColumnDevice = (attrs, suffix) => {
     Object.assign(decls, boxToCss(k('margin'), 'margin'));
 
     if (suffix === '') {
-        if (attrs.background) decls['background-color'] = attrs.background;
-        if (attrs.backgroundGradient) decls['background-image'] = attrs.backgroundGradient;
+        Object.assign(decls, backgroundToCss(attrs));
         Object.assign(decls, borderToCss(attrs.border));
         Object.assign(decls, radiusToCss(attrs.borderRadius));
         const sh = shadowToCss(attrs.boxShadow);

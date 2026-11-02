@@ -343,6 +343,9 @@ $any_visible = false;
 						<i class="<?php echo esc_attr( 'shapeblock-fl-icon shapeblock-icon ' . $ico ); ?>" aria-hidden="true"></i>
 					<?php endif; ?>
 					<span class="shapeblock-fl-title"><?php echo esc_html( $ttl ); ?></span>
+					<?php if ( ! empty( $item['hot'] ) ) : ?>
+						<span class="shapeblock-fl-badge shapeblock-fl-hot" style="--shapeblock-fl-badge-bg:#fff0e5;--shapeblock-fl-badge-color:#d9480f"><?php esc_html_e( 'Hot', 'shapeblock' ); ?></span>
+					<?php endif; ?>
 					<?php if ( '' !== $badge ) : ?>
 						<span class="shapeblock-fl-badge"<?php echo $badge_css ? ' style="' . esc_attr( implode( ';', $badge_css ) ) . '"' : ''; ?>><?php echo esc_html( $badge ); ?></span>
 					<?php endif; ?>

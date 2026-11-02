@@ -1,0 +1,377 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "shapeblock/google-map",
+  "version": "1.0.1",
+  "title": "Google Map",
+  "category": "shapeblock",
+  "description": "A Google map of one place or several, with a list of the places beside it, directions links and a look that suits the page.",
+  "keywords": [
+    "map",
+    "google",
+    "location",
+    "address",
+    "directions",
+    "contact"
+  ],
+  "example": {},
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ]
+  },
+  "textdomain": "shapeblock",
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php",
+  "attributes": {
+    "advPadding": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advPaddingTablet": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advPaddingMobile": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advMargin": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advMarginTablet": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advMarginMobile": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "advBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "advBgGradient": {
+      "type": "string",
+      "default": ""
+    },
+    "advPosition": {
+      "type": "string",
+      "default": ""
+    },
+    "advHAlign": {
+      "type": "string",
+      "default": ""
+    },
+    "advVAlign": {
+      "type": "string",
+      "default": ""
+    },
+    "advTop": {
+      "type": "string",
+      "default": ""
+    },
+    "advTopTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "advTopMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "advRight": {
+      "type": "string",
+      "default": ""
+    },
+    "advRightTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "advRightMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "advBottom": {
+      "type": "string",
+      "default": ""
+    },
+    "advBottomTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "advBottomMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "advLeft": {
+      "type": "string",
+      "default": ""
+    },
+    "advLeftTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "advLeftMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "advWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "advWidthTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "advWidthMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "advZIndex": {
+      "type": "string",
+      "default": ""
+    },
+    "blockId": {
+      "type": "string",
+      "default": ""
+    },
+    "locations": {
+      "type": "array",
+      "default": [
+        {
+          "title": "Union Square Studio",
+          "address": "333 Post St, San Francisco, CA 94108",
+          "details": "Mon to Fri, 9am to 6pm",
+          "phone": "(415) 555-0142"
+        }
+      ]
+    },
+    "zoom": {
+      "type": "number",
+      "default": 15
+    },
+    "mapType": {
+      "type": "string",
+      "default": "roadmap"
+    },
+    "mapLook": {
+      "type": "string",
+      "default": "standard"
+    },
+    "colorOnHover": {
+      "type": "boolean",
+      "default": false
+    },
+    "clickToLoad": {
+      "type": "boolean",
+      "default": false
+    },
+    "loadLabel": {
+      "type": "string",
+      "default": ""
+    },
+    "listPosition": {
+      "type": "string",
+      "default": "left"
+    },
+    "showDirections": {
+      "type": "boolean",
+      "default": true
+    },
+    "directionsLabel": {
+      "type": "string",
+      "default": ""
+    },
+    "titleTag": {
+      "type": "string",
+      "default": "h4"
+    },
+    "height": {
+      "type": "string",
+      "default": ""
+    },
+    "heightTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "heightMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "listWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "listWidthTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "listWidthMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "gap": {
+      "type": "string",
+      "default": ""
+    },
+    "gapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "gapMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "mapRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "mapBorder": {
+      "type": "object",
+      "default": {}
+    },
+    "mapShadow": {
+      "type": "object",
+      "default": {}
+    },
+    "itemBg": {
+      "type": "string",
+      "default": ""
+    },
+    "itemActiveBg": {
+      "type": "string",
+      "default": ""
+    },
+    "activeColor": {
+      "type": "string",
+      "default": ""
+    },
+    "itemPadding": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "itemPaddingTablet": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "itemPaddingMobile": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "itemRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "itemGap": {
+      "type": "string",
+      "default": ""
+    },
+    "itemGapTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "itemGapMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "cardBg": {
+      "type": "string",
+      "default": ""
+    },
+    "titleColor": {
+      "type": "string",
+      "default": ""
+    },
+    "titleTypography": {
+      "type": "object",
+      "default": {}
+    },
+    "titleTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "titleTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "textColor": {
+      "type": "string",
+      "default": ""
+    },
+    "textTypography": {
+      "type": "object",
+      "default": {}
+    },
+    "textTypographyTablet": {
+      "type": "object",
+      "default": {}
+    },
+    "textTypographyMobile": {
+      "type": "object",
+      "default": {}
+    },
+    "linkColor": {
+      "type": "string",
+      "default": ""
+    }
+  }
+}

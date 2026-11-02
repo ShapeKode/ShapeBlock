@@ -281,6 +281,11 @@ class Theme_Builder {
 	 * @return array<int,array<string,mixed>>
 	 */
 	public static function get_post_conditions( $post_id ) {
+		// A template saved before it had conditions at all was shown on the whole
+		// site, and still is; one whose conditions were all removed is shown nowhere.
+		if ( ! metadata_exists( 'post', $post_id, self::META_CONDITIONS ) ) {
+			return array( array( 'type' => 'include', 'rule' => 'entire_site', 'ids' => array() ) );
+		}
 		$conditions = get_post_meta( $post_id, self::META_CONDITIONS, true );
 		if ( ! is_array( $conditions ) ) {
 			return array();

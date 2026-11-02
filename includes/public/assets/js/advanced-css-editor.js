@@ -1,5 +1,5 @@
 /**
- * The Advanced tab's padding, margin and background, in the editor canvas.
+ * The Advanced tab's padding, margin, background and Position, in the editor canvas.
  *
  * On the page they come from a render_block_data filter in blocks/blocks.php.
  * A block the editor draws itself (most blocks, as opposed to those rendered
@@ -32,6 +32,12 @@
 		return /^-?\d*\.?\d+$/.test( v ) ? v + 'px' : v;
 	}
 
+	// A Position side or width: px, %, vw or vh (bare number = px), else nothing.
+	function length( value ) {
+		var m = String( value === undefined || value === null ? '' : value ).trim().match( /^(-?\d*\.?\d+)(px|%|vw|vh)?$/ );
+		return m ? m[ 1 ] + ( m[ 2 ] || 'px' ) : '';
+	}
+
 	// Only what a CSS value can hold, so nothing typed can end the rule.
 	function safe( value ) {
 		return /[{};<>]/.test( value ) ? '' : value;
@@ -51,8 +57,35 @@
 				}
 			} );
 		} );
-		// The background has no per-device value, matching its control.
+		// Position, as shapeblock_advanced_block_css() writes it: on desktop every
+		// side starts at auto and the aligned edge(s) at 0 (Center / Middle with
+		// auto margins), then each side and the width take their own value.
+		if ( 'absolute' === attrs.advPosition || 'fixed' === attrs.advPosition ) {
+			if ( '' === suffix ) {
+				var h = attrs.advHAlign, v = attrs.advVAlign;
+				var base = { position: attrs.advPosition, top: 'auto', right: 'auto', bottom: 'auto', left: 'auto' };
+				if ( 'left' === h || 'center' === h ) { base.left = '0px'; }
+				if ( 'right' === h || 'center' === h ) { base.right = '0px'; }
+				if ( 'center' === h ) { base[ 'margin-left' ] = 'auto'; base[ 'margin-right' ] = 'auto'; base.width = 'fit-content'; }
+				if ( 'top' === v || 'middle' === v ) { base.top = '0px'; }
+				if ( 'bottom' === v || 'middle' === v ) { base.bottom = '0px'; }
+				if ( 'middle' === v ) { base[ 'margin-top' ] = 'auto'; base[ 'margin-bottom' ] = 'auto'; base.height = 'fit-content'; }
+				Object.keys( base ).forEach( function ( prop ) {
+					out += prop + ':' + base[ prop ] + ';';
+				} );
+			}
+			[ [ 'advTop', 'top' ], [ 'advRight', 'right' ], [ 'advBottom', 'bottom' ], [ 'advLeft', 'left' ], [ 'advWidth', 'width' ] ].forEach( function ( pair ) {
+				var value = length( attrs[ pair[ 0 ] + suffix ] );
+				if ( '' !== value ) {
+					out += pair[ 1 ] + ':' + value + ';';
+				}
+			} );
+		}
+		// The background and z-index have no per-device value, matching their controls.
 		if ( '' === suffix ) {
+			if ( /^-?\d+$/.test( String( attrs.advZIndex || '' ).trim() ) ) {
+				out += 'z-index:' + parseInt( attrs.advZIndex, 10 ) + ';';
+			}
 			if ( attrs.advBgColor && safe( String( attrs.advBgColor ) ) ) {
 				out += 'background-color:' + attrs.advBgColor + ';';
 			}

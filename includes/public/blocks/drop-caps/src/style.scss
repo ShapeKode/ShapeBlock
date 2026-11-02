@@ -1,0 +1,89 @@
+/**
+ * Drop Caps — front-end + editor styles.
+ *
+ * The letter floats, sized from the number of lines it spans and the
+ * paragraph's line height; in a box it is set smaller, the padding making up
+ * the height. See the end of the file for browsers with initial-letter.
+ */
+
+:where(.shapeblock-dc) {
+	--shapeblock-dc-lines: 3;
+	--shapeblock-dc-lh: 1.7;
+	--shapeblock-dc-cols: 1;
+}
+
+.shapeblock-dc {
+	// At least as tall as the letter, so a short paragraph does not let it hang out.
+	.shapeblock-dc__text {
+		display: flow-root;
+		min-height: calc(var(--shapeblock-dc-lines) * var(--shapeblock-dc-lh) * 1em);
+		margin: 0;
+		line-height: var(--shapeblock-dc-lh);
+		columns: var(--shapeblock-dc-cols);
+		column-gap: var(--shapeblock-dc-col-gap, 40px);
+	}
+
+	&[data-rule="1"] .shapeblock-dc__text {
+		column-rule: 1px solid var(--shapeblock-dc-rule-color, #e4e7ec);
+	}
+
+	.shapeblock-dc__text::first-letter {
+		float: left;
+		margin: 0.04em var(--shapeblock-dc-gap, 0.1em) 0 0;
+		color: var(--shapeblock-dc-color, #101828);
+		font-family: var(--shapeblock-dc-font, inherit);
+		font-size: calc(var(--shapeblock-dc-lines) * var(--shapeblock-dc-lh) * 1em - 0.2em);
+		font-weight: var(--shapeblock-dc-weight, 700);
+		line-height: 0.82;
+	}
+
+	&[data-cap="filled"] .shapeblock-dc__text::first-letter,
+	&[data-cap="outline"] .shapeblock-dc__text::first-letter {
+		margin: 0.12em var(--shapeblock-dc-gap, 0.22em) 0 0;
+		padding: 0.16em 0.26em;
+		border-radius: var(--shapeblock-dc-radius, 6px);
+		font-size: calc(var(--shapeblock-dc-lines) * var(--shapeblock-dc-lh) * 0.68em - 0.3em);
+		line-height: 1;
+	}
+
+	&[data-cap="filled"] .shapeblock-dc__text::first-letter {
+		background: var(--shapeblock-dc-bg, #101828);
+		color: var(--shapeblock-dc-color, #fff);
+	}
+
+	&[data-cap="outline"] .shapeblock-dc__text::first-letter {
+		border: 2px solid var(--shapeblock-dc-bg, currentColor);
+	}
+
+	// An outlined letter: the letter in the inside colour, its outline drawn
+	// by four hairline shadows (text-stroke does not reach ::first-letter).
+	&[data-cap="stroke"] .shapeblock-dc__text::first-letter {
+		color: var(--shapeblock-dc-bg, #fff);
+		text-shadow:
+			-1px -1px 0 var(--shapeblock-dc-color, #101828),
+			1px -1px 0 var(--shapeblock-dc-color, #101828),
+			-1px 1px 0 var(--shapeblock-dc-color, #101828),
+			1px 1px 0 var(--shapeblock-dc-color, #101828);
+	}
+}
+
+// Browsers with initial-letter: it sizes and places the letter itself, and keeps
+// it whole in text columns, where a floated letter can break. A box drawn
+// round it there hugs the letter (vertical padding is ignored), so boxed
+// letters keep the floated way, with room in the box, unless the text has
+// columns.
+@supports (initial-letter: 2) or (-webkit-initial-letter: 2) {
+	.shapeblock-dc:is([data-cap="plain"], [data-cap="stroke"], [data-multicol="1"]) .shapeblock-dc__text::first-letter {
+		-webkit-initial-letter: var(--shapeblock-dc-lines);
+		initial-letter: var(--shapeblock-dc-lines);
+		float: none;
+		margin: 0 var(--shapeblock-dc-gap, 0.12em) 0 0;
+		font-size: inherit;
+		line-height: inherit;
+	}
+
+	.shapeblock-dc[data-multicol="1"]:is([data-cap="filled"], [data-cap="outline"]) .shapeblock-dc__text::first-letter {
+		margin: 0 var(--shapeblock-dc-gap, 0.2em) 0 0;
+		padding: 0 0.2em;
+	}
+}

@@ -15,11 +15,13 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		/* The space below sits on the row, so the title and the percent line up. */
+		margin-bottom: 15px;
 
 		.shapeblock-pb-title {
 			color: var(--shapeblock-pb-secondary);
 			font-weight: 500;
-			margin: 0 0 15px;
+			margin: 0;
 		}
 
 		.shapeblock-pb-percent {

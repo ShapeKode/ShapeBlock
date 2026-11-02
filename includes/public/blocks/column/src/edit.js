@@ -28,6 +28,7 @@ import {
 } from '@wordpress/components';
 
 import BackgroundControl from '../../custom-components/BackgroundControl';
+import BackgroundImageControls from '../../custom-components/BackgroundImageControls';
 import BorderControl from '../../custom-components/BorderControl';
 import BoxShadowControls from '../../custom-components/BoxShadowControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
@@ -387,6 +388,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     {(device) => (
                         <BoxControl
                             values={attributes[getKey('margin', device)]}
+                            // Margins may be negative, e.g. -50px to pull a row up over the one above.
+                            inputProps={{ min: -1000, max: 1000 }}
                             onChange={(v) => setAttributes({ [getKey('margin', device)]: v })}
                         />
                     )}
@@ -404,6 +407,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     }}
                     onGradientChange={(v) => setAttributes({ backgroundGradient: v || '' })}
                 />
+                <Divider />
+                <BackgroundImageControls attributes={attributes} setAttributes={setAttributes} />
             </PanelBody>
 
             <PanelBody title={__('Border', 'shapeblock')} initialOpen={false}>

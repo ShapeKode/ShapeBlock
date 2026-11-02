@@ -104,6 +104,51 @@
 	color: #000000;
 }
 
+/* A linked item: the link takes the item's own layout (direction, gap,
+   alignment), so a list looks the same with or without links. */
+.shapeblock-icon-list-link {
+	display: flex;
+	flex-direction: inherit;
+	align-items: inherit;
+	justify-content: inherit;
+	gap: inherit;
+	color: inherit;
+	text-align: inherit;
+	text-decoration: none;
+	box-shadow: none;
+
+	&:hover,
+	&:focus {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 3px;
+		border-radius: 2px;
+	}
+}
+
+/* Hover: the colours, the underline and the shift ease over the same time. */
+.shapeblock-icon-list-link,
+.shapeblock-icon-list > .shapeblock-icon-list-icon,
+.shapeblock-icon-list > .shapeblock-icon-list-info,
+.shapeblock-icon-list-title,
+.shapeblock-icon-list-icon i,
+.shapeblock-icon-list-icon svg,
+.shapeblock-icon-list-icon svg path {
+	transition: color var(--shapeblock-list-speed, 250ms) ease, fill var(--shapeblock-list-speed, 250ms) ease, transform var(--shapeblock-list-speed, 250ms) ease, text-decoration-color var(--shapeblock-list-speed, 250ms) ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.shapeblock-icon-list-link,
+	.shapeblock-icon-list > .shapeblock-icon-list-icon,
+	.shapeblock-icon-list > .shapeblock-icon-list-info {
+		transition: none;
+	}
+}
+
 .shapeblock-icon-list.shapeblock-icon-list-dir-left {
 	flex-direction: row;
 	text-align: left;
