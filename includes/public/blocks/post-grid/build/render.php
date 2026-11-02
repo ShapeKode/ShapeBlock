@@ -49,7 +49,11 @@ $author_prefix = isset($attributes['authorPrefix']) ? $attributes['authorPrefix'
 $title_tag = isset($attributes['titleTag']) && in_array( $attributes['titleTag'], array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span', 'div' ), true ) ? $attributes['titleTag'] : 'h3';
 $show_excerpt = !empty($attributes['showExcerpt']) ? 'yes' : 'no';
 $show_read_more = !empty($attributes['showReadMore']) ? 'yes' : 'no';
-$read_more_text = isset($attributes['readMoreText']) ? $attributes['readMoreText'] : 'Read More';
+// The default label is stored in English; show it translated unless the author typed their own.
+$read_more_text = ( isset( $attributes['readMoreText'] ) && is_string( $attributes['readMoreText'] ) ) ? $attributes['readMoreText'] : 'Read More';
+if ( 'Read More' === $read_more_text ) {
+    $read_more_text = __( 'Read More', 'shapeblock' );
+}
 $read_more_icon = isset($attributes['readMoreIcon']) ? $attributes['readMoreIcon'] : 'none';
 $read_more_icon_pos = isset($attributes['readMoreIconPosition']) ? $attributes['readMoreIconPosition'] : 'after';
 $show_date_on_top = !empty($attributes['showDateOnTop']) ? 'yes' : 'no';
@@ -409,7 +413,7 @@ $pag_justify = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-
 $pag_row_responsive  = [ 'desktop' => [], 'tablet' => [], 'mobile' => [] ];
 $pag_item_responsive = [ 'desktop' => [], 'tablet' => [], 'mobile' => [] ];
 foreach ( [ '' => 'desktop', 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $pag_suffix => $pag_device ) {
-    if ( isset( $attributes[ 'paginationAlign' . $pag_suffix ], $pag_justify[ $attributes[ 'paginationAlign' . $pag_suffix ] ] ) ) $pag_row_responsive[ $pag_device ]['justify-content'] = $pag_justify[ $attributes[ 'paginationAlign' . $pag_suffix ] ];
+    if ( isset( $attributes[ 'paginationAlign' . $pag_suffix ] ) && is_string( $attributes[ 'paginationAlign' . $pag_suffix ] ) && isset( $pag_justify[ $attributes[ 'paginationAlign' . $pag_suffix ] ] ) ) $pag_row_responsive[ $pag_device ]['justify-content'] = $pag_justify[ $attributes[ 'paginationAlign' . $pag_suffix ] ];
     if ( isset( $attributes[ 'paginationGap' . $pag_suffix ] ) && '' !== (string) $attributes[ 'paginationGap' . $pag_suffix ] ) $pag_row_responsive[ $pag_device ]['gap'] = max( 0, min( 60, (int) $attributes[ 'paginationGap' . $pag_suffix ] ) ) . 'px';
     if ( isset( $attributes[ 'paginationSpacing' . $pag_suffix ] ) && '' !== (string) $attributes[ 'paginationSpacing' . $pag_suffix ] ) $pag_row_responsive[ $pag_device ]['margin-top'] = max( 0, min( 200, (int) $attributes[ 'paginationSpacing' . $pag_suffix ] ) ) . 'px';
     if ( '' === $pag_suffix ) {
@@ -488,7 +492,7 @@ wp_enqueue_style( $style_handle );
     '.shapeblock-pagination' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_row),
     '.shapeblock-pagination .page-numbers' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_styles),
     '.shapeblock-pagination .page-numbers.current' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
-    // Links and the Load More button (Pro) alike.
+    // Page links and the Load More button alike.
     '.shapeblock-pagination .page-numbers:hover' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
     '.shapeblock-pagination .page-numbers:focus-visible' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-blog-img'   => \ShapeBlock\Frontend\Helper::get_inline_styles($thumbnail_border_radius_styles),
@@ -510,12 +514,12 @@ if ( ! empty( $offset ) ) {
     $args['offset'] = (int) $offset + ( ( $paged - 1 ) * $per_page );
 }
 
-if ( ! empty( $attributes['posts'] ) && ! in_array( 'all', $attributes['posts'] ) ) {
+if ( ! empty( $attributes['posts'] ) && is_array( $attributes['posts'] ) && ! in_array( 'all', $attributes['posts'], true ) ) {
     $args['post__in'] = array_map( 'intval', $attributes['posts'] );
     $args['orderby'] = 'post__in';
 }
 
-if ( ! empty( $attributes['excludes'] ) && ! in_array( 'no-excludes', $attributes['excludes'] ) ) {
+if ( ! empty( $attributes['excludes'] ) && is_array( $attributes['excludes'] ) && ! in_array( 'no-excludes', $attributes['excludes'], true ) ) {
     $exclude_ids = array_map( 'intval', $attributes['excludes'] );
 
     if ( ! empty( $args['post__in'] ) ) {
@@ -555,7 +559,7 @@ if ( ! empty( $attributes['excludes'] ) && ! in_array( 'no-excludes', $attribute
     }
 }
 
-if ( ! empty( $attributes['categories'] ) && ! in_array( 'all', $attributes['categories'] ) ) {
+if ( ! empty( $attributes['categories'] ) && is_array( $attributes['categories'] ) && ! in_array( 'all', $attributes['categories'], true ) ) {
     $cat_ids = [];
 
     foreach ( $attributes['categories'] as $cat ) {

@@ -696,7 +696,7 @@ class Helper {
 			$left   = self::ensure_unit( $width['left']   ?? 0 );
 
 			// Skip if every side is zero
-			if ( (int) $top === 0 && (int) $right === 0 && (int) $bottom === 0 && (int) $left === 0 ) {
+			if ( 0.0 === (float) $top && 0.0 === (float) $right && 0.0 === (float) $bottom && 0.0 === (float) $left ) {
 				return [];
 			}
 
@@ -708,7 +708,7 @@ class Helper {
 		}
 
 		// Skip if width is zero
-		if ( (int) $width === 0 ) {
+		if ( 0.0 === (float) $width ) {
 			return [];
 		}
 

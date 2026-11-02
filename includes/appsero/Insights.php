@@ -198,7 +198,7 @@ class Insights {
 
         $response = $this->client->send_request( $tracking_data, 'track' );
 
-        update_option( $this->client->slug . '_tracking_last_send', time() );
+        update_option( $this->client->slug . '_tracking_last_send', time(), false );
     }
 
     /**
@@ -610,8 +610,8 @@ class Insights {
      * @return void
      */
     public function optin() {
-        update_option( $this->client->slug . '_allow_tracking', 'yes' );
-        update_option( $this->client->slug . '_tracking_notice', 'hide' );
+        update_option( $this->client->slug . '_allow_tracking', 'yes', false );
+        update_option( $this->client->slug . '_tracking_notice', 'hide', false );
 
         $this->clear_schedule_event();
         $this->schedule_event();
@@ -626,8 +626,8 @@ class Insights {
      * @return void
      */
     public function optout() {
-        update_option( $this->client->slug . '_allow_tracking', 'no' );
-        update_option( $this->client->slug . '_tracking_notice', 'hide' );
+        update_option( $this->client->slug . '_allow_tracking', 'no', false );
+        update_option( $this->client->slug . '_tracking_notice', 'hide', false );
 
         $this->clear_schedule_event();
 
@@ -812,9 +812,8 @@ class Insights {
         if ( 'theme' === $this->client->type ) {
             delete_option( $this->client->slug . '_tracking_last_send' );
             delete_option( $this->client->slug . '_allow_tracking' );
+            delete_option( $this->client->slug . '_tracking_notice' );
         }
-
-        delete_option( $this->client->slug . '_tracking_notice' );
     }
 
     /**

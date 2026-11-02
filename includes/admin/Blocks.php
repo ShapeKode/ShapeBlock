@@ -341,7 +341,7 @@ class Blocks {
         }
 
         $mode = $used ? 'all' : 'starter';
-        update_option( self::DEFAULTS_OPTION, $mode );
+        update_option( self::DEFAULTS_OPTION, $mode, false );
         return $mode;
     }
 

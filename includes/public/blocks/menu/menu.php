@@ -43,8 +43,9 @@ function shapeblock_menu_get_google_fonts() {
 		return array();
 	}
 
+	// An empty array is a cached failure: try Google again only after it expires.
 	$cached = get_transient( 'shapeblock_menu_google_fonts' );
-	if ( is_array( $cached ) && ! empty( $cached ) ) {
+	if ( is_array( $cached ) ) {
 		return $cached;
 	}
 
@@ -68,9 +69,7 @@ function shapeblock_menu_get_google_fonts() {
 		}
 	}
 
-	if ( ! empty( $fonts ) ) {
-		set_transient( 'shapeblock_menu_google_fonts', $fonts, WEEK_IN_SECONDS );
-	}
+	set_transient( 'shapeblock_menu_google_fonts', $fonts, empty( $fonts ) ? 10 * MINUTE_IN_SECONDS : WEEK_IN_SECONDS );
 
 	return $fonts;
 }

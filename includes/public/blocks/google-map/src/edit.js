@@ -84,7 +84,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<div className="shapeblock-gm-repeater-item" key={index}>
 						<div className="shapeblock-gm-repeater-head">
 							<button type="button" className="shapeblock-gm-repeater-toggle" onClick={() => setOpenIndex(openIndex === index ? null : index)} aria-expanded={openIndex === index}>
-								<strong>{place.title || place.address || sprintf(__('Place %d', 'shapeblock'), index + 1)}</strong>
+								<strong>{place.title || place.address || sprintf(
+									/* translators: %d: place number. */
+									__('Place %d', 'shapeblock'),
+									index + 1
+								)}</strong>
 								<span className="shapeblock-gm-caret" style={{ transform: openIndex === index ? 'rotate(180deg)' : 'none' }}>{ICON_CARET}</span>
 							</button>
 						</div>

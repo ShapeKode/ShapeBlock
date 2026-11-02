@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ShapeBlock
  * Plugin URI:  https://shapekode.com/product/shapeblock/
- * Description: A library of 34 Gutenberg blocks - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls.
+ * Description: A library of 36 Gutenberg blocks - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls.
  * Version:     1.0.5
  * Author:      ShapeKode
  * Author URI:  https://profiles.wordpress.org/shapekode22/

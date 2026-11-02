@@ -8,19 +8,19 @@ Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-40+ Gutenberg blocks - sliders, grids, tabs, counters and more - plus a Header & Footer Builder, with per-device controls.
+36 Gutenberg blocks - sliders, grids, tabs, counters and more - plus a Header & Footer Builder, with per-device controls.
 
 == Description ==
 
-**ShapeBlock adds 40+** blocks to the WordPress block editor, plus a **Header & Footer Builder**.
+**ShapeBlock adds 36** blocks to the WordPress block editor, plus a **Header & Footer Builder**.
 
 Every block has the same three tabs: **Settings** for the content, **Layout** for columns, alignment and spacing, and **Style** for colours, typography, borders, shadows and hover effects. Sizes, spacing and columns can be set separately for desktop, tablet and mobile.
 
-[Demo](https://shapekode.com/product/shapeblock/) | [Docs](https://shapekode.com/product/shapeblock/docs/) | [Roadmap](https://shapekode.com/product/shapeblock/roadmap/)
+[Demo](https://shapekode.com/product/shapeblock/) | [Docs](https://shapekode.com/product/shapeblock/docs/) | [Roadmap](https://shapekode.com/product/shapeblock/roadmap/) | [Overview Video](https://www.youtube.com/watch?v=HfEXu6Y449M)
 
 = Key Features =
 
-* **40+ blocks** for layouts, content, media, navigation and marketing.
+* **36 blocks** for layouts, content, media, navigation and marketing.
 * **Header & Footer Builder** with Include and Exclude display conditions, for classic and block themes.
 * **Fully responsive** - separate desktop, tablet and mobile values, and hide any block per device.
 * **Full design control** - typography, gradients, borders, shadows, spacing and a built-in icon picker.
@@ -147,8 +147,9 @@ With it allowed, your server sends this to Appsero right away and then once a we
 
 When you deactivate ShapeBlock, a dialog asks why. Only **Submit & Deactivate** sends the reason you picked to Appsero, with ShapeBlock's project key and an anonymous hash of the site address (and the site details above only if you had allowed sharing); **Skip & Deactivate** sends nothing.
 
-Appsero (https://appsero.com) - Privacy policy: https://appsero.com/privacy-policy/
-icanhazip - About and privacy: https://major.io/icanhazip-com-faq/
+Appsero (https://appsero.com) - Privacy policy: https://appsero.com/privacy-policy/ (Appsero publishes no separate terms of use; the privacy policy covers this data.)
+
+icanhazip - About and privacy: https://major.io/icanhazip-com-faq/ (icanhazip publishes no separate terms of use.)
 
 = Gravatar (Post Grid author picture) =
 
@@ -168,7 +169,7 @@ These blocks only output normal links. Nothing is sent until a visitor clicks on
 
 == Source code and build process ==
 
-Every compiled file in the plugin ships with its readable source right beside it:
+Every compiled file in the plugin ships with its readable source right beside it, except the Menu block, which is written by hand and has no build step:
 
 * Blocks: `includes/public/blocks/<block>/src/`, built into the `build/` folder next to it. The Menu block is hand-written in `includes/public/blocks/menu/build/` and has no build step.
 * Admin dashboard: `src/` in the plugin root, built into `build/`.
@@ -184,9 +185,9 @@ ShapeBlock is licensed GPLv2 or later and includes these MIT-licensed libraries:
 * Bootstrap 5.3 grid (https://getbootstrap.com) - `assets/lib/bootstrap/LICENSE`, only the grid, recompiled with a `shapeblock-` prefix.
 * Ant Design 6 and Ant Design Icons (https://ant.design) - `assets/lib/antd/LICENSE`, used only in the admin dashboard.
 * Bootstrap Icons 1.13.1 (https://icons.getbootstrap.com) - `includes/public/assets/font/bootstrap-icons-LICENSE.txt`, the icons of the built-in icon picker.
-* Appsero Client 2.0 (https://github.com/Appsero/client) - `includes/appsero/`, the opt-in usage data client described under External services.
+* Appsero Client 2.0 (https://github.com/Appsero/client) - `includes/appsero/LICENSE`, the opt-in usage data client described under External services.
 
-The icon fonts were made with Fontello (https://fontello.com). Our own icons are GPLv2 or later; three come from Font Awesome 4.7 and Elusive Icons under the SIL Open Font License 1.1 (https://openfontlicense.org), listed in `includes/public/assets/icon/config.json`.
+The icon fonts were made with Fontello (https://fontello.com). Our own icons are GPLv2 or later; three come from Font Awesome 4.7 and Elusive Icons under the SIL Open Font License 1.1 (https://openfontlicense.org), listed in `includes/public/assets/icon/config.json`, with the licence and notices in `includes/public/assets/font/OFL-LICENSE.txt`.
 
 == Installation ==
 
@@ -226,7 +227,7 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 * **New:** Column - a background image, with its size, position, repeat and attachment, as on the Row.
 * **New:** Icon List - a link for each item (new tab and nofollow), an icon box with its own background, size and corner radius, items that slide towards their text when pointed at, and title typography.
 * **New:** Filterable List - Mark as Hot adds a Hot label to an item.
-* **New:** Clients Logo - Add Logos picks several logos from the Media Library at once; the old button is now Add Empty Logo.
+* **New:** Client Logo - Add Logos picks several logos from the Media Library at once; the old button is now Add Empty Logo.
 * **Improved:** Row - Position is Default or Sticky, with the sticky top offset right under it; margins can be negative, to pull a row up over the one above.
 * **Improved:** Column - blocks side by side move onto more lines on a phone when they do not fit, instead of being squeezed out of the column.
 * **Improved:** Blocks page - All, Free, Pro and Upcoming tabs; a block still to come has no switch.
@@ -248,6 +249,9 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 * **Fixed:** Progress Bar - the title and the percent line up; Feature List - the connector line shows over a section's background.
 * **Fixed:** Google Map, Icon List, Row and Post Grid - Wide and Full width follow the theme on every theme: they no longer stop short of the screen edge or run past a sidebar; Post Grid is no wider than the content on block themes, and the theme's list indent no longer reaches the Google Map places.
 * **Fixed:** Row - the layout picker reads "Choose a Layout".
+* **Improved:** Post Grid's "Read More" label, the Search placeholder and the Row and Column background and overflow options can be translated.
+* **Improved:** the usage-data notice stays answered after the plugin is deactivated and activated again.
+* **Fixed:** a border thinner than 1px (such as 0.5px) is no longer dropped.
 
 = 1.0.4 =
 * **Security:** Pricing Table - the old price colour and the features and button alignment are checked before they go into the page's styles.

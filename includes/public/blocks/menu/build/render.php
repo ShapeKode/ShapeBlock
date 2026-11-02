@@ -136,7 +136,8 @@ if ( ! function_exists( 'shapeblock_menu_paint' ) ) {
 			return $v;
 		}
 		if ( preg_match( '/^(?:repeating-)?(?:linear|radial|conic)-gradient\([#0-9a-z.,%\/\s()-]+\)$/i', $v ) ) {
-			return $v;
+			// The shared sanitizer also rejects unbalanced brackets.
+			return \ShapeBlock\Frontend\Helper::sanitize_css_value( $v );
 		}
 		if ( preg_match( '/^var\(\s*--[A-Za-z0-9_-]+\s*\)$/', $v ) ) {
 			return $v;

@@ -43,7 +43,7 @@ const TypographyControls = ({ label, attributes, setAttributes, attributeKey }) 
     const [isOpen, setIsOpen] = useState(false);
     const typography = attributes[attributeKey] || {};
 
-    // Google Fonts is an opt-in connection (ShapeBlock > Settings). While it is
+    // Google Fonts is an opt-in connection (ShapeBlock > General). While it is
     // off the picker offers only locally available stacks and nothing here ever
     // contacts fonts.googleapis.com.
     const googleFontsAllowed = (typeof window !== 'undefined' && !!window.shapeblockGoogleFonts);

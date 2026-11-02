@@ -1,3 +1,4 @@
+/*! Bootstrap v5.3 grid (https://getbootstrap.com) | Copyright 2011-2025 The Bootstrap Authors | MIT License | Modified for ShapeBlock: grid only, classes prefixed with shapeblock- */
 .shapeblock-row {
   --shapeblock-gutter-x: 1.5rem;
   --shapeblock-gutter-y: 0;

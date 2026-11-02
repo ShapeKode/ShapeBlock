@@ -390,10 +390,10 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                     value={attributes.overflow}
                     options={[
                         { label: __('Default', 'shapeblock'), value: '' },
-                        { label: 'visible', value: 'visible' },
-                        { label: 'hidden', value: 'hidden' },
-                        { label: 'auto', value: 'auto' },
-                        { label: 'scroll', value: 'scroll' },
+                        { label: __( 'Visible', 'shapeblock' ), value: 'visible' },
+                        { label: __( 'Hidden', 'shapeblock' ), value: 'hidden' },
+                        { label: __( 'Auto', 'shapeblock' ), value: 'auto' },
+                        { label: __( 'Scroll', 'shapeblock' ), value: 'scroll' },
                     ]}
                     onChange={(v) => setAttributes({ overflow: v })}
                     __next40pxDefaultSize

@@ -17,7 +17,11 @@ $H = '\ShapeBlock\Frontend\Helper';
 $unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-search-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
 $style       = ( isset( $attributes['selectStyle'] ) && '2' === $attributes['selectStyle'] ) ? '2' : '1';
-$placeholder = isset( $attributes['placeholder'] ) ? $attributes['placeholder'] : '';
+// The default placeholder is stored in English; show it translated unless the author typed their own.
+$placeholder = isset( $attributes['placeholder'] ) && is_string( $attributes['placeholder'] ) ? $attributes['placeholder'] : '';
+if ( 'Type keywords here...' === $placeholder ) {
+	$placeholder = __( 'Type keywords here...', 'shapeblock' );
+}
 $title       = isset( $attributes['searchTitle'] ) && '' !== $attributes['searchTitle'] ? $attributes['searchTitle'] : __( 'What are you looking for?', 'shapeblock' );
 $open_icon   = isset( $attributes['openIcon'] ) ? $attributes['openIcon'] : '';
 $close_icon  = isset( $attributes['closeIcon'] ) ? $attributes['closeIcon'] : '';
@@ -257,8 +261,8 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 // markup (uploaded image or icon-font glyph) and an empty string otherwise, so
 // callers can branch to the literal SVG when it returns ''.
 $render_icon = function ( $val, $image = array(), $img_class = '' ) {
-	if ( ! empty( $image ) && ! empty( $image['url'] ) ) {
-		$alt = ! empty( $image['alt'] ) ? $image['alt'] : '';
+	if ( is_array( $image ) && ! empty( $image['url'] ) && is_string( $image['url'] ) ) {
+		$alt = ! empty( $image['alt'] ) && is_string( $image['alt'] ) ? $image['alt'] : '';
 		return '<img src="' . esc_url( $image['url'] ) . '" alt="' . esc_attr( $alt ) . '" class="' . esc_attr( $img_class ) . '" />';
 	}
 	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : '';

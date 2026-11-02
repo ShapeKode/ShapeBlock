@@ -336,7 +336,7 @@ function shapeblock_add_swiper_dependency( $block_type ) {
  * Off by default. While it is off the plugin never contacts Google: the
  * font catalogue is not fetched, no fonts.googleapis.com stylesheet is
  * enqueued on the front end, and the editor offers only locally available
- * font stacks. Site owners turn it on in ShapeBlock > Settings.
+ * font stacks. Site owners turn it on in ShapeBlock > General.
  *
  * @return bool
  */
@@ -685,7 +685,7 @@ function shapeblock_advanced_block_css( $parsed_block ) {
 		$responsive['desktop']['background-image'] = $attrs['advBgGradient'];
 	}
 
-	// Position, as Elementor's Advanced tab has it: absolute or fixed. The
+	// Position: absolute or fixed. The
 	// alignment picks the edge the block sticks to (0 from it; Center / Middle
 	// center it with auto margins), and the sliders, per device, move it from
 	// there or set a side of their own. Every other side is auto, so a block's

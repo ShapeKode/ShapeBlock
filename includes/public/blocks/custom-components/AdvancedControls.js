@@ -88,7 +88,7 @@ const SideRow = ( { label, value, onChange, ranges } ) => {
 };
 
 /**
- * Position, as Elementor's Advanced tab has it: Default, Absolute or Fixed.
+ * Position: Default, Absolute or Fixed.
  * A positioned block picks the edge it sticks to (horizontal and vertical
  * alignment; the middle options center it), and the sliders move it from
  * there: one per side and one for its width, per device, each left unset

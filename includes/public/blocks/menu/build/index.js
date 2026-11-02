@@ -134,8 +134,6 @@
 		return 'caret';
 	}
 
-	var TD = 'shapeblock';
-
 	// Switch WordPress's own editor preview ( canvas ) to Desktop / Tablet / Mobile width.
 	function shapeblockSetPreview( d ) {
 		var type = ( 'tablet' === d ) ? 'Tablet' : ( ( 'mobile' === d ) ? 'Mobile' : 'Desktop' );
@@ -207,7 +205,7 @@
 	// Options for the Font Family select: Default + web-safe stacks + every Google font.
 	function shapeblockFontOptions() {
 		var opts = [
-			{ label: __( 'Default', TD ), value: '' },
+			{ label: __( 'Default', 'shapeblock' ), value: '' },
 			{ label: 'System', value: 'system' },
 			{ label: 'Arial', value: 'arial' },
 			{ label: 'Helvetica', value: 'helvetica' },
@@ -345,17 +343,17 @@
 		// ---- "Create page" sub-panel ( title + publish toggle ), like core Navigation ----
 		if ( 'create' === view ) {
 			return el( 'div', { className: 'shapeblock-menu-add-search shapeblock-menu-add-createview' },
-				el( Button, { className: 'shapeblock-menu-add-back', icon: 'arrow-left-alt2', onClick: function () { setView( 'main' ); } }, __( 'Back', TD ) ),
-				el( TextControl, { label: __( 'Title', TD ), value: newTitle, placeholder: __( 'No title', TD ), onChange: setNewTitle, autoComplete: 'off' } ),
+				el( Button, { className: 'shapeblock-menu-add-back', icon: 'arrow-left-alt2', onClick: function () { setView( 'main' ); } }, __( 'Back', 'shapeblock' ) ),
+				el( TextControl, { label: __( 'Title', 'shapeblock' ), value: newTitle, placeholder: __( 'No title', 'shapeblock' ), onChange: setNewTitle, autoComplete: 'off' } ),
 				el( CheckboxControl, {
-					label: __( 'Publish', TD ),
-					help: __( 'Turn off to save as a draft. Drafts won’t appear on your site until published.', TD ),
+					label: __( 'Publish', 'shapeblock' ),
+					help: __( 'Turn off to save as a draft. Drafts won’t appear on your site until published.', 'shapeblock' ),
 					checked: publish,
 					onChange: setPublish
 				} ),
 				el( 'div', { className: 'shapeblock-menu-add-actions' },
-					el( Button, { variant: 'tertiary', onClick: function () { setView( 'main' ); } }, __( 'Cancel', TD ) ),
-					el( Button, { variant: 'primary', onClick: doCreate, disabled: creating || ! newTitle.trim() }, creating ? el( Spinner, {} ) : __( 'Create page', TD ) )
+					el( Button, { variant: 'tertiary', onClick: function () { setView( 'main' ); } }, __( 'Cancel', 'shapeblock' ) ),
+					el( Button, { variant: 'primary', onClick: doCreate, disabled: creating || ! newTitle.trim() }, creating ? el( Spinner, {} ) : __( 'Create page', 'shapeblock' ) )
 				)
 			);
 		}
@@ -368,7 +366,7 @@
 				el( Button, { className: 'shapeblock-menu-add-result', onClick: useTypedUrl },
 					el( 'span', { className: 'dashicons dashicons-admin-links' } ),
 					el( 'span', { className: 'shapeblock-menu-add-result-text' },
-						el( 'span', { className: 'shapeblock-menu-add-result-title' }, __( 'Link to URL', TD ) ),
+						el( 'span', { className: 'shapeblock-menu-add-result-title' }, __( 'Link to URL', 'shapeblock' ) ),
 						el( 'span', { className: 'shapeblock-menu-add-result-sub' }, normalizeUrl( trimmed ) )
 					)
 				)
@@ -391,7 +389,7 @@
 				) );
 			} );
 			if ( ! results.length && ! isUrl ) {
-				rows.push( el( 'li', { key: 'empty', className: 'shapeblock-menu-add-row shapeblock-menu-add-empty' }, __( 'No pages match. Type a URL to link directly.', TD ) ) );
+				rows.push( el( 'li', { key: 'empty', className: 'shapeblock-menu-add-row shapeblock-menu-add-empty' }, __( 'No pages match. Type a URL to link directly.', 'shapeblock' ) ) );
 			}
 		}
 
@@ -399,21 +397,21 @@
 		rows.push( el( 'li', { key: 'create', className: 'shapeblock-menu-add-row shapeblock-menu-add-create' },
 			el( Button, { className: 'shapeblock-menu-add-result', onClick: openCreate },
 				el( 'span', { className: 'dashicons dashicons-plus-alt2' } ),
-				el( 'span', {}, __( 'Create page', TD ) )
+				el( 'span', {}, __( 'Create page', 'shapeblock' ) )
 			)
 		) );
 
 
 		return el( 'div', { className: 'shapeblock-menu-add-search' },
 			el( 'div', { className: 'shapeblock-menu-add-input' },
-				el( TextControl, { value: q, placeholder: __( 'Search or type a URL…', TD ), onChange: setQ, autoComplete: 'off', onKeyDown: function ( e ) {
+				el( TextControl, { value: q, placeholder: __( 'Search or type a URL…', 'shapeblock' ), onChange: setQ, autoComplete: 'off', onKeyDown: function ( e ) {
 					if ( 'Enter' === e.key ) {
 						e.preventDefault();
 						if ( isUrl ) { useTypedUrl(); }
 						else if ( results.length ) { props.onPick( { url: results[0].url, title: results[0].title, id: results[0].id, type: results[0].type } ); }
 					}
 				} } ),
-				isUrl ? el( Button, { className: 'shapeblock-menu-add-go', icon: 'arrow-right-alt2', label: __( 'Use URL', TD ), onClick: useTypedUrl } ) : null
+				isUrl ? el( Button, { className: 'shapeblock-menu-add-go', icon: 'arrow-right-alt2', label: __( 'Use URL', 'shapeblock' ), onClick: useTypedUrl } ) : null
 			),
 			el( 'ul', { className: 'shapeblock-menu-add-results' }, rows )
 		);
@@ -435,7 +433,7 @@
 					className: 'shapeblock-menu-linkpicker-btn',
 					onClick: t.onToggle,
 					'aria-expanded': t.isOpen
-				}, props.url ? props.url : __( 'Set link…', TD ) );
+				}, props.url ? props.url : __( 'Set link…', 'shapeblock' ) );
 			},
 			renderContent: function ( c ) {
 				return el( AddMenuSearch, { url: props.url, onPick: function ( v ) { props.onPick( v || {} ); c.onClose(); } } );
@@ -469,7 +467,7 @@
 				el( 'span', {}, label ),
 				el( 'span', { style: { display: 'flex', alignItems: 'center', gap: '6px' } },
 					el( 'input', { type: 'color', value: value || '#000000', onChange: function ( e ) { onChange( e.target.value ); } } ),
-					value ? el( Button, { variant: 'link', onClick: function () { onChange( '' ); } }, __( 'Clear', TD ) ) : null
+					value ? el( Button, { variant: 'link', onClick: function () { onChange( '' ); } }, __( 'Clear', 'shapeblock' ) ) : null
 				)
 			);
 		}
@@ -516,7 +514,7 @@
 						);
 					}
 				} ),
-				value ? el( Button, { variant: 'link', isSmall: true, onClick: function () { onChange( '' ); } }, __( 'Clear', TD ) ) : null
+				value ? el( Button, { variant: 'link', isSmall: true, onClick: function () { onChange( '' ); } }, __( 'Clear', 'shapeblock' ) ) : null
 			)
 		);
 	}
@@ -697,8 +695,8 @@
 					.catch( function () { setLoadingMenu( false ); } );
 			}
 
-			function blankItem() { return { label: __( 'New Item', TD ), url: '#', description: '', newTab: false, children: [] }; }
-			function blankChild() { return { label: __( 'Sub Item', TD ), url: '#', description: '', newTab: false, children: [] }; }
+			function blankItem() { return { label: __( 'New Item', 'shapeblock' ), url: '#', description: '', newTab: false, children: [] }; }
+			function blankChild() { return { label: __( 'Sub Item', 'shapeblock' ), url: '#', description: '', newTab: false, children: [] }; }
 
 			// Strip HTML tags for plain-text contexts ( inspector text fields, panel titles ).
 			function shapeblockStripTags( s ) { return String( s == null ? '' : s ).replace( /<[^>]*>/g, '' ); }
@@ -708,7 +706,7 @@
 				var n = clone();
 				var it = blankItem();
 				it.url = v.url || '#';
-				it.label = v.title || __( 'New Item', TD );
+				it.label = v.title || __( 'New Item', 'shapeblock' );
 				it.objectId = v.id || 0;
 				it.objectType = v.type || '';
 				n.push( it );
@@ -779,14 +777,14 @@
 
 				var iconField = el( 'div', { key: 'icon', className: 'shapeblock-menu-field' },
 					el( ToggleControl, {
-						label: __( 'Icon', TD ),
+						label: __( 'Icon', 'shapeblock' ),
 						checked: 'none' !== shapeblockItemType( node ),
 						onChange: function ( v ) { updateAt( path, { iconType: v ? ( ( node.iconType && 'none' !== node.iconType ) ? node.iconType : 'icon' ) : 'none' } ); }
 					} ),
 					( 'none' !== shapeblockItemType( node ) ) ? el( SelectControl, {
-						label: __( 'Type', TD ),
+						label: __( 'Type', 'shapeblock' ),
 						value: 'image' === shapeblockItemType( node ) ? 'image' : 'icon',
-						options: [ { label: __( 'Icon', TD ), value: 'icon' }, { label: __( 'Image', TD ), value: 'image' } ],
+						options: [ { label: __( 'Icon', 'shapeblock' ), value: 'icon' }, { label: __( 'Image', 'shapeblock' ), value: 'image' } ],
 						onChange: function ( v ) { updateAt( path, { iconType: v } ); }
 					} ) : null,
 					( 'icon' === shapeblockItemType( node ) ) ? el( 'div', { className: 'shapeblock-menu-icon-picker' },
@@ -805,46 +803,46 @@
 								value: node.iconId,
 								onSelect: function ( m ) { updateAt( path, { iconUrl: m.url, iconId: m.id } ); },
 								render: function ( o ) {
-									return el( Button, { variant: 'secondary', onClick: o.open }, node.iconUrl ? __( 'Replace', TD ) : __( 'Upload image', TD ) );
+									return el( Button, { variant: 'secondary', onClick: o.open }, node.iconUrl ? __( 'Replace', 'shapeblock' ) : __( 'Upload image', 'shapeblock' ) );
 								}
 							} )
 						),
-						node.iconUrl ? el( Button, { variant: 'link', isDestructive: true, onClick: function () { updateAt( path, { iconUrl: '', iconId: 0 } ); } }, __( 'Remove', TD ) ) : null
+						node.iconUrl ? el( Button, { variant: 'link', isDestructive: true, onClick: function () { updateAt( path, { iconUrl: '', iconId: 0 } ); } }, __( 'Remove', 'shapeblock' ) ) : null
 					) : null,
 					( 'none' !== shapeblockItemType( node ) ) ? el( SelectControl, {
-						label: __( 'Icon Side', TD ),
+						label: __( 'Icon Side', 'shapeblock' ),
 						value: 'left' === node.iconSide ? 'left' : 'right',
-						options: [ { label: __( 'Right', TD ), value: 'right' }, { label: __( 'Left', TD ), value: 'left' } ],
+						options: [ { label: __( 'Right', 'shapeblock' ), value: 'right' }, { label: __( 'Left', 'shapeblock' ), value: 'left' } ],
 						onChange: function ( v ) { updateAt( path, { iconSide: v } ); }
 					} ) : null
 				);
 
 				var fields = [
 					// A small badge on nested editors so it is always clear which level you are editing.
-					isTop ? null : el( 'div', { key: 'badge', className: 'shapeblock-menu-level-badge' }, sprintf( __( 'Level %d sub-item', TD ), level ) ),
-					el( TextControl, { key: 'label', label: isTop ? __( 'Label', TD ) : sprintf( __( 'Level %d label', TD ), level ), value: shapeblockStripTags( node.label || '' ), onChange: function ( v ) { updateAt( path, { label: v } ); } } ),
+					isTop ? null : el( 'div', { key: 'badge', className: 'shapeblock-menu-level-badge' }, sprintf( __( 'Level %d sub-item', 'shapeblock' ), level ) ),
+					el( TextControl, { key: 'label', label: isTop ? __( 'Label', 'shapeblock' ) : sprintf( __( 'Level %d label', 'shapeblock' ), level ), value: shapeblockStripTags( node.label || '' ), onChange: function ( v ) { updateAt( path, { label: v } ); } } ),
 					el( 'div', { key: 'link', className: 'shapeblock-menu-field' },
-						el( 'div', { className: 'shapeblock-menu-linkfield-label' }, __( 'Link', TD ) ),
+						el( 'div', { className: 'shapeblock-menu-linkfield-label' }, __( 'Link', 'shapeblock' ) ),
 						el( LinkPicker, { url: node.url, onPick: function ( v ) {
 							// Only the link changes here — the label is edited separately.
 							updateAt( path, { url: v.url || '', objectId: v.id || 0, objectType: v.type || '' } );
 						} } )
 					),
-					el( TextControl, { key: 'desc', label: __( 'Description', TD ), value: node.description || '', onChange: function ( v ) { updateAt( path, { description: v } ); } } ),
-					el( ToggleControl, { key: 'newtab', label: __( 'Open in new tab', TD ), checked: !! node.newTab, onChange: function ( v ) { updateAt( path, { newTab: v } ); } } ),
+					el( TextControl, { key: 'desc', label: __( 'Description', 'shapeblock' ), value: node.description || '', onChange: function ( v ) { updateAt( path, { description: v } ); } } ),
+					el( ToggleControl, { key: 'newtab', label: __( 'Open in new tab', 'shapeblock' ), checked: !! node.newTab, onChange: function ( v ) { updateAt( path, { newTab: v } ); } } ),
 					iconField,
 					// --- Nested dropdown items ( unlimited depth ). The heading names the level being added,
 					//     so the tree is easy to follow: Level 2 = dropdown, Level 3, Level 4, and so on. ---
 					el( 'div', { key: 'subs', className: 'shapeblock-menu-subsection' },
-						el( 'div', { className: 'shapeblock-menu-section-label' }, sprintf( __( 'Level %d dropdown items', TD ), subLvl ) ),
+						el( 'div', { className: 'shapeblock-menu-section-label' }, sprintf( __( 'Level %d dropdown items', 'shapeblock' ), subLvl ) ),
 						childEditors,
-						el( Button, { variant: 'secondary', className: 'shapeblock-menu-add-child', onClick: function () { addChildAt( path, blankChild() ); } }, sprintf( __( '+ Add Level %d item', TD ), subLvl ) )
+						el( Button, { variant: 'secondary', className: 'shapeblock-menu-add-child', onClick: function () { addChildAt( path, blankChild() ); } }, sprintf( __( '+ Add Level %d item', 'shapeblock' ), subLvl ) )
 					),
 					// --- Actions ---
 					el( 'div', { key: 'actions', className: 'shapeblock-menu-item-actions' },
 						el( Button, { variant: 'tertiary', onClick: function () { moveAt( path, -1 ); }, disabled: 0 === idx }, '↑' ),
 						el( Button, { variant: 'tertiary', onClick: function () { moveAt( path, 1 ); }, disabled: idx === siblingCount - 1 }, '↓' ),
-						el( Button, { isDestructive: true, variant: 'link', onClick: function () { removeAt( path ); } }, isTop ? __( 'Remove item', TD ) : __( 'Remove sub-item', TD ) )
+						el( Button, { isDestructive: true, variant: 'link', onClick: function () { removeAt( path ); } }, isTop ? __( 'Remove item', 'shapeblock' ) : __( 'Remove sub-item', 'shapeblock' ) )
 					)
 				];
 
@@ -852,7 +850,7 @@
 					return el( PanelBody, {
 						key: 'i' + idx,
 						className: 'shapeblock-menu-item-panel',
-						title: shapeblockStripTags( node.label || '' ).trim() || __( 'Untitled', TD ),
+						title: shapeblockStripTags( node.label || '' ).trim() || __( 'Untitled', 'shapeblock' ),
 						initialOpen: false
 					}, fields );
 				}
@@ -870,7 +868,7 @@
 					className: 'shapeblock-menu-additem-dropdown',
 					popoverProps: { className: 'shapeblock-menu-add-pop', placement: 'bottom-start' },
 					renderToggle: function ( t ) {
-						return el( Button, { variant: 'primary', onClick: t.onToggle, 'aria-expanded': t.isOpen }, __( '+ Add Item', TD ) );
+						return el( Button, { variant: 'primary', onClick: t.onToggle, 'aria-expanded': t.isOpen }, __( '+ Add Item', 'shapeblock' ) );
 					},
 					renderContent: function ( c ) {
 						return el( AddMenuSearch, { onPick: function ( v ) { addLinkItem( v ); c.onClose(); } } );
@@ -881,44 +879,44 @@
 			// Import a menu built in the Dashboard ( Appearance → Menus ) into this block.
 			var wpMenuPicker = el(
 				PanelBody,
-				{ title: __( 'Import from WordPress Menu', TD ), initialOpen: false },
+				{ title: __( 'Import from WordPress Menu', 'shapeblock' ), initialOpen: false },
 				wpMenus.length ? el( SelectControl, {
-					label: __( 'Menu', TD ),
+					label: __( 'Menu', 'shapeblock' ),
 					value: selMenu,
-					options: [ { label: __( '— Select a menu —', TD ), value: '' } ].concat(
+					options: [ { label: __( '— Select a menu —', 'shapeblock' ), value: '' } ].concat(
 						wpMenus.map( function ( m ) { return { label: shapeblockStripTags( ( m.name || '' ) ) || ( '#' + m.id ), value: String( m.id ) }; } )
 					),
 					onChange: setSelMenu
-				} ) : el( 'p', { className: 'shapeblock-menu-section-label' }, __( 'No menus found. Create one under Appearance → Menus.', TD ) ),
+				} ) : el( 'p', { className: 'shapeblock-menu-section-label' }, __( 'No menus found. Create one under Appearance → Menus.', 'shapeblock' ) ),
 				el( Button, {
 					variant: 'secondary',
 					disabled: ! selMenu || loadingMenu,
 					onClick: function () { shapeblockLoadWpMenu( selMenu ); }
-				}, loadingMenu ? __( 'Loading…', TD ) : __( 'Load menu items', TD ) ),
-				el( 'p', { className: 'shapeblock-menu-section-label', style: { marginTop: '8px' } }, __( 'This replaces the items above with the selected menu.', TD ) )
+				}, loadingMenu ? __( 'Loading…', 'shapeblock' ) : __( 'Load menu items', 'shapeblock' ) ),
+				el( 'p', { className: 'shapeblock-menu-section-label', style: { marginTop: '8px' } }, __( 'This replaces the items above with the selected menu.', 'shapeblock' ) )
 			);
 
 			// Dropdown settings ( always available in the Settings tab ).
 			var dropdownPanel = el(
 				PanelBody,
-				{ title: __( 'Dropdown', TD ), initialOpen: false },
+				{ title: __( 'Dropdown', 'shapeblock' ), initialOpen: false },
 				shapeblockToggleGroup( {
-					label: __( 'Submenu Visibility', TD ),
-					help: __( 'How the dropdown opens on the live site ( and in this preview ). Edit dropdown items from each item panel under Menu.', TD ),
+					label: __( 'Submenu Visibility', 'shapeblock' ),
+					help: __( 'How the dropdown opens on the live site ( and in this preview ). Edit dropdown items from each item panel under Menu.', 'shapeblock' ),
 					value: 'click' === attributes.submenuTrigger ? 'click' : 'hover',
-					options: [ { label: __( 'Hover', TD ), value: 'hover' }, { label: __( 'Click', TD ), value: 'click' } ],
+					options: [ { label: __( 'Hover', 'shapeblock' ), value: 'hover' }, { label: __( 'Click', 'shapeblock' ), value: 'click' } ],
 					onChange: function ( v ) { setAttributes( { submenuTrigger: v } ); }
 				} ),
 				shapeblockToggleGroup( {
-					label: __( 'Dropdown Icon', TD ),
-					help: __( 'Indicator shown next to items that have a dropdown.', TD ),
+					label: __( 'Dropdown Icon', 'shapeblock' ),
+					help: __( 'Indicator shown next to items that have a dropdown.', 'shapeblock' ),
 					value: attributes.dropdownIcon || 'caret',
 					options: [
-						{ label: __( 'Caret', TD ), value: 'caret' },
-						{ label: __( 'Chevron', TD ), value: 'chevron' },
-						{ label: __( 'Arrow', TD ), value: 'arrow' },
-						{ label: __( 'Plus', TD ), value: 'plus' },
-						{ label: __( 'None', TD ), value: 'none' }
+						{ label: __( 'Caret', 'shapeblock' ), value: 'caret' },
+						{ label: __( 'Chevron', 'shapeblock' ), value: 'chevron' },
+						{ label: __( 'Arrow', 'shapeblock' ), value: 'arrow' },
+						{ label: __( 'Plus', 'shapeblock' ), value: 'plus' },
+						{ label: __( 'None', 'shapeblock' ), value: 'none' }
 					],
 					onChange: function ( v ) { setAttributes( { dropdownIcon: v } ); }
 				} )
@@ -937,25 +935,25 @@
 			}
 
 			var orientationCtrl = useIconGroups ? el( ToggleGroupControl, {
-				label: __( 'Orientation', TD ),
+				label: __( 'Orientation', 'shapeblock' ),
 				value: 'vertical' === attributes.layout ? 'vertical' : 'horizontal',
 				isBlock: true,
 				onChange: function ( v ) { setAttributes( { layout: v } ); }
 			},
-				el( ToggleGroupOption, { value: 'horizontal', icon: SHAPEBLOCK_UI_ICONS.horizontal, label: __( 'Horizontal', TD ) } ),
-				el( ToggleGroupOption, { value: 'vertical', icon: SHAPEBLOCK_UI_ICONS.vertical, label: __( 'Vertical', TD ) } )
-			) : el( SelectControl, { label: __( 'Orientation', TD ), value: attributes.layout, options: [ { label: __( 'Horizontal', TD ), value: 'horizontal' }, { label: __( 'Vertical', TD ), value: 'vertical' } ], onChange: function ( v ) { setAttributes( { layout: v } ); } } );
+				el( ToggleGroupOption, { value: 'horizontal', icon: SHAPEBLOCK_UI_ICONS.horizontal, label: __( 'Horizontal', 'shapeblock' ) } ),
+				el( ToggleGroupOption, { value: 'vertical', icon: SHAPEBLOCK_UI_ICONS.vertical, label: __( 'Vertical', 'shapeblock' ) } )
+			) : el( SelectControl, { label: __( 'Orientation', 'shapeblock' ), value: attributes.layout, options: [ { label: __( 'Horizontal', 'shapeblock' ), value: 'horizontal' }, { label: __( 'Vertical', 'shapeblock' ), value: 'vertical' } ], onChange: function ( v ) { setAttributes( { layout: v } ); } } );
 
 			var justifyCtrl = useIconGroups ? el( ToggleGroupControl, {
-				label: __( 'Justification', TD ),
+				label: __( 'Justification', 'shapeblock' ),
 				value: attributes.alignment || 'left',
 				isBlock: true,
 				onChange: function ( v ) { setAttributes( { alignment: v } ); }
 			},
-				el( ToggleGroupOption, { value: 'left', icon: SHAPEBLOCK_UI_ICONS.alignLeft, label: __( 'Left', TD ) } ),
-				el( ToggleGroupOption, { value: 'center', icon: SHAPEBLOCK_UI_ICONS.alignCenter, label: __( 'Center', TD ) } ),
-				el( ToggleGroupOption, { value: 'right', icon: SHAPEBLOCK_UI_ICONS.alignRight, label: __( 'Right', TD ) } )
-			) : el( SelectControl, { label: __( 'Justification', TD ), value: attributes.alignment, options: [ { label: __( 'Left', TD ), value: 'left' }, { label: __( 'Center', TD ), value: 'center' }, { label: __( 'Right', TD ), value: 'right' } ], onChange: function ( v ) { setAttributes( { alignment: v } ); } } );
+				el( ToggleGroupOption, { value: 'left', icon: SHAPEBLOCK_UI_ICONS.alignLeft, label: __( 'Left', 'shapeblock' ) } ),
+				el( ToggleGroupOption, { value: 'center', icon: SHAPEBLOCK_UI_ICONS.alignCenter, label: __( 'Center', 'shapeblock' ) } ),
+				el( ToggleGroupOption, { value: 'right', icon: SHAPEBLOCK_UI_ICONS.alignRight, label: __( 'Right', 'shapeblock' ) } )
+			) : el( SelectControl, { label: __( 'Justification', 'shapeblock' ), value: attributes.alignment, options: [ { label: __( 'Left', 'shapeblock' ), value: 'left' }, { label: __( 'Center', 'shapeblock' ), value: 'center' }, { label: __( 'Right', 'shapeblock' ), value: 'right' } ], onChange: function ( v ) { setAttributes( { alignment: v } ); } } );
 
 			// Item Gap — responsive ( per-device string attributes; itemGap is the desktop value ).
 			// Per-device gap stored in separate string attributes ( they persist reliably ).
@@ -968,7 +966,7 @@
 				setAttributes( patch );
 			}
 			var gapDevices = el( 'div', { className: 'shapeblock-menu-devices' },
-				[ [ 'desktop', 'dashicons-desktop', __( 'Desktop', TD ) ], [ 'tablet', 'dashicons-tablet', __( 'Tablet', TD ) ], [ 'mobile', 'dashicons-smartphone', __( 'Mobile', TD ) ] ].map( function ( d ) {
+				[ [ 'desktop', 'dashicons-desktop', __( 'Desktop', 'shapeblock' ) ], [ 'tablet', 'dashicons-tablet', __( 'Tablet', 'shapeblock' ) ], [ 'mobile', 'dashicons-smartphone', __( 'Mobile', 'shapeblock' ) ] ].map( function ( d ) {
 					return el( Button, {
 						key: d[0],
 						label: d[2],
@@ -979,13 +977,13 @@
 				} )
 			);
 			var gapToggle = shapeblockToggleGroup( {
-				label: __( 'Item Gap', TD ),
+				label: __( 'Item Gap', 'shapeblock' ),
 				value: gapPreset,
-				options: [ { label: __( 'Def', TD ), value: '' }, { label: 'S', value: '10px' }, { label: 'M', value: '20px' }, { label: 'L', value: '32px' }, { label: __( 'Custom', TD ), value: 'custom' } ],
+				options: [ { label: __( 'Def', 'shapeblock' ), value: '' }, { label: 'S', value: '10px' }, { label: 'M', value: '20px' }, { label: 'L', value: '32px' }, { label: __( 'Custom', 'shapeblock' ), value: 'custom' } ],
 				onChange: function ( v ) { setGapDevice( 'custom' === v ? ( 'custom' === gapPreset ? gapDevVal : '24px' ) : v ); }
 			} );
 			var gapCustom = ( 'custom' === gapPreset ) ? el( RangeControl, {
-				label: __( 'Custom Gap (px)', TD ),
+				label: __( 'Custom Gap (px)', 'shapeblock' ),
 				value: parseInt( gapDevVal, 10 ) || 24,
 				min: 0,
 				max: 80,
@@ -995,14 +993,14 @@
 
 			var layoutPanel = el(
 				PanelBody,
-				{ title: __( 'Menu Layout', TD ), initialOpen: true },
+				{ title: __( 'Menu Layout', 'shapeblock' ), initialOpen: true },
 				orientationCtrl,
 				justifyCtrl,
-				el( 'div', { className: 'shapeblock-menu-linkfield-label', style: { marginTop: '4px' } }, __( 'Item Gap', TD ) ),
+				el( 'div', { className: 'shapeblock-menu-linkfield-label', style: { marginTop: '4px' } }, __( 'Item Gap', 'shapeblock' ) ),
 				gapDevices,
 				gapToggle,
 				gapCustom,
-				el( ToggleControl, { label: __( 'Allow to wrap to multiple lines', TD ), checked: false !== attributes.menuWrap, onChange: function ( v ) { setAttributes( { menuWrap: v } ); } } )
+				el( ToggleControl, { label: __( 'Allow to wrap to multiple lines', 'shapeblock' ), checked: false !== attributes.menuWrap, onChange: function ( v ) { setAttributes( { menuWrap: v } ); } } )
 			);
 
 			// Font Size — responsive ( per-device: fontSize=desktop, fontSizeTablet, fontSizeMobile ).
@@ -1015,7 +1013,7 @@
 				setAttributes( patch );
 			}
 			var fontDevices = el( 'div', { className: 'shapeblock-menu-devices' },
-				[ [ 'desktop', 'dashicons-desktop', __( 'Desktop', TD ) ], [ 'tablet', 'dashicons-tablet', __( 'Tablet', TD ) ], [ 'mobile', 'dashicons-smartphone', __( 'Mobile', TD ) ] ].map( function ( d ) {
+				[ [ 'desktop', 'dashicons-desktop', __( 'Desktop', 'shapeblock' ) ], [ 'tablet', 'dashicons-tablet', __( 'Tablet', 'shapeblock' ) ], [ 'mobile', 'dashicons-smartphone', __( 'Mobile', 'shapeblock' ) ] ].map( function ( d ) {
 					return el( Button, {
 						key: d[0],
 						label: d[2],
@@ -1026,13 +1024,13 @@
 				} )
 			);
 			var fontToggle = shapeblockToggleGroup( {
-				label: __( 'Font Size', TD ),
+				label: __( 'Font Size', 'shapeblock' ),
 				value: fontPreset,
-				options: [ { label: __( 'Def', TD ), value: '' }, { label: 'S', value: '14px' }, { label: 'M', value: '16px' }, { label: 'L', value: '18px' }, { label: 'XL', value: '22px' }, { label: __( 'Custom', TD ), value: 'custom' } ],
+				options: [ { label: __( 'Def', 'shapeblock' ), value: '' }, { label: 'S', value: '14px' }, { label: 'M', value: '16px' }, { label: 'L', value: '18px' }, { label: 'XL', value: '22px' }, { label: __( 'Custom', 'shapeblock' ), value: 'custom' } ],
 				onChange: function ( v ) { setFontDevice( 'custom' === v ? ( 'custom' === fontPreset ? fontDevVal : '20px' ) : v ); }
 			} );
 			var fontCustom = ( 'custom' === fontPreset ) ? el( RangeControl, {
-				label: __( 'Custom Size (px)', TD ),
+				label: __( 'Custom Size (px)', 'shapeblock' ),
 				value: parseInt( fontDevVal, 10 ) || 16,
 				min: 8,
 				max: 72,
@@ -1042,27 +1040,27 @@
 
 			var typographyPanel = el(
 				PanelBody,
-				{ title: __( 'Typography', TD ), initialOpen: false },
+				{ title: __( 'Typography', 'shapeblock' ), initialOpen: false },
 				el( SelectControl, {
-					label: __( 'Font Family', TD ),
+					label: __( 'Font Family', 'shapeblock' ),
 					value: attributes.fontFamily || '',
 					options: shapeblockFontOptions(),
 					onChange: function ( v ) { setAttributes( { fontFamily: v } ); }
 				} ),
-				el( 'div', { className: 'shapeblock-menu-linkfield-label', style: { marginTop: '4px' } }, __( 'Font Size', TD ) ),
+				el( 'div', { className: 'shapeblock-menu-linkfield-label', style: { marginTop: '4px' } }, __( 'Font Size', 'shapeblock' ) ),
 				fontDevices,
 				fontToggle,
 				fontCustom,
 				shapeblockToggleGroup( {
-					label: __( 'Font Weight', TD ),
+					label: __( 'Font Weight', 'shapeblock' ),
 					value: attributes.fontWeight || '',
-					options: [ { label: __( 'Def', TD ), value: '' }, { label: '400', value: '400' }, { label: '500', value: '500' }, { label: '600', value: '600' }, { label: '700', value: '700' } ],
+					options: [ { label: __( 'Def', 'shapeblock' ), value: '' }, { label: '400', value: '400' }, { label: '500', value: '500' }, { label: '600', value: '600' }, { label: '700', value: '700' } ],
 					onChange: function ( v ) { setAttributes( { fontWeight: v } ); }
 				} ),
 				shapeblockToggleGroup( {
-					label: __( 'Text Transform', TD ),
+					label: __( 'Text Transform', 'shapeblock' ),
 					value: attributes.textTransform || '',
-					options: [ { label: __( 'Def', TD ), value: '' }, { label: 'AB', value: 'uppercase' }, { label: 'ab', value: 'lowercase' }, { label: 'Ab', value: 'capitalize' }, { label: __( 'None', TD ), value: 'none' } ],
+					options: [ { label: __( 'Def', 'shapeblock' ), value: '' }, { label: 'AB', value: 'uppercase' }, { label: 'ab', value: 'lowercase' }, { label: 'Ab', value: 'capitalize' }, { label: __( 'None', 'shapeblock' ), value: 'none' } ],
 					onChange: function ( v ) { setAttributes( { textTransform: v } ); }
 				} )
 			);
@@ -1071,7 +1069,7 @@
 			function shapeblockColorPicker( attrKey ) {
 				var val = attributes[ attrKey ] || '';
 				var onSet = function ( v ) { var p = {}; p[ attrKey ] = v || ''; setAttributes( p ); };
-				return ColorPalette ? el( ColorPalette, { value: val, onChange: onSet } ) : colorRow( __( 'Color', TD ), val, onSet );
+				return ColorPalette ? el( ColorPalette, { value: val, onChange: onSet } ) : colorRow( __( 'Color', 'shapeblock' ), val, onSet );
 			}
 			// A background picker offering BOTH a solid colour and a gradient. Solid and gradient are stored
 			// in SEPARATE attributes ( like core ); each handler writes only its own key so neither clears
@@ -1109,42 +1107,42 @@
 
 			var colorsPanel = el(
 				PanelBody,
-				{ title: __( 'Colors', TD ), initialOpen: true },
+				{ title: __( 'Colors', 'shapeblock' ), initialOpen: true },
 				// --- Item text colour ---
 				shapeblockToggleGroup( {
-					label: __( 'Item Text', TD ),
+					label: __( 'Item Text', 'shapeblock' ),
 					value: colorState,
-					options: [ { label: __( 'Text', TD ), value: 'text' }, { label: __( 'Hover', TD ), value: 'hover' }, { label: __( 'Active', TD ), value: 'active' } ],
+					options: [ { label: __( 'Text', 'shapeblock' ), value: 'text' }, { label: __( 'Hover', 'shapeblock' ), value: 'hover' }, { label: __( 'Active', 'shapeblock' ), value: 'active' } ],
 					onChange: setColorState
 				} ),
 				shapeblockColorPicker( colorAttrKey ),
 				// --- Item background colour ---
-				shapeblockColorLabel( __( 'Item Background', TD ) ),
+				shapeblockColorLabel( __( 'Item Background', 'shapeblock' ) ),
 				shapeblockToggleGroup( {
 					value: bgState,
-					options: [ { label: __( 'Normal', TD ), value: 'normal' }, { label: __( 'Hover', TD ), value: 'hover' }, { label: __( 'Active', TD ), value: 'active' } ],
+					options: [ { label: __( 'Normal', 'shapeblock' ), value: 'normal' }, { label: __( 'Hover', 'shapeblock' ), value: 'hover' }, { label: __( 'Active', 'shapeblock' ), value: 'active' } ],
 					onChange: setBgState
 				} ),
 				shapeblockBgPicker( bgAttrKey, bgGradKey ),
 				// --- Description colour ---
-				shapeblockColorLabel( __( 'Description Color', TD ) ),
+				shapeblockColorLabel( __( 'Description Color', 'shapeblock' ) ),
 				shapeblockColorPicker( 'descriptionColor' )
 			);
 
 			// Dropdown colours: their own collapsible panel under the Style tab.
 			var dropdownColorsPanel = el(
 				PanelBody,
-				{ title: __( 'Dropdown Colors', TD ), initialOpen: false },
-				shapeblockColorLabel( __( 'Dropdown Background', TD ) ),
+				{ title: __( 'Dropdown Colors', 'shapeblock' ), initialOpen: false },
+				shapeblockColorLabel( __( 'Dropdown Background', 'shapeblock' ) ),
 				shapeblockBgPicker( 'dropdownBg', 'dropdownBgGradient' ),
-				shapeblockColorLabel( __( 'Dropdown Item Text', TD ) ),
+				shapeblockColorLabel( __( 'Dropdown Item Text', 'shapeblock' ) ),
 				shapeblockToggleGroup( {
 					value: ddState,
-					options: [ { label: __( 'Text', TD ), value: 'text' }, { label: __( 'Hover', TD ), value: 'hover' } ],
+					options: [ { label: __( 'Text', 'shapeblock' ), value: 'text' }, { label: __( 'Hover', 'shapeblock' ), value: 'hover' } ],
 					onChange: setDdState
 				} ),
 				shapeblockColorPicker( ddTextKey ),
-				shapeblockColorLabel( __( 'Dropdown Item Hover Background', TD ) ),
+				shapeblockColorLabel( __( 'Dropdown Item Hover Background', 'shapeblock' ) ),
 				shapeblockBgPicker( 'dropdownHoverBg', 'dropdownHoverBgGradient' )
 			);
 
@@ -1152,20 +1150,20 @@
 			// only when the mobile drawer is active, so the mobile menu can be styled separately.
 			var mobilePanel = el(
 				PanelBody,
-				{ title: __( 'Mobile Colors', TD ), initialOpen: false },
-				( 'off' !== mobileMode ) ? shapeblockColorLabel( __( 'Drawer Background', TD ) ) : null,
+				{ title: __( 'Mobile Colors', 'shapeblock' ), initialOpen: false },
+				( 'off' !== mobileMode ) ? shapeblockColorLabel( __( 'Drawer Background', 'shapeblock' ) ) : null,
 				( 'off' !== mobileMode ) ? shapeblockBgPicker( 'drawerBg', 'drawerBgGradient' ) : null,
-				shapeblockColorLabel( __( 'Item Text', TD ) ),
+				shapeblockColorLabel( __( 'Item Text', 'shapeblock' ) ),
 				shapeblockToggleGroup( {
 					value: mTextState,
-					options: [ { label: __( 'Text', TD ), value: 'text' }, { label: __( 'Hover', TD ), value: 'hover' }, { label: __( 'Active', TD ), value: 'active' } ],
+					options: [ { label: __( 'Text', 'shapeblock' ), value: 'text' }, { label: __( 'Hover', 'shapeblock' ), value: 'hover' }, { label: __( 'Active', 'shapeblock' ), value: 'active' } ],
 					onChange: setMTextState
 				} ),
 				shapeblockColorPicker( mTextKey ),
-				shapeblockColorLabel( __( 'Item Background', TD ) ),
+				shapeblockColorLabel( __( 'Item Background', 'shapeblock' ) ),
 				shapeblockToggleGroup( {
 					value: mBgState,
-					options: [ { label: __( 'Normal', TD ), value: 'normal' }, { label: __( 'Hover', TD ), value: 'hover' }, { label: __( 'Active', TD ), value: 'active' } ],
+					options: [ { label: __( 'Normal', 'shapeblock' ), value: 'normal' }, { label: __( 'Hover', 'shapeblock' ), value: 'hover' }, { label: __( 'Active', 'shapeblock' ), value: 'active' } ],
 					onChange: setMBgState
 				} ),
 				shapeblockBgPicker( mBgKey, mBgGradKey )
@@ -1174,21 +1172,21 @@
 			// ---- Settings tab: when the hamburger / drawer replaces the full menu ----
 			var mobileMenuPanel = el(
 				PanelBody,
-				{ title: __( 'Mobile Menu', TD ), initialOpen: false },
+				{ title: __( 'Mobile Menu', 'shapeblock' ), initialOpen: false },
 				shapeblockToggleGroup( {
-					label: __( 'Overlay Visibility', TD ),
-					help: __( 'Off: full menu always. Mobile: hamburger below the breakpoint. Always: hamburger on every screen.', TD ),
+					label: __( 'Overlay Visibility', 'shapeblock' ),
+					help: __( 'Off: full menu always. Mobile: hamburger below the breakpoint. Always: hamburger on every screen.', 'shapeblock' ),
 					value: mobileMode,
 					options: [
-						{ label: __( 'Off', TD ), value: 'off' },
-						{ label: __( 'Mobile', TD ), value: 'mobile' },
-						{ label: __( 'Always', TD ), value: 'always' }
+						{ label: __( 'Off', 'shapeblock' ), value: 'off' },
+						{ label: __( 'Mobile', 'shapeblock' ), value: 'mobile' },
+						{ label: __( 'Always', 'shapeblock' ), value: 'always' }
 					],
 					onChange: function ( v ) { setAttributes( { mobileMode: v, mobileEnable: 'off' !== v } ); }
 				} ),
 				( 'mobile' === mobileMode ) ? el( RangeControl, {
-					label: __( 'Mobile breakpoint (px)', TD ),
-					help: __( 'Below this screen width the hamburger + off-canvas drawer show.', TD ),
+					label: __( 'Mobile breakpoint (px)', 'shapeblock' ),
+					help: __( 'Below this screen width the hamburger + off-canvas drawer show.', 'shapeblock' ),
 					value: attributes.mobileBreakpoint || 782,
 					min: 320,
 					max: 1200,
@@ -1200,15 +1198,15 @@
 			// ---- Layout tab: drawer side / width and hamburger position ( only while the overlay is on ) ----
 			var responsivePanel = ( 'off' !== mobileMode ) ? el(
 				PanelBody,
-				{ title: __( 'Responsive', TD ), initialOpen: false },
+				{ title: __( 'Responsive', 'shapeblock' ), initialOpen: false },
 				shapeblockToggleGroup( {
-					label: __( 'Drawer opens from', TD ),
+					label: __( 'Drawer opens from', 'shapeblock' ),
 					value: 'left' === attributes.drawerSide ? 'left' : 'right',
-					options: [ { label: __( 'Right', TD ), value: 'right' }, { label: __( 'Left', TD ), value: 'left' } ],
+					options: [ { label: __( 'Right', 'shapeblock' ), value: 'right' }, { label: __( 'Left', 'shapeblock' ), value: 'left' } ],
 					onChange: function ( v ) { setAttributes( { drawerSide: v } ); }
 				} ),
 				el( RangeControl, {
-					label: __( 'Drawer width (px)', TD ),
+					label: __( 'Drawer width (px)', 'shapeblock' ),
 					value: attributes.drawerWidth || 320,
 					min: 240,
 					max: 480,
@@ -1219,9 +1217,9 @@
 				// Per device: toggleAlign ( desktop ), toggleAlignTablet, toggleAlignMobile.
 				// Tablet / Mobile left empty inherit the next larger screen.
 				el( 'div', { className: 'shapeblock-menu-toggle-align' },
-					el( 'div', { className: 'shapeblock-menu-linkfield-label', style: { marginTop: '4px' } }, __( 'Hamburger Alignment', TD ) ),
+					el( 'div', { className: 'shapeblock-menu-linkfield-label', style: { marginTop: '4px' } }, __( 'Hamburger Alignment', 'shapeblock' ) ),
 					el( 'div', { className: 'shapeblock-menu-devices' },
-						[ [ 'desktop', 'dashicons-desktop', __( 'Desktop', TD ) ], [ 'tablet', 'dashicons-tablet', __( 'Tablet', TD ) ], [ 'mobile', 'dashicons-smartphone', __( 'Mobile', TD ) ] ].map( function ( d ) {
+						[ [ 'desktop', 'dashicons-desktop', __( 'Desktop', 'shapeblock' ) ], [ 'tablet', 'dashicons-tablet', __( 'Tablet', 'shapeblock' ) ], [ 'mobile', 'dashicons-smartphone', __( 'Mobile', 'shapeblock' ) ] ].map( function ( d ) {
 							return el( Button, {
 								key: d[0],
 								label: d[2],
@@ -1232,24 +1230,24 @@
 						} )
 					),
 					useIconGroups ? el( ToggleGroupControl, {
-						label: __( 'Hamburger Alignment', TD ),
+						label: __( 'Hamburger Alignment', 'shapeblock' ),
 						hideLabelFromVision: true,
 						value: attributes[ toggleAlignKey ] || ( 'desktop' === device ? 'left' : undefined ),
 						isBlock: true,
 						isDeselectable: 'desktop' !== device,
 						onChange: function ( v ) { setToggleAlign( v ); }
 					},
-						el( ToggleGroupOption, { value: 'left', icon: SHAPEBLOCK_UI_ICONS.alignLeft, label: __( 'Left', TD ) } ),
-						el( ToggleGroupOption, { value: 'center', icon: SHAPEBLOCK_UI_ICONS.alignCenter, label: __( 'Center', TD ) } ),
-						el( ToggleGroupOption, { value: 'right', icon: SHAPEBLOCK_UI_ICONS.alignRight, label: __( 'Right', TD ) } )
+						el( ToggleGroupOption, { value: 'left', icon: SHAPEBLOCK_UI_ICONS.alignLeft, label: __( 'Left', 'shapeblock' ) } ),
+						el( ToggleGroupOption, { value: 'center', icon: SHAPEBLOCK_UI_ICONS.alignCenter, label: __( 'Center', 'shapeblock' ) } ),
+						el( ToggleGroupOption, { value: 'right', icon: SHAPEBLOCK_UI_ICONS.alignRight, label: __( 'Right', 'shapeblock' ) } )
 					) : el( SelectControl, {
-						label: __( 'Hamburger Alignment', TD ),
+						label: __( 'Hamburger Alignment', 'shapeblock' ),
 						hideLabelFromVision: true,
 						value: attributes[ toggleAlignKey ] || ( 'desktop' === device ? 'left' : '' ),
-						options: ( 'desktop' === device ? [] : [ { label: __( 'Inherit', TD ), value: '' } ] ).concat( [ { label: __( 'Left', TD ), value: 'left' }, { label: __( 'Center', TD ), value: 'center' }, { label: __( 'Right', TD ), value: 'right' } ] ),
+						options: ( 'desktop' === device ? [] : [ { label: __( 'Inherit', 'shapeblock' ), value: '' } ] ).concat( [ { label: __( 'Left', 'shapeblock' ), value: 'left' }, { label: __( 'Center', 'shapeblock' ), value: 'center' }, { label: __( 'Right', 'shapeblock' ), value: 'right' } ] ),
 						onChange: function ( v ) { setToggleAlign( v ); }
 					} ),
-					( 'desktop' !== device && ! attributes[ toggleAlignKey ] ) ? el( 'p', { className: 'components-base-control__help', style: { marginTop: '4px' } }, __( 'Inherits from the larger screen.', TD ) ) : null
+					( 'desktop' !== device && ! attributes[ toggleAlignKey ] ) ? el( 'p', { className: 'components-base-control__help', style: { marginTop: '4px' } }, __( 'Inherits from the larger screen.', 'shapeblock' ) ) : null
 				)
 			) : null;
 
@@ -1260,13 +1258,13 @@
 			// ( transparent background, currentColor border ).
 			var buttonsPanel = ( 'off' !== mobileMode ) ? el(
 				PanelBody,
-				{ title: __( 'Hamburger & Close Buttons', TD ), initialOpen: false },
+				{ title: __( 'Hamburger & Close Buttons', 'shapeblock' ), initialOpen: false },
 				el( TabPanel, {
 						className: 'shapeblock-menu-button-tabs shapeblock-inspector-tabs',
 						activeClass: 'is-active',
 						tabs: [
-							{ name: 'hamburger', title: __( 'Hamburger', TD ) },
-							{ name: 'close', title: __( 'Close', TD ) }
+							{ name: 'hamburger', title: __( 'Hamburger', 'shapeblock' ) },
+							{ name: 'close', title: __( 'Close', 'shapeblock' ) }
 						]
 					}, function ( target ) {
 						var prefix = 'close' === target.name ? 'close' : 'toggle';
@@ -1274,8 +1272,8 @@
 							className: 'shapeblock-menu-state-tabs shapeblock-inspector-tabs',
 							activeClass: 'is-active',
 							tabs: [
-								{ name: 'normal', title: __( 'Normal', TD ) },
-								{ name: 'hover', title: __( 'Hover', TD ) }
+								{ name: 'normal', title: __( 'Normal', 'shapeblock' ) },
+								{ name: 'hover', title: __( 'Hover', 'shapeblock' ) }
 							]
 						}, function ( state ) {
 							var isHover = 'hover' === state.name;
@@ -1289,12 +1287,12 @@
 								} );
 							};
 							return el( 'div', { style: { marginTop: '12px' } },
-								row( __( 'Icon Color', TD ), 'Color' ),
-								shapeblockColorLabel( __( 'Background', TD ) ),
+								row( __( 'Icon Color', 'shapeblock' ), 'Color' ),
+								shapeblockColorLabel( __( 'Background', 'shapeblock' ) ),
 								shapeblockBgPicker( prefix + 'Bg' + ( isHover ? 'Hover' : '' ), prefix + 'Bg' + ( isHover ? 'Hover' : '' ) + 'Gradient' ),
-								row( __( 'Border Color', TD ), 'BorderColor' ),
+								row( __( 'Border Color', 'shapeblock' ), 'BorderColor' ),
 								( 'close' === prefix && ! isHover ) ? el( 'p', { className: 'shapeblock-menu-section-label', style: { margin: '4px 0 0', opacity: 0.7 } },
-									__( 'Leave Icon Color empty to follow the hamburger.', TD ) ) : null
+									__( 'Leave Icon Color empty to follow the hamburger.', 'shapeblock' ) ) : null
 							);
 						} );
 					} )
@@ -1330,7 +1328,7 @@
 						value: node.label || '',
 						allowedFormats: [ 'core/bold', 'core/italic' ],
 						disableLineBreaks: true,
-						placeholder: __( 'Label', TD ),
+						placeholder: __( 'Label', 'shapeblock' ),
 						onFocus: function () { setActivePath( path ); },
 						onChange: function ( v ) { updateAt( path, { label: v } ); },
 						// Backspace on an already-empty label removes the whole item.
@@ -1368,7 +1366,7 @@
 				if ( kids.length ) {
 					if ( showDrawer ) {
 						// In the mobile-drawer preview the caret toggles the accordion ( like the front end ).
-						var ap = { type: 'button', className: 'shapeblock-menu-sub-toggle shapeblock-menu-sub-trigger shapeblock-menu-sub-toggle--' + ( 'none' === ddVal ? 'none' : ddVal ), 'aria-label': __( 'Toggle sub-menu', TD ), onClick: function () { toggleSubOpen( key ); } };
+						var ap = { type: 'button', className: 'shapeblock-menu-sub-toggle shapeblock-menu-sub-trigger shapeblock-menu-sub-toggle--' + ( 'none' === ddVal ? 'none' : ddVal ), 'aria-label': __( 'Toggle sub-menu', 'shapeblock' ), onClick: function () { toggleSubOpen( key ); } };
 						if ( ddKey ) { ap.dangerouslySetInnerHTML = { __html: SHAPEBLOCK_SVG[ ddKey ] }; }
 						subToggle = el( 'button', ap );
 					} else {
@@ -1376,7 +1374,7 @@
 							className: 'shapeblock-menu-subadd',
 							popoverProps: { className: 'shapeblock-menu-add-pop', placement: 'bottom-start' },
 							renderToggle: function ( t ) {
-								var p = { type: 'button', className: 'shapeblock-menu-sub-toggle shapeblock-menu-sub-trigger shapeblock-menu-sub-toggle--' + ( 'none' === ddVal ? 'none' : ddVal ), 'aria-label': __( 'Add sub-menu', TD ), 'aria-expanded': t.isOpen, onClick: t.onToggle };
+								var p = { type: 'button', className: 'shapeblock-menu-sub-toggle shapeblock-menu-sub-trigger shapeblock-menu-sub-toggle--' + ( 'none' === ddVal ? 'none' : ddVal ), 'aria-label': __( 'Add sub-menu', 'shapeblock' ), 'aria-expanded': t.isOpen, onClick: t.onToggle };
 								if ( ddKey ) { p.dangerouslySetInnerHTML = { __html: SHAPEBLOCK_SVG[ ddKey ] }; }
 								return el( 'button', p );
 							},
@@ -1390,7 +1388,7 @@
 						className: 'shapeblock-menu-subadd shapeblock-menu-subadd--leaf',
 						popoverProps: { className: 'shapeblock-menu-add-pop', placement: 'right-start' },
 						renderToggle: function ( t ) {
-							return el( Button, { icon: plusIcon, className: 'shapeblock-menu-sub-plus', label: sprintf( __( 'Add Level %d item', TD ), path.length + 1 ), showTooltip: true, 'aria-expanded': t.isOpen, onClick: t.onToggle } );
+							return el( Button, { icon: plusIcon, className: 'shapeblock-menu-sub-plus', label: sprintf( __( 'Add Level %d item', 'shapeblock' ), path.length + 1 ), showTooltip: true, 'aria-expanded': t.isOpen, onClick: t.onToggle } );
 						},
 						renderContent: subPickerContent
 					} );
@@ -1401,7 +1399,7 @@
 				// An add-on's dropdown shows the same caret ( in the drawer it toggles the dropdown ).
 				if ( extra.content && ! kids.length ) {
 					var xp = showDrawer
-						? { type: 'button', className: 'shapeblock-menu-sub-toggle shapeblock-menu-sub-trigger shapeblock-menu-sub-toggle--' + ( 'none' === ddVal ? 'none' : ddVal ), 'aria-label': __( 'Toggle sub-menu', TD ), onClick: function () { toggleSubOpen( key ); } }
+						? { type: 'button', className: 'shapeblock-menu-sub-toggle shapeblock-menu-sub-trigger shapeblock-menu-sub-toggle--' + ( 'none' === ddVal ? 'none' : ddVal ), 'aria-label': __( 'Toggle sub-menu', 'shapeblock' ), onClick: function () { toggleSubOpen( key ); } }
 						: { className: 'shapeblock-menu-sub-toggle shapeblock-menu-sub-toggle--' + ( 'none' === ddVal ? 'none' : ddVal ), 'aria-hidden': 'true' };
 					if ( ddKey ) { xp.dangerouslySetInnerHTML = { __html: SHAPEBLOCK_SVG[ ddKey ] }; }
 					subToggle = el( showDrawer ? 'button' : 'span', xp );
@@ -1419,7 +1417,7 @@
 						el( Dropdown, {
 							popoverProps: { className: 'shapeblock-menu-add-pop', placement: 'bottom-start' },
 							renderToggle: function ( t ) {
-								return el( Button, { icon: plusIcon, variant: 'secondary', className: 'shapeblock-menu-add-btn', label: __( 'Add sub-menu item', TD ), showTooltip: true, 'aria-expanded': t.isOpen, onClick: t.onToggle } );
+								return el( Button, { icon: plusIcon, variant: 'secondary', className: 'shapeblock-menu-add-btn', label: __( 'Add sub-menu item', 'shapeblock' ), showTooltip: true, 'aria-expanded': t.isOpen, onClick: t.onToggle } );
 							},
 							renderContent: subPickerContent
 						} )
@@ -1448,7 +1446,7 @@
 				className: 'shapeblock-menu-add-dropdown',
 				popoverProps: { className: 'shapeblock-menu-add-pop', placement: 'bottom-start' },
 				renderToggle: function ( t ) {
-					return el( Button, { icon: plusIcon, variant: 'secondary', className: 'shapeblock-menu-add-btn', label: __( 'Add menu item', TD ), showTooltip: true, 'aria-expanded': t.isOpen, onClick: t.onToggle } );
+					return el( Button, { icon: plusIcon, variant: 'secondary', className: 'shapeblock-menu-add-btn', label: __( 'Add menu item', 'shapeblock' ), showTooltip: true, 'aria-expanded': t.isOpen, onClick: t.onToggle } );
 				},
 				renderContent: function ( c ) {
 					return el( AddMenuSearch, { onPick: function ( v ) { addLinkItem( v ); c.onClose(); } } );
@@ -1604,7 +1602,7 @@
 			var previewToggle = showDrawer ? el( 'button', {
 				type: 'button',
 				className: 'shapeblock-menu-toggle',
-				'aria-label': __( 'Toggle menu', TD ),
+				'aria-label': __( 'Toggle menu', 'shapeblock' ),
 				onClick: function () { setOpenPreview( ! isOpenPreview ); }
 			},
 				el( 'span', { className: 'shapeblock-menu-toggle-bar' } ),
@@ -1616,7 +1614,7 @@
 			var previewClose = showDrawer ? el( 'button', {
 				type: 'button',
 				className: 'shapeblock-menu-close',
-				'aria-label': __( 'Close menu', TD ),
+				'aria-label': __( 'Close menu', 'shapeblock' ),
 				onClick: function () { setOpenPreview( false ); },
 				dangerouslySetInnerHTML: { __html: '<svg class="shapeblock-menu-svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 8 8"/><path d="m12 4-8 8"/></svg>' }
 			} ) : null;
@@ -1646,7 +1644,7 @@
 							renderToggle: function ( t ) {
 								return el( ToolbarButton, {
 									icon: 'admin-links',
-									title: activeNode ? __( 'Edit link', TD ) : __( 'Click a menu item to edit its link', TD ),
+									title: activeNode ? __( 'Edit link', 'shapeblock' ) : __( 'Click a menu item to edit its link', 'shapeblock' ),
 									isActive: t.isOpen,
 									'aria-expanded': t.isOpen,
 									disabled: ! activeNode,
@@ -1670,7 +1668,7 @@
 							renderToggle: function ( t ) {
 								return el( ToolbarButton, {
 									icon: plusIcon,
-									title: activeNode ? __( 'Add sub-menu item', TD ) : __( 'Click a menu item to add a sub-menu item', TD ),
+									title: activeNode ? __( 'Add sub-menu item', 'shapeblock' ) : __( 'Click a menu item to add a sub-menu item', 'shapeblock' ),
 									isActive: t.isOpen,
 									'aria-expanded': t.isOpen,
 									disabled: ! activeNode,
@@ -1695,9 +1693,9 @@
 					el( TabPanel, {
 						className: 'shapeblock-menu-tabs shapeblock-inspector-tabs',
 						tabs: [
-							{ name: 'settings', title: __( 'Settings', TD ) },
-							{ name: 'layout', title: __( 'Layout', TD ) },
-							{ name: 'style', title: __( 'Style', TD ) }
+							{ name: 'settings', title: __( 'Settings', 'shapeblock' ) },
+							{ name: 'layout', title: __( 'Layout', 'shapeblock' ) },
+							{ name: 'style', title: __( 'Style', 'shapeblock' ) }
 						]
 					}, function ( tab ) {
 						if ( 'settings' === tab.name ) {
@@ -1730,8 +1728,8 @@
 			}
 			wp.blocks.registerBlockVariation( 'core/navigation', {
 				name: 'shapeblock-menu',
-				title: __( 'ShapeBlock Menu', TD ),
-				description: __( 'A navigation menu that works exactly like the default Navigation, in ShapeBlock style.', TD ),
+				title: __( 'ShapeBlock Menu', 'shapeblock' ),
+				description: __( 'A navigation menu that works exactly like the default Navigation, in ShapeBlock style.', 'shapeblock' ),
 				icon: 'menu',
 				scope: [ 'inserter' ],
 				attributes: { className: 'shapeblock-nav' }

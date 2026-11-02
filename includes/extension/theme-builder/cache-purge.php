@@ -38,7 +38,10 @@ function shapeblock_cache_purge_all() {
 		wpfc_clear_all_cache();
 	}
 	if ( function_exists( 'WP_Optimize' ) ) {
-		WP_Optimize()->get_page_cache()->purge();
+		$wpo_cache = WP_Optimize()->get_page_cache();
+		if ( is_object( $wpo_cache ) && is_callable( array( $wpo_cache, 'purge' ) ) ) {
+			$wpo_cache->purge();
+		}
 	}
 }
 

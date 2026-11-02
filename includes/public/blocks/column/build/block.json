@@ -6,7 +6,7 @@
   "title": "Column",
   "category": "shapeblock",
   "icon": "align-center",
-  "description": "A column inside a shapeblock Row. Holds any block — including nested Rows.",
+  "description": "A column inside a ShapeBlock Row. Holds any block, including nested Rows.",
   "keywords": [
     "column",
     "container",

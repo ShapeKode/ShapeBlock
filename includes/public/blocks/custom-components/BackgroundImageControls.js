@@ -68,9 +68,9 @@ const BackgroundImageControls = ( { attributes, setAttributes } ) => {
                         label={ __( 'Size', 'shapeblock' ) }
                         value={ attributes.backgroundSize }
                         options={ [
-                            { label: 'auto', value: 'auto' },
-                            { label: 'cover', value: 'cover' },
-                            { label: 'contain', value: 'contain' },
+                            { label: __( 'Auto', 'shapeblock' ), value: 'auto' },
+                            { label: __( 'Cover', 'shapeblock' ), value: 'cover' },
+                            { label: __( 'Contain', 'shapeblock' ), value: 'contain' },
                         ] }
                         onChange={ ( v ) => setAttributes( { backgroundSize: v } ) }
                         __next40pxDefaultSize
@@ -80,10 +80,10 @@ const BackgroundImageControls = ( { attributes, setAttributes } ) => {
                         label={ __( 'Repeat', 'shapeblock' ) }
                         value={ attributes.backgroundRepeat }
                         options={ [
-                            { label: 'no-repeat', value: 'no-repeat' },
-                            { label: 'repeat', value: 'repeat' },
-                            { label: 'repeat-x', value: 'repeat-x' },
-                            { label: 'repeat-y', value: 'repeat-y' },
+                            { label: __( 'No Repeat', 'shapeblock' ), value: 'no-repeat' },
+                            { label: __( 'Repeat', 'shapeblock' ), value: 'repeat' },
+                            { label: __( 'Repeat Horizontally', 'shapeblock' ), value: 'repeat-x' },
+                            { label: __( 'Repeat Vertically', 'shapeblock' ), value: 'repeat-y' },
                         ] }
                         onChange={ ( v ) => setAttributes( { backgroundRepeat: v } ) }
                         __next40pxDefaultSize
@@ -100,8 +100,8 @@ const BackgroundImageControls = ( { attributes, setAttributes } ) => {
                         label={ __( 'Attachment', 'shapeblock' ) }
                         value={ attributes.backgroundAttachment }
                         options={ [
-                            { label: 'scroll', value: 'scroll' },
-                            { label: 'fixed', value: 'fixed' },
+                            { label: __( 'Scroll', 'shapeblock' ), value: 'scroll' },
+                            { label: __( 'Fixed', 'shapeblock' ), value: 'fixed' },
                         ] }
                         onChange={ ( v ) => setAttributes( { backgroundAttachment: v } ) }
                         __next40pxDefaultSize

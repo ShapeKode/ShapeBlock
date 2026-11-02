@@ -53,3 +53,4 @@ test
 phpunit.xml
 phpunit.xml.dist
 .travis.yml
+.distignore
