@@ -16,7 +16,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Every block has the same three tabs: **Settings** for the content, **Layout** for columns, alignment and spacing, and **Style** for colours, typography, borders, shadows and hover effects. Sizes, spacing and columns can be set separately for desktop, tablet and mobile.
 
-[Demo](https://shapekode.com/product/shapeblock/) | [Docs](https://shapekode.com/product/shapeblock/docs/) | [Roadmap](https://shapekode.com/product/shapeblock/roadmap/) | [Overview Video](https://www.youtube.com/watch?v=HfEXu6Y449M)
+[Demo](https://shapekode.com/product/shapeblock/) | [Docs](https://shapekode.com/product/shapeblock/docs/) | [Roadmap](https://shapekode.com/product/shapeblock/roadmap/) | [Overview Video](https://www.youtube.com/watch?v=HfEXu6Y449M) | **[Upgrade to Pro](https://shapekode.com/product/shapeblock/pricing/)**
 
 = Key Features =
 
@@ -28,6 +28,19 @@ Every block has the same three tabs: **Settings** for the content, **Layout** fo
 * **Lightweight** - each block loads its files only on pages that use it, and unused blocks can be switched off.
 * **Export & Import** - move your settings and templates between sites in one file.
 * **Privacy friendly** - no tracking unless you opt in, no CDN, and Google Fonts stays off until you turn it on.
+
+= [Want more? Upgrade to ShapeBlock Pro](https://shapekode.com/product/shapeblock/pricing/) =
+
+ShapeBlock Pro adds:
+
+* **Theme Builder** - design single posts, pages, archives, search results and the 404 page with 13 dynamic blocks.
+* **Popup Builder** - popups built with blocks, opened on page load, on scroll, on exit intent or on a click.
+* **Mega Menu** - wide dropdown panels built from any blocks.
+* **WooCommerce Builder** - your own product, shop, cart and checkout pages, plus Product Grid and Product Carousel.
+* **Motion Effects** - entrance, scroll and mouse animations for any block.
+* **8 animation blocks** - Animation Title, Typewriter, Rotating Text, Scroll Text, Horizontal Scroll and more.
+* **Display Conditions** - show or hide any block by user, role, date, time, page or device.
+* **Image Hotspot, Flip Box, Hero Slider, Timeline, Advanced Data Table** and more Pro blocks.
 
 = Blocks =
 
@@ -74,55 +87,18 @@ Every block has the same three tabs: **Settings** for the content, **Layout** fo
 
 It **works with classic and block themes**. Pages that match none of your conditions keep the theme's own header and footer. There's also a Custom Block type you can place anywhere with the `[shapeblock_builder]` shortcode.
 
-= Features =
+= ShapeBlock Pro =
 
-**Design controls on every block**
+Everything above is free and stays free. ShapeBlock Pro is a separate add-on that works on top of this plugin.
 
-* Settings, Layout and Style tabs, plus an Advanced tab with padding, margin and a solid or gradient background.
-* Typography: font family, size, weight, style, line height, letter spacing, transform and decoration.
-* Borders, radius and box shadows.
-* A built-in icon picker with search, served from your own site.
+* **Pro blocks:** Advanced Accordion, Advanced Button, Advanced Data Table, Clients Logo Slider, Comparison Table, Flip Box, Hero Slider, Image Hotspot, Masonry Gallery, Mega Menu, Post Carousel, Price Menu, Rating, Team Member Carousel, Timeline, Video Player, WooCommerce Product Grid and Product Carousel.
+* **Animation blocks:** Animation Title, Animation Text, Typewriter Effect, Rotating Text, Scroll Text, Image Reveal Effect, Image Scroll Trigger and Horizontal Scroll.
+* **Theme Builder:** Single Post, Single Page, Archive, Search Results and 404 templates with 13 dynamic blocks (Post Title, Featured Image, Post Content, Post Meta, Author Box, Related Posts, Archive Posts and more).
+* **Popup Builder:** popups built with blocks, opened on page load, on scroll, on exit intent or on a click.
+* **WooCommerce Builder:** your own product, shop, cart and checkout pages from 15 WooCommerce blocks.
+* **Extensions:** Motion Effects, Display Conditions, Parallax Background, Copy Style, Post Grid Filter and Load More, Preloader, Scroll to Top, Smooth Scrolling and Custom Cursor.
 
-**Fully responsive**
-
-* A desktop, tablet and mobile switcher on sizes, spacing, columns and typography, so each device gets its own value.
-* Tablet styles apply up to 1024px and mobile styles up to 767px.
-* Padding and margin per device on every block.
-* Hide any block on desktop, tablet or mobile from its Responsive panel.
-* Tablet and mobile padding and margin for core WordPress blocks too.
-
-**Header & Footer Builder**
-
-* Header, Footer and Custom Block templates, built in the block editor.
-* Include and Exclude display conditions, where Exclude always wins.
-* Works with classic and block themes.
-* Copy a template's shortcode with one click.
-
-**Custom Templates**
-
-* Save a layout once and reuse it anywhere with the `[shapeblock_template]` shortcode.
-* Use a template as the content of the Offcanvas block.
-* Search, sort, trash, restore and bulk actions in the template list.
-
-**Dashboard**
-
-* Turn any block on or off, or all at once. A block that's off doesn't load.
-* A global container width for the Row block.
-* Export and import your settings, Custom Templates and Theme Builder templates as one JSON file. Pick what to import and skip duplicates.
-
-**Speed**
-
-* Block styles and scripts load only on pages that use the block.
-* Styles are generated per block, so two copies of a block can look different.
-* All libraries are bundled with the plugin, with no CDN.
-* Google Fonts are optional, off by default, and load only the fonts you use.
-
-**Other**
-
-* Duplicated or pasted blocks get a new ID, so their styles never clash.
-* Translation ready, with a `.pot` file.
-* No tracking unless you opt in, and no licence check.
-* Deleting the plugin removes its settings and cached data, and keeps your content.
+= [Upgrade to ShapeBlock Pro](https://shapekode.com/product/shapeblock/pricing/) =
 
 == External services ==
 
@@ -230,7 +206,7 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 * **New:** Client Logo - Add Logos picks several logos from the Media Library at once; the old button is now Add Empty Logo.
 * **Improved:** Row - Position is Default or Sticky, with the sticky top offset right under it; margins can be negative, to pull a row up over the one above.
 * **Improved:** Column - blocks side by side move onto more lines on a phone when they do not fit, instead of being squeezed out of the column.
-* **Improved:** Blocks page - All, Free, Pro and Upcoming tabs; a block still to come has no switch.
+* **Improved:** Blocks page - blocks are grouped in tabs.
 * **Improved:** Post Grid - the page links have padding, alignment (left, center or right), the space between them, the space above and typography for each device, and a box shadow for normal and hover; the hover colours also reach a Load More button.
 * **Improved:** Post Grid - a post title turns to the primary colour when pointed at, and the date, author and category links change colour instead of showing an underline.
 * **Improved:** Row and Column - border and border radius for each device; a width of 0 or the None style on Tablet or Mobile removes the border there.

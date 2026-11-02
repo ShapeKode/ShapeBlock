@@ -347,7 +347,7 @@ class Blocks {
 
     /**
      * The kinds of block, in order: slug => label. The Blocks page groups its
-     * list by them (its tabs are All, Free, Pro and Upcoming).
+     * list by them, one tab each.
      *
      * @return array<string,string>
      */
