@@ -230,7 +230,11 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 * **Improved:** Row - Position is Default or Sticky, with the sticky top offset right under it; margins can be negative, to pull a row up over the one above.
 * **Improved:** Column - blocks side by side move onto more lines on a phone when they do not fit, instead of being squeezed out of the column.
 * **Improved:** Blocks page - All, Free, Pro and Upcoming tabs; a block still to come has no switch.
-* **Improved:** Post Grid - the page links have padding, alignment (left, center or right), the space between them and the space above; the hover colours also reach a Load More button.
+* **Improved:** Post Grid - the page links have padding, alignment (left, center or right), the space between them, the space above and typography for each device, and a box shadow for normal and hover; the hover colours also reach a Load More button.
+* **Improved:** Post Grid - a post title turns to the primary colour when pointed at, and the date, author and category links change colour instead of showing an underline.
+* **Improved:** Row and Column - border and border radius for each device; a width of 0 or the None style on Tablet or Mobile removes the border there.
+* **Improved:** Search - the submit button has a border, border radius and a hover border colour; the hover colours also reach the button of the Input Field style.
+* **Fixed:** The Padding and Margin fields no longer show a stray "Box Control" label.
 * **Improved:** Image Carousel and Slider - images picked from the Media Library take the place of the empty starting slides.
 * **Improved:** Table, Image Comparison and Isotope Filter - Wide and Full width follow the theme, as core blocks do; a wide table scrolls inside its own box instead of pushing out of a column.
 * **Improved:** Countdown - the digits keep one width, so the timer does not shift as they change.

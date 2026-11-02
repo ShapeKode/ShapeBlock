@@ -2,7 +2,7 @@
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
     "name": "shapeblock/layout-row",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "title": "Row",
     "category": "shapeblock",
     "icon": "grid-view",
@@ -160,6 +160,10 @@
             "type": "object",
             "default": { "top": "", "right": "", "bottom": "", "left": "" }
         },
+        "borderTablet": { "type": "object", "default": {} },
+        "borderMobile": { "type": "object", "default": {} },
+        "borderRadiusTablet": { "type": "object", "default": {} },
+        "borderRadiusMobile": { "type": "object", "default": {} },
 
         "boxShadow": {
             "type": "object",

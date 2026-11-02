@@ -196,7 +196,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		<ResponsiveWrapper label={label}>
 			{(d) => {
 				const k = getKey(base, d);
-				return <BoxControl values={attributes[k]} onChange={(v) => setAttributes({ [k]: v })} />;
+				return <BoxControl label="" values={attributes[k]} onChange={(v) => setAttributes({ [k]: v })} />;
 			}}
 		</ResponsiveWrapper>
 	);

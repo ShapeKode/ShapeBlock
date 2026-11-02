@@ -419,7 +419,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const respBox = (label, base) => (
 		<ResponsiveWrapper label={label}>
 			{(device) => (
-				<BoxControl
+				<BoxControl label=""
 					values={attributes[getAttrKey(base, device)]}
 					onChange={(value) => setAttributes({ [getAttrKey(base, device)]: value })}
 				/>
@@ -642,7 +642,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<Divider />
 				<ResponsiveWrapper label={__('Padding', 'shapeblock')}>
 					{(device) => (
-						<BoxControl
+						<BoxControl label=""
 							values={attributes[getAttrKey('itemTitlePadding', device)]}
 							onChange={(value) => setAttributes({ [getAttrKey('itemTitlePadding', device)]: value })}
 						/>
@@ -651,7 +651,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<Divider />
 				<ResponsiveWrapper label={__('Margin', 'shapeblock')}>
 					{(device) => (
-						<BoxControl
+						<BoxControl label=""
 							values={attributes[getAttrKey('itemTitleMargin', device)]}
 							onChange={(value) => setAttributes({ [getAttrKey('itemTitleMargin', device)]: value })}
 						/>
@@ -692,7 +692,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<Divider />
 				<ResponsiveWrapper label={__('Padding', 'shapeblock')}>
 					{(device) => (
-						<BoxControl
+						<BoxControl label=""
 							values={attributes[getAttrKey('itemExcerptPadding', device)]}
 							onChange={(value) => setAttributes({ [getAttrKey('itemExcerptPadding', device)]: value })}
 						/>
@@ -701,7 +701,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<Divider />
 				<ResponsiveWrapper label={__('Margin', 'shapeblock')}>
 					{(device) => (
-						<BoxControl
+						<BoxControl label=""
 							values={attributes[getAttrKey('itemExcerptMargin', device)]}
 							onChange={(value) => setAttributes({ [getAttrKey('itemExcerptMargin', device)]: value })}
 						/>
@@ -923,6 +923,11 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									onColorChange={(value) => setAttributes({ [isHover ? 'paginationBackgroundColorHover' : 'paginationBackgroundColor']: (value && typeof value === 'object') ? value.hex : value })}
 									onGradientChange={(value) => setAttributes({ [isHover ? 'paginationBackgroundGradientHover' : 'paginationBackgroundGradient']: value || '' })}
 								/>
+								<BoxShadowControl
+									label={__('Box Shadow', 'shapeblock')}
+									value={isHover ? attributes.paginationBoxShadowHover : attributes.paginationBoxShadow}
+									onChange={(value) => setAttributes({ [isHover ? 'paginationBoxShadowHover' : 'paginationBoxShadow']: value })}
+								/>
 							</div>
 						);
 					}}
@@ -938,47 +943,64 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					values={attributes.paginationBtnBorderRadius}
 					onChange={(value) => setAttributes({ paginationBtnBorderRadius: value })}
 				/>
-				<BoxControl
-					label={__('Padding', 'shapeblock')}
-					values={attributes.paginationPadding}
-					onChange={(value) => setAttributes({ paginationPadding: value })}
-				/>
+				<ResponsiveWrapper label={__('Padding', 'shapeblock')}>
+					{(device) => (
+						<BoxControl
+							label=""
+							values={attributes[getAttrKey('paginationPadding', device)]}
+							onChange={(value) => setAttributes({ [getAttrKey('paginationPadding', device)]: value })}
+						/>
+					)}
+				</ResponsiveWrapper>
 				<Divider />
-				<SelectControl
-					label={__('Alignment', 'shapeblock')}
-					value={attributes.paginationAlign}
-					options={[
-						{ label: __('Default (Center)', 'shapeblock'), value: '' },
-						{ label: __('Left', 'shapeblock'), value: 'left' },
-						{ label: __('Right', 'shapeblock'), value: 'right' },
-					]}
-					onChange={(value) => setAttributes({ paginationAlign: value })}
-					__next40pxDefaultSize={true}
-					__nextHasNoMarginBottom={true}
-				/>
-				<NumberControl
-					label={__('Space Between (px)', 'shapeblock')}
-					value={attributes.paginationGap}
-					min={0}
-					max={60}
-					placeholder="8"
-					onChange={(value) => setAttributes({ paginationGap: value ?? '' })}
-				/>
-				<NumberControl
-					label={__('Space Above (px)', 'shapeblock')}
-					value={attributes.paginationSpacing}
-					min={0}
-					max={200}
-					placeholder="40"
-					onChange={(value) => setAttributes({ paginationSpacing: value ?? '' })}
-				/>
+				<ResponsiveWrapper label={__('Alignment', 'shapeblock')}>
+					{(device) => (
+						<SelectControl
+							value={attributes[getAttrKey('paginationAlign', device)]}
+							options={[
+								{ label: 'desktop' === device ? __('Default (Center)', 'shapeblock') : __('Default', 'shapeblock'), value: '' },
+								{ label: __('Left', 'shapeblock'), value: 'left' },
+								...('desktop' === device ? [] : [{ label: __('Center', 'shapeblock'), value: 'center' }]),
+								{ label: __('Right', 'shapeblock'), value: 'right' },
+							]}
+							onChange={(value) => setAttributes({ [getAttrKey('paginationAlign', device)]: value })}
+							__next40pxDefaultSize={true}
+							__nextHasNoMarginBottom={true}
+						/>
+					)}
+				</ResponsiveWrapper>
+				<ResponsiveWrapper label={__('Space Between (px)', 'shapeblock')}>
+					{(device) => (
+						<NumberControl
+							value={attributes[getAttrKey('paginationGap', device)]}
+							min={0}
+							max={60}
+							placeholder={'desktop' === device ? '8' : ''}
+							onChange={(value) => setAttributes({ [getAttrKey('paginationGap', device)]: value ?? '' })}
+						/>
+					)}
+				</ResponsiveWrapper>
+				<ResponsiveWrapper label={__('Space Above (px)', 'shapeblock')}>
+					{(device) => (
+						<NumberControl
+							value={attributes[getAttrKey('paginationSpacing', device)]}
+							min={0}
+							max={200}
+							placeholder={'desktop' === device ? '40' : ''}
+							onChange={(value) => setAttributes({ [getAttrKey('paginationSpacing', device)]: value ?? '' })}
+						/>
+					)}
+				</ResponsiveWrapper>
 				<Divider />
-				<TypographyControls
-					label={__('Typography', 'shapeblock')}
-					attributes={attributes}
-					setAttributes={setAttributes}
-					attributeKey="paginationTypography"
-				/>
+				<ResponsiveWrapper label={__('Typography', 'shapeblock')}>
+					{(device) => (
+						<TypographyControls
+							attributes={attributes}
+							setAttributes={setAttributes}
+							attributeKey={getAttrKey('paginationTypography', device)}
+						/>
+					)}
+				</ResponsiveWrapper>
 
 			</PanelBody>
 

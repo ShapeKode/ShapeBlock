@@ -85,6 +85,12 @@ class Main {
         require_once SHAPEBLOCK_PL_PATH . 'includes/public/responsive-visibility.php';
         require_once SHAPEBLOCK_PL_PATH . 'includes/public/responsive-spacing.php';
         require_once SHAPEBLOCK_PL_PATH . 'includes/public/blocks/blocks.php';
+
+        // Only with a page cache plugin active: empty its cache when a Theme
+        // Builder template changes.
+        if ( function_exists( 'wp_cache_clear_cache' ) || function_exists( 'w3tc_flush_all' ) || defined( 'LSCWP_V' ) || function_exists( 'wpfc_clear_all_cache' ) || function_exists( 'WP_Optimize' ) ) {
+            require_once SHAPEBLOCK_PL_PATH . 'includes/extension/theme-builder/cache-purge.php';
+        }
     }
 
     /**

@@ -213,7 +213,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	);
 	const respBox = (label, base) => (
 		<ResponsiveWrapper label={label}>
-			{(d) => <BoxControl values={attributes[getKey(base, d)]} onChange={(v) => setAttributes({ [getKey(base, d)]: v })} />}
+			{(d) => <BoxControl label="" values={attributes[getKey(base, d)]} onChange={(v) => setAttributes({ [getKey(base, d)]: v })} />}
 		</ResponsiveWrapper>
 	);
 	const respNum = (label, base) => (

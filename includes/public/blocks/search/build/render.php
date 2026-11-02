@@ -117,8 +117,15 @@ if ( ! empty( $attributes['submitBtnHoverBgGradient'] ) ) {
 } elseif ( ! empty( $attributes['submitBtnHoverBg'] ) ) {
 	$submit1_hover[ ! empty( $attributes['submitBtnBgGradient'] ) ? 'background' : 'background-color' ] = $attributes['submitBtnHoverBg'];
 }
+// Border and corners, for both styles; the hover border takes its own colour.
+$submit_box = array_merge(
+	! empty( $attributes['submitBorder'] ) && is_array( $attributes['submitBorder'] ) ? $H::border_to_css_props( $attributes['submitBorder'] ) : [],
+	$dims( $attributes['submitBorderRadius'] ?? [], 'radius' )
+);
+$submit1 = array_merge( $submit1, $submit_box );
+if ( ! empty( $attributes['submitHoverBorderColor'] ) ) $submit1_hover['border-color'] = $attributes['submitHoverBorderColor'];
 $submit2 = $submit2_pos;
-$submit2 = array_merge( $submit2, $submit_bg );
+$submit2 = array_merge( $submit2, $submit_bg, $submit_box );
 $submit2 = array_merge( $submit2, $dims( $attributes['submitPadding'] ?? [], 'padding' ) );
 
 // Popup.
@@ -230,6 +237,9 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-search-content .shapeblock-search-submit:hover'  => $H::get_inline_styles( $submit1_hover ),
 	'.shapeblock-search-content .shapeblock-search-submit:hover svg' => $H::get_inline_styles( $submit1_hover_svg ),
 	'.shapeblock-search-style-2 .shapeblock-search-submit-btn'    => $H::get_inline_styles( $submit2 ),
+	'.shapeblock-search-style-2 .shapeblock-search-submit-btn:hover' => $H::get_inline_styles( $submit1_hover ),
+	'.shapeblock-search-style-2 .shapeblock-search-submit-btn:hover svg' => $H::get_inline_styles( $submit1_hover_svg ),
+	'.shapeblock-search-style-2 .shapeblock-search-submit-btn:hover i' => ! empty( $attributes['submitIconHoverColor'] ) ? 'color:' . $attributes['submitIconHoverColor'] : '',
 	'.shapeblock-search-lightbox, ' . $selector . ' .shapeblock-search-overlay' => $H::get_inline_styles( $overlay ),
 	'.shapeblock-search-title'                               => $H::get_inline_styles( $popup_title ),
 	'.shapeblock-search-close-btn i'                         => $H::get_inline_styles( array_merge( $close_styles, $close_glyph ) ),

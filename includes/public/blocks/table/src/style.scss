@@ -11,8 +11,10 @@
 	// table scrolls inside its own box instead of pushing the block out.
 	min-width: 0;
 
-	// Wide and full width: the theme sizes it, as it does a core block.
-	&:where(:not(.alignfull):not(.alignwide)) {
+	// Wide and full width: the theme sizes it, as it does a core block. No
+	// weight at all, so the theme's content width wins in any stylesheet order
+	// (cache plugins that merge CSS change the order).
+	@at-root :where(.shapeblock-table-block-wrap:not(.alignfull):not(.alignwide)) {
 		max-width: 100%;
 	}
 

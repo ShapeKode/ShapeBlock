@@ -2,7 +2,7 @@
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
     "name": "shapeblock/column",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "title": "Column",
     "category": "shapeblock",
     "icon": "align-center",
@@ -132,6 +132,10 @@
             "type": "object",
             "default": { "top": "", "right": "", "bottom": "", "left": "" }
         },
+        "borderTablet": { "type": "object", "default": {} },
+        "borderMobile": { "type": "object", "default": {} },
+        "borderRadiusTablet": { "type": "object", "default": {} },
+        "borderRadiusMobile": { "type": "object", "default": {} },
         "boxShadow": {
             "type": "object",
             "default": { "x": 0, "y": 0, "b": 0, "s": 0, "c": "" }

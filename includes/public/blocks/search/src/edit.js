@@ -23,6 +23,12 @@ import IconPicker from '../../custom-components/IconPicker';
 import TypographyControls from '../../custom-components/TypographyControls';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import AdvancedControls from '../../custom-components/AdvancedControls';
+import BorderControl from '../../custom-components/BorderControl';
+
+const STATE_TABS = [
+	{ name: 'normal', title: __('Normal', 'shapeblock'), className: 'shapeblock-tab-normal' },
+	{ name: 'hover', title: __('Hover', 'shapeblock'), className: 'shapeblock-tab-hover' },
+];
 
 // Map a base attribute name to its per-device key (desktop uses the base name).
 const getKey = (base, device) =>
@@ -145,7 +151,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	);
 	const respBox = (label, base) => (
 		<ResponsiveWrapper label={label}>
-			{(device) => <BoxControl values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
+			{(device) => <BoxControl label="" values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
 		</ResponsiveWrapper>
 	);
 	const respNum = (label, base) => (
@@ -231,10 +237,26 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			</PanelBody>
 
 			<PanelBody title={__('Submit Button', 'shapeblock')} initialOpen={false}>
-				{isPopup && color(__('Submit Icon Color', 'shapeblock'), 'submitIconColor')}
-				{isPopup && color(__('Submit Icon Hover Color', 'shapeblock'), 'submitIconHoverColor')}
-				{bg(__('Submit Icon Background', 'shapeblock'), 'submitBtnBg', 'submitBtnBgGradient')}
-				{isPopup && bg(__('Submit Icon Hover Background', 'shapeblock'), 'submitBtnHoverBg', 'submitBtnHoverBgGradient')}
+				<TabPanel className="shapeblock-tab-panel" activeClass="is-active" tabs={STATE_TABS}>
+					{(tab) =>
+						tab.name === 'hover' ? (
+							<>
+								{color(__('Icon Color', 'shapeblock'), 'submitIconHoverColor')}
+								{bg(__('Background', 'shapeblock'), 'submitBtnHoverBg', 'submitBtnHoverBgGradient')}
+								{color(__('Border Color', 'shapeblock'), 'submitHoverBorderColor')}
+							</>
+						) : (
+							<>
+								{isPopup && color(__('Icon Color', 'shapeblock'), 'submitIconColor')}
+								{bg(__('Background', 'shapeblock'), 'submitBtnBg', 'submitBtnBgGradient')}
+								<BorderControl label={__('Border', 'shapeblock')} value={attributes.submitBorder} onChange={(v) => setAttributes({ submitBorder: v })} />
+							</>
+						)
+					}
+				</TabPanel>
+				<Divider />
+				{box(__('Border Radius', 'shapeblock'), 'submitBorderRadius')}
+				<Divider />
 				{respBox(__('Padding', 'shapeblock'), 'submitPadding')}
 			</PanelBody>
 

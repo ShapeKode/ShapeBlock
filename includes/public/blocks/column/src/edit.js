@@ -377,7 +377,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             <PanelBody title={__('Spacing', 'shapeblock')} initialOpen={true}>
                 <ResponsiveWrapper label={__('Padding', 'shapeblock')}>
                     {(device) => (
-                        <BoxControl
+                        <BoxControl label=""
                             values={attributes[getKey('padding', device)]}
                             onChange={(v) => setAttributes({ [getKey('padding', device)]: v })}
                         />
@@ -386,7 +386,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 <Divider />
                 <ResponsiveWrapper label={__('Margin', 'shapeblock')}>
                     {(device) => (
-                        <BoxControl
+                        <BoxControl label=""
                             values={attributes[getKey('margin', device)]}
                             // Margins may be negative, e.g. -50px to pull a row up over the one above.
                             inputProps={{ min: -1000, max: 1000 }}
@@ -412,17 +412,25 @@ export default function Edit({ attributes, setAttributes, clientId }) {
             </PanelBody>
 
             <PanelBody title={__('Border', 'shapeblock')} initialOpen={false}>
-                <BorderControl
-                    label={__('Border', 'shapeblock')}
-                    value={attributes.border}
-                    onChange={(v) => setAttributes({ border: v })}
-                />
+                {/* Per device: on Tablet / Mobile a width of 0 or the None style removes the border there. */}
+                <ResponsiveWrapper label={__('Border', 'shapeblock')}>
+                    {(device) => (
+                        <BorderControl
+                            value={attributes[getKey('border', device)]}
+                            onChange={(v) => setAttributes({ [getKey('border', device)]: v })}
+                        />
+                    )}
+                </ResponsiveWrapper>
                 <Divider />
-                <BoxControl
-                    label={__('Border Radius', 'shapeblock')}
-                    values={attributes.borderRadius}
-                    onChange={(v) => setAttributes({ borderRadius: v })}
-                />
+                <ResponsiveWrapper label={__('Border Radius', 'shapeblock')}>
+                    {(device) => (
+                        <BoxControl
+                            label=""
+                            values={attributes[getKey('borderRadius', device)]}
+                            onChange={(v) => setAttributes({ [getKey('borderRadius', device)]: v })}
+                        />
+                    )}
+                </ResponsiveWrapper>
                 <Divider />
                 <BoxShadowControls
                     label={__('Box Shadow', 'shapeblock')}

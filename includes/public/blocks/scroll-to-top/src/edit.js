@@ -70,7 +70,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// matching per-device attribute (base / baseTablet / baseMobile).
 	const respBox = (label, base) => (
 		<ResponsiveWrapper label={label}>
-			{(device) => <BoxControl values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
+			{(device) => <BoxControl label="" values={attributes[getKey(base, device)]} onChange={(v) => setAttributes({ [getKey(base, device)]: v })} />}
 		</ResponsiveWrapper>
 	);
 	const respNum = (label, base) => (

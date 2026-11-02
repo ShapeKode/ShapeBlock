@@ -117,6 +117,22 @@ if ( ! empty( $radius['right'] ) )  $col_responsive['desktop']['border-top-right
 if ( ! empty( $radius['bottom'] ) ) $col_responsive['desktop']['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $radius['bottom'] );
 if ( ! empty( $radius['left'] ) )   $col_responsive['desktop']['border-bottom-left-radius']  = \ShapeBlock\Frontend\Helper::ensure_unit( $radius['left'] );
 
+// Border and border radius on Tablet / Mobile, where set. A width of 0 or the
+// None style there removes the border on that device.
+foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $border_suffix => $border_device ) {
+    $device_border = $attributes[ 'border' . $border_suffix ] ?? [];
+    if ( is_array( $device_border ) && $device_border ) {
+        $device_props = \ShapeBlock\Frontend\Helper::border_to_css_props( $device_border );
+        $col_responsive[ $border_device ] = array_merge( $col_responsive[ $border_device ], $device_props ? $device_props : [ 'border-style' => 'none' ] );
+    }
+    $device_radius = $attributes[ 'borderRadius' . $border_suffix ] ?? [];
+    foreach ( [ 'top' => 'border-top-left-radius', 'right' => 'border-top-right-radius', 'bottom' => 'border-bottom-right-radius', 'left' => 'border-bottom-left-radius' ] as $radius_side => $radius_prop ) {
+        if ( isset( $device_radius[ $radius_side ] ) && '' !== (string) $device_radius[ $radius_side ] ) {
+            $col_responsive[ $border_device ][ $radius_prop ] = \ShapeBlock\Frontend\Helper::ensure_unit( $device_radius[ $radius_side ] );
+        }
+    }
+}
+
 // Box shadow.
 if ( ! empty( $attributes['boxShadow'] ) && ! empty( $attributes['boxShadow']['c'] ) && $attributes['boxShadow']['c'] !== 'rgba(0,0,0,0)' ) {
     $col_responsive['desktop']['box-shadow'] = \ShapeBlock\Frontend\Helper::box_shadow_to_css( $attributes['boxShadow'] );

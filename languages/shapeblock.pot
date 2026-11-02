@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-02T03:52:53+00:00\n"
+"POT-Creation-Date: 2026-11-02T06:57:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: shapeblock\n"
@@ -456,7 +456,7 @@ msgstr ""
 #: includes/public/blocks/button/src/edit.js:182
 #: includes/public/blocks/button/src/edit.js:332
 #: includes/public/blocks/clients-logo-grid/src/edit.js:309
-#: includes/public/blocks/column/src/edit.js:468
+#: includes/public/blocks/column/src/edit.js:476
 #: includes/public/blocks/countdown/src/edit.js:169
 #: includes/public/blocks/countdown/src/edit.js:241
 #: includes/public/blocks/counter/src/edit.js:462
@@ -478,13 +478,13 @@ msgstr ""
 #: includes/public/blocks/image-comparison/src/edit.js:134
 #: includes/public/blocks/image-comparison/src/edit.js:281
 #: includes/public/blocks/isotope/src/edit.js:800
-#: includes/public/blocks/layout-row/src/edit.js:694
+#: includes/public/blocks/layout-row/src/edit.js:702
 #: includes/public/blocks/offcanvas/src/edit.js:285
-#: includes/public/blocks/post-grid/src/edit.js:1012
+#: includes/public/blocks/post-grid/src/edit.js:1034
 #: includes/public/blocks/pricing-table/src/edit.js:538
 #: includes/public/blocks/progress/src/edit.js:179
 #: includes/public/blocks/scroll-to-top/src/edit.js:140
-#: includes/public/blocks/search/src/edit.js:263
+#: includes/public/blocks/search/src/edit.js:285
 #: includes/public/blocks/slider/src/edit.js:241
 #: includes/public/blocks/slider/src/edit.js:299
 #: includes/public/blocks/social-icon/src/edit.js:247
@@ -734,7 +734,7 @@ msgstr ""
 msgid "No builder templates found in Trash"
 msgstr ""
 
-#: includes/Main.php:98
+#: includes/Main.php:104
 #: includes/public/blocks/column/src/edit.js:170
 #: includes/public/blocks/faq/src/edit.js:255
 #: includes/public/blocks/layout-row/src/edit.js:196
@@ -744,41 +744,41 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: includes/Main.php:99
+#: includes/Main.php:105
 #: src/app.js:28
 #: src/components/admin-components/blocks.jsx:186
 msgid "Blocks"
 msgstr ""
 
-#: includes/Main.php:100
+#: includes/Main.php:106
 #: src/app.js:33
 #: src/components/admin-components/theme-builder.jsx:474
 msgid "Theme Builder"
 msgstr ""
 
-#: includes/Main.php:101
+#: includes/Main.php:107
 #: src/app.js:38
 #: src/components/admin-components/export-import.jsx:10
 msgid "Custom Templates"
 msgstr ""
 
-#: includes/Main.php:125
+#: includes/Main.php:131
 #: src/app.js:45
 #: src/components/admin-components/export-import.jsx:219
 msgid "Export & Import"
 msgstr ""
 
 #. translators: %s: name of the ShapeBlock admin page.
-#: includes/Main.php:240
+#: includes/Main.php:246
 #, php-format
 msgid "ShapeBlock - %s"
 msgstr ""
 
-#: includes/Main.php:266
+#: includes/Main.php:272
 #: includes/public/blocks/breadcrumb/src/edit.js:240
 #: includes/public/blocks/button/src/edit.js:331
 #: includes/public/blocks/clients-logo-grid/src/edit.js:308
-#: includes/public/blocks/column/src/edit.js:467
+#: includes/public/blocks/column/src/edit.js:475
 #: includes/public/blocks/countdown/src/edit.js:240
 #: includes/public/blocks/counter/src/edit.js:461
 #: includes/public/blocks/drop-caps/src/edit.js:88
@@ -795,13 +795,13 @@ msgstr ""
 #: includes/public/blocks/image-carousel/src/edit.js:363
 #: includes/public/blocks/image-comparison/src/edit.js:280
 #: includes/public/blocks/isotope/src/edit.js:799
-#: includes/public/blocks/layout-row/src/edit.js:693
+#: includes/public/blocks/layout-row/src/edit.js:701
 #: includes/public/blocks/offcanvas/src/edit.js:284
-#: includes/public/blocks/post-grid/src/edit.js:1011
+#: includes/public/blocks/post-grid/src/edit.js:1033
 #: includes/public/blocks/pricing-table/src/edit.js:537
 #: includes/public/blocks/progress/src/edit.js:178
 #: includes/public/blocks/scroll-to-top/src/edit.js:139
-#: includes/public/blocks/search/src/edit.js:262
+#: includes/public/blocks/search/src/edit.js:284
 #: includes/public/blocks/slider/src/edit.js:298
 #: includes/public/blocks/social-icon/src/edit.js:246
 #: includes/public/blocks/social-share/src/edit.js:242
@@ -992,7 +992,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: includes/public/blocks/post-grid/src/render.php:604
+#: includes/public/blocks/post-grid/src/render.php:643
 msgid "No posts found."
 msgstr ""
 
@@ -1122,16 +1122,16 @@ msgstr ""
 msgid "What are you looking for?"
 msgstr ""
 
-#: includes/public/blocks/search/src/render.php:275
-#: includes/public/blocks/search/src/render.php:316
+#: includes/public/blocks/search/src/render.php:285
+#: includes/public/blocks/search/src/render.php:326
 msgid "Submit Search"
 msgstr ""
 
-#: includes/public/blocks/search/src/render.php:289
+#: includes/public/blocks/search/src/render.php:299
 msgid "Open Search"
 msgstr ""
 
-#: includes/public/blocks/search/src/render.php:301
+#: includes/public/blocks/search/src/render.php:311
 msgid "Close Search"
 msgstr ""
 
@@ -1273,6 +1273,7 @@ msgstr ""
 #: includes/public/blocks/post-grid/src/edit.js:317
 #: includes/public/blocks/post-grid/src/edit.js:438
 #: includes/public/blocks/post-grid/src/edit.js:753
+#: includes/public/blocks/post-grid/src/edit.js:961
 #: includes/public/blocks/pricing-table/src/edit.js:231
 #: includes/public/blocks/sticky-stack/src/edit.js:362
 #: includes/public/blocks/tab/src/edit.js:376
@@ -1311,12 +1312,12 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:488
 #: includes/public/blocks/isotope/src/edit.js:498
 #: includes/public/blocks/offcanvas/src/edit.js:185
-#: includes/public/blocks/post-grid/src/edit.js:952
+#: includes/public/blocks/post-grid/src/edit.js:962
 #: includes/public/blocks/pricing-table/src/edit.js:56
 #: includes/public/blocks/pricing-table/src/edit.js:287
 #: includes/public/blocks/pricing-table/src/price.js:49
 #: includes/public/blocks/scroll-to-top/src/edit.js:104
-#: includes/public/blocks/search/src/edit.js:194
+#: includes/public/blocks/search/src/edit.js:200
 #: includes/public/blocks/sticky-stack/src/edit.js:364
 #: includes/public/blocks/sticky-stack/src/edit.js:388
 #: includes/public/blocks/tab/src/edit.js:85
@@ -1352,6 +1353,7 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:66
 #: includes/public/blocks/isotope/src/edit.js:489
 #: includes/public/blocks/layout-row/src/edit.js:443
+#: includes/public/blocks/post-grid/src/edit.js:963
 #: includes/public/blocks/pricing-table/src/edit.js:57
 #: includes/public/blocks/sticky-stack/src/edit.js:389
 #: includes/public/blocks/tab/src/edit.js:348
@@ -1391,12 +1393,12 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:67
 #: includes/public/blocks/isotope/src/edit.js:490
 #: includes/public/blocks/offcanvas/src/edit.js:186
-#: includes/public/blocks/post-grid/src/edit.js:953
+#: includes/public/blocks/post-grid/src/edit.js:964
 #: includes/public/blocks/pricing-table/src/edit.js:58
 #: includes/public/blocks/pricing-table/src/edit.js:288
 #: includes/public/blocks/pricing-table/src/price.js:50
 #: includes/public/blocks/scroll-to-top/src/edit.js:103
-#: includes/public/blocks/search/src/edit.js:195
+#: includes/public/blocks/search/src/edit.js:201
 #: includes/public/blocks/sticky-stack/src/edit.js:363
 #: includes/public/blocks/sticky-stack/src/edit.js:390
 #: includes/public/blocks/tab/src/edit.js:87
@@ -1426,6 +1428,7 @@ msgstr ""
 #: includes/public/blocks/post-grid/src/edit.js:790
 #: includes/public/blocks/post-grid/src/edit.js:826
 #: includes/public/blocks/post-grid/src/edit.js:906
+#: includes/public/blocks/search/src/edit.js:29
 #: includes/public/blocks/social-icon/src/edit.js:44
 #: includes/public/blocks/social-share/src/edit.js:45
 #: includes/public/blocks/sticky-stack/src/edit.js:54
@@ -1450,6 +1453,7 @@ msgstr ""
 #: includes/public/blocks/post-grid/src/edit.js:768
 #: includes/public/blocks/post-grid/src/edit.js:791
 #: includes/public/blocks/post-grid/src/edit.js:827
+#: includes/public/blocks/search/src/edit.js:30
 #: includes/public/blocks/social-icon/src/edit.js:45
 #: includes/public/blocks/social-share/src/edit.js:46
 #: includes/public/blocks/sticky-stack/src/edit.js:55
@@ -1527,7 +1531,7 @@ msgstr ""
 #: includes/public/blocks/icon/src/edit.js:170
 #: includes/public/blocks/isotope/src/edit.js:508
 #: includes/public/blocks/isotope/src/edit.js:569
-#: includes/public/blocks/post-grid/src/edit.js:948
+#: includes/public/blocks/post-grid/src/edit.js:956
 #: includes/public/blocks/team-grid/src/edit.js:193
 #: includes/public/blocks/team-grid/src/edit.js:289
 #: includes/public/blocks/testimonials-grid/src/edit.js:213
@@ -1602,6 +1606,8 @@ msgstr ""
 #: includes/public/blocks/pricing-table/src/edit.js:439
 #: includes/public/blocks/progress/src/edit.js:147
 #: includes/public/blocks/scroll-to-top/src/edit.js:119
+#: includes/public/blocks/search/src/edit.js:245
+#: includes/public/blocks/search/src/edit.js:251
 #: includes/public/blocks/slider/src/edit.js:275
 #: includes/public/blocks/social-icon/src/edit.js:138
 #: includes/public/blocks/social-icon/src/edit.js:149
@@ -1664,12 +1670,13 @@ msgstr ""
 #: includes/public/blocks/layout-row/src/edit.js:652
 #: includes/public/blocks/post-grid/src/edit.js:565
 #: includes/public/blocks/post-grid/src/edit.js:878
-#: includes/public/blocks/post-grid/src/edit.js:932
+#: includes/public/blocks/post-grid/src/edit.js:937
 #: includes/public/blocks/pricing-table/src/edit.js:333
 #: includes/public/blocks/pricing-table/src/edit.js:346
 #: includes/public/blocks/pricing-table/src/edit.js:422
 #: includes/public/blocks/pricing-table/src/edit.js:442
 #: includes/public/blocks/scroll-to-top/src/edit.js:120
+#: includes/public/blocks/search/src/edit.js:252
 #: includes/public/blocks/social-icon/src/edit.js:192
 #: includes/public/blocks/social-share/src/edit.js:202
 #: includes/public/blocks/sticky-stack/src/edit.js:427
@@ -1689,7 +1696,7 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/src/edit.js:213
 #: includes/public/blocks/button/src/edit.js:244
 #: includes/public/blocks/clients-logo-grid/src/edit.js:273
-#: includes/public/blocks/column/src/edit.js:422
+#: includes/public/blocks/column/src/edit.js:425
 #: includes/public/blocks/counter/src/edit.js:429
 #: includes/public/blocks/faq/src/edit.js:358
 #: includes/public/blocks/faq/src/edit.js:449
@@ -1719,16 +1726,17 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:699
 #: includes/public/blocks/isotope/src/edit.js:743
 #: includes/public/blocks/isotope/src/edit.js:768
-#: includes/public/blocks/layout-row/src/edit.js:658
+#: includes/public/blocks/layout-row/src/edit.js:661
 #: includes/public/blocks/post-grid/src/edit.js:571
 #: includes/public/blocks/post-grid/src/edit.js:610
 #: includes/public/blocks/post-grid/src/edit.js:872
-#: includes/public/blocks/post-grid/src/edit.js:937
+#: includes/public/blocks/post-grid/src/edit.js:942
 #: includes/public/blocks/pricing-table/src/edit.js:321
 #: includes/public/blocks/pricing-table/src/edit.js:335
 #: includes/public/blocks/pricing-table/src/edit.js:450
 #: includes/public/blocks/scroll-to-top/src/edit.js:126
-#: includes/public/blocks/search/src/edit.js:227
+#: includes/public/blocks/search/src/edit.js:233
+#: includes/public/blocks/search/src/edit.js:258
 #: includes/public/blocks/slider/src/edit.js:262
 #: includes/public/blocks/slider/src/edit.js:277
 #: includes/public/blocks/social-icon/src/edit.js:191
@@ -1783,14 +1791,14 @@ msgstr ""
 #: includes/public/blocks/post-grid/src/edit.js:643
 #: includes/public/blocks/post-grid/src/edit.js:693
 #: includes/public/blocks/post-grid/src/edit.js:860
-#: includes/public/blocks/post-grid/src/edit.js:942
+#: includes/public/blocks/post-grid/src/edit.js:946
 #: includes/public/blocks/pricing-table/src/edit.js:319
 #: includes/public/blocks/pricing-table/src/edit.js:337
 #: includes/public/blocks/pricing-table/src/edit.js:348
 #: includes/public/blocks/pricing-table/src/edit.js:452
 #: includes/public/blocks/scroll-to-top/src/edit.js:128
-#: includes/public/blocks/search/src/edit.js:230
-#: includes/public/blocks/search/src/edit.js:238
+#: includes/public/blocks/search/src/edit.js:236
+#: includes/public/blocks/search/src/edit.js:260
 #: includes/public/blocks/sticky-stack/src/edit.js:485
 #: includes/public/blocks/tab/src/edit.js:367
 #: includes/public/blocks/tab/src/edit.js:413
@@ -1819,7 +1827,9 @@ msgstr ""
 #: includes/public/blocks/offcanvas/src/edit.js:265
 #: includes/public/blocks/pricing-table/src/edit.js:419
 #: includes/public/blocks/scroll-to-top/src/edit.js:118
-#: includes/public/blocks/search/src/edit.js:218
+#: includes/public/blocks/search/src/edit.js:224
+#: includes/public/blocks/search/src/edit.js:244
+#: includes/public/blocks/search/src/edit.js:250
 #: includes/public/blocks/slider/src/edit.js:274
 #: includes/public/blocks/social-icon/src/edit.js:144
 #: includes/public/blocks/social-icon/src/edit.js:155
@@ -1922,7 +1932,7 @@ msgstr ""
 #: includes/public/blocks/post-grid/src/edit.js:724
 #: includes/public/blocks/post-grid/src/edit.js:814
 #: includes/public/blocks/post-grid/src/edit.js:894
-#: includes/public/blocks/post-grid/src/edit.js:977
+#: includes/public/blocks/post-grid/src/edit.js:995
 #: includes/public/blocks/pricing-table/src/edit.js:315
 #: includes/public/blocks/pricing-table/src/edit.js:331
 #: includes/public/blocks/pricing-table/src/edit.js:344
@@ -1930,7 +1940,7 @@ msgstr ""
 #: includes/public/blocks/pricing-table/src/edit.js:459
 #: includes/public/blocks/progress/src/edit.js:161
 #: includes/public/blocks/progress/src/edit.js:166
-#: includes/public/blocks/search/src/edit.js:223
+#: includes/public/blocks/search/src/edit.js:229
 #: includes/public/blocks/sticky-stack/src/edit.js:439
 #: includes/public/blocks/sticky-stack/src/edit.js:449
 #: includes/public/blocks/sticky-stack/src/edit.js:454
@@ -2034,7 +2044,7 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/src/edit.js:242
 #: includes/public/blocks/button/src/edit.js:333
 #: includes/public/blocks/clients-logo-grid/src/edit.js:310
-#: includes/public/blocks/column/src/edit.js:469
+#: includes/public/blocks/column/src/edit.js:477
 #: includes/public/blocks/countdown/src/edit.js:242
 #: includes/public/blocks/counter/src/edit.js:463
 #: includes/public/blocks/custom-components/BorderControl.js:120
@@ -2055,14 +2065,14 @@ msgstr ""
 #: includes/public/blocks/image-comparison/src/edit.js:282
 #: includes/public/blocks/isotope/src/edit.js:718
 #: includes/public/blocks/isotope/src/edit.js:801
-#: includes/public/blocks/layout-row/src/edit.js:695
+#: includes/public/blocks/layout-row/src/edit.js:703
 #: includes/public/blocks/offcanvas/src/edit.js:286
-#: includes/public/blocks/post-grid/src/edit.js:1013
+#: includes/public/blocks/post-grid/src/edit.js:1035
 #: includes/public/blocks/pricing-table/src/edit.js:239
 #: includes/public/blocks/pricing-table/src/edit.js:539
 #: includes/public/blocks/progress/src/edit.js:180
 #: includes/public/blocks/scroll-to-top/src/edit.js:141
-#: includes/public/blocks/search/src/edit.js:264
+#: includes/public/blocks/search/src/edit.js:286
 #: includes/public/blocks/slider/src/edit.js:300
 #: includes/public/blocks/social-icon/src/edit.js:248
 #: includes/public/blocks/social-share/src/edit.js:244
@@ -2078,7 +2088,7 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/src/edit.js:243
 #: includes/public/blocks/button/src/edit.js:334
 #: includes/public/blocks/clients-logo-grid/src/edit.js:311
-#: includes/public/blocks/column/src/edit.js:470
+#: includes/public/blocks/column/src/edit.js:478
 #: includes/public/blocks/countdown/src/edit.js:243
 #: includes/public/blocks/counter/src/edit.js:464
 #: includes/public/blocks/drop-caps/src/edit.js:91
@@ -2095,13 +2105,13 @@ msgstr ""
 #: includes/public/blocks/image-carousel/src/edit.js:366
 #: includes/public/blocks/image-comparison/src/edit.js:283
 #: includes/public/blocks/isotope/src/edit.js:802
-#: includes/public/blocks/layout-row/src/edit.js:696
+#: includes/public/blocks/layout-row/src/edit.js:704
 #: includes/public/blocks/offcanvas/src/edit.js:287
-#: includes/public/blocks/post-grid/src/edit.js:1014
+#: includes/public/blocks/post-grid/src/edit.js:1036
 #: includes/public/blocks/pricing-table/src/edit.js:540
 #: includes/public/blocks/progress/src/edit.js:181
 #: includes/public/blocks/scroll-to-top/src/edit.js:142
-#: includes/public/blocks/search/src/edit.js:265
+#: includes/public/blocks/search/src/edit.js:287
 #: includes/public/blocks/slider/src/edit.js:301
 #: includes/public/blocks/social-icon/src/edit.js:249
 #: includes/public/blocks/social-share/src/edit.js:245
@@ -2167,7 +2177,7 @@ msgstr ""
 #: includes/public/blocks/icon-list/src/edit.js:201
 #: includes/public/blocks/isotope/src/edit.js:496
 #: includes/public/blocks/post-grid/src/edit.js:364
-#: includes/public/blocks/search/src/edit.js:191
+#: includes/public/blocks/search/src/edit.js:197
 #: includes/public/blocks/tab/src/edit.js:310
 msgid "Icon Position"
 msgstr ""
@@ -2218,7 +2228,7 @@ msgstr ""
 #: includes/public/blocks/button/src/edit.js:238
 #: includes/public/blocks/clients-logo-grid/src/edit.js:283
 #: includes/public/blocks/clients-logo-grid/src/edit.js:291
-#: includes/public/blocks/column/src/edit.js:428
+#: includes/public/blocks/column/src/edit.js:436
 #: includes/public/blocks/counter/src/edit.js:432
 #: includes/public/blocks/custom-components/BoxShadowControls.js:76
 #: includes/public/blocks/faq/src/edit.js:345
@@ -2232,9 +2242,10 @@ msgstr ""
 #: includes/public/blocks/image-comparison/src/edit.js:216
 #: includes/public/blocks/isotope/src/edit.js:677
 #: includes/public/blocks/isotope/src/edit.js:683
-#: includes/public/blocks/layout-row/src/edit.js:664
+#: includes/public/blocks/layout-row/src/edit.js:672
 #: includes/public/blocks/post-grid/src/edit.js:529
 #: includes/public/blocks/post-grid/src/edit.js:559
+#: includes/public/blocks/post-grid/src/edit.js:927
 #: includes/public/blocks/pricing-table/src/edit.js:443
 #: includes/public/blocks/scroll-to-top/src/edit.js:121
 #: includes/public/blocks/social-icon/src/edit.js:194
@@ -2432,7 +2443,7 @@ msgid "Move down"
 msgstr ""
 
 #: includes/public/blocks/clients-logo-grid/src/edit.js:178
-#: includes/public/blocks/column/src/edit.js:444
+#: includes/public/blocks/column/src/edit.js:452
 #: includes/public/blocks/faq/src/edit.js:236
 #: includes/public/blocks/faq/src/edit.js:594
 #: includes/public/blocks/feature-list/src/edit.js:199
@@ -2451,7 +2462,7 @@ msgstr ""
 
 #: includes/public/blocks/clients-logo-grid/src/edit.js:179
 #: includes/public/blocks/clients-logo-grid/src/edit.js:207
-#: includes/public/blocks/column/src/edit.js:446
+#: includes/public/blocks/column/src/edit.js:454
 #: includes/public/blocks/custom-components/BackgroundImageControls.js:50
 #: includes/public/blocks/faq/src/edit.js:237
 #: includes/public/blocks/faq/src/edit.js:600
@@ -2462,7 +2473,7 @@ msgstr ""
 #: includes/public/blocks/icon-list/src/edit.js:166
 #: includes/public/blocks/image-carousel/src/edit.js:216
 #: includes/public/blocks/isotope/src/edit.js:277
-#: includes/public/blocks/search/src/edit.js:129
+#: includes/public/blocks/search/src/edit.js:135
 #: includes/public/blocks/slider/src/edit.js:184
 #: includes/public/blocks/social-icon/src/edit.js:124
 #: includes/public/blocks/social-share/src/edit.js:118
@@ -2733,7 +2744,7 @@ msgstr ""
 #: includes/public/blocks/column/src/edit.js:287
 #: includes/public/blocks/column/src/edit.js:331
 #: includes/public/blocks/column/src/edit.js:342
-#: includes/public/blocks/column/src/edit.js:456
+#: includes/public/blocks/column/src/edit.js:464
 #: includes/public/blocks/layout-row/src/edit.js:462
 #: includes/public/blocks/layout-row/src/edit.js:481
 msgid "Stretch"
@@ -2848,32 +2859,32 @@ msgstr ""
 msgid "Spacing"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:442
+#: includes/public/blocks/column/src/edit.js:450
 msgid "Move Left"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:443
+#: includes/public/blocks/column/src/edit.js:451
 msgid "Move Right"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:445
-#: includes/public/blocks/layout-row/src/edit.js:678
+#: includes/public/blocks/column/src/edit.js:453
+#: includes/public/blocks/layout-row/src/edit.js:686
 msgid "Add Column"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:451
+#: includes/public/blocks/column/src/edit.js:459
 msgid "Content Align"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:453
+#: includes/public/blocks/column/src/edit.js:461
 msgid "Align Left"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:454
+#: includes/public/blocks/column/src/edit.js:462
 msgid "Align Center"
 msgstr ""
 
-#: includes/public/blocks/column/src/edit.js:455
+#: includes/public/blocks/column/src/edit.js:463
 msgid "Align Right"
 msgstr ""
 
@@ -3171,7 +3182,7 @@ msgstr ""
 #: includes/public/blocks/offcanvas/src/edit.js:266
 #: includes/public/blocks/pricing-table/src/edit.js:420
 #: includes/public/blocks/scroll-to-top/src/edit.js:127
-#: includes/public/blocks/search/src/edit.js:219
+#: includes/public/blocks/search/src/edit.js:225
 #: includes/public/blocks/social-icon/src/edit.js:189
 #: includes/public/blocks/social-share/src/edit.js:216
 #: includes/public/blocks/sticky-stack/src/edit.js:444
@@ -3195,7 +3206,7 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:411
 #: includes/public/blocks/isotope/src/edit.js:785
 #: includes/public/blocks/post-grid/src/edit.js:237
-#: includes/public/blocks/post-grid/src/edit.js:997
+#: includes/public/blocks/post-grid/src/edit.js:1019
 #: includes/public/blocks/sticky-stack/src/edit.js:340
 #: includes/public/blocks/sticky-stack/src/edit.js:516
 #: includes/public/blocks/team-grid/src/edit.js:441
@@ -3260,7 +3271,7 @@ msgstr ""
 #: includes/public/blocks/custom-components/BackgroundImageControls.js:46
 #: includes/public/blocks/hover-box/src/edit.js:176
 #: includes/public/blocks/image-carousel/src/edit.js:229
-#: includes/public/blocks/search/src/edit.js:125
+#: includes/public/blocks/search/src/edit.js:131
 #: includes/public/blocks/slider/src/edit.js:197
 msgid "Replace Image"
 msgstr ""
@@ -3819,6 +3830,7 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:676
 #: includes/public/blocks/isotope/src/edit.js:756
 #: includes/public/blocks/post-grid/src/edit.js:524
+#: includes/public/blocks/search/src/edit.js:246
 #: includes/public/blocks/sticky-stack/src/edit.js:473
 #: includes/public/blocks/tab/src/edit.js:397
 #: includes/public/blocks/tab/src/edit.js:403
@@ -4201,20 +4213,20 @@ msgstr ""
 
 #: includes/public/blocks/filter-list/src/edit.js:472
 #: includes/public/blocks/isotope/src/edit.js:660
-#: includes/public/blocks/search/src/edit.js:225
+#: includes/public/blocks/search/src/edit.js:231
 msgid "Placeholder Color"
 msgstr ""
 
 #: includes/public/blocks/filter-list/src/edit.js:476
 #: includes/public/blocks/isotope/src/edit.js:664
-#: includes/public/blocks/search/src/edit.js:229
+#: includes/public/blocks/search/src/edit.js:235
 msgid "Border Color (Focus)"
 msgstr ""
 
 #: includes/public/blocks/filter-list/src/edit.js:478
 #: includes/public/blocks/image-comparison/src/edit.js:145
 #: includes/public/blocks/progress/src/edit.js:131
-#: includes/public/blocks/search/src/edit.js:208
+#: includes/public/blocks/search/src/edit.js:214
 #: includes/public/blocks/team-grid/src/edit.js:295
 msgid "Height (px)"
 msgstr ""
@@ -4929,7 +4941,7 @@ msgstr ""
 
 #: includes/public/blocks/icon-list/src/edit.js:195
 #: includes/public/blocks/image-carousel/src/edit.js:303
-#: includes/public/blocks/post-grid/src/edit.js:960
+#: includes/public/blocks/post-grid/src/edit.js:972
 #: includes/public/blocks/slider/src/edit.js:243
 #: includes/public/blocks/team-grid/src/edit.js:386
 #: includes/public/blocks/team-grid/src/edit.js:406
@@ -5327,7 +5339,7 @@ msgid "Only for this card. Leave empty to use the colors under Style."
 msgstr ""
 
 #: includes/public/blocks/isotope/src/edit.js:264
-#: includes/public/blocks/search/src/edit.js:245
+#: includes/public/blocks/search/src/edit.js:267
 msgid "Title Color"
 msgstr ""
 
@@ -5554,7 +5566,7 @@ msgid "Load More Button"
 msgstr ""
 
 #: includes/public/blocks/isotope/src/edit.js:770
-#: includes/public/blocks/post-grid/src/edit.js:968
+#: includes/public/blocks/post-grid/src/edit.js:983
 msgid "Space Above (px)"
 msgstr ""
 
@@ -5666,11 +5678,11 @@ msgstr ""
 msgid "Link Hover"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:681
+#: includes/public/blocks/layout-row/src/edit.js:689
 msgid "Remove Column"
 msgstr ""
 
-#: includes/public/blocks/layout-row/src/edit.js:714
+#: includes/public/blocks/layout-row/src/edit.js:722
 msgid "Choose a Layout"
 msgstr ""
 
@@ -5745,7 +5757,7 @@ msgid "No templates yet. Click “Create New Template” to add one, then select
 msgstr ""
 
 #: includes/public/blocks/offcanvas/src/edit.js:218
-#: includes/public/blocks/search/src/edit.js:178
+#: includes/public/blocks/search/src/edit.js:184
 msgid "Close Icon"
 msgstr ""
 
@@ -6071,7 +6083,7 @@ msgstr ""
 msgid "Hover / Active"
 msgstr ""
 
-#: includes/public/blocks/post-grid/src/edit.js:951
+#: includes/public/blocks/post-grid/src/edit.js:961
 msgid "Default (Center)"
 msgstr ""
 
@@ -6358,121 +6370,105 @@ msgstr ""
 msgid "Icon Color (Hover)"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:125
+#: includes/public/blocks/search/src/edit.js:131
 msgid "Upload Image"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:162
+#: includes/public/blocks/search/src/edit.js:168
 msgid "Search Settings"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:164
+#: includes/public/blocks/search/src/edit.js:170
 msgid "Search Skin"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:167
-#: includes/public/blocks/search/src/edit.js:242
+#: includes/public/blocks/search/src/edit.js:173
+#: includes/public/blocks/search/src/edit.js:264
 msgid "Search Popup"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:168
+#: includes/public/blocks/search/src/edit.js:174
 msgid "Search Fields"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:174
+#: includes/public/blocks/search/src/edit.js:180
 msgid "Search Title"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:175
+#: includes/public/blocks/search/src/edit.js:181
 msgid "Search Placeholder"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:176
-#: includes/public/blocks/search/src/edit.js:217
+#: includes/public/blocks/search/src/edit.js:182
+#: includes/public/blocks/search/src/edit.js:223
 msgid "Search Icon"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:177
+#: includes/public/blocks/search/src/edit.js:183
 msgid "Or Upload Search Icon (SVG/Image)"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:179
+#: includes/public/blocks/search/src/edit.js:185
 msgid "Or Upload Close Icon (SVG/Image)"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:186
+#: includes/public/blocks/search/src/edit.js:192
 msgid "Search Icon Position"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:187
+#: includes/public/blocks/search/src/edit.js:193
 msgid "Icon Vertical Position (px)"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:201
+#: includes/public/blocks/search/src/edit.js:207
 msgid "Offset From Right (px)"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:202
+#: includes/public/blocks/search/src/edit.js:208
 msgid "Offset From Left (px)"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:207
+#: includes/public/blocks/search/src/edit.js:213
 msgid "Input Size"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:209
+#: includes/public/blocks/search/src/edit.js:215
 msgid "Input Field Width (px)"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:222
+#: includes/public/blocks/search/src/edit.js:228
 msgid "Input Field"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:224
+#: includes/public/blocks/search/src/edit.js:230
 msgid "Input Text Color"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:226
+#: includes/public/blocks/search/src/edit.js:232
 msgid "Input Background Color"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:228
+#: includes/public/blocks/search/src/edit.js:234
 msgid "Input Border Color"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:233
+#: includes/public/blocks/search/src/edit.js:239
 msgid "Submit Button"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:234
-msgid "Submit Icon Color"
-msgstr ""
-
-#: includes/public/blocks/search/src/edit.js:235
-msgid "Submit Icon Hover Color"
-msgstr ""
-
-#: includes/public/blocks/search/src/edit.js:236
-msgid "Submit Icon Background"
-msgstr ""
-
-#: includes/public/blocks/search/src/edit.js:237
-msgid "Submit Icon Hover Background"
-msgstr ""
-
-#: includes/public/blocks/search/src/edit.js:243
+#: includes/public/blocks/search/src/edit.js:265
 msgid "Overlay Background"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:246
+#: includes/public/blocks/search/src/edit.js:268
 msgid "Title Typography"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:248
+#: includes/public/blocks/search/src/edit.js:270
 msgid "Close Icon Color"
 msgstr ""
 
-#: includes/public/blocks/search/src/edit.js:249
+#: includes/public/blocks/search/src/edit.js:271
 msgid "Close Icon Size (px)"
 msgstr ""
 

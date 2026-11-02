@@ -395,12 +395,49 @@ if ( array_filter( $pag_pad_sides, 'strlen' ) ) {
     $pag_styles['min-height'] = '30px';
 }
 
-// The row of page links: its alignment, the space between them and above.
-$pag_row       = [];
-$pag_justify   = [ 'left' => 'flex-start', 'right' => 'flex-end' ];
-if ( isset( $attributes['paginationAlign'], $pag_justify[ $attributes['paginationAlign'] ] ) ) $pag_row['justify-content'] = $pag_justify[ $attributes['paginationAlign'] ];
-if ( isset( $attributes['paginationGap'] ) && '' !== (string) $attributes['paginationGap'] ) $pag_row['gap'] = max( 0, min( 60, (int) $attributes['paginationGap'] ) ) . 'px';
-if ( isset( $attributes['paginationSpacing'] ) && '' !== (string) $attributes['paginationSpacing'] ) $pag_row['margin-top'] = max( 0, min( 200, (int) $attributes['paginationSpacing'] ) ) . 'px';
+// Box shadow, normal and hover / current.
+if ( ! empty( $attributes['paginationBoxShadow'] ) && is_array( $attributes['paginationBoxShadow'] ) ) {
+    $pag_styles['box-shadow'] = \ShapeBlock\Frontend\Helper::box_shadow_to_css( $attributes['paginationBoxShadow'] );
+}
+if ( ! empty( $attributes['paginationBoxShadowHover'] ) && is_array( $attributes['paginationBoxShadowHover'] ) ) {
+    $pag_hover['box-shadow'] = \ShapeBlock\Frontend\Helper::box_shadow_to_css( $attributes['paginationBoxShadowHover'] );
+}
+
+// The row of page links: its alignment, the space between them and above,
+// per device (desktop first; Tablet and Mobile only where set).
+$pag_justify = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end' ];
+$pag_row_responsive  = [ 'desktop' => [], 'tablet' => [], 'mobile' => [] ];
+$pag_item_responsive = [ 'desktop' => [], 'tablet' => [], 'mobile' => [] ];
+foreach ( [ '' => 'desktop', 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $pag_suffix => $pag_device ) {
+    if ( isset( $attributes[ 'paginationAlign' . $pag_suffix ], $pag_justify[ $attributes[ 'paginationAlign' . $pag_suffix ] ] ) ) $pag_row_responsive[ $pag_device ]['justify-content'] = $pag_justify[ $attributes[ 'paginationAlign' . $pag_suffix ] ];
+    if ( isset( $attributes[ 'paginationGap' . $pag_suffix ] ) && '' !== (string) $attributes[ 'paginationGap' . $pag_suffix ] ) $pag_row_responsive[ $pag_device ]['gap'] = max( 0, min( 60, (int) $attributes[ 'paginationGap' . $pag_suffix ] ) ) . 'px';
+    if ( isset( $attributes[ 'paginationSpacing' . $pag_suffix ] ) && '' !== (string) $attributes[ 'paginationSpacing' . $pag_suffix ] ) $pag_row_responsive[ $pag_device ]['margin-top'] = max( 0, min( 200, (int) $attributes[ 'paginationSpacing' . $pag_suffix ] ) ) . 'px';
+    if ( '' === $pag_suffix ) {
+        continue;
+    }
+    $pag_dev_pad   = $attributes[ 'paginationPadding' . $pag_suffix ] ?? [];
+    $pag_dev_sides = [];
+    foreach ( [ 'top', 'right', 'bottom', 'left' ] as $pag_side ) {
+        $pag_dev_sides[] = ( isset( $pag_dev_pad[ $pag_side ] ) && '' !== (string) $pag_dev_pad[ $pag_side ] ) ? \ShapeBlock\Frontend\Helper::ensure_unit( $pag_dev_pad[ $pag_side ] ) : '';
+    }
+    if ( array_filter( $pag_dev_sides, 'strlen' ) ) {
+        $pag_item_responsive[ $pag_device ] = [
+            'padding'    => implode( ' ', array_map( function ( $v ) { return '' !== $v ? $v : '0'; }, $pag_dev_sides ) ),
+            'width'      => 'auto',
+            'height'     => 'auto',
+            'min-width'  => '30px',
+            'min-height' => '30px',
+        ];
+    }
+    $pag_dev_typo = $attributes[ 'paginationTypography' . $pag_suffix ] ?? [];
+    if ( ! empty( $pag_dev_typo['fontSize'] ) ) $pag_item_responsive[ $pag_device ]['font-size'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pag_dev_typo['fontSize'] );
+    if ( ! empty( $pag_dev_typo['fontWeight'] ) ) $pag_item_responsive[ $pag_device ]['font-weight'] = $pag_dev_typo['fontWeight'];
+    if ( ! empty( $pag_dev_typo['lineHeight'] ) ) $pag_item_responsive[ $pag_device ]['line-height'] = $pag_dev_typo['lineHeight'];
+    if ( ! empty( $pag_dev_typo['letterSpacing'] ) ) $pag_item_responsive[ $pag_device ]['letter-spacing'] = \ShapeBlock\Frontend\Helper::ensure_unit( $pag_dev_typo['letterSpacing'] );
+    if ( ! empty( $pag_dev_typo['textTransform'] ) ) $pag_item_responsive[ $pag_device ]['text-transform'] = $pag_dev_typo['textTransform'];
+}
+$pag_row = $pag_row_responsive['desktop'];
+unset( $pag_row_responsive['desktop'] );
 
 
 $thumbnail_height_responsive = ['desktop' => [], 'tablet' => [], 'mobile' => []];
@@ -426,7 +463,9 @@ $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($se
 $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-post-metas', $meta_responsive);
 $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-blog-excerpt', $excerpt_responsive);
 $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-blog-content', $content_padding_responsive);
-$full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-blog-img img', $thumbnail_height_responsive);   
+$full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-blog-img img', $thumbnail_height_responsive);
+$full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-pagination', $pag_row_responsive);
+$full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-pagination .page-numbers', $pag_item_responsive);   
 $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-read-more', $button_text_align_responsive);   
 
 wp_enqueue_style( $style_handle );

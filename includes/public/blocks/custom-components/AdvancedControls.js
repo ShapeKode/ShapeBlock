@@ -201,7 +201,7 @@ const AdvancedControls = ( { attributes, setAttributes, hideZIndex = false } ) =
         <PanelBody title={ __( 'Spacing', 'shapeblock' ) } initialOpen={ true }>
             <ResponsiveWrapper label={ __( 'Padding', 'shapeblock' ) }>
                 { ( device ) => (
-                    <BoxControl
+                    <BoxControl label=""
                         values={ attributes[ advKey( 'advPadding', device ) ] }
                         onChange={ ( v ) =>
                             setAttributes( { [ advKey( 'advPadding', device ) ]: v } )
@@ -214,7 +214,7 @@ const AdvancedControls = ( { attributes, setAttributes, hideZIndex = false } ) =
 
             <ResponsiveWrapper label={ __( 'Margin', 'shapeblock' ) }>
                 { ( device ) => (
-                    <BoxControl
+                    <BoxControl label=""
                         values={ attributes[ advKey( 'advMargin', device ) ] }
                         // Margins may be negative, e.g. -50px to overlap the block above.
                         inputProps={ { min: -1000, max: 1000 } }

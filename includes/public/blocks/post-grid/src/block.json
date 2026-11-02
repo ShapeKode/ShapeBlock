@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/post-grid",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"title": "Post Grid",
 	"category": "shapeblock",
 	"description": "Post Grid Block",
@@ -83,25 +83,82 @@
 			"type": "string",
 			"default": ""
 		},
-		"advPosition": { "type": "string", "default": "" },
-		"advHAlign": { "type": "string", "default": "" },
-		"advVAlign": { "type": "string", "default": "" },
-		"advTop": { "type": "string", "default": "" },
-		"advTopTablet": { "type": "string", "default": "" },
-		"advTopMobile": { "type": "string", "default": "" },
-		"advRight": { "type": "string", "default": "" },
-		"advRightTablet": { "type": "string", "default": "" },
-		"advRightMobile": { "type": "string", "default": "" },
-		"advBottom": { "type": "string", "default": "" },
-		"advBottomTablet": { "type": "string", "default": "" },
-		"advBottomMobile": { "type": "string", "default": "" },
-		"advLeft": { "type": "string", "default": "" },
-		"advLeftTablet": { "type": "string", "default": "" },
-		"advLeftMobile": { "type": "string", "default": "" },
-		"advWidth": { "type": "string", "default": "" },
-		"advWidthTablet": { "type": "string", "default": "" },
-		"advWidthMobile": { "type": "string", "default": "" },
-		"advZIndex": { "type": "string", "default": "" },
+		"advPosition": {
+			"type": "string",
+			"default": ""
+		},
+		"advHAlign": {
+			"type": "string",
+			"default": ""
+		},
+		"advVAlign": {
+			"type": "string",
+			"default": ""
+		},
+		"advTop": {
+			"type": "string",
+			"default": ""
+		},
+		"advTopTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advTopMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advRight": {
+			"type": "string",
+			"default": ""
+		},
+		"advRightTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advRightMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottom": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottomTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottomMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeft": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeftTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeftMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidth": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidthTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidthMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advZIndex": {
+			"type": "string",
+			"default": ""
+		},
 		"blockId": {
 			"type": "string",
 			"default": ""
@@ -720,6 +777,76 @@
 		"hideMobile": {
 			"type": "boolean",
 			"default": false
+		},
+		"paginationBoxShadow": {
+			"type": "object",
+			"default": {
+				"x": 0,
+				"y": 0,
+				"b": 0,
+				"s": 0,
+				"c": "rgba(0, 0, 0, 0)"
+			}
+		},
+		"paginationBoxShadowHover": {
+			"type": "object",
+			"default": {
+				"x": 0,
+				"y": 0,
+				"b": 0,
+				"s": 0,
+				"c": "rgba(0, 0, 0, 0)"
+			}
+		},
+		"paginationPaddingTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"paginationAlignTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"paginationGapTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"paginationSpacingTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"paginationTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"paginationPaddingMobile": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"paginationAlignMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"paginationGapMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"paginationSpacingMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"paginationTypographyMobile": {
+			"type": "object",
+			"default": {}
 		}
 	}
 }

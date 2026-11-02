@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/search",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "title": "Search",
   "category": "shapeblock",
   "description": "A site search — popup lightbox skin or inline search field skin, with full styling.",
@@ -340,6 +340,23 @@
     "submitBtnHoverBgGradient": {
       "type": "string",
       "default": ""
+    },
+    "submitBorder": {
+      "type": "object",
+      "default": {}
+    },
+    "submitHoverBorderColor": {
+      "type": "string",
+      "default": ""
+    },
+    "submitBorderRadius": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
     },
     "submitPadding": {
       "type": "object"
