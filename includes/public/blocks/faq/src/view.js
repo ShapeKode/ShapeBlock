@@ -42,6 +42,19 @@
 		}, DURATION);
 	}
 
+	// While answers open and close, the browser's scroll anchoring is paused: it
+	// would scroll the page to make up for the changing height, and next to a
+	// sticky column that moved the page by hundreds of pixels, or shook it.
+	var anchorTimer = 0;
+	function pauseScrollAnchoring() {
+		var root = document.documentElement;
+		root.style.overflowAnchor = 'none';
+		window.clearTimeout(anchorTimer);
+		anchorTimer = window.setTimeout(function () {
+			root.style.removeProperty('overflow-anchor');
+		}, DURATION + 200);
+	}
+
 	function initAccordion(wrap) {
 		if (wrap.dataset.shapeblockFaqInit === '1') {
 			return;
@@ -81,6 +94,7 @@
 
 			var toggle = function () {
 				var isActive = item.classList.contains('active');
+				pauseScrollAnchoring();
 
 				// Close every other open item.
 				items.forEach(function (other) {
