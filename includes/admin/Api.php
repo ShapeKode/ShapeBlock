@@ -223,8 +223,8 @@ class Api {
         $statuses = array();
         foreach ( Blocks::instance()->get_blocks() as $block ) {
             $id = isset( $block['id'] ) ? (string) $block['id'] : '';
-            // A block still to come (an add-on's "upcoming" entry) has no switch.
-            if ( '' === $id || ( isset( $block['status'] ) && 'upcoming' === $block['status'] ) ) {
+            // An add-on can list an entry with no switch.
+            if ( '' === $id || ! empty( $block['noSwitch'] ) ) {
                 continue;
             }
             $statuses[ $id ] = ( 'disable' === $block['status'] ) ? 'disable' : 'enable';

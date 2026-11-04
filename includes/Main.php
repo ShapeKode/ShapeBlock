@@ -130,6 +130,11 @@ class Main {
         // Export & Import always comes last, after any add-on pages.
         $pages['shapeblock-export-import'] = array( 'tab' => 'export-import', 'label' => __( 'Export & Import', 'shapeblock' ) );
 
+        // A plain list of what Pro adds; gone once Pro is active.
+        if ( '' !== self::get_upgrade_url() ) {
+            $pages['shapeblock-pro-features'] = array( 'tab' => 'pro-features', 'label' => __( 'Pro Features', 'shapeblock' ) );
+        }
+
         return $pages;
     }
 
@@ -256,6 +261,18 @@ class Main {
                 self::$page_hooks[ $hook ] = $slug;
             }
         }
+
+        // A plain link after the pages, no page of its own.
+        $upgrade_url = self::get_upgrade_url();
+        if ( '' !== $upgrade_url ) {
+            add_submenu_page(
+                'shapeblock',
+                esc_html__( 'Upgrade to Pro', 'shapeblock' ),
+                esc_html__( 'Upgrade to Pro', 'shapeblock' ),
+                'manage_options',
+                $upgrade_url
+            );
+        }
     }
 
     public function render_menu_page() {
@@ -266,10 +283,24 @@ class Main {
         echo '<div id="shapeblock-dashboard" data-initial-tab="' . esc_attr( $tab ) . '"></div>';
     }
 
+    /**
+     * Where the plain "Upgrade to Pro" links go; empty when Pro is active, so they all disappear.
+     *
+     * @return string
+     */
+    public static function get_upgrade_url() {
+        return defined( 'SHAPEBLOCK_PRO_VERSION' ) ? '' : 'https://shapekode.com/product/shapeblock/pricing/';
+    }
+
     public function plugin_action_links( $plugin_actions ) {
 
 		$new_actions = array();
 		$new_actions['shapeblock_plugin_actions_setting'] = '<a href="' . esc_url( admin_url( 'admin.php?page=shapeblock' ) ) . '">' . esc_html__( 'Settings', 'shapeblock' ) . '</a>';
+
+		$upgrade_url = self::get_upgrade_url();
+		if ( '' !== $upgrade_url ) {
+			$new_actions['shapeblock_plugin_actions_upgrade'] = '<a href="' . esc_url( $upgrade_url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Upgrade to Pro', 'shapeblock' ) . '</a>';
+		}
 
 		return array_merge( $new_actions, $plugin_actions );
 

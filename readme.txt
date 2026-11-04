@@ -4,7 +4,7 @@ Tags: gutenberg blocks, header footer builder, block editor, gutenberg, wordpres
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,13 +12,13 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-**ShapeBlock adds 36** blocks to the WordPress block editor, plus a **Header & Footer Builder**.
+**ShapeBlock adds 66+** blocks to the WordPress block editor, plus a **Header & Footer Builder**.
 
 Every block has the same three tabs: **Settings** for the content, **Layout** for columns, alignment and spacing, and **Style** for colours, typography, borders, shadows and hover effects. Sizes, spacing and columns can be set separately for desktop, tablet and mobile.
 
 [Demo](https://shapekode.com/product/shapeblock/) | [Docs](https://shapekode.com/product/shapeblock/docs/) | [Roadmap](https://shapekode.com/product/shapeblock/roadmap/) | **[Upgrade to Pro](https://shapekode.com/product/shapeblock/pricing/)**
 
-https://www.youtube.com/watch?v=HfEXu6Y449M
+https://www.youtube.com/watch?v=kPrc-yuYkCQ
 
 = Key Features =
 
@@ -46,7 +46,7 @@ ShapeBlock Pro adds **29 more blocks** (**65 blocks** with the free ones), plus 
 * **Display Conditions** - show or hide any block by user, role, date, time, page or device.
 * **Image Hotspot, Flip Box, Hero Slider, Timeline, Advanced Data Table** and more Pro blocks.
 
-= 36 Free Blocks =
+= 36+ Free Blocks =
 
 1. [Accordion](https://shapekode.com/product/shapeblock/accordion/) - Collapsible question and answer sections.
 2. [Breadcrumb](https://shapekode.com/product/shapeblock/breadcrumb/) - Shows visitors where they are on the site.
@@ -222,7 +222,7 @@ The icon fonts were made with Fontello (https://fontello.com). Our own icons are
 
 Yes, with any well-coded theme, including block themes. The blocks pick up your theme's typography, and you can restyle them from the block settings.
 
-= Do I have to use all 36 blocks? =
+= Do I have to use all 66+ blocks? =
 
 No. Turn off any you don't need in **ShapeBlock > Blocks Settings**. A block that's off isn't registered and its files aren't loaded.
 
@@ -240,6 +240,11 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 
 == Changelog ==
 
+= 1.0.6 =
+* **New:** ShapeBlock dashboard - Docs, Video Tutorials and Support links in the footer.
+* **New:** Pro Features page in the ShapeBlock dashboard - a table of what Free and Pro include, with demo links.
+* **New:** Upgrade to Pro links in the ShapeBlock dashboard, the ShapeBlock menu, the Plugins screen and under the settings of ShapeBlock blocks. These and the Pro Features page are hidden when ShapeBlock Pro is active.
+
 = 1.0.5 =
 * **New:** Google Map block - one place or several, with the places listed beside, under or over the map (click one to show it), directions and phone links, a gray, dark, warm or soft look, and Load on Click for privacy.
 * **New:** Drop Caps block - a large first letter across 2 to 8 lines, plain, in a box, outlined or as an outlined letter, with text columns and a line between them.
@@ -251,6 +256,7 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 * **Improved:** Row - Position is Default or Sticky, with the sticky top offset right under it; margins can be negative, to pull a row up over the one above.
 * **Improved:** Column - blocks side by side move onto more lines on a phone when they do not fit, instead of being squeezed out of the column.
 * **Improved:** Blocks page - blocks are grouped in tabs.
+* **Improved:** Pro Features page - a cleaner comparison table.
 * **Improved:** Post Grid - the page links have padding, alignment (left, center or right), the space between them, the space above and typography for each device, and a box shadow for normal and hover; the hover colours also reach a Load More button.
 * **Improved:** Post Grid - a post title turns to the primary colour when pointed at, and the date, author and category links change colour instead of showing an underline.
 * **Improved:** Row and Column - border and border radius for each device; a width of 0 or the None style on Tablet or Mobile removes the border there.
@@ -273,6 +279,7 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 * **Improved:** the usage-data notice stays answered after the plugin is deactivated and activated again.
 * **Fixed:** a border thinner than 1px (such as 0.5px) is no longer dropped.
 * **Fixed:** Accordion - opening or closing a question no longer makes the page jump or shake next to a sticky column.
+* **Fixed:** Post Grid - a Pagination Type added by another plugin falls back to the numbered links when that plugin is switched off, so the grid never loses its paging.
 
 = 1.0.4 =
 * **Security:** Pricing Table - the old price colour and the features and button alignment are checked before they go into the page's styles.

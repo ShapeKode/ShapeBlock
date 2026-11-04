@@ -40,3 +40,21 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* The Upgrade to Pro link, below the Advanced panel at the end of the block sidebar. */
+.block-editor-block-inspector:has(.shapeblock-upgrade-link) {
+	position: relative;
+	padding-bottom: 80px;
+}
+.shapeblock-upgrade-link {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: 0;
+	padding: 28px 16px 12px;
+	text-align: center;
+}
+.shapeblock-upgrade-link a {
+	white-space: nowrap;
+}

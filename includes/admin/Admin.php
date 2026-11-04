@@ -64,6 +64,7 @@ class Admin {
             'builderTypes' => array_values( \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_template_types() ),
             'builderRules' => \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::get_rules(),
             'addonPages' => \ShapeBlock\Main::get_addon_pages(),
+            'upgradeUrl' => \ShapeBlock\Main::get_upgrade_url(),
         ) );
     }
 

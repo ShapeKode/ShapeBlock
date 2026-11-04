@@ -20,7 +20,6 @@ $style = isset($attributes['gridStyle']) && in_array( $attributes['gridStyle'], 
 $thumbnail_size = isset($attributes['thumbnailSize']) ? $attributes['thumbnailSize'] : 'large';
 $is_featured = !empty($attributes['isFeatured']) ? true : false;
 $pagination = !empty($attributes['pagination']) ? true : false;
-$pagination_type = isset($attributes['paginationType']) ? $attributes['paginationType'] : 'numeric';
 $ignore_stikcy_posts = !empty($attributes['ignoreStikcyPosts']) ? 1 : 0;
 $unique_id    = !empty($attributes['blockId']) ? sanitize_html_class( (string) $attributes['blockId'] ) : '';
 if ( '' === $unique_id ) {
@@ -492,7 +491,7 @@ wp_enqueue_style( $style_handle );
     '.shapeblock-pagination' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_row),
     '.shapeblock-pagination .page-numbers' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_styles),
     '.shapeblock-pagination .page-numbers.current' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
-    // Page links and the Load More button alike.
+    // Page links, and anything another plugin puts in their place.
     '.shapeblock-pagination .page-numbers:hover' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
     '.shapeblock-pagination .page-numbers:focus-visible' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-blog-img'   => \ShapeBlock\Frontend\Helper::get_inline_styles($thumbnail_border_radius_styles),

@@ -283,9 +283,6 @@ body textarea.ant-input:focus {
 .shapeblock-block-item .shapeblock-block-badge.is-free {
   background: #00a32a;
 }
-.shapeblock-block-item .shapeblock-block-badge.is-upcoming {
-  background: #2271b1;
-}
 
 .shapeblock-options-content-header {
   margin-bottom: 20px;
@@ -332,4 +329,209 @@ body textarea.ant-input:focus {
 }
 .shapeblock-builder-types .ant-segmented-group {
   flex-wrap: wrap;
+}
+
+.shapeblock-options-content.shapeblock-pro-features {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 270px;
+  gap: 36px;
+  align-items: start;
+}
+.shapeblock-pro-features__side {
+  position: sticky;
+  top: 52px;
+  grid-column: 2;
+  grid-row: 1;
+}
+.shapeblock-pro-features__intro {
+  margin: 0;
+  color: #5f5b70;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.shapeblock-pro-table {
+  grid-column: 1;
+  grid-row: 1;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.shapeblock-pro-table th,
+.shapeblock-pro-table td {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eeecf3;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: 400;
+  transition: background-color 0.15s ease;
+}
+.shapeblock-pro-table td,
+.shapeblock-pro-table thead th:not(:first-child) {
+  width: 160px;
+}
+.shapeblock-pro-table thead th:first-child {
+  width: 60%;
+}
+.shapeblock-pro-table tbody th {
+  text-align: start;
+}
+.shapeblock-pro-table thead th {
+  position: sticky;
+  top: 32px;
+  z-index: 2;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e3dfeb;
+  background: #fff;
+  color: #1c1730;
+  font-size: 17px;
+  font-weight: 600;
+  vertical-align: bottom;
+}
+.shapeblock-pro-table .is-pro {
+  border-inline: 1px solid #dcc2f7;
+  background: #fbf7ff;
+}
+.shapeblock-pro-table thead .is-pro {
+  border: 0;
+  border-radius: 14px 14px 0 0;
+  background: linear-gradient(160deg, #6d12c9 0%, #a216ff 100%);
+  color: #fff;
+}
+.shapeblock-pro-table__name {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 19px;
+}
+.shapeblock-pro-features .shapeblock-pro-table thead .is-pro .ant-btn {
+  border-color: #fff;
+  background: #fff;
+  color: #7a12d6;
+  font-weight: 500;
+  box-shadow: none;
+}
+.shapeblock-pro-features .shapeblock-pro-table thead .is-pro .ant-btn:hover,
+.shapeblock-pro-features .shapeblock-pro-table thead .is-pro .ant-btn:focus-visible {
+  border-color: #f3e6ff;
+  background: #f3e6ff;
+  color: #6d12c9;
+}
+.shapeblock-pro-table__group th,
+.shapeblock-pro-table__group td {
+  padding-top: 26px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e3dfeb;
+  background: #f8f7fb;
+}
+.shapeblock-pro-table__group th {
+  color: #1c1730;
+  font-size: 15px;
+  font-weight: 600;
+}
+.shapeblock-pro-table .shapeblock-pro-table__group .is-pro {
+  background: #f4eafe;
+}
+.shapeblock-pro-table__group small {
+  display: block;
+  margin-top: 3px;
+  color: #5f5b70;
+  font-size: 12px;
+  font-weight: 400;
+}
+.shapeblock-pro-table tbody tr:not(.shapeblock-pro-table__group):hover th,
+.shapeblock-pro-table tbody tr:not(.shapeblock-pro-table__group):hover td {
+  background: #fbfaff;
+}
+.shapeblock-pro-table tbody tr:not(.shapeblock-pro-table__group):hover .is-pro {
+  background: #f6eeff;
+}
+.shapeblock-pro-table tbody th a,
+.shapeblock-pro-table tbody th strong {
+  color: #1c1730;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.shapeblock-pro-table tbody th a:hover,
+.shapeblock-pro-table tbody th a:focus-visible {
+  color: #a216ff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.shapeblock-pro-table tbody th p {
+  margin: 3px 0 0;
+  color: #5f5b70;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.shapeblock-pro-table__yes,
+.shapeblock-pro-table__no {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 12px;
+}
+.shapeblock-pro-table__yes {
+  background: #f1e3ff;
+  color: #8a10e0;
+}
+.shapeblock-pro-table .is-pro .shapeblock-pro-table__yes {
+  background: #a216ff;
+  color: #fff;
+}
+.shapeblock-pro-table__no {
+  background: #f3f2f6;
+  color: #a8a5b3;
+  font-size: 11px;
+}
+.shapeblock-pro-table tfoot td {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 0;
+}
+.shapeblock-pro-table tfoot .is-pro {
+  border-bottom: 1px solid #dcc2f7;
+  border-radius: 0 0 14px 14px;
+}
+@media (max-width: 1280px) {
+  .shapeblock-options-content.shapeblock-pro-features {
+    display: block;
+  }
+  .shapeblock-pro-features__side {
+    position: static;
+    margin-bottom: 24px;
+  }
+}
+@media (max-width: 782px) {
+  .shapeblock-pro-table thead th:first-child {
+    width: auto;
+  }
+  .shapeblock-pro-table thead th {
+    position: static;
+  }
+  .shapeblock-pro-table th,
+  .shapeblock-pro-table td {
+    padding: 12px 8px;
+  }
+  .shapeblock-pro-table td,
+  .shapeblock-pro-table thead th:not(:first-child) {
+    width: 76px;
+  }
+  .shapeblock-pro-table .ant-btn .anticon {
+    display: none;
+  }
+  .shapeblock-pro-features .shapeblock-pro-table .ant-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shapeblock-pro-table th,
+  .shapeblock-pro-table td,
+  .shapeblock-pro-table tbody th a {
+    transition: none;
+  }
 }

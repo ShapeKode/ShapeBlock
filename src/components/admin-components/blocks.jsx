@@ -8,17 +8,15 @@ import { SearchOutlined } from '@ant-design/icons';
 // groups the blocks by kind.
 const CATEGORIES = Object.entries(shapeblock.blockCategories || {}).map(([value, label]) => ({ value, label }));
 
-// The tabs above the list: All, then Free, Pro and Upcoming, each by its
-// blocks' tag (badgeType). A tab shows only when a block is in it.
-const TABS = [
-    { value: 'free', label: __( 'Free', 'shapeblock' ) },
-    { value: 'pro', label: __( 'Pro', 'shapeblock' ) },
-    { value: 'upcoming', label: __( 'Upcoming', 'shapeblock' ) },
-];
+// The tabs above the list: All, then one for each tag the blocks carry
+// (badgeType), named by its badge. An add-on's blocks bring their own tabs.
+const getTabs = (blocks) => [...new Map(blocks.map((b) => [b.badgeType, b.badge])).entries()]
+    .filter(([value]) => value)
+    .map(([value, label]) => ({ value, label }));
 const inTab = (block, tab) => block.badgeType === tab;
 
-// A block still to come is listed, with no switch to turn it on.
-const canSwitch = (block) => 'upcoming' !== block.status;
+// An add-on can list an entry with no switch.
+const canSwitch = (block) => !block.noSwitch;
 
 export default function Blocks() {
     const [blocks, setBlocks] = useState(shapeblock.blocks);
@@ -185,7 +183,7 @@ export default function Blocks() {
             <div className="shapeblock-options-content-header">
                 <h1 className='shapeblock-options-title'>{ __( 'Blocks', 'shapeblock' ) }</h1>
                 <div className="shapeblock-blocks-tabs" role="tablist" aria-label={ __( 'Block categories', 'shapeblock' ) }>
-                    {[{ value: '', label: __( 'All', 'shapeblock' ) }, ...TABS.filter((c) => blocks.some((b) => inTab(b, c.value)))].map((c) => (
+                    {[{ value: '', label: __( 'All', 'shapeblock' ) }, ...getTabs(blocks)].map((c) => (
                         <button
                             key={c.value || 'all'}
                             type="button"
@@ -283,6 +281,7 @@ export default function Blocks() {
                         icon={block.iconClass}
                         onChangeHandler={() => updateBlockStatus(block.id, block.status)}
                         status={block.status}
+                        noSwitch={block.noSwitch}
                     />
 
                 ))

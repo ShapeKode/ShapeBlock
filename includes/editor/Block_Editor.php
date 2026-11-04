@@ -40,6 +40,20 @@ class Block_Editor {
             \shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'assets/css/editor.css' )
         );
 
+        // A plain "Upgrade to Pro" link under each block's settings; not loaded when Pro is active.
+        $upgrade_url = \ShapeBlock\Main::get_upgrade_url();
+        if ( '' !== $upgrade_url ) {
+            wp_enqueue_script(
+                'shapeblock-upgrade-link',
+                SHAPEBLOCK_PL_URL . 'includes/public/assets/js/upgrade-link.js',
+                array( 'wp-hooks', 'wp-compose', 'wp-element', 'wp-block-editor', 'wp-i18n' ),
+                \shapeblock_asset_version( SHAPEBLOCK_PL_PATH . 'includes/public/assets/js/upgrade-link.js' ),
+                true
+            );
+            wp_localize_script( 'shapeblock-upgrade-link', 'shapeblockUpgrade', array( 'url' => $upgrade_url ) );
+            wp_set_script_translations( 'shapeblock-upgrade-link', 'shapeblock', SHAPEBLOCK_PL_PATH . 'languages' );
+        }
+
         // The inserter's search box gets the cursor when the inserter opens.
         wp_enqueue_script(
             'shapeblock-editor-inserter',
