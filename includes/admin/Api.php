@@ -223,8 +223,7 @@ class Api {
         $statuses = array();
         foreach ( Blocks::instance()->get_blocks() as $block ) {
             $id = isset( $block['id'] ) ? (string) $block['id'] : '';
-            // An add-on can list an entry with no switch.
-            if ( '' === $id || ! empty( $block['noSwitch'] ) ) {
+            if ( '' === $id ) {
                 continue;
             }
             $statuses[ $id ] = ( 'disable' === $block['status'] ) ? 'disable' : 'enable';

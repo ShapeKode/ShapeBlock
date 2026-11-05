@@ -35,7 +35,7 @@ https://www.youtube.com/watch?v=kPrc-yuYkCQ
 
 **[Upgrade to ShapeBlock Pro](https://shapekode.com/product/shapeblock/pricing/)**
 
-ShapeBlock Pro adds **29 more blocks** (**65 blocks** with the free ones), plus 8 animation blocks, 3 WooCommerce blocks, 2 builders and 8 extensions:
+ShapeBlock Pro adds **31 more blocks** (**67 blocks** with the free ones), plus 8 animation blocks, 3 WooCommerce blocks, 2 builders and 8 extensions:
 
 * **Theme Builder** - design single posts, pages, archives, search results and the 404 page with 13 dynamic blocks.
 * **Popup Builder** - popups built with blocks, opened on page load, on scroll, on exit intent or on a click.
@@ -93,9 +93,9 @@ It **works with classic and block themes**. Pages that match none of your condit
 
 = ShapeBlock Pro =
 
-Everything above is free and stays free. ShapeBlock Pro is a separate add-on that works on top of this plugin. It adds 29 blocks, 8 animation blocks, 3 WooCommerce blocks, 2 builders and 8 extensions.
+Everything above is free and stays free. ShapeBlock Pro is a separate add-on that works on top of this plugin. It adds 31 blocks, 8 animation blocks, 3 WooCommerce blocks, 2 builders and 8 extensions.
 
-**Pro Blocks (29)**
+**Pro Blocks (30)**
 
 1. [Advanced Accordion](https://shapekode.com/product/shapeblock/advanced-accordion/) - sections that hold any blocks.
 2. [Advanced Button](https://shapekode.com/product/shapeblock/advanced-button/) - buttons with eight hover animations.
@@ -105,27 +105,29 @@ Everything above is free and stays free. ShapeBlock Pro is a separate add-on tha
 6. [Flip Box](https://shapekode.com/product/shapeblock/flip-box/) - a box that turns over on hover.
 7. [Hero Slider](https://shapekode.com/product/shapeblock/hero-slider/) - full-width slides with heading and buttons.
 8. [Image Hotspot](https://shapekode.com/product/shapeblock/image-hotspot/) - markers on an image that open popups.
-9. [Masonry Gallery](https://shapekode.com/product/shapeblock/masonry-gallery/) - photos packed into tight columns.
-10. [Mega Menu](https://shapekode.com/product/shapeblock/mega-menu/) - wide dropdown panels built from blocks.
-11. [Post Carousel](https://shapekode.com/product/shapeblock/post-carousel/) - posts as cards in a slider.
-12. [Price Menu](https://shapekode.com/product/shapeblock/price-menu/) - names, prices and short descriptions.
-13. [Rating](https://shapekode.com/product/shapeblock/rating/) - stars, a score and a short note.
-14. [Team Member Carousel](https://shapekode.com/product/shapeblock/team-carousel/) - your team in a sliding row.
-15. [Timeline](https://shapekode.com/product/shapeblock/timeline/) - a story step by step along a line.
-16. [Video Player](https://shapekode.com/product/shapeblock/video-player/) - YouTube, Vimeo or your own video, inline or popup.
-17. [Post Title](https://shapekode.com/product/shapeblock/theme-builder/) - the title of every post (Theme Builder).
-18. [Featured Image](https://shapekode.com/product/shapeblock/theme-builder/) - the featured image of every post (Theme Builder).
-19. [Post Content](https://shapekode.com/product/shapeblock/theme-builder/) - the text and blocks of every post (Theme Builder).
-20. [Post Excerpt](https://shapekode.com/product/shapeblock/theme-builder/) - a short summary of every post (Theme Builder).
-21. [Post Meta](https://shapekode.com/product/shapeblock/theme-builder/) - author, date, categories and comments (Theme Builder).
-22. [Post Categories / Tags](https://shapekode.com/product/shapeblock/theme-builder/) - the terms of every post (Theme Builder).
-23. [Author Box](https://shapekode.com/product/shapeblock/theme-builder/) - the author with photo and bio (Theme Builder).
-24. [Post Pagination](https://shapekode.com/product/shapeblock/theme-builder/) - links to the previous and next post (Theme Builder).
-25. [Post Comments](https://shapekode.com/product/shapeblock/theme-builder/) - comments and the comment form (Theme Builder).
-26. [Related Posts](https://shapekode.com/product/shapeblock/theme-builder/) - more posts from the same category (Theme Builder).
-27. [Archive Title](https://shapekode.com/product/shapeblock/theme-builder/) - the title of blog and category pages (Theme Builder).
-28. [Archive Description](https://shapekode.com/product/shapeblock/theme-builder/) - the description of a category or tag (Theme Builder).
-29. [Archive Posts](https://shapekode.com/product/shapeblock/theme-builder/) - the posts of a blog, category or search page (Theme Builder).
+9. [Marquee](https://shapekode.com/product/shapeblock/marquee/) - text, logos, icons or any blocks moving in an endless line.
+10. [Masonry Gallery](https://shapekode.com/product/shapeblock/masonry-gallery/) - photos packed into tight columns.
+11. [Mega Menu](https://shapekode.com/product/shapeblock/mega-menu/) - wide dropdown panels built from blocks.
+12. [Post Carousel](https://shapekode.com/product/shapeblock/post-carousel/) - posts as cards in a slider.
+13. [Price Menu](https://shapekode.com/product/shapeblock/price-menu/) - names, prices and short descriptions.
+14. [Rating](https://shapekode.com/product/shapeblock/rating/) - stars, a score and a short note.
+15. [Table of Contents](https://shapekode.com/product/shapeblock/table-of-contents/) - a list of the page headings that marks the section on screen.
+16. [Team Member Carousel](https://shapekode.com/product/shapeblock/team-carousel/) - your team in a sliding row.
+17. [Timeline](https://shapekode.com/product/shapeblock/timeline/) - a story step by step along a line.
+18. [Video Player](https://shapekode.com/product/shapeblock/video-player/) - YouTube, Vimeo or your own video, inline or popup.
+19. [Post Title](https://shapekode.com/product/shapeblock/theme-builder/) - the title of every post (Theme Builder).
+20. [Featured Image](https://shapekode.com/product/shapeblock/theme-builder/) - the featured image of every post (Theme Builder).
+21. [Post Content](https://shapekode.com/product/shapeblock/theme-builder/) - the text and blocks of every post (Theme Builder).
+22. [Post Excerpt](https://shapekode.com/product/shapeblock/theme-builder/) - a short summary of every post (Theme Builder).
+23. [Post Meta](https://shapekode.com/product/shapeblock/theme-builder/) - author, date, categories and comments (Theme Builder).
+24. [Post Categories / Tags](https://shapekode.com/product/shapeblock/theme-builder/) - the terms of every post (Theme Builder).
+25. [Author Box](https://shapekode.com/product/shapeblock/theme-builder/) - the author with photo and bio (Theme Builder).
+26. [Post Pagination](https://shapekode.com/product/shapeblock/theme-builder/) - links to the previous and next post (Theme Builder).
+27. [Post Comments](https://shapekode.com/product/shapeblock/theme-builder/) - comments and the comment form (Theme Builder).
+28. [Related Posts](https://shapekode.com/product/shapeblock/theme-builder/) - more posts from the same category (Theme Builder).
+29. [Archive Title](https://shapekode.com/product/shapeblock/theme-builder/) - the title of blog and category pages (Theme Builder).
+30. [Archive Description](https://shapekode.com/product/shapeblock/theme-builder/) - the description of a category or tag (Theme Builder).
+31. [Archive Posts](https://shapekode.com/product/shapeblock/theme-builder/) - the posts of a blog, category or search page (Theme Builder).
 
 **Animation Blocks (8)**
 

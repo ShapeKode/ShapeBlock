@@ -15,9 +15,6 @@ const getTabs = (blocks) => [...new Map(blocks.map((b) => [b.badgeType, b.badge]
     .map(([value, label]) => ({ value, label }));
 const inTab = (block, tab) => block.badgeType === tab;
 
-// An add-on can list an entry with no switch.
-const canSwitch = (block) => !block.noSwitch;
-
 export default function Blocks() {
     const [blocks, setBlocks] = useState(shapeblock.blocks);
     const [bulkLoading, setBulkLoading] = useState(false);
@@ -93,10 +90,10 @@ export default function Blocks() {
     const updateAllBlockStatus = (newStatus) => {
         // Keep a snapshot of the current blocks so we can revert on failure
         const previousBlocks = blocks;
-        const blockIds = blocks.filter(canSwitch).map(block => block.id);
+        const blockIds = blocks.map(block => block.id);
 
         // Optimistic Update — flip every block to the new status
-        setBlocks(prevBlocks => prevBlocks.map(block => (canSwitch(block) ? { ...block, status: newStatus } : block)));
+        setBlocks(prevBlocks => prevBlocks.map(block => ({ ...block, status: newStatus })));
         setBulkLoading(true);
 
         const data = {
@@ -241,7 +238,7 @@ export default function Blocks() {
                             size="large"
                             type="primary"
                             loading={bulkLoading}
-                            disabled={blocks.filter(canSwitch).every(block => block.status === 'enable')}
+                            disabled={blocks.every(block => block.status === 'enable')}
                             onClick={() => updateAllBlockStatus('enable')}
                         >
                             { __( 'Activate All', 'shapeblock' ) }
@@ -250,7 +247,7 @@ export default function Blocks() {
                             size="large"
                             danger
                             loading={bulkLoading}
-                            disabled={blocks.filter(canSwitch).every(block => block.status === 'disable')}
+                            disabled={blocks.every(block => block.status === 'disable')}
                             onClick={() => updateAllBlockStatus('disable')}
                         >
                             { __( 'Deactivate All', 'shapeblock' ) }
@@ -281,7 +278,6 @@ export default function Blocks() {
                         icon={block.iconClass}
                         onChangeHandler={() => updateBlockStatus(block.id, block.status)}
                         status={block.status}
-                        noSwitch={block.noSwitch}
                     />
 
                 ))

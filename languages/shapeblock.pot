@@ -941,6 +941,14 @@ msgstr ""
 msgid "Upgrade to Pro"
 msgstr ""
 
+#: src/components/admin-components/pro-features.jsx
+msgid "Table of Contents"
+msgstr ""
+
+#: src/components/admin-components/pro-features.jsx
+msgid "A list of the page headings that marks the section on screen."
+msgstr ""
+
 #: includes/public/assets/js/upgrade-link.js
 msgid "Need all Pro blocks & Modules?"
 msgstr ""

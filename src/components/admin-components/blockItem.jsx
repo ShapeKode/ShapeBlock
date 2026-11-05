@@ -9,8 +9,7 @@ export default function BlockItem(
         badge,
         badgeType,
         onChangeHandler,
-        status,
-        noSwitch
+        status
     }
 ) {
     // The small tag on top of the icon ("Free", or whatever an add-on passes for
@@ -30,7 +29,7 @@ export default function BlockItem(
                 </div>
             </div>
             <div className='switch'>
-                {noSwitch ? null : <Switch size="small" onChange={onChangeHandler} checked={status === 'enable'} />}
+                <Switch size="small" onChange={onChangeHandler} checked={status === 'enable'} />
             </div>
         </div>
     );
