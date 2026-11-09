@@ -155,7 +155,7 @@ export default function Edit({ attributes, setAttributes, clientId, isSelected }
 							<table {...tableProps} />
 						</div>
 						{(isSelected || !!attributes.caption) && (
-							<RichText
+							<RichText identifier={"caption"}
 								tagName="div"
 								className="shapeblock-table-caption"
 								value={attributes.caption || ''}

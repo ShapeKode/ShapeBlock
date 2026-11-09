@@ -488,7 +488,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								<li key={block.clientId} className={`shapeblock-tab-nav-item${index === shown ? ' active' : ''}`} onClick={() => setActive(index)}>
 									{'icon' === type && <span className="shapeblock-tab-icon">{item.icon && 'none' !== item.icon ? <i className={`shapeblock-icon ${item.icon}`} aria-hidden="true" /> : HEART}</span>}
 									{'image' === type && item.image?.url && <span className="shapeblock-tab-image"><img src={item.image.url} alt={item.image.alt || ''} /></span>}
-									<RichText
+									<RichText identifier={`tabTitle-${index}`}
 										tagName="span"
 										className="shapeblock-tab-title-text"
 										value={toHtml(item.tabTitle)}

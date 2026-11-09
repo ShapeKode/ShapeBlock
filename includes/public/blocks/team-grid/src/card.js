@@ -75,13 +75,13 @@ export default function TeamCard({ attributes, setAttributes, isSelected }) {
 	};
 
 	const nameEl = (
-		<RichText tagName={tag} className="shapeblock-name" value={toHtml(attributes.name)} onChange={set('name')} allowedFormats={[]} placeholder={__('Name', 'shapeblock')} />
+		<RichText identifier={"name"} tagName={tag} className="shapeblock-name" value={toHtml(attributes.name)} onChange={set('name')} allowedFormats={[]} placeholder={__('Name', 'shapeblock')} />
 	);
 	const designationEl = (
-		<RichText tagName="div" className="shapeblock-designation" value={toHtml(attributes.designation)} onChange={set('designation')} allowedFormats={[]} placeholder={__('Designation', 'shapeblock')} />
+		<RichText identifier={"designation"} tagName="div" className="shapeblock-designation" value={toHtml(attributes.designation)} onChange={set('designation')} allowedFormats={[]} placeholder={__('Designation', 'shapeblock')} />
 	);
 	const detailsEl = (className) => (
-		<RichText
+		<RichText identifier={"details"}
 			tagName="div"
 			className={className}
 			value={String(attributes.details || '').replace(/\n/g, '<br>')}
@@ -96,13 +96,13 @@ export default function TeamCard({ attributes, setAttributes, isSelected }) {
 			{(attributes.teamEmail || isSelected) && (
 				<span className="shapeblock-team-email shapeblock-contact-item">
 					<span className="shapeblock-contact-icon">{icon(attributes.teamEmailIcon, MAIL_SVG)}</span>
-					<RichText tagName="span" className="shapeblock-contact-text" value={toHtml(attributes.teamEmail)} onChange={set('teamEmail')} allowedFormats={[]} placeholder={__('Email address', 'shapeblock')} />
+					<RichText identifier={"teamEmail"} tagName="span" className="shapeblock-contact-text" value={toHtml(attributes.teamEmail)} onChange={set('teamEmail')} allowedFormats={[]} placeholder={__('Email address', 'shapeblock')} />
 				</span>
 			)}
 			{(attributes.teamPhone || isSelected) && (
 				<span className="shapeblock-team-phone shapeblock-contact-item">
 					<span className="shapeblock-contact-icon">{icon(attributes.teamPhoneIcon, PHONE_SVG)}</span>
-					<RichText tagName="span" className="shapeblock-contact-text" value={toHtml(attributes.teamPhone)} onChange={set('teamPhone')} allowedFormats={[]} placeholder={__('Phone number', 'shapeblock')} />
+					<RichText identifier={"teamPhone"} tagName="span" className="shapeblock-contact-text" value={toHtml(attributes.teamPhone)} onChange={set('teamPhone')} allowedFormats={[]} placeholder={__('Phone number', 'shapeblock')} />
 				</span>
 			)}
 		</div>

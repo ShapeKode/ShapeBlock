@@ -218,7 +218,7 @@ function CellEdit({ attributes, setAttributes, clientId, context, isSelected }) 
 				{'body' === section && 'image' === item.type && item.image?.url && <img src={item.image.url} className="shapeblock-table-image" alt={item.image.alt || ''} />}
 				{'body' === section && 'image' !== item.type && item.icon && 'none' !== item.icon && <span className="shapeblock-table-icon" style={iconColor}><Icon name={item.icon} /></span>}
 				{/* The cell's own text line; a cell holding blocks shows it only when it has text. */}
-				{(!hasBlocks || item.text) && <RichText
+				{(!hasBlocks || item.text) && <RichText identifier={"text"}
 					ref={textRef}
 					tagName="span"
 					className="shapeblock-tbl-cell-text"

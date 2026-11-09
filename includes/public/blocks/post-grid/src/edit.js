@@ -489,10 +489,90 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							step={1}
 						/>
 					)}
-				</ResponsiveWrapper>
-			</PanelBody>
-		</>
-	);
+					</ResponsiveWrapper>
+				</PanelBody>
+
+				<PanelBody title={__('List & Extras', 'shapeblock')} initialOpen={false}>
+					<SelectControl
+						label={__('Layout', 'shapeblock')}
+						value={attributes.listLayout || 'grid'}
+						options={[
+							{ label: __('Grid (image on top)', 'shapeblock'), value: 'grid' },
+							{ label: __('List (image left)', 'shapeblock'), value: 'list' },
+							{ label: __('List (image right)', 'shapeblock'), value: 'list-right' },
+							{ label: __('Text only', 'shapeblock'), value: 'text' },
+							{ label: __('Numbered list', 'shapeblock'), value: 'numbered' },
+						]}
+						onChange={(v) => setAttributes({ listLayout: v })}
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+					{['list', 'list-right'].includes(attributes.listLayout) && (
+						<ResponsiveWrapper label={__('Image Width (px or %)', 'shapeblock')}>
+							{(device) => (
+								<TextControl
+									value={attributes[getAttrKey('listImageWidth', device)] || ''}
+									placeholder="38%"
+									onChange={(v) => setAttributes({ [getAttrKey('listImageWidth', device)]: v })}
+									__next40pxDefaultSize
+									__nextHasNoMarginBottom
+								/>
+							)}
+						</ResponsiveWrapper>
+					)}
+					{attributes.listLayout === 'numbered' && (
+						<>
+							<ColorPopover label={__('Number Color', 'shapeblock')} color={attributes.numberColor} onChange={(v) => setAttributes({ numberColor: v || '' })} />
+							<TextControl label={__('Number Size (px)', 'shapeblock')} type="number" value={attributes.numberSize} onChange={(v) => setAttributes({ numberSize: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+						</>
+					)}
+					<Divider />
+					<SelectControl
+						label={__('Image Ratio', 'shapeblock')}
+						value={attributes.imageRatio || ''}
+						options={[
+							{ label: __('Original', 'shapeblock'), value: '' },
+							{ label: '1:1', value: '1/1' },
+							{ label: '4:3', value: '4/3' },
+							{ label: '3:2', value: '3/2' },
+							{ label: '16:10', value: '16/10' },
+							{ label: '16:9', value: '16/9' },
+							{ label: '3:4', value: '3/4' },
+							{ label: '2:3', value: '2/3' },
+						]}
+						onChange={(v) => setAttributes({ imageRatio: v })}
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+					<SelectControl
+						label={__('Title Lines (cut longer titles)', 'shapeblock')}
+						value={String(attributes.titleLines || 0)}
+						options={[
+							{ label: __('No limit', 'shapeblock'), value: '0' },
+							{ label: '1', value: '1' },
+							{ label: '2', value: '2' },
+							{ label: '3', value: '3' },
+							{ label: '4', value: '4' },
+						]}
+						onChange={(v) => setAttributes({ titleLines: parseInt(v, 10) || 0 })}
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom
+					/>
+					<ColorPopover label={__('Divider Between Posts', 'shapeblock')} color={attributes.itemDividerColor} onChange={(v) => setAttributes({ itemDividerColor: v || '' })} />
+					<Divider />
+					<ToggleControl label={__('Category as Badge', 'shapeblock')} checked={!!attributes.categoryBadge} onChange={(v) => setAttributes({ categoryBadge: v })} __nextHasNoMarginBottom />
+					{attributes.categoryBadge && (
+						<>
+							<ColorPopover label={__('Badge Background', 'shapeblock')} color={attributes.badgeBgColor} onChange={(v) => setAttributes({ badgeBgColor: v || '' })} />
+							<ColorPopover label={__('Badge Text', 'shapeblock')} color={attributes.badgeTextColor} onChange={(v) => setAttributes({ badgeTextColor: v || '' })} />
+							<TextControl label={__('Badge Radius (px)', 'shapeblock')} type="number" value={attributes.badgeRadius} onChange={(v) => setAttributes({ badgeRadius: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+						</>
+					)}
+					<ToggleControl label={__('Underline Title on Hover', 'shapeblock')} checked={!!attributes.titleUnderlineHover} onChange={(v) => setAttributes({ titleUnderlineHover: v })} __nextHasNoMarginBottom />
+					<ToggleControl label={__('Play Icon on Image (video posts)', 'shapeblock')} checked={!!attributes.playIcon} onChange={(v) => setAttributes({ playIcon: v })} __nextHasNoMarginBottom />
+				</PanelBody>
+			</>
+		);
 
 	// --- Tab 3: Style (colors / typography / background / border / hover) -----
 	const styleTab = (

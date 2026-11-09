@@ -454,6 +454,42 @@ if ( ( isset( $t_border_radius['right'] ) && '' !== (string) $t_border_radius['r
 if ( ( isset( $t_border_radius['bottom'] ) && '' !== (string) $t_border_radius['bottom'] ) ) $thumbnail_border_radius_styles['border-bottom-right-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $t_border_radius['bottom'] );
 if ( ( isset( $t_border_radius['left'] ) && '' !== (string) $t_border_radius['left'] ) ) $thumbnail_border_radius_styles['border-bottom-left-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $t_border_radius['left'] );
 
+// Layout extras: list / numbered layouts, image ratio, title lines, dividers,
+// category badge, title underline on hover and a play icon. All set in the block.
+$list_layout = isset( $attributes['listLayout'] ) && in_array( $attributes['listLayout'], array( 'grid', 'list', 'list-right', 'text', 'numbered' ), true ) ? $attributes['listLayout'] : 'grid';
+$extra_classes = ' layout-' . $list_layout;
+$extra_vars    = array();
+$ratio_allowed = array( '1/1', '4/3', '3/2', '16/10', '16/9', '3/4', '2/3' );
+if ( ! empty( $attributes['imageRatio'] ) && in_array( $attributes['imageRatio'], $ratio_allowed, true ) ) {
+    $extra_classes             .= ' has-ratio';
+    $extra_vars['--sbpg-ratio'] = $attributes['imageRatio'];
+}
+$title_lines = isset( $attributes['titleLines'] ) ? max( 0, min( 6, (int) $attributes['titleLines'] ) ) : 0;
+if ( $title_lines > 0 ) {
+    $extra_classes             .= ' has-lines';
+    $extra_vars['--sbpg-lines'] = (string) $title_lines;
+}
+if ( ! empty( $attributes['itemDividerColor'] ) ) {
+    $extra_classes               .= ' has-divider';
+    $extra_vars['--sbpg-divider'] = $attributes['itemDividerColor'];
+}
+if ( ! empty( $attributes['numberColor'] ) ) $extra_vars['--sbpg-num-color'] = $attributes['numberColor'];
+if ( isset( $attributes['numberSize'] ) && '' !== (string) $attributes['numberSize'] ) $extra_vars['--sbpg-num-size'] = \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['numberSize'] );
+if ( ! empty( $attributes['categoryBadge'] ) ) {
+    $extra_classes .= ' is-badge';
+    if ( ! empty( $attributes['badgeBgColor'] ) ) $extra_vars['--sbpg-badge-bg'] = $attributes['badgeBgColor'];
+    if ( ! empty( $attributes['badgeTextColor'] ) ) $extra_vars['--sbpg-badge-color'] = $attributes['badgeTextColor'];
+    if ( isset( $attributes['badgeRadius'] ) && '' !== (string) $attributes['badgeRadius'] ) $extra_vars['--sbpg-badge-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['badgeRadius'] );
+}
+if ( ! empty( $attributes['titleUnderlineHover'] ) ) $extra_classes .= ' is-underline';
+if ( ! empty( $attributes['playIcon'] ) ) $extra_classes .= ' has-play';
+$list_width_responsive = array( 'desktop' => array(), 'tablet' => array(), 'mobile' => array() );
+foreach ( array( '' => 'desktop', 'Tablet' => 'tablet', 'Mobile' => 'mobile' ) as $lw_suffix => $lw_device ) {
+    if ( isset( $attributes[ 'listImageWidth' . $lw_suffix ] ) && '' !== (string) $attributes[ 'listImageWidth' . $lw_suffix ] ) {
+        $list_width_responsive[ $lw_device ]['--sbpg-img-w'] = \ShapeBlock\Frontend\Helper::ensure_unit( $attributes[ 'listImageWidth' . $lw_suffix ] );
+    }
+}
+
 $style_handle = 'shapeblock-post-grid-style';
 $selector    = '.shapeblock-post-grid-block-wrap.' . $unique_id;
 
@@ -468,6 +504,7 @@ $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($se
 $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-blog-content', $content_padding_responsive);
 $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-blog-img img', $thumbnail_height_responsive);
 $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-pagination', $pag_row_responsive);
+$full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid', $list_width_responsive);
 $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-pagination .page-numbers', $pag_item_responsive);   
 $full_responsive_css .= \ShapeBlock\Frontend\Helper::generate_responsive_css($selector . ' .shapeblock-post-grid.style-' . $style . ' .shapeblock-grid-item .shapeblock-read-more', $button_text_align_responsive);   
 
@@ -495,6 +532,7 @@ wp_enqueue_style( $style_handle );
     '.shapeblock-pagination .page-numbers:hover' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
     '.shapeblock-pagination .page-numbers:focus-visible' => \ShapeBlock\Frontend\Helper::get_inline_styles($pag_hover),
     '.shapeblock-post-grid .shapeblock-grid-item .shapeblock-blog-img'   => \ShapeBlock\Frontend\Helper::get_inline_styles($thumbnail_border_radius_styles),
+    '.shapeblock-post-grid' => \ShapeBlock\Frontend\Helper::get_inline_styles($extra_vars),
 ] );
 
 
@@ -613,7 +651,7 @@ $template_pl_path = SHAPEBLOCK_PL_PATH;
 if ( $query->have_posts() ) :
 ?>
     <div <?php echo wp_kses_post($block_wrap_attr); ?>>
-        <div class="<?php echo esc_attr( 'shapeblock-post-grid shapeblock-row style-' . $style . ( ! empty( $attributes['itemHoverLift'] ) ? ' is-hover-lift' : '' ) . ( ! empty( $attributes['buttonAtBottom'] ) ? ' is-button-bottom' : '' ) ); ?>">
+        <div class="<?php echo esc_attr( 'shapeblock-post-grid shapeblock-row style-' . $style . $extra_classes . ( ! empty( $attributes['itemHoverLift'] ) ? ' is-hover-lift' : '' ) . ( ! empty( $attributes['buttonAtBottom'] ) ? ' is-button-bottom' : '' ) ); ?>">
             <?php
             while ( $query->have_posts() ) : $query->the_post();
                 $item_class = $col_class;

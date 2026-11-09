@@ -31,3 +31,32 @@
 		word-break: break-word;
 	}
 }
+
+/* --- Shape before the title / bar under it (set in the block) ---------- */
+.shapeblock-heading.has-shape .shapeblock-title::before {
+	content: "";
+	display: inline-block;
+	width: var(--sbh-shape-size, 10px);
+	height: var(--sbh-shape-size, 10px);
+	margin-right: var(--sbh-shape-gap, 12px);
+	vertical-align: middle;
+	background: var(--sbh-shape-color, var(--shapeblock-preset-color-primary, #ffd012));
+}
+.shapeblock-heading.shape-square .shapeblock-title::before { border-radius: 2px; }
+.shapeblock-heading.shape-circle .shapeblock-title::before { border-radius: 50%; }
+.shapeblock-heading.shape-bar .shapeblock-title::before {
+	width: calc(var(--sbh-shape-size, 10px) * 2.4);
+	height: 4px;
+	border-radius: 2px;
+}
+.shapeblock-heading.has-underline .shapeblock-title::after {
+	content: "";
+	display: block;
+	width: 56px;
+	height: 4px;
+	margin-top: 12px;
+	border-radius: 4px;
+	background: var(--sbh-line-color, var(--shapeblock-preset-color-primary, #ffd012));
+}
+.shapeblock-heading.has-underline.align-center .shapeblock-title::after { margin-left: auto; margin-right: auto; }
+.shapeblock-heading.has-underline.align-right .shapeblock-title::after { margin-left: auto; }

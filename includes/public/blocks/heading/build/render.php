@@ -143,16 +143,26 @@ foreach ( $resp_sel_map as $key => $full_sel ) {
 // Google fonts are loaded globally via the render_block filter (blocks.php),
 // deduped by handle — no per-block enqueue needed here.
 
+// Shape before the title and bar under it.
+$shape      = isset( $attributes['titleShape'] ) && in_array( $attributes['titleShape'], array( 'square', 'circle', 'bar' ), true ) ? $attributes['titleShape'] : '';
+$underline  = isset( $attributes['titleUnderline'] ) && 'bar' === $attributes['titleUnderline'] ? 'bar' : '';
+$shape_vars = array();
+if ( ! empty( $attributes['shapeColor'] ) ) $shape_vars['--sbh-shape-color'] = $attributes['shapeColor'];
+if ( isset( $attributes['shapeSize'] ) && '' !== (string) $attributes['shapeSize'] ) $shape_vars['--sbh-shape-size'] = $H::ensure_unit( $attributes['shapeSize'] );
+if ( isset( $attributes['shapeGap'] ) && '' !== (string) $attributes['shapeGap'] ) $shape_vars['--sbh-shape-gap'] = $H::ensure_unit( $attributes['shapeGap'] );
+if ( ! empty( $attributes['underlineColor'] ) ) $shape_vars['--sbh-line-color'] = $attributes['underlineColor'];
+$heading_class = 'shapeblock-heading' . ( $shape ? ' has-shape shape-' . $shape : '' ) . ( $underline ? ' has-underline' : '' ) . ( ! empty( $attributes['align'] ) && in_array( $attributes['align'], array( 'center', 'right' ), true ) ? ' align-' . $attributes['align'] : '' );
+
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $resp_css, [
-	'.shapeblock-heading'                              => $H::get_inline_styles( $heading_styles ),
+	'.shapeblock-heading'                              => $H::get_inline_styles( array_merge( $heading_styles, $shape_vars ) ),
 	'.shapeblock-heading .shapeblock-title'                 => $H::get_inline_styles( $title_styles ),
 	'.shapeblock-heading .shapeblock-title span'            => $H::get_inline_styles( $hl ),
 ] );
 
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="shapeblock-heading">
+	<div class="<?php echo esc_attr( $heading_class ); ?>">
 		<?php
 		if ( '' !== trim( (string) $title_raw ) ) {
 			printf(

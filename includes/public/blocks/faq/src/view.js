@@ -8,37 +8,58 @@
 
 	var DURATION = 300;
 
+	// The answer's own top and bottom padding (set in the block) are animated with
+	// its height; otherwise they stay while the height runs to 0 and the page jumps
+	// by that padding at the end.
+	var PROPS = ['height', 'padding-top', 'padding-bottom'];
+	function clean(el) {
+		PROPS.concat(['overflow', 'transition']).forEach(function (p) {
+			el.style.removeProperty(p);
+		});
+	}
+
 	function slideDown(el) {
 		// Set an explicit display so the element is laid out (the base stylesheet
 		// has `display:none`); removing the property would keep it hidden and make
 		// scrollHeight read 0.
 		el.style.display = 'block';
-		var height = el.scrollHeight;
+		var cs = window.getComputedStyle(el);
+		var padTop = cs.paddingTop;
+		var padBottom = cs.paddingBottom;
+		// scrollHeight counts the padding; a content-box answer gets it on top of its height.
+		var height = el.scrollHeight - ('border-box' === cs.boxSizing ? 0 : parseFloat(padTop) + parseFloat(padBottom));
 		el.style.overflow = 'hidden';
 		el.style.height = '0px';
+		el.style.paddingTop = '0px';
+		el.style.paddingBottom = '0px';
 		// Force reflow so the transition runs.
 		void el.offsetHeight;
-		el.style.transition = 'height ' + DURATION + 'ms ease';
+		el.style.transition = PROPS.map(function (p) {
+			return p + ' ' + DURATION + 'ms ease';
+		}).join(',');
 		el.style.height = height + 'px';
+		el.style.paddingTop = padTop;
+		el.style.paddingBottom = padBottom;
 		window.setTimeout(function () {
-			el.style.removeProperty('height');
-			el.style.removeProperty('overflow');
-			el.style.removeProperty('transition');
 			// Keep display:block so the answer stays visible after the animation.
+			clean(el);
 		}, DURATION);
 	}
 
 	function slideUp(el) {
 		el.style.overflow = 'hidden';
-		el.style.height = el.scrollHeight + 'px';
+		// The current content height, without padding (the padding animates on its own).
+		el.style.height = window.getComputedStyle(el).height;
 		void el.offsetHeight;
-		el.style.transition = 'height ' + DURATION + 'ms ease';
+		el.style.transition = PROPS.map(function (p) {
+			return p + ' ' + DURATION + 'ms ease';
+		}).join(',');
 		el.style.height = '0px';
+		el.style.paddingTop = '0px';
+		el.style.paddingBottom = '0px';
 		window.setTimeout(function () {
 			el.style.display = 'none';
-			el.style.removeProperty('height');
-			el.style.removeProperty('overflow');
-			el.style.removeProperty('transition');
+			clean(el);
 		}, DURATION);
 	}
 
