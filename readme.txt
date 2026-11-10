@@ -246,6 +246,7 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 == Changelog ==
 
 = 1.0.8 =
+* **Fixed:** Blocks shown after the page head on a block theme (such as in a template library preview) now keep their own styles - fonts, sizes, colours and spacing.
 * **Changed:** The Pro Features tab lists the new Testimonial Slider Pro block.
 * **Fixed:** Selecting text with Shift and the arrow keys in a Heading, FAQ, Tabs, Table, Pricing Table or Team Member text no longer selects whole blocks, so Backspace deletes only the selected letters, not the blocks around them.
 * **Fixed:** Column - the width label (such as 35%) shows only while the Column itself is selected, above its corner, instead of covering the text being edited.

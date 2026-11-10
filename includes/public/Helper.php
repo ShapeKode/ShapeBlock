@@ -442,9 +442,11 @@ class Helper {
 	 *    renders early on a classic theme is in the same position, so the CSS
 	 *    can simply be attached to the block's own (still pending) style handle.
 	 * 2. Classic themes render blocks inside the_content(), long after wp_head()
-	 *    printed. wp_add_inline_style() would queue CSS onto a handle that has
-	 *    already been output, so core's wp_enqueue_block_support_styles() is used
-	 *    instead — the same mechanism core uses for its own block support styles.
+	 *    printed, and so does any page that renders blocks after the head on a
+	 *    block theme (a template library's preview, for one). wp_add_inline_style()
+	 *    would queue CSS onto a handle that has already been output, so it goes
+	 *    to a style handle of its own that WordPress prints in the footer (see
+	 *    add_late_css()).
 	 * 3. The editor renders blocks over REST (ServerSideRender). Neither wp_head
 	 *    nor wp_footer runs there, so no enqueue can reach the response: the CSS
 	 *    has to travel with the block's own markup. It is returned through the
@@ -470,11 +472,33 @@ class Helper {
 		}
 
 		if ( did_action( 'wp_head' ) ) {
-			wp_enqueue_block_support_styles( $css );
+			self::add_late_css( $css );
 			return;
 		}
 
 		wp_add_inline_style( $handle, $css );
+	}
+
+	/**
+	 * CSS made after wp_head() printed: on a style handle of its own, which
+	 * WordPress prints in the footer as a late-enqueued stylesheet.
+	 *
+	 * Core's wp_enqueue_block_support_styles() cannot be used here: on a block
+	 * theme it hooks the CSS to wp_head, which has already run, so the CSS was
+	 * lost wherever blocks render after the head on a block theme.
+	 *
+	 * @param string $css Generated CSS, already free of markup.
+	 * @return void
+	 */
+	public static function add_late_css( $css ) {
+		if ( '' === trim( (string) $css ) ) {
+			return;
+		}
+		if ( ! wp_style_is( 'shapeblock-late', 'registered' ) ) {
+			wp_register_style( 'shapeblock-late', false, array(), SHAPEBLOCK_VERSION );
+		}
+		wp_add_inline_style( 'shapeblock-late', wp_strip_all_tags( (string) $css ) );
+		wp_enqueue_style( 'shapeblock-late' );
 	}
 
 	/**

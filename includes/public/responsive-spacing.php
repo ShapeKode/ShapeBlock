@@ -146,7 +146,13 @@ function shapeblock_spacing_render_block( $content, $block ) {
 		if ( '' !== $mobile ) {
 			$css .= '@media (max-width:767px){' . $sel . '{' . $mobile . '}}';
 		}
-		wp_enqueue_block_support_styles( $css );
+		// After the head, core's helper would hook the CSS to wp_head on a
+		// block theme, which has already run (see Helper::add_late_css()).
+		if ( did_action( 'wp_head' ) ) {
+			\ShapeBlock\Frontend\Helper::add_late_css( $css );
+		} else {
+			wp_enqueue_block_support_styles( $css );
+		}
 	}
 
 	return $content;
