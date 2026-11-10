@@ -55,6 +55,7 @@ const getGroups = () => [
             { name: __( 'Rating', 'shapeblock' ), text: __( 'Stars, a score and a short note.', 'shapeblock' ), page: 'rating' },
             { name: __( 'Table of Contents', 'shapeblock' ), text: __( 'A list of the page headings that marks the section on screen.', 'shapeblock' ), page: 'table-of-contents' },
             { name: __( 'Team Member Carousel', 'shapeblock' ), text: __( 'Your team in a sliding row.', 'shapeblock' ), page: 'team-carousel' },
+            { name: __( 'Testimonial Slider', 'shapeblock' ), text: __( 'Customer reviews with stars, photos and logos, in four layouts.', 'shapeblock' ) },
             { name: __( 'Timeline', 'shapeblock' ), text: __( 'A story step by step along a line.', 'shapeblock' ), page: 'timeline' },
             { name: __( 'Video Player', 'shapeblock' ), text: __( 'YouTube, Vimeo or your own video, inline or popup.', 'shapeblock' ), page: 'video-player' },
         ],

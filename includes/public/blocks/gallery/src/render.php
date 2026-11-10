@@ -256,7 +256,7 @@ $popup_class = $popup_enabled ? 'shapeblock-popup-enabled' : '';
 	<?php if ( $popup_enabled ) : ?>
 		<div class="<?php echo esc_attr( 'shapeblock-lightbox-gallery is-anim-' . $popup_anim ); ?>" style="<?php echo esc_attr( '--shapeblock-lb-duration:' . ( 'none' === $popup_anim ? 0 : $popup_duration ) . 'ms' ); ?>" data-duration="<?php echo esc_attr( (string) ( 'none' === $popup_anim ? 0 : $popup_duration ) ); ?>">
 			<span class="shapeblock-close">&times;</span>
-			<img class="shapeblock-lightbox-image" src="" alt="">
+			<img class="shapeblock-lightbox-image" alt="">
 			<button class="shapeblock-prev">&#10094;</button>
 			<button class="shapeblock-next">&#10095;</button>
 		</div>

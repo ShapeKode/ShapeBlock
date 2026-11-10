@@ -94,9 +94,9 @@ It **works with classic and block themes**. Pages that match none of your condit
 
 = ShapeBlock Pro =
 
-Everything above is free and stays free. ShapeBlock Pro is a separate add-on that works on top of this plugin. It adds 42+ blocks (31 Pro blocks, 8 animation blocks and 3 WooCommerce blocks), 2 builders and 9+ extensions.
+Everything above is free and stays free. ShapeBlock Pro is a separate add-on that works on top of this plugin. It adds 42+ blocks (32 Pro blocks, 8 animation blocks and 3 WooCommerce blocks), 2 builders and 9+ extensions.
 
-**Pro Blocks (31)**
+**Pro Blocks (32)**
 
 1. [Advanced Accordion](https://shapekode.com/product/shapeblock/advanced-accordion/) - sections that hold any blocks.
 2. [Advanced Button](https://shapekode.com/product/shapeblock/advanced-button/) - buttons with eight hover animations.
@@ -114,21 +114,22 @@ Everything above is free and stays free. ShapeBlock Pro is a separate add-on tha
 14. [Rating](https://shapekode.com/product/shapeblock/rating/) - stars, a score and a short note.
 15. [Table of Contents](https://shapekode.com/product/shapeblock/table-of-contents/) - a list of the page headings that marks the section on screen.
 16. [Team Member Carousel](https://shapekode.com/product/shapeblock/team-carousel/) - your team in a sliding row.
-17. [Timeline](https://shapekode.com/product/shapeblock/timeline/) - a story step by step along a line.
-18. [Video Player](https://shapekode.com/product/shapeblock/video-player/) - YouTube, Vimeo or your own video, inline or popup.
-19. [Post Title](https://shapekode.com/product/shapeblock/theme-builder/) - the title of every post (Theme Builder).
-20. [Featured Image](https://shapekode.com/product/shapeblock/theme-builder/) - the featured image of every post (Theme Builder).
-21. [Post Content](https://shapekode.com/product/shapeblock/theme-builder/) - the text and blocks of every post (Theme Builder).
-22. [Post Excerpt](https://shapekode.com/product/shapeblock/theme-builder/) - a short summary of every post (Theme Builder).
-23. [Post Meta](https://shapekode.com/product/shapeblock/theme-builder/) - author, date, categories and comments (Theme Builder).
-24. [Post Categories / Tags](https://shapekode.com/product/shapeblock/theme-builder/) - the terms of every post (Theme Builder).
-25. [Author Box](https://shapekode.com/product/shapeblock/theme-builder/) - the author with photo and bio (Theme Builder).
-26. [Post Pagination](https://shapekode.com/product/shapeblock/theme-builder/) - links to the previous and next post (Theme Builder).
-27. [Post Comments](https://shapekode.com/product/shapeblock/theme-builder/) - comments and the comment form (Theme Builder).
-28. [Related Posts](https://shapekode.com/product/shapeblock/theme-builder/) - more posts from the same category (Theme Builder).
-29. [Archive Title](https://shapekode.com/product/shapeblock/theme-builder/) - the title of blog and category pages (Theme Builder).
-30. [Archive Description](https://shapekode.com/product/shapeblock/theme-builder/) - the description of a category or tag (Theme Builder).
-31. [Archive Posts](https://shapekode.com/product/shapeblock/theme-builder/) - the posts of a blog, category or search page (Theme Builder).
+17. Testimonial Slider - customer reviews with stars, photos and logos, in four layouts.
+18. [Timeline](https://shapekode.com/product/shapeblock/timeline/) - a story step by step along a line.
+19. [Video Player](https://shapekode.com/product/shapeblock/video-player/) - YouTube, Vimeo or your own video, inline or popup.
+20. [Post Title](https://shapekode.com/product/shapeblock/theme-builder/) - the title of every post (Theme Builder).
+21. [Featured Image](https://shapekode.com/product/shapeblock/theme-builder/) - the featured image of every post (Theme Builder).
+22. [Post Content](https://shapekode.com/product/shapeblock/theme-builder/) - the text and blocks of every post (Theme Builder).
+23. [Post Excerpt](https://shapekode.com/product/shapeblock/theme-builder/) - a short summary of every post (Theme Builder).
+24. [Post Meta](https://shapekode.com/product/shapeblock/theme-builder/) - author, date, categories and comments (Theme Builder).
+25. [Post Categories / Tags](https://shapekode.com/product/shapeblock/theme-builder/) - the terms of every post (Theme Builder).
+26. [Author Box](https://shapekode.com/product/shapeblock/theme-builder/) - the author with photo and bio (Theme Builder).
+27. [Post Pagination](https://shapekode.com/product/shapeblock/theme-builder/) - links to the previous and next post (Theme Builder).
+28. [Post Comments](https://shapekode.com/product/shapeblock/theme-builder/) - comments and the comment form (Theme Builder).
+29. [Related Posts](https://shapekode.com/product/shapeblock/theme-builder/) - more posts from the same category (Theme Builder).
+30. [Archive Title](https://shapekode.com/product/shapeblock/theme-builder/) - the title of blog and category pages (Theme Builder).
+31. [Archive Description](https://shapekode.com/product/shapeblock/theme-builder/) - the description of a category or tag (Theme Builder).
+32. [Archive Posts](https://shapekode.com/product/shapeblock/theme-builder/) - the posts of a blog, category or search page (Theme Builder).
 
 **Animation Blocks (8)**
 
@@ -245,12 +246,14 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 == Changelog ==
 
 = 1.0.8 =
+* **Changed:** The Pro Features tab lists the new Testimonial Slider Pro block.
 * **Fixed:** Selecting text with Shift and the arrow keys in a Heading, FAQ, Tabs, Table, Pricing Table or Team Member text no longer selects whole blocks, so Backspace deletes only the selected letters, not the blocks around them.
 * **Fixed:** Column - the width label (such as 35%) shows only while the Column itself is selected, above its corner, instead of covering the text being edited.
 * **Fixed:** Heading - a highlight with a line-through or underline now shows it in the editor too, not only on the page.
 * **Fixed:** Heading - typing right next to a highlighted word keeps the highlight, instead of starting text in another colour.
 * **Fixed:** Heading - letters typed at the end of a highlight (such as an old, crossed-out price) stay in the highlight, even after all its letters were deleted; type a space first to continue in normal text.
 * **Fixed:** FAQ - opening or closing an answer no longer makes the page jump at the end; the answer's padding now opens and closes with it.
+* **Fixed:** Gallery - the hidden lightbox image no longer has an empty address, so the browser does not request the page a second time.
 
 = 1.0.7 =
 * **New:** Pro Features page - the new Pro blocks and extension are listed with their demo links: [Marquee](https://shapekode.com/product/shapeblock/marquee/), [Table of Contents](https://shapekode.com/product/shapeblock/table-of-contents/) and [Custom Code](https://shapekode.com/product/shapeblock/custom-code/).

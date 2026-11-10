@@ -472,6 +472,15 @@
 		padding-bottom: 0;
 	}
 
+	&.is-badge .shapeblock-post-meta-item:has(.shapeblock-meta-cat) {
+		margin-right: 10px;
+	}
+
+	// The badge already names the category, so its icon is not needed.
+	&.is-badge .shapeblock-post-meta-item:has(.shapeblock-meta-cat) .shapeblock-meta-icon {
+		display: none;
+	}
+
 	&.is-badge .shapeblock-meta-cat {
 		display: inline-block;
 		padding: 4px 9px;

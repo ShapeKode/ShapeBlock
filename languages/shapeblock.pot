@@ -15022,3 +15022,11 @@ msgstr ""
 #: src/components/admin-components/pro-features.jsx
 msgid "Text, logos, icons or any blocks moving in an endless line."
 msgstr ""
+
+#: src/components/admin-components/pro-features.jsx:58
+msgid "Testimonial Slider"
+msgstr ""
+
+#: src/components/admin-components/pro-features.jsx:58
+msgid "Customer reviews with stars, photos and logos, in four layouts."
+msgstr ""
