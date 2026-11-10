@@ -181,7 +181,7 @@
 		return tools.length ? el( 'div', { className: 'sbtl-ext-tools' }, tools ) : null;
 	}
 
-	/** A plain "Upgrade to Pro" link; config.upgradeUrl is empty when ShapeBlock Pro is active. */
+	/** A plain "Upgrade to Pro" link, shown while config.upgradeUrl is set (Template_Library::upgrade_notice()). */
 	function UpgradeLink() {
 		if ( ! config.upgradeUrl ) {
 			return null;
@@ -191,7 +191,7 @@
 
 	/**
 	 * Upgrade bar under the templates, kept in view while they scroll; shown
-	 * only while ShapeBlock Pro is not active (config.upgradeUrl is empty then).
+	 * only while config.upgradeUrl is set (Template_Library::upgrade_notice()).
 	 */
 	function UpgradeBar() {
 		if ( ! config.upgradeUrl ) {

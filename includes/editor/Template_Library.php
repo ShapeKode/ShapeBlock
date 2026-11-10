@@ -68,6 +68,26 @@ class Template_Library {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin' ), 20 );
 		add_action( 'in_admin_header', array( $this, 'suppress_notices' ), 1 );
 		add_filter( 'admin_body_class', array( $this, 'body_class' ) );
+		// The "Upgrade to Pro" bar and link; ShapeBlock Pro removes this action.
+		add_action( 'shapeblock_template_library_enqueue', array( __CLASS__, 'upgrade_notice' ) );
+	}
+
+	/** Where the library's "Upgrade to Pro" bar and link go. */
+	const UPGRADE_URL = 'https://shapekode.com/product/shapeblock/pricing/';
+
+	/**
+	 * Gives the library its "Upgrade to Pro" bar (under the templates) and
+	 * link (in the header). Hooked to shapeblock_template_library_enqueue;
+	 * remove it with remove_action( 'shapeblock_template_library_enqueue',
+	 * array( 'ShapeBlock\Editor\Template_Library', 'upgrade_notice' ) )
+	 * (the class name without a leading backslash, or it does not match).
+	 */
+	public static function upgrade_notice() {
+		wp_add_inline_script(
+			'shapeblock-template-library-ui',
+			'window.shapeblockTemplateLibrary.upgradeUrl = ' . wp_json_encode( self::UPGRADE_URL ) . ';',
+			'before'
+		);
 	}
 
 	/** ShapeBlock → Templates: its own full-screen page, outside the dashboard app. */
@@ -201,7 +221,6 @@ class Template_Library {
 					'themeBuilder'  => admin_url( 'admin.php?page=shapeblock-theme-builder' ),
 					'pagesUrl'      => admin_url( 'edit.php?post_type=page' ),
 					'homeUrl'       => home_url( '/' ),
-					'upgradeUrl'    => \ShapeBlock\Main::get_upgrade_url(),
 				)
 			) . ';',
 			'before'
