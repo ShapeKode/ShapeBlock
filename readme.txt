@@ -180,6 +180,10 @@ Only after you turn it on under **ShapeBlock > General**: font files load from G
 
 Only if you click **Allow**: once a week your site sends api.appsero.com its URL and name, the admin email, first and last name, the WordPress, PHP and MySQL versions, locale, theme, the number of users and of active and inactive plugins, and the server IP (looked up from icanhazip.com). Without Allow nothing is sent, except a deactivation reason you type, and only when you click **Submit & Deactivate**. [Appsero Privacy Policy](https://appsero.com/privacy-policy/), [icanhazip FAQ](https://major.io/icanhazip-com-faq/).
 
+= ShapeBlock template library (only when you open it) =
+
+Only when you open **Templates** in the block editor or **ShapeBlock > Templates**: your site asks the ShapeBlock template server (https://shapekode.com/product/shapeblock/demo-template/) for the list of templates and their preview images and, when you insert or import one, its block content. Importing a whole template can also download its demo content file (blog posts, media, menus) and its settings from the same server. The requests are made by your server and send your site's address (as the request origin). If **Copy images to Media Library** is ticked, the template's images are downloaded from the same server. Live previews open the template's demo site in your browser. By ShapeKode: [Terms of Service](https://shapekode.com/terms-and-conditions/), [Privacy Policy](https://shapekode.com/privacy-policy/).
+
 = Gravatar (Post Grid author picture) =
 
 When a Post Grid shows the author picture, it loads from Gravatar, which receives the visitor's IP. By Automattic Inc.: [Terms of Service](https://automattic.com/tos/), [Privacy Policy](https://automattic.com/privacy/).
