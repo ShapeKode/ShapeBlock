@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "shapeblock/post-grid",
-  "version": "1.0.7",
+  "version": "1.0.10",
   "title": "Post Grid",
   "category": "shapeblock",
   "description": "Show your posts in a grid, with several card styles and pagination.",
@@ -847,6 +847,66 @@
     "paginationTypographyMobile": {
       "type": "object",
       "default": {}
+    },
+    "listLayout": {
+      "type": "string",
+      "default": "grid"
+    },
+    "listImageWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "listImageWidthTablet": {
+      "type": "string",
+      "default": ""
+    },
+    "listImageWidthMobile": {
+      "type": "string",
+      "default": ""
+    },
+    "imageRatio": {
+      "type": "string",
+      "default": ""
+    },
+    "titleLines": {
+      "type": "number",
+      "default": 0
+    },
+    "itemDividerColor": {
+      "type": "string",
+      "default": ""
+    },
+    "numberColor": {
+      "type": "string",
+      "default": ""
+    },
+    "numberSize": {
+      "type": "string",
+      "default": ""
+    },
+    "categoryBadge": {
+      "type": "boolean",
+      "default": false
+    },
+    "badgeBgColor": {
+      "type": "string",
+      "default": ""
+    },
+    "badgeTextColor": {
+      "type": "string",
+      "default": ""
+    },
+    "badgeRadius": {
+      "type": "string",
+      "default": ""
+    },
+    "titleUnderlineHover": {
+      "type": "boolean",
+      "default": false
+    },
+    "playIcon": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

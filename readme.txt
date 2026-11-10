@@ -4,15 +4,15 @@ Tags: gutenberg blocks, header footer builder, block editor, gutenberg, wordpres
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.6
+Stable tag: 1.0.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-66+ Gutenberg blocks - sliders, grids, tabs, counters and more - plus a Header & Footer Builder, with per-device controls.
+75+ Gutenberg blocks with Pro - sliders, grids, tabs, counters and more - plus a Header & Footer Builder, with per-device controls.
 
 == Description ==
 
-**ShapeBlock adds 66+** blocks to the WordPress block editor, plus a **Header & Footer Builder**.
+**ShapeBlock adds 75+ blocks** with ShapeBlock Pro to the WordPress block editor, plus a **Header & Footer Builder**.
 
 Every block has the same three tabs: **Settings** for the content, **Layout** for columns, alignment and spacing, and **Style** for colours, typography, borders, shadows and hover effects. Sizes, spacing and columns can be set separately for desktop, tablet and mobile.
 
@@ -22,7 +22,7 @@ https://www.youtube.com/watch?v=kPrc-yuYkCQ
 
 = Key Features =
 
-* **66+ blocks** for layouts, content, media, navigation and marketing.
+* **75+ blocks** with Pro for layouts, content, media, navigation and marketing.
 * **Header & Footer Builder** with Include and Exclude display conditions, for classic and block themes.
 * **Fully responsive** - separate desktop, tablet and mobile values, and hide any block per device.
 * **Full design control** - typography, gradients, borders, shadows, spacing and a built-in icon picker.
@@ -35,7 +35,7 @@ https://www.youtube.com/watch?v=kPrc-yuYkCQ
 
 **[Upgrade to ShapeBlock Pro](https://shapekode.com/product/shapeblock/pricing/)**
 
-ShapeBlock Pro adds **31 more blocks** (**67 blocks** with the free ones), plus 8 animation blocks, 3 WooCommerce blocks, 2 builders and 8 extensions:
+ShapeBlock Pro adds **42+ more blocks** (**75+ blocks** with the free ones): 31 Pro blocks, 8 animation blocks and 3 WooCommerce blocks, plus 2 builders and 9+ extensions:
 
 * **Theme Builder** - design single posts, pages, archives, search results and the 404 page with 13 dynamic blocks.
 * **Popup Builder** - popups built with blocks, opened on page load, on scroll, on exit intent or on a click.
@@ -44,9 +44,10 @@ ShapeBlock Pro adds **31 more blocks** (**67 blocks** with the free ones), plus 
 * **Motion Effects** - entrance, scroll and mouse animations for any block.
 * **8 animation blocks** - Animation Title, Typewriter, Rotating Text, Scroll Text, Horizontal Scroll and more.
 * **Display Conditions** - show or hide any block by user, role, date, time, page or device.
-* **Image Hotspot, Flip Box, Hero Slider, Timeline, Advanced Data Table** and more Pro blocks.
+* **Custom Code** - Google Analytics, Tag Manager, a pixel or a live chat in your header or footer, without editing a theme file.
+* **Marquee, Table of Contents, Image Hotspot, Flip Box, Hero Slider, Timeline, Advanced Data Table** and more Pro blocks.
 
-= 36+ Free Blocks =
+= Free Blocks =
 
 1. [Accordion](https://shapekode.com/product/shapeblock/accordion/) - Collapsible question and answer sections.
 2. [Breadcrumb](https://shapekode.com/product/shapeblock/breadcrumb/) - Shows visitors where they are on the site.
@@ -93,9 +94,9 @@ It **works with classic and block themes**. Pages that match none of your condit
 
 = ShapeBlock Pro =
 
-Everything above is free and stays free. ShapeBlock Pro is a separate add-on that works on top of this plugin. It adds 31 blocks, 8 animation blocks, 3 WooCommerce blocks, 2 builders and 8 extensions.
+Everything above is free and stays free. ShapeBlock Pro is a separate add-on that works on top of this plugin. It adds 42+ blocks (32 Pro blocks, 8 animation blocks and 3 WooCommerce blocks), 2 builders and 9+ extensions.
 
-**Pro Blocks (30)**
+**Pro Blocks (32)**
 
 1. [Advanced Accordion](https://shapekode.com/product/shapeblock/advanced-accordion/) - sections that hold any blocks.
 2. [Advanced Button](https://shapekode.com/product/shapeblock/advanced-button/) - buttons with eight hover animations.
@@ -113,21 +114,22 @@ Everything above is free and stays free. ShapeBlock Pro is a separate add-on tha
 14. [Rating](https://shapekode.com/product/shapeblock/rating/) - stars, a score and a short note.
 15. [Table of Contents](https://shapekode.com/product/shapeblock/table-of-contents/) - a list of the page headings that marks the section on screen.
 16. [Team Member Carousel](https://shapekode.com/product/shapeblock/team-carousel/) - your team in a sliding row.
-17. [Timeline](https://shapekode.com/product/shapeblock/timeline/) - a story step by step along a line.
-18. [Video Player](https://shapekode.com/product/shapeblock/video-player/) - YouTube, Vimeo or your own video, inline or popup.
-19. [Post Title](https://shapekode.com/product/shapeblock/theme-builder/) - the title of every post (Theme Builder).
-20. [Featured Image](https://shapekode.com/product/shapeblock/theme-builder/) - the featured image of every post (Theme Builder).
-21. [Post Content](https://shapekode.com/product/shapeblock/theme-builder/) - the text and blocks of every post (Theme Builder).
-22. [Post Excerpt](https://shapekode.com/product/shapeblock/theme-builder/) - a short summary of every post (Theme Builder).
-23. [Post Meta](https://shapekode.com/product/shapeblock/theme-builder/) - author, date, categories and comments (Theme Builder).
-24. [Post Categories / Tags](https://shapekode.com/product/shapeblock/theme-builder/) - the terms of every post (Theme Builder).
-25. [Author Box](https://shapekode.com/product/shapeblock/theme-builder/) - the author with photo and bio (Theme Builder).
-26. [Post Pagination](https://shapekode.com/product/shapeblock/theme-builder/) - links to the previous and next post (Theme Builder).
-27. [Post Comments](https://shapekode.com/product/shapeblock/theme-builder/) - comments and the comment form (Theme Builder).
-28. [Related Posts](https://shapekode.com/product/shapeblock/theme-builder/) - more posts from the same category (Theme Builder).
-29. [Archive Title](https://shapekode.com/product/shapeblock/theme-builder/) - the title of blog and category pages (Theme Builder).
-30. [Archive Description](https://shapekode.com/product/shapeblock/theme-builder/) - the description of a category or tag (Theme Builder).
-31. [Archive Posts](https://shapekode.com/product/shapeblock/theme-builder/) - the posts of a blog, category or search page (Theme Builder).
+17. Testimonial Slider - customer reviews with stars, photos and logos, in four layouts.
+18. [Timeline](https://shapekode.com/product/shapeblock/timeline/) - a story step by step along a line.
+19. [Video Player](https://shapekode.com/product/shapeblock/video-player/) - YouTube, Vimeo or your own video, inline or popup.
+20. [Post Title](https://shapekode.com/product/shapeblock/theme-builder/) - the title of every post (Theme Builder).
+21. [Featured Image](https://shapekode.com/product/shapeblock/theme-builder/) - the featured image of every post (Theme Builder).
+22. [Post Content](https://shapekode.com/product/shapeblock/theme-builder/) - the text and blocks of every post (Theme Builder).
+23. [Post Excerpt](https://shapekode.com/product/shapeblock/theme-builder/) - a short summary of every post (Theme Builder).
+24. [Post Meta](https://shapekode.com/product/shapeblock/theme-builder/) - author, date, categories and comments (Theme Builder).
+25. [Post Categories / Tags](https://shapekode.com/product/shapeblock/theme-builder/) - the terms of every post (Theme Builder).
+26. [Author Box](https://shapekode.com/product/shapeblock/theme-builder/) - the author with photo and bio (Theme Builder).
+27. [Post Pagination](https://shapekode.com/product/shapeblock/theme-builder/) - links to the previous and next post (Theme Builder).
+28. [Post Comments](https://shapekode.com/product/shapeblock/theme-builder/) - comments and the comment form (Theme Builder).
+29. [Related Posts](https://shapekode.com/product/shapeblock/theme-builder/) - more posts from the same category (Theme Builder).
+30. [Archive Title](https://shapekode.com/product/shapeblock/theme-builder/) - the title of blog and category pages (Theme Builder).
+31. [Archive Description](https://shapekode.com/product/shapeblock/theme-builder/) - the description of a category or tag (Theme Builder).
+32. [Archive Posts](https://shapekode.com/product/shapeblock/theme-builder/) - the posts of a blog, category or search page (Theme Builder).
 
 **Animation Blocks (8)**
 
@@ -146,7 +148,7 @@ Everything above is free and stays free. ShapeBlock Pro is a separate add-on tha
 2. [Product Carousel](https://shapekode.com/product/shapeblock/product-carousel/) - your products in a slider.
 3. [WooCommerce Builder](https://shapekode.com/product/shapeblock/woocommerce-builder/) - product, shop, cart and checkout pages from 15 blocks.
 
-**Builders & Extensions (10)**
+**Builders & Extensions (11)**
 
 1. [Theme Builder](https://shapekode.com/product/shapeblock/theme-builder/) - Single Post, Page, Archive, Search and 404 templates.
 2. [Popup Builder](https://shapekode.com/product/shapeblock/popup-builder/) - popups built with blocks, on load, scroll, exit or click.
@@ -158,6 +160,7 @@ Everything above is free and stays free. ShapeBlock Pro is a separate add-on tha
 8. [Scroll to Top](https://shapekode.com/product/shapeblock/scroll-to-top-button/) - a back-to-top button on every page.
 9. [Smooth Scrolling](https://shapekode.com/product/shapeblock/smooth-scrolling/) - gliding scroll and a styled scrollbar.
 10. [Custom Cursor](https://shapekode.com/product/shapeblock/custom-cursor/) - a dot and ring that follow the mouse.
+11. [Custom Code](https://shapekode.com/product/shapeblock/custom-code/) - code in the header, after the opening body tag or in the footer, such as Google Analytics or a live chat.
 
 Also in Pro: [Post Grid Filter](https://shapekode.com/product/shapeblock/post-grid-filter/) adds category tabs, Load More and infinite scroll to the free Post Grid.
 
@@ -171,11 +174,11 @@ ShapeBlock connects to an outside service only in the cases below.
 
 = Google Fonts (optional, off by default) =
 
-Only after you turn it on under **ShapeBlock > General**: fonts load from Google, which receives the visitor's IP address. By Google LLC: [Terms of Service](https://policies.google.com/terms), [Privacy Policy](https://policies.google.com/privacy).
+Only after you turn it on under **ShapeBlock > General**: font files load from Google (fonts.googleapis.com and fonts.gstatic.com), which receives the visitor's IP address, and the editor's font list is fetched once a week from fonts.google.com by your server. By Google LLC: [Terms of Service](https://policies.google.com/terms), [Privacy Policy](https://policies.google.com/privacy).
 
 = Appsero (only if you allow it) =
 
-Only if you click **Allow**: site URL, admin email, versions, theme and server IP (via icanhazip) are sent weekly; a deactivation reason only on **Submit & Deactivate**. [Appsero Privacy Policy](https://appsero.com/privacy-policy/), [icanhazip FAQ](https://major.io/icanhazip-com-faq/).
+Only if you click **Allow**: once a week your site sends api.appsero.com its URL and name, the admin email, first and last name, the WordPress, PHP and MySQL versions, locale, theme, the number of users and of active and inactive plugins, and the server IP (looked up from icanhazip.com). Without Allow nothing is sent, except a deactivation reason you type, and only when you click **Submit & Deactivate**. [Appsero Privacy Policy](https://appsero.com/privacy-policy/), [icanhazip FAQ](https://major.io/icanhazip-com-faq/).
 
 = ShapeBlock template library (only when you open it) =
 
@@ -183,15 +186,15 @@ Only when you open **Templates** in the block editor or **ShapeBlock > Templates
 
 = Gravatar (Post Grid author picture) =
 
-Post Grid author pictures load from Gravatar, which receives the visitor's IP. By Automattic Inc.: [Terms of Service](https://automattic.com/tos/), [Privacy Policy](https://automattic.com/privacy/).
+When a Post Grid shows the author picture, it loads from Gravatar, which receives the visitor's IP. By Automattic Inc.: [Terms of Service](https://automattic.com/tos/), [Privacy Policy](https://automattic.com/privacy/).
 
 = Google Maps (Google Map block) =
 
-The Google Map block loads from Google Maps, which receives the visitor's IP. By Google LLC: [Terms of Service](https://maps.google.com/help/terms_maps/), [Privacy Policy](https://policies.google.com/privacy).
+On a page with a Google Map block, the map loads from Google Maps, which receives the visitor's IP (with Load on Click, only after the visitor clicks). By Google LLC: [Terms of Service](https://maps.google.com/help/terms_maps/), [Privacy Policy](https://policies.google.com/privacy).
 
 = Social Share and Social Icon links =
 
-Plain links; nothing is sent until a visitor clicks one.
+Plain links to Facebook, X (Twitter), LinkedIn, Pinterest, WhatsApp, Telegram, Reddit and the other networks you add; nothing is sent until a visitor clicks one, and then that network receives the page address and title.
 
 == Source code and build process ==
 
@@ -228,7 +231,7 @@ The icon fonts were made with Fontello (https://fontello.com). Our own icons are
 
 Yes, with any well-coded theme, including block themes. The blocks pick up your theme's typography, and you can restyle them from the block settings.
 
-= Do I have to use all 66+ blocks? =
+= Do I have to use all 75+ blocks? =
 
 No. Turn off any you don't need in **ShapeBlock > Blocks Settings**. A block that's off isn't registered and its files aren't loaded.
 
@@ -245,6 +248,22 @@ Not by default. See External services above.
 Deleting the plugin removes the options and cached data it created. Your Custom Templates, Theme Builder items and the blocks in your posts are your content, so they stay.
 
 == Changelog ==
+
+= 1.0.8 =
+* **Changed:** The Pro Features tab lists the new Testimonial Slider Pro block.
+* **Fixed:** Selecting text with Shift and the arrow keys in a Heading, FAQ, Tabs, Table, Pricing Table or Team Member text no longer selects whole blocks, so Backspace deletes only the selected letters, not the blocks around them.
+* **Fixed:** Column - the width label (such as 35%) shows only while the Column itself is selected, above its corner, instead of covering the text being edited.
+* **Fixed:** Heading - a highlight with a line-through or underline now shows it in the editor too, not only on the page.
+* **Fixed:** Heading - typing right next to a highlighted word keeps the highlight, instead of starting text in another colour.
+* **Fixed:** Heading - letters typed at the end of a highlight (such as an old, crossed-out price) stay in the highlight, even after all its letters were deleted; type a space first to continue in normal text.
+* **Fixed:** FAQ - opening or closing an answer no longer makes the page jump at the end; the answer's padding now opens and closes with it.
+* **Fixed:** Gallery - the hidden lightbox image no longer has an empty address, so the browser does not request the page a second time.
+
+= 1.0.7 =
+* **New:** Pro Features page - the new Pro blocks and extension are listed with their demo links: [Marquee](https://shapekode.com/product/shapeblock/marquee/), [Table of Contents](https://shapekode.com/product/shapeblock/table-of-contents/) and [Custom Code](https://shapekode.com/product/shapeblock/custom-code/).
+* **Improved:** the Upgrade to Pro link under the settings of ShapeBlock blocks reads "Need all Pro blocks & Modules?" and keeps the link on one line.
+* **Improved:** readme - the block and extension counts match what Free and Pro include: 75+ blocks with Pro.
+* **Improved:** a smaller plugin - editor stylesheets that were never loaded and old icon font formats that no current browser uses are no longer shipped.
 
 = 1.0.6 =
 * **New:** ShapeBlock dashboard - Docs, Video Tutorials and Support links in the footer.

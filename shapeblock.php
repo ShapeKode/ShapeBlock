@@ -2,8 +2,8 @@
 /**
  * Plugin Name: ShapeBlock
  * Plugin URI:  https://shapekode.com/product/shapeblock/
- * Description: A library of 36 Gutenberg blocks - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls.
- * Version:     1.0.6
+ * Description: A library of 75+ Gutenberg blocks with Pro - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls.
+ * Version:     1.0.8
  * Author:      ShapeKode
  * Author URI:  https://profiles.wordpress.org/shapekode22/
  * Text Domain: shapeblock
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define constants
-define( 'SHAPEBLOCK_VERSION', '1.0.6' );
+define( 'SHAPEBLOCK_VERSION', '1.0.8' );
 define( 'SHAPEBLOCK_PL_ROOT', __FILE__ );
 define( 'SHAPEBLOCK_PL_URL', plugins_url( '/', SHAPEBLOCK_PL_ROOT ) );
 define( 'SHAPEBLOCK_PL_PATH', plugin_dir_path( SHAPEBLOCK_PL_ROOT ) );

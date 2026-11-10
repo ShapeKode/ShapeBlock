@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useRef } from '@wordpress/element';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -48,6 +48,33 @@ import BackgroundControl from '../../custom-components/BackgroundControl';
 import ResponsiveWrapper from '../../custom-components/ResponsiveWrapper';
 import AdvancedControls from '../../custom-components/AdvancedControls';
 
+// The editor leaves new letters typed right after a highlight outside it (so "$99" -> "$9" + "d"
+// gives "<span>$9</span>d"), and deleting the last highlighted letter drops the highlight. Letters
+// typed there join the highlight instead; a space first starts normal text after it.
+const HL_OPEN = '<span class="shapeblock-highlight">';
+const HL_CLOSE = '</span>';
+const keepHighlight = (prev, next, mem) => {
+	let s = 0;
+	while (s < prev.length && s < next.length && prev[s] === next[s]) s++;
+	let e = 0;
+	while (e < prev.length - s && e < next.length - s && prev[prev.length - 1 - e] === next[next.length - 1 - e]) e++;
+	const removed = prev.slice(s, prev.length - e);
+	const added = next.slice(s, next.length - e);
+	const wasEmptied = mem.current && mem.current.text === prev && mem.current.at === s;
+	mem.current = null;
+	// The last letters of a highlight were deleted: remember where it was.
+	if (!added && removed.startsWith(HL_OPEN) && removed.endsWith(HL_CLOSE) && removed.indexOf('<', 1) === removed.length - HL_CLOSE.length) {
+		mem.current = { text: next, at: s };
+		return next;
+	}
+	if (removed || !added || added.includes('<') || /^\s/.test(added)) return next;
+	if (wasEmptied) return next.slice(0, s) + HL_OPEN + added + HL_CLOSE + next.slice(s + added.length);
+	if (next.slice(0, s).endsWith(HL_CLOSE) && next.lastIndexOf('<span', s) === next.lastIndexOf(HL_OPEN, s)) {
+		return next.slice(0, s - HL_CLOSE.length) + added + HL_CLOSE + next.slice(s + added.length);
+	}
+	return next;
+};
+
 // Map a base attribute name to its per-device key (desktop uses the base name).
 const getKey = (base, device) =>
 	device === 'desktop' ? base : `${base}${device.charAt(0).toUpperCase() + device.slice(1)}`;
@@ -77,6 +104,7 @@ const typoStyles = (obj) => {
 	if (obj.textTransform) o.textTransform = obj.textTransform;
 	if (obj.lineHeight) o.lineHeight = obj.lineHeight;
 	if (obj.letterSpacing) o.letterSpacing = ensureUnit(obj.letterSpacing);
+	if (obj.textDecoration) o.textDecoration = obj.textDecoration;
 	return o;
 };
 const dimStyles = (obj, type) => {
@@ -104,6 +132,8 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		linkNofollow,
 		blockId,
 	} = attributes;
+	const hlMemory = useRef(null);
+	const titleValue = (attributes.title || '').replace(/\{\{(.*?)\}\}/g, '<span class="shapeblock-highlight">$1</span>').replace(/<span>/g, '<span class="shapeblock-highlight">');
 
 	useEffect(() => {
 		if (!blockId) {
@@ -164,6 +194,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	// Heading wrapper alignment.
 	const headingStyle = {};
 	if (attributes.align) headingStyle.textAlign = attributes.align;
+	// Shape before the title / bar under it: same classes and custom properties as render.php.
+	const shape = ['square', 'circle', 'bar'].includes(attributes.titleShape) ? attributes.titleShape : '';
+	const hasLine = attributes.titleUnderline === 'bar';
+	if (attributes.shapeColor) headingStyle['--sbh-shape-color'] = attributes.shapeColor;
+	if (attributes.shapeSize) headingStyle['--sbh-shape-size'] = /^\d+(\.\d+)?$/.test(String(attributes.shapeSize)) ? attributes.shapeSize + 'px' : attributes.shapeSize;
+	if (attributes.shapeGap) headingStyle['--sbh-shape-gap'] = /^\d+(\.\d+)?$/.test(String(attributes.shapeGap)) ? attributes.shapeGap + 'px' : attributes.shapeGap;
+	if (attributes.underlineColor) headingStyle['--sbh-line-color'] = attributes.underlineColor;
+	const headingClass = 'shapeblock-heading' + (shape ? ' has-shape shape-' + shape : '') + (hasLine ? ' has-underline' : '') + (['center', 'right'].includes(attributes.align) ? ' align-' + attributes.align : '');
 
 	// Title.
 	const titleStyle = { ...typoStyles(attributes.titleTypography) };
@@ -286,6 +324,41 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									{respBox(__('Title Padding', 'shapeblock'), 'titlePadding')}
 								</PanelBody>
 
+								<PanelBody title={__('Shape', 'shapeblock')} initialOpen={false}>
+									<SelectControl
+										label={__('Shape Before Title', 'shapeblock')}
+										value={attributes.titleShape || 'none'}
+										options={[
+											{ label: __('None', 'shapeblock'), value: 'none' },
+											{ label: __('Square', 'shapeblock'), value: 'square' },
+											{ label: __('Circle', 'shapeblock'), value: 'circle' },
+											{ label: __('Bar', 'shapeblock'), value: 'bar' },
+										]}
+										onChange={(v) => setAttributes({ titleShape: v })}
+										__next40pxDefaultSize
+										__nextHasNoMarginBottom
+									/>
+									{attributes.titleShape && attributes.titleShape !== 'none' && (
+										<>
+											{color(__('Shape Color', 'shapeblock'), 'shapeColor')}
+											<TextControl label={__('Shape Size (px)', 'shapeblock')} type="number" value={attributes.shapeSize} onChange={(v) => setAttributes({ shapeSize: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+											<TextControl label={__('Space After Shape (px)', 'shapeblock')} type="number" value={attributes.shapeGap} onChange={(v) => setAttributes({ shapeGap: v })} __next40pxDefaultSize __nextHasNoMarginBottom />
+										</>
+									)}
+									<SelectControl
+										label={__('Line Under Title', 'shapeblock')}
+										value={attributes.titleUnderline || 'none'}
+										options={[
+											{ label: __('None', 'shapeblock'), value: 'none' },
+											{ label: __('Short Bar', 'shapeblock'), value: 'bar' },
+										]}
+										onChange={(v) => setAttributes({ titleUnderline: v })}
+										__next40pxDefaultSize
+										__nextHasNoMarginBottom
+									/>
+									{attributes.titleUnderline === 'bar' && color(__('Line Color', 'shapeblock'), 'underlineColor')}
+								</PanelBody>
+
 								<PanelBody title={__('Highlight', 'shapeblock')} initialOpen={false}>
 									<p style={{ margin: '0 0 12px', padding: '8px 10px', background: '#f0f6fc', border: '1px solid #c5d9ed', borderRadius: '4px', fontSize: '12px', lineHeight: '1.5' }}>
 										{__('How to highlight: in the title, select the word(s) you want, then click the Highlight (marker) button in the toolbar — or wrap them in double braces, e.g. {{word}}. The styles below apply to the highlighted text.', 'shapeblock')}
@@ -307,12 +380,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				<style>{`.${blockId} .shapeblock-title .shapeblock-highlight, .${blockId} .shapeblock-title span { ${hlCss} }`}</style>
 			)}
 			{responsiveCss && blockId && <style>{responsiveCss}</style>}
-			<div className="shapeblock-heading" style={headingStyle}>
+			<div className={headingClass} style={headingStyle}>
 				<RichText
+					identifier="title"
 					tagName={tag}
 					className="shapeblock-title"
-					value={(attributes.title || '').replace(/\{\{(.*?)\}\}/g, '<span class="shapeblock-highlight">$1</span>')}
-					onChange={(v) => setAttributes({ title: v.replace(/\{\{(.*?)\}\}/g, '<span class="shapeblock-highlight">$1</span>') })}
+					value={titleValue}
+					onChange={(v) => setAttributes({ title: keepHighlight(titleValue, v, hlMemory).replace(/\{\{(.*?)\}\}/g, '<span class="shapeblock-highlight">$1</span>') })}
 					allowedFormats={['core/bold', 'core/italic', 'core/link', 'shapeblock/highlight']}
 					placeholder={__('Add heading…', 'shapeblock')}
 					style={titleStyle}

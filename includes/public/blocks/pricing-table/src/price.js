@@ -21,7 +21,7 @@ const toText = (html) => {
 function PriceEdit({ attributes, setAttributes }) {
 	const { onSale, currencyPlacement, separator } = attributes;
 	const plain = (key, placeholder, className) => (
-		<RichText
+		<RichText identifier={key}
 			tagName="span"
 			className={className}
 			value={toHtml(attributes[key])}

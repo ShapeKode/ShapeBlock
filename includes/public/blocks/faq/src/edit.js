@@ -609,7 +609,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								onClick={() => { if (!openAll) toggleOpen(index); }}
 								style={!openAll ? { cursor: 'pointer' } : undefined}
 							>
-								<RichText
+								<RichText identifier={`title-${index}`}
 									tagName={TitleTag}
 									className="shapeblock-faq-title"
 									value={item.title}
@@ -637,7 +637,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								)}
 							</div>
 
-							<RichText
+							<RichText identifier={`description-${index}`}
 								tagName="div"
 								className="shapeblock-faq-answer"
 								value={item.description}

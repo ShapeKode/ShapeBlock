@@ -2,7 +2,7 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: ShapeBlock 1.0.6\n"
+"Project-Id-Version: ShapeBlock 1.0.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/shapeblock\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Domain: shapeblock\n"
 
 #. Plugin Name of the plugin
-#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
+#: shapeblock.php
 #: includes/public/blocks/blocks.php:835
 #: includes/public/blocks/pricing-table/pricing-table.php:130
 #: includes/public/blocks/breadcrumb/build/index.js:1
@@ -47,22 +47,22 @@ msgid "ShapeBlock"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
+#: shapeblock.php
 msgid "https://shapekode.com/product/shapeblock/"
 msgstr ""
 
 #. Description of the plugin
-#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
-msgid "A library of 36 Gutenberg blocks - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls."
+#: shapeblock.php
+msgid "A library of 75+ Gutenberg blocks with Pro - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls."
 msgstr ""
 
 #. Author of the plugin
-#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
+#: shapeblock.php
 msgid "ShapeKode"
 msgstr ""
 
 #. Author URI of the plugin
-#: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
+#: shapeblock.php
 msgid "https://profiles.wordpress.org/shapekode22/"
 msgstr ""
 
@@ -2570,7 +2570,7 @@ msgstr ""
 
 #: build/index.js:24
 #: src/components/admin-components/pro-features.jsx:14
-msgid "36 Free Blocks"
+msgid "Free Blocks"
 msgstr ""
 
 #: build/index.js:24
@@ -15005,4 +15005,28 @@ msgstr ""
 #: includes/public/blocks/testimonials-grid/src/block.json
 msgctxt "block keyword"
 msgid "quote"
+msgstr ""
+
+#: src/components/admin-components/pro-features.jsx
+msgid "Custom Code"
+msgstr ""
+
+#: src/components/admin-components/pro-features.jsx
+msgid "Analytics, a pixel or a live chat in your header or footer."
+msgstr ""
+
+#: src/components/admin-components/pro-features.jsx
+msgid "Marquee"
+msgstr ""
+
+#: src/components/admin-components/pro-features.jsx
+msgid "Text, logos, icons or any blocks moving in an endless line."
+msgstr ""
+
+#: src/components/admin-components/pro-features.jsx:58
+msgid "Testimonial Slider"
+msgstr ""
+
+#: src/components/admin-components/pro-features.jsx:58
+msgid "Customer reviews with stars, photos and logos, in four layouts."
 msgstr ""
