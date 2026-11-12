@@ -65,6 +65,7 @@ class Admin {
             'builderRules' => \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::get_rules(),
             'addonPages' => \ShapeBlock\Main::get_addon_pages(),
             'upgradeUrl' => \ShapeBlock\Main::get_upgrade_url(),
+            'templatesUrl' => admin_url( 'admin.php?page=shapeblock-starter-templates' ),
         ) );
     }
 

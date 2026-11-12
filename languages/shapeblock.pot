@@ -15030,3 +15030,55 @@ msgstr ""
 #: src/components/admin-components/pro-features.jsx:58
 msgid "Customer reviews with stars, photos and logos, in four layouts."
 msgstr ""
+
+#: includes/extension/theme-builder/Page_Template.php:172
+msgid "ShapeBlock Full Width"
+msgstr ""
+
+#: includes/extension/theme-builder/Page_Template.php:173
+msgid "The site header and footer, with the page content at full width."
+msgstr ""
+
+#: includes/extension/theme-builder/Page_Template.php:181
+msgid "ShapeBlock Canvas"
+msgstr ""
+
+#: includes/extension/theme-builder/Page_Template.php:182
+msgid "The page content alone, without the site header and footer."
+msgstr ""
+
+#: includes/public/assets/js/page-settings.js:43
+msgid "Default (from the theme)"
+msgstr ""
+
+#: includes/public/assets/js/page-settings.js:48
+msgid "Canvas (no header or footer)"
+msgstr ""
+
+#: includes/public/assets/js/page-settings.js:60
+msgid "ShapeBlock Page"
+msgstr ""
+
+#: includes/public/assets/js/page-settings.js:63
+msgid "Page Layout"
+msgstr ""
+
+#: includes/public/assets/js/page-settings.js:74
+msgid "Show Page Title"
+msgstr ""
+
+#: src/components/admin-components/pro-features.jsx:15
+msgid "Starter Templates"
+msgstr ""
+
+#: src/components/admin-components/pro-features.jsx:15
+msgid "Import a complete website, or a single page, section, header or footer, in a few clicks. Free templates here; Pro adds more."
+msgstr ""
+
+#: src/components/admin-components/pro-features.jsx:16
+msgid "Page Layouts"
+msgstr ""
+
+#: src/components/admin-components/pro-features.jsx:16
+msgid "Full Width and Canvas page templates, and a switch to hide the page title."
+msgstr ""

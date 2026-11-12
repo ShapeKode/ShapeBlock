@@ -12,6 +12,8 @@ const getGroups = () => [
         free: true,
         items: [
             { name: __( 'Free Blocks', 'shapeblock' ), text: __( 'Layouts, content, media, navigation and marketing.', 'shapeblock' ) },
+            { name: __( 'Starter Templates', 'shapeblock' ), text: __( 'Import a complete website, or a single page, section, header or footer, in a few clicks. Free templates here; Pro adds more.', 'shapeblock' ), href: shapeblock.templatesUrl },
+            { name: __( 'Page Layouts', 'shapeblock' ), text: __( 'Full Width and Canvas page templates, and a switch to hide the page title.', 'shapeblock' ) },
             { name: __( 'Header & Footer Builder', 'shapeblock' ), text: __( 'With Include and Exclude display conditions.', 'shapeblock' ) },
             { name: __( 'Custom Templates', 'shapeblock' ), text: __( 'Build a layout once and reuse it with a shortcode.', 'shapeblock' ) },
             { name: __( 'Per-Device Controls', 'shapeblock' ), text: __( 'Separate desktop, tablet and mobile values.', 'shapeblock' ) },
@@ -55,7 +57,7 @@ const getGroups = () => [
             { name: __( 'Rating', 'shapeblock' ), text: __( 'Stars, a score and a short note.', 'shapeblock' ), page: 'rating' },
             { name: __( 'Table of Contents', 'shapeblock' ), text: __( 'A list of the page headings that marks the section on screen.', 'shapeblock' ), page: 'table-of-contents' },
             { name: __( 'Team Member Carousel', 'shapeblock' ), text: __( 'Your team in a sliding row.', 'shapeblock' ), page: 'team-carousel' },
-            { name: __( 'Testimonial Slider', 'shapeblock' ), text: __( 'Customer reviews with stars, photos and logos, in four layouts.', 'shapeblock' ) },
+            { name: __( 'Testimonial Slider', 'shapeblock' ), text: __( 'Customer reviews with stars, photos and logos, in four layouts.', 'shapeblock' ), page: 'testimonial-slider' },
             { name: __( 'Timeline', 'shapeblock' ), text: __( 'A story step by step along a line.', 'shapeblock' ), page: 'timeline' },
             { name: __( 'Video Player', 'shapeblock' ), text: __( 'YouTube, Vimeo or your own video, inline or popup.', 'shapeblock' ), page: 'video-player' },
         ],
@@ -143,9 +145,11 @@ export default function ProFeatures() {
                         {group.items.map((item) => (
                             <tr key={item.name}>
                                 <th scope="row">
-                                    {item.page
-                                        ? <a href={`${DEMO}${item.page}/`} target="_blank" rel="noopener noreferrer">{item.name}</a>
-                                        : <strong>{item.name}</strong>}
+                                    {item.href
+                                        ? <a href={item.href}>{item.name}</a>
+                                        : item.page
+                                            ? <a href={`${DEMO}${item.page}/`} target="_blank" rel="noopener noreferrer">{item.name}</a>
+                                            : <strong>{item.name}</strong>}
                                     <p>{item.text}</p>
                                 </th>
                                 <td><Mark included={!!group.free} /></td>

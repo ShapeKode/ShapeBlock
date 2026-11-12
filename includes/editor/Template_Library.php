@@ -571,9 +571,13 @@ class Template_Library {
 		}
 		update_post_meta( $post_id, '_shapeblock_template_import', $type . ':' . (int) $request['id'] );
 
-		// Demo pages are designed edge to edge: no theme title, sidebar or box.
-		if ( ! $is_part && \ShapeBlock\Extension\ThemeBuilder\Page_Template::available() ) {
-			update_post_meta( $post_id, '_wp_page_template', \ShapeBlock\Extension\ThemeBuilder\Page_Template::SLUG );
+		// Demo pages are designed edge to edge: Full Width, no title, sidebar or box.
+		if ( ! $is_part ) {
+			$full = \ShapeBlock\Extension\ThemeBuilder\Page_Template::slugs()['full'];
+			if ( '' !== $full ) {
+				update_post_meta( $post_id, '_wp_page_template', $full );
+			}
+			update_post_meta( $post_id, \ShapeBlock\Extension\ThemeBuilder\Page_Template::title_meta(), true );
 		}
 
 		if ( $is_part ) {
@@ -643,7 +647,58 @@ class Template_Library {
 			'title'   => isset( $data['title'] ) ? sanitize_text_field( $data['title'] ) : '',
 			'content' => $content,
 			'media'   => $stats,
+			'enabled' => self::enable_blocks_used( $content ),
 		);
+	}
+
+	/**
+	 * Switches on every ShapeBlock block the content uses that is switched
+	 * off (Dashboard → Blocks), so an imported template shows complete on a
+	 * site that started with only a few blocks on. An administrator's import
+	 * only: the switches are a site setting.
+	 *
+	 * Fires shapeblock_template_library_blocks_used with the block names
+	 * (without the "shapeblock/" prefix), for add-ons with blocks of their own.
+	 *
+	 * @param string $content Block markup.
+	 * @return string[] IDs of the blocks switched on.
+	 */
+	public static function enable_blocks_used( $content ) {
+		$content = (string) $content;
+		if ( ! current_user_can( 'manage_options' ) || false === strpos( $content, '<!-- wp:shapeblock/' ) ) {
+			return array();
+		}
+
+		$names = array();
+		$walk  = static function ( array $blocks ) use ( &$walk, &$names ) {
+			foreach ( $blocks as $block ) {
+				if ( ! empty( $block['blockName'] ) && 0 === strpos( $block['blockName'], 'shapeblock/' ) ) {
+					$names[ substr( $block['blockName'], 11 ) ] = true;
+				}
+				if ( ! empty( $block['innerBlocks'] ) ) {
+					$walk( $block['innerBlocks'] );
+				}
+			}
+		};
+		$walk( parse_blocks( $content ) );
+
+		$enabled = array();
+		foreach ( \ShapeBlock\Admin\Blocks::instance()->get_blocks() as $block ) {
+			if ( isset( $names[ $block['id'] ] ) && 'disable' === $block['status'] ) {
+				update_option( 'shapeblock_block_' . $block['id'], 'enable', false );
+				$enabled[] = $block['id'];
+			}
+		}
+
+		/**
+		 * Fires after the library has switched on the ShapeBlock blocks an
+		 * imported template uses.
+		 *
+		 * @param string[] $names Block names in the content, without "shapeblock/".
+		 */
+		do_action( 'shapeblock_template_library_blocks_used', array_keys( $names ) );
+
+		return $enabled;
 	}
 
 	/**
@@ -682,7 +737,7 @@ class Template_Library {
 		}
 
 		$sent = array();
-		$data = self::cached( '/library', $query, (bool) $request['refresh'], $sent );
+		$data = self::cached( '/library', $query, ( $request['refresh'] && current_user_can( 'manage_options' ) ), $sent );
 		if ( ! is_wp_error( $data ) && isset( $data['counts'] ) && is_array( $data['counts'] ) ) {
 			// Only the number of items for the access level that was asked for.
 			$access         = isset( $sent['access'] ) ? (string) $sent['access'] : self::ACCESS;
@@ -697,7 +752,7 @@ class Template_Library {
 	 */
 	public function get_groups( $request ) {
 		self::$params = $request->get_params();
-		$data = self::cached( '/groups', array( 'access' => self::ACCESS ), (bool) $request['refresh'] );
+		$data = self::cached( '/groups', array( 'access' => self::ACCESS ), ( $request['refresh'] && current_user_can( 'manage_options' ) ) );
 		if ( ! is_wp_error( $data ) && isset( $data['groups'] ) && is_array( $data['groups'] ) ) {
 			// A demo is offered only when its main (landing) page was listed.
 			$data['groups'] = array_values(
@@ -719,7 +774,7 @@ class Template_Library {
 	public function get_group( $request ) {
 		self::$params = $request->get_params();
 		$slug = sanitize_title( $request['slug'] );
-		return self::respond( self::cached( '/groups/' . rawurlencode( $slug ), array( 'access' => self::ACCESS ), (bool) $request['refresh'] ) );
+		return self::respond( self::cached( '/groups/' . rawurlencode( $slug ), array( 'access' => self::ACCESS ), ( $request['refresh'] && current_user_can( 'manage_options' ) ) ) );
 	}
 
 	/**
@@ -848,6 +903,11 @@ class Template_Library {
 		}
 		$url = isset( $data['group']['setup']['xml'] ) ? esc_url_raw( (string) $data['group']['setup']['xml'], array( 'http', 'https' ) ) : '';
 		if ( '' === $url ) {
+			return new \WP_Error( 'shapeblock_tl_no_xml', __( 'This template has no demo content file.', 'shapeblock' ), array( 'status' => 404 ) );
+		}
+		// The demo content file comes from the template server only.
+		$host = wp_parse_url( self::api_url(), PHP_URL_HOST );
+		if ( ! $host || strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) ) !== strtolower( $host ) ) {
 			return new \WP_Error( 'shapeblock_tl_no_xml', __( 'This template has no demo content file.', 'shapeblock' ), array( 'status' => 404 ) );
 		}
 
@@ -1124,11 +1184,13 @@ class Template_Library {
 			}
 		}
 
-		if ( ! empty( $settings['custom_css'] ) && is_string( $settings['custom_css'] ) && function_exists( 'wp_update_custom_css_post' ) ) {
+		if ( ! empty( $settings['custom_css'] ) && is_string( $settings['custom_css'] ) && function_exists( 'wp_update_custom_css_post' ) && current_user_can( 'edit_css' ) ) {
 			$marker = '/* ShapeBlock template: ' . sanitize_text_field( $name ) . ' */';
 			$css    = (string) wp_get_custom_css();
 			if ( false === strpos( $css, $marker ) ) {
-				$result = wp_update_custom_css_post( trim( $css . "\n\n" . $marker . "\n" . wp_strip_all_tags( $settings['custom_css'] ) ) );
+				// No @import (outside stylesheets), old IE expressions or script URLs.
+				$custom = preg_replace( '/@import[^;]*;?|expression\s*\(|javascript\s*:/i', '', wp_strip_all_tags( $settings['custom_css'] ) );
+				$result = wp_update_custom_css_post( trim( $css . "\n\n" . $marker . "\n" . $custom ) );
 				if ( ! is_wp_error( $result ) ) {
 					$applied[] = 'css';
 				}

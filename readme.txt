@@ -20,9 +20,16 @@ Every block has the same three tabs: **Settings** for the content, **Layout** fo
 
 https://www.youtube.com/watch?v=kPrc-yuYkCQ
 
+= Starter Templates =
+
+Import a complete website - pages, header, footer, menu and images - in a few clicks from **ShapeBlock > Templates**, or add a single page, section, header or footer from the **Templates** button in the block editor. Preview each template on desktop, tablet and phone first. See how it works, step by step:
+
+https://www.youtube.com/watch?v=y7reuXzRf5s
+
 = Key Features =
 
 * **75+ blocks** with Pro for layouts, content, media, navigation and marketing.
+* **Starter Templates** - import a complete website or a single ready-made page in a few clicks.
 * **Header & Footer Builder** with Include and Exclude display conditions, for classic and block themes.
 * **Fully responsive** - separate desktop, tablet and mobile values, and hide any block per device.
 * **Full design control** - typography, gradients, borders, shadows, spacing and a built-in icon picker.
@@ -35,7 +42,7 @@ https://www.youtube.com/watch?v=kPrc-yuYkCQ
 
 **[Upgrade to ShapeBlock Pro](https://shapekode.com/product/shapeblock/pricing/)**
 
-ShapeBlock Pro adds **42+ more blocks** (**75+ blocks** with the free ones): 31 Pro blocks, 8 animation blocks and 3 WooCommerce blocks, plus 2 builders and 9+ extensions:
+ShapeBlock Pro adds **42+ more blocks** (**75+ blocks** with the free ones): 32 Pro blocks, 8 animation blocks and 3 WooCommerce blocks, plus 2 builders and 9+ extensions:
 
 * **Theme Builder** - design single posts, pages, archives, search results and the 404 page with 13 dynamic blocks.
 * **Popup Builder** - popups built with blocks, opened on page load, on scroll, on exit intent or on a click.
@@ -114,7 +121,7 @@ Everything above is free and stays free. ShapeBlock Pro is a separate add-on tha
 14. [Rating](https://shapekode.com/product/shapeblock/rating/) - stars, a score and a short note.
 15. [Table of Contents](https://shapekode.com/product/shapeblock/table-of-contents/) - a list of the page headings that marks the section on screen.
 16. [Team Member Carousel](https://shapekode.com/product/shapeblock/team-carousel/) - your team in a sliding row.
-17. Testimonial Slider - customer reviews with stars, photos and logos, in four layouts.
+17. [Testimonial Slider](https://shapekode.com/product/shapeblock/testimonial-slider/) - customer reviews with stars, photos and logos, in four layouts.
 18. [Timeline](https://shapekode.com/product/shapeblock/timeline/) - a story step by step along a line.
 19. [Video Player](https://shapekode.com/product/shapeblock/video-player/) - YouTube, Vimeo or your own video, inline or popup.
 20. [Post Title](https://shapekode.com/product/shapeblock/theme-builder/) - the title of every post (Theme Builder).
@@ -182,7 +189,7 @@ Only if you click **Allow**: once a week your site sends api.appsero.com its URL
 
 = ShapeBlock template library (only when you open it) =
 
-Only when you open **Templates** in the block editor or **ShapeBlock > Templates**: your site asks the ShapeBlock template server (https://shapekode.com/product/shapeblock/demo-template/) for the list of templates and their preview images and, when you insert or import one, its block content. Importing a whole template can also download its demo content file (blog posts, media, menus) and its settings from the same server. The requests are made by your server and send your site's address (as the request origin). If **Copy images to Media Library** is ticked, the template's images are downloaded from the same server. Live previews open the template's demo site in your browser. By ShapeKode: [Terms of Service](https://shapekode.com/terms-and-conditions/), [Privacy Policy](https://shapekode.com/privacy-policy/).
+Only when you open **Templates** in the block editor or **ShapeBlock > Templates**: your site asks the ShapeBlock template server (https://shapekode.com/product/shapeblock/demo-template/) for the list of templates and their preview images and, when you insert or import one, its block content. Importing a whole template can also download its demo content file (blog posts, media, menus) and its settings from the same server. The requests are made by your server and send your site's address (as the request origin). If **Copy images to Media Library** is ticked, the template's images are downloaded from the same server. Live previews open the template's demo site in your browser. By ShapeKode: [Terms of Service](https://shapekode.com/terms-of-conditions/), [Privacy Policy](https://shapekode.com/privacy-policy/).
 
 = Gravatar (Post Grid author picture) =
 
@@ -223,7 +230,7 @@ The icon fonts were made with Fontello (https://fontello.com). Our own icons are
 1. Go to **Plugins > Add New Plugin**, search for "ShapeBlock" and click **Install Now**.
 2. Activate ShapeBlock from the Plugins screen.
 3. Open any post or page and add a ShapeBlock block from the block inserter.
-4. Optional: visit **ShapeBlock > Blocks Settings** to turn off blocks you won't use.
+4. Optional: visit **ShapeBlock > Blocks** to turn off blocks you won't use.
 
 == Frequently Asked Questions ==
 
@@ -233,7 +240,7 @@ Yes, with any well-coded theme, including block themes. The blocks pick up your 
 
 = Do I have to use all 75+ blocks? =
 
-No. Turn off any you don't need in **ShapeBlock > Blocks Settings**. A block that's off isn't registered and its files aren't loaded.
+No. Turn off any you don't need in **ShapeBlock > Blocks**. A block that's off isn't registered and its files aren't loaded.
 
 = Can I replace my theme's header and footer? =
 
@@ -250,8 +257,13 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 == Changelog ==
 
 = 1.0.8 =
+* **New:** Page layouts - a "ShapeBlock Page" panel in the page sidebar picks Default, Full Width (site header and footer, content edge to edge) or Canvas (content only, no header or footer), on classic themes and on block themes (WordPress 6.7 or newer). A "Show Page Title" switch beside it (on by default) hides the title; with a theme that has its own title switch, such as Blockode, that one is used.
+* **New:** Importing a template (or a whole demo) switches on the ShapeBlock blocks it uses, so it shows complete on a new site where most blocks start switched off - in the editor too, at once, without reloading. Switched-off blocks stay out of the block inserter and off the site.
 * **Fixed:** Blocks shown after the page head on a block theme (such as in a template library preview) now keep their own styles - fonts, sizes, colours and spacing.
-* **Changed:** The Pro Features tab lists the new Testimonial Slider Pro block.
+* **Fixed:** Full Width and Canvas pages with the title switched off no longer leave an empty gap above the first section.
+* **Fixed:** Template library in the editor - the search box is narrower on smaller screens, so all five tabs (Templates, Pages, Sections, Headers, Footers) stay in view.
+* **Changed:** A demo import downloads its media only from the ShapeBlock template server, and adds a template's custom CSS only for users allowed to edit CSS.
+* **Changed:** The Pro Features tab lists the new [Testimonial Slider](https://shapekode.com/product/shapeblock/testimonial-slider/) Pro block, and Starter Templates and Page Layouts among the free features (Starter Templates opens your template library).
 * **Fixed:** Selecting text with Shift and the arrow keys in a Heading, FAQ, Tabs, Table, Pricing Table or Team Member text no longer selects whole blocks, so Backspace deletes only the selected letters, not the blocks around them.
 * **Fixed:** Column - the width label (such as 35%) shows only while the Column itself is selected, above its corner, instead of covering the text being edited.
 * **Fixed:** Heading - a highlight with a line-through or underline now shows it in the editor too, not only on the page.

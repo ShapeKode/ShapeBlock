@@ -170,7 +170,8 @@
 }
 .sbtl-nav .sbtl-search {
 	align-self: center;
-	width: 420px;
+	/* Narrower on smaller screens, so all five tabs stay in view. */
+	width: clamp(200px, 22vw, 420px);
 	margin: 0 24px 0 16px;
 }
 .sbtl-ext-tools {

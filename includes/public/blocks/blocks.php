@@ -507,7 +507,57 @@ function shapeblock_compact_block_markup( $content, $block ) {
 add_filter( 'render_block', 'shapeblock_compact_block_markup', 99, 2 );
 
 /**
- * Load the files of every enabled block.
+ * Whether this request is the admin or a REST request (the block editor, and
+ * the editor's server-side previews and template imports).
+ *
+ * Read at the start of `init`, before WordPress has marked a REST request, so
+ * the REST prefix is looked for in the requested address.
+ *
+ * @return bool
+ */
+function shapeblock_is_editor_request() {
+	if ( is_admin() ) {
+		return true;
+	}
+	$uri   = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$path  = (string) wp_parse_url( $uri, PHP_URL_PATH );
+	$query = (string) wp_parse_url( $uri, PHP_URL_QUERY );
+	// The REST prefix in the path, or ?rest_route= (plain permalinks) - never elsewhere in the query.
+	return false !== strpos( $path, '/' . rest_get_url_prefix() . '/' ) || 1 === preg_match( '/(^|&)rest_route=/', $query );
+}
+
+/**
+ * Hide switched-off blocks from the inserter. They are still registered in
+ * the editor (see shapeblock_load_block_files()), so content that uses one —
+ * such as a template just imported, which switches its blocks on — shows at
+ * once, without reloading the editor.
+ *
+ * @param string[] $names Block names.
+ * @return void
+ */
+function shapeblock_hide_from_inserter( array $names ) {
+	if ( ! $names ) {
+		return;
+	}
+	add_filter(
+		'register_block_type_args',
+		static function ( $args, $name ) use ( $names ) {
+			if ( in_array( $name, $names, true ) ) {
+				$args['supports']             = isset( $args['supports'] ) && is_array( $args['supports'] ) ? $args['supports'] : array();
+				$args['supports']['inserter'] = false;
+			}
+			return $args;
+		},
+		10,
+		2
+	);
+}
+
+/**
+ * Load the files of every enabled block. In the editor (and its REST
+ * requests) the switched-off blocks load too, hidden from the inserter, so
+ * imported content that uses them works without a reload; on the site they
+ * stay unloaded.
  *
  * Runs on `init` rather than while the plugin file loads: the block list
  * carries translated titles, and translations may not be loaded before `init`.
@@ -517,11 +567,20 @@ add_filter( 'render_block', 'shapeblock_compact_block_markup', 99, 2 );
  * @return void
  */
 function shapeblock_load_block_files() {
+	$editor = shapeblock_is_editor_request();
+	$hidden = array();
+	$files  = array();
 	foreach ( \ShapeBlock\Admin\Blocks::instance()->get_blocks() as $shapeblock_block ) {
 		if ( 'disable' === $shapeblock_block['status'] ) {
-			continue;
+			if ( ! $editor ) {
+				continue;
+			}
+			$hidden[] = 'shapeblock/' . $shapeblock_block['id'];
 		}
-		$shapeblock_file = __DIR__ . '/' . $shapeblock_block['id'] . '/' . $shapeblock_block['id'] . '.php';
+		$files[] = __DIR__ . '/' . $shapeblock_block['id'] . '/' . $shapeblock_block['id'] . '.php';
+	}
+	shapeblock_hide_from_inserter( $hidden );
+	foreach ( $files as $shapeblock_file ) {
 		if ( file_exists( $shapeblock_file ) ) {
 			require_once $shapeblock_file;
 		}
@@ -593,10 +652,9 @@ add_action( 'wp_enqueue_scripts', function () {
  * guarantees that regardless of the per-block editor-style dependency chain.
  */
 add_action( 'enqueue_block_editor_assets', function () {
+	// Switched-off blocks too: they are registered in the editor, hidden from
+	// the inserter, so content that uses one is styled as well.
 	foreach ( \ShapeBlock\Admin\Blocks::instance()->get_blocks() as $shapeblock_block ) {
-		if ( 'disable' === $shapeblock_block['status'] ) {
-			continue;
-		}
 		$handle = 'shapeblock-' . $shapeblock_block['id'] . '-style';
 		if ( wp_style_is( $handle, 'registered' ) ) {
 			wp_enqueue_style( $handle );

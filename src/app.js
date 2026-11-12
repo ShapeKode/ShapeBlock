@@ -39,7 +39,8 @@ const getMenuItems = () => [
         label: __( 'Custom Templates', 'shapeblock' ),
         icon: <PicRightOutlined />
     },
-    // Add-on pages, then Export & Import last (the same order as the submenu).
+    // Add-on pages, then Export & Import last (the same order as the submenu,
+    // Main::get_admin_pages()).
     ...addonPages.map((p) => ({ key: p.tab, label: p.label, icon: <AppstoreAddOutlined /> })),
     {
         key: 'export-import',

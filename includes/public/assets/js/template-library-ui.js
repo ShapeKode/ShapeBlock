@@ -207,8 +207,8 @@
 			el(
 				'div',
 				{ className: 'sbtl-upgrade-bar__text' },
-				el( 'strong', null, __( 'Unlock every Pro template', TD ) ),
-				el( 'span', null, __( 'Get all Pro templates, sections, headers and footers, plus the Pro blocks and features.', TD ) )
+				el( 'strong', null, __( 'More with ShapeBlock Pro', TD ) ),
+				el( 'span', null, __( 'Pro adds more templates, sections, headers and footers, plus the Pro blocks and features.', TD ) )
 			),
 			el(
 				'a',
@@ -480,7 +480,18 @@
 	}
 
 	/** Live preview with device sizes; falls back to the large image. */
-	function Preview( { title, subtitle, badges, url, image, actions, onBack, backLabel, notice } ) {
+	/** A web address from the template server, only if it is http(s); '' otherwise. */
+	function safeUrl( url ) {
+		try {
+			const parsed = new URL( String( url || '' ), window.location.href );
+			return 'http:' === parsed.protocol || 'https:' === parsed.protocol ? parsed.href : '';
+		} catch ( e ) {
+			return '';
+		}
+	}
+
+	function Preview( { title, subtitle, badges, url: rawUrl, image, actions, onBack, backLabel, notice } ) {
+		const url = rawUrl ? safeUrl( rawUrl ) : '';
 		const [ device, setDevice ] = useState( 'desktop' );
 		const [ loaded, setLoaded ] = useState( false );
 		const width = DEVICES.find( ( d ) => d.slug === device ).width;
@@ -538,6 +549,8 @@
 						! loaded && el( 'div', { className: 'sbtl-state is-overlay' }, el( Spinner ) ),
 						el( 'iframe', {
 							src: url,
+							sandbox: 'allow-scripts allow-same-origin allow-popups allow-forms',
+							referrerPolicy: 'no-referrer',
 							/* translators: %s: template name. */
 							title: sprintf( __( 'Live preview of %s', TD ), title ),
 							onLoad: () => setLoaded( true ),

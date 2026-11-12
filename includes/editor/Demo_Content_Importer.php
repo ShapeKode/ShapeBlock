@@ -30,7 +30,7 @@ class Demo_Content_Importer {
 	const MAX_BYTES = 31457280; // 30 MB.
 
 	/** Post types never imported from a demo file. */
-	const SKIP_TYPES = array( 'revision', 'customize_changeset', 'oembed_cache', 'user_request', 'wp_global_styles', 'wp_template', 'wp_template_part', 'wp_font_family', 'wp_font_face', 'shapeblock-builder' );
+	const SKIP_TYPES = array( 'revision', 'customize_changeset', 'oembed_cache', 'user_request', 'wp_global_styles', 'wp_template', 'wp_template_part', 'wp_font_family', 'wp_font_face', 'shapeblock-builder', 'custom_css', 'wp_navigation' );
 
 	private $media;
 	private $base_urls = array();
@@ -100,10 +100,6 @@ class Demo_Content_Importer {
 		$ns = $xml->getNamespaces( true );
 		if ( empty( $ns['wp'] ) ) {
 			return new \WP_Error( 'shapeblock_xml_invalid', __( 'The demo content file is not a valid WordPress export.', 'shapeblock' ), array( 'status' => 400 ) );
-		}
-
-		if ( function_exists( 'set_time_limit' ) ) {
-			@set_time_limit( 0 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- may be disabled on the host.
 		}
 		wp_defer_term_counting( true );
 		wp_suspend_cache_invalidation( true );
@@ -331,6 +327,9 @@ class Demo_Content_Importer {
 
 		$this->assign_terms( $post_id, $item['terms'] );
 		$this->import_meta( $post_id, $item['meta'] );
+
+		// The blocks this post uses are switched on, as for a library import.
+		Template_Library::enable_blocks_used( $item['content'] );
 	}
 
 	/**
@@ -339,6 +338,12 @@ class Demo_Content_Importer {
 	private function import_attachment( array $item ) {
 		$url = esc_url_raw( $item['attachment_url'] );
 		if ( ! $this->media || '' === $url ) {
+			++$this->stats['skipped'];
+			return;
+		}
+		// Files are downloaded only from the template server.
+		$host = wp_parse_url( Template_Library::api_url(), PHP_URL_HOST );
+		if ( ! $host || strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) ) !== strtolower( $host ) ) {
 			++$this->stats['skipped'];
 			return;
 		}
@@ -427,7 +432,12 @@ class Demo_Content_Importer {
 	private function import_meta( $post_id, array $meta ) {
 		foreach ( $meta as $m ) {
 			$key = (string) $m['key'];
-			if ( '' === $key || in_array( $key, array( '_edit_lock', '_edit_last', '_wp_old_slug', '_wp_old_date', '_wp_trash_meta_status', '_wp_trash_meta_time', '_pingme', '_encloseme' ), true ) ) {
+			// Plain key names only; WordPress's own file and attachment keys are never taken from the file.
+			if ( '' === $key || ! preg_match( '/^[A-Za-z0-9_\-]{1,191}$/', $key ) || in_array( $key, array( '_edit_lock', '_edit_last', '_wp_old_slug', '_wp_old_date', '_wp_trash_meta_status', '_wp_trash_meta_time', '_pingme', '_encloseme', '_wp_attached_file', '_wp_attachment_metadata', '_wp_attachment_backup_sizes', '_wp_desired_post_slug' ), true ) ) {
+				continue;
+			}
+			// A page template is a file name: no folders above it.
+			if ( '_wp_page_template' === $key && ( ! is_string( $m['value'] ) || ! preg_match( '/^[A-Za-z0-9_\-\.\/]+$/', $m['value'] ) || false !== strpos( $m['value'], '..' ) ) ) {
 				continue;
 			}
 			if ( '_thumbnail_id' === $key ) {
@@ -437,7 +447,7 @@ class Demo_Content_Importer {
 			$value = $m['value'];
 			if ( is_serialized( $value ) ) {
 				// Never instantiate objects from a downloaded file.
-				$value = @unserialize( trim( $value ), array( 'allowed_classes' => false ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize, WordPress.PHP.NoSilencedErrors.Discouraged
+				$value = unserialize( trim( $value ), array( 'allowed_classes' => false ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- WXR meta is serialized; objects are refused.
 				// Objects come back as __PHP_Incomplete_Class; such meta is dropped.
 				if ( false === $value || self::has_object( $value ) ) {
 					++$this->stats['skipped'];
