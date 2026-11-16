@@ -708,3 +708,22 @@
 	content: attr( data-shapeblock-placeholder );
 	opacity: 0.5;
 }
+
+/* A dropdown that would run past the right edge of the screen opens from the right of its item
+   (view.js adds .shapeblock-sub-flip), and a side flyout then opens to the left. */
+.shapeblock-menu:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu.shapeblock-sub-flip {
+	left: auto;
+	right: 0;
+}
+.shapeblock-menu:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu .sub-menu.shapeblock-sub-flip {
+	right: 100%;
+	transform: translateX( -12px );
+}
+.shapeblock-menu:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu li:hover > .sub-menu.shapeblock-sub-flip,
+.shapeblock-menu:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu li:focus-within > .sub-menu.shapeblock-sub-flip {
+	transform: translateX( 0 );
+}
+.shapeblock-menu:not( .shapeblock-menu--vertical ) .shapeblock-menu-list .sub-menu .sub-menu.shapeblock-sub-flip::before {
+	left: auto;
+	right: -14px;
+}

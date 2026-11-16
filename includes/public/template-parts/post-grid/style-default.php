@@ -7,17 +7,16 @@
         <div class="shapeblock-blog-img shapeblock-animate <?php echo esc_attr( $anim_style ); ?>">
                 <?php if ( $show_meta && in_array( 'date', $allowed_metas, true ) && 'yes' === $show_date_on_top ) : ?>
                     <div class="shapeblock-blog-date-top">
-                        <h4><?php echo esc_html( get_the_time( 'd' ) ); ?></h4>
+                        <span class="shapeblock-blog-date-day"><?php echo esc_html( get_the_time( 'd' ) ); ?></span>
                         <span><?php echo esc_html( get_the_time( 'M' ) ); ?></span>
                     </div>
                 <?php endif; ?>
-                <a href="<?php the_permalink(); ?>">
-                <?php
-                    if ( has_post_thumbnail() ) {
-                        the_post_thumbnail( $thumbnail_size );
-                    }
-                ?>
+                <?php if ( has_post_thumbnail() ) : ?>
+                <?php // The title link below names the post; this image link is a mouse-only shortcut. ?>
+                <a href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1">
+                <?php the_post_thumbnail( $thumbnail_size ); ?>
                 </a>
+                <?php endif; ?>
 
                 <div class="shapeblock-overlay-all"></div>
         </div>
@@ -32,9 +31,9 @@
             <?php if ( $show_meta && 'below_title' === $meta_position ) include SHAPEBLOCK_PL_PATH . 'includes/public/template-parts/post-meta/post-meta.php'; ?>
             
             <?php if ( $show_excerpt === 'yes' ) : ?>
-            <div class="shapeblock-blog-excerpt">
+            <p class="shapeblock-blog-excerpt">
                 <?php echo esc_html( $trimmed_excerpt ); ?>
-            </div>
+            </p>
             <?php endif; ?>
             
             <?php if ( $show_meta && 'below_content' === $meta_position ) include SHAPEBLOCK_PL_PATH . 'includes/public/template-parts/post-meta/post-meta.php'; ?>

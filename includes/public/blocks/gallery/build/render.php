@@ -138,8 +138,13 @@ if ( ! empty( $attributes['hoverTextColor'] ) ) {
 	$hover_text_styles['color'] = $attributes['hoverTextColor'];
 }
 
+// The lightbox's open / close / change-picture animation length, in ms. The
+// stylesheet reads it from --shapeblock-lb-duration; view.js from data-duration.
+$popup_ms = 'none' === $popup_anim ? 0 : $popup_duration;
+
 wp_enqueue_style( $style_handle );
 \ShapeBlock\Frontend\Helper::add_custom_style( $style_handle, $selector, $full_responsive_css, [
+	'.shapeblock-lightbox-gallery'        => $popup_enabled ? \ShapeBlock\Frontend\Helper::get_inline_styles( [ '--shapeblock-lb-duration' => $popup_ms . 'ms' ] ) : '',
 	'.shapeblock-gallery-item img'        => \ShapeBlock\Frontend\Helper::get_inline_styles( $image_styles ),
 	'.shapeblock-gallery-item img, ' . $selector . ' .shapeblock-gallery-item' => \ShapeBlock\Frontend\Helper::get_inline_styles( $image_radius_styles ),
 	'.shapeblock-gallery-caption'         => \ShapeBlock\Frontend\Helper::get_inline_styles( $caption_styles ),
@@ -191,7 +196,9 @@ $popup_class = $popup_enabled ? 'shapeblock-popup-enabled' : '';
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-gallery-grid <?php echo esc_attr( $popup_class ); ?>">
 		<?php
+		$image_n = 0;
 		foreach ( $images as $image ) :
+			++$image_n;
 			$image_id  = isset( $image['id'] ) ? (int) $image['id'] : 0;
 			$fallback  = isset( $image['url'] ) ? $image['url'] : '';
 			$image_url = $image_id ? wp_get_attachment_image_url( $image_id, $thumbnail_size ) : '';
@@ -214,37 +221,53 @@ $popup_class = $popup_enabled ? 'shapeblock-popup-enabled' : '';
 			if ( $show_description && $image_id ) {
 				$description = get_post_field( 'post_content', $image_id );
 			}
+
+			// The picture's alt text names its link; without one, the caption,
+			// else the picture's place in the gallery.
+			$link_label = '';
+			if ( '' === trim( (string) $alt ) ) {
+				if ( '' !== trim( wp_strip_all_tags( (string) $caption ) ) ) {
+					$link_label = wp_strip_all_tags( (string) $caption );
+				} elseif ( $popup_enabled ) {
+					/* translators: %d: the picture's number in the gallery. */
+					$link_label = sprintf( __( 'Open image %d', 'shapeblock' ), $image_n );
+				} else {
+					/* translators: %d: the picture's number in the gallery. */
+					$link_label = sprintf( __( 'View image %d', 'shapeblock' ), $image_n );
+				}
+			}
 			?>
 			<div class="shapeblock-gallery-item">
 				<?php if ( $popup_enabled ) : ?>
-					<a href="<?php echo esc_url( $full_image ); ?>" class="shapeblock-popup-link">
+					<a href="<?php echo esc_url( $full_image ); ?>" class="shapeblock-popup-link"<?php echo '' !== $link_label ? ' aria-label="' . esc_attr( $link_label ) . '"' : ''; ?>>
 				<?php else : ?>
-					<a href="<?php echo esc_url( $fallback ); ?>" target="_blank" rel="noopener">
+					<a href="<?php echo esc_url( $fallback ); ?>" target="_blank" rel="noopener"<?php echo '' !== $link_label ? ' aria-label="' . esc_attr( $link_label ) . '"' : ''; ?>>
 				<?php endif; ?>
 
-					<div class="shapeblock-gallery-image-wrap">
+					<span class="shapeblock-gallery-image-wrap">
 						<img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $alt ); ?>">
 
 						<?php if ( 'text' === $hover_style && ! empty( $hover_text ) ) : ?>
-							<div class="shapeblock-hover-content shapeblock-hover-text">
+							<span class="shapeblock-hover-content shapeblock-hover-text">
 								<span><?php echo esc_html( $hover_text ); ?></span>
-							</div>
+							</span>
 						<?php elseif ( 'icon' === $hover_style && ! empty( $hover_icon ) && 'none' !== $hover_icon ) : ?>
-							<div class="shapeblock-hover-content shapeblock-hover-icon">
+							<span class="shapeblock-hover-content shapeblock-hover-icon">
 								<i class="shapeblock-icon <?php echo esc_attr( $hover_icon ); ?>" aria-hidden="true"></i>
-							</div>
+							</span>
 						<?php endif; ?>
-					</div>
+					</span>
 				</a>
 
 				<?php if ( ! empty( $caption ) || ! empty( $description ) ) : ?>
 					<div class="shapeblock-gallery-caption">
 						<?php
 						if ( ! empty( $caption ) ) {
-							echo esc_html( $caption );
+							echo '<p class="shapeblock-gallery-caption-text">' . esc_html( $caption ) . '</p>';
 						}
 						if ( ! empty( $description ) ) {
-							echo '<div class="shapeblock-gallery-description">' . wp_kses_post( $description ) . '</div>';
+							$description_tag = \ShapeBlock\Frontend\Helper::text_tag( $description );
+							echo '<' . esc_attr( $description_tag ) . ' class="shapeblock-gallery-description">' . wp_kses_post( $description ) . '</' . esc_attr( $description_tag ) . '>';
 						}
 						?>
 					</div>
@@ -254,11 +277,11 @@ $popup_class = $popup_enabled ? 'shapeblock-popup-enabled' : '';
 	</div>
 
 	<?php if ( $popup_enabled ) : ?>
-		<div class="<?php echo esc_attr( 'shapeblock-lightbox-gallery is-anim-' . $popup_anim ); ?>" style="<?php echo esc_attr( '--shapeblock-lb-duration:' . ( 'none' === $popup_anim ? 0 : $popup_duration ) . 'ms' ); ?>" data-duration="<?php echo esc_attr( (string) ( 'none' === $popup_anim ? 0 : $popup_duration ) ); ?>">
-			<span class="shapeblock-close">&times;</span>
+		<div class="<?php echo esc_attr( 'shapeblock-lightbox-gallery is-anim-' . $popup_anim ); ?>" data-duration="<?php echo esc_attr( (string) $popup_ms ); ?>">
+			<button type="button" class="shapeblock-close" aria-label="<?php esc_attr_e( 'Close', 'shapeblock' ); ?>">&times;</button>
 			<img class="shapeblock-lightbox-image" alt="">
-			<button class="shapeblock-prev">&#10094;</button>
-			<button class="shapeblock-next">&#10095;</button>
+			<button type="button" class="shapeblock-prev" aria-label="<?php esc_attr_e( 'Previous image', 'shapeblock' ); ?>">&#10094;</button>
+			<button type="button" class="shapeblock-next" aria-label="<?php esc_attr_e( 'Next image', 'shapeblock' ); ?>">&#10095;</button>
 		</div>
 	<?php endif; ?>
 </div>

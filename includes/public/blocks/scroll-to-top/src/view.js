@@ -44,12 +44,8 @@
 					window.scrollTo({ top: 0, behavior: 'smooth' });
 				}
 			};
+			// A <button>: Enter and Space click it.
 			btn.addEventListener('click', toTop);
-			btn.addEventListener('keydown', function (e) {
-				if (e.key === 'Enter' || e.key === ' ') {
-					toTop(e);
-				}
-			});
 		});
 
 		// Set initial state.

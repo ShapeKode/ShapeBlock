@@ -80,6 +80,7 @@ class Main {
         Editor\Template_Library::instance();
         Extension\ThemeBuilder\Theme_Builder::instance();
         Extension\ThemeBuilder\Page_Template::instance();
+        Frontend\Meta_Description::instance();
 
         // Procedural files (define functions / run bootstrap code — not autoloadable).
         require_once SHAPEBLOCK_PL_PATH . 'includes/admin/post-types.php';

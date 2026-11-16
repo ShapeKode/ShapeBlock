@@ -372,12 +372,19 @@ $render_separator = function () use ( $show_sep_icon, $sep_icon, $sep_text, $ico
 		?><svg class="shapeblock-breadcrumb-separator" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M8.6 5.4 7.2 6.8 12.4 12l-5.2 5.2 1.4 1.4L15.2 12z"></path></svg><?php
 	}
 };
+// The trail is an ordered list, one crumb to an item. The home link opens the
+// first item; every separator closes the item before it and opens the next, so
+// each separator sits at the start of the crumb it leads to.
+$render_crumb_separator = function () use ( $render_separator ) {
+	echo '</li><li class="shapeblock-breadcrumb-item">';
+	$render_separator();
+};
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="shapeblock-breadcrumb">
-		<div class="shapeblock-breadcrumb-path">
-			<?php shapeblock_breadcrumb_trail( $render_separator, $home_title, $show_cat, $render_home_icon, $has_home_icon, $show_home_text, $show_current ); ?>
-		</div>
-	</div>
+	<nav class="shapeblock-breadcrumb" aria-label="<?php esc_attr_e( 'Breadcrumb', 'shapeblock' ); ?>">
+		<ol class="shapeblock-breadcrumb-path">
+			<li class="shapeblock-breadcrumb-item"><?php shapeblock_breadcrumb_trail( $render_crumb_separator, $home_title, $show_cat, $render_home_icon, $has_home_icon, $show_home_text, $show_current ); ?></li>
+		</ol>
+	</nav>
 </div>
 <?php } )( $attributes, $content, $block );

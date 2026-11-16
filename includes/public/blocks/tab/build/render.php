@@ -415,16 +415,18 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-tabs-wrapper" data-tab-direction="<?php echo esc_attr( $direction ); ?>" data-icon-position="<?php echo esc_attr( $icon_pos ); ?>">
-		<ul class="shapeblock-tab-titles">
+		<ul class="shapeblock-tab-titles" role="tablist"<?php echo 'top' === $direction ? '' : ' aria-orientation="vertical"'; ?>>
 			<?php foreach ( $tabs as $index => $item ) : ?>
 				<?php
-				$type     = isset( $item['iconType'] ) ? $item['iconType'] : 'icon';
-				$icon     = isset( $item['icon'] ) ? $item['icon'] : '';
-				$img      = isset( $item['image'] ) && is_array( $item['image'] ) ? $item['image'] : [];
+				$type      = isset( $item['iconType'] ) ? $item['iconType'] : 'icon';
+				$icon      = isset( $item['icon'] ) ? $item['icon'] : '';
+				$img       = isset( $item['image'] ) && is_array( $item['image'] ) ? $item['image'] : [];
 				$tab_title = isset( $item['tabTitle'] ) ? $item['tabTitle'] : '';
-				$active    = 0 === $index ? ' active' : '';
+				$is_first  = 0 === $index;
+				$panel_id  = $unique_id . '-tab-' . $index;
 				?>
-				<li class="shapeblock-tab-nav-item<?php echo esc_attr( $active ); ?>" data-tab="<?php echo esc_attr( $unique_id . '-tab-' . $index ); ?>">
+				<li class="shapeblock-tab-nav-item<?php echo $is_first ? ' active' : ''; ?>" data-tab="<?php echo esc_attr( $panel_id ); ?>" role="presentation">
+					<button type="button" class="shapeblock-tab-nav-btn" role="tab" id="<?php echo esc_attr( $panel_id . '-title' ); ?>" aria-controls="<?php echo esc_attr( $panel_id ); ?>" aria-selected="<?php echo $is_first ? 'true' : 'false'; ?>" tabindex="<?php echo $is_first ? '0' : '-1'; ?>">
 					<?php
 					if ( 'icon' === $type ) {
 						echo '<span class="shapeblock-tab-icon">';
@@ -435,10 +437,12 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 						}
 						echo '</span>';
 					} elseif ( 'image' === $type && ! empty( $img['url'] ) ) {
-						echo '<span class="shapeblock-tab-image"><img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $img['alt'] ?? $tab_title ) . '"></span>';
+						// The tab's own title names it; the picture beside it is decorative.
+						echo '<span class="shapeblock-tab-image"><img src="' . esc_url( $img['url'] ) . '" alt=""></span>';
 					}
 					?>
 					<span class="shapeblock-tab-title-text"><?php echo esc_html( $tab_title ); ?></span>
+					</button>
 				</li>
 			<?php endforeach; ?>
 		</ul>
@@ -452,7 +456,7 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 				$btn_target        = ! empty( $item['readMoreNewTab'] ) ? '_blank' : '_self';
 				$active            = 0 === $index ? ' active' : '';
 				?>
-				<div class="shapeblock-tab-content<?php echo esc_attr( $active ); ?>" id="<?php echo esc_attr( $unique_id . '-tab-' . $index ); ?>">
+				<div class="shapeblock-tab-content<?php echo esc_attr( $active ); ?>" id="<?php echo esc_attr( $unique_id . '-tab-' . $index ); ?>" role="tabpanel" aria-labelledby="<?php echo esc_attr( $unique_id . '-tab-' . $index . '-title' ); ?>">
 					<?php if ( isset( $item['html'] ) ) : ?>
 						<?php echo wp_kses( $item['html'], $H::template_allowed_html() ); ?>
 					<?php else : ?>

@@ -285,7 +285,7 @@ $action = home_url( '/' );
 	<?php if ( '2' === $style ) : ?>
 		<div class="shapeblock-search shapeblock-search-style-2">
 			<form role="search" method="get" class="shapeblock-search-form" action="<?php echo esc_url( $action ); ?>">
-				<input type="search" class="shapeblock-search-field" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="" name="s" />
+				<input type="search" class="shapeblock-search-field" placeholder="<?php echo esc_attr( $placeholder ); ?>" aria-label="<?php esc_attr_e( 'Search', 'shapeblock' ); ?>" value="" name="s" />
 				<button type="submit" class="shapeblock-search-submit-btn" aria-label="<?php esc_attr_e( 'Submit Search', 'shapeblock' ); ?>">
 					<?php
 					$open_icon_html = $render_icon( $open_icon, $open_icon_image, 'shapeblock-search-open-icon-img' );
@@ -300,7 +300,7 @@ $action = home_url( '/' );
 		</div>
 	<?php else : ?>
 		<div class="shapeblock-search shapeblock-search-style-1">
-			<a href="#" role="button" class="shapeblock-search-open-btn" aria-label="<?php esc_attr_e( 'Open Search', 'shapeblock' ); ?>">
+			<button type="button" class="shapeblock-search-open-btn" aria-label="<?php esc_attr_e( 'Open Search', 'shapeblock' ); ?>">
 				<?php
 				$open_icon_html = $render_icon( $open_icon, $open_icon_image, 'shapeblock-search-open-icon-img' );
 				if ( '' !== $open_icon_html ) :
@@ -309,10 +309,10 @@ $action = home_url( '/' );
 					?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M21 20l-5.6-5.6a7 7 0 10-1.4 1.4L20 21zM5 10.5a5.5 5.5 0 1111 0 5.5 5.5 0 01-11 0z"></path></svg><?php
 				endif;
 				?>
-			</a>
+			</button>
 			<div class="shapeblock-search-lightbox">
 				<div class="shapeblock-search-overlay">
-					<a href="#" role="button" class="shapeblock-search-close-btn" aria-label="<?php esc_attr_e( 'Close Search', 'shapeblock' ); ?>">
+					<button type="button" class="shapeblock-search-close-btn" aria-label="<?php esc_attr_e( 'Close Search', 'shapeblock' ); ?>">
 						<?php
 						$close_icon_html = $render_icon( $close_icon, $close_icon_image, 'shapeblock-search-close-icon-img' );
 						if ( '' !== $close_icon_html ) :
@@ -321,12 +321,12 @@ $action = home_url( '/' );
 							?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg><?php
 						endif;
 						?>
-					</a>
+					</button>
 				</div>
 				<div class="shapeblock-search-content">
-					<div class="shapeblock-search-title"><?php echo esc_html( $title ); ?></div>
+					<p class="shapeblock-search-title"><?php echo esc_html( $title ); ?></p>
 					<form role="search" method="get" class="shapeblock-search-form" action="<?php echo esc_url( $action ); ?>">
-						<input type="search" class="shapeblock-search-field" placeholder="<?php echo esc_attr( $placeholder ); ?>" value="" name="s" />
+						<input type="search" class="shapeblock-search-field" placeholder="<?php echo esc_attr( $placeholder ); ?>" aria-label="<?php esc_attr_e( 'Search', 'shapeblock' ); ?>" value="" name="s" />
 						<button type="submit" class="shapeblock-search-submit" aria-label="<?php esc_attr_e( 'Submit Search', 'shapeblock' ); ?>">
 							<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M21 20l-5.6-5.6a7 7 0 10-1.4 1.4L20 21zM5 10.5a5.5 5.5 0 1111 0 5.5 5.5 0 01-11 0z"></path></svg>
 						</button>

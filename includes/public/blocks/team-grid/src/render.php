@@ -249,7 +249,7 @@ $pop_close = ! empty( $attributes['popupCloseColor'] ) ? [ 'color' => $attribute
 $name_sel        = '.shapeblock-name, ' . $selector . '.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-name';
 $deg_sel         = '.shapeblock-designation, ' . $selector . '.skin4 .shapeblock-team-hover-content.overlay2 .shapeblock-designation';
 $cicon_glyph_sel = '.shapeblock-author-contact .shapeblock-contact-item .shapeblock-contact-icon i, ' . $selector . ' .shapeblock-author-contact .shapeblock-contact-icon svg';
-$soc_sel         = '.shapeblock-team-social ul li a, ' . $selector . ' .shapeblock-team-social .shapeblock-team-social-hover a';
+$soc_sel         = '.shapeblock-team-social ul li a, ' . $selector . ' .shapeblock-team-social .shapeblock-team-social-hover button';
 
 // Several skins style these parts with longer selectors in style.scss (skin 1's
 // right column, skin 3's image box, skin 4's second overlay, skin 5's
@@ -257,7 +257,7 @@ $soc_sel         = '.shapeblock-team-social ul li a, ' . $selector . ' .shapeblo
 // key below also carries the skin's own path.
 $ov2_path     = $selector . ' .shapeblock-team-card .shapeblock-team-hover-content.overlay2';
 $soc_sel     .= ', ' . $ov2_path . ' .shapeblock-team-social ul li a:not(.shapeblock-popup-trigger), ' . $ov2_path . ' .shapeblock-team-social ul li:first-child a:not(.shapeblock-popup-trigger)';
-$soc_hov_sel  = '.shapeblock-team-social ul li a:hover, ' . $selector . ' .shapeblock-team-social .shapeblock-team-social-hover a:hover, ' . $ov2_path . ' .shapeblock-team-social ul li a:not(.shapeblock-popup-trigger):hover';
+$soc_hov_sel  = '.shapeblock-team-social ul li a:hover, ' . $selector . ' .shapeblock-team-social .shapeblock-team-social-hover button:hover, ' . $ov2_path . ' .shapeblock-team-social ul li a:not(.shapeblock-popup-trigger):hover';
 $deg_sel     .= ', ' . $selector . ' .shapeblock-team-card.skin5 .shapeblock-designation';
 $k_wrap       = '.shapeblock-team-card .shapeblock-name-deg-wrap, ' . $selector . ' .shapeblock-team-card .shapeblock-team-right .shapeblock-name-deg-wrap, ' . $ov2_path . ' .shapeblock-name-deg-wrap';
 $k_img_box    = '.shapeblock-team-card .shapeblock-team-img-box, ' . $selector . ' .shapeblock-grid-item .shapeblock-team-card .shapeblock-team-img-area .shapeblock-team-img-box';
@@ -469,6 +469,8 @@ $shapeblock_allowed_html = array(
 		'target'        => true,
 		'rel'           => true,
 		'data-popup-id' => true,
+		'aria-haspopup' => true,
+		'aria-controls' => true,
 	),
 	'ul'   => array(),
 	'li'   => array(),
@@ -499,7 +501,7 @@ if ( 'link' === $action && $link ) {
 	$open_link = '<a href="' . esc_url( $link ) . '"' . $target . $nofollow . '>';
 	$close_link = '</a>';
 } elseif ( 'popup' === $action ) {
-	$open_link = '<a href="#' . esc_attr( $popup_id ) . '" class="shapeblock-popup-trigger" data-popup-id="' . esc_attr( $popup_id ) . '">';
+	$open_link = '<a href="#' . esc_attr( $popup_id ) . '" class="shapeblock-popup-trigger" data-popup-id="' . esc_attr( $popup_id ) . '" aria-haspopup="dialog" aria-controls="' . esc_attr( $popup_id ) . '">';
 	$close_link = '</a>';
 }
 
@@ -512,7 +514,7 @@ $render_social = function () use ( $icon_i, $shapeblock_allowed_html, $social_sh
 	?>
 	<div class="shapeblock-team-social <?php echo esc_attr( $pos_classes ); ?>">
 		<?php if ( 'hover_show' === $social_show && ! empty( $social_hover_icon ) ) : ?>
-			<div class="shapeblock-team-social-hover"><a href="#">
+			<div class="shapeblock-team-social-hover"><button type="button" aria-expanded="false" aria-label="<?php esc_attr_e( 'Show social links', 'shapeblock' ); ?>">
 				<?php
 				$hover_icon_html = $icon_i( $social_hover_icon );
 				if ( '' !== $hover_icon_html ) {
@@ -521,17 +523,18 @@ $render_social = function () use ( $icon_i, $shapeblock_allowed_html, $social_sh
 					?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M11 5v6H5v2h6v6h2v-6h6v-2h-6V5z"/></svg><?php
 				}
 				?>
-			</a></div>
+			</button></div>
 		<?php endif; ?>
 		<ul>
 			<?php
 			foreach ( $social_links as $s ) :
-				$su = isset( $s['url'] ) && '' !== $s['url'] ? $s['url'] : '#';
+				// An icon with no link set is shown but is not a link (no href="#").
+				$su = isset( $s['url'] ) && '' !== trim( (string) $s['url'] ) && '#' !== trim( (string) $s['url'] ) ? $s['url'] : '';
 				// A name for screen readers, from the icon: "logo-linkedin" -> "Linkedin".
 				$sn = preg_replace( '/^(shapeblock-icon-|shapeblock-bi-)(logo-)?|-(f|square|fill|circle)$/', '', (string) ( $s['icon'] ?? '' ) );
 				$sn = 'twitter-x' === $sn ? 'X' : ucwords( str_replace( '-', ' ', $sn ) );
 				?>
-				<li><a href="<?php echo esc_url( $su ); ?>"<?php echo '#' !== $su ? ' target="_blank" rel="noopener noreferrer"' : ''; ?><?php echo '' !== $sn ? ' aria-label="' . esc_attr( $sn ) . '"' : ''; ?>>
+				<li><a<?php echo '' !== $su ? ' href="' . esc_url( $su ) . '" target="_blank" rel="noopener noreferrer"' . ( '' !== $sn ? ' aria-label="' . esc_attr( $sn ) . '"' : '' ) : ' aria-hidden="true"'; ?>>
 					<?php
 					$link_icon_html = $icon_i( isset( $s['icon'] ) ? $s['icon'] : '' );
 					if ( '' !== $link_icon_html ) {
@@ -588,7 +591,8 @@ $render_contact = function () use ( $attributes, $icon_i, $shapeblock_allowed_ht
 };
 
 // Image markup.
-$img_alt_text = $img_url ? ( $image['alt'] ?? '' ) : __( 'Team Image', 'shapeblock' );
+// The photo is named after the member when it has no alt text of its own.
+$img_alt_text = $img_url ? ( ( isset( $image['alt'] ) && '' !== trim( (string) $image['alt'] ) ) ? $image['alt'] : wp_strip_all_tags( (string) $name ) ) : __( 'Team Image', 'shapeblock' );
 $placeholder = SHAPEBLOCK_PL_URL . 'includes/public/assets/img/placeholder.png';
 $img_src = $img_url ? $img_url : $placeholder;
 ob_start();
@@ -599,7 +603,7 @@ ob_start();
 	<div class="shapeblock-image-overlay"></div>
 	<?php if ( 'skin3' === $skin && $details ) : ?>
 		<div class="shapeblock-image-content">
-			<div class="shapeblock-description"><?php echo wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></div>
+			<p class="shapeblock-description"><?php echo wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></p>
 		</div>
 	<?php endif; ?>
 </div>
@@ -612,8 +616,8 @@ $build_name_wrap = function ( $extra_class = '', $with_details = true, $with_soc
 	?>
 	<div class="shapeblock-name-deg-wrap <?php echo esc_attr( $extra_class ); ?>">
 		<?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?>
-		<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
-		<?php if ( $with_details && $details ) : ?><div class="shapeblock-team-description"><?php echo wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></div><?php endif; ?>
+		<?php if ( $designation ) : ?><p class="shapeblock-designation"><?php echo esc_html( $designation ); ?></p><?php endif; ?>
+		<?php if ( $with_details && $details ) : ?><p class="shapeblock-team-description"><?php echo wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></p><?php endif; ?>
 		<?php if ( $has_contact ) : ?><div class="shapeblock-author-contact"><?php $render_contact(); ?></div><?php endif; ?>
 		<?php if ( $with_social && $has_social && 'default' === $social_pos ) : ?>
 			<?php $render_social(); ?>
@@ -652,7 +656,7 @@ $build_name_wrap = function ( $extra_class = '', $with_details = true, $with_soc
 					<div class="shapeblock-team-deg-content">
 						<div class="shapeblock-name-deg-wrap">
 							<?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?>
-							<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
+							<?php if ( $designation ) : ?><p class="shapeblock-designation"><?php echo esc_html( $designation ); ?></p><?php endif; ?>
 						</div>
 					</div>
 					<?php echo wp_kses( $close_link, $shapeblock_allowed_html ); ?>
@@ -678,7 +682,7 @@ $build_name_wrap = function ( $extra_class = '', $with_details = true, $with_soc
 					<div class="shapeblock-team-hover-content <?php echo esc_attr( $overlay4 ); ?>">
 						<div class="shapeblock-name-deg-wrap">
 							<?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?>
-							<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
+							<?php if ( $designation ) : ?><p class="shapeblock-designation"><?php echo esc_html( $designation ); ?></p><?php endif; ?>
 							<?php if ( $has_contact ) : ?><div class="shapeblock-author-contact"><?php $render_contact(); ?></div><?php endif; ?>
 						</div>
 						<?php if ( $has_social ) : ?>
@@ -697,12 +701,12 @@ $build_name_wrap = function ( $extra_class = '', $with_details = true, $with_soc
 						<div class="shapeblock-name-deg-wrap">
 							<div class="shapeblock-author-content">
 								<?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?>
-								<?php if ( $designation ) : ?><div class="shapeblock-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
+								<?php if ( $designation ) : ?><p class="shapeblock-designation"><?php echo esc_html( $designation ); ?></p><?php endif; ?>
 							</div>
 							<?php if ( $details || $has_contact || ( $has_social && 'default' === $social_pos ) ) : ?>
 								<div class="shapeblock-author-contact">
 									<?php if ( $details ) : ?>
-										<div class="shapeblock-image-content"><div class="shapeblock-description"><?php echo wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></div></div>
+										<div class="shapeblock-image-content"><p class="shapeblock-description"><?php echo wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></p></div>
 									<?php endif; ?>
 									<?php if ( $has_contact ) { $render_contact(); } ?>
 									<?php if ( $has_social && 'default' === $social_pos ) { $render_social(); } ?>
@@ -733,15 +737,15 @@ $build_name_wrap = function ( $extra_class = '', $with_details = true, $with_soc
 		<?php endif; ?>
 
 		<?php if ( 'popup' === $action ) : ?>
-			<div id="<?php echo esc_attr( $popup_id ); ?>" class="shapeblock-popup-modal" style="display:none;">
+			<div id="<?php echo esc_attr( $popup_id ); ?>" class="shapeblock-popup-modal" role="dialog" aria-modal="true"<?php echo $name_html ? ' aria-labelledby="' . esc_attr( $popup_id . '-name' ) . '"' : ' aria-label="' . esc_attr__( 'Team member details', 'shapeblock' ) . '"'; ?>>
 				<div class="shapeblock-popup-content">
-					<span class="shapeblock-popup-close">&times;</span>
+					<button type="button" class="shapeblock-popup-close" aria-label="<?php esc_attr_e( 'Close', 'shapeblock' ); ?>"><span aria-hidden="true">&times;</span></button>
 					<div class="shapeblock-popup-header">
-						<?php if ( $name_html ) : ?><div class="shapeblock-popup-name"><?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?></div><?php endif; ?>
-						<?php if ( $designation ) : ?><div class="shapeblock-popup-designation"><?php echo esc_html( $designation ); ?></div><?php endif; ?>
+						<?php if ( $name_html ) : ?><div class="shapeblock-popup-name" id="<?php echo esc_attr( $popup_id . '-name' ); ?>"><?php echo wp_kses( $name_html, $shapeblock_allowed_html ); ?></div><?php endif; ?>
+						<?php if ( $designation ) : ?><p class="shapeblock-popup-designation"><?php echo esc_html( $designation ); ?></p><?php endif; ?>
 					</div>
 					<div class="shapeblock-popup-details">
-						<?php echo $details ? wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ) : '<p>' . esc_html__( 'No additional details available.', 'shapeblock' ) . '</p>'; ?>
+						<?php echo $details ? '<p class="shapeblock-popup-text">' . wp_kses( nl2br( $details ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ) . '</p>' : '<p>' . esc_html__( 'No additional details available.', 'shapeblock' ) . '</p>'; ?>
 					</div>
 				</div>
 			</div>

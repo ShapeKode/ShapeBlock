@@ -351,19 +351,31 @@ $H::add_custom_style( $style_handle, $selector, $full_responsive_css, [
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-faq-accordion <?php echo esc_attr( $open_all_class ); ?> <?php echo esc_attr( $sticky_class ); ?>">
 		<?php
+		// Inside the question's <button> only phrasing markup belongs: a link
+		// there would be a control inside a control, so its text is kept and
+		// the link itself is left out.
+		$question_html = wp_kses_allowed_html( 'post' );
+		unset( $question_html['a'] );
+		$faq_n = 0;
 		foreach ( $faq_items as $item ) :
 			$title       = isset( $item['title'] ) && is_scalar( $item['title'] ) ? (string) $item['title'] : '';
 			$description = isset( $item['description'] ) && is_scalar( $item['description'] ) ? (string) $item['description'] : '';
 			// "Open all" shows every answer, so every item is in its open (active)
 			// state and the Active style settings apply to it - as in the editor.
 			$is_active   = ( $open_all || ! empty( $item['active'] ) ) ? 'active' : '';
+			$answer_id   = $unique_id . '-answer-' . $faq_n;
+			++$faq_n;
 			?>
 			<div class="shapeblock-faq-item <?php echo esc_attr( $is_active ); ?>">
 				<div class="shapeblock-faq-question">
-					<<?php echo tag_escape( $title_tag ); ?> class="shapeblock-faq-title"<?php if ( ! $open_all ) : ?> role="button" tabindex="0" aria-expanded="<?php echo $is_active ? 'true' : 'false'; ?>"<?php endif; ?>>
-						<?php echo wp_kses_post( $title ); ?>
+					<<?php echo tag_escape( $title_tag ); ?> class="shapeblock-faq-title">
+						<?php if ( $open_all ) : ?>
+							<?php echo wp_kses_post( $title ); ?>
+						<?php else : ?>
+							<button type="button" class="shapeblock-faq-toggle" aria-expanded="<?php echo $is_active ? 'true' : 'false'; ?>" aria-controls="<?php echo esc_attr( $answer_id ); ?>"><?php echo wp_kses( $title, $question_html ); ?></button>
+						<?php endif; ?>
 					</<?php echo tag_escape( $title_tag ); ?>>
-					<span class="shapeblock-faq-icon shapeblock-faq-icon-open">
+					<span class="shapeblock-faq-icon shapeblock-faq-icon-open" aria-hidden="true">
 						<?php
 						if ( ! empty( $icon_open ) && 'none' !== $icon_open ) {
 							echo '<i class="shapeblock-icon ' . esc_attr( $icon_open ) . '" aria-hidden="true"></i>';
@@ -372,7 +384,7 @@ $H::add_custom_style( $style_handle, $selector, $full_responsive_css, [
 						}
 						?>
 					</span>
-					<span class="shapeblock-faq-icon shapeblock-faq-icon-close">
+					<span class="shapeblock-faq-icon shapeblock-faq-icon-close" aria-hidden="true">
 						<?php
 						if ( ! empty( $icon_close ) && 'none' !== $icon_close ) {
 							echo '<i class="shapeblock-icon ' . esc_attr( $icon_close ) . '" aria-hidden="true"></i>';
@@ -382,9 +394,8 @@ $H::add_custom_style( $style_handle, $selector, $full_responsive_css, [
 						?>
 					</span>
 				</div>
-				<div class="shapeblock-faq-answer">
-					<?php echo wp_kses_post( $description ); ?>
-				</div>
+				<?php $answer_tag = $H::text_tag( $description ); ?>
+				<<?php echo esc_attr( $answer_tag ); ?> class="shapeblock-faq-answer" id="<?php echo esc_attr( $answer_id ); ?>"><?php echo wp_kses_post( $description ); ?></<?php echo esc_attr( $answer_tag ); ?>>
 			</div>
 		<?php endforeach; ?>
 	</div>

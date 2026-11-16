@@ -239,6 +239,21 @@ foreach ( $per_device as $sub_sel => $build ) {
 	}
 }
 
+// Each card's place in the stack (--i, for its sticky offset and z-index)
+// and its own badge background (colour or gradient).
+foreach ( $cards as $ci => $card ) {
+	if ( ! is_array( $card ) ) {
+		continue;
+	}
+	$card_sel  = $selector . ' .shapeblock-ss-card-' . (int) $ci;
+	$resp_css .= $card_sel . '{--i:' . (int) $ci . ';}';
+	$badge_bg  = ! empty( $card['badgeBgGradient'] ) ? $card['badgeBgGradient'] : ( ! empty( $card['badgeBg'] ) ? $card['badgeBg'] : '' );
+	$badge_bg  = $H::get_inline_styles( [ 'background' => $badge_bg ] );
+	if ( '' !== $badge_bg ) {
+		$resp_css .= $card_sel . ' .shapeblock-ss-badge{' . $badge_bg . ';}';
+	}
+}
+
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-ss-card'               => $H::get_inline_styles( $card_css ),
@@ -284,21 +299,13 @@ $icon_class = function ( $value ) {
 					$has_img = true;
 				}
 			}
-
-			// Per-card badge background (colour or gradient).
-			$badge_bg = '';
-			if ( ! empty( $card['badgeBgGradient'] ) ) {
-				$badge_bg = $H::get_inline_styles( [ 'background' => $card['badgeBgGradient'] ] );
-			} elseif ( ! empty( $card['badgeBg'] ) ) {
-				$badge_bg = $H::get_inline_styles( [ 'background' => $card['badgeBg'] ] );
-			}
 			?>
-			<article class="shapeblock-ss-card<?php echo $has_img ? ' has-media' : ''; ?>" style="--i:<?php echo (int) $ci; ?>">
+			<article class="shapeblock-ss-card shapeblock-ss-card-<?php echo (int) $ci; ?><?php echo $has_img ? ' has-media' : ''; ?>">
 				<div class="shapeblock-ss-content">
 					<?php if ( ( $show_number && '' !== $number ) || ( $show_icon && '' !== $icon && 'none' !== $icon ) ) : ?>
 						<div class="shapeblock-ss-head">
 							<?php if ( $show_number && '' !== $number ) : ?>
-								<span class="shapeblock-ss-badge"<?php echo '' !== $badge_bg ? ' style="' . esc_attr( $badge_bg ) . '"' : ''; ?>><?php echo esc_html( $number ); ?></span>
+								<span class="shapeblock-ss-badge"><?php echo esc_html( $number ); ?></span>
 							<?php endif; ?>
 							<?php if ( $show_icon && '' !== $icon && 'none' !== $icon ) : ?>
 								<span class="shapeblock-ss-icon"><i class="shapeblock-icon <?php echo esc_attr( $icon ); ?>" aria-hidden="true"></i></span>
@@ -319,7 +326,11 @@ $icon_class = function ( $value ) {
 						</ul>
 					<?php endif; ?>
 					<?php if ( $show_button && '' !== $btn_text ) : ?>
-						<a class="shapeblock-ss-btn" href="<?php echo esc_url( '' !== $btn_url ? $btn_url : '#' ); ?>"<?php echo $btn_new ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html( $btn_text ); ?></a>
+						<?php if ( '' !== $btn_url ) : ?>
+							<a class="shapeblock-ss-btn" href="<?php echo esc_url( $btn_url ); ?>"<?php echo $btn_new ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>><?php echo esc_html( $btn_text ); ?></a>
+						<?php else : ?>
+							<span class="shapeblock-ss-btn"><?php echo esc_html( $btn_text ); ?></span>
+						<?php endif; ?>
 					<?php endif; ?>
 				</div>
 				<?php if ( $has_img ) : ?>

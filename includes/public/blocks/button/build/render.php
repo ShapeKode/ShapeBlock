@@ -30,7 +30,6 @@ $bg_gradient_hover = isset( $attributes['bgGradientHover'] ) ? (string) $attribu
 $border_gradient   = isset( $attributes['borderGradient'] ) ? (string) $attributes['borderGradient'] : '';
 $border_grad       = ! empty( $attributes['borderGradientButton'] ) && '' !== $border_gradient;
 
-$target   = $is_external ? '_blank' : '_self';
 $rel      = [];
 if ( $is_external ) {
 	$rel[] = 'noopener';
@@ -52,10 +51,10 @@ if ( '' !== $bg_gradient_hover ) {
 }
 
 $block_wrap_attr = get_block_wrapper_attributes( array(
-	'class' => 'shapeblock-block shapeblock-button-block-wrap ' . $unique_id,
+	'class' => 'shapeblock-block shapeblock-button-block-wrap ' . $unique_id . ( 'link' === $button_type ? ' is-link' : '' ),
 ) );
 if ( empty( $block_wrap_attr ) ) {
-	$block_wrap_attr = 'class="shapeblock-block shapeblock-button-block-wrap ' . esc_attr( $unique_id ) . '"';
+	$block_wrap_attr = 'class="shapeblock-block shapeblock-button-block-wrap ' . esc_attr( $unique_id ) . ( 'link' === $button_type ? ' is-link' : '' ) . '"';
 }
 
 // ---------------------------------------------------------------------------
@@ -120,7 +119,8 @@ $shadow = function ( $obj ) use ( $H ) {
 $button_styles = $typo( $attributes['buttonTypography'] ?? [] );
 if ( ! empty( $attributes['buttonAlignment'] ) ) $button_styles['justify-content'] = $attributes['buttonAlignment'];
 // min() so a wide minimum never pushes the button past a narrow column or screen.
-if ( ! empty( $attributes['minWidth'] ) ) $button_styles['min-width'] = 'min(' . $H::ensure_unit( $attributes['minWidth'] ) . ', 100%)';
+// A Link is as wide as its text.
+if ( 'link' !== $button_type && ! empty( $attributes['minWidth'] ) ) $button_styles['min-width'] = 'min(' . $H::ensure_unit( $attributes['minWidth'] ) . ', 100%)';
 if ( ! empty( $attributes['textColor'] ) ) $button_styles['color'] = $attributes['textColor'];
 if ( ! empty( $attributes['bgColor'] ) ) $button_styles['background-color'] = $attributes['bgColor'];
 $button_styles = array_merge( $button_styles, $dims( $attributes['buttonBorderRadius'] ?? [], 'radius' ), $dims( $attributes['buttonPadding'] ?? [], 'padding' ), $dims( $attributes['buttonMargin'] ?? [], 'margin' ), $shadow( $attributes['buttonBoxShadow'] ?? [] ) );
@@ -194,10 +194,10 @@ if ( isset( $attributes['iconRotationHover'] ) && '' !== $attributes['iconRotati
 // these rules are emitted only when the matching per-device attribute is set,
 // so existing content renders identically.
 // ---------------------------------------------------------------------------
-$build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H ) {
+$build_dev = function ( $suffix ) use ( $attributes, $typo, $dims, $H, $button_type ) {
 	$btn = $typo( $attributes[ 'buttonTypography' . $suffix ] ?? [] );
 	if ( ! empty( $attributes[ 'buttonAlignment' . $suffix ] ) ) $btn['justify-content'] = $attributes[ 'buttonAlignment' . $suffix ];
-	if ( isset( $attributes[ 'minWidth' . $suffix ] ) && '' !== $attributes[ 'minWidth' . $suffix ] ) $btn['min-width'] = 'min(' . $H::ensure_unit( $attributes[ 'minWidth' . $suffix ] ) . ', 100%)';
+	if ( 'link' !== $button_type && isset( $attributes[ 'minWidth' . $suffix ] ) && '' !== $attributes[ 'minWidth' . $suffix ] ) $btn['min-width'] = 'min(' . $H::ensure_unit( $attributes[ 'minWidth' . $suffix ] ) . ', 100%)';
 	$btn = array_merge( $btn, $dims( $attributes[ 'buttonPadding' . $suffix ] ?? [], 'padding' ), $dims( $attributes[ 'buttonMargin' . $suffix ] ?? [], 'margin' ) );
 
 	$icon_i = [];
@@ -262,6 +262,12 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-button:hover .shapeblock-button-icon-before, ' . $selector . ' .shapeblock-button:hover .shapeblock-button-icon-after' => $H::get_inline_styles( $icon_hover_bg ),
 ] );
 
+// An icon-only button has no visible text, so it gets an accessible name.
+$aria_label = '';
+if ( '' === trim( (string) $text ) ) {
+	$aria_label = ! empty( $attributes['ariaLabel'] ) ? (string) $attributes['ariaLabel'] : __( 'Button', 'shapeblock' );
+}
+
 $icon_html = ( ! empty( $icon ) && 'none' !== $icon ) ? '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>' : '';
 // Only the icon font class markup above is ever put in this string, so a single-tag allow-list is enough.
 $icon_allowed_html = array(
@@ -272,7 +278,7 @@ $icon_allowed_html = array(
 );
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<a href="<?php echo esc_url( $url ); ?>" class="<?php echo esc_attr( implode( ' ', $button_classes ) ); ?>" target="<?php echo esc_attr( $target ); ?>"<?php echo $rel_attr ? ' rel="' . esc_attr( $rel_attr ) . '"' : ''; ?>>
+	<a href="<?php echo esc_url( $url ); ?>" class="<?php echo esc_attr( implode( ' ', $button_classes ) ); ?>"<?php echo $is_external ? ' target="_blank"' : ''; ?><?php echo '' !== $aria_label ? ' aria-label="' . esc_attr( $aria_label ) . '"' : ''; ?><?php echo $rel_attr ? ' rel="' . esc_attr( $rel_attr ) . '"' : ''; ?>>
 		<?php if ( $icon_html && 'before' === $icon_position ) : ?>
 			<span class="shapeblock-button-icon-before"><?php echo wp_kses( $icon_html, $icon_allowed_html ); ?></span>
 		<?php endif; ?>

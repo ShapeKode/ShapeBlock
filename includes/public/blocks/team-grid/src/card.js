@@ -78,11 +78,11 @@ export default function TeamCard({ attributes, setAttributes, isSelected }) {
 		<RichText identifier={"name"} tagName={tag} className="shapeblock-name" value={toHtml(attributes.name)} onChange={set('name')} allowedFormats={[]} placeholder={__('Name', 'shapeblock')} />
 	);
 	const designationEl = (
-		<RichText identifier={"designation"} tagName="div" className="shapeblock-designation" value={toHtml(attributes.designation)} onChange={set('designation')} allowedFormats={[]} placeholder={__('Designation', 'shapeblock')} />
+		<RichText identifier={"designation"} tagName="p" className="shapeblock-designation" value={toHtml(attributes.designation)} onChange={set('designation')} allowedFormats={[]} placeholder={__('Designation', 'shapeblock')} />
 	);
 	const detailsEl = (className) => (
 		<RichText identifier={"details"}
-			tagName="div"
+			tagName="p"
 			className={className}
 			value={String(attributes.details || '').replace(/\n/g, '<br>')}
 			onChange={(v) => setAttributes({ details: v })}
@@ -113,7 +113,7 @@ export default function TeamCard({ attributes, setAttributes, isSelected }) {
 		<div className={`shapeblock-team-social ${pos} ${show}`}>
 			{'hover_show' === show && socialHoverIcon && (
 				<div className="shapeblock-team-social-hover">
-					<a href="#shapeblock-team" onClick={(e) => e.preventDefault()}>{icon(socialHoverIcon, PLUS_SVG)}</a>
+					<button type="button" aria-expanded="false" aria-label={__('Show social links', 'shapeblock')}>{icon(socialHoverIcon, PLUS_SVG)}</button>
 				</div>
 			)}
 			<ul>

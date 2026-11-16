@@ -47,7 +47,6 @@ body {
     box-sizing: border-box;
 
     /* Sticky positioning support - z-index auto allows natural stacking */
-    &[style*="position:sticky"],
     &.is-sticky {
         position: sticky;
         z-index: auto;

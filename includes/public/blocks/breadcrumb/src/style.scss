@@ -30,14 +30,26 @@
 		line-height: 1.4;
 	}
 
-	/* Every crumb, icon and separator sits on one centred line. */
+	/* Every crumb, icon and separator sits on one centred line. The trail is an
+	   ordered list: no list markers or list spacing. */
 	.shapeblock-breadcrumb-path {
 		display: inline-flex;
 		flex-wrap: wrap;
 		align-items: center;
 		vertical-align: middle;
+		list-style: none;
+		margin: 0;
+		padding: 0;
 		/* Takes the Typography line height set on the trail. */
 		line-height: inherit;
+
+		/* One crumb: the separator that leads to it, then its link or text. The
+		   item draws no box of its own, so the crumbs and separators lay out on
+		   the trail's line exactly as before (it stays a list item to screen
+		   readers). */
+		> li {
+			display: contents;
+		}
 
 		a {
 			display: inline-flex;
@@ -48,10 +60,11 @@
 			transition: color 0.2s ease, background 0.2s ease;
 		}
 
-		> span,
-		> a,
-		> i,
-		> svg {
+		/* A crumb's own parts. (An icon separator keeps the line height of 1
+		   set for icons below.) */
+		> :where(li) > span,
+		> :where(li) > a,
+		> :where(li) > svg {
 			line-height: inherit;
 		}
 

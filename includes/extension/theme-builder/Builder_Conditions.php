@@ -174,6 +174,54 @@ class Builder_Conditions {
 	}
 
 	/**
+	 * match_rank() for a post open in the block editor rather than for the
+	 * current request: would the template show around this post on the site?
+	 *
+	 * @param array $conditions Sanitised conditions list.
+	 * @param int   $post_id    The post being edited.
+	 * @return int
+	 */
+	public static function match_rank_for_post( $conditions, $post_id ) {
+		if ( ! is_array( $conditions ) || empty( $conditions ) ) {
+			return 0;
+		}
+		$post_type = get_post_type( $post_id );
+		$rank      = 0;
+		foreach ( $conditions as $row ) {
+			$rule = isset( $row['rule'] ) ? $row['rule'] : '';
+			$ids  = isset( $row['ids'] ) && is_array( $row['ids'] ) ? array_map( 'intval', $row['ids'] ) : array();
+			switch ( $rule ) {
+				case 'entire_site':
+					$hit = true;
+					break;
+				case 'front_page':
+					$hit = 'page' === get_option( 'show_on_front' ) && (int) get_option( 'page_on_front' ) === (int) $post_id;
+					break;
+				case 'all_pages':
+					$hit = 'page' === $post_type;
+					break;
+				case 'all_posts':
+					$hit = 'post' === $post_type;
+					break;
+				case 'page':
+				case 'post':
+					$hit = $rule === $post_type && in_array( (int) $post_id, $ids, true );
+					break;
+				default:
+					$hit = false;
+			}
+			if ( ! $hit ) {
+				continue;
+			}
+			if ( isset( $row['type'] ) && 'exclude' === $row['type'] ) {
+				return 0;
+			}
+			$rank = max( $rank, self::rule_rank( $rule ) );
+		}
+		return $rank;
+	}
+
+	/**
 	 * How specific a rule is: chosen pages or posts (4) over a single kind of
 	 * page such as the front page or category pages (3), over a whole group
 	 * such as all pages or all archives (2), over the entire site (1).

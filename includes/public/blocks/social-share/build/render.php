@@ -342,8 +342,15 @@ $platform_names = [
 	'email'     => __( 'Email', 'shapeblock' ),
 	'copy'      => __( 'Copy Link', 'shapeblock' ),
 ];
+$item_name = function ( $platform, $item ) use ( $platform_names ) {
+	$name = ( isset( $item['label'] ) && is_string( $item['label'] ) ) ? trim( $item['label'] ) : '';
+	if ( '' === $name ) {
+		$name = isset( $platform_names[ $platform ] ) ? $platform_names[ $platform ] : ucfirst( $platform );
+	}
+	return $name;
+};
 // The icon (unless the button shows its name only), then the name.
-$echo_button_content = function ( $platform, $item, $custom, $has_custom_icon ) use ( $show_icon, $show_label, $platform_names, $echo_platform_icon, $icon_allowed_html ) {
+$echo_button_content = function ( $platform, $item, $custom, $has_custom_icon ) use ( $show_icon, $show_label, $item_name, $echo_platform_icon, $icon_allowed_html ) {
 	if ( $show_icon ) {
 		if ( $has_custom_icon ) {
 			echo wp_kses( '<i class="shapeblock-icon ' . esc_attr( $custom ) . '" aria-hidden="true"></i>', $icon_allowed_html );
@@ -352,17 +359,13 @@ $echo_button_content = function ( $platform, $item, $custom, $has_custom_icon ) 
 		}
 	}
 	if ( $show_label ) {
-		$name = ( isset( $item['label'] ) && is_string( $item['label'] ) ) ? trim( $item['label'] ) : '';
-		if ( '' === $name ) {
-			$name = isset( $platform_names[ $platform ] ) ? $platform_names[ $platform ] : ucfirst( $platform );
-		}
-		echo '<span class="shapeblock-social-label">' . esc_html( $name ) . '</span>';
+		echo '<span class="shapeblock-social-label">' . esc_html( $item_name( $platform, $item ) ) . '</span>';
 	}
 };
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-social-share <?php echo esc_attr( $layout_class ); ?>">
-		<div class="shapeblock-social-buttons">
+		<ul class="shapeblock-social-buttons">
 			<?php
 			foreach ( $platforms as $item ) {
 				$platform = ( is_array( $item ) && isset( $item['platform'] ) && is_string( $item['platform'] ) ) ? $item['platform'] : '';
@@ -374,33 +377,29 @@ $echo_button_content = function ( $platform, $item, $custom, $has_custom_icon ) 
 
 				$btn_class = trim( 'shapeblock-social-button shapeblock-' . sanitize_html_class( $platform ) . ' ' . $hover['class'] );
 
+				// Read out in place of a name the button does not show.
+				$name = $item_name( $platform, $item );
+
+				echo '<li class="shapeblock-social-item">';
 				if ( 'copy' === $platform ) {
-					echo '<a href="#" class="' . esc_attr( $btn_class ) . ' shapeblock-social-copy" data-url="' . esc_attr( $current_url ) . '" title="' . esc_attr__( 'Copy Link', 'shapeblock' ) . '"' . ( $show_label ? ' data-copied="' . esc_attr__( 'Copied!', 'shapeblock' ) . '"' : '' ) . '>';
+					echo '<button type="button" class="' . esc_attr( $btn_class ) . ' shapeblock-social-copy" data-url="' . esc_attr( $current_url ) . '" title="' . esc_attr__( 'Copy Link', 'shapeblock' ) . '" data-copied="' . esc_attr__( 'Copied!', 'shapeblock' ) . '"' . ( $show_label ? '' : ' aria-label="' . esc_attr( $name ) . '"' ) . '>';
 					$echo_button_content( $platform, $item, $custom, $has_custom_icon );
-					echo '</a>';
+					echo '</button>';
+				} elseif ( in_array( $platform, $native_platforms, true ) ) {
+					// No share link for websites: the device's share sheet, else a copy.
+					echo '<button type="button" class="' . esc_attr( $btn_class ) . '" title="' . esc_attr( ucfirst( $platform ) ) . '" data-native="1" data-url="' . esc_attr( $current_url ) . '" data-title="' . esc_attr( $current_title ) . '" data-copied="' . esc_attr__( 'Copied!', 'shapeblock' ) . '"' . ( $show_label ? '' : ' aria-label="' . esc_attr( $name ) . '"' ) . '>';
+					$echo_button_content( $platform, $item, $custom, $has_custom_icon );
+					echo '</button>';
 				} else {
-					$share_data = [];
-					if ( in_array( $platform, $popup_platforms, true ) ) {
-						$share_data['data-popup'] = '1';
-					} elseif ( in_array( $platform, $native_platforms, true ) ) {
-						$share_data = [
-							'data-native' => '1',
-							'data-url'    => $current_url,
-							'data-title'  => $current_title,
-							'data-copied' => __( 'Copied!', 'shapeblock' ),
-						];
-					}
-					echo '<a href="' . esc_url( $share_url( $platform ) ) . '" class="' . esc_attr( $btn_class ) . '" target="' . esc_attr( 'email' === $platform ? '_self' : $target ) . '" rel="noopener noreferrer" title="' . esc_attr( ucfirst( $platform ) ) . '"';
-					foreach ( $share_data as $data_name => $data_value ) {
-						echo ' ' . esc_attr( $data_name ) . '="' . esc_attr( $data_value ) . '"';
-					}
-					echo '>';
+					echo '<a href="' . esc_url( $share_url( $platform ) ) . '" class="' . esc_attr( $btn_class ) . '" target="' . esc_attr( 'email' === $platform ? '_self' : $target ) . '" rel="noopener noreferrer" title="' . esc_attr( ucfirst( $platform ) ) . '"' . ( in_array( $platform, $popup_platforms, true ) ? ' data-popup="1"' : '' ) . ( $show_label ? '' : ' aria-label="' . esc_attr( $name ) . '"' ) . '>';
 					$echo_button_content( $platform, $item, $custom, $has_custom_icon );
 					echo '</a>';
 				}
+				echo '</li>';
 			}
 			?>
-		</div>
+		</ul>
+		<span class="shapeblock-social-live" aria-live="polite"></span>
 	</div>
 </div>
 <?php } )( $attributes, $content, $block );

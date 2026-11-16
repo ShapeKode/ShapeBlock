@@ -50,7 +50,8 @@
 	}
 
 	// The editable title should stay clickable/typed even with the icon beside it.
-	.shapeblock-faq-title {
+	.shapeblock-faq-title,
+	.shapeblock-faq-toggle {
 		outline: none;
 	}
 }

@@ -66,6 +66,8 @@ if ( ! empty( $attributes['progressBarColorGradient'] ) ) {
 } elseif ( ! empty( $attributes['progressBarColor'] ) ) {
 	$fill['background'] = $attributes['progressBarColor'];
 }
+// The fill's target width; view.js animates up to it.
+$fill['width'] = $percent . '%';
 if ( '' !== $u( 'progressHeight' ) ) $track['height'] = $u( 'progressHeight' );
 if ( '' !== $u( 'progressRadius' ) ) $track['border-radius'] = $u( 'progressRadius' );
 
@@ -116,28 +118,30 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-pb-percent'    => $H::get_inline_styles( $percent_styles ),
 	'.shapeblock-progress-style2 .shapeblock-progress .shapeblock-pb-percent' => $H::get_inline_styles( $percent_styles ),
 ] );
+// The bar is named by its title, or generically when there is none.
+$title_id = '' !== $title ? wp_unique_id( 'shapeblock-pb-title-' ) : '';
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-progress-bar shapeblock-progress-<?php echo esc_attr( $style ); ?>">
 		<?php if ( 'style2' === $style ) : ?>
 			<div class="shapeblock-progress-style2">
 				<?php if ( '' !== $title ) : ?>
-					<p class="shapeblock-pb-title"><?php echo wp_kses_post( $title ); ?></p>
+					<p class="shapeblock-pb-title" id="<?php echo esc_attr( $title_id ); ?>"><?php echo wp_kses_post( $title ); ?></p>
 				<?php endif; ?>
 				<div class="shapeblock-progress">
-					<div class="shapeblock-progress-fill" role="progressbar" style="width: <?php echo esc_attr( $percent ); ?>%" data-width="<?php echo esc_attr( $percent ); ?>" aria-valuenow="<?php echo esc_attr( $percent ); ?>" aria-valuemin="0" aria-valuemax="100"></div>
+					<div class="shapeblock-progress-fill" role="progressbar"<?php if ( '' !== $title_id ) : ?> aria-labelledby="<?php echo esc_attr( $title_id ); ?>"<?php else : ?> aria-label="<?php esc_attr_e( 'Progress', 'shapeblock' ); ?>"<?php endif; ?> data-width="<?php echo esc_attr( $percent ); ?>" aria-valuenow="<?php echo esc_attr( $percent ); ?>" aria-valuemin="0" aria-valuemax="100"></div>
 					<span class="shapeblock-pb-percent"><?php echo esc_html( $percent ); ?>%</span>
 				</div>
 			</div>
 		<?php else : ?>
 			<div class="shapeblock-progress-top">
 				<?php if ( '' !== $title ) : ?>
-					<p class="shapeblock-pb-title"><?php echo wp_kses_post( $title ); ?></p>
+					<p class="shapeblock-pb-title" id="<?php echo esc_attr( $title_id ); ?>"><?php echo wp_kses_post( $title ); ?></p>
 				<?php endif; ?>
 				<span class="shapeblock-pb-percent"><?php echo esc_html( $percent ); ?>%</span>
 			</div>
 			<div class="shapeblock-progress">
-				<div class="shapeblock-progress-fill" role="progressbar" style="width: <?php echo esc_attr( $percent ); ?>%" data-width="<?php echo esc_attr( $percent ); ?>" aria-valuenow="<?php echo esc_attr( $percent ); ?>" aria-valuemin="0" aria-valuemax="100"></div>
+				<div class="shapeblock-progress-fill" role="progressbar"<?php if ( '' !== $title_id ) : ?> aria-labelledby="<?php echo esc_attr( $title_id ); ?>"<?php else : ?> aria-label="<?php esc_attr_e( 'Progress', 'shapeblock' ); ?>"<?php endif; ?> data-width="<?php echo esc_attr( $percent ); ?>" aria-valuenow="<?php echo esc_attr( $percent ); ?>" aria-valuemin="0" aria-valuemax="100"></div>
 			</div>
 		<?php endif; ?>
 	</div>

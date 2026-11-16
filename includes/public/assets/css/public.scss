@@ -154,19 +154,10 @@
 
     .shapeblock-blog-title {
         line-height: 1.2;
+        // The hover underline is the block's "Underline Title on Hover" setting
+        // (post-grid/style.scss).
         a {
-            background-size: 0% 1px;
-            background-position: 0% 100%;
-            background-repeat: no-repeat;
-            transition: all 1000ms;
             display: unset !important;
-
-            &:hover {
-                background-size: 100% 1px;
-                background-position: 0% 100%;
-                background-image: linear-gradient(to right, currentColor 100%, transparent 100%);
-                width: fit-content;
-            }
         }
     }
 

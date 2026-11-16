@@ -14,7 +14,7 @@ $H = '\ShapeBlock\Frontend\Helper';
 
 $unique_id = ! empty( $attributes['blockId'] ) ? sanitize_html_class( (string) $attributes['blockId'] ) : 'shapeblock-heading-' . substr( md5( wp_json_encode( $attributes ) ), 0, 6 );
 
-$allowed_tags = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span' ];
+$allowed_tags = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span' ];
 $tag          = isset( $attributes['titleTag'] ) && in_array( $attributes['titleTag'], $allowed_tags, true ) ? $attributes['titleTag'] : 'h2';
 
 $title_raw   = isset( $attributes['title'] ) ? $attributes['title'] : '';

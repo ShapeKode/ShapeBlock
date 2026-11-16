@@ -348,53 +348,7 @@ if ( ! empty( $tip_resp['box'] ) ) {
 	$resp_css .= $H::generate_responsive_css( $selector . ' .shapeblock-table .shapeblock-tbl-tooltip', $tip_resp['place'] );
 }
 
-wp_enqueue_style( $style_handle );
-$H::add_custom_style( $style_handle, $selector, $resp_css, $sub );
-
-// ---------------------------------------------------------------------------
-// Per-cell helpers.
-// ---------------------------------------------------------------------------
-// Allow-list covering every markup fragment this template assembles server-side:
-// - th/td open tags with the style/colspan/rowspan attributes built below (colspan/rowspan
-//   are always (int) cast, style values are already run through esc_attr() and, since 'style'
-//   is a filtered attribute, wp_kses() also runs them through safecss_filter_attr()).
-// - the icon-font <i> tag and the tooltip <span> wrapper.
-//
-// The tooltip's fallback icon is a hard-coded SVG constant with no user input.
-// wp_kses() lowercases every attribute name, which turns the case-sensitive
-// viewBox into viewbox -- the browser then ignores it and the icon loses its
-// intrinsic size. $render_tooltip() below echoes it as literal markup at its
-// output point instead of returning it as part of a string that gets passed
-// through wp_kses().
-$table_allowed_html = array(
-	'th'   => array(
-		'class'   => true,
-		'style'   => true,
-		'colspan' => true,
-		'rowspan' => true,
-	),
-	'td'   => array(
-		'class'   => true,
-		'style'   => true,
-		'colspan' => true,
-		'rowspan' => true,
-	),
-	'span' => array(
-		'class'         => true,
-		'style'         => true,
-		'data-placement' => true,
-	),
-	'i'    => array(
-		'class'       => true,
-		'aria-hidden' => true,
-	),
-);
-
-$render_icon = function ( $val ) {
-	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : '';
-};
-
-// Build the per-cell inline style attribute from "advance" settings.
+// A cell's own declarations, from its "advance" settings.
 $cell_style = function ( $item ) use ( $H ) {
 	$adv = ! empty( $item['advance'] );
 	$styles = [];
@@ -421,6 +375,72 @@ $cell_style = function ( $item ) use ( $H ) {
 	return implode( ';', $styles );
 };
 
+// Each cell's own look, on a class of its own (shapeblock-tbl-cell-N, numbered
+// through the table). The selector out-ranks every shared cell rule, the
+// striped, per-device and hover ones included.
+$cell_no = 0;
+foreach ( $sections as $section ) {
+	$cell_tag = 'body' === $section[0] ? 'td' : 'th';
+	foreach ( $section[1] as $cells ) {
+		foreach ( $cells as $item ) {
+			$cell_sel = $selector . ' .shapeblock-table ' . $cell_tag . '.shapeblock-tbl-cell-' . $cell_no;
+			++$cell_no;
+			$decls = $H::sanitize_css_declarations( $cell_style( $item ) );
+			if ( '' !== $decls ) {
+				$resp_css .= $cell_sel . '{' . $decls . ';}';
+			}
+			if ( 'body' === $section[0] && ! empty( $item['advance'] ) && ( ! isset( $item['type'] ) || 'icon' === $item['type'] ) ) {
+				$icon_color = $H::sanitize_css_value( $item['iconColor'] ?? '' );
+				if ( '' !== $icon_color ) {
+					$resp_css .= $cell_sel . ' .shapeblock-table-icon{color:' . $icon_color . ';}';
+				}
+			}
+		}
+	}
+}
+
+wp_enqueue_style( $style_handle );
+$H::add_custom_style( $style_handle, $selector, $resp_css, $sub );
+
+// ---------------------------------------------------------------------------
+// Per-cell helpers.
+// ---------------------------------------------------------------------------
+// Allow-list covering every markup fragment this template assembles server-side:
+// - th/td open tags with the class/scope/colspan/rowspan attributes built below
+//   (colspan/rowspan are always (int) cast).
+// - the icon-font <i> tag and its <span> wrappers.
+//
+// The tooltip's fallback icon is a hard-coded SVG constant with no user input.
+// wp_kses() lowercases every attribute name, which turns the case-sensitive
+// viewBox into viewbox -- the browser then ignores it and the icon loses its
+// intrinsic size. $render_tooltip() below echoes it as literal markup at its
+// output point instead of returning it as part of a string that gets passed
+// through wp_kses().
+$table_allowed_html = array(
+	'th'   => array(
+		'class'   => true,
+		'scope'   => true,
+		'colspan' => true,
+		'rowspan' => true,
+	),
+	'td'   => array(
+		'class'   => true,
+		'colspan' => true,
+		'rowspan' => true,
+	),
+	'span' => array(
+		'class' => true,
+	),
+	'i'    => array(
+		'class'       => true,
+		'aria-hidden' => true,
+	),
+);
+
+$render_icon = function ( $val ) {
+	return ( ! empty( $val ) && 'none' !== $val ) ? '<i class="shapeblock-icon ' . esc_attr( $val ) . '" aria-hidden="true"></i>' : '';
+};
+
 $cell_attrs = function ( $item ) {
 	$adv  = ! empty( $item['advance'] );
 	$out  = '';
@@ -439,14 +459,15 @@ $render_tooltip = function ( $item ) use ( $render_icon, $tooltip_align, $table_
 	if ( empty( $item['tooltip'] ) || '' === ( $item['tooltipDesc'] ?? '' ) ) {
 		return;
 	}
-	$icon = $render_icon( $item['tooltipIcon'] ?? '' );
-	echo '<span class="shapeblock-tbl-tooltip" data-placement="' . esc_attr( $tooltip_align ) . '">';
+	$icon   = $render_icon( $item['tooltipIcon'] ?? '' );
+	$tip_id = wp_unique_id( 'shapeblock-tbl-tip-' );
+	echo '<button type="button" class="shapeblock-tbl-tooltip" data-placement="' . esc_attr( $tooltip_align ) . '" aria-label="' . esc_attr__( 'More information', 'shapeblock' ) . '" aria-describedby="' . esc_attr( $tip_id ) . '">';
 	if ( '' !== $icon ) {
 		echo wp_kses( $icon, $table_allowed_html );
 	} else {
 		?><svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-3.6h-2c0-2 2.5-2.2 2.5-3.9A1.5 1.5 0 0012 8a1.6 1.6 0 00-1.6 1.5H8.4A3.6 3.6 0 0112 6a3.5 3.5 0 013.5 3.5c0 2-2.5 2.3-2.5 3.9z"/></svg><?php
 	}
-	echo '<span class="shapeblock-tbl-tooltip-content">' . esc_html( $item['tooltipDesc'] ) . '</span></span>';
+	echo '<span class="shapeblock-tbl-tooltip-content" id="' . esc_attr( $tip_id ) . '" role="tooltip">' . esc_html( $item['tooltipDesc'] ) . '</span></button>';
 };
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
@@ -459,15 +480,17 @@ $render_tooltip = function ( $item ) use ( $render_icon, $tooltip_align, $table_
 			'body' => array( 'tbody', 'shapeblock-table-body', 'td', 'shapeblock-td' ),
 			'foot' => array( 'tfoot', 'shapeblock-table-footer', 'th', 'shapeblock-tf' ),
 		);
+		$cell_no = 0;
 		foreach ( $sections as $section ) {
 			list( $tag, $section_class, $cell_tag, $cell_class ) = $section_tags[ $section[0] ];
 			echo '<' . tag_escape( $tag ) . ' class="' . esc_attr( $section_class ) . '">';
 			foreach ( $section[1] as $cells ) {
 				echo '<tr>';
 				foreach ( $cells as $item ) {
-					$style = $cell_style( $item );
 					$flex  = 'body' === $section[0] && ! empty( $item['dataFlex'] ) ? ' shapeblock-data-flex' : '';
-					echo wp_kses( '<' . $cell_tag . ' class="' . esc_attr( $cell_class . $flex ) . '"' . $cell_attrs( $item ) . ( $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>', $table_allowed_html );
+					$scope = 'head' === $section[0] ? ' scope="col"' : '';
+					echo wp_kses( '<' . $cell_tag . ' class="' . esc_attr( $cell_class . $flex . ' shapeblock-tbl-cell-' . $cell_no ) . '"' . $scope . $cell_attrs( $item ) . '>', $table_allowed_html );
+					++$cell_no;
 
 					if ( 'head' === $section[0] && ! empty( $item['headerIcon'] ) ) {
 						$icon = $render_icon( $item['headIcon'] ?? '' );
@@ -479,10 +502,9 @@ $render_tooltip = function ( $item ) use ( $render_icon, $tooltip_align, $table_
 						if ( 'image' === $type && ! empty( $item['image']['url'] ) ) {
 							echo '<img src="' . esc_url( $item['image']['url'] ) . '" class="shapeblock-table-image" alt="' . esc_attr( $item['image']['alt'] ?? '' ) . '">';
 						} elseif ( 'icon' === $type ) {
-							$ic             = $render_icon( $item['icon'] ?? '' );
-							$icon_color_val = ! empty( $item['advance'] ) ? $H::sanitize_css_value( $item['iconColor'] ?? '' ) : '';
+							$ic = $render_icon( $item['icon'] ?? '' );
 							if ( '' !== $ic ) {
-								echo wp_kses( '<span class="shapeblock-table-icon"' . ( '' !== $icon_color_val ? ' style="color:' . esc_attr( $icon_color_val ) . '"' : '' ) . '>' . $ic . '</span>', $table_allowed_html );
+								echo wp_kses( '<span class="shapeblock-table-icon">' . $ic . '</span>', $table_allowed_html );
 							}
 						}
 					}
@@ -501,7 +523,7 @@ $render_tooltip = function ( $item ) use ( $render_icon, $tooltip_align, $table_
 	</table>
 	</div>
 	<?php if ( isset( $attributes['caption'] ) && '' !== trim( (string) $attributes['caption'] ) ) : ?>
-		<div class="shapeblock-table-caption"><?php echo wp_kses_post( $attributes['caption'] ); ?></div>
+		<p class="shapeblock-table-caption"><?php echo wp_kses_post( $attributes['caption'] ); ?></p>
 	<?php endif; ?>
 </div>
 <?php } )( $attributes, $content, $block );

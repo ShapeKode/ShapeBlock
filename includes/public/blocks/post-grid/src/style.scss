@@ -51,10 +51,12 @@
 				z-index: 1;
 				background-color: var(--shapeblock-preset-color-primary);
 
-				h4 {
+				/* The day number: a line of its own, in the badge's colour. */
+				.shapeblock-blog-date-day {
+					display: block;
 					margin: 0;
-					color: #fff;
 					font-size: 36px;
+					font-weight: 600;
 					line-height: 1;
 				}
 
@@ -68,7 +70,6 @@
 				color: #fff;
 				margin: 25px;
 
-				h4,
 				span {
 					color: inherit;
 				}
@@ -492,13 +493,20 @@
 		text-decoration: none;
 	}
 
-	&.is-underline .shapeblock-blog-title a {
+	// "Underline Title on Hover": a real underline, so it follows every line of
+	// a wrapped title (also one cut to a number of lines) at the length of its
+	// text. Close under the letters, so a title cut to a number of lines (overflow
+	// hidden) does not clip the line of its last row. Stronger than the plain title
+	// rule above, which removes underlines.
+	&.is-underline .shapeblock-grid-item .shapeblock-blog-title a {
 		text-decoration: underline;
 		text-decoration-color: transparent;
 		text-decoration-thickness: 1px;
-		text-underline-offset: 0.14em;
+		text-underline-offset: 0.05em;
 		transition: text-decoration-color 0.25s ease, color 0.2s ease;
-		&:hover {
+		&:hover,
+		&:focus-visible {
+			text-decoration-line: underline;
 			text-decoration-color: currentColor;
 		}
 	}

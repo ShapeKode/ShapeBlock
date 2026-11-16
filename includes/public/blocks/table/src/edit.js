@@ -156,7 +156,7 @@ export default function Edit({ attributes, setAttributes, clientId, isSelected }
 						</div>
 						{(isSelected || !!attributes.caption) && (
 							<RichText identifier={"caption"}
-								tagName="div"
+								tagName="p"
 								className="shapeblock-table-caption"
 								value={attributes.caption || ''}
 								onChange={(v) => setAttributes({ caption: v })}

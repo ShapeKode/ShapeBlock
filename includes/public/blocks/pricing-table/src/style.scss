@@ -115,6 +115,19 @@
 	font-size: 14px;
 }
 
+/* The ribbon, description and note are paragraphs: a theme's paragraph
+   margins stay off them, on the site and in the editor. */
+.shapeblock-pricing-table .shapeblock-ribbon,
+.shapeblock-pricing-table .shapeblock-subtitle-price,
+.shapeblock-pricing-table .shapeblock-features-description {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.shapeblock-pricing-table .shapeblock-button-subtext {
+	margin-bottom: 0;
+}
+
 .shapeblock-features .feature-icon {
 	font-size: 16px;
 	display: inline-flex;

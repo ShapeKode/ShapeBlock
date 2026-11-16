@@ -9,7 +9,7 @@ class Blocks {
      * The blocks a new install starts with switched on; the rest are off until
      * they are switched on in ShapeBlock > Blocks. (Row needs Column.)
      */
-    const STARTER = array( 'layout-row', 'column', 'heading', 'button', 'icon-box' );
+    const STARTER = array( 'layout-row', 'column', 'heading', 'paragraph', 'button', 'icon-box' );
 
     /**
      * How a block with no saved on/off state is treated: 'starter' on a new
@@ -80,6 +80,12 @@ class Blocks {
                 'title'       => __( 'Heading', 'shapeblock' ),
                 'id'          => 'heading',
                 'description' => __( 'Heading with a sub-heading.', 'shapeblock' ),
+                'iconClass'    => 'shapeblock-icon-heading',
+            ],
+            [
+                'title'       => __( 'Paragraph', 'shapeblock' ),
+                'id'          => 'paragraph',
+                'description' => __( 'Text with its own typography, colour and highlights, per device.', 'shapeblock' ),
                 'iconClass'    => 'shapeblock-icon-heading',
             ],
             [
@@ -252,6 +258,7 @@ class Blocks {
             'column'            => 'layout',
             'sticky-stack'      => 'layout',
             'heading'           => 'content',
+            'paragraph'         => 'content',
             'button'            => 'content',
             'icon'              => 'content',
             'icon-box'          => 'content',

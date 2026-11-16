@@ -12,7 +12,6 @@
 	max-width: 100%;
 	align-items: center;
 	justify-content: center;
-	text-decoration: none;
 	border: none;
 	cursor: pointer;
 	font-family: inherit;
@@ -26,6 +25,11 @@
 	line-height: 1.5;
 	padding: 10px 20px;
 	border-radius: 5px;
+}
+
+/* Buttons have no underline; a Link keeps the site's own link style. */
+.shapeblock-button:where(:not(.shapeblock-button-link)) {
+	text-decoration: none;
 
 	&:hover {
 		text-decoration: none;
@@ -90,6 +94,29 @@
 .shapeblock-button-text {
 	display: inline-block;
 	vertical-align: middle;
+}
+
+/* Link: a text link, no box - as wide as its text, wrapping like text, aligned with the text around it. */
+.shapeblock-button-link {
+	background-color: transparent;
+	color: var(--shapeblock-preset-color-secondary, #0b3665);
+	padding: 0;
+	border-radius: 0;
+	white-space: normal;
+	text-align: inherit;
+	overflow: visible;
+	vertical-align: top;
+	user-select: auto;
+	transition: none;
+
+	&:hover {
+		color: var(--shapeblock-preset-color-primary, #ffd012);
+	}
+}
+
+/* The row holding a Link is as tall as the link itself, not the surrounding text's line. */
+.shapeblock-button-block-wrap.is-link {
+	line-height: 0;
 }
 
 /* Icon-only button variant */

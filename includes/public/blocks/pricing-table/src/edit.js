@@ -552,7 +552,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 			<div {...cardProps}>
 				{isFeatured && (
 					<RichText identifier={"featuredText"}
-						tagName="div"
+						tagName="p"
 						className={`shapeblock-ribbon shapeblock-${attributes.ribbonAlignment || 'right'}`}
 						value={toHtml(attributes.featuredText)}
 						onChange={(v) => setAttributes({ featuredText: v.replace(/<[^>]*>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&') })}

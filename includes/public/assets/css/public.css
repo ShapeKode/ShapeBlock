@@ -701,17 +701,7 @@
   line-height: 1.2;
 }
 .shapeblock-post-grid .shapeblock-blog-title a {
-  background-size: 0% 1px;
-  background-position: 0% 100%;
-  background-repeat: no-repeat;
-  transition: all 1000ms;
   display: unset !important;
-}
-.shapeblock-post-grid .shapeblock-blog-title a:hover {
-  background-size: 100% 1px;
-  background-position: 0% 100%;
-  background-image: linear-gradient(to right, currentColor 100%, transparent 100%);
-  width: fit-content;
 }
 
 /* Images inside any ShapeBlock block stay inside their container.

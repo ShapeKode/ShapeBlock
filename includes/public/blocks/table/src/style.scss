@@ -96,8 +96,20 @@
 		object-fit: cover;
 	}
 
-	/* Tooltip */
+	/* Tooltip. A button on the site (a span in the editor): none of the
+	 * browser's button look. */
 	.shapeblock-tbl-tooltip {
+		appearance: none;
+		padding: 0;
+		border: 0;
+		background: none;
+		color: inherit;
+		font-family: inherit;
+		font-style: inherit;
+		font-weight: inherit;
+		letter-spacing: inherit;
+		text-transform: inherit;
+		text-align: inherit;
 		position: relative;
 		display: inline-block;
 		cursor: pointer;
@@ -241,6 +253,7 @@
 
 .shapeblock-table-block-wrap .shapeblock-table-caption {
 	margin-top: 8px;
+	margin-bottom: 0;
 	font-size: 13px;
 	text-align: center;
 }

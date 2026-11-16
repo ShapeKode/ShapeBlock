@@ -11,12 +11,21 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
             'format'    => is_archive() ? '?paged=%#%' : '',
             'current'   => $paged,
             'total'     => $query->max_num_pages,
-            'prev_text' => '<i class="shapeblock-icon-chevron-left"></i>',
-            'next_text' => '<i class="shapeblock-icon-chevron-right"></i>',
+            'prev_text' => '<i class="shapeblock-icon-chevron-left" aria-hidden="true"></i>',
+            'next_text' => '<i class="shapeblock-icon-chevron-right" aria-hidden="true"></i>',
         ) );
 
         if ($shapeblock_pagination_html) {
-            $shapeblock_pagination_html = '<div class="shapeblock-pagination">' . $shapeblock_pagination_html . '</div>';
+            // The previous/next links show only an arrow, so they are named for screen readers.
+            $shapeblock_pagination_html = str_replace(
+                array( 'class="prev page-numbers"', 'class="next page-numbers"' ),
+                array(
+                    'class="prev page-numbers" aria-label="' . esc_attr__( 'Previous page', 'shapeblock' ) . '"',
+                    'class="next page-numbers" aria-label="' . esc_attr__( 'Next page', 'shapeblock' ) . '"',
+                ),
+                $shapeblock_pagination_html
+            );
+            $shapeblock_pagination_html = '<nav class="shapeblock-pagination" aria-label="' . esc_attr__( 'Posts pagination', 'shapeblock' ) . '">' . $shapeblock_pagination_html . '</nav>';
         }
 
         echo wp_kses_post( apply_filters( 'shapeblock_pagination_html', $shapeblock_pagination_html, $query, $attributes, $paged, $page_key ) );

@@ -94,17 +94,19 @@ const ensureUnit = (v) => {
 };
 const has = (v) => v !== '' && v !== null && v !== undefined;
 
+// A value the page stylesheet leaves out (empty, or "0" as PHP empty() sees it) is left out here too.
+const set = (v) => !!v && v !== '0';
 const typoStyles = (obj) => {
 	const o = {};
 	if (!obj || typeof obj !== 'object') return o;
-	if (obj.fontFamily) o.fontFamily = obj.fontFamily;
-	if (obj.fontSize) o.fontSize = ensureUnit(obj.fontSize);
-	if (obj.fontWeight) o.fontWeight = obj.fontWeight;
-	if (obj.fontStyle) o.fontStyle = obj.fontStyle;
-	if (obj.textTransform) o.textTransform = obj.textTransform;
-	if (obj.lineHeight) o.lineHeight = obj.lineHeight;
-	if (obj.letterSpacing) o.letterSpacing = ensureUnit(obj.letterSpacing);
-	if (obj.textDecoration) o.textDecoration = obj.textDecoration;
+	if (set(obj.fontFamily)) o.fontFamily = obj.fontFamily;
+	if (set(obj.fontSize)) o.fontSize = ensureUnit(obj.fontSize);
+	if (set(obj.fontWeight)) o.fontWeight = obj.fontWeight;
+	if (set(obj.fontStyle)) o.fontStyle = obj.fontStyle;
+	if (set(obj.textTransform)) o.textTransform = obj.textTransform;
+	if (set(obj.lineHeight)) o.lineHeight = obj.lineHeight;
+	if (set(obj.letterSpacing)) o.letterSpacing = ensureUnit(obj.letterSpacing);
+	if (set(obj.textDecoration)) o.textDecoration = obj.textDecoration;
 	return o;
 };
 const dimStyles = (obj, type) => {
@@ -266,7 +268,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					icon="heading"
 					label={__('Title HTML Tag', 'shapeblock')}
 					text={(titleTag || 'h2').toUpperCase()}
-					controls={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span'].map((t) => ({
+					controls={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span'].map((t) => ({
 						title: t.toUpperCase(),
 						isActive: titleTag === t,
 						onClick: () => setAttributes({ titleTag: t }),
@@ -290,7 +292,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								<SelectControl
 									label={__('HTML Tag', 'shapeblock')}
 									value={titleTag}
-									options={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span'].map((t) => ({ label: t.toUpperCase(), value: t }))}
+									options={['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span'].map((t) => ({ label: t.toUpperCase(), value: t }))}
 									onChange={(v) => setAttributes({ titleTag: v })}
 									__next40pxDefaultSize
 									__nextHasNoMarginBottom

@@ -2,7 +2,7 @@
  * Progress Bar — front-end behaviour.
  *
  * Animates the fill from 0 to its target width when scrolled into view.
- * Dependency-free; the bar is also rendered at its target width inline so it
+ * Dependency-free; the block's CSS also sets the target width, so the bar
  * stays correct if JavaScript is unavailable.
  */
 (function () {
@@ -17,7 +17,7 @@
 		var target = (fill.getAttribute('data-width') || '0') + '%';
 
 		// Reset to 0 WITHOUT animating (disable transition + force reflow), so the
-		// bar doesn't visibly shrink from its inline target width first.
+		// bar doesn't visibly shrink from its target width first.
 		fill.style.transition = 'none';
 		fill.style.width = '0%';
 		void fill.offsetWidth; // force reflow

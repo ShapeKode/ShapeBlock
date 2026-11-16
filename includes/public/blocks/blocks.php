@@ -951,3 +951,31 @@ function shapeblock_clean_renderer_attributes( $result, $server, $request ) {
 	return $result;
 }
 add_filter( 'rest_pre_dispatch', 'shapeblock_clean_renderer_attributes', 10, 3 );
+
+/**
+ * Let WordPress see the text of ShapeBlock blocks when it builds an excerpt.
+ *
+ * WordPress makes an automatic excerpt (used for meta descriptions by themes
+ * and SEO plugins, feeds and post lists) only from a short list of core blocks,
+ * so a page built from ShapeBlock blocks gave none. Heading and Paragraph text
+ * is added to that list, and Row and Column are passed through like a core
+ * Group, so text inside them is found too.
+ *
+ * @param string[] $blocks Block names.
+ * @return string[]
+ */
+function shapeblock_excerpt_allowed_blocks( $blocks ) {
+	return array_merge( (array) $blocks, array( 'shapeblock/heading', 'shapeblock/paragraph' ) );
+}
+add_filter( 'excerpt_allowed_blocks', 'shapeblock_excerpt_allowed_blocks' );
+
+/**
+ * Row and Column hold the blocks of a ShapeBlock page; read inside them.
+ *
+ * @param string[] $blocks Block names.
+ * @return string[]
+ */
+function shapeblock_excerpt_allowed_wrapper_blocks( $blocks ) {
+	return array_merge( (array) $blocks, array( 'shapeblock/layout-row', 'shapeblock/column' ) );
+}
+add_filter( 'excerpt_allowed_wrapper_blocks', 'shapeblock_excerpt_allowed_wrapper_blocks' );

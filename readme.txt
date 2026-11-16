@@ -4,7 +4,7 @@ Tags: gutenberg blocks, header footer builder, block editor, gutenberg, wordpres
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,21 +77,22 @@ ShapeBlock Pro adds **42+ more blocks** (**75+ blocks** with the free ones): 32 
 19. [Isotope Filter](https://shapekode.com/product/shapeblock/isotope-filter/) - A filterable grid with category buttons, an optional search box, and an icon, title, description and badge for each item.
 20. [Menu](https://shapekode.com/product/shapeblock/menu/) - Shows a WordPress navigation menu with layout, alignment and colour options.
 21. [Offcanvas](https://shapekode.com/product/shapeblock/offcanvas/) - Slide-in panels for menus, sidebars or extra content.
-22. [Post Grid](https://shapekode.com/product/shapeblock/post-grid/) - Posts in grid layouts, with pagination.
-23. [Pricing Table](https://shapekode.com/product/shapeblock/pricing-table/) - Pricing plans with features, badges and a button.
-24. [Progress Bar](https://shapekode.com/product/shapeblock/progress-bar/) - Animated progress and skill bars.
-25. Row - A responsive row that holds Column blocks, boxed, full width or a custom width.
-26. [Scroll Top](https://shapekode.com/product/shapeblock/scroll-to-top/) - A back-to-top button.
-27. [Search](https://shapekode.com/product/shapeblock/search/) - A search field you can put anywhere.
-28. [Simple Gallery](https://shapekode.com/product/shapeblock/simple-gallery/) - An image gallery with spacing and column controls, and a popup with a choice of animations.
-29. [Slider](https://shapekode.com/product/shapeblock/slider/) - A full-width image slider with arrows, dots and autoplay.
-30. [Social Icon](https://shapekode.com/product/shapeblock/social-icon/) - Linked social icons, coloured all together or one by one.
-31. [Social Share](https://shapekode.com/product/shapeblock/social-share/) - Share buttons for the current page.
-32. [Sticky Stack](https://shapekode.com/product/shapeblock/sticky-stack/) - Cards that stick as you scroll and stack over one another.
-33. [Table](https://shapekode.com/product/shapeblock/table/) - Tables with styled headers, rows and cells.
-34. [Tabs](https://shapekode.com/product/shapeblock/tabs/) - Tabbed content with icons and a few tab styles to pick from.
-35. [Team Member](https://shapekode.com/product/shapeblock/team-member/) - Team members with photo, role and social links.
-36. [Testimonial](https://shapekode.com/product/shapeblock/testimonial/) - Testimonials in three styles, with ratings, quote icons and logos.
+22. Paragraph - Text with its own colour, typography per device, alignment and highlighted words.
+23. [Post Grid](https://shapekode.com/product/shapeblock/post-grid/) - Posts in grid layouts, with pagination.
+24. [Pricing Table](https://shapekode.com/product/shapeblock/pricing-table/) - Pricing plans with features, badges and a button.
+25. [Progress Bar](https://shapekode.com/product/shapeblock/progress-bar/) - Animated progress and skill bars.
+26. Row - A responsive row that holds Column blocks, boxed, full width or a custom width.
+27. [Scroll Top](https://shapekode.com/product/shapeblock/scroll-to-top/) - A back-to-top button.
+28. [Search](https://shapekode.com/product/shapeblock/search/) - A search field you can put anywhere.
+29. [Simple Gallery](https://shapekode.com/product/shapeblock/simple-gallery/) - An image gallery with spacing and column controls, and a popup with a choice of animations.
+30. [Slider](https://shapekode.com/product/shapeblock/slider/) - A full-width image slider with arrows, dots and autoplay.
+31. [Social Icon](https://shapekode.com/product/shapeblock/social-icon/) - Linked social icons, coloured all together or one by one.
+32. [Social Share](https://shapekode.com/product/shapeblock/social-share/) - Share buttons for the current page.
+33. [Sticky Stack](https://shapekode.com/product/shapeblock/sticky-stack/) - Cards that stick as you scroll and stack over one another.
+34. [Table](https://shapekode.com/product/shapeblock/table/) - Tables with styled headers, rows and cells.
+35. [Tabs](https://shapekode.com/product/shapeblock/tabs/) - Tabbed content with icons and a few tab styles to pick from.
+36. [Team Member](https://shapekode.com/product/shapeblock/team-member/) - Team members with photo, role and social links.
+37. [Testimonial](https://shapekode.com/product/shapeblock/testimonial/) - Testimonials in three styles, with ratings, quote icons and logos.
 
 = Header & Footer Builder =
 
@@ -255,6 +256,31 @@ Not by default. See External services above.
 Deleting the plugin removes the options and cached data it created. Your Custom Templates, Theme Builder items and the blocks in your posts are your content, so they stay.
 
 == Changelog ==
+
+= 1.0.9 =
+* **New:** Button - a Link type: a plain text link with no box, as wide as its text, for "Read more →" style links.
+* **New:** Paragraph block - text in a single paragraph, with colour, link colour, typography per device (desktop, tablet, mobile), alignment and highlighted words, plus the Advanced tab (margin, padding, position, hide per device). Its styles come from the block settings through the page stylesheet, so no style attributes are written into the page.
+* **New:** Heading - a P (paragraph) option in the HTML tag list, for descriptions, labels and other text that is not a heading. A theme's paragraph margins stay off it; the block's own Margin setting still applies.
+* **New:** SEO - a default meta description on every page: a post's or page's excerpt (or the start of its text), the site tagline on the front page, a category's or tag's description, an author's bio. Pages get the Excerpt box so a description can be written by hand. It is not added when the theme or another plugin already prints one, and steps aside on its own when an SEO plugin (Yoast SEO, Rank Math, All in One SEO, SEOPress, The SEO Framework, Slim SEO, Squirrly, SmartCrawl) is active.
+* **New:** Template Library - a template, page, section or whole demo that uses a ShapeForms form now brings that form with it: the form is created in ShapeForms (an identical one from an earlier import is reused) and the imported content points to it. Needs ShapeForms to be active.
+* **New:** Icon List - a "Link label" for a linked item that shows only an icon, read out by screen readers.
+* **Improved:** Text is printed in paragraphs instead of plain boxes, which is better for SEO and screen readers: the FAQ answer, Gallery caption and description, Pricing Table ribbon, description and button note, Search popup title, Table caption, Team Member designation and bio, Testimonials name and quote, and Post Grid excerpt. They look exactly as before, on the site and in the editor.
+* **Improved:** Block editor - CSS written into the page itself (in a Custom HTML block) and into the Theme Builder header and footer shown around it now applies in the editor too, so the page looks the same while it is edited as it does on the site.
+* **Improved:** SEO - the automatic excerpt WordPress builds from a page now includes the text of ShapeBlock Heading and Paragraph blocks (inside Rows and Columns too), so themes and SEO plugins that use it get a real description instead of none.
+* **Improved:** Every tag now does its own job, for SEO, keyboard and screen-reader users - with no change to how anything looks:
+  * Lists are lists: Social Icons, Social Share, Feature List, Client Logo and the Breadcrumb trail (now a navigation with an ordered list).
+  * Controls are buttons: Offcanvas open and close, Scroll to Top, Search open and close, the Gallery lightbox close, Social Share copy, Team Member social and popup close, Table tooltips. Tabs work with the keyboard (arrow keys, Home, End) and FAQ questions are headings with a button inside.
+  * Links and icon-only buttons have names: Social Icons, Social Share, Gallery images, linked Client logos, Icon and Button (new "Link label" / "Accessible label" fields), Post Grid pagination.
+  * No style attributes in the page: Social Icon, Isotope, Progress, Sticky Stack, Table, sticky Rows and the Filter List badge print their colours and sizes through the stylesheet.
+  * Post Grid date day is no longer a heading; post images and avatars have alt text.
+* **Fixed:** Heading and Paragraph - a typography value of 0 (a letter spacing of 0, say), which the page leaves to the theme, no longer applies in the editor, so the text looks the same in both.
+* **Fixed:** Accessibility attributes (tab order, dialog and pressed states) were removed from blocks placed inside a Row or Column.
+* **Fixed:** Block styles were missing on pages that render blocks after the page head (a template library preview, for one) when a block in the head - a top bar, say - had already printed its styles: the page showed without its layout, colours and sizes.
+* **Fixed:** Menu - each menu on a page has its own name for screen readers ("Menu", "Menu 2"...), so the navigation areas can be told apart.
+* **Fixed:** Menu - a dropdown near the right edge of the screen opens to the left of its item (and its side flyouts too), so it is never cut off and a closed dropdown no longer lets the page be dragged sideways on phones.
+* **Fixed:** Icon List - a title set to a heading or paragraph tag is no longer placed inside a span, which made the HTML invalid.
+* **Fixed:** Team Member - a photo without alt text of its own is described by the member's name, so a linked photo is never an empty link.
+* **Fixed:** Post Grid - "Underline Title on Hover" draws a real underline under every line of a title that wraps, each as long as its own text, also on titles cut to a number of lines; the extra hover line that showed on every grid, whatever the setting, is gone.
 
 = 1.0.8 =
 * **New:** Page layouts - a "ShapeBlock Page" panel in the page sidebar picks Default, Full Width (site header and footer, content edge to edge) or Canvas (content only, no header or footer), on classic themes and on block themes (WordPress 6.7 or newer). A "Show Page Title" switch beside it (on by default) hides the title; with a theme that has its own title switch, such as Blockode, that one is used.

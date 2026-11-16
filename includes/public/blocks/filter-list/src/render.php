@@ -251,8 +251,25 @@ foreach ( $per_device as $sub_sel => $build ) {
 	}
 }
 
+// An item's own badge colours go into the block's CSS (not a style attribute
+// on the badge). The item gets a class only when it has them.
+$item_badge_css = [];
+foreach ( $items as $i => $item ) {
+	if ( ! isset( $item['badge'] ) || '' === trim( (string) $item['badge'] ) ) {
+		continue;
+	}
+	$decls    = [];
+	$badge_bg = isset( $item['badgeBgGradient'] ) && '' !== $item['badgeBgGradient'] ? $H::sanitize_css_value( (string) $item['badgeBgGradient'] ) : ( isset( $item['badgeBg'] ) ? $H::sanitize_css_color( (string) $item['badgeBg'], '' ) : '' );
+	$badge_fg = isset( $item['badgeColor'] ) ? $H::sanitize_css_color( (string) $item['badgeColor'], '' ) : '';
+	if ( '' !== $badge_bg ) $decls['--shapeblock-fl-badge-bg'] = $badge_bg;
+	if ( '' !== $badge_fg ) $decls['--shapeblock-fl-badge-color'] = $badge_fg;
+	if ( $decls ) {
+		$item_badge_css[ '.shapeblock-fl-item-' . $i . ' .shapeblock-fl-badge:not(.shapeblock-fl-hot)' ] = $H::get_inline_styles( $decls );
+	}
+}
+
 wp_enqueue_style( $style_handle );
-$H::add_custom_style( $style_handle, $selector, $resp_css, [
+$H::add_custom_style( $style_handle, $selector, $resp_css, $item_badge_css + [
 	'.shapeblock-fl-header'                                 => $H::get_inline_styles( $header ),
 	'.shapeblock-fl-filters'                                => $H::get_inline_styles( $bar ),
 	'.shapeblock-fl-filter'                                 => $H::get_inline_styles( $btn ),
@@ -308,7 +325,7 @@ $any_visible = false;
 	<?php endif; ?>
 
 	<ul class="shapeblock-fl-list" role="list">
-		<?php foreach ( $items as $item ) : ?>
+		<?php foreach ( $items as $i => $item ) : ?>
 			<?php
 			$ttl     = isset( $item['title'] ) ? (string) $item['title'] : '';
 			$ico     = isset( $item['icon'] ) ? (string) $item['icon'] : '';
@@ -330,24 +347,19 @@ $any_visible = false;
 			$keywords = isset( $item['keywords'] ) ? (string) $item['keywords'] : '';
 			$haystack = trim( $lower( $ttl . ' ' . $keywords . ' ' . ( $item['badge'] ?? '' ) ) );
 			$badge    = isset( $item['badge'] ) ? trim( (string) $item['badge'] ) : '';
-			$badge_css = [];
-			$badge_bg  = isset( $item['badgeBgGradient'] ) && '' !== $item['badgeBgGradient'] ? $H::sanitize_css_value( (string) $item['badgeBgGradient'] ) : ( isset( $item['badgeBg'] ) ? $H::sanitize_css_color( (string) $item['badgeBg'], '' ) : '' );
-			$badge_fg  = isset( $item['badgeColor'] ) ? $H::sanitize_css_color( (string) $item['badgeColor'], '' ) : '';
-			if ( '' !== $badge_bg ) $badge_css[] = '--shapeblock-fl-badge-bg:' . $badge_bg;
-			if ( '' !== $badge_fg ) $badge_css[] = '--shapeblock-fl-badge-color:' . $badge_fg;
 			$tag = '' !== $url ? 'a' : 'span';
 			?>
-			<li class="shapeblock-fl-item" data-filters="<?php echo esc_attr( implode( ' ', $own_ids ) ); ?>" data-search="<?php echo esc_attr( $haystack ); ?>"<?php echo $visible ? '' : ' hidden'; ?>>
+			<li class="shapeblock-fl-item<?php echo isset( $item_badge_css[ '.shapeblock-fl-item-' . $i . ' .shapeblock-fl-badge:not(.shapeblock-fl-hot)' ] ) ? ' shapeblock-fl-item-' . esc_attr( $i ) : ''; ?>" data-filters="<?php echo esc_attr( implode( ' ', $own_ids ) ); ?>" data-search="<?php echo esc_attr( $haystack ); ?>"<?php echo $visible ? '' : ' hidden'; ?>>
 				<<?php echo tag_escape( $tag ); ?> class="shapeblock-fl-link"<?php if ( 'a' === $tag ) : ?> href="<?php echo esc_url( $url ); ?>"<?php echo $new_tab ? ' target="_blank"' : ''; ?><?php echo '' !== $rel ? ' rel="' . esc_attr( $rel ) . '"' : ''; ?><?php endif; ?>>
 					<?php if ( $show_icon && '' !== $ico && 'none' !== $ico ) : ?>
 						<i class="<?php echo esc_attr( 'shapeblock-fl-icon shapeblock-icon ' . $ico ); ?>" aria-hidden="true"></i>
 					<?php endif; ?>
 					<span class="shapeblock-fl-title"><?php echo esc_html( $ttl ); ?></span>
 					<?php if ( ! empty( $item['hot'] ) ) : ?>
-						<span class="shapeblock-fl-badge shapeblock-fl-hot" style="--shapeblock-fl-badge-bg:#fff0e5;--shapeblock-fl-badge-color:#d9480f"><?php esc_html_e( 'Hot', 'shapeblock' ); ?></span>
+						<span class="shapeblock-fl-badge shapeblock-fl-hot"><?php esc_html_e( 'Hot', 'shapeblock' ); ?></span>
 					<?php endif; ?>
 					<?php if ( '' !== $badge ) : ?>
-						<span class="shapeblock-fl-badge"<?php echo $badge_css ? ' style="' . esc_attr( implode( ';', $badge_css ) ) . '"' : ''; ?>><?php echo esc_html( $badge ); ?></span>
+						<span class="shapeblock-fl-badge"><?php echo esc_html( $badge ); ?></span>
 					<?php endif; ?>
 				</<?php echo tag_escape( $tag ); ?>>
 			</li>

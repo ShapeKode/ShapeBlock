@@ -1,0 +1,44 @@
+/**
+ * Paragraph — front-end + editor styles.
+ *
+ * A theme's own paragraph margins stay off the block, on the site and in the
+ * editor; the Advanced tab's Margin sets its spacing. Inside a WordPress
+ * layout (a Group, Columns, the page content) the layout's block gap still
+ * spaces it from the block above, as it does any other block.
+ */
+
+.shapeblock-block.shapeblock-paragraph {
+	overflow-wrap: break-word;
+
+	a {
+		color: currentColor;
+	}
+}
+
+:where(:not(.is-layout-flow, .is-layout-constrained, .is-layout-flex, .is-layout-grid)) > .shapeblock-block.shapeblock-paragraph {
+	margin: 0;
+}
+
+:where(.is-layout-flow, .is-layout-constrained, .is-layout-flex, .is-layout-grid) > .shapeblock-block.shapeblock-paragraph {
+	margin-bottom: 0;
+}
+
+/* Lines break the way the text around it does; a theme's own rule for every
+   paragraph (text-wrap: pretty, for example) does not reflow the block. A
+   Custom CSS rule on the block or its parent still wins. */
+.shapeblock-paragraph {
+	text-wrap: inherit;
+}
+
+/* Highlighted words, until the block's Highlight settings say otherwise. */
+.shapeblock-paragraph span {
+	color: var(--shapeblock-preset-color-primary, #ffd012);
+	display: inline-block;
+}
+
+/* Long words and links wrap on phones instead of running past the edge. */
+@media (max-width: 767px) {
+	.shapeblock-block.shapeblock-paragraph {
+		word-break: break-word;
+	}
+}

@@ -16,6 +16,14 @@
 		justify-content: center;
 		align-items: center;
 		gap: 10px;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		> li {
+			margin: 0;
+			padding: 0;
+		}
 	}
 
 	.shapeblock-social-layout-vertical .shapeblock-social-buttons {
@@ -30,6 +38,23 @@
 		gap: 10px;
 		width: 100%;
 		max-width: 300px;
+	}
+
+	// Copy Link and the share-sheet networks are buttons: they take the
+	// link's font and spacing, not the browser's button look.
+	button.shapeblock-social-button {
+		margin: 0;
+		padding: 0;
+		font-family: inherit;
+		font-style: inherit;
+		font-weight: inherit;
+		line-height: inherit;
+		letter-spacing: inherit;
+		text-transform: inherit;
+		appearance: none;
+		// A link's sizing box, whatever the theme gives the elements around it
+		// (the browser's own makes a button border-box).
+		box-sizing: inherit;
 	}
 
 	.shapeblock-social-button {
@@ -121,6 +146,20 @@
 	}
 }
 
+// Announces "Copied!" to screen readers.
+.shapeblock-social-share-block-wrap .shapeblock-social-live {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
 @keyframes shapeblock-soc-pulse {
 	0% { transform: scale(1); }
 	50% { transform: scale(1.1); }
@@ -148,6 +187,17 @@
 	.shapeblock-social-layout-grid.shapeblock-social-style-text .shapeblock-social-buttons {
 		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 		max-width: none;
+	}
+
+	// Named buttons fill their grid cell; a button does not stretch on its own
+	// as a link does, so each one grows to its cell's width.
+	.shapeblock-social-layout-grid.shapeblock-social-style-icon-text .shapeblock-social-buttons > li,
+	.shapeblock-social-layout-grid.shapeblock-social-style-text .shapeblock-social-buttons > li {
+		display: flex;
+
+		> .shapeblock-social-button {
+			flex: 1 1 auto;
+		}
 	}
 
 	.shapeblock-social-label {

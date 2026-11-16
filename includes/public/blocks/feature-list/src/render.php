@@ -237,6 +237,7 @@ if ( '' !== $responsive_media ) {
 // wp_kses(); the icon-font <i> tag stays escaped with esc_attr() as before.
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
+	<ul class="shapeblock-fea-list-items">
 	<?php
 	foreach ( $features as $item ) :
 		$type = isset( $item['iconType'] ) ? $item['iconType'] : 'icon';
@@ -251,7 +252,7 @@ if ( '' !== $responsive_media ) {
 			|| ( 'icon' === $type )
 			|| ( 'number' === $type && '' !== $num ) );
 		?>
-		<div class="shapeblock-fea-list shapeblock-fea-list-dir-<?php echo esc_attr( $dir ); ?>">
+		<li class="shapeblock-fea-list shapeblock-fea-list-dir-<?php echo esc_attr( $dir ); ?>">
 			<?php if ( $has_icon ) : ?>
 				<div class="shapeblock-fea-list-icon shapeblock-fea-list-type-<?php echo esc_attr( $type ); ?>">
 					<?php
@@ -277,7 +278,8 @@ if ( '' !== $responsive_media ) {
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>
-		</div>
+		</li>
 	<?php endforeach; ?>
+	</ul>
 </div>
 <?php } )( $attributes, $content, $block );

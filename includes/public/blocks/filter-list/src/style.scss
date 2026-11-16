@@ -199,6 +199,12 @@
 		color: var(--shapeblock-fl-accent);
 	}
 
+	/* The "Hot" badge keeps its own colours over the block's badge colours. */
+	.shapeblock-fl-link .shapeblock-fl-badge.shapeblock-fl-hot {
+		--shapeblock-fl-badge-bg: #fff0e5;
+		--shapeblock-fl-badge-color: #d9480f;
+	}
+
 	.shapeblock-fl-badge {
 		--shapeblock-fl-badge-bg: #e8efff;
 		--shapeblock-fl-badge-color: var(--shapeblock-fl-accent);

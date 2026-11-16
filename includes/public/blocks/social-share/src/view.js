@@ -34,8 +34,8 @@
 		});
 	}
 
-	// For two seconds: a check in place of the icon, and "Copied!" in place of
-	// the name on a button that shows one.
+	// For two seconds: a check in place of the icon, "Copied!" in place of the
+	// name on a button that shows one, and "Copied!" read out by screen readers.
 	function showCopied(btn) {
 		if (btn.classList.contains('shapeblock-copied')) {
 			return;
@@ -52,9 +52,17 @@
 			btn.innerHTML = CHECK_SVG;
 		}
 		btn.classList.add('shapeblock-copied');
+		var wrap = btn.closest('.shapeblock-social-share-block-wrap');
+		var live = wrap ? wrap.querySelector('.shapeblock-social-live') : null;
+		if (live) {
+			live.textContent = btn.getAttribute('data-copied') || '';
+		}
 		window.setTimeout(function () {
 			btn.innerHTML = original;
 			btn.classList.remove('shapeblock-copied');
+			if (live) {
+				live.textContent = '';
+			}
 		}, 2000);
 	}
 

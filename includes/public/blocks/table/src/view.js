@@ -37,6 +37,21 @@ import { placeTooltip, resetTooltip } from './tooltip-position';
 			tip.addEventListener('mouseleave', function () {
 				hide(tip);
 			});
+			// The keyboard: open on focus, close on blur or Escape. A click
+			// (which also focuses the button) keeps its own toggle below.
+			tip.addEventListener('focus', function () {
+				if (tip.matches(':focus-visible')) {
+					show(tip);
+				}
+			});
+			tip.addEventListener('blur', function () {
+				hide(tip);
+			});
+			tip.addEventListener('keydown', function (e) {
+				if ('Escape' === e.key) {
+					hide(tip);
+				}
+			});
 			tip.addEventListener('click', function (e) {
 				e.stopPropagation();
 				if (tip.classList.contains('show')) {

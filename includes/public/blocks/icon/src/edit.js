@@ -39,7 +39,7 @@ const iconAlignCenter = <AlignSVG><rect x="3" y="6" width="18" height="2" /><rec
 const iconAlignRight = <AlignSVG><rect x="3" y="6" width="18" height="2" /><rect x="9" y="11" width="12" height="2" /><rect x="6" y="16" width="15" height="2" /></AlignSVG>;
 
 export default function Edit({ attributes, setAttributes, clientId }) {
-	const { blockId, icon, view, iconUrl, iconTarget, iconNofollow } = attributes;
+	const { blockId, icon, view, iconUrl, linkLabel, iconTarget, iconNofollow } = attributes;
 
 	useEffect(() => {
 		if (!blockId) {
@@ -158,6 +158,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								/>
 								{iconUrl && (
 									<>
+										<TextControl
+											label={__('Link label (for screen readers)', 'shapeblock')}
+											value={linkLabel}
+											onChange={(v) => setAttributes({ linkLabel: v })}
+											__next40pxDefaultSize
+											__nextHasNoMarginBottom
+										/>
 										<ToggleControl label={__('Open in new tab', 'shapeblock')} checked={iconTarget} onChange={(v) => setAttributes({ iconTarget: v })} __nextHasNoMarginBottom />
 										<ToggleControl label={__('Add nofollow', 'shapeblock')} checked={iconNofollow} onChange={(v) => setAttributes({ iconNofollow: v })} __nextHasNoMarginBottom />
 									</>

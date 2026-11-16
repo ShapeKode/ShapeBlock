@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "shapeblock/button",
-	"version": "1.0.5",
+	"version": "1.0.8",
 	"title": "Button",
 	"category": "shapeblock",
 	"description": "A flexible button with icon, gradient and full style controls.",
@@ -48,6 +48,7 @@
 
 		"buttonText": { "type": "string", "default": "Click Here" },
 		"buttonUrl": { "type": "string", "default": "#" },
+		"ariaLabel": { "type": "string", "default": "" },
 		"buttonTarget": { "type": "boolean", "default": false },
 		"buttonNofollow": { "type": "boolean", "default": false },
 		"buttonType": { "type": "string", "default": "primary" },

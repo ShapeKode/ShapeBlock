@@ -153,8 +153,8 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-offcanvas-toggle-text i'                => $H::get_inline_styles( $opener_icon_i ),
 	'.shapeblock-icon-menu'                              => $H::get_inline_styles( $opener_menu ),
 	'.shapeblock-icon-menu-wrap'                         => $H::get_inline_styles( $opener_menu_wrap ),
-	'.shapeblock-offcanvas-toggle label span'            => $H::get_inline_styles( $opener_label_span ),
-	'.shapeblock-offcanvas-toggle label'                 => $H::get_inline_styles( $opener_label ),
+	'.shapeblock-offcanvas-toggle .shapeblock-offcanvas-hamburger span' => $H::get_inline_styles( $opener_label_span ),
+	'.shapeblock-offcanvas-toggle .shapeblock-offcanvas-hamburger' => $H::get_inline_styles( $opener_label ),
 	'.shapeblock-offcanvas-close'                        => $H::get_inline_styles( $close_classic ),
 	'.shapeblock-modern-close-toggle span'               => $H::get_inline_styles( $close_modern_span ),
 	'.shapeblock-offcanvas'                              => $H::get_inline_styles( $panel ),
@@ -209,40 +209,40 @@ if ( $template && $template !== get_queried_object_id() && empty( \ShapeBlock\Fr
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-offcanvas-wrapper <?php echo esc_attr( $layout ); ?>">
-		<div class="shapeblock-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0" aria-expanded="false" aria-controls="<?php echo esc_attr( $panel_id ); ?>">
+		<button type="button" class="shapeblock-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>" aria-expanded="false" aria-controls="<?php echo esc_attr( $panel_id ); ?>"<?php if ( '' === $menu_text ) : ?> aria-label="<?php esc_attr_e( 'Open menu', 'shapeblock' ); ?>"<?php endif; ?>>
 			<span class="shapeblock-offcanvas-toggle-text">
 				<?php if ( '' !== $menu_text ) : ?>
-					<em class="shapeblock-icon-text"><?php echo esc_html( $menu_text ); ?></em>
+					<span class="shapeblock-icon-text"><?php echo esc_html( $menu_text ); ?></span>
 				<?php endif; ?>
 				<?php if ( 'classic' === $layout ) : ?>
 					<?php
 					if ( '' !== $render_icon( $btn_icon ) ) {
 						echo wp_kses( $render_icon( $btn_icon ), $icon_allowed_html );
 					} else {
-						echo '<span class="shapeblock-icon-menu-wrap"><em class="shapeblock-icon-menu"></em><em class="shapeblock-icon-menu"></em></span>';
+						echo '<span class="shapeblock-icon-menu-wrap" aria-hidden="true"><span class="shapeblock-icon-menu"></span><span class="shapeblock-icon-menu"></span></span>';
 					}
 					?>
 				<?php else : ?>
-					<label><span></span><span></span><span></span></label>
+					<span class="shapeblock-offcanvas-hamburger" aria-hidden="true"><span></span><span></span><span></span></span>
 				<?php endif; ?>
 			</span>
-		</div>
+		</button>
 
-		<div class="shapeblock-offcanvas-overlay shapeblock-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>"></div>
+		<div class="shapeblock-offcanvas-overlay shapeblock-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>" aria-hidden="true"></div>
 		<div id="<?php echo esc_attr( $panel_id ); ?>" class="shapeblock-offcanvas <?php echo esc_attr( trim( $blur . ' ' . ( 'classic' === $layout ? $position : $modern_pos ) . ' ' . $layout ) ); ?>">
 			<div class="shapeblock-offcanvas-panel">
 				<?php if ( 'classic' === $layout ) : ?>
-					<span class="shapeblock-offcanvas-close shapeblock-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0" aria-label="<?php esc_attr_e( 'Close', 'shapeblock' ); ?>">
+					<button type="button" class="shapeblock-offcanvas-close shapeblock-offcanvas-toggle" data-target="#<?php echo esc_attr( $panel_id ); ?>" aria-controls="<?php echo esc_attr( $panel_id ); ?>" aria-label="<?php esc_attr_e( 'Close', 'shapeblock' ); ?>">
 						<?php if ( '' !== $render_icon( $close_icon ) ) : ?>
 							<?php echo wp_kses( $render_icon( $close_icon ), $icon_allowed_html ); ?>
 						<?php else : ?>
 							<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"></path></svg>
 						<?php endif; ?>
-					</span>
+					</button>
 				<?php else : ?>
-					<span class="shapeblock-offcanvas-close shapeblock-offcanvas-toggle shapeblock-modern-close" data-target="#<?php echo esc_attr( $panel_id ); ?>" role="button" tabindex="0" aria-label="<?php esc_attr_e( 'Close', 'shapeblock' ); ?>">
-						<label class="shapeblock-modern-close-toggle"><span></span><span></span><span></span></label>
-					</span>
+					<button type="button" class="shapeblock-offcanvas-close shapeblock-offcanvas-toggle shapeblock-modern-close" data-target="#<?php echo esc_attr( $panel_id ); ?>" aria-controls="<?php echo esc_attr( $panel_id ); ?>" aria-label="<?php esc_attr_e( 'Close', 'shapeblock' ); ?>">
+						<span class="shapeblock-modern-close-toggle" aria-hidden="true"><span></span><span></span><span></span></span>
+					</button>
 				<?php endif; ?>
 				<div class="shapeblock-offcanvas-content">
 					<?php

@@ -610,9 +610,18 @@ if ( $mobile_on ) {
 	}
 }
 
+// Each menu on a page gets its own name, so screen readers can tell the
+// navigation landmarks apart: "Menu", then "Menu 2", "Menu 3"...
+$GLOBALS['shapeblock_menu_count'] = isset( $GLOBALS['shapeblock_menu_count'] ) ? (int) $GLOBALS['shapeblock_menu_count'] + 1 : 1;
+$shapeblock_menu_count             = $GLOBALS['shapeblock_menu_count'];
+
 $wrapper_attributes = get_block_wrapper_attributes(
 	array(
 		'id'              => $block_id,
+		'aria-label'      => 1 === $shapeblock_menu_count
+			? __( 'Menu', 'shapeblock' )
+			/* translators: %d: number of the menu on the page, 2 or more. */
+			: sprintf( __( 'Menu %d', 'shapeblock' ), $shapeblock_menu_count ),
 		'class'           => 'shapeblock-menu shapeblock-menu--' . $layout . ' shapeblock-menu-align-' . $alignment
 			. ( $mobile_on ? ' shapeblock-menu-has-mobile' : '' )
 			. ( 'always' === $mobile_mode ? ' shapeblock-menu-overlay-always' : '' )

@@ -2,6 +2,11 @@
  * FAQ Accordion — front-end behaviour.
  *
  * Scoped, dependency-free JS that runs on any front-end page.
+ *
+ * Whether an answer shows is the stylesheet's job (.shapeblock-faq-item.active).
+ * The script sets inline height / padding / overflow / display only while an
+ * answer slides open or shut — the animation needs the measured height — and
+ * removes them all again when it ends.
  */
 (function () {
 	'use strict';
@@ -13,16 +18,32 @@
 	// by that padding at the end.
 	var PROPS = ['height', 'padding-top', 'padding-bottom'];
 	function clean(el) {
-		PROPS.concat(['overflow', 'transition']).forEach(function (p) {
+		PROPS.concat(['overflow', 'transition', 'display']).forEach(function (p) {
 			el.style.removeProperty(p);
 		});
+		// Leave no empty style attribute behind.
+		if (!el.getAttribute('style')) {
+			el.removeAttribute('style');
+		}
 	}
 
+	function transition() {
+		return PROPS.map(function (p) {
+			return p + ' ' + DURATION + 'ms ease';
+		}).join(',');
+	}
+
+	// Each answer runs one animation at a time: a new one cancels the last.
+	function finishLater(el) {
+		window.clearTimeout(el.shapeblockFaqTimer);
+		el.shapeblockFaqTimer = window.setTimeout(function () {
+			clean(el);
+		}, DURATION);
+	}
+
+	// Called once the item is active, so the stylesheet shows the answer.
 	function slideDown(el) {
-		// Set an explicit display so the element is laid out (the base stylesheet
-		// has `display:none`); removing the property would keep it hidden and make
-		// scrollHeight read 0.
-		el.style.display = 'block';
+		clean(el);
 		var cs = window.getComputedStyle(el);
 		var padTop = cs.paddingTop;
 		var padBottom = cs.paddingBottom;
@@ -34,33 +55,27 @@
 		el.style.paddingBottom = '0px';
 		// Force reflow so the transition runs.
 		void el.offsetHeight;
-		el.style.transition = PROPS.map(function (p) {
-			return p + ' ' + DURATION + 'ms ease';
-		}).join(',');
+		el.style.transition = transition();
 		el.style.height = height + 'px';
 		el.style.paddingTop = padTop;
 		el.style.paddingBottom = padBottom;
-		window.setTimeout(function () {
-			// Keep display:block so the answer stays visible after the animation.
-			clean(el);
-		}, DURATION);
+		finishLater(el);
 	}
 
+	// Called while the item is still active (the answer still shows); the inline
+	// display keeps it laid out after the item closes, until the animation ends.
 	function slideUp(el) {
+		clean(el);
+		el.style.display = 'block';
 		el.style.overflow = 'hidden';
 		// The current content height, without padding (the padding animates on its own).
 		el.style.height = window.getComputedStyle(el).height;
 		void el.offsetHeight;
-		el.style.transition = PROPS.map(function (p) {
-			return p + ' ' + DURATION + 'ms ease';
-		}).join(',');
+		el.style.transition = transition();
 		el.style.height = '0px';
 		el.style.paddingTop = '0px';
 		el.style.paddingBottom = '0px';
-		window.setTimeout(function () {
-			el.style.display = 'none';
-			clean(el);
-		}, DURATION);
+		finishLater(el);
 	}
 
 	// While answers open and close, the browser's scroll anchoring is paused: it
@@ -73,7 +88,18 @@
 		window.clearTimeout(anchorTimer);
 		anchorTimer = window.setTimeout(function () {
 			root.style.removeProperty('overflow-anchor');
+			if (!root.getAttribute('style')) {
+				root.removeAttribute('style');
+			}
 		}, DURATION + 200);
+	}
+
+	// Screen readers: the question's button reports whether its answer is open.
+	function setExpanded(item, open) {
+		var btn = item.querySelector('.shapeblock-faq-toggle');
+		if (btn) {
+			btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+		}
 	}
 
 	function initAccordion(wrap) {
@@ -102,17 +128,6 @@
 				return;
 			}
 
-			var title = item.querySelector('.shapeblock-faq-title');
-			var setExpanded = function (el, open) {
-				var t = el.querySelector('.shapeblock-faq-title');
-				if (t) {
-					t.setAttribute('aria-expanded', open ? 'true' : 'false');
-				}
-			};
-
-			// Initial state.
-			answer.style.display = item.classList.contains('active') ? 'block' : 'none';
-
 			var toggle = function () {
 				var isActive = item.classList.contains('active');
 				pauseScrollAnchoring();
@@ -120,19 +135,19 @@
 				// Close every other open item.
 				items.forEach(function (other) {
 					if (other !== item && other.classList.contains('active')) {
-						other.classList.remove('active');
-						setExpanded(other, false);
 						var otherAnswer = other.querySelector('.shapeblock-faq-answer');
 						if (otherAnswer) {
 							slideUp(otherAnswer);
 						}
+						other.classList.remove('active');
+						setExpanded(other, false);
 					}
 				});
 
 				// Toggle the clicked item.
 				if (isActive) {
-					item.classList.remove('active');
 					slideUp(answer);
+					item.classList.remove('active');
 				} else {
 					item.classList.add('active');
 					slideDown(answer);
@@ -140,17 +155,9 @@
 				setExpanded(item, !isActive);
 			};
 
+			// The whole question row opens and closes the answer; its <button>
+			// (Enter and Space click it) is what the keyboard reaches.
 			question.addEventListener('click', toggle);
-
-			// The question is focusable: Enter and Space open and close it too.
-			if (title) {
-				title.addEventListener('keydown', function (e) {
-					if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
-						e.preventDefault();
-						toggle();
-					}
-				});
-			}
 		});
 	}
 

@@ -6,6 +6,41 @@
  * panel is fixed/page-level); per-instance colors are layered on via render.php.
  */
 
+/* The opener and the close controls are native <button>s. The browser's own
+   button look is removed so they look exactly as before. Class-level
+   specificity, first in the file: every rule below and the per-block CSS still
+   win. box-sizing sits at zero specificity, so a theme's own box-sizing rule
+   keeps applying as it did to the old elements. */
+:where(button.shapeblock-offcanvas-toggle) {
+	box-sizing: content-box;
+}
+.shapeblock-offcanvas-toggle:where(button) {
+	appearance: none;
+	background: none;
+	border: 0;
+	border-radius: 0;
+	padding: 0;
+	margin: 0;
+	font: inherit;
+	color: inherit;
+	line-height: inherit;
+	letter-spacing: inherit;
+	word-spacing: inherit;
+	text-transform: inherit;
+	text-indent: inherit;
+	text-shadow: inherit;
+	text-align: inherit;
+	text-decoration: inherit;
+	text-rendering: inherit;
+	align-items: normal;
+	cursor: pointer;
+}
+/* The opener was a block-level element. */
+.shapeblock-offcanvas-wrapper > .shapeblock-offcanvas-toggle:where(button) {
+	display: block;
+	width: 100%;
+}
+
 /* Opener */
 .shapeblock-offcanvas-toggle-text {
 	cursor: pointer;
@@ -28,11 +63,11 @@
 		transition: all ease-in 0.5s;
 	}
 
-	&:hover em {
+	&:hover .shapeblock-icon-menu {
 		width: 70%;
 	}
 
-	em:nth-child(2) {
+	.shapeblock-icon-menu:nth-child(2) {
 		top: auto;
 		bottom: 0;
 		right: 0;
@@ -49,7 +84,7 @@
 }
 
 .shapeblock-modern-close-toggle,
-.shapeblock-offcanvas-wrapper.modern .shapeblock-offcanvas-toggle label {
+.shapeblock-offcanvas-wrapper.modern .shapeblock-offcanvas-toggle .shapeblock-offcanvas-hamburger {
 	position: relative;
 	display: block;
 	width: 36px;

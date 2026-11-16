@@ -5,22 +5,30 @@
  * truth for show/hide + the opacity fade ( .shapeblock-tab-content / .shapeblock-tab-content.active ). The
  * previous setTimeout-based slide left multiple panels visible when tabs were clicked quickly
  * ( each click queued its own 300ms "hide" timer ), so switching is intentionally instant here.
+ *
+ * Each tab is a <button role="tab"> inside its list item: the selected one is the only one in the
+ * Tab order (roving tabindex), and the arrow keys, Home and End move between the tabs.
  */
 (function () {
 	'use strict';
 
+	function buttonOf(tab) {
+		return tab.querySelector('.shapeblock-tab-nav-btn');
+	}
+
 	function activate(tabs, contents, tab) {
 		var targetId = tab.getAttribute('data-tab');
 		tabs.forEach(function (t) {
-			t.classList.toggle('active', t === tab);
+			var on = t === tab;
+			var btn = buttonOf(t);
+			t.classList.toggle('active', on);
+			if (btn) {
+				btn.setAttribute('aria-selected', on ? 'true' : 'false');
+				btn.setAttribute('tabindex', on ? '0' : '-1');
+			}
 		});
 		contents.forEach(function (c) {
 			c.classList.toggle('active', c.id === targetId);
-			// Clear any stale inline styles so the stylesheet controls display / opacity.
-			c.style.removeProperty('display');
-			c.style.removeProperty('opacity');
-			c.style.removeProperty('transform');
-			c.style.removeProperty('transition');
 		});
 	}
 
@@ -42,13 +50,42 @@
 			return;
 		}
 
-		tabs.forEach(function (tab) {
+		function select(tab) {
+			var targetId = tab.getAttribute('data-tab');
+			if (!targetId || !wrapper.querySelector('#' + targetId)) {
+				return false;
+			}
+			activate(tabs, contents, tab);
+			return true;
+		}
+
+		tabs.forEach(function (tab, index) {
 			tab.addEventListener('click', function () {
-				var targetId = this.getAttribute('data-tab');
-				if (!wrapper.querySelector('#' + targetId)) {
+				select(tab);
+			});
+
+			var btn = buttonOf(tab);
+			if (!btn) {
+				return;
+			}
+			btn.addEventListener('keydown', function (e) {
+				var next = -1;
+				if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+					next = (index + 1) % tabs.length;
+				} else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+					next = (index - 1 + tabs.length) % tabs.length;
+				} else if (e.key === 'Home') {
+					next = 0;
+				} else if (e.key === 'End') {
+					next = tabs.length - 1;
+				}
+				if (next < 0) {
 					return;
 				}
-				activate(tabs, contents, this);
+				e.preventDefault();
+				if (select(tabs[next]) && buttonOf(tabs[next])) {
+					buttonOf(tabs[next]).focus();
+				}
 			});
 		});
 

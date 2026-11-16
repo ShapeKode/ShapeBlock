@@ -263,6 +263,7 @@ $testimonial_allowed_html = array(
 		'aria-label' => true,
 		'aria-hidden' => true,
 	),
+	'p'    => array( 'class' => true ),
 	'span' => array( 'class' => true ),
 	'em'   => array( 'class' => true ),
 	'img'  => array(
@@ -307,13 +308,13 @@ $render_rating = function ( $item ) use ( $show_rating ) {
 };
 $render_name = function ( $item ) {
 	if ( empty( $item['name'] ) ) return '';
-	return '<div class="shapeblock-name">' . esc_html( $item['name'] ) . '</div>';
+	return '<p class="shapeblock-name">' . esc_html( $item['name'] ) . '</p>';
 };
 $render_desig = function ( $item ) {
-	return ! empty( $item['designation'] ) ? '<em class="shapeblock-designation">' . esc_html( $item['designation'] ) . '</em>' : '';
+	return ! empty( $item['designation'] ) ? '<span class="shapeblock-designation">' . esc_html( $item['designation'] ) . '</span>' : '';
 };
 $render_desc = function ( $item ) {
-	return ! empty( $item['description'] ) ? '<div class="shapeblock-description">' . wp_kses( nl2br( $item['description'] ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ) . '</div>' : '';
+	return ! empty( $item['description'] ) ? '<p class="shapeblock-description">' . wp_kses( nl2br( $item['description'] ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ) . '</p>' : '';
 };
 $render_quote = function ( $item ) use ( $icon_i ) {
 	if ( empty( $item['quoteIcon'] ) || 'none' === $item['quoteIcon'] ) return '';

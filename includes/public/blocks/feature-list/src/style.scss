@@ -32,6 +32,19 @@
 	right: 26px;
 }
 
+/* The items are a list: none of the browser's or theme's list look. */
+.shapeblock-fea-list-items {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	> .shapeblock-fea-list {
+		margin-top: 0;
+		margin-left: 0;
+		margin-right: 0;
+	}
+}
+
 .shapeblock-fea-list {
 	display: flex;
 	margin-bottom: 25px;

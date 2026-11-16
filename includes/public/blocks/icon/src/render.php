@@ -193,6 +193,8 @@ $icon_allowed_html = array(
 
 // Optional link wrapper.
 $has_link = ( '' !== $url && '#' !== $url );
+// The link holds only a decorative icon, so it is named for screen readers.
+$link_label = ! empty( $attributes['linkLabel'] ) ? (string) $attributes['linkLabel'] : __( 'Link', 'shapeblock' );
 $rel      = [];
 if ( $is_external ) {
 	$rel[] = 'noopener';
@@ -204,7 +206,7 @@ if ( $nofollow ) {
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-icon-wrap">
 		<?php if ( $has_link ) : ?>
-			<a class="<?php echo esc_attr( $el_classes ); ?>" href="<?php echo esc_url( $url ); ?>"<?php if ( $is_external ) : ?> target="_blank"<?php endif; ?><?php if ( ! empty( $rel ) ) : ?> rel="<?php echo esc_attr( implode( ' ', $rel ) ); ?>"<?php endif; ?>>
+			<a class="<?php echo esc_attr( $el_classes ); ?>" href="<?php echo esc_url( $url ); ?>" aria-label="<?php echo esc_attr( $link_label ); ?>"<?php if ( $is_external ) : ?> target="_blank"<?php endif; ?><?php if ( ! empty( $rel ) ) : ?> rel="<?php echo esc_attr( implode( ' ', $rel ) ); ?>"<?php endif; ?>>
 				<?php echo wp_kses( $icon_html, $icon_allowed_html ); ?>
 			</a>
 		<?php else : ?>

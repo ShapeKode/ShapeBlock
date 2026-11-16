@@ -361,6 +361,36 @@ if ( ! $show_search ) {
 	$bar['justify-content'] = $flex_map[ $filter_align ];
 }
 
+// A card's own colours, by its number in the grid. The card, icon, title and
+// description rules out-rank the shared ones, hover included.
+$item_no = 0;
+foreach ( $categories as $cat ) {
+	$items = isset( $cat['items'] ) && is_array( $cat['items'] ) ? $cat['items'] : [];
+	foreach ( $items as $item ) {
+		$item_sel = $selector . ' .shapeblock-iso-item-' . $item_no;
+		++$item_no;
+		$own = function ( $field ) use ( $item, $H ) {
+			return isset( $item[ $field ] ) ? $H::sanitize_css_color( (string) $item[ $field ], '' ) : '';
+		};
+		// A card gradient wins over its flat colour.
+		$card_grad = isset( $item['cardBgGradient'] ) ? $H::sanitize_css_value( (string) $item['cardBgGradient'] ) : '';
+		$card_bg   = '' !== $card_grad ? $card_grad : $own( 'cardBg' );
+		$parts     = [
+			' .shapeblock-iso-card'                         => [ 'background' => $card_bg ],
+			' .shapeblock-iso-card .shapeblock-iso-icon i'  => [ 'color' => $own( 'iconColor' ) ],
+			' .shapeblock-iso-card .shapeblock-iso-title'   => [ 'color' => $own( 'titleColor' ) ],
+			' .shapeblock-iso-card .shapeblock-iso-desc'    => [ 'color' => $own( 'descColor' ) ],
+			' .shapeblock-iso-card .shapeblock-iso-badge'   => [ '--shapeblock-iso-badge-color' => $own( 'badgeColor' ), '--shapeblock-iso-badge-bg' => $own( 'badgeBg' ) ],
+		];
+		foreach ( $parts as $part_sel => $decls ) {
+			$decls = $H::get_inline_styles( $decls );
+			if ( '' !== $decls ) {
+				$resp_css .= $item_sel . $part_sel . '{' . $decls . ';}';
+			}
+		}
+	}
+}
+
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	'.shapeblock-iso-header'                        => $H::get_inline_styles( $header ),
@@ -421,6 +451,7 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 	<?php endif; ?>
 
 	<div class="shapeblock-iso-grid">
+		<?php $item_no = 0; ?>
 		<?php foreach ( $categories as $ci => $cat ) : ?>
 			<?php
 			$key   = 'c' . (int) $ci;
@@ -441,29 +472,11 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 				}
 				$has_icon  = $show_icon && '' !== $icon && 'none' !== $icon;
 				$badge_txt = isset( $item['badge'] ) ? trim( (string) $item['badge'] ) : '';
-				$badge_css = [];
-				foreach ( [ 'badgeColor' => '--shapeblock-iso-badge-color', 'badgeBg' => '--shapeblock-iso-badge-bg' ] as $badge_key => $badge_prop ) {
-					$badge_val = isset( $item[ $badge_key ] ) ? $H::sanitize_css_color( (string) $item[ $badge_key ], '' ) : '';
-					if ( '' !== $badge_val ) {
-						$badge_css[] = $badge_prop . ':' . $badge_val;
-					}
-				}
-				$badge_html = '' !== $badge_txt ? '<span class="shapeblock-iso-badge"' . ( $badge_css ? ' style="' . esc_attr( implode( ';', $badge_css ) ) . '"' : '' ) . '>' . esc_html( $badge_txt ) . '</span>' : '';
-				$badge_kses = [ 'span' => [ 'class' => true, 'style' => true ] ];
-				// This card's own colours, if set: a declaration for each part.
-				$own = function ( $field, $prop ) use ( $item, $H ) {
-					$value = isset( $item[ $field ] ) ? $H::sanitize_css_color( (string) $item[ $field ], '' ) : '';
-					return '' !== $value ? $prop . ':' . $value : '';
-				};
-				// A card gradient wins over its flat colour.
-				$card_grad = isset( $item['cardBgGradient'] ) ? $H::sanitize_css_value( (string) $item['cardBgGradient'] ) : '';
-				$card_own  = '' !== $card_grad ? 'background:' . $card_grad : $own( 'cardBg', 'background' );
-				$icon_own  = $own( 'iconColor', 'color' );
-				$title_own = $own( 'titleColor', 'color' );
-				$desc_own  = $own( 'descColor', 'color' );
+				$badge_html = '' !== $badge_txt ? '<span class="shapeblock-iso-badge">' . esc_html( $badge_txt ) . '</span>' : '';
+				$badge_kses = [ 'span' => [ 'class' => true ] ];
 				?>
-				<div class="shapeblock-iso-item" data-cat="<?php echo esc_attr( $key ); ?>"<?php if ( $show_search ) : ?> data-search="<?php echo esc_attr( trim( $lower( $ttl . ' ' . $dsc . ' ' . $badge_txt ) ) ); ?>"<?php endif; ?><?php echo $visible ? '' : ' hidden'; ?>>
-					<div class="shapeblock-iso-card<?php echo '' !== $link ? ' has-link' : ''; ?>"<?php echo '' !== $card_own ? ' style="' . esc_attr( $card_own ) . '"' : ''; ?>>
+				<div class="shapeblock-iso-item shapeblock-iso-item-<?php echo (int) $item_no; ?>" data-cat="<?php echo esc_attr( $key ); ?>"<?php if ( $show_search ) : ?> data-search="<?php echo esc_attr( trim( $lower( $ttl . ' ' . $dsc . ' ' . $badge_txt ) ) ); ?>"<?php endif; ?><?php echo $visible ? '' : ' hidden'; ?>>
+					<div class="shapeblock-iso-card<?php echo '' !== $link ? ' has-link' : ''; ?>">
 						<?php
 						// The whole card is clickable through a link stretched over it -
 						// a wrapping link would nest any link typed in the description.
@@ -475,21 +488,22 @@ $H::add_custom_style( $style_handle, $selector, $resp_css, [
 							<?php echo wp_kses( $badge_html, $badge_kses ); ?>
 						<?php endif; ?>
 						<?php if ( $has_icon ) : ?>
-							<div class="shapeblock-iso-icon"><i class="<?php echo esc_attr( 'shapeblock-icon ' . $icon ); ?>" aria-hidden="true"<?php echo '' !== $icon_own ? ' style="' . esc_attr( $icon_own ) . '"' : ''; ?>></i></div>
+							<div class="shapeblock-iso-icon"><i class="<?php echo esc_attr( 'shapeblock-icon ' . $icon ); ?>" aria-hidden="true"></i></div>
 						<?php endif; ?>
 						<div class="shapeblock-iso-text">
 							<?php if ( '' !== $badge_html && 'inline' === $badge_pos ) : ?>
 								<?php echo wp_kses( $badge_html, $badge_kses ); ?>
 							<?php endif; ?>
 							<?php if ( '' !== $ttl ) : ?>
-								<?php printf( '<%1$s class="shapeblock-iso-title"%2$s>%3$s</%1$s>', tag_escape( $title_tag ), '' !== $title_own ? ' style="' . esc_attr( $title_own ) . '"' : '', wp_kses_post( $ttl ) ); ?>
+								<?php printf( '<%1$s class="shapeblock-iso-title">%2$s</%1$s>', tag_escape( $title_tag ), wp_kses_post( $ttl ) ); ?>
 							<?php endif; ?>
 							<?php if ( '' !== $dsc ) : ?>
-								<p class="shapeblock-iso-desc"<?php echo '' !== $desc_own ? ' style="' . esc_attr( $desc_own ) . '"' : ''; ?>><?php echo wp_kses( nl2br( $dsc ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></p>
+								<p class="shapeblock-iso-desc"><?php echo wp_kses( nl2br( $dsc ), \ShapeBlock\Frontend\Helper::inline_allowed_html() ); ?></p>
 							<?php endif; ?>
 						</div>
 					</div>
 				</div>
+				<?php ++$item_no; ?>
 			<?php endforeach; ?>
 		<?php endforeach; ?>
 	</div>

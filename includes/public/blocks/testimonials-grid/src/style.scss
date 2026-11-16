@@ -204,3 +204,11 @@
 		overflow-wrap: break-word;
 	}
 }
+
+/* Name and quote are paragraphs: a theme's paragraph margins stay off them,
+   on the site and in the editor (the block's Margin settings still apply). */
+.shapeblock-testimonial-block-wrap p.shapeblock-name,
+.shapeblock-testimonial-block-wrap p.shapeblock-description {
+	margin-top: 0;
+	margin-bottom: 0;
+}

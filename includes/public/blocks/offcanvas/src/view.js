@@ -92,12 +92,8 @@
 			});
 		});
 
+		// The opener and close controls are <button>s: Enter and Space click them.
 		document.addEventListener('keydown', function (e) {
-			// The opener and close buttons are focusable: Enter and Space work them.
-			if ((e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') && e.target.closest && e.target.closest('.shapeblock-offcanvas-toggle[role="button"]')) {
-				onToggleClick(e);
-				return;
-			}
 			if (e.key === 'Escape') {
 				Array.prototype.forEach.call(document.querySelectorAll('.shapeblock-offcanvas.' + ACTIVE), closePanel);
 			}

@@ -519,7 +519,7 @@ $render_button = function () use ( $attributes, $H, $icon_allowed_html ) {
 			<?php endif; ?>
 		</a>
 		<?php if ( ! empty( $subtext ) ) : ?>
-			<div class="shapeblock-button-subtext"><?php echo esc_html( $subtext ); ?></div>
+			<p class="shapeblock-button-subtext"><?php echo esc_html( $subtext ); ?></p>
 		<?php endif; ?>
 	</div>
 	<?php
@@ -545,7 +545,7 @@ if ( $block instanceof WP_Block && count( $block->inner_blocks ) ) {
 	<div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 		<div class="<?php echo esc_attr( $card_classes ); ?>">
 			<?php if ( $is_featured ) : ?>
-				<div class="shapeblock-ribbon shapeblock-<?php echo esc_attr( $ribbon_align ); ?>"><?php echo esc_html( $featured_txt ); ?></div>
+				<p class="shapeblock-ribbon shapeblock-<?php echo esc_attr( $ribbon_align ); ?>"><?php echo esc_html( $featured_txt ); ?></p>
 			<?php endif; ?>
 			<?php echo wp_kses( $content, $H::template_allowed_html() ); ?>
 		</div>
@@ -557,13 +557,12 @@ if ( $block instanceof WP_Block && count( $block->inner_blocks ) ) {
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="<?php echo esc_attr( $wrap_classes ); ?>">
 		<?php if ( $is_featured ) : ?>
-			<div class="shapeblock-ribbon shapeblock-<?php echo esc_attr( $ribbon_align ); ?>">
-				<?php echo esc_html( $featured_txt ); ?>
-			</div>
+			<p class="shapeblock-ribbon shapeblock-<?php echo esc_attr( $ribbon_align ); ?>"><?php echo esc_html( $featured_txt ); ?></p>
 		<?php endif; ?>
 
 		<div class="shapeblock-price-title-wrap"><h3 class="shapeblock-price-title"><?php echo wp_kses_post( $title ); ?></h3></div>
-		<div class="shapeblock-subtitle-price"><?php echo wp_kses_post( $description ); ?></div>
+		<?php $description_tag = $H::text_tag( $description ); ?>
+		<<?php echo esc_attr( $description_tag ); ?> class="shapeblock-subtitle-price"><?php echo wp_kses_post( $description ); ?></<?php echo esc_attr( $description_tag ); ?>>
 
 		<div class="shapeblock-price">
 			<?php if ( $on_sale ) : ?>
@@ -578,7 +577,8 @@ if ( $block instanceof WP_Block && count( $block->inner_blocks ) ) {
 		<?php if ( 'in_features' === $button_pos ) { $render_button(); } ?>
 
 		<?php if ( ! empty( $features_des ) ) : ?>
-			<div class="shapeblock-features-description"><?php echo wp_kses_post( $features_des ); ?></div>
+			<?php $features_des_tag = $H::text_tag( $features_des ); ?>
+			<<?php echo esc_attr( $features_des_tag ); ?> class="shapeblock-features-description"><?php echo wp_kses_post( $features_des ); ?></<?php echo esc_attr( $features_des_tag ); ?>>
 		<?php endif; ?>
 
 		<ul class="shapeblock-features">

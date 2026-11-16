@@ -486,16 +486,19 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							const type = item.iconType || 'icon';
 							return (
 								<li key={block.clientId} className={`shapeblock-tab-nav-item${index === shown ? ' active' : ''}`} onClick={() => setActive(index)}>
-									{'icon' === type && <span className="shapeblock-tab-icon">{item.icon && 'none' !== item.icon ? <i className={`shapeblock-icon ${item.icon}`} aria-hidden="true" /> : HEART}</span>}
-									{'image' === type && item.image?.url && <span className="shapeblock-tab-image"><img src={item.image.url} alt={item.image.alt || ''} /></span>}
-									<RichText identifier={`tabTitle-${index}`}
-										tagName="span"
-										className="shapeblock-tab-title-text"
-										value={toHtml(item.tabTitle)}
-										onChange={(v) => updateItem(index, 'tabTitle', v.replace(/<[^>]*>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&'))}
-										allowedFormats={[]}
-										placeholder={__('Tab title', 'shapeblock')}
-									/>
+									{/* The page has a <button role="tab"> here; the editor uses a span with the same class, as the title inside is typed in place. */}
+									<span className="shapeblock-tab-nav-btn">
+										{'icon' === type && <span className="shapeblock-tab-icon">{item.icon && 'none' !== item.icon ? <i className={`shapeblock-icon ${item.icon}`} aria-hidden="true" /> : HEART}</span>}
+										{'image' === type && item.image?.url && <span className="shapeblock-tab-image"><img src={item.image.url} alt="" /></span>}
+										<RichText identifier={`tabTitle-${index}`}
+											tagName="span"
+											className="shapeblock-tab-title-text"
+											value={toHtml(item.tabTitle)}
+											onChange={(v) => updateItem(index, 'tabTitle', v.replace(/<[^>]*>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&'))}
+											allowedFormats={[]}
+											placeholder={__('Tab title', 'shapeblock')}
+										/>
+									</span>
 								</li>
 							);
 						})}

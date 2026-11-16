@@ -193,12 +193,12 @@ if ( $is_editor ) {
 // wp_kses(); the icon-font <i> tag stays escaped with esc_attr() as before.
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
-	<div class="<?php echo esc_attr( $btn_classes ); ?>" role="button" tabindex="0" aria-label="<?php echo esc_attr__( 'Scroll to top', 'shapeblock' ); ?>" data-show-after="<?php echo esc_attr( $show_after ); ?>">
+	<button type="button" class="<?php echo esc_attr( $btn_classes ); ?>" aria-label="<?php echo esc_attr__( 'Scroll to top', 'shapeblock' ); ?>" data-show-after="<?php echo esc_attr( $show_after ); ?>">
 		<?php if ( ! empty( $icon ) && 'none' !== $icon ) : ?>
 			<i class="shapeblock-icon <?php echo esc_attr( $icon ); ?>" aria-hidden="true"></i>
 		<?php else : ?>
 			<svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M12 4l8 8-1.4 1.4L13 7.8V20h-2V7.8L5.4 13.4 4 12z"></path></svg>
 		<?php endif; ?>
-	</div>
+	</button>
 </div>
 <?php } )( $attributes, $content, $block );

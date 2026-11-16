@@ -108,6 +108,18 @@ class Helper {
 	}
 
 	/**
+	 * The tag for a piece of text: a paragraph, unless the text itself holds
+	 * block-level markup (a list, a table, another paragraph), which a <p>
+	 * cannot contain.
+	 *
+	 * @param string $html The text, as it will be printed.
+	 * @return string 'p' or 'div'.
+	 */
+	public static function text_tag( $html ) {
+		return preg_match( '/<(p|div|ul|ol|li|h[1-6]|table|blockquote|figure|pre|section|form|hr)\b/i', (string) $html ) ? 'div' : 'p';
+	}
+
+	/**
 	 * Block ids already printed on this request.
 	 *
 	 * @var array<string,int>
@@ -494,11 +506,20 @@ class Helper {
 		if ( '' === trim( (string) $css ) ) {
 			return;
 		}
-		if ( ! wp_style_is( 'shapeblock-late', 'registered' ) ) {
-			wp_register_style( 'shapeblock-late', false, array(), SHAPEBLOCK_VERSION );
+		// Blocks rendered during wp_head (a top bar, say) put their CSS here too,
+		// and wp_head then prints the handle. CSS added to a printed handle is
+		// never output, so later blocks move on to a fresh handle.
+		static $count = 0;
+		$handle = 'shapeblock-late' . ( $count ? '-' . $count : '' );
+		while ( wp_style_is( $handle, 'done' ) ) {
+			++$count;
+			$handle = 'shapeblock-late-' . $count;
 		}
-		wp_add_inline_style( 'shapeblock-late', wp_strip_all_tags( (string) $css ) );
-		wp_enqueue_style( 'shapeblock-late' );
+		if ( ! wp_style_is( $handle, 'registered' ) ) {
+			wp_register_style( $handle, false, array(), SHAPEBLOCK_VERSION );
+		}
+		wp_add_inline_style( $handle, wp_strip_all_tags( (string) $css ) );
+		wp_enqueue_style( $handle );
 	}
 
 	/**
@@ -921,6 +942,38 @@ class Helper {
         $allowed['img']['srcset']         = true;
         $allowed['img']['sizes']          = true;
         $allowed['img']['fetchpriority']  = true;
+
+        /*
+         * Accessibility attributes the blocks print on buttons, tabs, dialogs
+         * and progress bars (WordPress keeps only some ARIA attributes on
+         * every tag). Without them a Row or Column would strip, for example,
+         * the tab keyboard order or a popup's dialog role from the blocks in it.
+         */
+        $a11y = array(
+            'tabindex'         => true,
+            'aria-modal'       => true,
+            'aria-haspopup'    => true,
+            'aria-selected'    => true,
+            'aria-orientation' => true,
+            'aria-pressed'     => true,
+            'aria-checked'     => true,
+            'aria-atomic'      => true,
+            'aria-busy'        => true,
+            'aria-valuenow'    => true,
+            'aria-valuemin'    => true,
+            'aria-valuemax'    => true,
+            'aria-valuetext'   => true,
+            'aria-controls'    => true,
+            'aria-expanded'    => true,
+            'aria-current'     => true,
+            'aria-live'        => true,
+            'scope'            => true,
+        );
+        foreach ( $allowed as $tag => $attrs ) {
+            if ( is_array( $attrs ) ) {
+                $allowed[ $tag ] = array_merge( $attrs, $a11y );
+            }
+        }
 
         $allowed['picture'] = $common;
         $allowed['source']  = array_merge( $common, array(

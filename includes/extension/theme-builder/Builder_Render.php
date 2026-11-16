@@ -61,6 +61,105 @@ class Builder_Render {
 
 		// Front-end admin bar: edit links for the templates this page shows.
 		add_action( 'admin_bar_menu', array( $this, 'admin_bar_templates' ), 81 );
+
+		// Block editor: the CSS the site applies to this content, so it looks the same while edited.
+		add_action( 'enqueue_block_assets', array( $this, 'editor_css' ) );
+	}
+
+	/**
+	 * In the block editor, apply the CSS that the site applies to the content
+	 * being edited: style elements written into the content itself (a Custom
+	 * HTML block) and into the header and footer templates shown around it.
+	 * On the site those load with the page; the editor would otherwise leave
+	 * them out, so the content looked different while it was edited. Only what
+	 * is inside style elements is used; nothing else from the markup runs.
+	 *
+	 * @return void
+	 */
+	public function editor_css() {
+		if ( ! is_admin() || ! function_exists( 'shapeblock_is_block_editor_screen' ) || ! shapeblock_is_block_editor_screen() ) {
+			return;
+		}
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- which post the editor shows, read only.
+		$post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
+		if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+
+		$css = array();
+		if ( \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE !== get_post_type( $post_id ) ) {
+			foreach ( array( 'header', 'footer' ) as $type ) {
+				$template = $this->editor_location_post( $type, $post_id );
+				if ( $template ) {
+					$css[] = self::style_text( get_post_field( 'post_content', $template ) );
+				}
+			}
+		}
+		$css[] = self::style_text( get_post_field( 'post_content', $post_id ) );
+		$css   = trim( implode( "\n", array_filter( $css ) ) );
+		if ( '' === $css ) {
+			return;
+		}
+		// Rules written for the site wrapper also reach the editor canvas.
+		$css = preg_replace( '/\.wp-site-blocks(?![\w-])/', ':is(.wp-site-blocks, .editor-styles-wrapper)', $css );
+		$css = str_ireplace( '</style', '', $css );
+
+		wp_register_style( 'shapeblock-editor-content-css', false, array(), SHAPEBLOCK_VERSION );
+		wp_enqueue_style( 'shapeblock-editor-content-css' );
+		wp_add_inline_style( 'shapeblock-editor-content-css', $css );
+	}
+
+	/**
+	 * The CSS inside the style elements of some markup.
+	 *
+	 * @param string $content Post content.
+	 * @return string
+	 */
+	private static function style_text( $content ) {
+		if ( ! is_string( $content ) || false === stripos( $content, '<style' ) ) {
+			return '';
+		}
+		preg_match_all( '#<style[^>]*>(.*?)</style>#is', $content, $m );
+		return implode( "\n", $m[1] );
+	}
+
+	/**
+	 * The header or footer template the site shows around a post (the same
+	 * choice the front end makes, judged for that post).
+	 *
+	 * @param string $type    header or footer.
+	 * @param int    $post_id Post being edited.
+	 * @return int|false
+	 */
+	private function editor_location_post( $type, $post_id ) {
+		$query = new \WP_Query(
+			array(
+				'post_type'      => \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::POST_TYPE,
+				'post_status'    => 'publish',
+				'posts_per_page' => 100,
+				'orderby'        => 'modified',
+				'order'          => 'DESC',
+				'no_found_rows'  => true,
+				'fields'         => 'ids',
+			)
+		);
+		if ( empty( $query->posts ) ) {
+			return false;
+		}
+		update_meta_cache( 'post', $query->posts );
+		$best      = false;
+		$best_rank = 0;
+		foreach ( $query->posts as $id ) {
+			if ( $type !== get_post_meta( $id, \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::META_TYPE, true ) ) {
+				continue;
+			}
+			$rank = \ShapeBlock\Extension\ThemeBuilder\Builder_Conditions::match_rank_for_post( \ShapeBlock\Extension\ThemeBuilder\Theme_Builder::get_post_conditions( $id ), $post_id );
+			if ( $rank > $best_rank ) {
+				$best      = (int) $id;
+				$best_rank = $rank;
+			}
+		}
+		return $best;
 	}
 
 	/**

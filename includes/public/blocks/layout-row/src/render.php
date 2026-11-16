@@ -154,15 +154,10 @@ if ( isset( $attributes['zIndex'] ) && $attributes['zIndex'] !== '' ) {
     if ( $z !== '' ) $row_responsive['desktop']['z-index'] = (int) $z;
 }
 
-// Sticky positioning - apply when isSticky is enabled.
+// Sticky positioning - apply when isSticky is enabled. Position, z-index and
+// top go in a rule of their own at the end (see below).
 if ( ! empty( $attributes['isSticky'] ) ) {
-    $row_responsive['desktop']['position'] = 'sticky';
-    // The Z-Index setting still applies to a sticky row.
-    $row_responsive['desktop']['z-index'] = ( isset( $attributes['zIndex'] ) && '' !== trim( (string) $attributes['zIndex'] ) ) ? (int) $attributes['zIndex'] : 'auto';
     $row_responsive['desktop']['width'] = '100%';
-
-    $sticky_top = isset( $attributes['stickyTop'] ) ? trim( (string) $attributes['stickyTop'] ) : '0px';
-    $row_responsive['desktop']['top'] = \ShapeBlock\Frontend\Helper::ensure_unit( $sticky_top );
 }
 
 // The gap, as a custom property for the column-width calc: columns read it via
@@ -342,6 +337,19 @@ $css .= \ShapeBlock\Frontend\Helper::generate_responsive_css( '.shapeblock-block
 $css .= $color_css;
 $css .= $per_device_css;
 
+// Sticky goes last, on a selector strong enough to outrank a theme rule that
+// sets position on the same element, on every device.
+if ( ! empty( $attributes['isSticky'] ) ) {
+    $css .= \ShapeBlock\Frontend\Helper::generate_responsive_css( '.shapeblock-block.shapeblock-layout-row.is-sticky' . $selector, [
+        'desktop' => [
+            'position' => 'sticky',
+            // The Z-Index setting still applies to a sticky row.
+            'z-index'  => ( isset( $attributes['zIndex'] ) && '' !== trim( (string) $attributes['zIndex'] ) ) ? (int) $attributes['zIndex'] : 'auto',
+            'top'      => \ShapeBlock\Frontend\Helper::ensure_unit( ! empty( $attributes['stickyTop'] ) ? (string) $attributes['stickyTop'] : '0px' ),
+        ],
+    ] );
+}
+
 wp_enqueue_style( $style_handle );
 \ShapeBlock\Frontend\Helper::add_custom_style( $style_handle, $selector, $css, [] );
 
@@ -368,18 +376,6 @@ if ( $custom_class ) {
     }
 }
 
-// Sticky is written inline as well as in the generated stylesheet: the inline
-// declaration is the only one that outranks a theme rule setting position on
-// the same element, and style.scss keys off [style*="position:sticky"].
-$sticky_styles = '';
-if ( ! empty( $attributes['isSticky'] ) ) {
-    $sticky_z       = ( isset( $attributes['zIndex'] ) && '' !== trim( (string) $attributes['zIndex'] ) ) ? (int) $attributes['zIndex'] : 'auto';
-    $sticky_styles  = 'position:sticky;z-index:' . $sticky_z . ';';
-    $sticky_styles .= 'top:' . \ShapeBlock\Frontend\Helper::ensure_unit(
-        ! empty( $attributes['stickyTop'] ) ? (string) $attributes['stickyTop'] : '0px'
-    ) . ';';
-}
-
 // Wide / Full width come from the theme's layout (theme.json). A theme without
 // theme.json gives them no size, so the Row sizes itself there (style.scss).
 $align = isset( $attributes['align'] ) && in_array( $attributes['align'], [ 'wide', 'full' ], true ) ? $attributes['align'] : '';
@@ -388,9 +384,6 @@ if ( '' !== $align && ! wp_theme_has_theme_json() ) {
 }
 
 $wrapper_args = [ 'class' => implode( ' ', $classes ) ];
-if ( $sticky_styles ) {
-    $wrapper_args['style'] = $sticky_styles;
-}
 // Names the Row for screen readers, as the core Group block's ARIA label does.
 $aria_label = isset( $attributes['ariaLabel'] ) ? trim( sanitize_text_field( (string) $attributes['ariaLabel'] ) ) : '';
 if ( '' !== $aria_label ) {

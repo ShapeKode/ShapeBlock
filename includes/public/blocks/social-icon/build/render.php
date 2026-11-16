@@ -96,13 +96,22 @@ if ( 'global' === $color_mode ) {
 	}
 }
 
-// Custom colour mode: per-item hover rules (base colours are inline on each <a>).
+// Custom colour mode: per-item colours. The doubled class keeps the base
+// colours above the shared button rules; the hover rules stay !important.
 $extra_css = '';
 if ( 'custom' === $color_mode ) {
 	foreach ( $links as $index => $link ) {
-		$item_sel = $selector . ' .shapeblock-si-item-' . $index;
+		$item_sel = $selector . ' .shapeblock-si-button.shapeblock-si-item-' . $index;
+		$bg  = $css_val( ! empty( $link['bgGradient'] ) ? $link['bgGradient'] : ( ! empty( $link['bgColor'] ) ? $link['bgColor'] : '' ) );
+		$ic  = ! empty( $link['iconColor'] ) ? $css_val( $link['iconColor'] ) : '';
 		$hbg = $css_val( ! empty( $link['hoverBgGradient'] ) ? $link['hoverBgGradient'] : ( ! empty( $link['hoverBgColor'] ) ? $link['hoverBgColor'] : '' ) );
 		$hic = ! empty( $link['hoverIconColor'] ) ? $css_val( $link['hoverIconColor'] ) : '';
+		if ( '' !== $bg ) {
+			$extra_css .= $item_sel . '{background:' . $bg . ';}';
+		}
+		if ( '' !== $ic ) {
+			$extra_css .= $item_sel . '{color:' . $ic . ';}' . $item_sel . ' i{color:' . $ic . ';}';
+		}
 		if ( '' !== $hbg ) {
 			$extra_css .= $item_sel . ':hover{background:' . $hbg . '!important;}';
 		}
@@ -161,12 +170,25 @@ $H::add_custom_style( $style_handle, $selector, $extra_css, $sub );
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-si-share">
-		<div class="shapeblock-si-buttons">
+		<ul class="shapeblock-si-buttons">
 			<?php
 			foreach ( $links as $index => $link ) {
-				$title = isset( $link['linkTitle'] ) ? $link['linkTitle'] : '';
-				$url   = ! empty( $link['linkUrl'] ) ? $link['linkUrl'] : '#';
-				$icon  = isset( $link['icon'] ) ? $link['icon'] : '';
+				$title = isset( $link['linkTitle'] ) ? trim( (string) $link['linkTitle'] ) : '';
+				$url   = ! empty( $link['linkUrl'] ) ? $link['linkUrl'] : '';
+				$icon  = isset( $link['icon'] ) ? (string) $link['icon'] : '';
+				$icon  = 'none' === $icon ? '' : $icon;
+
+				// A link with no address goes nowhere, and one with neither an
+				// icon nor a title has nothing to show or announce.
+				if ( '' === $url || ( '' === $icon && '' === $title ) ) {
+					continue;
+				}
+
+				// Accessible name: the link title, else the network the icon shows.
+				$label = $title;
+				if ( '' === $label ) {
+					$label = ucwords( trim( str_replace( '-', ' ', preg_replace( '/^(?:shapeblock-icon-logo-|shapeblock-icon-|shapeblock-bi-)/', '', $icon ) ) ) );
+				}
 
 				$external = ! empty( $link['isExternal'] );
 				$nofollow = ! empty( $link['nofollow'] );
@@ -175,29 +197,17 @@ $H::add_custom_style( $style_handle, $selector, $extra_css, $sub );
 				if ( $external ) { $rel[] = 'noopener'; $rel[] = 'noreferrer'; }
 				if ( $nofollow ) { $rel[] = 'nofollow'; }
 
-				// Per-item base colours (custom mode only).
-				$style      = '';
-				$icon_color = '';
-				if ( 'custom' === $color_mode ) {
-					$bg = $css_val( ! empty( $link['bgGradient'] ) ? $link['bgGradient'] : ( ! empty( $link['bgColor'] ) ? $link['bgColor'] : '' ) );
-					if ( '' !== $bg ) { $style .= 'background:' . $bg . ';'; }
-					$ic = ! empty( $link['iconColor'] ) ? $css_val( $link['iconColor'] ) : '';
-					if ( '' !== $ic ) {
-						$style     .= 'color:' . $ic . ';';
-						$icon_color = $ic;
-					}
-				}
-
-				echo '<a href="' . esc_url( $url ) . '" class="' . esc_attr( trim( 'shapeblock-si-button shapeblock-si-item-' . $index . ' ' . $hover['class'] ) ) . '" target="' . esc_attr( $target ) . '"'
+				echo '<li class="shapeblock-si-list-item"><a href="' . esc_url( $url ) . '" class="' . esc_attr( trim( 'shapeblock-si-button shapeblock-si-item-' . $index . ' ' . $hover['class'] ) ) . '" target="' . esc_attr( $target ) . '"'
 					. ( ! empty( $rel ) ? ' rel="' . esc_attr( implode( ' ', $rel ) ) . '"' : '' )
-					. ' title="' . esc_attr( $title ) . '"' . ( '' !== $style ? ' style="' . esc_attr( $style ) . '"' : '' ) . '>';
-				if ( ! empty( $icon ) && 'none' !== $icon ) {
-					echo '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"' . ( '' !== $icon_color ? ' style="color:' . esc_attr( $icon_color ) . ';"' : '' ) . '></i>';
+					. ( '' !== $title ? ' title="' . esc_attr( $title ) . '"' : '' )
+					. ' aria-label="' . esc_attr( $label ) . '">';
+				if ( '' !== $icon ) {
+					echo '<i class="shapeblock-icon ' . esc_attr( $icon ) . '" aria-hidden="true"></i>';
 				}
-				echo '</a>';
+				echo '</a></li>';
 			}
 			?>
-		</div>
+		</ul>
 	</div>
 </div>
 <?php } )( $attributes, $content, $block );

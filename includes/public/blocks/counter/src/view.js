@@ -49,8 +49,15 @@
 		counter.innerHTML = '';
 		counter.classList.add('shapeblock-cnt-odometer-wrap');
 
+		// Screen readers get the final number once; the rolling digits are hidden from them.
+		var label = document.createElement('span');
+		label.className = 'screen-reader-text';
+		label.textContent = (negative ? '-' : '') + formatWithSeparator(targetInt, separator, 0);
+		counter.appendChild(label);
+
 		if (negative) {
 			var s = document.createElement('span');
+			s.setAttribute('aria-hidden', 'true');
 			s.className = 'shapeblock-cnt-odometer-sep';
 			s.textContent = '-';
 			counter.appendChild(s);
@@ -63,12 +70,14 @@
 			var posFromRight = targetStr.length - i;
 			if (i > 0 && separator && posFromRight % 3 === 0) {
 				var sep = document.createElement('span');
+				sep.setAttribute('aria-hidden', 'true');
 				sep.className = 'shapeblock-cnt-odometer-sep';
 				sep.textContent = separator;
 				counter.appendChild(sep);
 			}
 
 			var col = document.createElement('span');
+			col.setAttribute('aria-hidden', 'true');
 			col.className = 'shapeblock-cnt-odometer-digit';
 
 			var roll = document.createElement('span');

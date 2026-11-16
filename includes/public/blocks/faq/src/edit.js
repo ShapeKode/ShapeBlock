@@ -607,17 +607,21 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							<div
 								className="shapeblock-faq-question"
 								onClick={() => { if (!openAll) toggleOpen(index); }}
-								style={!openAll ? { cursor: 'pointer' } : undefined}
 							>
-								<RichText identifier={`title-${index}`}
-									tagName={TitleTag}
-									className="shapeblock-faq-title"
-									value={item.title}
-									onChange={(v) => updateItem(index, 'title', v)}
-									placeholder={__('Add question…', 'shapeblock')}
-									allowedFormats={['core/bold', 'core/italic', 'core/link']}
-									onClick={(e) => e.stopPropagation()}
-								/>
+								{/* The page puts the question's text in a <button> inside the
+								    heading; here it is a span with the same class, as the text
+								    is typed in place. */}
+								<TitleTag className="shapeblock-faq-title">
+									<RichText identifier={`title-${index}`}
+										tagName="span"
+										className="shapeblock-faq-toggle"
+										value={item.title}
+										onChange={(v) => updateItem(index, 'title', v)}
+										placeholder={__('Add question…', 'shapeblock')}
+										allowedFormats={['core/bold', 'core/italic', 'core/link']}
+										onClick={(e) => e.stopPropagation()}
+									/>
+								</TitleTag>
 								{!openAll && (
 									<button
 										type="button"
@@ -638,7 +642,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							</div>
 
 							<RichText identifier={`description-${index}`}
-								tagName="div"
+								tagName="p"
 								className="shapeblock-faq-answer"
 								value={item.description}
 								onChange={(v) => updateItem(index, 'description', v)}

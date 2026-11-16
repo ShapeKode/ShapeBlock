@@ -60,6 +60,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const {
 		blockId,
 		buttonText,
+		ariaLabel,
 		buttonUrl,
 		buttonTarget,
 		buttonNofollow,
@@ -162,6 +163,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				__next40pxDefaultSize
 				__nextHasNoMarginBottom
 			/>
+			{!(buttonText || '').trim() && (
+				<TextControl
+					label={__('Accessible label', 'shapeblock')}
+					help={__('Read by screen readers because the button has no text.', 'shapeblock')}
+					value={ariaLabel}
+					onChange={(v) => setAttributes({ ariaLabel: v })}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+			)}
 			<TextControl
 				label={__('Button URL', 'shapeblock')}
 				type="url"
@@ -214,6 +225,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 						{ label: __('Primary', 'shapeblock'), value: 'primary' },
 						{ label: __('Outline', 'shapeblock'), value: 'outline' },
 						{ label: __('Icon', 'shapeblock'), value: 'icon_btn' },
+						{ label: __('Link', 'shapeblock'), value: 'link' },
 					]}
 					onChange={(v) => setAttributes({ buttonType: v })}
 					__next40pxDefaultSize

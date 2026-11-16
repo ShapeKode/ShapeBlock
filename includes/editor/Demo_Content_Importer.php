@@ -60,6 +60,13 @@ class Demo_Content_Importer {
 	}
 
 	/**
+	 * @return int[] IDs of the posts this run created.
+	 */
+	public function created_ids() {
+		return array_map( 'intval', array_values( $this->created ) );
+	}
+
+	/**
 	 * Downloads and imports an export file.
 	 *
 	 * @param string $url Export file URL.

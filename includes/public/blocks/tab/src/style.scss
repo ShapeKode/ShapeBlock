@@ -4,6 +4,32 @@
  * Classes use the "shapeblock-" prefix and
  * everything is scoped under `.shapeblock-tab-block-wrap`.
  */
+
+/* Each tab's control is a native <button> (role="tab") inside its list item.
+   The browser's own button look is removed so the tab looks exactly as before.
+   Class-level specificity, first in the file: every rule below and the
+   per-block CSS still win. */
+.shapeblock-tab-nav-btn:where(button) {
+	appearance: none;
+	background: none;
+	border: 0;
+	border-radius: 0;
+	padding: 0;
+	margin: 0;
+	font: inherit;
+	color: inherit;
+	line-height: inherit;
+	letter-spacing: inherit;
+	word-spacing: inherit;
+	text-transform: inherit;
+	text-indent: inherit;
+	text-shadow: inherit;
+	text-align: inherit;
+	text-decoration: inherit;
+	text-rendering: inherit;
+	cursor: inherit;
+}
+
 .shapeblock-tab-block-wrap {
 	--shapeblock-tab-primary: #5933ff;
 	--shapeblock-tab-secondary: #0b3665;
@@ -67,6 +93,22 @@
 	.shapeblock-tabs-wrapper[data-icon-position='right'] .shapeblock-tab-titles li {
 		flex-direction: row-reverse;
 		text-align: right;
+	}
+
+	/* The tab's button (a plain span in the editor) fills the tab's content box
+	   and takes over its layout, so the icon and the title sit exactly where
+	   they sat as the tab's own children. */
+	.shapeblock-tab-nav-btn {
+		display: inherit;
+		flex-direction: inherit;
+		flex-wrap: inherit;
+		place-content: inherit;
+		place-items: inherit;
+		gap: inherit;
+		flex: 1 1 auto;
+		align-self: stretch;
+		justify-self: stretch;
+		min-width: 0;
 	}
 
 	.shapeblock-tab-title-text {

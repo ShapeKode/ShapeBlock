@@ -5,6 +5,30 @@
  * plugin's own "shapeblock-" prefix.
  */
 
+/* The lightbox's close control is a native <button>. The browser's own button
+   look is removed so it looks exactly as before. Class-level specificity, first
+   in the file: every rule below still wins. */
+.shapeblock-close:where(button) {
+	appearance: none;
+	background: none;
+	border: 0;
+	border-radius: 0;
+	padding: 0;
+	margin: 0;
+	font: inherit;
+	color: inherit;
+	line-height: inherit;
+	letter-spacing: inherit;
+	word-spacing: inherit;
+	text-transform: inherit;
+	text-indent: inherit;
+	text-shadow: inherit;
+	text-align: inherit;
+	text-decoration: inherit;
+	text-rendering: inherit;
+	cursor: pointer;
+}
+
 /* === Gallery Grid === */
 .shapeblock-gallery-grid {
 	display: grid;
@@ -75,6 +99,7 @@
 }
 
 .shapeblock-gallery-image-wrap {
+	display: block;
 	position: relative;
 	overflow: hidden;
 }
@@ -93,6 +118,18 @@
 	font-size: 14px;
 	opacity: 1;
 	transition: opacity 0.3s ease;
+}
+
+/* Caption and description are paragraphs: no theme paragraph margins. */
+.shapeblock-gallery-caption .shapeblock-gallery-caption-text,
+.shapeblock-gallery-caption .shapeblock-gallery-description {
+	margin: 0;
+	font-size: inherit;
+	line-height: inherit;
+}
+
+.shapeblock-gallery-caption .shapeblock-gallery-caption-text {
+	color: inherit;
 }
 
 /* === Lightbox === */
@@ -159,7 +196,9 @@
 	}
 
 	&.is-anim-none,
-	&.is-anim-none .shapeblock-lightbox-image {
+	&.is-anim-none .shapeblock-lightbox-image,
+	/* view.js: back to the first frame, with no animation, before a new picture plays in. */
+	.shapeblock-lightbox-image.is-reset {
 		transition: none;
 	}
 
@@ -172,7 +211,8 @@
 		cursor: pointer;
 	}
 
-	button {
+	.shapeblock-prev,
+	.shapeblock-next {
 		background: none;
 		border: none;
 		color: white;

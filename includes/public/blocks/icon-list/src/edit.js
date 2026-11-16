@@ -155,6 +155,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<TextControl label={__('Link', 'shapeblock')} type="url" placeholder="https://" help={__('Empty: no link.', 'shapeblock')} value={item.url || ''} onChange={(v) => updateItem(index, 'url', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
 					{!!item.url && (
 						<>
+							{!item.title && (
+								<TextControl label={__('Link label', 'shapeblock')} help={__('Read out by screen readers, as the item shows only an icon.', 'shapeblock')} value={item.label || ''} onChange={(v) => updateItem(index, 'label', v)} __next40pxDefaultSize __nextHasNoMarginBottom />
+							)}
 							<ToggleControl label={__('Open in a New Tab', 'shapeblock')} checked={!!item.newTab} onChange={(v) => updateItem(index, 'newTab', v)} __nextHasNoMarginBottom />
 							<ToggleControl label={__('Add rel="nofollow"', 'shapeblock')} checked={!!item.nofollow} onChange={(v) => updateItem(index, 'nofollow', v)} __nextHasNoMarginBottom />
 						</>

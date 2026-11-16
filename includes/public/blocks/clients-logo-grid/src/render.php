@@ -163,9 +163,9 @@ $H::add_custom_style( $style_handle, $selector, $responsive_css, [
 ?>
 <div <?php echo wp_kses_post( $block_wrap_attr ); ?>>
 	<div class="shapeblock-clients-logo shapeblock-grid-layout">
-		<div class="shapeblock-grid-wrap">
+		<ul class="shapeblock-grid-wrap">
 			<?php
-			foreach ( $logos as $item ) :
+			foreach ( $logos as $logo_no => $item ) :
 				$image = isset( $item['image'] ) && is_array( $item['image'] ) ? $item['image'] : [];
 				$url   = ! empty( $image['url'] ) ? $image['url'] : '';
 				$alt   = ! empty( $image['alt'] ) ? $image['alt'] : '';
@@ -177,17 +177,24 @@ $H::add_custom_style( $style_handle, $selector, $responsive_css, [
 				$new_tab    = ! empty( $item['linkNewTab'] );
 				$nofollow   = ! empty( $item['linkNofollow'] );
 
+				// A linked logo is named by its alt text, else by its place in the grid.
+				$link_name = '' !== $alt ? '' : sprintf(
+					/* translators: %d: logo number. */
+					__( 'Client logo %d', 'shapeblock' ),
+					(int) $logo_no + 1
+				);
+
 				$box_class = trim( 'shapeblock-logo-img ' . $gray_class . ( '' === $url ? ' is-placeholder' : '' ) );
 				?>
-				<div class="shapeblock-grid-item">
+				<li class="shapeblock-grid-item">
 					<div class="<?php echo esc_attr( $box_class ); ?>">
 						<?php if ( '' !== $link ) : ?>
-							<a href="<?php echo esc_url( $link ); ?>"<?php echo $new_tab ? ' target="_blank"' : ''; ?><?php echo ( $new_tab || $nofollow ) ? ' rel="' . esc_attr( trim( ( $new_tab ? 'noopener noreferrer ' : '' ) . ( $nofollow ? 'nofollow' : '' ) ) ) . '"' : ''; ?>>
+							<a href="<?php echo esc_url( $link ); ?>"<?php echo $new_tab ? ' target="_blank"' : ''; ?><?php echo ( $new_tab || $nofollow ) ? ' rel="' . esc_attr( trim( ( $new_tab ? 'noopener noreferrer ' : '' ) . ( $nofollow ? 'nofollow' : '' ) ) ) . '"' : ''; ?><?php echo '' !== $link_name ? ' aria-label="' . esc_attr( $link_name ) . '"' : ''; ?>>
 						<?php endif; ?>
 
 						<?php if ( '' !== $url ) : ?>
 							<?php if ( $swap ) : ?>
-								<img class="shapeblock-grid-img shapeblock-logo-img-hover" src="<?php echo esc_url( $hover_url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async">
+								<img class="shapeblock-grid-img shapeblock-logo-img-hover" src="<?php echo esc_url( $hover_url ); ?>" alt="" loading="lazy" decoding="async">
 								<img class="shapeblock-grid-img shapeblock-logo-img-normal" src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async">
 							<?php else : ?>
 								<img class="shapeblock-grid-img" src="<?php echo esc_url( $url ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async">
@@ -200,9 +207,9 @@ $H::add_custom_style( $style_handle, $selector, $responsive_css, [
 							</a>
 						<?php endif; ?>
 					</div>
-				</div>
+				</li>
 			<?php endforeach; ?>
-		</div>
+		</ul>
 	</div>
 </div>
 <?php } )( $attributes, $content, $block );

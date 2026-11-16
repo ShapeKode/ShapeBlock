@@ -116,6 +116,27 @@
 
 		// Reset mobile state when resizing back to desktop. During the resize we suppress the
 		// drawer transition so it doesn't visibly slide across the screen at the breakpoint.
+		// A dropdown that would run past the right edge of the screen opens to the left of its
+		// item instead (and its side flyouts to the left too), so a closed dropdown near the
+		// edge never makes the page wider than the screen. Parents come before their children
+		// in the list, so a flyout is measured after its own dropdown has moved.
+		function fitDropdowns() {
+			var subs = nav.querySelectorAll( '.shapeblock-menu-list .sub-menu' );
+			Array.prototype.forEach.call( subs, function ( sub ) {
+				sub.classList.remove( 'shapeblock-sub-flip' );
+			} );
+			if ( isMobile( nav ) || nav.classList.contains( 'shapeblock-menu--vertical' ) ) {
+				return;
+			}
+			var edge = document.documentElement.clientWidth;
+			Array.prototype.forEach.call( subs, function ( sub ) {
+				if ( sub.getBoundingClientRect().right > edge ) {
+					sub.classList.add( 'shapeblock-sub-flip' );
+				}
+			} );
+		}
+		fitDropdowns();
+
 		var resizeTimer = null;
 		window.addEventListener( 'resize', function () {
 			nav.classList.add( 'shapeblock-menu-no-anim' );
@@ -124,6 +145,7 @@
 			}
 			resizeTimer = window.setTimeout( function () {
 				nav.classList.remove( 'shapeblock-menu-no-anim' );
+				fitDropdowns();
 			}, 200 );
 
 			if ( ! isMobile( nav ) ) {

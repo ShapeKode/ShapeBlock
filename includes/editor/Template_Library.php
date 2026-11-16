@@ -633,6 +633,11 @@ class Template_Library {
 			'failed'   => 0,
 		);
 
+		// ShapeForms forms the content uses come with it.
+		if ( ! empty( $data['forms'] ) && is_array( $data['forms'] ) && Form_Importer::has_forms( $content ) ) {
+			$content = Form_Importer::remap( $content, Form_Importer::import( $data['forms'] ) );
+		}
+
 		if ( $media && '' !== $content && current_user_can( 'upload_files' ) ) {
 			$result  = self::import_media( $content );
 			$content = $result['content'];
@@ -926,6 +931,12 @@ class Template_Library {
 		$result = '' !== $local ? $importer->import_file( $local ) : $importer->import_url( $url );
 		if ( is_wp_error( $result ) ) {
 			return $result;
+		}
+
+		// The demo's ShapeForms forms, for the imported posts that use them.
+		$forms = isset( $data['group']['setup']['forms'] ) && is_array( $data['group']['setup']['forms'] ) ? $data['group']['setup']['forms'] : array();
+		if ( $forms ) {
+			$result['forms'] = Form_Importer::import_for_posts( $forms, $importer->created_ids() );
 		}
 		return rest_ensure_response( $result );
 	}

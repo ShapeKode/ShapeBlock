@@ -7,6 +7,55 @@
 
 $primary: var(--shapeblock-preset-color-primary, #5933ff);
 
+/* Designation and bio are paragraphs: a theme's paragraph margins stay off
+   them, on the site and in the editor (the block's Margin settings still apply). */
+.shapeblock-team-grid p.shapeblock-designation,
+.shapeblock-team-grid p.shapeblock-description,
+.shapeblock-team-grid p.shapeblock-team-description {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.shapeblock-popup-header p.shapeblock-popup-designation {
+	margin: 0 0 6px;
+}
+
+/* The bio in the popup is a paragraph: it looks like the text around it. */
+.shapeblock-popup-details p.shapeblock-popup-text {
+	margin: 0;
+	font: inherit;
+	color: inherit;
+	letter-spacing: inherit;
+}
+
+/* The social reveal and the popup close are buttons: a theme's button look stays
+   off them. Only properties the block's own rules never set are reset here. */
+.shapeblock-team-social .shapeblock-team-social-hover button,
+.shapeblock-popup-content button.shapeblock-popup-close {
+	appearance: none;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	min-height: 0;
+	box-shadow: none;
+	font-family: inherit;
+	font-weight: inherit;
+	font-style: inherit;
+	line-height: inherit;
+	letter-spacing: inherit;
+	text-transform: inherit;
+	text-decoration: none;
+}
+
+.shapeblock-popup-content button.shapeblock-popup-close {
+	background: none;
+}
+
+.shapeblock-team-social .shapeblock-team-social-hover button {
+	cursor: pointer;
+	font-size: inherit;
+}
+
 .shapeblock-team-grid {
 	.shapeblock-grid-item {
 		box-sizing: border-box;
@@ -185,7 +234,7 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 		transition: all 0.3s ease;
 	}
 
-	.shapeblock-team-social-hover a,
+	.shapeblock-team-social-hover button,
 	ul li a:not(.shapeblock-popup-trigger) {
 		background: $primary;
 		color: #fff;
@@ -229,7 +278,8 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 			opacity: 0;
 		}
 
-		&:hover {
+		&:hover,
+		&.is-open {
 			.shapeblock-team-social-hover {
 				opacity: 0;
 				visibility: hidden;
@@ -270,7 +320,8 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 		&.hover_show ul {
 			transform: translateY(-100%);
 		}
-		&.hover_show:hover ul {
+		&.hover_show:hover ul,
+		&.hover_show.is-open ul {
 			transform: translateY(-40%);
 		}
 	}
@@ -282,7 +333,8 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 		&.hover_show ul {
 			transform: translateY(50px);
 		}
-		&.hover_show:hover ul {
+		&.hover_show:hover ul,
+		&.hover_show.is-open ul {
 			transform: translateY(-100%);
 		}
 	}
@@ -316,6 +368,10 @@ $primary: var(--shapeblock-preset-color-primary, #5933ff);
 	height: 100vh;
 	overflow: auto;
 	background: rgba(0, 0, 0, 0.5);
+
+	&.active {
+		display: block;
+	}
 }
 
 .shapeblock-popup-content {

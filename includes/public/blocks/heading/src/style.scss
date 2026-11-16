@@ -6,6 +6,12 @@
  * from the original widget are intentionally omitted.
  */
 
+/* Text set to the P tag: a theme's paragraph margins stay off it, on the site
+   and in the editor (the block's own Margin setting still applies). */
+.shapeblock-heading p.shapeblock-title {
+	margin: 0;
+}
+
 .shapeblock-title {
 	color: var(--shapeblock-preset-color-secondary, #0b3665);
 	margin: 0;

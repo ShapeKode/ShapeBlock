@@ -33,13 +33,17 @@
 		var duration = parseInt(lightbox.getAttribute('data-duration'), 10) || 0;
 		var closing = null;
 
-		// Show a picture: back to the animation's start, then play it in.
-		function present(src) {
+		// Show a picture: back to the animation's start, then play it in. It
+		// takes the thumbnail's alt text along with its source.
+		function present(index) {
+			var link = links[index];
+			var thumb = link.querySelector('img');
 			image.classList.remove('is-in');
-			image.style.transition = 'none';
-			image.setAttribute('src', src);
+			image.classList.add('is-reset');
+			image.setAttribute('src', link.getAttribute('href'));
+			image.setAttribute('alt', thumb ? thumb.getAttribute('alt') || '' : '');
 			void image.offsetWidth;
-			image.style.transition = '';
+			image.classList.remove('is-reset');
 			window.requestAnimationFrame(function () {
 				image.classList.add('is-in');
 			});
@@ -49,7 +53,7 @@
 			window.clearTimeout(closing);
 			current = index;
 			lightbox.classList.add('is-open');
-			present(links[current].getAttribute('href'));
+			present(current);
 			window.requestAnimationFrame(function () {
 				lightbox.classList.add('is-visible');
 			});
@@ -65,7 +69,7 @@
 
 		function show(index) {
 			current = (index + links.length) % links.length;
-			present(links[current].getAttribute('href'));
+			present(current);
 		}
 
 		links.forEach(function (link, index) {

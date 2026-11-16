@@ -1,17 +1,27 @@
 /**
- * Team Member — front-end popup.
+ * Team Member — front-end popup and social reveal.
  *
  * Dependency-free JS.
  */
 (function () {
 	'use strict';
 
+	// The element that opened the popup, so focus can go back to it.
+	var opener = null;
+
 	function closeAll() {
-		document.querySelectorAll('.shapeblock-popup-modal.active').forEach(function (modal) {
-			modal.style.display = 'none';
+		var open = document.querySelectorAll('.shapeblock-popup-modal.active');
+		if (!open.length) {
+			return;
+		}
+		open.forEach(function (modal) {
 			modal.classList.remove('active');
 		});
 		document.body.classList.remove('shapeblock-popup-open');
+		if (opener && document.contains(opener)) {
+			opener.focus();
+		}
+		opener = null;
 	}
 
 	function init() {
@@ -28,15 +38,44 @@
 				var id = trigger.getAttribute('data-popup-id');
 				var modal = id && document.getElementById(id);
 				if (modal) {
-					modal.style.display = 'block';
+					opener = trigger;
 					modal.classList.add('active');
 					document.body.classList.add('shapeblock-popup-open');
+					var close = modal.querySelector('.shapeblock-popup-close');
+					if (close) {
+						close.focus();
+					}
+				}
+				return;
+			}
+
+			// The social reveal button shows the icons (as hover does) and moves
+			// focus to the first one; they hide again when focus leaves them.
+			var reveal = e.target.closest('.shapeblock-team-social-hover button');
+			if (reveal) {
+				var social = reveal.closest('.shapeblock-team-social');
+				social.classList.add('is-open');
+				reveal.setAttribute('aria-expanded', 'true');
+				var first = social.querySelector('ul a[href]');
+				if (first) {
+					first.focus();
 				}
 				return;
 			}
 
 			if (e.target.closest('.shapeblock-popup-close') || e.target.classList.contains('shapeblock-popup-modal')) {
 				closeAll();
+			}
+		});
+
+		document.addEventListener('focusout', function (e) {
+			var social = e.target.closest && e.target.closest('.shapeblock-team-social.is-open');
+			if (social && !social.contains(e.relatedTarget)) {
+				social.classList.remove('is-open');
+				var reveal = social.querySelector('.shapeblock-team-social-hover button');
+				if (reveal) {
+					reveal.setAttribute('aria-expanded', 'false');
+				}
 			}
 		});
 

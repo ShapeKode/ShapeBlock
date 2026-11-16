@@ -2,7 +2,7 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: ShapeBlock 1.0.8\n"
+"Project-Id-Version: ShapeBlock 1.0.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/shapeblock\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -10149,6 +10149,16 @@ msgid "Empty: no link."
 msgstr ""
 
 #: includes/public/blocks/icon-list/build/index.js:2
+#: includes/public/blocks/icon-list/src/edit.js:159
+msgid "Link label"
+msgstr ""
+
+#: includes/public/blocks/icon-list/build/index.js:2
+#: includes/public/blocks/icon-list/src/edit.js:159
+msgid "Read out by screen readers, as the item shows only an icon."
+msgstr ""
+
+#: includes/public/blocks/icon-list/build/index.js:2
 #: includes/public/blocks/icon-list/src/edit.js:158
 msgid "Open in a New Tab"
 msgstr ""
@@ -15081,4 +15091,18 @@ msgstr ""
 
 #: src/components/admin-components/pro-features.jsx:16
 msgid "Full Width and Canvas page templates, and a switch to hide the page title."
+msgstr ""
+
+#: includes/editor/Form_Importer.php:97
+msgid "Imported form"
+msgstr ""
+
+#. translators: 1: category or tag name, 2: site name.
+#: includes/public/Meta_Description.php:139
+msgid "%1$s articles from %2$s."
+msgstr ""
+
+#. translators: %d: number of the menu on the page, 2 or more.
+#: includes/public/blocks/menu/build/render.php:621
+msgid "Menu %d"
 msgstr ""

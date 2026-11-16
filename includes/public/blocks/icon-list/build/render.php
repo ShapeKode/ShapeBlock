@@ -18,6 +18,7 @@ $features   = isset( $attributes['features'] ) && is_array( $attributes['feature
 $dir        = ( isset( $attributes['feaDir'] ) && 'right' === $attributes['feaDir'] ) ? 'right' : 'left';
 $allowed    = [ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span' ];
 $title_tag  = isset( $attributes['titleTag'] ) && in_array( $attributes['titleTag'], $allowed, true ) ? $attributes['titleTag'] : 'h3';
+$info_tag   = 'span' === $title_tag ? 'span' : 'div';
 $layout     = ( isset( $attributes['layout'] ) && 'inline' === $attributes['layout'] ) ? 'inline' : 'default';
 $align      = ( isset( $attributes['listAlign'] ) && in_array( $attributes['listAlign'], [ 'left', 'center', 'right' ], true ) ) ? $attributes['listAlign'] : 'left';
 $divider    = ! empty( $attributes['divider'] );
@@ -214,10 +215,12 @@ if ( '' !== $responsive_media ) {
 		$rel = [];
 		if ( ! empty( $item['newTab'] ) ) $rel[] = 'noopener';
 		if ( ! empty( $item['nofollow'] ) ) $rel[] = 'nofollow';
+		// An icon-only link takes its name for screen readers from "Link label".
+		$label = ( '' === trim( wp_strip_all_tags( $ttl ) ) && isset( $item['label'] ) && is_string( $item['label'] ) ) ? trim( $item['label'] ) : '';
 		?>
 		<li class="shapeblock-icon-list shapeblock-icon-list-dir-<?php echo esc_attr( $dir ); ?>">
 			<?php if ( '' !== $url ) : ?>
-			<a class="shapeblock-icon-list-link" href="<?php echo esc_url( $url ); ?>"<?php echo ! empty( $item['newTab'] ) ? ' target="_blank"' : ''; ?><?php echo $rel ? ' rel="' . esc_attr( implode( ' ', $rel ) ) . '"' : ''; ?>>
+			<a class="shapeblock-icon-list-link" href="<?php echo esc_url( $url ); ?>"<?php echo '' !== $label ? ' aria-label="' . esc_attr( $label ) . '"' : ''; ?><?php echo ! empty( $item['newTab'] ) ? ' target="_blank"' : ''; ?><?php echo $rel ? ' rel="' . esc_attr( implode( ' ', $rel ) ) . '"' : ''; ?>>
 			<?php endif; ?>
 			<?php if ( $show_icon ) : ?>
 			<span class="shapeblock-icon-list-icon">
@@ -229,9 +232,10 @@ if ( '' !== $responsive_media ) {
 			</span>
 			<?php endif; ?>
 			<?php if ( '' !== $ttl ) : ?>
-				<span class="shapeblock-icon-list-info">
+				<?php // A heading or paragraph title cannot sit inside a <span>. ?>
+				<<?php echo esc_attr( $info_tag ); ?> class="shapeblock-icon-list-info">
 					<?php printf( '<%1$s class="shapeblock-icon-list-title">%2$s</%1$s>', tag_escape( $title_tag ), wp_kses_post( $ttl ) ); ?>
-				</span>
+				</<?php echo esc_attr( $info_tag ); ?>>
 			<?php endif; ?>
 			<?php if ( '' !== $url ) : ?>
 			</a>

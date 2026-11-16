@@ -111,6 +111,12 @@
 	color: #000000;
 }
 
+/* A title set to the P tag: a theme's paragraph margins stay off it, on the
+   site and in the editor. */
+.shapeblock-icon-list-info p.shapeblock-icon-list-title {
+	margin: 0;
+}
+
 /* A linked item: the link takes the item's own layout (direction, gap,
    alignment), so a list looks the same with or without links. */
 .shapeblock-icon-list-link {

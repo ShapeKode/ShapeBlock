@@ -36,7 +36,7 @@ const getAttrKey = (base, device) =>
 
 // The editor lightbox's picture. Keyed by its src, so each new picture starts
 // from the animation's first frame and plays in (style.scss, is-in).
-function LightboxImage({ src }) {
+function LightboxImage({ src, alt }) {
 	const [shown, setShown] = useState(false);
 	useEffect(() => {
 		let inner;
@@ -48,7 +48,7 @@ function LightboxImage({ src }) {
 			window.cancelAnimationFrame(inner);
 		};
 	}, []);
-	return <img className={`shapeblock-lightbox-image${shown ? ' is-in' : ''}`} src={src} alt="" style={{ maxWidth: '90%', maxHeight: '80%', borderRadius: 10 }} />;
+	return <img className={`shapeblock-lightbox-image${shown ? ' is-in' : ''}`} src={src} alt={alt} />;
 }
 
 const mapImages = (media) =>
@@ -103,7 +103,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 	const previewNodeRef = useRef(null);
 	// opened counts the openings, so one that comes while the last is still
 	// closing plays its animation again.
-	const [lightbox, setLightbox] = useState({ open: false, images: [], index: 0, opened: 0 });
+	const [lightbox, setLightbox] = useState({ open: false, images: [], alts: [], index: 0, opened: 0 });
 	// The editor canvas is an iframe; render the lightbox into its document body
 	// so position:fixed is not clipped by a transformed/contained ancestor.
 	const [portalDoc, setPortalDoc] = useState(null);
@@ -156,12 +156,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				return;
 			}
 			const allLinks = Array.prototype.slice.call(grid.querySelectorAll('.shapeblock-popup-link'));
-			const images = allLinks.map((a) => a.getAttribute('href')).filter(Boolean);
-			const index = Math.max(0, allLinks.indexOf(link));
+			const withSrc = allLinks.filter((a) => a.getAttribute('href'));
+			const images = withSrc.map((a) => a.getAttribute('href'));
+			const alts = withSrc.map((a) => (a.querySelector('img') ? a.querySelector('img').getAttribute('alt') || '' : ''));
+			const index = Math.max(0, withSrc.indexOf(link));
 			if (images.length) {
 				window.clearTimeout(closeTimer.current);
 				setVisible(false);
-				setLightbox((s) => ({ open: true, images, index, opened: s.opened + 1 }));
+				setLightbox((s) => ({ open: true, images, alts, index, opened: s.opened + 1 }));
 			}
 		};
 		portalDoc.addEventListener('click', onDocClick, true);
@@ -560,6 +562,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							httpMethod="POST"
 						/>
 					</div>
+					{/* Laid out by style.scss, as on the page. The animation length is set here: the page sets it in the block's generated CSS, and this lightbox sits in the canvas body, outside the block. */}
 					{lightbox.open && portalDoc && createPortal(
 						<div
 							className={`shapeblock-lightbox-gallery is-open is-anim-${popupAnimation || 'fade'}${visible ? ' is-visible' : ''}`}
@@ -568,14 +571,14 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 									closeLightbox();
 								}
 							}}
-							style={{ position: 'fixed', inset: 0, zIndex: 100000, background: 'rgba(0,0,0,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', '--shapeblock-lb-duration': `${duration}ms` }}
+							style={{ '--shapeblock-lb-duration': `${duration}ms` }}
 						>
-							<span className="shapeblock-close" role="button" tabIndex={0} onClick={closeLightbox} style={{ position: 'absolute', top: 15, right: 25, fontSize: 35, lineHeight: 1, color: '#fff', cursor: 'pointer' }}>&times;</span>
-							<LightboxImage key={`${lightbox.index}-${lightbox.images[lightbox.index]}`} src={lightbox.images[lightbox.index]} />
+							<button type="button" className="shapeblock-close" aria-label={__('Close', 'shapeblock')} onClick={closeLightbox}>&times;</button>
+							<LightboxImage key={`${lightbox.index}-${lightbox.images[lightbox.index]}`} src={lightbox.images[lightbox.index]} alt={lightbox.alts[lightbox.index] || ''} />
 							{lightbox.images.length > 1 && (
 								<>
-									<button type="button" className="shapeblock-prev" onClick={lightboxPrev} style={{ position: 'absolute', left: 20, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#fff', fontSize: 30, cursor: 'pointer' }}>&#10094;</button>
-									<button type="button" className="shapeblock-next" onClick={lightboxNext} style={{ position: 'absolute', right: 20, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#fff', fontSize: 30, cursor: 'pointer' }}>&#10095;</button>
+									<button type="button" className="shapeblock-prev" aria-label={__('Previous image', 'shapeblock')} onClick={lightboxPrev}>&#10094;</button>
+									<button type="button" className="shapeblock-next" aria-label={__('Next image', 'shapeblock')} onClick={lightboxNext}>&#10095;</button>
 								</>
 							)}
 						</div>,
