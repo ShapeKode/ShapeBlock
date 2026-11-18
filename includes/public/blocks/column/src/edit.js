@@ -106,6 +106,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         'shapeblock-column',
         blockId,
         verticalAlign ? `is-self-${verticalAlign}` : '',
+        attributes.bgHoverZoom ? 'has-bg-zoom' : '',
         customClass,
     ]
         .filter(Boolean)
@@ -409,6 +410,13 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 />
                 <Divider />
                 <BackgroundImageControls attributes={attributes} setAttributes={setAttributes} />
+                <ToggleControl
+                    label={__('Zoom Background on Hover', 'shapeblock')}
+                    help={__('The background image grows a little while the pointer is over the column.', 'shapeblock')}
+                    checked={!!attributes.bgHoverZoom}
+                    onChange={(v) => setAttributes({ bgHoverZoom: v })}
+                    __nextHasNoMarginBottom
+                />
             </PanelBody>
 
             <PanelBody title={__('Border', 'shapeblock')} initialOpen={false}>

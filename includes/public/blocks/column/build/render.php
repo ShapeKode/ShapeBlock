@@ -192,6 +192,8 @@ $classes = [
     $unique_id,
 ];
 if ( $vertical ) $classes[] = 'is-self-' . sanitize_html_class( $vertical );
+// The background photo zooms a little while the column is hovered.
+if ( ! empty( $attributes['bgHoverZoom'] ) ) $classes[] = 'has-bg-zoom';
 if ( ! empty( $attributes['hideDesktop'] ) ) $classes[] = 'shapeblock-hide-desktop';
 if ( ! empty( $attributes['hideTablet'] ) )  $classes[] = 'shapeblock-hide-tablet';
 if ( ! empty( $attributes['hideMobile'] ) )  $classes[] = 'shapeblock-hide-mobile';

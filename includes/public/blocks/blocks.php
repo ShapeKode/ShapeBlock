@@ -413,6 +413,33 @@ function shapeblock_expose_google_fonts_editor() {
 add_action( 'enqueue_block_editor_assets', 'shapeblock_expose_google_fonts_editor' );
 
 /**
+ * Is this font family installed on the site, in the Font Library or the
+ * theme's theme.json? WordPress loads those itself, so no Google request.
+ *
+ * @param string $family Font family name, e.g. "Satoshi".
+ * @return bool
+ */
+function shapeblock_font_is_installed( $family ) {
+	static $names = null;
+	if ( null === $names ) {
+		$names = array();
+		$sets  = function_exists( 'wp_get_global_settings' ) ? wp_get_global_settings( array( 'typography', 'fontFamilies' ) ) : array();
+		foreach ( (array) $sets as $list ) {
+			foreach ( (array) $list as $font ) {
+				if ( is_array( $font ) && ! empty( $font['fontFace'] ) ) {
+					foreach ( array( 'name', 'slug' ) as $key ) {
+						if ( ! empty( $font[ $key ] ) && is_string( $font[ $key ] ) ) {
+							$names[ strtolower( $font[ $key ] ) ] = true;
+						}
+					}
+				}
+			}
+		}
+	}
+	return isset( $names[ strtolower( trim( (string) $family ) ) ] );
+}
+
+/**
  * Enqueue a single Google font family (front end + editor). Web-safe stacks
  * (which contain a comma) are ignored — only a single Google family name is
  * loaded. Safe to call repeatedly.
@@ -425,6 +452,10 @@ function shapeblock_enqueue_google_font( $family ) {
 	}
 	$family = trim( (string) $family );
 	if ( '' === $family || false !== strpos( $family, ',' ) ) {
+		return;
+	}
+	// A font installed on the site (Font Library or theme.json) is already loaded by WordPress.
+	if ( shapeblock_font_is_installed( $family ) ) {
 		return;
 	}
 	$handle = 'shapeblock-font-' . sanitize_title( $family );

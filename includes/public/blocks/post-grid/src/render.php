@@ -481,7 +481,15 @@ if ( ! empty( $attributes['categoryBadge'] ) ) {
     if ( ! empty( $attributes['badgeTextColor'] ) ) $extra_vars['--sbpg-badge-color'] = $attributes['badgeTextColor'];
     if ( isset( $attributes['badgeRadius'] ) && '' !== (string) $attributes['badgeRadius'] ) $extra_vars['--sbpg-badge-radius'] = \ShapeBlock\Frontend\Helper::ensure_unit( $attributes['badgeRadius'] );
 }
+// The badge in a top corner of the photo instead of in the meta line ( layouts that show a photo ).
+$badge_on_image = ! empty( $attributes['categoryBadge'] ) && ! empty( $attributes['badgeOnImage'] ) && 'default' === $style && $show_meta
+    && ! in_array( $list_layout, array( 'text', 'numbered' ), true ) && in_array( 'category', (array) $allowed_metas, true );
+if ( $badge_on_image ) {
+    $extra_classes .= ' is-badge-img';
+    $allowed_metas  = array_values( array_diff( (array) $allowed_metas, array( 'category' ) ) );
+}
 if ( ! empty( $attributes['titleUnderlineHover'] ) ) $extra_classes .= ' is-underline';
+if ( isset( $attributes['showMetaIcons'] ) && ! $attributes['showMetaIcons'] ) $extra_classes .= ' no-meta-icons';
 if ( ! empty( $attributes['playIcon'] ) ) $extra_classes .= ' has-play';
 $list_width_responsive = array( 'desktop' => array(), 'tablet' => array(), 'mobile' => array() );
 foreach ( array( '' => 'desktop', 'Tablet' => 'tablet', 'Mobile' => 'mobile' ) as $lw_suffix => $lw_device ) {

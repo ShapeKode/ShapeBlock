@@ -2,6 +2,10 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 $shapeblock_allowed_metas = isset($attributes['allowedMetas']) ? $attributes['allowedMetas'] : [];
+// Post Grid's "Badge on the Photo" already shows the category on the photo.
+if ( ! empty( $badge_on_image ) ) {
+    $shapeblock_allowed_metas = array_values( array_diff( (array) $shapeblock_allowed_metas, array( 'category' ) ) );
+}
 $shapeblock_meta_html = '';
 
 if(empty($shapeblock_allowed_metas)) {
@@ -45,7 +49,7 @@ if ( in_array( 'category', $shapeblock_allowed_metas ) ) {
             if ( $shapeblock_category->slug === 'uncategorized' ) {
                 continue;
             }
-            $shapeblock_cat_links[] = '<a href="' . esc_url(get_category_link($shapeblock_category->term_id)) . '" class="shapeblock-meta-cat">' . esc_html( $shapeblock_category->name ) . '</a>';
+            $shapeblock_cat_links[] = '<a href="' . esc_url(get_category_link($shapeblock_category->term_id)) . '" class="shapeblock-meta-cat"' . shapeblock_term_color_attr( $shapeblock_category->term_id ) . '>' . esc_html( $shapeblock_category->name ) . '</a>';
         }
         if ( ! empty( $shapeblock_cat_links ) ) {
             $shapeblock_category_html  = '<span class="shapeblock-post-meta-item"><i class="shapeblock-meta-icon shapeblock-icon-notification-status" aria-hidden="true"></i>';

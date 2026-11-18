@@ -87,6 +87,7 @@ class Main {
         require_once SHAPEBLOCK_PL_PATH . 'includes/public/scripts.php';
         require_once SHAPEBLOCK_PL_PATH . 'includes/public/responsive-visibility.php';
         require_once SHAPEBLOCK_PL_PATH . 'includes/public/responsive-spacing.php';
+        require_once SHAPEBLOCK_PL_PATH . 'includes/public/term-color.php';
         require_once SHAPEBLOCK_PL_PATH . 'includes/public/blocks/blocks.php';
 
         // Only with a page cache plugin active: empty its cache when a Theme

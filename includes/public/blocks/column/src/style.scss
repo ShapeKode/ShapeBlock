@@ -26,3 +26,32 @@
     flex-grow: 1;
 }
 
+
+// Zoom Background on Hover: a copy of the background sits in a layer under the content and grows on hover;
+// the column clips it, so the size of the column never changes.
+.shapeblock-column.has-bg-zoom {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background: inherit;
+		border-radius: inherit;
+		transition: transform 0.6s ease;
+	}
+
+	&:hover::before,
+	&:focus-within::before {
+		transform: scale(1.08);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.shapeblock-column.has-bg-zoom::before {
+		transition: none;
+	}
+}

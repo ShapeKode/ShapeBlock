@@ -258,6 +258,14 @@ Deleting the plugin removes the options and cached data it created. Your Custom 
 == Changelog ==
 
 = 1.0.9 =
+* Fixed: Post Grid - in the numbered list the date now lines up with the number.
+* Added: Post Grid - a "Badge on the Photo" switch: the category badge sits in the top corner of the photo instead of beside the date.
+* Improved: Menu - a parent item now shows the active colour when one of its sub-menu items is the page being viewed.
+* Added: Category colour - each category can have its own colour (Posts > Categories); Post Grid category badges use it as their background, so every topic gets its own colour.
+* Added: Column - a "Zoom Background on Hover" switch: the background image grows a little while the pointer is over the column.
+* Improved: Post Grid - the photo hover effect (zoom or slide) now starts when anywhere on the card is hovered, not only the photo.
+* Added: Post Grid - a "Show Icons" switch for the date, author and other meta, so the meta can start on the same line as the title.
+* Improved: A font installed on the site (in the WordPress Font Library or the theme) is no longer requested from Google Fonts when a block uses it; WordPress already loads it from the site.
 * **New:** Button - a Link type: a plain text link with no box, as wide as its text, for "Read more →" style links.
 * **New:** Paragraph block - text in a single paragraph, with colour, link colour, typography per device (desktop, tablet, mobile), alignment and highlighted words, plus the Advanced tab (margin, padding, position, hide per device). Its styles come from the block settings through the page stylesheet, so no style attributes are written into the page.
 * **New:** Heading - a P (paragraph) option in the HTML tag list, for descriptions, labels and other text that is not a heading. A theme's paragraph margins stay off it; the block's own Margin setting still applies.

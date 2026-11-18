@@ -299,6 +299,12 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 							__next40pxDefaultSize={true}
 							__nextHasNoMarginBottom={true}
 						/>
+						<ToggleControl
+							label={__('Show Icons', 'shapeblock')}
+							checked={attributes.showMetaIcons !== false}
+							onChange={(value) => setAttributes({ showMetaIcons: value })}
+							__nextHasNoMarginBottom={true}
+						/>
 						{
 							attributes.allowedMetas.includes('author') && (
 								<TextControl
@@ -563,6 +569,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 					<ToggleControl label={__('Category as Badge', 'shapeblock')} checked={!!attributes.categoryBadge} onChange={(v) => setAttributes({ categoryBadge: v })} __nextHasNoMarginBottom />
 					{attributes.categoryBadge && (
 						<>
+							<ToggleControl label={__('Badge on the Photo', 'shapeblock')} help={__('Shows the category in the top corner of the photo instead of beside the date.', 'shapeblock')} checked={!!attributes.badgeOnImage} onChange={(v) => setAttributes({ badgeOnImage: v })} __nextHasNoMarginBottom />
 							<ColorPopover label={__('Badge Background', 'shapeblock')} color={attributes.badgeBgColor} onChange={(v) => setAttributes({ badgeBgColor: v || '' })} />
 							<ColorPopover label={__('Badge Text', 'shapeblock')} color={attributes.badgeTextColor} onChange={(v) => setAttributes({ badgeTextColor: v || '' })} />
 							<TextControl label={__('Badge Radius (px)', 'shapeblock')} type="number" value={attributes.badgeRadius} onChange={(v) => setAttributes({ badgeRadius: v })} __next40pxDefaultSize __nextHasNoMarginBottom />

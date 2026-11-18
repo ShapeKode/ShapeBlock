@@ -257,7 +257,9 @@ if ( ! function_exists( 'shapeblock_menu_render_items' ) ) {
 			};
 
 			$is_current = shapeblock_menu_is_current_url( $url );
-			echo '<li class="menu-item' . ( $has_dropdown ? ' menu-item-has-children' : '' ) . ( $is_current ? ' current-menu-item' : '' ) . ( '' !== $extra_class ? ' ' . esc_attr( $extra_class ) : '' ) . '"' . ( '' !== $extra_style ? ' style="' . esc_attr( $extra_style ) . '"' : '' ) . '>';
+			// A parent whose sub-menu holds the current page shows the active colour too.
+			$is_ancestor = ! $is_current && $has_children && shapeblock_menu_has_current_child( $children );
+			echo '<li class="menu-item' . ( $has_dropdown ? ' menu-item-has-children' : '' ) . ( $is_current ? ' current-menu-item' : '' ) . ( $is_ancestor ? ' current-menu-ancestor' : '' ) . ( '' !== $extra_class ? ' ' . esc_attr( $extra_class ) : '' ) . '"' . ( '' !== $extra_style ? ' style="' . esc_attr( $extra_style ) . '"' : '' ) . '>';
 			echo '<a href="' . esc_url( $url ) . '"' . ( $is_current ? ' aria-current="page"' : '' );
 			if ( $new_tab ) {
 				echo ' target="_blank" rel="noopener noreferrer"';
@@ -385,7 +387,7 @@ if ( isset( $font_stacks[ $font_family ] ) ) {
 	if ( '' !== $safe_family ) {
 		// The stylesheet is only requested from Google once the site owner has
 		// opted in; the family is still applied so a locally installed font works.
-		if ( function_exists( 'shapeblock_google_fonts_enabled' ) && shapeblock_google_fonts_enabled() ) {
+		if ( function_exists( 'shapeblock_google_fonts_enabled' ) && shapeblock_google_fonts_enabled() && ! ( function_exists( 'shapeblock_font_is_installed' ) && shapeblock_font_is_installed( $safe_family ) ) ) {
 			$font_url = 'https://fonts.googleapis.com/css2?family=' . str_replace( '%20', '+', rawurlencode( $safe_family ) ) . ':wght@300;400;500;600;700&display=swap';
 			wp_enqueue_style( 'shapeblock-menu-font-' . sanitize_title( $safe_family ), esc_url_raw( $font_url ), array(), SHAPEBLOCK_VERSION );
 		}
@@ -425,7 +427,7 @@ if ( ! empty( $attributes['hoverColor'] ) ) {
 	$css .= $selector . ' .shapeblock-menu-list a:hover,' . $selector . ' .shapeblock-menu-list a:focus{color:' . shapeblock_menu_paint( $attributes['hoverColor'] ) . ';}';
 }
 if ( ! empty( $attributes['activeColor'] ) ) {
-	$css .= $selector . ' .shapeblock-menu-list .current-menu-item > a{color:' . shapeblock_menu_paint( $attributes['activeColor'] ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list :is(.current-menu-item, .current-menu-ancestor) > a{color:' . shapeblock_menu_paint( $attributes['activeColor'] ) . ';}';
 }
 if ( ! empty( $attributes['descriptionColor'] ) ) {
 	$css .= $selector . ' .shapeblock-menu-desc{color:' . shapeblock_menu_paint( $attributes['descriptionColor'] ) . ';}';
@@ -447,7 +449,7 @@ if ( '' !== $item_bg_h ) {
 	$css .= $selector . ' .shapeblock-menu-list > li > a:hover,' . $selector . ' .shapeblock-menu-list > li > a:focus{background:' . shapeblock_menu_paint( $item_bg_h ) . ';}';
 }
 if ( '' !== $item_bg_a ) {
-	$css .= $selector . ' .shapeblock-menu-list > li.current-menu-item > a{background:' . shapeblock_menu_paint( $item_bg_a ) . ';}';
+	$css .= $selector . ' .shapeblock-menu-list > li:is(.current-menu-item, .current-menu-ancestor) > a{background:' . shapeblock_menu_paint( $item_bg_a ) . ';}';
 }
 // Dropdown ( sub-menu ) colours.
 if ( '' !== $dd_bg ) {
@@ -575,7 +577,7 @@ if ( $mobile_on ) {
 		$drawer .= $selector . ' .shapeblock-menu-list a:hover,' . $selector . ' .shapeblock-menu-list a:focus{color:' . shapeblock_menu_paint( $attributes['mobileHoverColor'] ) . ';}';
 	}
 	if ( ! empty( $attributes['mobileActiveColor'] ) ) {
-		$drawer .= $selector . ' .shapeblock-menu-list .current-menu-item > a{color:' . shapeblock_menu_paint( $attributes['mobileActiveColor'] ) . ';}';
+		$drawer .= $selector . ' .shapeblock-menu-list :is(.current-menu-item, .current-menu-ancestor) > a{color:' . shapeblock_menu_paint( $attributes['mobileActiveColor'] ) . ';}';
 	}
 	if ( '' !== $m_bg_n ) {
 		$drawer .= $selector . ' .shapeblock-menu-list > li > a{background:' . shapeblock_menu_paint( $m_bg_n ) . ';border-radius:6px;}';
@@ -584,7 +586,7 @@ if ( $mobile_on ) {
 		$drawer .= $selector . ' .shapeblock-menu-list > li > a:hover,' . $selector . ' .shapeblock-menu-list > li > a:focus{background:' . shapeblock_menu_paint( $m_bg_h ) . ';}';
 	}
 	if ( '' !== $m_bg_a ) {
-		$drawer .= $selector . ' .shapeblock-menu-list > li.current-menu-item > a{background:' . shapeblock_menu_paint( $m_bg_a ) . ';}';
+		$drawer .= $selector . ' .shapeblock-menu-list > li:is(.current-menu-item, .current-menu-ancestor) > a{background:' . shapeblock_menu_paint( $m_bg_a ) . ';}';
 	}
 
 	if ( 'always' === $mobile_mode ) {

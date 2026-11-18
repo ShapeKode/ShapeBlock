@@ -241,6 +241,28 @@ function shapeblock_menu_save_last( WP_REST_Request $request ) {
  * @param string $url Item link.
  * @return bool
  */
+/**
+ * Whether one of these sub-menu items ( at any depth ) is the page being viewed,
+ * so its parent can show the active colour too.
+ *
+ * @param array $children Sub-menu items.
+ * @return bool
+ */
+function shapeblock_menu_has_current_child( $children ) {
+	foreach ( (array) $children as $child ) {
+		if ( ! is_array( $child ) ) {
+			continue;
+		}
+		if ( isset( $child['url'] ) && shapeblock_menu_is_current_url( (string) $child['url'] ) ) {
+			return true;
+		}
+		if ( ! empty( $child['children'] ) && shapeblock_menu_has_current_child( $child['children'] ) ) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function shapeblock_menu_is_current_url( $url ) {
 	if ( ! is_string( $url ) || '' === $url || '#' === $url[0] || is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
 		return false;

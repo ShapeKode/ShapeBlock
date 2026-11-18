@@ -462,6 +462,11 @@
 			flex: 1 1 auto;
 			min-width: 0;
 		}
+		// The meta line starts at the very top, level with the number ( inline it sat
+		// a few pixels lower, on the text line of the content ).
+		.shapeblock-blog-content > .shapeblock-post-metas:first-child {
+			display: flex;
+		}
 	}
 
 	&.has-divider .shapeblock-grid-item .shapeblock-grid-item-inner {
@@ -471,6 +476,11 @@
 	&.has-divider > .shapeblock-grid-item:last-child .shapeblock-grid-item-inner {
 		border-bottom: 0;
 		padding-bottom: 0;
+	}
+
+	// Meta without its icons: the text starts on the same line as the title.
+	&.no-meta-icons .shapeblock-meta-icon {
+		display: none;
 	}
 
 	&.is-badge .shapeblock-post-meta-item:has(.shapeblock-meta-cat) {
@@ -486,11 +496,21 @@
 		display: inline-block;
 		padding: 4px 9px;
 		border-radius: var(--sbpg-badge-radius, 4px);
-		background: var(--sbpg-badge-bg, var(--shapeblock-preset-color-primary, #222));
+		background: var(--sb-term-color, var(--sbpg-badge-bg, var(--shapeblock-preset-color-primary, #222)));
 		color: var(--sbpg-badge-color, #fff) !important;
 		font-size: 0.85em;
 		line-height: 1.3;
 		text-decoration: none;
+	}
+
+	// The badge in the top corner of the photo ( after the badge rule, so its size wins ).
+	&.is-badge-img .shapeblock-img-badge {
+		position: absolute;
+		top: 10px;
+		left: 10px;
+		z-index: 3;
+		font-size: 11px;
+		font-weight: 600;
 	}
 
 	// "Underline Title on Hover": a real underline, so it follows every line of
@@ -526,5 +546,20 @@
 			pointer-events: none;
 			z-index: 2;
 		}
+	}
+}
+
+// Hovering anywhere on a card starts its photo effect, not only the photo itself.
+.shapeblock-post-grid-block-wrap .shapeblock-grid-item:hover .shapeblock-blog-img.shapeblock-animate {
+	&.left_right img {
+		transform: translateX(15px) scale(1.1);
+	}
+
+	&.top_bottom img {
+		transform: translateY(15px) scale(1.1);
+	}
+
+	&.zoom img {
+		transform: scale(1.08);
 	}
 }
