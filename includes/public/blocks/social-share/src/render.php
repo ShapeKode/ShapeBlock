@@ -137,6 +137,13 @@ if ( ! empty( $attributes['buttonBorder'] ) ) $button = array_merge( $button, $H
 // only spaced a horizontal row, and doubled the space there).
 $button_spacing = ( '' !== $u( 'buttonSpacing' ) ) ? [ 'gap' => $u( 'buttonSpacing' ) ] : [];
 
+// Alignment: where the row of buttons sits in the block (left, centre or right; per device).
+$justify = function ( $value ) {
+	$map = [ 'left' => 'flex-start', 'center' => 'center', 'right' => 'flex-end' ];
+	return isset( $map[ $value ] ) ? [ 'justify-content' => $map[ $value ] ] : [];
+};
+$align = $justify( $attributes['alignment'] ?? '' );
+
 $icon_i   = [];
 $icon_svg = [];
 if ( ! empty( $attributes['iconColor'] ) ) { $icon_i['color'] = $attributes['iconColor']; $icon_svg['fill'] = $attributes['iconColor']; }
@@ -167,7 +174,7 @@ if ( '' !== $u( 'labelSize' ) ) { $label['font-size'] = $u( 'labelSize' ); }
 // these rules are emitted only when the matching per-device attribute is set,
 // so existing content renders identically.
 // ---------------------------------------------------------------------------
-$build_dev = function ( $suffix ) use ( $attributes, $H, $show_label ) {
+$build_dev = function ( $suffix ) use ( $attributes, $H, $show_label, $justify ) {
 	$dev_u = function ( $key ) use ( $attributes, $suffix, $H ) {
 		return ( isset( $attributes[ $key . $suffix ] ) && '' !== $attributes[ $key . $suffix ] ) ? $H::ensure_unit( $attributes[ $key . $suffix ] ) : '';
 	};
@@ -186,7 +193,8 @@ $build_dev = function ( $suffix ) use ( $attributes, $H, $show_label ) {
 	if ( '' !== $dev_u( 'iconSize' ) ) { $i['font-size'] = $dev_u( 'iconSize' ); $svg['width'] = $dev_u( 'iconSize' ); $svg['height'] = $dev_u( 'iconSize' ); }
 
 	return [
-		'.shapeblock-social-buttons'    => $gap,
+		'.shapeblock-social-share'      => $justify( $attributes[ 'alignment' . $suffix ] ?? '' ),
+		'.shapeblock-social-buttons'    => array_merge( $gap, $justify( $attributes[ 'alignment' . $suffix ] ?? '' ) ),
 		'.shapeblock-social-button'     => $btn,
 		'.shapeblock-social-button i'   => $i,
 		'.shapeblock-social-button svg' => $svg,
@@ -194,7 +202,7 @@ $build_dev = function ( $suffix ) use ( $attributes, $H, $show_label ) {
 };
 $dev_data = [ 'Tablet' => $build_dev( 'Tablet' ), 'Mobile' => $build_dev( 'Mobile' ) ];
 $resp_css = '';
-foreach ( [ '.shapeblock-social-buttons', '.shapeblock-social-button', '.shapeblock-social-button i', '.shapeblock-social-button svg' ] as $sub_sel ) {
+foreach ( [ '.shapeblock-social-share', '.shapeblock-social-buttons', '.shapeblock-social-button', '.shapeblock-social-button i', '.shapeblock-social-button svg' ] as $sub_sel ) {
 	$rdata = [];
 	foreach ( [ 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $suffix => $device_key ) {
 		if ( ! empty( $dev_data[ $suffix ][ $sub_sel ] ) ) {
@@ -208,7 +216,8 @@ foreach ( [ '.shapeblock-social-buttons', '.shapeblock-social-button', '.shapebl
 
 wp_enqueue_style( $style_handle );
 $H::add_custom_style( $style_handle, $selector, $resp_css, [
-	'.shapeblock-social-buttons'          => $H::get_inline_styles( $button_spacing ),
+	'.shapeblock-social-share'            => $H::get_inline_styles( $align ),
+	'.shapeblock-social-buttons'          => $H::get_inline_styles( array_merge( $button_spacing, $align ) ),
 	'.shapeblock-social-button'           => $H::get_inline_styles( $button ),
 	'.shapeblock-social-button i'         => $H::get_inline_styles( $icon_i ),
 	'.shapeblock-social-button svg'       => $H::get_inline_styles( $icon_svg ),

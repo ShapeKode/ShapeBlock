@@ -1,0 +1,197 @@
+/**
+ * Business Hours - front end and editor.
+ * Spacing comes from CSS variables the block's settings fill in.
+ */
+.shapeblock-bh {
+	--sb-bh-row-gap: 0px;
+	--sb-bh-col-gap: 16px;
+	--sb-bh-title-gap: 18px;
+	box-sizing: border-box;
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	&__head {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 10px;
+		margin-bottom: var(--sb-bh-title-gap);
+
+		&--inline {
+			flex-direction: row;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+		}
+	}
+
+	&__title {
+		margin: 0;
+		line-height: 1.25;
+	}
+
+	&__status {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 5px 12px;
+		border-radius: 999px;
+		font-size: 13px;
+		font-weight: 600;
+		line-height: 1.3;
+
+		&.is-open {
+			color: #0f7a3d;
+			background: #e3f6ea;
+		}
+
+		&.is-closed {
+			color: #b42318;
+			background: #fdeceb;
+		}
+	}
+
+	&__dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: currentColor;
+		flex: none;
+	}
+
+	&__status.is-open &__dot {
+		animation: shapeblock-bh-pulse 1.8s ease-out infinite;
+	}
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+		gap: var(--sb-bh-row-gap);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__row {
+		display: flex;
+		align-items: baseline;
+		gap: var(--sb-bh-col-gap);
+		margin: 0;
+		padding: 12px 0;
+	}
+
+	&__day {
+		display: inline-flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 8px;
+		font-weight: 600;
+	}
+
+	&__time {
+		white-space: nowrap;
+	}
+
+	&__row.is-closed &__time {
+		opacity: 0.75;
+	}
+
+	&__today {
+		display: none;
+		padding: 2px 8px;
+		border-radius: 999px;
+		color: #fff;
+		background: #a216ff;
+		font-size: 11px;
+		font-weight: 600;
+		line-height: 1.5;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	&--today &__row.is-today &__today {
+		display: inline-flex;
+	}
+
+	&--today &__row.is-today &__day {
+		font-weight: 700;
+	}
+
+	&__note {
+		margin: 16px 0 0;
+		font-size: 14px;
+		opacity: 0.8;
+	}
+
+	// Day on the left, time on the right.
+	&--row &__row {
+		justify-content: space-between;
+	}
+
+	&--row &__time {
+		text-align: right;
+	}
+
+	&--leader &__leader {
+		flex: 1 1 auto;
+		min-width: 12px;
+		align-self: center;
+		border-bottom: var(--sb-bh-leader);
+		opacity: 0.35;
+		transform: translateY(0.2em);
+	}
+
+	// Day above, time below.
+	&--stacked &__row {
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	&--stacked.shapeblock-bh--align-center {
+		text-align: center;
+
+		.shapeblock-bh__row,
+		.shapeblock-bh__head {
+			align-items: center;
+		}
+	}
+
+	&--stacked.shapeblock-bh--align-right {
+		text-align: right;
+
+		.shapeblock-bh__row,
+		.shapeblock-bh__head {
+			align-items: flex-end;
+		}
+	}
+
+	&--divider &__row {
+		border-bottom: var(--sb-bh-divider);
+	}
+
+	&--divider &__row:last-child {
+		border-bottom: 0;
+	}
+}
+
+@keyframes shapeblock-bh-pulse {
+	0% {
+		box-shadow: 0 0 0 0 currentColor;
+	}
+	70% {
+		box-shadow: 0 0 0 6px transparent;
+	}
+	100% {
+		box-shadow: 0 0 0 0 transparent;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.shapeblock-bh__status.is-open .shapeblock-bh__dot {
+		animation: none;
+	}
+}

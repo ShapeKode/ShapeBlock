@@ -20,26 +20,25 @@
 	const apiFetch = wp.apiFetch;
 	const speak = wp.a11y ? wp.a11y.speak : function () {};
 
-	const TD = 'shapeblock';
 	const BASE = '/' + config.restPath;
 	const PER_PAGE = config.perPage || 24;
 
 	const TYPE_LABELS = {
-		template: __( 'Template', TD ),
-		page: __( 'Page', TD ),
-		pattern: __( 'Section', TD ),
-		header: __( 'Header', TD ),
-		footer: __( 'Footer', TD ),
+		template: __( 'Template', 'shapeblock' ),
+		page: __( 'Page', 'shapeblock' ),
+		pattern: __( 'Section', 'shapeblock' ),
+		header: __( 'Header', 'shapeblock' ),
+		footer: __( 'Footer', 'shapeblock' ),
 	};
 
 	const DEVICES = [
-		{ slug: 'desktop', label: __( 'Desktop', TD ), icon: 'desktop', width: '100%' },
-		{ slug: 'tablet', label: __( 'Tablet', TD ), icon: 'tablet', width: '768px' },
-		{ slug: 'mobile', label: __( 'Mobile', TD ), icon: 'smartphone', width: '390px' },
+		{ slug: 'desktop', label: __( 'Desktop', 'shapeblock' ), icon: 'desktop', width: '100%' },
+		{ slug: 'tablet', label: __( 'Tablet', 'shapeblock' ), icon: 'tablet', width: '768px' },
+		{ slug: 'mobile', label: __( 'Mobile', 'shapeblock' ), icon: 'smartphone', width: '390px' },
 	];
 
 	function errorMessage( error ) {
-		return ( error && error.message ) || __( 'Something went wrong while loading the template library.', TD );
+		return ( error && error.message ) || __( 'Something went wrong while loading the template library.', 'shapeblock' );
 	}
 
 	function readPref( key, fallback ) {
@@ -186,7 +185,7 @@
 		if ( ! config.upgradeUrl ) {
 			return null;
 		}
-		return el( 'a', { className: 'sbtl-upgrade', href: config.upgradeUrl, target: '_blank', rel: 'noopener noreferrer' }, __( 'Upgrade to Pro', TD ) );
+		return el( 'a', { className: 'sbtl-upgrade', href: config.upgradeUrl, target: '_blank', rel: 'noopener noreferrer' }, __( 'Upgrade to Pro', 'shapeblock' ) );
 	}
 
 	/**
@@ -207,13 +206,13 @@
 			el(
 				'div',
 				{ className: 'sbtl-upgrade-bar__text' },
-				el( 'strong', null, __( 'More with ShapeBlock Pro', TD ) ),
-				el( 'span', null, __( 'Pro adds more templates, sections, headers and footers, plus the Pro blocks and features.', TD ) )
+				el( 'strong', null, __( 'More with ShapeBlock Pro', 'shapeblock' ) ),
+				el( 'span', null, __( 'Pro adds more templates, sections, headers and footers, plus the Pro blocks and features.', 'shapeblock' ) )
 			),
 			el(
 				'a',
 				{ className: 'sbtl-upgrade-bar__button', href: config.upgradeUrl, target: '_blank', rel: 'noopener noreferrer' },
-				__( 'Upgrade to Pro', TD ),
+				__( 'Upgrade to Pro', 'shapeblock' ),
 				el( 'span', { className: 'dashicons dashicons-arrow-right-alt', 'aria-hidden': 'true' } )
 			)
 			)
@@ -273,7 +272,7 @@
 						} ) );
 						if ( page === 1 ) {
 							/* translators: %d: number of templates found. */
-							speak( sprintf( _n( '%d item found.', '%d items found.', pagination.total, TD ), pagination.total ) );
+							speak( sprintf( _n( '%d item found.', '%d items found.', pagination.total, 'shapeblock' ), pagination.total ) );
 						}
 					} )
 					.catch( ( err ) => {
@@ -360,14 +359,14 @@
 
 	function StateMessage( { status, error, empty, onRetry } ) {
 		if ( status === 'loading' || status === 'idle' ) {
-			return el( 'div', { className: 'sbtl-state' }, el( Spinner ), el( 'p', null, __( 'Loading templates…', TD ) ) );
+			return el( 'div', { className: 'sbtl-state' }, el( Spinner ), el( 'p', null, __( 'Loading templates…', 'shapeblock' ) ) );
 		}
 		if ( status === 'error' ) {
 			return el(
 				'div',
 				{ className: 'sbtl-state' },
 				el( Notice, { status: 'error', isDismissible: false }, error ),
-				onRetry && el( Button, { variant: 'secondary', onClick: onRetry }, __( 'Try again', TD ) )
+				onRetry && el( Button, { variant: 'secondary', onClick: onRetry }, __( 'Try again', 'shapeblock' ) )
 			);
 		}
 		return el( 'div', { className: 'sbtl-state' }, el( 'span', { className: 'dashicons dashicons-search' } ), el( 'p', null, empty ) );
@@ -449,7 +448,7 @@
 
 	/** Vertical filter list: All + entries with counts. */
 	function SideList( { title, items, value, onChange, allLabel, allCount } ) {
-		const rows = [ { slug: '', name: allLabel || __( 'All', TD ), count: allCount } ].concat( items );
+		const rows = [ { slug: '', name: allLabel || __( 'All', 'shapeblock' ), count: allCount } ].concat( items );
 		return el(
 			'nav',
 			{ className: 'sbtl-sidelist', 'aria-label': title },
@@ -505,7 +504,7 @@
 				el(
 					'div',
 					{ className: 'sbtl-preview__start' },
-					onBack && el( Button, { icon: 'arrow-left-alt2', onClick: onBack, className: 'sbtl-preview__back' }, backLabel || __( 'Back', TD ) ),
+					onBack && el( Button, { icon: 'arrow-left-alt2', onClick: onBack, className: 'sbtl-preview__back' }, backLabel || __( 'Back', 'shapeblock' ) ),
 					el( 'strong', { className: 'sbtl-preview__title' }, title ),
 					subtitle && el( 'span', { className: 'sbtl-preview__sub' }, subtitle ),
 					badges
@@ -513,7 +512,7 @@
 				url &&
 					el(
 						'div',
-						{ className: 'sbtl-devices', role: 'group', 'aria-label': __( 'Preview size', TD ) },
+						{ className: 'sbtl-devices', role: 'group', 'aria-label': __( 'Preview size', 'shapeblock' ) },
 						DEVICES.map( ( d ) =>
 							el( Button, { key: d.slug, icon: d.icon, label: d.label, isPressed: device === d.slug, onClick: () => setDevice( d.slug ) } )
 						)
@@ -533,7 +532,7 @@
 								rel: 'noopener noreferrer',
 								className: 'sbtl-preview__live',
 							},
-							__( 'Open live site', TD )
+							__( 'Open live site', 'shapeblock' )
 						),
 					actions
 				)
@@ -552,7 +551,7 @@
 							sandbox: 'allow-scripts allow-same-origin allow-popups allow-forms',
 							referrerPolicy: 'no-referrer',
 							/* translators: %s: template name. */
-							title: sprintf( __( 'Live preview of %s', TD ), title ),
+							title: sprintf( __( 'Live preview of %s', 'shapeblock' ), title ),
 							onLoad: () => setLoaded( true ),
 						} )
 					)
@@ -566,14 +565,13 @@
 			'div',
 			{ className: 'sbtl-brand' },
 			config.logo && el( 'img', { src: config.logo, alt: '' } ),
-			el( 'span', null, label || __( 'ShapeBlock Library', TD ) )
+			el( 'span', null, label || __( 'ShapeBlock Library', 'shapeblock' ) )
 		);
 	}
 
 	window.shapeblockTL = {
 		config,
 		BASE,
-		TD,
 		TYPE_LABELS,
 		apiFetch,
 		addQueryArgs,

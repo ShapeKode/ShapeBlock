@@ -328,6 +328,14 @@ $meta_responsive = ['desktop' => [], 'tablet' => [], 'mobile' => []];
     'letterSpacing'=>'letter-spacing',
     'textDecoration'=>'text-decoration',
 ], true);
+// The meta line follows the content alignment (it is a flex row, so text-align alone does not move it).
+// The default (left on desktop) adds nothing, so a theme's own centring of the line still applies.
+foreach ( [ '' => 'desktop', 'Tablet' => 'tablet', 'Mobile' => 'mobile' ] as $sbpg_suffix => $sbpg_device ) {
+    $sbpg_align = isset( $attributes[ 'contentTextAlign' . $sbpg_suffix ] ) ? (string) $attributes[ 'contentTextAlign' . $sbpg_suffix ] : '';
+    if ( 'center' === $sbpg_align || 'right' === $sbpg_align || ( 'left' === $sbpg_align && '' !== $sbpg_suffix ) ) {
+        $meta_responsive[ $sbpg_device ]['justify-content'] = 'center' === $sbpg_align ? 'center' : ( 'right' === $sbpg_align ? 'flex-end' : 'flex-start' );
+    }
+}
 
 $meta_hover = [];
 if(!empty($attributes['metaColorHover'])) $meta_hover['color'] = $attributes['metaColorHover'];

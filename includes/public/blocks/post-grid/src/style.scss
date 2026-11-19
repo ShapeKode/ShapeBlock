@@ -419,8 +419,13 @@
 			flex: 0 0 var(--sbpg-img-w, 38%);
 			max-width: var(--sbpg-img-w, 38%);
 		}
+		// The text takes what the photo leaves; with the photo at 100% (Mobile) it moves under the photo
+		// instead of being squeezed to nothing beside it.
+		.shapeblock-grid-item .shapeblock-grid-item-inner {
+			flex-wrap: wrap;
+		}
 		.shapeblock-blog-content {
-			flex: 1 1 auto;
+			flex: 1 1 0;
 			min-width: 0;
 			padding-top: 0;
 		}

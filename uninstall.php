@@ -35,6 +35,9 @@ function shapeblock_uninstall_cleanup_site() {
 	delete_transient( 'shapeblock_menu_google_fonts' );
 	delete_transient( 'shapeblock_activation_redirect' );
 
+	// Category colours (Posts > Categories).
+	delete_metadata( 'term', 0, 'shapeblock_color', '', true );
+
 	// Appsero usage data: the choice in its notice and its weekly send.
 	delete_option( 'shapeblock_allow_tracking' );
 	delete_option( 'shapeblock_tracking_notice' );

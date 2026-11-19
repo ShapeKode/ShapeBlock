@@ -180,6 +180,18 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 				__next40pxDefaultSize
 				__nextHasNoMarginBottom
 			/>
+			<ResponsiveWrapper label={__('Alignment', 'shapeblock')}>
+				{(device) => {
+					const k = getKey('alignment', device);
+					return (
+						<ToggleGroupControl value={attributes[k] || ''} onChange={(v) => setAttributes({ [k]: v || '' })} isBlock isDeselectable __next40pxDefaultSize __nextHasNoMarginBottom>
+							<ToggleGroupControlOption value="left" label={__('Left', 'shapeblock')} />
+							<ToggleGroupControlOption value="center" label={__('Center', 'shapeblock')} />
+							<ToggleGroupControlOption value="right" label={__('Right', 'shapeblock')} />
+						</ToggleGroupControl>
+					);
+				}}
+			</ResponsiveWrapper>
 			<Divider />
 			{respNum(showLabel ? __('Button Height (px)', 'shapeblock') : __('Button Size (px)', 'shapeblock'), 'buttonSize')}
 			{respNum(__('Button Spacing (px)', 'shapeblock'), 'buttonSpacing')}

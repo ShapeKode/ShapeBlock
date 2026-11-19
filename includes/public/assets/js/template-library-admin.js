@@ -19,7 +19,7 @@
 	const { createElement: el, Fragment, useEffect, useState, createRoot, render } = wp.element;
 	const { Button, Modal, Notice, CheckboxControl, Spinner, Dropdown, MenuGroup, MenuItem } = wp.components;
 	const { __, _n, sprintf } = wp.i18n;
-	const { config, BASE, TD, TYPE_LABELS, apiFetch, errorMessage } = TL;
+	const { config, BASE, TYPE_LABELS, apiFetch, errorMessage } = TL;
 
 	const INLINE_CATEGORIES = 8;
 	const MEDIA_PREF = 'shapeblockTemplateLibraryMedia';
@@ -51,8 +51,8 @@
 			{ className: 'sbtl-import__ok' },
 			el( Icon, { name: 'yes-alt' } ),
 			state.note && el( 'span', null, state.note ),
-			r.edit_url && el( 'a', { href: r.edit_url, target: '_blank', rel: 'noopener noreferrer' }, __( 'Edit', TD ) ),
-			r.view_url && el( 'a', { href: r.view_url, target: '_blank', rel: 'noopener noreferrer' }, __( 'View', TD ) )
+			r.edit_url && el( 'a', { href: r.edit_url, target: '_blank', rel: 'noopener noreferrer' }, __( 'Edit', 'shapeblock' ) ),
+			r.view_url && el( 'a', { href: r.view_url, target: '_blank', rel: 'noopener noreferrer' }, __( 'View', 'shapeblock' ) )
 		);
 	}
 
@@ -60,51 +60,51 @@
 		const parts = [];
 		if ( r.links ) {
 			/* translators: %d: number of pages whose links were updated. */
-			parts.push( sprintf( _n( 'links updated in %d page', 'links updated in %d pages', r.links, TD ), r.links ) );
+			parts.push( sprintf( _n( 'links updated in %d page', 'links updated in %d pages', r.links, 'shapeblock' ), r.links ) );
 		}
 		( r.menus || [] ).forEach( ( m ) => {
 			parts.push(
 				m.location
-					? /* translators: 1: menu name, 2: theme menu location. */ sprintf( __( 'menu “%1$s” (%2$s)', TD ), m.name, m.location )
-					: /* translators: %s: menu name. */ sprintf( __( 'menu “%s”', TD ), m.name )
+					? /* translators: 1: menu name, 2: theme menu location. */ sprintf( __( 'menu “%1$s” (%2$s)', 'shapeblock' ), m.name, m.location )
+					: /* translators: %s: menu name. */ sprintf( __( 'menu “%s”', 'shapeblock' ), m.name )
 			);
 		} );
 		const settings = r.settings || [];
 		if ( settings.includes( 'shapeblock' ) ) {
-			parts.push( __( 'colors & layout', TD ) );
+			parts.push( __( 'colors & layout', 'shapeblock' ) );
 		}
 		if ( settings.includes( 'css' ) ) {
-			parts.push( __( 'custom CSS', TD ) );
+			parts.push( __( 'custom CSS', 'shapeblock' ) );
 		}
 		if ( settings.includes( 'title' ) || settings.includes( 'tagline' ) ) {
-			parts.push( __( 'site title', TD ) );
+			parts.push( __( 'site title', 'shapeblock' ) );
 		}
-		return parts.length ? parts.join( ' · ' ) : __( 'nothing to change', TD );
+		return parts.length ? parts.join( ' · ' ) : __( 'nothing to change', 'shapeblock' );
 	}
 
 	function xmlNote( r ) {
 		const parts = [];
 		if ( r.posts ) {
 			/* translators: %d: number of blog posts imported. */
-			parts.push( sprintf( _n( '%d post', '%d posts', r.posts, TD ), r.posts ) );
+			parts.push( sprintf( _n( '%d post', '%d posts', r.posts, 'shapeblock' ), r.posts ) );
 		}
 		if ( r.pages ) {
 			/* translators: %d: number of pages imported. */
-			parts.push( sprintf( _n( '%d page', '%d pages', r.pages, TD ), r.pages ) );
+			parts.push( sprintf( _n( '%d page', '%d pages', r.pages, 'shapeblock' ), r.pages ) );
 		}
 		if ( r.attachments ) {
 			/* translators: %d: number of media files imported. */
-			parts.push( sprintf( _n( '%d media file', '%d media files', r.attachments, TD ), r.attachments ) );
+			parts.push( sprintf( _n( '%d media file', '%d media files', r.attachments, 'shapeblock' ), r.attachments ) );
 		}
 		if ( r.menu_items ) {
 			/* translators: %d: number of menu items imported. */
-			parts.push( sprintf( _n( '%d menu item', '%d menu items', r.menu_items, TD ), r.menu_items ) );
+			parts.push( sprintf( _n( '%d menu item', '%d menu items', r.menu_items, 'shapeblock' ), r.menu_items ) );
 		}
 		if ( r.errors && r.errors.length ) {
 			/* translators: %d: number of problems. */
-			parts.push( sprintf( _n( '%d problem', '%d problems', r.errors.length, TD ), r.errors.length ) );
+			parts.push( sprintf( _n( '%d problem', '%d problems', r.errors.length, 'shapeblock' ), r.errors.length ) );
 		}
-		return parts.length ? parts.join( ' · ' ) : __( 'nothing new to add', TD );
+		return parts.length ? parts.join( ' · ' ) : __( 'nothing new to add', 'shapeblock' );
 	}
 
 	function ImportDialog( { group, onClose } ) {
@@ -212,7 +212,7 @@
 				el(
 					'span',
 					{ className: 'sbtl-import__tags' },
-					item === landing && el( 'span', { className: 'sbtl-badge' }, __( 'Landing', TD ) ),
+					item === landing && el( 'span', { className: 'sbtl-badge' }, __( 'Landing', 'shapeblock' ) ),
 					el( 'span', { className: 'sbtl-import__type' }, TYPE_LABELS[ item.type ] )
 				),
 				el( 'span', { className: 'sbtl-import__status' }, el( StatusCell, { state: progress[ key ] } ) )
@@ -228,7 +228,7 @@
 			Modal,
 			{
 				/* translators: %s: demo name. */
-				title: sprintf( __( 'Import “%s”', TD ), group.name ),
+				title: sprintf( __( 'Import “%s”', 'shapeblock' ), group.name ),
 				onRequestClose: phase === 'running' ? () => {} : onClose,
 				className: 'sbtl-import',
 				shouldCloseOnClickOutside: false,
@@ -242,9 +242,9 @@
 					el(
 						'p',
 						{ className: 'sbtl-import__intro' },
-						__( 'Each page is created as a new published page on your site, headers and footers go to the ShapeBlock Theme Builder. Links between the demo’s pages are pointed at your new pages.', TD )
+						__( 'Each page is created as a new published page on your site, headers and footers go to the ShapeBlock Theme Builder. Links between the demo’s pages are pointed at your new pages.', 'shapeblock' )
 					),
-					el( 'p', { className: 'sbtl-import__heading' }, __( 'Content', TD ) ),
+					el( 'p', { className: 'sbtl-import__heading' }, __( 'Content', 'shapeblock' ) ),
 					el(
 						'ul',
 						{ className: 'sbtl-import__list' },
@@ -254,7 +254,7 @@
 							el(
 								'li',
 								{ className: 'sbtl-import__row is-setup' },
-								el( 'span', { className: 'sbtl-import__setup' }, el( Icon, { name: 'database-import' } ), __( 'Demo content: blog posts, media and menus', TD ) ),
+								el( 'span', { className: 'sbtl-import__setup' }, el( Icon, { name: 'database-import' } ), __( 'Demo content: blog posts, media and menus', 'shapeblock' ) ),
 								el( 'span', { className: 'sbtl-import__tags' } ),
 								el( 'span', { className: 'sbtl-import__status' }, el( StatusCell, { state: progress[ XML_KEY ] } ) )
 							),
@@ -262,50 +262,50 @@
 							el(
 								'li',
 								{ className: 'sbtl-import__row is-setup' },
-								el( 'span', { className: 'sbtl-import__setup' }, el( Icon, { name: 'admin-generic' } ), __( 'Site setup: links, menus and settings', TD ) ),
+								el( 'span', { className: 'sbtl-import__setup' }, el( Icon, { name: 'admin-generic' } ), __( 'Site setup: links, menus and settings', 'shapeblock' ) ),
 								el( 'span', { className: 'sbtl-import__tags' } ),
 								el( 'span', { className: 'sbtl-import__status' }, el( StatusCell, { state: progress[ SETUP_KEY ] } ) )
 							)
 					),
-					el( 'p', { className: 'sbtl-import__heading' }, __( 'Options', TD ) ),
+					el( 'p', { className: 'sbtl-import__heading' }, __( 'Options', 'shapeblock' ) ),
 					el(
 						'div',
 						{ className: 'sbtl-import__options' },
 						setup.xml &&
 							option(
-								__( 'Import the demo’s other content (blog posts, media, menus)', TD ),
+								__( 'Import the demo’s other content (blog posts, media, menus)', 'shapeblock' ),
 								withXml,
 								setWithXml,
-								__( 'Added from the demo’s content file; anything with the same name that already exists is kept as it is.', TD )
+								__( 'Added from the demo’s content file; anything with the same name that already exists is kept as it is.', 'shapeblock' )
 							),
 						config.canUpload &&
-							option( __( 'Copy images to the Media Library', TD ), media, ( v ) => {
+							option( __( 'Copy images to the Media Library', 'shapeblock' ), media, ( v ) => {
 								setMedia( v );
 								TL.writePref( MEDIA_PREF, v );
 							} ),
 						landing &&
 							option(
 								/* translators: %s: landing page name. */
-								sprintf( __( 'Set “%s” as the homepage', TD ), landing.title ),
+								sprintf( __( 'Set “%s” as the homepage', 'shapeblock' ), landing.title ),
 								front,
 								setFront
 							),
 						items.some( isPart ) &&
-							option( __( 'Use the header and footer on the entire site', TD ), activate, setActivate, __( 'Unticked, they are added to the Theme Builder but not shown anywhere yet.', TD ) ),
+							option( __( 'Use the header and footer on the entire site', 'shapeblock' ), activate, setActivate, __( 'Unticked, they are added to the Theme Builder but not shown anywhere yet.', 'shapeblock' ) ),
 						setup.menus.length > 0 &&
 							option(
 								setup.menus.length > 1
-									? /* translators: %d: number of menus. */ sprintf( __( 'Create the demo’s %d menus', TD ), setup.menus.length )
-									: /* translators: %s: menu name. */ sprintf( __( 'Create the menu “%s” and use it as the main menu', TD ), setup.menus[ 0 ].name ),
+									? /* translators: %d: number of menus. */ sprintf( __( 'Create the demo’s %d menus', 'shapeblock' ), setup.menus.length )
+									: /* translators: %s: menu name. */ sprintf( __( 'Create the menu “%s” and use it as the main menu', 'shapeblock' ), setup.menus[ 0 ].name ),
 								menus,
 								setMenus
 							),
 						hasDesign &&
-							option( __( 'Apply the demo’s design settings (ShapeBlock colors & layout, custom CSS)', TD ), design, setDesign ),
+							option( __( 'Apply the demo’s design settings (ShapeBlock colors & layout, custom CSS)', 'shapeblock' ), design, setDesign ),
 						hasSite &&
 							option(
 								/* translators: %s: the demo's site title. */
-								sprintf( __( 'Use the demo’s site title and tagline (“%s”)', TD ), settings.site.title || settings.site.tagline ),
+								sprintf( __( 'Use the demo’s site title and tagline (“%s”)', 'shapeblock' ), settings.site.title || settings.site.tagline ),
 								site,
 								setSite
 							)
@@ -315,8 +315,8 @@
 							Notice,
 							{ status: failed ? 'warning' : 'success', isDismissible: false },
 							failed
-								? /* translators: %d: number of steps that failed. */ sprintf( _n( 'Import finished, but %d step failed.', 'Import finished, but %d steps failed.', failed, TD ), failed )
-								: __( 'Import complete. Your new website is ready.', TD )
+								? /* translators: %d: number of steps that failed. */ sprintf( _n( 'Import finished, but %d step failed.', 'Import finished, but %d steps failed.', failed, 'shapeblock' ), failed )
+								: __( 'Import complete. Your new website is ready.', 'shapeblock' )
 						),
 					el(
 						'div',
@@ -325,27 +325,27 @@
 							el(
 								Fragment,
 								null,
-								el( Button, { variant: 'tertiary', onClick: onClose }, __( 'Cancel', TD ) ),
+								el( Button, { variant: 'tertiary', onClick: onClose }, __( 'Cancel', 'shapeblock' ) ),
 								el(
 									Button,
 									{ variant: 'primary', disabled: ! chosen.length, onClick: run },
 									/* translators: %d: number of pages and parts to import. */
-									sprintf( _n( 'Import %d item', 'Import %d items', chosen.length, TD ), chosen.length )
+									sprintf( _n( 'Import %d item', 'Import %d items', chosen.length, 'shapeblock' ), chosen.length )
 								)
 							),
-						phase === 'running' && el( Button, { variant: 'primary', isBusy: true, disabled: true }, __( 'Importing…', TD ) ),
+						phase === 'running' && el( Button, { variant: 'primary', isBusy: true, disabled: true }, __( 'Importing…', 'shapeblock' ) ),
 						phase === 'done' &&
 							el(
 								Fragment,
 								null,
-								el( Button, { variant: 'tertiary', href: config.pagesUrl }, __( 'Go to Pages', TD ) ),
-								items.some( isPart ) && el( Button, { variant: 'tertiary', href: config.themeBuilder }, __( 'Theme Builder', TD ) ),
+								el( Button, { variant: 'tertiary', href: config.pagesUrl }, __( 'Go to Pages', 'shapeblock' ) ),
+								items.some( isPart ) && el( Button, { variant: 'tertiary', href: config.themeBuilder }, __( 'Theme Builder', 'shapeblock' ) ),
 								el(
 									Button,
 									{ variant: 'secondary', href: frontDone ? config.homeUrl : config.pagesUrl, target: frontDone ? '_blank' : undefined },
-									frontDone ? __( 'View site', TD ) : __( 'View pages', TD )
+									frontDone ? __( 'View site', 'shapeblock' ) : __( 'View pages', 'shapeblock' )
 								),
-								el( Button, { variant: 'primary', onClick: onClose }, __( 'Done', TD ) )
+								el( Button, { variant: 'primary', onClick: onClose }, __( 'Done', 'shapeblock' ) )
 							)
 					)
 				)
@@ -432,7 +432,7 @@
 						className: 'sbtl-heart' + ( favourite ? ' is-on' : '' ),
 						'aria-pressed': favourite,
 						/* translators: %s: template name. */
-						'aria-label': sprintf( favourite ? __( 'Remove %s from favourites', TD ) : __( 'Add %s to favourites', TD ), group.name ),
+						'aria-label': sprintf( favourite ? __( 'Remove %s from favourites', 'shapeblock' ) : __( 'Add %s to favourites', 'shapeblock' ), group.name ),
 						onClick: onFavourite,
 					},
 					el( Icon, { name: 'heart' } )
@@ -446,7 +446,7 @@
 					'p',
 					null,
 					/* translators: %d: number of pages and parts in a demo. */
-					sprintf( _n( '%d item', '%d items', count, TD ), count ) + ( cats ? ' · ' + cats : '' )
+					sprintf( _n( '%d item', '%d items', count, 'shapeblock' ), count ) + ( cats ? ' · ' + cats : '' )
 				)
 			)
 		);
@@ -474,8 +474,8 @@
 
 		return el(
 			'nav',
-			{ className: 'sbtl-catbar', 'aria-label': __( 'Categories', TD ) },
-			chip( { slug: '', name: __( 'All templates', TD ) } ),
+			{ className: 'sbtl-catbar', 'aria-label': __( 'Categories', 'shapeblock' ) },
+			chip( { slug: '', name: __( 'All templates', 'shapeblock' ) } ),
 			inline.map( chip ),
 			rest.length > 0 &&
 				el( Dropdown, {
@@ -485,7 +485,7 @@
 						el(
 							'button',
 							{ type: 'button', className: 'sbtl-cat' + ( restActive ? ' is-active' : '' ), 'aria-expanded': isOpen, onClick: onToggle },
-							restActive ? restActive.name : __( 'More', TD ),
+							restActive ? restActive.name : __( 'More', 'shapeblock' ),
 							el( Icon, { name: 'arrow-down-alt2' } )
 						),
 					renderContent: ( { onClose } ) =>
@@ -557,8 +557,8 @@
 
 		function actionsFor( g ) {
 			return TL.extensionActions(
-				[ { key: 'import', label: __( 'Start Import', TD ), variant: 'light', onClick: () => setImporting( g ) } ].concat(
-					TL.groupPreviewUrl( g ) ? [ { key: 'live', label: __( 'Live Preview', TD ), variant: 'dark', onClick: () => setPreview( g ) } ] : []
+				[ { key: 'import', label: __( 'Start Import', 'shapeblock' ), variant: 'light', onClick: () => setImporting( g ) } ].concat(
+					TL.groupPreviewUrl( g ) ? [ { key: 'live', label: __( 'Live Preview', 'shapeblock' ), variant: 'dark', onClick: () => setPreview( g ) } ] : []
 				),
 				{ group: g, screen: 'admin', place: 'card' }
 			);
@@ -572,10 +572,10 @@
 				el( TL.StateMessage, {
 					status: groups.status,
 					error: groups.error,
-					empty: onlyFavourites && ! favourites.list.length ? __( 'No favourites yet. Tap the heart on a template to keep it here.', TD ) : __( 'No templates match your filters.', TD ),
+					empty: onlyFavourites && ! favourites.list.length ? __( 'No favourites yet. Tap the heart on a template to keep it here.', 'shapeblock' ) : __( 'No templates match your filters.', 'shapeblock' ),
 					onRetry: () => setReload( reload + 1 ),
 				} ),
-				groups.status === 'ready' && filtered && el( Button, { variant: 'secondary', onClick: resetFilters }, __( 'Clear filters', TD ) )
+				groups.status === 'ready' && filtered && el( Button, { variant: 'secondary', onClick: resetFilters }, __( 'Clear filters', 'shapeblock' ) )
 			);
 		} else {
 			body = el(
@@ -603,21 +603,21 @@
 					'div',
 					{ className: 'sbtl-topbar__brand' },
 					el( 'span', { className: 'sbtl-topbar__logo' }, config.logo && el( 'img', { src: config.logo, alt: '' } ) ),
-					el( 'span', { className: 'sbtl-topbar__name' }, el( 'strong', null, 'ShapeBlock' ), el( 'small', null, __( 'Starter Templates', TD ) ) )
+					el( 'span', { className: 'sbtl-topbar__name' }, el( 'strong', null, 'ShapeBlock' ), el( 'small', null, __( 'Starter Templates', 'shapeblock' ) ) )
 				),
 				el(
 					'div',
 					{ className: 'sbtl-topbar__tools' },
 					el( TL.UpgradeLink ),
-					el( 'a', { className: 'sbtl-pill is-ghost', href: config.dashboardUrl }, el( Icon, { name: 'arrow-left-alt2' } ), __( 'Back to Dashboard', TD ) ),
+					el( 'a', { className: 'sbtl-pill is-ghost', href: config.dashboardUrl }, el( Icon, { name: 'arrow-left-alt2' } ), __( 'Back to Dashboard', 'shapeblock' ) ),
 					el(
 						'button',
 						{
 							type: 'button',
 							className: 'sbtl-iconbtn' + ( onlyFavourites ? ' is-on' : '' ),
 							'aria-pressed': onlyFavourites,
-							title: __( 'Show favourites', TD ),
-							'aria-label': __( 'Show favourites', TD ),
+							title: __( 'Show favourites', 'shapeblock' ),
+							'aria-label': __( 'Show favourites', 'shapeblock' ),
 							onClick: () => setOnlyFavourites( ! onlyFavourites ),
 						},
 						el( Icon, { name: 'heart' } ),
@@ -625,14 +625,14 @@
 					),
 					el(
 						'button',
-						{ type: 'button', className: 'sbtl-iconbtn', title: __( 'Refresh templates', TD ), 'aria-label': __( 'Refresh templates', TD ), onClick: () => setReload( reload + 1 ) },
+						{ type: 'button', className: 'sbtl-iconbtn', title: __( 'Refresh templates', 'shapeblock' ), 'aria-label': __( 'Refresh templates', 'shapeblock' ), onClick: () => setReload( reload + 1 ) },
 						el( Icon, { name: 'update' } )
 					),
 					el(
 						'span',
 						{ className: 'sbtl-count' },
 						/* translators: %d: number of templates. */
-						sprintf( _n( '%d template', '%d templates', all.length, TD ), all.length )
+						sprintf( _n( '%d template', '%d templates', all.length, 'shapeblock' ), all.length )
 					),
 					el( TL.ExtensionTools, { state: ext.state, setState: ext.setState, screen: 'admin' } )
 				)
@@ -640,18 +640,18 @@
 			el(
 				'section',
 				{ className: 'sbtl-hero' },
-				el( 'span', { className: 'sbtl-hero__eyebrow' }, __( 'Template library', TD ) ),
-				el( 'h1', null, __( 'ShapeBlock Starter Templates', TD ) ),
-				el( 'p', null, __( 'Complete block websites, free to use. Preview a template, import its pages, header, footer, menu and settings in one click, then make it yours.', TD ) ),
+				el( 'span', { className: 'sbtl-hero__eyebrow' }, __( 'Template library', 'shapeblock' ) ),
+				el( 'h1', null, __( 'ShapeBlock Starter Templates', 'shapeblock' ) ),
+				el( 'p', null, __( 'Complete block websites, free to use. Preview a template, import its pages, header, footer, menu and settings in one click, then make it yours.', 'shapeblock' ) ),
 				el(
 					'label',
 					{ className: 'sbtl-hero__search' },
 					el( Icon, { name: 'search' } ),
-					el( 'span', { className: 'screen-reader-text' }, __( 'Search templates', TD ) ),
+					el( 'span', { className: 'screen-reader-text' }, __( 'Search templates', 'shapeblock' ) ),
 					el( 'input', {
 						type: 'search',
 						value: searchInput,
-						placeholder: __( 'What kind of website are you building?', TD ),
+						placeholder: __( 'What kind of website are you building?', 'shapeblock' ),
 						onChange: ( e ) => setSearchInput( e.target.value ),
 					} )
 				)
@@ -666,8 +666,8 @@
 						'p',
 						{ className: 'sbtl-summary' },
 						/* translators: %d: number of templates shown. */
-						sprintf( _n( '%d template', '%d templates', shown.length, TD ), shown.length ),
-						filtered && el( Button, { variant: 'link', onClick: resetFilters }, __( 'Clear filters', TD ) )
+						sprintf( _n( '%d template', '%d templates', shown.length, 'shapeblock' ), shown.length ),
+						filtered && el( Button, { variant: 'link', onClick: resetFilters }, __( 'Clear filters', 'shapeblock' ) )
 					),
 				body,
 				el( TL.UpgradeBar )
@@ -683,10 +683,10 @@
 						url: TL.groupPreviewUrl( preview ),
 						image: TL.groupImage( preview ),
 						onBack: () => setPreview( null ),
-						backLabel: __( 'Back to templates', TD ),
+						backLabel: __( 'Back to templates', 'shapeblock' ),
 						actions: TL.actionButtons(
 							TL.extensionActions(
-								[ { key: 'import', label: __( 'Start Import', TD ), icon: 'download', variant: 'light', onClick: () => setImporting( preview ) } ],
+								[ { key: 'import', label: __( 'Start Import', 'shapeblock' ), icon: 'download', variant: 'light', onClick: () => setImporting( preview ) } ],
 								{ group: preview, screen: 'admin', place: 'preview' }
 							)
 						),

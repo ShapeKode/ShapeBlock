@@ -56,18 +56,6 @@ function shapeblock_term_color( $term_id ) {
 }
 
 /**
- * A style attribute that hands the category colour to the badge CSS, or an
- * empty string when the category has none.
- *
- * @param int $term_id Category ID.
- * @return string
- */
-function shapeblock_term_color_attr( $term_id ) {
-	$color = shapeblock_term_color( $term_id );
-	return '' !== $color ? ' style="' . esc_attr( '--sb-term-color:' . $color ) . '"' : '';
-}
-
-/**
  * The colour field on the Add Category form.
  */
 function shapeblock_term_color_add_field() {

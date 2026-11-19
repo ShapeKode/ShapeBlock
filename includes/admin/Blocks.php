@@ -155,6 +155,12 @@ class Blocks {
                 'iconClass'    => 'shapeblock-icon-countdown',
             ],
             [
+                'title'       => __( 'Business Hours', 'shapeblock' ),
+                'id'          => 'business-hours',
+                'description' => __( 'Opening hours with today highlighted and an Open now badge.', 'shapeblock' ),
+                'iconClass'    => 'shapeblock-icon-countdown',
+            ],
+            [
                 'title'       => __( 'Table', 'shapeblock' ),
                 'id'          => 'table',
                 'description' => __( 'Data table with icons.', 'shapeblock' ),
@@ -283,6 +289,7 @@ class Blocks {
             'isotope'           => 'showcase',
             'filter-list'       => 'content',
             'countdown'         => 'showcase',
+            'business-hours'    => 'content',
             'menu'              => 'header-footer',
             'search'            => 'header-footer',
             'breadcrumb'        => 'header-footer',

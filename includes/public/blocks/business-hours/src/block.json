@@ -1,0 +1,582 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "shapeblock/business-hours",
+	"version": "1.0.0",
+	"title": "Business Hours",
+	"category": "shapeblock",
+	"description": "Opening hours for each day, with today highlighted and an Open now or Closed now badge that follows the site time.",
+	"keywords": [
+		"business hours",
+		"opening hours",
+		"open",
+		"schedule",
+		"timetable",
+		"working hours"
+	],
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "shapeblock",
+	"editorScript": "file:./index.js",
+	"viewScript": "file:./view.js",
+	"render": "file:./render.php",
+	"attributes": {
+		"advPadding": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advPaddingTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advPaddingMobile": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMargin": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMarginTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMarginMobile": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advBgColor": {
+			"type": "string",
+			"default": ""
+		},
+		"advBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"advPosition": {
+			"type": "string",
+			"default": ""
+		},
+		"advHAlign": {
+			"type": "string",
+			"default": ""
+		},
+		"advVAlign": {
+			"type": "string",
+			"default": ""
+		},
+		"advTop": {
+			"type": "string",
+			"default": ""
+		},
+		"advTopTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advTopMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advRight": {
+			"type": "string",
+			"default": ""
+		},
+		"advRightTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advRightMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottom": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottomTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottomMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeft": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeftTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeftMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidth": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidthTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidthMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advZIndex": {
+			"type": "string",
+			"default": ""
+		},
+		"hideDesktop": {
+			"type": "boolean",
+			"default": false
+		},
+		"hideTablet": {
+			"type": "boolean",
+			"default": false
+		},
+		"hideMobile": {
+			"type": "boolean",
+			"default": false
+		},
+		"blockId": {
+			"type": "string",
+			"default": ""
+		},
+		"showTitle": {
+			"type": "boolean",
+			"default": true
+		},
+		"title": {
+			"type": "string",
+			"default": "Opening Hours"
+		},
+		"titleTag": {
+			"type": "string",
+			"default": "h3"
+		},
+		"showStatus": {
+			"type": "boolean",
+			"default": true
+		},
+		"statusOpenText": {
+			"type": "string",
+			"default": "Open now"
+		},
+		"statusClosedText": {
+			"type": "string",
+			"default": "Closed now"
+		},
+		"statusPosition": {
+			"type": "string",
+			"default": "below"
+		},
+		"statusDot": {
+			"type": "boolean",
+			"default": true
+		},
+		"items": {
+			"type": "array",
+			"default": [
+				{
+					"day": "Monday",
+					"weekday": "1",
+					"open": "09:00",
+					"close": "18:00",
+					"mode": "hours",
+					"note": ""
+				},
+				{
+					"day": "Tuesday",
+					"weekday": "2",
+					"open": "09:00",
+					"close": "18:00",
+					"mode": "hours",
+					"note": ""
+				},
+				{
+					"day": "Wednesday",
+					"weekday": "3",
+					"open": "09:00",
+					"close": "18:00",
+					"mode": "hours",
+					"note": ""
+				},
+				{
+					"day": "Thursday",
+					"weekday": "4",
+					"open": "09:00",
+					"close": "18:00",
+					"mode": "hours",
+					"note": ""
+				},
+				{
+					"day": "Friday",
+					"weekday": "5",
+					"open": "09:00",
+					"close": "18:00",
+					"mode": "hours",
+					"note": ""
+				},
+				{
+					"day": "Saturday",
+					"weekday": "6",
+					"open": "10:00",
+					"close": "16:00",
+					"mode": "hours",
+					"note": ""
+				},
+				{
+					"day": "Sunday",
+					"weekday": "0",
+					"open": "",
+					"close": "",
+					"mode": "closed",
+					"note": ""
+				}
+			]
+		},
+		"timeFormat": {
+			"type": "string",
+			"default": "12"
+		},
+		"timeSeparator": {
+			"type": "string",
+			"default": " – "
+		},
+		"closedLabel": {
+			"type": "string",
+			"default": "Closed"
+		},
+		"allDayLabel": {
+			"type": "string",
+			"default": "Open 24 hours"
+		},
+		"highlightToday": {
+			"type": "boolean",
+			"default": true
+		},
+		"todayLabel": {
+			"type": "string",
+			"default": "Today"
+		},
+		"footerNote": {
+			"type": "string",
+			"default": ""
+		},
+		"layout": {
+			"type": "string",
+			"default": "row"
+		},
+		"leader": {
+			"type": "string",
+			"default": "none"
+		},
+		"textAlign": {
+			"type": "string",
+			"default": "left"
+		},
+		"divider": {
+			"type": "boolean",
+			"default": true
+		},
+		"dividerStyle": {
+			"type": "string",
+			"default": "solid"
+		},
+		"dividerColor": {
+			"type": "string",
+			"default": ""
+		},
+		"dividerWidth": {
+			"type": "string",
+			"default": ""
+		},
+		"boxBg": {
+			"type": "string",
+			"default": ""
+		},
+		"boxBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"boxBorder": {
+			"type": "object",
+			"default": {}
+		},
+		"boxRadius": {
+			"type": "object",
+			"default": {}
+		},
+		"boxShadow": {
+			"type": "object",
+			"default": {}
+		},
+		"titleColor": {
+			"type": "string",
+			"default": ""
+		},
+		"statusOpenColor": {
+			"type": "string",
+			"default": ""
+		},
+		"statusOpenBg": {
+			"type": "string",
+			"default": ""
+		},
+		"statusOpenBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"statusClosedColor": {
+			"type": "string",
+			"default": ""
+		},
+		"statusClosedBg": {
+			"type": "string",
+			"default": ""
+		},
+		"statusClosedBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"statusRadius": {
+			"type": "string",
+			"default": ""
+		},
+		"dayColor": {
+			"type": "string",
+			"default": ""
+		},
+		"timeColor": {
+			"type": "string",
+			"default": ""
+		},
+		"closedColor": {
+			"type": "string",
+			"default": ""
+		},
+		"noteColor": {
+			"type": "string",
+			"default": ""
+		},
+		"rowBg": {
+			"type": "string",
+			"default": ""
+		},
+		"rowBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"rowBgAlt": {
+			"type": "string",
+			"default": ""
+		},
+		"rowBgAltGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"rowRadius": {
+			"type": "string",
+			"default": ""
+		},
+		"todayColor": {
+			"type": "string",
+			"default": ""
+		},
+		"todayTimeColor": {
+			"type": "string",
+			"default": ""
+		},
+		"todayBg": {
+			"type": "string",
+			"default": ""
+		},
+		"todayBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"todayBadgeColor": {
+			"type": "string",
+			"default": ""
+		},
+		"todayBadgeBg": {
+			"type": "string",
+			"default": ""
+		},
+		"todayBadgeBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"leaderColor": {
+			"type": "string",
+			"default": ""
+		},
+		"boxPadding": {
+			"type": "object",
+			"default": {}
+		},
+		"boxPaddingTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"boxPaddingMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"rowPadding": {
+			"type": "object",
+			"default": {}
+		},
+		"rowPaddingTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"rowPaddingMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"statusPadding": {
+			"type": "object",
+			"default": {}
+		},
+		"statusPaddingTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"statusPaddingMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"titleTypography": {
+			"type": "object",
+			"default": {}
+		},
+		"titleTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"titleTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"statusTypography": {
+			"type": "object",
+			"default": {}
+		},
+		"statusTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"statusTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"dayTypography": {
+			"type": "object",
+			"default": {}
+		},
+		"dayTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"dayTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"timeTypography": {
+			"type": "object",
+			"default": {}
+		},
+		"timeTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"timeTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"noteTypography": {
+			"type": "object",
+			"default": {}
+		},
+		"noteTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"noteTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"titleGap": {
+			"type": "string",
+			"default": ""
+		},
+		"titleGapTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"titleGapMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"rowGap": {
+			"type": "string",
+			"default": ""
+		},
+		"rowGapTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"rowGapMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"columnGap": {
+			"type": "string",
+			"default": ""
+		},
+		"columnGapTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"columnGapMobile": {
+			"type": "string",
+			"default": ""
+		}
+	}
+}

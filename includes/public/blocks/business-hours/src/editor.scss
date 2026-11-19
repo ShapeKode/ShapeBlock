@@ -1,0 +1,89 @@
+/**
+ * Editor-only styles for the Business Hours block: the collapsible day rows in
+ * the sidebar (the same quiet list look as the Icon List repeater).
+ */
+.shapeblock-bh-repeater-item {
+	border-bottom: 1px solid #e0e0e0;
+
+	&:first-child {
+		border-top: 1px solid #e0e0e0;
+	}
+
+	&:last-of-type {
+		margin-bottom: 16px;
+	}
+}
+
+.shapeblock-bh-repeater-toggle {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	padding: 12px 2px;
+	background: none;
+	border: 0;
+	cursor: pointer;
+	text-align: left;
+
+	strong {
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-size: 13px;
+		font-weight: 600;
+		color: #1e1e1e;
+	}
+
+	&:hover strong {
+		color: #3858e9;
+	}
+}
+
+.shapeblock-bh-repeater-sub {
+	flex: none;
+	font-size: 12px;
+	color: #757575;
+}
+
+.shapeblock-bh-caret {
+	display: inline-flex;
+	flex: none;
+	transition: transform 0.2s ease;
+
+	svg {
+		width: 18px;
+		height: 18px;
+		fill: #949494;
+	}
+}
+
+.shapeblock-bh-repeater-body {
+	padding: 4px 2px 16px;
+
+	> * {
+		margin-bottom: 14px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+.shapeblock-bh-times {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+}
+
+.shapeblock-bh-hint {
+	margin: 0;
+	font-size: 12px;
+	color: #757575;
+}
+
+.shapeblock-bh-repeater-actions {
+	display: flex;
+	gap: 4px;
+}

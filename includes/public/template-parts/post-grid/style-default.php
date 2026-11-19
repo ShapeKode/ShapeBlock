@@ -25,7 +25,8 @@
                         if ( 'uncategorized' === $shapeblock_img_cat->slug ) {
                             continue;
                         }
-                        echo '<a class="shapeblock-meta-cat shapeblock-img-badge" href="' . esc_url( get_category_link( $shapeblock_img_cat->term_id ) ) . '"' . shapeblock_term_color_attr( $shapeblock_img_cat->term_id ) . '>' . esc_html( $shapeblock_img_cat->name ) . '</a>';
+                        $shapeblock_img_color = shapeblock_term_color( $shapeblock_img_cat->term_id );
+                        echo '<a class="shapeblock-meta-cat shapeblock-img-badge" href="' . esc_url( get_category_link( $shapeblock_img_cat->term_id ) ) . '"' . ( '' !== $shapeblock_img_color ? ' style="' . esc_attr( '--sb-term-color:' . $shapeblock_img_color ) . '"' : '' ) . '>' . esc_html( $shapeblock_img_cat->name ) . '</a>';
                         break;
                     }
                 }

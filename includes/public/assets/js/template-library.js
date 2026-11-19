@@ -24,18 +24,18 @@
 	const { Button, Modal, Notice, SearchControl, CheckboxControl, Spinner } = wp.components;
 	const { parse, isUnmodifiedDefaultBlock } = wp.blocks;
 	const { __, _n, sprintf } = wp.i18n;
-	const { config, BASE, TD, TYPE_LABELS, apiFetch, addQueryArgs, errorMessage } = TL;
+	const { config, BASE, TYPE_LABELS, apiFetch, addQueryArgs, errorMessage } = TL;
 	const blockEditorStore = 'core/block-editor';
 
 	const OPEN_EVENT = 'shapeblock:template-library';
 	const MEDIA_PREF = 'shapeblockTemplateLibraryMedia';
 
 	const TABS = [
-		{ slug: 'templates', label: __( 'Templates', TD ) },
-		{ slug: 'page', label: __( 'Pages', TD ) },
-		{ slug: 'pattern', label: __( 'Sections', TD ) },
-		{ slug: 'header', label: __( 'Headers', TD ) },
-		{ slug: 'footer', label: __( 'Footers', TD ) },
+		{ slug: 'templates', label: __( 'Templates', 'shapeblock' ) },
+		{ slug: 'page', label: __( 'Pages', 'shapeblock' ) },
+		{ slug: 'pattern', label: __( 'Sections', 'shapeblock' ) },
+		{ slug: 'header', label: __( 'Headers', 'shapeblock' ) },
+		{ slug: 'footer', label: __( 'Footers', 'shapeblock' ) },
 	];
 
 	/* ------------------------------------------------------------------ */
@@ -132,7 +132,7 @@
 		function insert( item, mode ) {
 			if ( mode === 'replace' && hasContent() ) {
 				// eslint-disable-next-line no-alert
-				if ( ! window.confirm( __( 'Replace all existing content with this template? You can undo it afterwards.', TD ) ) ) {
+				if ( ! window.confirm( __( 'Replace all existing content with this template? You can undo it afterwards.', 'shapeblock' ) ) ) {
 					return;
 				}
 			}
@@ -144,7 +144,7 @@
 				.then( ( r ) => {
 					const blocks = parse( r.content || '' );
 					if ( ! blocks.length ) {
-						throw { message: __( 'This template has no content to insert.', TD ) };
+						throw { message: __( 'This template has no content to insert.', 'shapeblock' ) };
 					}
 					insertBlocks( blocks, mode );
 					setBusyKey( '' );
@@ -155,11 +155,11 @@
 						copied
 							? sprintf(
 								/* translators: 1: template name, 2: number of images copied. */
-								_n( '“%1$s” inserted. %2$d image copied to the Media Library.', '“%1$s” inserted. %2$d images copied to the Media Library.', copied, TD ),
+								_n( '“%1$s” inserted. %2$d image copied to the Media Library.', '“%1$s” inserted. %2$d images copied to the Media Library.', copied, 'shapeblock' ),
 								item.title,
 								copied
 							)
-							: /* translators: %s: template name. */ sprintf( __( '“%s” inserted.', TD ), item.title )
+							: /* translators: %s: template name. */ sprintf( __( '“%s” inserted.', 'shapeblock' ), item.title )
 					);
 				} )
 				.catch( ( err ) => {
@@ -172,14 +172,14 @@
 		function itemActions( item, withReplace ) {
 			const key = item.type + '-' + item.id;
 			const actions = [
-				{ key: 'insert', label: __( 'Insert', TD ), icon: 'download', variant: 'light', busy: busyKey === key, onClick: () => insert( item, 'insert' ) },
+				{ key: 'insert', label: __( 'Insert', 'shapeblock' ), icon: 'download', variant: 'light', busy: busyKey === key, onClick: () => insert( item, 'insert' ) },
 			];
 			if ( withReplace && ( item.type === 'template' || item.type === 'page' ) ) {
-				actions.push( { key: 'replace', label: __( 'Replace all content', TD ), variant: 'outline', onClick: () => insert( item, 'replace' ) } );
+				actions.push( { key: 'replace', label: __( 'Replace all content', 'shapeblock' ), variant: 'outline', onClick: () => insert( item, 'replace' ) } );
 			} else {
 				actions.push( {
 					key: 'preview',
-					label: __( 'Preview', TD ),
+					label: __( 'Preview', 'shapeblock' ),
 					variant: 'dark',
 					onClick: () => {
 						setInsertError( null );
@@ -197,7 +197,7 @@
 				title: item.title,
 				meta: showType ? TYPE_LABELS[ item.type ] : item.label,
 				image: item.thumbnail && ( item.thumbnail.large || item.thumbnail.url ),
-				badge: showType && item.is_landing ? __( 'Landing', TD ) : '',
+				badge: showType && item.is_landing ? __( 'Landing', 'shapeblock' ) : '',
 				badges: TL.extensionBadges( { item } ),
 				busy: busyKey === key,
 				actions: itemActions( item, false ),
@@ -225,7 +225,7 @@
 					setInsertError( null );
 				},
 				/* translators: %s: template group name. */
-				backLabel: group ? sprintf( __( 'Back to %s', TD ), group.name ) : __( 'Back', TD ),
+				backLabel: group ? sprintf( __( 'Back to %s', 'shapeblock' ), group.name ) : __( 'Back', 'shapeblock' ),
 				notice: err && el( Notice, { status: 'error', isDismissible: false, className: 'sbtl-preview__notice' }, err.message ),
 				actions: TL.actionButtons( itemActions( preview, true ) ),
 			} );
@@ -237,19 +237,19 @@
 				.filter( ( t ) => t.count > 0 );
 			const shown = all.filter( ( i ) => ( ! partType || i.type === partType ) && ( ! needle || i.title.toLowerCase().indexOf( needle ) !== -1 ) );
 
-			sidebar = el( TL.SideList, { title: __( 'Show', TD ), items: types, value: partType, onChange: setPartType, allCount: all.length } );
+			sidebar = el( TL.SideList, { title: __( 'Show', 'shapeblock' ), items: types, value: partType, onChange: setPartType, allCount: all.length } );
 			content = el(
 				Fragment,
 				null,
 				el(
 					'div',
 					{ className: 'sbtl-crumb' },
-					el( Button, { icon: 'arrow-left-alt2', onClick: () => setGroup( null ) }, __( 'All templates', TD ) ),
+					el( Button, { icon: 'arrow-left-alt2', onClick: () => setGroup( null ) }, __( 'All templates', 'shapeblock' ) ),
 					el( 'h2', null, group.name )
 				),
 				g && g.description && el( 'p', { className: 'sbtl-intro' }, g.description ),
 				groupData.status !== 'ready' || ! shown.length
-					? el( TL.StateMessage, { status: groupData.status, error: groupData.error, empty: __( 'Nothing matches your search.', TD ) } )
+					? el( TL.StateMessage, { status: groupData.status, error: groupData.error, empty: __( 'Nothing matches your search.', 'shapeblock' ) } )
 					: el( 'ul', { className: 'sbtl-grid' }, shown.map( ( item ) => itemCard( item, true ) ) )
 			);
 		} else if ( ! isList ) {
@@ -261,10 +261,10 @@
 					( ! needle || g.name.toLowerCase().indexOf( needle ) !== -1 )
 			);
 
-			sidebar = el( TL.SideList, { title: __( 'Categories', TD ), items: facets, value: category, onChange: setCategory, allCount: list2.length } );
+			sidebar = el( TL.SideList, { title: __( 'Categories', 'shapeblock' ), items: facets, value: category, onChange: setCategory, allCount: list2.length } );
 			content =
 				groups.status !== 'ready' || ! shown.length
-					? el( TL.StateMessage, { status: groups.status, error: groups.error, empty: __( 'No templates match your filters.', TD ) } )
+					? el( TL.StateMessage, { status: groups.status, error: groups.error, empty: __( 'No templates match your filters.', 'shapeblock' ) } )
 					: el(
 						'ul',
 						{ className: 'sbtl-grid' },
@@ -275,14 +275,14 @@
 								key: g.slug,
 								title: g.name,
 								/* translators: %d: number of pages and parts in a template. */
-								meta: sprintf( _n( '%d item', '%d items', count, TD ), count ),
+								meta: sprintf( _n( '%d item', '%d items', count, 'shapeblock' ), count ),
 								image: TL.groupImage( g ),
 								badges: TL.extensionBadges( { group: g } ),
 								onOpen: () => openGroup( g ),
 								actions: TL.extensionActions(
-									[ { key: 'view', label: __( 'View pages', TD ), variant: 'light', onClick: () => openGroup( g ) } ].concat(
+									[ { key: 'view', label: __( 'View pages', 'shapeblock' ), variant: 'light', onClick: () => openGroup( g ) } ].concat(
 										landing && TL.groupPreviewUrl( g )
-											? [ { key: 'live', label: __( 'Live Preview', TD ), variant: 'dark', onClick: () => setPreview( { ...landing, preview_url: TL.groupPreviewUrl( g ) } ) } ]
+											? [ { key: 'live', label: __( 'Live Preview', 'shapeblock' ), variant: 'dark', onClick: () => setPreview( { ...landing, preview_url: TL.groupPreviewUrl( g ) } ) } ]
 											: []
 									),
 									{ group: g, screen: 'editor', place: 'card' }
@@ -293,14 +293,14 @@
 		} else {
 			const counts = list.counts;
 			sidebar = el( TL.SideList, {
-				title: __( 'Categories', TD ),
+				title: __( 'Categories', 'shapeblock' ),
 				items: list.facets.map( ( f ) => ( { slug: f.slug, name: f.name, count: f.count } ) ),
 				value: category,
 				onChange: setCategory,
 				allCount: counts ? counts.total : undefined,
 			} );
 			content = ! list.items.length
-				? el( TL.StateMessage, { status: list.status, error: list.error, empty: __( 'No templates match your filters.', TD ), onRetry: list.retry } )
+				? el( TL.StateMessage, { status: list.status, error: list.error, empty: __( 'No templates match your filters.', 'shapeblock' ), onRetry: list.retry } )
 				: el(
 					Fragment,
 					null,
@@ -311,7 +311,7 @@
 							'div',
 							{ className: 'sbtl-more' },
 							el( Notice, { status: 'error', isDismissible: false }, list.error ),
-							el( Button, { variant: 'secondary', onClick: list.retry }, __( 'Try again', TD ) )
+							el( Button, { variant: 'secondary', onClick: list.retry }, __( 'Try again', 'shapeblock' ) )
 						),
 					list.status === 'ready' && list.page < list.totalPages && el( TL.Sentinel, { onReach: list.loadMore } )
 				);
@@ -325,18 +325,18 @@
 				onRequestClose: onClose,
 				__experimentalHideHeader: true,
 				shouldCloseOnClickOutside: false,
-				title: __( 'Import Template', TD ),
+				title: __( 'Import Template', 'shapeblock' ),
 			},
 			el(
 				'div',
 				{ className: 'sbtl-head' },
-				el( 'h1', null, __( 'Import Template', TD ) ),
+				el( 'h1', null, __( 'Import Template', 'shapeblock' ) ),
 				el(
 					'div',
 					{ className: 'sbtl-head__tools' },
 					el( TL.UpgradeLink ),
-					el( Button, { icon: 'update', label: __( 'Refresh library', TD ), onClick: () => setReload( reload + 1 ) } ),
-					el( Button, { icon: 'no-alt', label: __( 'Close', TD ), onClick: onClose } )
+					el( Button, { icon: 'update', label: __( 'Refresh library', 'shapeblock' ), onClick: () => setReload( reload + 1 ) } ),
+					el( Button, { icon: 'no-alt', label: __( 'Close', 'shapeblock' ), onClick: onClose } )
 				)
 			),
 			el(
@@ -345,7 +345,7 @@
 				el( TL.Brand ),
 				el(
 					'div',
-					{ className: 'sbtl-tabs', role: 'tablist', 'aria-label': __( 'Template types', TD ) },
+					{ className: 'sbtl-tabs', role: 'tablist', 'aria-label': __( 'Template types', 'shapeblock' ) },
 					TABS.map( ( t ) =>
 						el(
 							'button',
@@ -365,9 +365,9 @@
 				! preview &&
 					el( SearchControl, {
 						className: 'sbtl-search',
-						label: __( 'Search templates', TD ),
+						label: __( 'Search templates', 'shapeblock' ),
 						/* translators: %s: tab name, e.g. Sections. */
-						placeholder: sprintf( __( 'Search %s…', TD ), TABS.find( ( t ) => t.slug === tab ).label.toLowerCase() ),
+						placeholder: sprintf( __( 'Search %s…', 'shapeblock' ), TABS.find( ( t ) => t.slug === tab ).label.toLowerCase() ),
 						value: searchInput,
 						onChange: setSearchInput,
 						__nextHasNoMarginBottom: true,
@@ -386,7 +386,7 @@
 								'div',
 								{ className: 'sbtl-side__foot' },
 								el( CheckboxControl, {
-									label: __( 'Copy images to Media Library', TD ),
+									label: __( 'Copy images to Media Library', 'shapeblock' ),
 									checked: media,
 									onChange: ( value ) => {
 										setMedia( value );
@@ -438,7 +438,7 @@
 		const button = document.createElement( 'button' );
 		button.type = 'button';
 		button.className = 'components-button sbtl-toggle';
-		button.setAttribute( 'aria-label', __( 'Open ShapeBlock Templates', TD ) );
+		button.setAttribute( 'aria-label', __( 'Open ShapeBlock Templates', 'shapeblock' ) );
 		if ( config.logo ) {
 			const img = document.createElement( 'img' );
 			img.src = config.logo;
@@ -446,7 +446,7 @@
 			button.appendChild( img );
 		}
 		const text = document.createElement( 'span' );
-		text.textContent = __( 'Templates', TD );
+		text.textContent = __( 'Templates', 'shapeblock' );
 		button.appendChild( text );
 		button.addEventListener( 'click', openLibrary );
 		toolbar.appendChild( button );
@@ -459,7 +459,7 @@
 		}
 		commands.registerCommand( {
 			name: 'shapeblock/template-library',
-			label: __( 'Open ShapeBlock Templates', TD ),
+			label: __( 'Open ShapeBlock Templates', 'shapeblock' ),
 			icon: 'layout',
 			callback: ( { close } ) => {
 				close();

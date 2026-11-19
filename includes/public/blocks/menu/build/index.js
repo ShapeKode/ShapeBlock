@@ -819,8 +819,8 @@
 
 				var fields = [
 					// A small badge on nested editors so it is always clear which level you are editing.
-					isTop ? null : el( 'div', { key: 'badge', className: 'shapeblock-menu-level-badge' }, sprintf( __( 'Level %d sub-item', 'shapeblock' ), level ) ),
-					el( TextControl, { key: 'label', label: isTop ? __( 'Label', 'shapeblock' ) : sprintf( __( 'Level %d label', 'shapeblock' ), level ), value: shapeblockStripTags( node.label || '' ), onChange: function ( v ) { updateAt( path, { label: v } ); } } ),
+					isTop ? null : el( 'div', { key: 'badge', className: 'shapeblock-menu-level-badge' }, /* translators: %d: menu level of the item. */ sprintf( __( 'Level %d sub-item', 'shapeblock' ), level ) ),
+					el( TextControl, { key: 'label', label: isTop ? __( 'Label', 'shapeblock' ) : /* translators: %d: menu level (2, 3 and so on). */ sprintf( __( 'Level %d label', 'shapeblock' ), level ), value: shapeblockStripTags( node.label || '' ), onChange: function ( v ) { updateAt( path, { label: v } ); } } ),
 					el( 'div', { key: 'link', className: 'shapeblock-menu-field' },
 						el( 'div', { className: 'shapeblock-menu-linkfield-label' }, __( 'Link', 'shapeblock' ) ),
 						el( LinkPicker, { url: node.url, onPick: function ( v ) {
@@ -834,9 +834,9 @@
 					// --- Nested dropdown items ( unlimited depth ). The heading names the level being added,
 					//     so the tree is easy to follow: Level 2 = dropdown, Level 3, Level 4, and so on. ---
 					el( 'div', { key: 'subs', className: 'shapeblock-menu-subsection' },
-						el( 'div', { className: 'shapeblock-menu-section-label' }, sprintf( __( 'Level %d dropdown items', 'shapeblock' ), subLvl ) ),
+						el( 'div', { className: 'shapeblock-menu-section-label' }, /* translators: %d: menu level of the dropdown items. */ sprintf( __( 'Level %d dropdown items', 'shapeblock' ), subLvl ) ),
 						childEditors,
-						el( Button, { variant: 'secondary', className: 'shapeblock-menu-add-child', onClick: function () { addChildAt( path, blankChild() ); } }, sprintf( __( '+ Add Level %d item', 'shapeblock' ), subLvl ) )
+						el( Button, { variant: 'secondary', className: 'shapeblock-menu-add-child', onClick: function () { addChildAt( path, blankChild() ); } }, /* translators: %d: menu level of the new item. */ sprintf( __( '+ Add Level %d item', 'shapeblock' ), subLvl ) )
 					),
 					// --- Actions ---
 					el( 'div', { key: 'actions', className: 'shapeblock-menu-item-actions' },
@@ -1388,7 +1388,7 @@
 						className: 'shapeblock-menu-subadd shapeblock-menu-subadd--leaf',
 						popoverProps: { className: 'shapeblock-menu-add-pop', placement: 'right-start' },
 						renderToggle: function ( t ) {
-							return el( Button, { icon: plusIcon, className: 'shapeblock-menu-sub-plus', label: sprintf( __( 'Add Level %d item', 'shapeblock' ), path.length + 1 ), showTooltip: true, 'aria-expanded': t.isOpen, onClick: t.onToggle } );
+							return el( Button, { icon: plusIcon, className: 'shapeblock-menu-sub-plus', label: /* translators: %d: menu level of the new item. */ sprintf( __( 'Add Level %d item', 'shapeblock' ), path.length + 1 ), showTooltip: true, 'aria-expanded': t.isOpen, onClick: t.onToggle } );
 						},
 						renderContent: subPickerContent
 					} );
