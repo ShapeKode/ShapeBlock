@@ -1,0 +1,449 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "shapeblock/contact-info",
+	"version": "1.0.0",
+	"title": "Contact Info",
+	"category": "shapeblock",
+	"description": "Phone, email, address, opening times and more, each with an icon and a link that opens the right app.",
+	"keywords": [
+		"contact",
+		"phone",
+		"email",
+		"address",
+		"whatsapp",
+		"info",
+		"details"
+	],
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "shapeblock",
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"attributes": {
+		"advPadding": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advPaddingTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advPaddingMobile": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMargin": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMarginTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMarginMobile": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advBgColor": {
+			"type": "string",
+			"default": ""
+		},
+		"advBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"advPosition": {
+			"type": "string",
+			"default": ""
+		},
+		"advHAlign": {
+			"type": "string",
+			"default": ""
+		},
+		"advVAlign": {
+			"type": "string",
+			"default": ""
+		},
+		"advTop": {
+			"type": "string",
+			"default": ""
+		},
+		"advTopTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advTopMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advRight": {
+			"type": "string",
+			"default": ""
+		},
+		"advRightTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advRightMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottom": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottomTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottomMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeft": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeftTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeftMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidth": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidthTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidthMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advZIndex": {
+			"type": "string",
+			"default": ""
+		},
+		"hideDesktop": {
+			"type": "boolean",
+			"default": false
+		},
+		"hideTablet": {
+			"type": "boolean",
+			"default": false
+		},
+		"hideMobile": {
+			"type": "boolean",
+			"default": false
+		},
+		"blockId": {
+			"type": "string",
+			"default": ""
+		},
+		"items": {
+			"type": "array",
+			"default": [
+				{
+					"type": "phone",
+					"icon": "shapeblock-bi-telephone",
+					"label": "Call us",
+					"value": "+1 (555) 014-2290",
+					"link": "",
+					"newTab": false
+				},
+				{
+					"type": "email",
+					"icon": "shapeblock-bi-envelope",
+					"label": "Email",
+					"value": "hello@example.com",
+					"link": "",
+					"newTab": false
+				},
+				{
+					"type": "address",
+					"icon": "shapeblock-bi-geo-alt",
+					"label": "Visit us",
+					"value": "214 Church Street, Burlington, VT 05401",
+					"link": "",
+					"newTab": true
+				},
+				{
+					"type": "text",
+					"icon": "shapeblock-bi-clock",
+					"label": "Open",
+					"value": "Mon – Fri, 9:00 AM – 6:00 PM",
+					"link": "",
+					"newTab": false
+				}
+			]
+		},
+		"layout": {
+			"type": "string",
+			"default": "list"
+		},
+		"columns": {
+			"type": "string",
+			"default": "2"
+		},
+		"columnsTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"columnsMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"iconPosition": {
+			"type": "string",
+			"default": "left"
+		},
+		"align": {
+			"type": "string",
+			"default": ""
+		},
+		"alignTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"alignMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"showLabel": {
+			"type": "boolean",
+			"default": true
+		},
+		"divider": {
+			"type": "boolean",
+			"default": false
+		},
+		"dividerStyle": {
+			"type": "string",
+			"default": "solid"
+		},
+		"dividerColor": {
+			"type": "string",
+			"default": ""
+		},
+		"rowGap": {
+			"type": "string",
+			"default": ""
+		},
+		"rowGapTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"rowGapMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"columnGap": {
+			"type": "string",
+			"default": ""
+		},
+		"columnGapTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"columnGapMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"iconGap": {
+			"type": "string",
+			"default": ""
+		},
+		"iconGapTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"iconGapMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"itemBg": {
+			"type": "string",
+			"default": ""
+		},
+		"itemBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"itemBgHover": {
+			"type": "string",
+			"default": ""
+		},
+		"itemBorder": {
+			"type": "object",
+			"default": {}
+		},
+		"itemBorderHover": {
+			"type": "string",
+			"default": ""
+		},
+		"itemRadius": {
+			"type": "string",
+			"default": ""
+		},
+		"itemPadding": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"itemPaddingTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"itemPaddingMobile": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"itemShadow": {
+			"type": "object",
+			"default": {}
+		},
+		"hoverLift": {
+			"type": "boolean",
+			"default": false
+		},
+		"iconView": {
+			"type": "string",
+			"default": "stacked"
+		},
+		"iconColor": {
+			"type": "string",
+			"default": ""
+		},
+		"iconColorHover": {
+			"type": "string",
+			"default": ""
+		},
+		"iconBg": {
+			"type": "string",
+			"default": ""
+		},
+		"iconBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"iconBgHover": {
+			"type": "string",
+			"default": ""
+		},
+		"iconSize": {
+			"type": "string",
+			"default": ""
+		},
+		"iconSizeTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"iconSizeMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"iconBoxSize": {
+			"type": "string",
+			"default": ""
+		},
+		"iconBoxSizeTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"iconBoxSizeMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"iconRadius": {
+			"type": "string",
+			"default": ""
+		},
+		"labelColor": {
+			"type": "string",
+			"default": ""
+		},
+		"labelTypography": {
+			"type": "object",
+			"default": {}
+		},
+		"labelTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"labelTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"valueColor": {
+			"type": "string",
+			"default": ""
+		},
+		"valueColorHover": {
+			"type": "string",
+			"default": ""
+		},
+		"valueTypography": {
+			"type": "object",
+			"default": {}
+		},
+		"valueTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"valueTypographyMobile": {
+			"type": "object",
+			"default": {}
+		}
+	}
+}

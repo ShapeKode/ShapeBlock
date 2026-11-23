@@ -1,0 +1,103 @@
+// Divider: a line painted with its colour or gradient; the style is a mask over it.
+
+// Full width even inside a centred flex column, where a block would otherwise
+// shrink to its content and a line has none.
+.shapeblock-divider {
+	width: 100%;
+	box-sizing: border-box;
+	padding-top: var(--sb-dv-gap, 15px);
+	padding-bottom: var(--sb-dv-gap, 15px);
+}
+
+.shapeblock-divider__inner {
+	display: flex;
+	align-items: center;
+	gap: var(--sb-dv-el-gap, 15px);
+	width: var(--sb-dv-w, 100%);
+	max-width: 100%;
+	margin-left: var(--sb-dv-ml, auto);
+	margin-right: var(--sb-dv-mr, auto);
+}
+
+.shapeblock-divider__line {
+	display: block;
+	flex: 1 1 0;
+	min-width: 0;
+	height: var(--sb-dv-h, 1px);
+	background: #b5b5c0;
+}
+
+.shapeblock-divider--double .shapeblock-divider__line {
+	-webkit-mask-image: linear-gradient(#000 0 33.34%, transparent 0 66.66%, #000 0);
+	mask-image: linear-gradient(#000 0 33.34%, transparent 0 66.66%, #000 0);
+}
+
+.shapeblock-divider--dashed .shapeblock-divider__line {
+	-webkit-mask-image: repeating-linear-gradient(90deg, #000 0 calc(var(--sb-dv-s, 12px) * 0.6), transparent 0 var(--sb-dv-s, 12px));
+	mask-image: repeating-linear-gradient(90deg, #000 0 calc(var(--sb-dv-s, 12px) * 0.6), transparent 0 var(--sb-dv-s, 12px));
+}
+
+.shapeblock-divider--dotted .shapeblock-divider__line {
+	-webkit-mask-image: radial-gradient(circle closest-side, #000 96%, transparent);
+	mask-image: radial-gradient(circle closest-side, #000 96%, transparent);
+	-webkit-mask-size: var(--sb-dv-s, 6px) 100%;
+	mask-size: var(--sb-dv-s, 6px) 100%;
+	-webkit-mask-repeat: repeat-x;
+	mask-repeat: repeat-x;
+}
+
+.shapeblock-divider--wave,
+.shapeblock-divider--zigzag,
+.shapeblock-divider--slashes {
+	.shapeblock-divider__line {
+		-webkit-mask-image: var(--sb-dv-mask);
+		mask-image: var(--sb-dv-mask);
+		-webkit-mask-size: var(--sb-dv-s, 20px) 100%;
+		mask-size: var(--sb-dv-s, 20px) 100%;
+		-webkit-mask-repeat: repeat-x;
+		mask-repeat: repeat-x;
+		-webkit-mask-position: left center;
+		mask-position: left center;
+	}
+}
+
+.shapeblock-divider__element {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 80%;
+	margin: 0;
+	line-height: 1.3;
+	text-align: center;
+}
+
+// Text keeps its spaces next to bold or italic words: a flex box would drop them.
+.shapeblock-divider__text {
+	display: block;
+}
+
+.shapeblock-divider__icon {
+	font-size: var(--sb-dv-icon, 20px);
+	line-height: 1;
+	color: #b5b5c0;
+
+	i {
+		display: block;
+		line-height: 1;
+	}
+}
+
+.shapeblock-divider__icon--stacked,
+.shapeblock-divider__icon--framed {
+	padding: 0.5em;
+	border-radius: 50%;
+}
+
+.shapeblock-divider__icon--stacked {
+	background: #f1f1f5;
+}
+
+.shapeblock-divider__icon--framed {
+	border: 2px solid currentColor;
+}

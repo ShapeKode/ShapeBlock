@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: ShapeBlock 1.1.0\n"
+"Project-Id-Version: ShapeBlock 1.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/shapeblock\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-19T08:20:41+00:00\n"
+"POT-Creation-Date: 2026-11-22T04:34:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: shapeblock\n"
@@ -20,9 +20,11 @@ msgstr ""
 #: includes/public/blocks/pricing-table/pricing-table.php:130
 #: includes/public/blocks/breadcrumb/build/index.js:1
 #: includes/public/blocks/button/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:1
 #: includes/public/blocks/custom-components/IconPicker.js:29
 #: includes/public/blocks/custom-components/IconPicker.js:36
+#: includes/public/blocks/divider/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:1
 #: includes/public/blocks/feature-list/build/index.js:1
 #: includes/public/blocks/filter-list/build/index.js:1
@@ -53,7 +55,7 @@ msgstr ""
 
 #. Description of the plugin
 #: D:\WordPress\Wpall\easy-elements-for-gutenberg\app\public\wp-content\plugins\shapeblock\shapeblock.php
-msgid "A library of 75+ Gutenberg blocks with Pro - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls."
+msgid "A library of 80+ Gutenberg blocks with Pro - sliders, carousels, grids, tabs, counters and more - with full styling and per-device controls."
 msgstr ""
 
 #. Author of the plugin
@@ -207,9 +209,16 @@ msgstr ""
 #: includes/public/blocks/button/src/edit.js:187
 #: includes/public/blocks/button/src/edit.js:227
 #: includes/public/blocks/button/src/edit.js:294
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:147
+#: includes/public/blocks/contact-info/src/edit.js:225
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:325
 #: includes/public/blocks/counter/src/edit.js:424
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:106
+#: includes/public/blocks/divider/src/edit.js:113
+#: includes/public/blocks/divider/src/edit.js:157
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/feature-list/src/edit.js:168
 #: includes/public/blocks/feature-list/src/edit.js:177
@@ -387,69 +396,91 @@ msgid "Countdown timer to a date."
 msgstr ""
 
 #: includes/admin/Blocks.php:158
-msgid "Business Hours"
+msgid "Contact Info"
 msgstr ""
 
 #: includes/admin/Blocks.php:160
-msgid "Opening hours with today highlighted and an Open now badge."
+msgid "Phone, email, address and more, each with an icon and a link."
 msgstr ""
 
 #: includes/admin/Blocks.php:164
+#: includes/public/blocks/business-hours/build/index.js:1
+#: includes/public/blocks/business-hours/src/edit.js:278
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:186
+#: includes/public/blocks/icon-list/build/index.js:2
+#: includes/public/blocks/icon-list/src/edit.js:226
+msgid "Divider"
+msgstr ""
+
+#: includes/admin/Blocks.php:166
+msgid "A line between sections, with text or an icon in it."
+msgstr ""
+
+#: includes/admin/Blocks.php:170
+msgid "Business Hours"
+msgstr ""
+
+#: includes/admin/Blocks.php:172
+msgid "Opening hours with today highlighted and an Open now badge."
+msgstr ""
+
+#: includes/admin/Blocks.php:176
 #: includes/public/blocks/custom-components/TableEditing.js:45
 #: includes/public/blocks/table/build/index.js:1
 #: includes/public/blocks/table/src/sidebar.js:126
 msgid "Table"
 msgstr ""
 
-#: includes/admin/Blocks.php:166
+#: includes/admin/Blocks.php:178
 msgid "Data table with icons."
 msgstr ""
 
-#: includes/admin/Blocks.php:170
+#: includes/admin/Blocks.php:182
 #: includes/public/blocks/social-share/build/index.js:2
 #: includes/public/blocks/social-share/src/edit.js:109
 msgid "Social Share"
 msgstr ""
 
-#: includes/admin/Blocks.php:172
+#: includes/admin/Blocks.php:184
 msgid "Share buttons for socials."
 msgstr ""
 
-#: includes/admin/Blocks.php:176
+#: includes/admin/Blocks.php:188
 msgid "Social Icon"
 msgstr ""
 
-#: includes/admin/Blocks.php:178
+#: includes/admin/Blocks.php:190
 msgid "Linked social media icons."
 msgstr ""
 
-#: includes/admin/Blocks.php:182
+#: includes/admin/Blocks.php:194
 #: includes/public/blocks/progress/build/index.js:1
 #: includes/public/blocks/progress/src/edit.js:97
 msgid "Progress Bar"
 msgstr ""
 
-#: includes/admin/Blocks.php:184
+#: includes/admin/Blocks.php:196
 msgid "Progress and skill bars."
 msgstr ""
 
-#: includes/admin/Blocks.php:188
+#: includes/admin/Blocks.php:200
 msgid "Client Logo"
 msgstr ""
 
-#: includes/admin/Blocks.php:190
+#: includes/admin/Blocks.php:202
 msgid "A grid of client logos."
 msgstr ""
 
-#: includes/admin/Blocks.php:194
+#: includes/admin/Blocks.php:206
 msgid "Image Comparison"
 msgstr ""
 
-#: includes/admin/Blocks.php:196
+#: includes/admin/Blocks.php:208
 msgid "Before / after image slider."
 msgstr ""
 
-#: includes/admin/Blocks.php:200
+#: includes/admin/Blocks.php:212
 #: build/index.js:24
 #: includes/public/blocks/scroll-to-top/build/index.js:2
 #: includes/public/blocks/scroll-to-top/src/edit.js:87
@@ -457,19 +488,19 @@ msgstr ""
 msgid "Scroll to Top"
 msgstr ""
 
-#: includes/admin/Blocks.php:202
+#: includes/admin/Blocks.php:214
 msgid "Button back to page top."
 msgstr ""
 
-#: includes/admin/Blocks.php:206
+#: includes/admin/Blocks.php:218
 msgid "Offcanvas"
 msgstr ""
 
-#: includes/admin/Blocks.php:208
+#: includes/admin/Blocks.php:220
 msgid "Button that opens a panel."
 msgstr ""
 
-#: includes/admin/Blocks.php:212
+#: includes/admin/Blocks.php:224
 #: includes/public/blocks/search/build/render.php:288
 #: includes/public/blocks/search/build/render.php:329
 #: includes/public/blocks/search/src/render.php:288
@@ -481,77 +512,77 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: includes/admin/Blocks.php:214
+#: includes/admin/Blocks.php:226
 msgid "Search popup or search field."
 msgstr ""
 
-#: includes/admin/Blocks.php:218
+#: includes/admin/Blocks.php:230
 #: includes/public/blocks/breadcrumb/build/render.php:384
 #: includes/public/blocks/breadcrumb/src/render.php:384
 msgid "Breadcrumb"
 msgstr ""
 
-#: includes/admin/Blocks.php:220
+#: includes/admin/Blocks.php:232
 msgid "Breadcrumb trail for pages."
 msgstr ""
 
-#: includes/admin/Blocks.php:224
+#: includes/admin/Blocks.php:236
 #: includes/public/blocks/menu/build/render.php:624
 #: includes/public/blocks/menu/build/index.js:884
 msgid "Menu"
 msgstr ""
 
-#: includes/admin/Blocks.php:226
+#: includes/admin/Blocks.php:238
 msgid "Navigation menu with styles."
 msgstr ""
 
-#: includes/admin/Blocks.php:230
+#: includes/admin/Blocks.php:242
 msgid "Slider"
 msgstr ""
 
-#: includes/admin/Blocks.php:232
+#: includes/admin/Blocks.php:244
 msgid "Full-width image slider."
 msgstr ""
 
-#: includes/admin/Blocks.php:236
+#: includes/admin/Blocks.php:248
 msgid "Image Carousel"
 msgstr ""
 
-#: includes/admin/Blocks.php:238
+#: includes/admin/Blocks.php:250
 msgid "Images in a carousel."
 msgstr ""
 
-#: includes/admin/Blocks.php:242
+#: includes/admin/Blocks.php:254
 msgid "Isotope Filter"
 msgstr ""
 
-#: includes/admin/Blocks.php:244
+#: includes/admin/Blocks.php:256
 msgid "Filterable grid by category."
 msgstr ""
 
-#: includes/admin/Blocks.php:248
+#: includes/admin/Blocks.php:260
 msgid "Filterable List"
 msgstr ""
 
-#: includes/admin/Blocks.php:250
+#: includes/admin/Blocks.php:262
 msgid "Links with icons, filter buttons and search."
 msgstr ""
 
-#: includes/admin/Blocks.php:254
+#: includes/admin/Blocks.php:266
 msgid "Sticky Stack"
 msgstr ""
 
-#: includes/admin/Blocks.php:256
+#: includes/admin/Blocks.php:268
 msgid "Cards that stack on scroll."
 msgstr ""
 
-#: includes/admin/Blocks.php:311
+#: includes/admin/Blocks.php:325
 #: build/index.js:24
 #: src/components/admin-components/pro-features.jsx:128
 msgid "Free"
 msgstr ""
 
-#: includes/admin/Blocks.php:370
+#: includes/admin/Blocks.php:384
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/breadcrumb/src/edit.js:241
 #: includes/public/blocks/business-hours/build/index.js:1
@@ -564,11 +595,16 @@ msgstr ""
 #: includes/public/blocks/clients-logo-grid/src/edit.js:309
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:484
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:172
+#: includes/public/blocks/contact-info/src/edit.js:275
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/countdown/src/edit.js:169
 #: includes/public/blocks/countdown/src/edit.js:241
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:462
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:190
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/drop-caps/src/edit.js:89
 #: includes/public/blocks/faq/build/index.js:2
@@ -624,7 +660,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:247
 #: includes/public/blocks/social-share/build/index.js:2
 #: includes/public/blocks/social-share/src/edit.js:172
-#: includes/public/blocks/social-share/src/edit.js:243
+#: includes/public/blocks/social-share/src/edit.js:255
 #: includes/public/blocks/sticky-stack/build/index.js:2
 #: includes/public/blocks/sticky-stack/src/edit.js:531
 #: includes/public/blocks/tab/build/index.js:2
@@ -637,7 +673,7 @@ msgstr ""
 msgid "Layout"
 msgstr ""
 
-#: includes/admin/Blocks.php:371
+#: includes/admin/Blocks.php:385
 #: includes/public/assets/js/template-library-admin.js:247
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/breadcrumb/src/edit.js:98
@@ -664,29 +700,29 @@ msgstr ""
 msgid "Content"
 msgstr ""
 
-#: includes/admin/Blocks.php:372
+#: includes/admin/Blocks.php:386
 #: includes/public/blocks/hover-box/build/index.js:2
 #: includes/public/blocks/hover-box/src/edit.js:155
 msgid "Media"
 msgstr ""
 
-#: includes/admin/Blocks.php:373
+#: includes/admin/Blocks.php:387
 msgid "Header Footer"
 msgstr ""
 
-#: includes/admin/Blocks.php:374
+#: includes/admin/Blocks.php:388
 msgid "Showcase"
 msgstr ""
 
-#: includes/admin/Blocks.php:375
+#: includes/admin/Blocks.php:389
 msgid "Posts & Site"
 msgstr ""
 
-#: includes/admin/Blocks.php:376
+#: includes/admin/Blocks.php:390
 msgid "Form"
 msgstr ""
 
-#: includes/admin/Blocks.php:377
+#: includes/admin/Blocks.php:391
 msgid "Feed"
 msgstr ""
 
@@ -1098,10 +1134,14 @@ msgstr ""
 #: includes/public/blocks/clients-logo-grid/src/edit.js:308
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:483
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:274
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/countdown/src/edit.js:240
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:461
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:189
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/drop-caps/src/edit.js:88
 #: includes/public/blocks/faq/build/index.js:2
@@ -1150,7 +1190,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/build/index.js:2
 #: includes/public/blocks/social-icon/src/edit.js:246
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:242
+#: includes/public/blocks/social-share/src/edit.js:254
 #: includes/public/blocks/sticky-stack/build/index.js:2
 #: includes/public/blocks/sticky-stack/src/edit.js:530
 #: includes/public/blocks/tab/build/index.js:2
@@ -1263,6 +1303,11 @@ msgstr ""
 #: includes/public/blocks/slider/build/render.php:206
 #: includes/public/blocks/slider/src/render.php:206
 msgid "Placeholder image"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/render.php:228
+#: includes/public/blocks/contact-info/src/render.php:228
+msgid "Add a row in the block settings."
 msgstr ""
 
 #: includes/public/blocks/faq/build/render.php:46
@@ -1740,8 +1785,10 @@ msgstr ""
 msgid "Please add social platforms."
 msgstr ""
 
-#: includes/public/blocks/social-share/build/render.php:342
-#: includes/public/blocks/social-share/src/render.php:342
+#: includes/public/blocks/social-share/build/render.php:351
+#: includes/public/blocks/social-share/src/render.php:351
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:49
 #: includes/public/blocks/social-share/build/index.js:2
 #: includes/public/blocks/social-share/src/edit.js:63
 #: includes/public/blocks/team-grid/build/index.js:2
@@ -1749,19 +1796,19 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: includes/public/blocks/social-share/build/render.php:343
-#: includes/public/blocks/social-share/build/render.php:385
-#: includes/public/blocks/social-share/src/render.php:343
-#: includes/public/blocks/social-share/src/render.php:385
+#: includes/public/blocks/social-share/build/render.php:352
+#: includes/public/blocks/social-share/build/render.php:394
+#: includes/public/blocks/social-share/src/render.php:352
+#: includes/public/blocks/social-share/src/render.php:394
 #: includes/public/blocks/social-share/build/index.js:2
 #: includes/public/blocks/social-share/src/edit.js:64
 msgid "Copy Link"
 msgstr ""
 
-#: includes/public/blocks/social-share/build/render.php:385
-#: includes/public/blocks/social-share/build/render.php:390
-#: includes/public/blocks/social-share/src/render.php:385
-#: includes/public/blocks/social-share/src/render.php:390
+#: includes/public/blocks/social-share/build/render.php:394
+#: includes/public/blocks/social-share/build/render.php:399
+#: includes/public/blocks/social-share/src/render.php:394
+#: includes/public/blocks/social-share/src/render.php:399
 msgid "Copied!"
 msgstr ""
 
@@ -1843,14 +1890,14 @@ msgstr ""
 msgid "Placeholder"
 msgstr ""
 
-#: includes/public/template-parts/post-meta/post-meta.php:85
+#: includes/public/template-parts/post-meta/post-meta.php:86
 msgid "comment"
 msgid_plural "comments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/public/term-color.php:77
-#: includes/public/term-color.php:93
+#: includes/public/term-color.php:65
+#: includes/public/term-color.php:81
 #: includes/public/blocks/breadcrumb/build/index.js:1
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/business-hours/src/edit.js:284
@@ -1863,6 +1910,12 @@ msgstr[1] ""
 #: includes/public/blocks/button/src/edit.js:310
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:191
+#: includes/public/blocks/contact-info/src/edit.js:227
+#: includes/public/blocks/contact-info/src/edit.js:238
+#: includes/public/blocks/contact-info/src/edit.js:243
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:391
@@ -1871,6 +1924,10 @@ msgstr[1] ""
 #: includes/public/blocks/counter/src/edit.js:416
 #: includes/public/blocks/counter/src/edit.js:425
 #: includes/public/blocks/custom-components/BorderControl.js:137
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:141
+#: includes/public/blocks/divider/src/edit.js:145
+#: includes/public/blocks/divider/src/edit.js:159
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/drop-caps/src/edit.js:73
 #: includes/public/blocks/faq/build/index.js:2
@@ -1966,8 +2023,8 @@ msgstr[1] ""
 msgid "Color"
 msgstr ""
 
-#: includes/public/term-color.php:79
-#: includes/public/term-color.php:97
+#: includes/public/term-color.php:67
+#: includes/public/term-color.php:85
 msgid "Background of this category's badge in ShapeBlock post blocks."
 msgstr ""
 
@@ -2224,6 +2281,8 @@ msgid "Title"
 msgstr ""
 
 #: build/index.js:3
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:144
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/feature-list/src/edit.js:165
 #: includes/public/blocks/feature-list/src/edit.js:290
@@ -3685,9 +3744,11 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/ResponsiveWrapper.js:39
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -3731,9 +3792,11 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/ResponsiveWrapper.js:40
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -3810,6 +3873,10 @@ msgid "Responsive"
 msgstr ""
 
 #: includes/public/assets/js/template-library-admin.js:55
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:226
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:158
 #: includes/public/blocks/icon/build/index.js:2
 #: includes/public/blocks/icon/src/edit.js:183
 msgid "View"
@@ -4122,9 +4189,11 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/ResponsiveWrapper.js:38
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -4190,9 +4259,11 @@ msgstr ""
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:1
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:1
 #: includes/public/blocks/custom-components/ServerRender.js:79
+#: includes/public/blocks/divider/build/index.js:1
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/feature-list/build/index.js:1
 #: includes/public/blocks/filter-list/build/index.js:1
@@ -4337,9 +4408,11 @@ msgstr ""
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:1
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:1
 #: includes/public/blocks/custom-components/ServerRender.js:43
+#: includes/public/blocks/divider/build/index.js:1
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/feature-list/build/index.js:1
 #: includes/public/blocks/filter-list/build/index.js:1
@@ -4373,9 +4446,11 @@ msgstr ""
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:1
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:1
 #: includes/public/blocks/custom-components/ServerRender.js:70
+#: includes/public/blocks/divider/build/index.js:1
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/feature-list/build/index.js:1
 #: includes/public/blocks/filter-list/build/index.js:1
@@ -4413,11 +4488,17 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:190
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BackgroundControl.js:66
 #: includes/public/blocks/custom-components/BorderControl.js:123
+#: includes/public/blocks/divider/build/index.js:1
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:37
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
@@ -4464,9 +4545,11 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:1
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:1
 #: includes/public/blocks/custom-components/BackgroundControl.js:67
+#: includes/public/blocks/divider/build/index.js:1
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:1
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -4514,6 +4597,9 @@ msgstr ""
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:422
 #: includes/public/blocks/column/src/edit.js:424
+#: includes/public/blocks/contact-info/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:214
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:431
@@ -4570,7 +4656,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/build/index.js:2
 #: includes/public/blocks/social-icon/src/edit.js:192
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:202
+#: includes/public/blocks/social-share/src/edit.js:214
 #: includes/public/blocks/sticky-stack/build/index.js:2
 #: includes/public/blocks/sticky-stack/src/edit.js:427
 #: includes/public/blocks/sticky-stack/src/edit.js:479
@@ -4596,10 +4682,13 @@ msgstr ""
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:221
 #: includes/public/blocks/column/src/edit.js:236
+#: includes/public/blocks/contact-info/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/AdvancedControls.js:169
 #: includes/public/blocks/custom-components/BorderControl.js:113
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -4647,11 +4736,18 @@ msgstr ""
 #: includes/public/blocks/clients-logo-grid/src/edit.js:310
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:485
+#: includes/public/blocks/contact-info/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:190
+#: includes/public/blocks/contact-info/src/edit.js:276
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/countdown/src/edit.js:242
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:463
 #: includes/public/blocks/custom-components/BorderControl.js:120
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:96
+#: includes/public/blocks/divider/src/edit.js:191
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/drop-caps/src/edit.js:46
 #: includes/public/blocks/drop-caps/src/edit.js:90
@@ -4709,7 +4805,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/build/index.js:2
 #: includes/public/blocks/social-icon/src/edit.js:248
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:244
+#: includes/public/blocks/social-share/src/edit.js:256
 #: includes/public/blocks/sticky-stack/build/index.js:2
 #: includes/public/blocks/sticky-stack/src/edit.js:532
 #: includes/public/blocks/tab/build/index.js:2
@@ -4731,9 +4827,14 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:190
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BorderControl.js:124
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:39
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/filter-list/build/index.js:2
@@ -4769,9 +4870,14 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:190
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BorderControl.js:125
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:40
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/filter-list/build/index.js:2
@@ -4805,9 +4911,12 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BorderControl.js:126
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:38
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/filter-list/build/index.js:2
@@ -4841,6 +4950,7 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BorderControl.js:127
@@ -4874,6 +4984,7 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BorderControl.js:128
@@ -4907,6 +5018,7 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BorderControl.js:129
@@ -4941,6 +5053,7 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BorderControl.js:130
@@ -4975,11 +5088,14 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BorderControl.js:131
 #: includes/public/blocks/custom-components/HoverAnimationControl.js:9
 #: includes/public/blocks/custom-components/HoverAnimationControl.js:13
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:106
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/filter-list/build/index.js:2
@@ -5025,6 +5141,7 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BorderControl.js:153
@@ -5056,8 +5173,10 @@ msgstr ""
 
 #: includes/public/blocks/breadcrumb/build/index.js:1
 #: includes/public/blocks/button/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:1
 #: includes/public/blocks/custom-components/IconPicker.js:142
+#: includes/public/blocks/divider/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:1
 #: includes/public/blocks/feature-list/build/index.js:1
 #: includes/public/blocks/filter-list/build/index.js:1
@@ -5083,8 +5202,10 @@ msgstr ""
 
 #: includes/public/blocks/breadcrumb/build/index.js:1
 #: includes/public/blocks/button/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:1
 #: includes/public/blocks/custom-components/IconPicker.js:160
+#: includes/public/blocks/divider/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:1
 #: includes/public/blocks/feature-list/build/index.js:1
 #: includes/public/blocks/filter-list/build/index.js:1
@@ -5110,8 +5231,10 @@ msgstr ""
 
 #: includes/public/blocks/breadcrumb/build/index.js:1
 #: includes/public/blocks/button/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:1
 #: includes/public/blocks/custom-components/IconPicker.js:171
+#: includes/public/blocks/divider/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:1
 #: includes/public/blocks/feature-list/build/index.js:1
 #: includes/public/blocks/filter-list/build/index.js:1
@@ -5137,8 +5260,10 @@ msgstr ""
 
 #: includes/public/blocks/breadcrumb/build/index.js:1
 #: includes/public/blocks/button/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:1
 #: includes/public/blocks/custom-components/IconPicker.js:188
+#: includes/public/blocks/divider/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:1
 #: includes/public/blocks/feature-list/build/index.js:1
 #: includes/public/blocks/filter-list/build/index.js:1
@@ -5165,8 +5290,10 @@ msgstr ""
 #. translators: %d: number of icons found.
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/IconPicker.js:193
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/filter-list/build/index.js:2
@@ -5194,8 +5321,10 @@ msgstr[1] ""
 
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/IconPicker.js:220
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/filter-list/build/index.js:2
@@ -5227,6 +5356,8 @@ msgstr ""
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:284
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:226
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:302
@@ -5239,6 +5370,8 @@ msgstr ""
 #: includes/public/blocks/custom-components/TypographyControls.js:8
 #: includes/public/blocks/custom-components/TypographyControls.js:213
 #: includes/public/blocks/custom-components/TypographyControls.js:280
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:158
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5302,9 +5435,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:206
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5334,9 +5469,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:222
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5366,9 +5503,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:242
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5398,9 +5537,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:258
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5432,9 +5573,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:261
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5464,9 +5607,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:277
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/drop-caps/src/edit.js:69
 #: includes/public/blocks/faq/build/index.js:2
@@ -5498,9 +5643,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:281
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5530,9 +5677,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:282
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5562,9 +5711,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:283
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5594,9 +5745,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:284
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5626,9 +5779,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:285
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5658,9 +5813,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:286
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5690,9 +5847,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:305
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5722,9 +5881,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:322
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5754,9 +5915,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:325
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5786,9 +5949,11 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/button/build/index.js:2
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/TypographyControls.js:368
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5820,11 +5985,14 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/AdvancedControls.js:128
 #: includes/public/blocks/custom-components/AdvancedControls.js:130
 #: includes/public/blocks/custom-components/BackgroundImageControls.js:93
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:114
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5867,9 +6035,11 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/AdvancedControls.js:134
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5908,10 +6078,12 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/AdvancedControls.js:135
 #: includes/public/blocks/custom-components/BackgroundImageControls.js:104
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5950,9 +6122,11 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/AdvancedControls.js:139
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -5991,9 +6165,11 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/AdvancedControls.js:140
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -6032,9 +6208,11 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/AdvancedControls.js:150
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -6077,6 +6255,9 @@ msgstr ""
 #: includes/public/blocks/button/src/edit.js:42
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:175
+#: includes/public/blocks/contact-info/src/edit.js:177
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/countdown/src/edit.js:180
 #: includes/public/blocks/counter/build/index.js:2
@@ -6088,6 +6269,8 @@ msgstr ""
 #: includes/public/blocks/custom-components/AdvancedControls.js:168
 #: includes/public/blocks/custom-components/SpacingControl.js:43
 #: includes/public/blocks/custom-components/TextAlignControl.js:16
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:125
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/faq/src/edit.js:314
@@ -6143,6 +6326,7 @@ msgstr ""
 #: includes/public/blocks/slider/build/index.js:1
 #: includes/public/blocks/social-icon/build/index.js:2
 #: includes/public/blocks/social-share/build/index.js:2
+#: includes/public/blocks/social-share/src/edit.js:188
 #: includes/public/blocks/sticky-stack/build/index.js:2
 #: includes/public/blocks/sticky-stack/src/edit.js:364
 #: includes/public/blocks/sticky-stack/src/edit.js:388
@@ -6172,6 +6356,8 @@ msgstr ""
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:321
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:177
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/countdown/src/edit.js:181
 #: includes/public/blocks/counter/build/index.js:2
@@ -6180,6 +6366,9 @@ msgstr ""
 #: includes/public/blocks/counter/src/edit.js:418
 #: includes/public/blocks/custom-components/AdvancedControls.js:152
 #: includes/public/blocks/custom-components/TextAlignControl.js:17
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:114
+#: includes/public/blocks/divider/src/edit.js:125
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -6225,6 +6414,7 @@ msgstr ""
 #: includes/public/blocks/slider/build/index.js:1
 #: includes/public/blocks/social-icon/build/index.js:2
 #: includes/public/blocks/social-share/build/index.js:2
+#: includes/public/blocks/social-share/src/edit.js:189
 #: includes/public/blocks/sticky-stack/build/index.js:2
 #: includes/public/blocks/sticky-stack/src/edit.js:389
 #: includes/public/blocks/tab/build/index.js:2
@@ -6250,6 +6440,8 @@ msgstr ""
 #: includes/public/blocks/button/src/edit.js:44
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:177
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/countdown/src/edit.js:182
 #: includes/public/blocks/counter/build/index.js:2
@@ -6261,6 +6453,8 @@ msgstr ""
 #: includes/public/blocks/custom-components/AdvancedControls.js:166
 #: includes/public/blocks/custom-components/SpacingControl.js:41
 #: includes/public/blocks/custom-components/TextAlignControl.js:18
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:125
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/faq/src/edit.js:313
@@ -6315,6 +6509,7 @@ msgstr ""
 #: includes/public/blocks/slider/build/index.js:1
 #: includes/public/blocks/social-icon/build/index.js:2
 #: includes/public/blocks/social-share/build/index.js:2
+#: includes/public/blocks/social-share/src/edit.js:190
 #: includes/public/blocks/sticky-stack/build/index.js:2
 #: includes/public/blocks/sticky-stack/src/edit.js:363
 #: includes/public/blocks/sticky-stack/src/edit.js:390
@@ -6339,9 +6534,11 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/AdvancedControls.js:155
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -6384,6 +6581,8 @@ msgstr ""
 #: includes/public/blocks/column/src/edit.js:285
 #: includes/public/blocks/column/src/edit.js:333
 #: includes/public/blocks/column/src/edit.js:344
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:175
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:35
@@ -6392,6 +6591,7 @@ msgstr ""
 #: includes/public/blocks/custom-components/AdvancedControls.js:156
 #: includes/public/blocks/custom-components/AdvancedControls.js:165
 #: includes/public/blocks/custom-components/SpacingControl.js:40
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -6447,10 +6647,12 @@ msgstr ""
 #: includes/public/blocks/column/src/edit.js:286
 #: includes/public/blocks/column/src/edit.js:334
 #: includes/public/blocks/column/src/edit.js:345
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:36
 #: includes/public/blocks/custom-components/AdvancedControls.js:157
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -6500,6 +6702,7 @@ msgstr ""
 #: includes/public/blocks/column/src/edit.js:287
 #: includes/public/blocks/column/src/edit.js:335
 #: includes/public/blocks/column/src/edit.js:346
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:37
@@ -6508,6 +6711,7 @@ msgstr ""
 #: includes/public/blocks/custom-components/AdvancedControls.js:158
 #: includes/public/blocks/custom-components/AdvancedControls.js:167
 #: includes/public/blocks/custom-components/SpacingControl.js:42
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -6558,9 +6762,11 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/AdvancedControls.js:161
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -6599,9 +6805,11 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/AdvancedControls.js:187
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -6643,9 +6851,13 @@ msgstr ""
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:378
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:180
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/AdvancedControls.js:201
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:130
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -6695,10 +6907,14 @@ msgstr ""
 #: includes/public/blocks/clients-logo-grid/src/edit.js:274
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:379
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:221
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:430
 #: includes/public/blocks/custom-components/AdvancedControls.js:202
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:150
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/faq/src/edit.js:454
@@ -6788,9 +7004,11 @@ msgstr ""
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:388
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/AdvancedControls.js:215
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
@@ -6866,11 +7084,18 @@ msgstr ""
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:400
 #: includes/public/blocks/column/src/edit.js:402
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:207
+#: includes/public/blocks/contact-info/src/edit.js:213
+#: includes/public/blocks/contact-info/src/edit.js:229
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:426
 #: includes/public/blocks/custom-components/AdvancedControls.js:231
 #: includes/public/blocks/custom-components/AdvancedControls.js:233
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:149
+#: includes/public/blocks/divider/src/edit.js:161
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/faq/src/edit.js:330
@@ -6957,7 +7182,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:206
 #: includes/public/blocks/social-icon/src/edit.js:217
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:195
+#: includes/public/blocks/social-share/src/edit.js:207
 #: includes/public/blocks/sticky-stack/build/index.js:2
 #: includes/public/blocks/sticky-stack/src/edit.js:426
 #: includes/public/blocks/sticky-stack/src/edit.js:436
@@ -6993,6 +7218,8 @@ msgstr ""
 #: includes/public/blocks/button/src/edit.js:35
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/clients-logo-grid/src/edit.js:106
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:203
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:316
 #: includes/public/blocks/faq/build/index.js:2
@@ -7035,6 +7262,8 @@ msgstr ""
 #: includes/public/blocks/button/src/edit.js:36
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/clients-logo-grid/src/edit.js:107
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:203
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/faq/src/edit.js:36
 #: includes/public/blocks/filter-list/build/index.js:2
@@ -7153,8 +7382,14 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/src/edit.js:143
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/business-hours/src/edit.js:266
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:176
+#: includes/public/blocks/contact-info/src/edit.js:177
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:383
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:124
+#: includes/public/blocks/divider/src/edit.js:125
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/feature-list/src/edit.js:225
 #: includes/public/blocks/feature-list/src/edit.js:268
@@ -7174,6 +7409,8 @@ msgstr ""
 #: includes/public/blocks/isotope/src/edit.js:569
 #: includes/public/blocks/post-grid/build/index.js:2
 #: includes/public/blocks/post-grid/src/edit.js:1045
+#: includes/public/blocks/social-share/build/index.js:2
+#: includes/public/blocks/social-share/src/edit.js:183
 #: includes/public/blocks/team-grid/build/index.js:2
 #: includes/public/blocks/team-grid/src/edit.js:193
 #: includes/public/blocks/team-grid/src/edit.js:289
@@ -7268,7 +7505,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/build/index.js:2
 #: includes/public/blocks/social-icon/src/edit.js:191
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:228
+#: includes/public/blocks/social-share/src/edit.js:240
 #: includes/public/blocks/sticky-stack/build/index.js:2
 #: includes/public/blocks/sticky-stack/src/edit.js:430
 #: includes/public/blocks/sticky-stack/src/edit.js:438
@@ -7324,7 +7561,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/src/edit.js:212
 #: includes/public/blocks/social-icon/src/edit.js:223
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:191
+#: includes/public/blocks/social-share/src/edit.js:203
 #: includes/public/blocks/tab/build/index.js:2
 #: includes/public/blocks/tab/src/edit.js:389
 #: includes/public/blocks/tab/src/edit.js:405
@@ -7343,6 +7580,8 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/src/edit.js:203
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/button/src/edit.js:295
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:160
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/feature-list/src/edit.js:266
 #: includes/public/blocks/filter-list/build/index.js:3
@@ -7372,6 +7611,8 @@ msgstr ""
 
 #: includes/public/blocks/breadcrumb/build/index.js:2
 #: includes/public/blocks/breadcrumb/src/edit.js:176
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:183
 msgid "Space Between Icon and Text (px)"
 msgstr ""
 
@@ -7393,6 +7634,10 @@ msgstr ""
 #: includes/public/blocks/breadcrumb/src/edit.js:183
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/business-hours/src/edit.js:212
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:106
+#: includes/public/blocks/divider/src/edit.js:109
+#: includes/public/blocks/divider/src/edit.js:144
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/drop-caps/src/edit.js:72
 #: includes/public/blocks/gallery/build/index.js:2
@@ -7427,11 +7672,16 @@ msgstr ""
 #: includes/public/blocks/business-hours/src/edit.js:356
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/button/src/edit.js:235
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:239
+#: includes/public/blocks/contact-info/src/edit.js:245
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:392
 #: includes/public/blocks/counter/src/edit.js:401
 #: includes/public/blocks/counter/src/edit.js:409
 #: includes/public/blocks/counter/src/edit.js:417
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:146
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/drop-caps/src/edit.js:74
 #: includes/public/blocks/faq/build/index.js:2
@@ -7603,7 +7853,7 @@ msgstr ""
 #: includes/public/blocks/pricing-table/src/edit.js:376
 #: includes/public/blocks/pricing-table/src/edit.js:438
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:191
+#: includes/public/blocks/social-share/src/edit.js:203
 #: includes/public/blocks/sticky-stack/build/index.js:2
 #: includes/public/blocks/sticky-stack/src/edit.js:435
 #: includes/public/blocks/sticky-stack/src/edit.js:458
@@ -7641,10 +7891,14 @@ msgstr ""
 #: includes/public/blocks/clients-logo-grid/src/edit.js:311
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:486
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:277
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/countdown/src/edit.js:243
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:464
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:192
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/drop-caps/src/edit.js:91
 #: includes/public/blocks/faq/build/index.js:2
@@ -7694,7 +7948,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/build/index.js:2
 #: includes/public/blocks/social-icon/src/edit.js:249
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:245
+#: includes/public/blocks/social-share/src/edit.js:257
 #: includes/public/blocks/sticky-stack/build/index.js:2
 #: includes/public/blocks/sticky-stack/src/edit.js:533
 #: includes/public/blocks/tab/build/index.js:2
@@ -7717,6 +7971,9 @@ msgstr ""
 #: includes/public/blocks/clients-logo-grid/src/edit.js:291
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:444
+#: includes/public/blocks/contact-info/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:216
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:432
@@ -7755,7 +8012,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/build/index.js:2
 #: includes/public/blocks/social-icon/src/edit.js:194
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:229
+#: includes/public/blocks/social-share/src/edit.js:241
 #: includes/public/blocks/sticky-stack/build/index.js:2
 #: includes/public/blocks/sticky-stack/src/edit.js:428
 #: includes/public/blocks/sticky-stack/src/edit.js:502
@@ -7770,6 +8027,7 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BoxShadowControls.js:92
@@ -7798,6 +8056,7 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BoxShadowControls.js:98
@@ -7826,6 +8085,7 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:255
@@ -7856,6 +8116,7 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BoxShadowControls.js:110
@@ -7884,6 +8145,7 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/custom-components/BoxShadowControls.js:117
@@ -7912,6 +8174,7 @@ msgstr ""
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/column/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:1
 #: includes/public/blocks/countdown/build/index.js:1
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:256
@@ -7938,7 +8201,9 @@ msgid "Shadow Color"
 msgstr ""
 
 #: includes/public/blocks/business-hours/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/custom-components/SpacingControl.js:122
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/filter-list/build/index.js:2
 #: includes/public/blocks/google-map/build/index.js:1
@@ -7950,8 +8215,10 @@ msgid "Unit"
 msgstr ""
 
 #: includes/public/blocks/business-hours/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/custom-components/SpacingControl.js:125
 #: includes/public/blocks/custom-components/SpacingControl.js:131
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/filter-list/build/index.js:2
 #: includes/public/blocks/google-map/build/index.js:1
@@ -7963,8 +8230,10 @@ msgid "Unlink sides"
 msgstr ""
 
 #: includes/public/blocks/business-hours/build/index.js:1
+#: includes/public/blocks/contact-info/build/index.js:2
 #: includes/public/blocks/custom-components/SpacingControl.js:125
 #: includes/public/blocks/custom-components/SpacingControl.js:131
+#: includes/public/blocks/divider/build/index.js:2
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/filter-list/build/index.js:2
 #: includes/public/blocks/google-map/build/index.js:1
@@ -8039,6 +8308,9 @@ msgstr ""
 
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/business-hours/src/edit.js:199
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:145
+#: includes/public/blocks/contact-info/src/edit.js:237
 #: includes/public/blocks/menu/build/index.js:823
 #: includes/public/blocks/menu/build/index.js:1331
 msgid "Label"
@@ -8080,6 +8352,8 @@ msgstr ""
 #: includes/public/blocks/business-hours/src/edit.js:215
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/clients-logo-grid/src/edit.js:176
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:151
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/faq/src/edit.js:234
 #: includes/public/blocks/faq/src/edit.js:573
@@ -8114,6 +8388,8 @@ msgstr ""
 #: includes/public/blocks/business-hours/src/edit.js:216
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/clients-logo-grid/src/edit.js:177
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:152
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/faq/src/edit.js:235
 #: includes/public/blocks/faq/src/edit.js:580
@@ -8150,6 +8426,8 @@ msgstr ""
 #: includes/public/blocks/clients-logo-grid/src/edit.js:178
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:460
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:153
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/faq/src/edit.js:236
 #: includes/public/blocks/faq/src/edit.js:594
@@ -8185,6 +8463,8 @@ msgstr ""
 #: includes/public/blocks/clients-logo-grid/src/edit.js:207
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:462
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:154
 #: includes/public/blocks/custom-components/BackgroundImageControls.js:50
 #: includes/public/blocks/faq/build/index.js:2
 #: includes/public/blocks/faq/src/edit.js:237
@@ -8238,6 +8518,8 @@ msgstr ""
 
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/business-hours/src/edit.js:225
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:161
 msgid "Add Row"
 msgstr ""
 
@@ -8382,6 +8664,10 @@ msgstr ""
 
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/business-hours/src/edit.js:265
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:226
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:158
 #: includes/public/blocks/feature-list/build/index.js:2
 #: includes/public/blocks/feature-list/src/edit.js:262
 #: includes/public/blocks/icon-box/build/index.js:2
@@ -8420,6 +8706,8 @@ msgstr ""
 
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/business-hours/src/edit.js:274
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:181
 #: includes/public/blocks/filter-list/build/index.js:3
 #: includes/public/blocks/filter-list/src/edit.js:379
 msgid "Space Between Rows (px)"
@@ -8433,13 +8721,6 @@ msgstr ""
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/business-hours/src/edit.js:276
 msgid "Row Padding"
-msgstr ""
-
-#: includes/public/blocks/business-hours/build/index.js:1
-#: includes/public/blocks/business-hours/src/edit.js:278
-#: includes/public/blocks/icon-list/build/index.js:2
-#: includes/public/blocks/icon-list/src/edit.js:226
-msgid "Divider"
 msgstr ""
 
 #: includes/public/blocks/business-hours/build/index.js:1
@@ -8475,6 +8756,12 @@ msgstr ""
 #: includes/public/blocks/business-hours/build/index.js:1
 #: includes/public/blocks/business-hours/src/edit.js:326
 #: includes/public/blocks/business-hours/src/edit.js:332
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:215
+#: includes/public/blocks/contact-info/src/edit.js:234
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:153
+#: includes/public/blocks/divider/src/edit.js:171
 #: includes/public/blocks/progress/build/index.js:1
 #: includes/public/blocks/progress/src/edit.js:156
 msgid "Border Radius (px)"
@@ -8627,6 +8914,8 @@ msgstr ""
 
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/button/src/edit.js:197
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:175
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:358
 #: includes/public/blocks/faq/build/index.js:2
@@ -8724,6 +9013,8 @@ msgstr ""
 
 #: includes/public/blocks/button/build/index.js:2
 #: includes/public/blocks/button/src/edit.js:288
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:165
 msgid "Border Width (px)"
 msgstr ""
 
@@ -8823,6 +9114,8 @@ msgstr ""
 #: includes/public/blocks/clients-logo-grid/build/index.js:1
 #: includes/public/blocks/clients-logo-grid/src/edit.js:243
 #: includes/public/blocks/clients-logo-grid/src/edit.js:245
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:174
 #: includes/public/blocks/drop-caps/build/index.js:1
 #: includes/public/blocks/drop-caps/src/edit.js:53
 #: includes/public/blocks/filter-list/build/index.js:3
@@ -8975,6 +9268,8 @@ msgstr ""
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/custom-components/BackgroundImageControls.js:68
 #: includes/public/blocks/custom-components/RangeControlWithUnit.js:11
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:122
 #: includes/public/blocks/layout-row/build/index.js:1
 #: includes/public/blocks/post-grid/build/index.js:1
 msgid "Size"
@@ -9051,6 +9346,8 @@ msgstr ""
 
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:173
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:110
 #: includes/public/blocks/heading/build/index.js:1
 #: includes/public/blocks/heading/src/edit.js:293
 #: includes/public/blocks/layout-row/build/index.js:1
@@ -9170,6 +9467,8 @@ msgstr ""
 #: includes/public/blocks/column/src/edit.js:320
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:29
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:114
 #: includes/public/blocks/layout-row/build/index.js:1
 #: includes/public/blocks/layout-row/src/edit.js:442
 #: includes/public/blocks/testimonials-grid/build/index.js:2
@@ -9181,6 +9480,8 @@ msgstr ""
 #: includes/public/blocks/column/src/edit.js:322
 #: includes/public/blocks/counter/build/index.js:2
 #: includes/public/blocks/counter/src/edit.js:31
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:114
 #: includes/public/blocks/layout-row/build/index.js:1
 #: includes/public/blocks/layout-row/src/edit.js:444
 #: includes/public/blocks/testimonials-grid/build/index.js:2
@@ -9309,6 +9610,281 @@ msgstr ""
 #: includes/public/blocks/column/build/index.js:1
 #: includes/public/blocks/column/src/edit.js:471
 msgid "Align Right"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:48
+#: includes/public/blocks/google-map/build/index.js:2
+#: includes/public/blocks/google-map/src/edit.js:100
+#: includes/public/blocks/team-grid/build/index.js:2
+#: includes/public/blocks/team-grid/src/edit.js:168
+msgid "Phone"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:48
+msgid "Opens the phone app (tel:)."
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:49
+msgid "Opens the mail app (mailto:)."
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:50
+#: includes/public/blocks/google-map/build/index.js:2
+#: includes/public/blocks/google-map/src/edit.js:97
+msgid "Address"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:50
+msgid "Opens the address in Google Maps."
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:51
+#: includes/public/blocks/contact-info/src/edit.js:77
+msgid "WhatsApp"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:51
+msgid "Opens a WhatsApp chat with this number."
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:52
+msgid "Website"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:52
+msgid "Opens the website."
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:53
+#: includes/public/blocks/post-grid/build/index.js:2
+#: includes/public/blocks/post-grid/src/edit.js:509
+msgid "Text only"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:53
+msgid "No link, unless you add one below. For example opening times."
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:133
+msgid "Contact Details"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:146
+#: includes/public/blocks/contact-info/src/edit.js:242
+msgid "Value"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:146
+msgid "The number, address or text shown. Press Enter for a new line."
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:148
+msgid "Custom Link"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:148
+msgid "Empty: the link the type gives."
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:149
+#: includes/public/blocks/filter-list/build/index.js:3
+#: includes/public/blocks/filter-list/src/edit.js:226
+#: includes/public/blocks/icon-box/build/index.js:2
+#: includes/public/blocks/icon-box/src/edit.js:179
+#: includes/public/blocks/isotope/build/index.js:2
+#: includes/public/blocks/isotope/src/edit.js:269
+#: includes/public/blocks/social-share/build/index.js:2
+#: includes/public/blocks/social-share/src/edit.js:147
+msgid "Open in New Tab"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:163
+#: includes/public/blocks/image-comparison/build/index.js:1
+#: includes/public/blocks/image-comparison/src/edit.js:116
+#: includes/public/blocks/image-comparison/src/edit.js:262
+msgid "Labels"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:164
+msgid "Show Labels"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:164
+msgid "The small text above each value, such as \"Call us\"."
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:173
+msgid "Arrange"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:173
+#: includes/public/blocks/filter-list/build/index.js:3
+#: includes/public/blocks/filter-list/src/edit.js:355
+#: includes/public/blocks/icon-list/build/index.js:2
+#: includes/public/blocks/icon-list/src/edit.js:225
+msgid "List"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:173
+#: includes/public/blocks/gallery/build/index.js:2
+#: includes/public/blocks/gallery/src/edit.js:372
+#: includes/public/blocks/isotope/build/index.js:2
+#: includes/public/blocks/isotope/src/edit.js:452
+#: includes/public/blocks/post-grid/build/index.js:2
+#: includes/public/blocks/post-grid/src/edit.js:441
+#: includes/public/blocks/social-share/build/index.js:2
+#: includes/public/blocks/social-share/src/edit.js:177
+msgid "Grid"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:173
+msgid "In a Row"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:182
+#: includes/public/blocks/filter-list/build/index.js:3
+#: includes/public/blocks/filter-list/src/edit.js:380
+msgid "Space Between Columns (px)"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:187
+msgid "Line Between Rows"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:202
+msgid "Row Box"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:208
+#: includes/public/blocks/contact-info/src/edit.js:231
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:164
+#: includes/public/blocks/faq/build/index.js:2
+#: includes/public/blocks/faq/src/edit.js:441
+#: includes/public/blocks/faq/src/edit.js:472
+#: includes/public/blocks/filter-list/build/index.js:3
+#: includes/public/blocks/filter-list/src/edit.js:443
+#: includes/public/blocks/filter-list/src/edit.js:449
+#: includes/public/blocks/filter-list/src/edit.js:514
+#: includes/public/blocks/icon-box/build/index.js:2
+#: includes/public/blocks/icon-box/src/edit.js:259
+#: includes/public/blocks/icon-box/src/edit.js:336
+#: includes/public/blocks/isotope/build/index.js:2
+#: includes/public/blocks/isotope/src/edit.js:601
+#: includes/public/blocks/isotope/src/edit.js:607
+#: includes/public/blocks/isotope/src/edit.js:676
+#: includes/public/blocks/isotope/src/edit.js:756
+#: includes/public/blocks/menu/build/index.js:1293
+#: includes/public/blocks/post-grid/build/index.js:2
+#: includes/public/blocks/post-grid/src/edit.js:613
+#: includes/public/blocks/search/build/index.js:2
+#: includes/public/blocks/search/src/edit.js:246
+#: includes/public/blocks/sticky-stack/build/index.js:2
+#: includes/public/blocks/sticky-stack/src/edit.js:473
+#: includes/public/blocks/tab/build/index.js:2
+#: includes/public/blocks/tab/src/edit.js:397
+#: includes/public/blocks/tab/src/edit.js:403
+msgid "Border Color"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:209
+msgid "Lift on Hover"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:226
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:158
+#: includes/public/blocks/icon/build/index.js:2
+#: includes/public/blocks/icon/src/edit.js:188
+msgid "Framed"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:228
+msgid "Hover Color"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:230
+msgid "Hover Background"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:232
+#: includes/public/blocks/counter/build/index.js:2
+#: includes/public/blocks/counter/src/edit.js:428
+#: includes/public/blocks/faq/build/index.js:2
+#: includes/public/blocks/faq/src/edit.js:500
+#: includes/public/blocks/gallery/build/index.js:2
+#: includes/public/blocks/gallery/src/edit.js:477
+#: includes/public/blocks/isotope/build/index.js:2
+#: includes/public/blocks/isotope/src/edit.js:697
+#: includes/public/blocks/offcanvas/build/index.js:2
+#: includes/public/blocks/offcanvas/src/edit.js:266
+#: includes/public/blocks/pricing-table/build/index.js:1
+#: includes/public/blocks/pricing-table/src/edit.js:420
+#: includes/public/blocks/scroll-to-top/build/index.js:2
+#: includes/public/blocks/scroll-to-top/src/edit.js:127
+#: includes/public/blocks/search/build/index.js:2
+#: includes/public/blocks/search/src/edit.js:225
+#: includes/public/blocks/social-icon/build/index.js:2
+#: includes/public/blocks/social-icon/src/edit.js:189
+#: includes/public/blocks/social-share/build/index.js:2
+#: includes/public/blocks/social-share/src/edit.js:228
+#: includes/public/blocks/sticky-stack/build/index.js:2
+#: includes/public/blocks/sticky-stack/src/edit.js:444
+#: includes/public/blocks/table/build/index.js:1
+#: includes/public/blocks/table/build/index.js:2
+#: includes/public/blocks/table/src/cells.js:105
+#: includes/public/blocks/table/src/sidebar.js:209
+#: includes/public/blocks/team-grid/build/index.js:2
+#: includes/public/blocks/team-grid/src/edit.js:392
+#: includes/public/blocks/team-grid/src/edit.js:404
+msgid "Icon Size (px)"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:233
+#: includes/public/blocks/team-grid/build/index.js:2
+#: includes/public/blocks/team-grid/src/edit.js:338
+msgid "Circle Size (px)"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/index.js:2
+#: includes/public/blocks/contact-info/src/edit.js:244
+#: includes/public/blocks/paragraph/build/index.js:1
+#: includes/public/blocks/paragraph/src/edit.js:154
+msgid "Link Hover Color"
 msgstr ""
 
 #: includes/public/blocks/countdown/build/index.js:1
@@ -9632,38 +10208,6 @@ msgstr ""
 msgid "Box Size (px)"
 msgstr ""
 
-#: includes/public/blocks/counter/build/index.js:2
-#: includes/public/blocks/counter/src/edit.js:428
-#: includes/public/blocks/faq/build/index.js:2
-#: includes/public/blocks/faq/src/edit.js:500
-#: includes/public/blocks/gallery/build/index.js:2
-#: includes/public/blocks/gallery/src/edit.js:477
-#: includes/public/blocks/isotope/build/index.js:2
-#: includes/public/blocks/isotope/src/edit.js:697
-#: includes/public/blocks/offcanvas/build/index.js:2
-#: includes/public/blocks/offcanvas/src/edit.js:266
-#: includes/public/blocks/pricing-table/build/index.js:1
-#: includes/public/blocks/pricing-table/src/edit.js:420
-#: includes/public/blocks/scroll-to-top/build/index.js:2
-#: includes/public/blocks/scroll-to-top/src/edit.js:127
-#: includes/public/blocks/search/build/index.js:2
-#: includes/public/blocks/search/src/edit.js:225
-#: includes/public/blocks/social-icon/build/index.js:2
-#: includes/public/blocks/social-icon/src/edit.js:189
-#: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:216
-#: includes/public/blocks/sticky-stack/build/index.js:2
-#: includes/public/blocks/sticky-stack/src/edit.js:444
-#: includes/public/blocks/table/build/index.js:1
-#: includes/public/blocks/table/build/index.js:2
-#: includes/public/blocks/table/src/cells.js:105
-#: includes/public/blocks/table/src/sidebar.js:209
-#: includes/public/blocks/team-grid/build/index.js:2
-#: includes/public/blocks/team-grid/src/edit.js:392
-#: includes/public/blocks/team-grid/src/edit.js:404
-msgid "Icon Size (px)"
-msgstr ""
-
 #: includes/public/blocks/custom-components/HoverAnimationControl.js:14
 #: includes/public/blocks/icon/build/index.js:2
 #: includes/public/blocks/social-icon/build/index.js:2
@@ -9828,6 +10372,77 @@ msgstr ""
 #: includes/public/blocks/custom-components/TableEditing.js:280
 #: includes/public/blocks/table/build/index.js:2
 msgid "Delete column"
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:41
+msgid "Wave"
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:42
+msgid "Zigzag"
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:43
+msgid "Slashes"
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:95
+#: includes/public/blocks/divider/src/edit.js:140
+msgid "Line"
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:105
+msgid "Text or Icon"
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:106
+msgid "In the Line"
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:109
+msgid "You can also type it right on the divider."
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:123
+msgid "Width (%)"
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:127
+msgid "Weight (px)"
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:128
+msgid "Pattern Length (px)"
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:128
+msgid "Pattern Width (px)"
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:131
+msgid "Space Above and Below (px)"
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:132
+msgid "Space Around Text or Icon (px)"
+msgstr ""
+
+#: includes/public/blocks/divider/build/index.js:2
+#: includes/public/blocks/divider/src/edit.js:170
+msgid "Padding (px)"
 msgstr ""
 
 #: includes/public/blocks/drop-caps/build/index.js:1
@@ -10095,34 +10710,6 @@ msgstr ""
 #: includes/public/blocks/testimonials-grid/src/edit.js:176
 #: includes/public/blocks/testimonials-grid/src/edit.js:242
 msgid "Description"
-msgstr ""
-
-#: includes/public/blocks/faq/build/index.js:2
-#: includes/public/blocks/faq/src/edit.js:441
-#: includes/public/blocks/faq/src/edit.js:472
-#: includes/public/blocks/filter-list/build/index.js:3
-#: includes/public/blocks/filter-list/src/edit.js:443
-#: includes/public/blocks/filter-list/src/edit.js:449
-#: includes/public/blocks/filter-list/src/edit.js:514
-#: includes/public/blocks/icon-box/build/index.js:2
-#: includes/public/blocks/icon-box/src/edit.js:259
-#: includes/public/blocks/icon-box/src/edit.js:336
-#: includes/public/blocks/isotope/build/index.js:2
-#: includes/public/blocks/isotope/src/edit.js:601
-#: includes/public/blocks/isotope/src/edit.js:607
-#: includes/public/blocks/isotope/src/edit.js:676
-#: includes/public/blocks/isotope/src/edit.js:756
-#: includes/public/blocks/menu/build/index.js:1293
-#: includes/public/blocks/post-grid/build/index.js:2
-#: includes/public/blocks/post-grid/src/edit.js:613
-#: includes/public/blocks/search/build/index.js:2
-#: includes/public/blocks/search/src/edit.js:246
-#: includes/public/blocks/sticky-stack/build/index.js:2
-#: includes/public/blocks/sticky-stack/src/edit.js:473
-#: includes/public/blocks/tab/build/index.js:2
-#: includes/public/blocks/tab/src/edit.js:397
-#: includes/public/blocks/tab/src/edit.js:403
-msgid "Border Color"
 msgstr ""
 
 #: includes/public/blocks/faq/build/index.js:2
@@ -10410,17 +10997,6 @@ msgid "Leave empty for plain text."
 msgstr ""
 
 #: includes/public/blocks/filter-list/build/index.js:3
-#: includes/public/blocks/filter-list/src/edit.js:226
-#: includes/public/blocks/icon-box/build/index.js:2
-#: includes/public/blocks/icon-box/src/edit.js:179
-#: includes/public/blocks/isotope/build/index.js:2
-#: includes/public/blocks/isotope/src/edit.js:269
-#: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:147
-msgid "Open in New Tab"
-msgstr ""
-
-#: includes/public/blocks/filter-list/build/index.js:3
 #: includes/public/blocks/filter-list/src/edit.js:227
 msgid "On for every link (Settings > Content)."
 msgstr ""
@@ -10522,13 +11098,6 @@ msgid "Off: each item decides for itself (Settings > Items)."
 msgstr ""
 
 #: includes/public/blocks/filter-list/build/index.js:3
-#: includes/public/blocks/filter-list/src/edit.js:355
-#: includes/public/blocks/icon-list/build/index.js:2
-#: includes/public/blocks/icon-list/src/edit.js:225
-msgid "List"
-msgstr ""
-
-#: includes/public/blocks/filter-list/build/index.js:3
 #: includes/public/blocks/filter-list/src/edit.js:357
 #: includes/public/blocks/post-grid/build/index.js:2
 #: includes/public/blocks/post-grid/src/edit.js:192
@@ -10543,11 +11112,6 @@ msgstr ""
 #: includes/public/blocks/filter-list/build/index.js:3
 #: includes/public/blocks/filter-list/src/edit.js:361
 msgid "Across the rows"
-msgstr ""
-
-#: includes/public/blocks/filter-list/build/index.js:3
-#: includes/public/blocks/filter-list/src/edit.js:380
-msgid "Space Between Columns (px)"
 msgstr ""
 
 #: includes/public/blocks/filter-list/build/index.js:3
@@ -10868,17 +11432,6 @@ msgid "Hover Icon"
 msgstr ""
 
 #: includes/public/blocks/gallery/build/index.js:2
-#: includes/public/blocks/gallery/src/edit.js:372
-#: includes/public/blocks/isotope/build/index.js:2
-#: includes/public/blocks/isotope/src/edit.js:452
-#: includes/public/blocks/post-grid/build/index.js:2
-#: includes/public/blocks/post-grid/src/edit.js:441
-#: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:177
-msgid "Grid"
-msgstr ""
-
-#: includes/public/blocks/gallery/build/index.js:2
 #: includes/public/blocks/gallery/src/edit.js:378
 #: includes/public/blocks/post-grid/build/index.js:2
 #: includes/public/blocks/post-grid/src/edit.js:460
@@ -11008,11 +11561,6 @@ msgstr ""
 
 #: includes/public/blocks/google-map/build/index.js:2
 #: includes/public/blocks/google-map/src/edit.js:97
-msgid "Address"
-msgstr ""
-
-#: includes/public/blocks/google-map/build/index.js:2
-#: includes/public/blocks/google-map/src/edit.js:97
 msgid "A street address, a place name, or coordinates such as 40.7580, -73.9855."
 msgstr ""
 
@@ -11044,13 +11592,6 @@ msgstr ""
 #: includes/public/blocks/google-map/build/index.js:2
 #: includes/public/blocks/google-map/src/edit.js:99
 msgid "e.g. Open daily, 8am to 6pm"
-msgstr ""
-
-#: includes/public/blocks/google-map/build/index.js:2
-#: includes/public/blocks/google-map/src/edit.js:100
-#: includes/public/blocks/team-grid/build/index.js:2
-#: includes/public/blocks/team-grid/src/edit.js:168
-msgid "Phone"
 msgstr ""
 
 #: includes/public/blocks/google-map/build/index.js:2
@@ -11645,11 +12186,6 @@ msgid "Link label (for screen readers)"
 msgstr ""
 
 #: includes/public/blocks/icon/build/index.js:2
-#: includes/public/blocks/icon/src/edit.js:188
-msgid "Framed"
-msgstr ""
-
-#: includes/public/blocks/icon/build/index.js:2
 #: includes/public/blocks/icon/src/edit.js:218
 #: includes/public/blocks/pricing-table/build/index.js:1
 #: includes/public/blocks/pricing-table/src/edit.js:446
@@ -11909,12 +12445,6 @@ msgstr ""
 #: includes/public/blocks/image-comparison/build/index.js:1
 #: includes/public/blocks/image-comparison/src/edit.js:107
 msgid "Default Offset (%)"
-msgstr ""
-
-#: includes/public/blocks/image-comparison/build/index.js:1
-#: includes/public/blocks/image-comparison/src/edit.js:116
-#: includes/public/blocks/image-comparison/src/edit.js:262
-msgid "Labels"
 msgstr ""
 
 #: includes/public/blocks/image-comparison/build/index.js:1
@@ -12585,6 +13115,7 @@ msgstr ""
 msgid "Icon Side"
 msgstr ""
 
+#. translators: %d: menu level of the item.
 #: includes/public/blocks/menu/build/index.js:822
 msgid "Level %d sub-item"
 msgstr ""
@@ -13012,11 +13543,6 @@ msgid "Enable Blur"
 msgstr ""
 
 #: includes/public/blocks/paragraph/build/index.js:1
-#: includes/public/blocks/paragraph/src/edit.js:154
-msgid "Link Hover Color"
-msgstr ""
-
-#: includes/public/blocks/paragraph/build/index.js:1
 #: includes/public/blocks/paragraph/src/edit.js:157
 msgid "Select words in the text and click the Highlight button in the toolbar, or wrap them in double braces, e.g. {{word}}. These styles apply to the highlighted words."
 msgstr ""
@@ -13330,11 +13856,6 @@ msgstr ""
 #: includes/public/blocks/post-grid/build/index.js:2
 #: includes/public/blocks/post-grid/src/edit.js:508
 msgid "List (image right)"
-msgstr ""
-
-#: includes/public/blocks/post-grid/build/index.js:2
-#: includes/public/blocks/post-grid/src/edit.js:509
-msgid "Text only"
 msgstr ""
 
 #: includes/public/blocks/post-grid/build/index.js:2
@@ -13806,7 +14327,7 @@ msgstr ""
 #: includes/public/blocks/social-icon/build/index.js:2
 #: includes/public/blocks/social-icon/src/edit.js:170
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:184
+#: includes/public/blocks/social-share/src/edit.js:196
 #: includes/public/blocks/team-grid/build/index.js:2
 #: includes/public/blocks/team-grid/src/edit.js:405
 msgid "Button Size (px)"
@@ -14002,14 +14523,14 @@ msgstr ""
 #: includes/public/blocks/social-icon/build/index.js:2
 #: includes/public/blocks/social-icon/src/edit.js:171
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:185
+#: includes/public/blocks/social-share/src/edit.js:197
 msgid "Button Spacing (px)"
 msgstr ""
 
 #: includes/public/blocks/social-icon/build/index.js:2
 #: includes/public/blocks/social-icon/src/edit.js:177
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:207
+#: includes/public/blocks/social-share/src/edit.js:219
 msgid "Buttons"
 msgstr ""
 
@@ -14054,22 +14575,22 @@ msgid "Icon & Text"
 msgstr ""
 
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:184
+#: includes/public/blocks/social-share/src/edit.js:196
 msgid "Button Height (px)"
 msgstr ""
 
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:191
+#: includes/public/blocks/social-share/src/edit.js:203
 msgid "Icon & Text Color"
 msgstr ""
 
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:219
+#: includes/public/blocks/social-share/src/edit.js:231
 msgid "Text Size (px)"
 msgstr ""
 
 #: includes/public/blocks/social-share/build/index.js:2
-#: includes/public/blocks/social-share/src/edit.js:231
+#: includes/public/blocks/social-share/src/edit.js:243
 msgid "Lift (default)"
 msgstr ""
 
@@ -15013,11 +15534,6 @@ msgid "Background Blur (px)"
 msgstr ""
 
 #: includes/public/blocks/team-grid/build/index.js:2
-#: includes/public/blocks/team-grid/src/edit.js:338
-msgid "Circle Size (px)"
-msgstr ""
-
-#: includes/public/blocks/team-grid/build/index.js:2
 #: includes/public/blocks/team-grid/src/edit.js:341
 msgid "Fade Time (s)"
 msgstr ""
@@ -15392,6 +15908,64 @@ msgctxt "block keyword"
 msgid "layout"
 msgstr ""
 
+#: includes/public/blocks/contact-info/build/block.json
+#: includes/public/blocks/contact-info/src/block.json
+msgctxt "block title"
+msgid "Contact Info"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/block.json
+#: includes/public/blocks/contact-info/src/block.json
+msgctxt "block description"
+msgid "Phone, email, address, opening times and more, each with an icon and a link that opens the right app."
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/block.json
+#: includes/public/blocks/contact-info/src/block.json
+#: includes/public/blocks/google-map/build/block.json
+#: includes/public/blocks/google-map/src/block.json
+msgctxt "block keyword"
+msgid "contact"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/block.json
+#: includes/public/blocks/contact-info/src/block.json
+msgctxt "block keyword"
+msgid "phone"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/block.json
+#: includes/public/blocks/contact-info/src/block.json
+msgctxt "block keyword"
+msgid "email"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/block.json
+#: includes/public/blocks/contact-info/src/block.json
+#: includes/public/blocks/google-map/build/block.json
+#: includes/public/blocks/google-map/src/block.json
+msgctxt "block keyword"
+msgid "address"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/block.json
+#: includes/public/blocks/contact-info/src/block.json
+msgctxt "block keyword"
+msgid "whatsapp"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/block.json
+#: includes/public/blocks/contact-info/src/block.json
+msgctxt "block keyword"
+msgid "info"
+msgstr ""
+
+#: includes/public/blocks/contact-info/build/block.json
+#: includes/public/blocks/contact-info/src/block.json
+msgctxt "block keyword"
+msgid "details"
+msgstr ""
+
 #: includes/public/blocks/countdown/build/block.json
 #: includes/public/blocks/countdown/src/block.json
 msgctxt "block title"
@@ -15468,6 +16042,60 @@ msgstr ""
 #: includes/public/blocks/counter/src/block.json
 msgctxt "block keyword"
 msgid "animated"
+msgstr ""
+
+#: includes/public/blocks/divider/build/block.json
+#: includes/public/blocks/divider/src/block.json
+msgctxt "block title"
+msgid "Divider"
+msgstr ""
+
+#: includes/public/blocks/divider/build/block.json
+#: includes/public/blocks/divider/src/block.json
+msgctxt "block description"
+msgid "A line between sections: solid, dashed, dotted, double, wave, zigzag or slashes, with text or an icon in it."
+msgstr ""
+
+#: includes/public/blocks/divider/build/block.json
+#: includes/public/blocks/divider/src/block.json
+msgctxt "block keyword"
+msgid "divider"
+msgstr ""
+
+#: includes/public/blocks/divider/build/block.json
+#: includes/public/blocks/divider/src/block.json
+msgctxt "block keyword"
+msgid "separator"
+msgstr ""
+
+#: includes/public/blocks/divider/build/block.json
+#: includes/public/blocks/divider/src/block.json
+msgctxt "block keyword"
+msgid "line"
+msgstr ""
+
+#: includes/public/blocks/divider/build/block.json
+#: includes/public/blocks/divider/src/block.json
+msgctxt "block keyword"
+msgid "spacer"
+msgstr ""
+
+#: includes/public/blocks/divider/build/block.json
+#: includes/public/blocks/divider/src/block.json
+msgctxt "block keyword"
+msgid "hr"
+msgstr ""
+
+#: includes/public/blocks/divider/build/block.json
+#: includes/public/blocks/divider/src/block.json
+msgctxt "block keyword"
+msgid "wave"
+msgstr ""
+
+#: includes/public/blocks/divider/build/block.json
+#: includes/public/blocks/divider/src/block.json
+msgctxt "block keyword"
+msgid "zigzag"
 msgstr ""
 
 #: includes/public/blocks/drop-caps/build/block.json
@@ -15766,19 +16394,7 @@ msgstr ""
 #: includes/public/blocks/google-map/build/block.json
 #: includes/public/blocks/google-map/src/block.json
 msgctxt "block keyword"
-msgid "address"
-msgstr ""
-
-#: includes/public/blocks/google-map/build/block.json
-#: includes/public/blocks/google-map/src/block.json
-msgctxt "block keyword"
 msgid "directions"
-msgstr ""
-
-#: includes/public/blocks/google-map/build/block.json
-#: includes/public/blocks/google-map/src/block.json
-msgctxt "block keyword"
-msgid "contact"
 msgstr ""
 
 #: includes/public/blocks/heading/build/block.json

@@ -1,0 +1,52 @@
+// Contact Info: editor only (the rows repeater in the sidebar).
+
+.shapeblock-ci-repeater-item {
+	margin-bottom: 8px;
+	border: 1px solid #e0e0e0;
+	border-radius: 4px;
+	background: #fff;
+}
+
+.shapeblock-ci-repeater-toggle {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	padding: 10px 12px;
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+	text-align: left;
+
+	i {
+		font-size: 16px;
+		color: #5933ff;
+	}
+
+	strong {
+		flex: 1;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		font-size: 13px;
+	}
+}
+
+.shapeblock-ci-repeater-body {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 4px 12px 12px;
+}
+
+.shapeblock-ci-repeater-actions {
+	display: flex;
+	gap: 4px;
+	justify-content: flex-end;
+}
+
+.shapeblock-ci-hint {
+	margin: 0;
+	color: #757575;
+	font-size: 12px;
+}

@@ -155,6 +155,18 @@ class Blocks {
                 'iconClass'    => 'shapeblock-icon-countdown',
             ],
             [
+                'title'       => __( 'Contact Info', 'shapeblock' ),
+                'id'          => 'contact-info',
+                'description' => __( 'Phone, email, address and more, each with an icon and a link.', 'shapeblock' ),
+                'iconClass'    => 'shapeblock-icon-iconbox',
+            ],
+            [
+                'title'       => __( 'Divider', 'shapeblock' ),
+                'id'          => 'divider',
+                'description' => __( 'A line between sections, with text or an icon in it.', 'shapeblock' ),
+                'iconClass'    => 'shapeblock-icon-row',
+            ],
+            [
                 'title'       => __( 'Business Hours', 'shapeblock' ),
                 'id'          => 'business-hours',
                 'description' => __( 'Opening hours with today highlighted and an Open now badge.', 'shapeblock' ),
@@ -290,6 +302,8 @@ class Blocks {
             'filter-list'       => 'content',
             'countdown'         => 'showcase',
             'business-hours'    => 'content',
+            'divider'           => 'content',
+            'contact-info'      => 'content',
             'menu'              => 'header-footer',
             'search'            => 'header-footer',
             'breadcrumb'        => 'header-footer',

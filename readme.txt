@@ -4,7 +4,7 @@ Tags: gutenberg blocks, header footer builder, block editor, gutenberg, wordpres
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,38 +64,40 @@ ShapeBlock Pro adds **42+ more blocks** (**80+ blocks** with the free ones): 32 
 4. [Button](https://shapekode.com/product/shapeblock/button/) - Buttons with icons, sizes and hover styles.
 5. [Client Logo](https://shapekode.com/product/shapeblock/client-logo/) - A grid of client or partner logos with links, grayscale and hover-swap.
 6. Column - A column inside a Row, with its own width per device.
-7. [Countdown](https://shapekode.com/product/shapeblock/countdown/) - Counts down to a date and time.
-8. [Counter](https://shapekode.com/product/shapeblock/counter/) - Animated number counters.
-9. [Drop Caps](https://shapekode.com/product/shapeblock/drop-caps/) - A paragraph that opens with a large first letter, plain, in a box, outlined or as an outlined letter, with optional newspaper columns.
-10. [Features List](https://shapekode.com/product/shapeblock/feature-list/) - Feature lists with icons.
-11. [Filterable List](https://shapekode.com/product/shapeblock/filterable-list/) - A list of links with icons, filter buttons that count their items, badges and a search box.
-12. [Google Map](https://shapekode.com/product/shapeblock/google-map/) - A Google map of one place or several, with a list of the places, directions links and a gray, dark or warm look.
-13. [Heading](https://shapekode.com/product/shapeblock/heading/) - Headings with typography, gradient and highlight options.
-14. [Hover Box](https://shapekode.com/product/shapeblock/hover-box/) - An image or icon in a circle or square that shows a title and description on hover.
-15. [Icon Box](https://shapekode.com/product/shapeblock/icon-box/) - Icon, heading and text together, in several layouts, with an optional button (text, icon or icon only).
-16. [Icon List](https://shapekode.com/product/shapeblock/icon-list/) - A list where each item gets its own icon.
-17. [Icon](https://shapekode.com/product/shapeblock/icon/) - A single icon with colour, size and link.
-18. [Image Carousel](https://shapekode.com/product/shapeblock/image-carousel/) - Several images at once, with centred slides and continuous scrolling.
-19. [Image Comparison](https://shapekode.com/product/shapeblock/image-comparison/) - Before / after images with a draggable handle - side by side, top and bottom, or corner to corner - with labels and several handle styles.
-20. [Isotope Filter](https://shapekode.com/product/shapeblock/isotope-filter/) - A filterable grid with category buttons, an optional search box, and an icon, title, description and badge for each item.
-21. [Menu](https://shapekode.com/product/shapeblock/menu/) - Shows a WordPress navigation menu with layout, alignment and colour options.
-22. [Offcanvas](https://shapekode.com/product/shapeblock/offcanvas/) - Slide-in panels for menus, sidebars or extra content.
-23. Paragraph - Text with its own colour, typography per device, alignment and highlighted words.
-24. [Post Grid](https://shapekode.com/product/shapeblock/post-grid/) - Posts in grid layouts, with pagination.
-25. [Pricing Table](https://shapekode.com/product/shapeblock/pricing-table/) - Pricing plans with features, badges and a button.
-26. [Progress Bar](https://shapekode.com/product/shapeblock/progress-bar/) - Animated progress and skill bars.
-27. Row - A responsive row that holds Column blocks, boxed, full width or a custom width.
-28. [Scroll Top](https://shapekode.com/product/shapeblock/scroll-to-top/) - A back-to-top button.
-29. [Search](https://shapekode.com/product/shapeblock/search/) - A search field you can put anywhere.
-30. [Simple Gallery](https://shapekode.com/product/shapeblock/simple-gallery/) - An image gallery with spacing and column controls, and a popup with a choice of animations.
-31. [Slider](https://shapekode.com/product/shapeblock/slider/) - A full-width image slider with arrows, dots and autoplay.
-32. [Social Icon](https://shapekode.com/product/shapeblock/social-icon/) - Linked social icons, coloured all together or one by one.
-33. [Social Share](https://shapekode.com/product/shapeblock/social-share/) - Share buttons for the current page.
-34. [Sticky Stack](https://shapekode.com/product/shapeblock/sticky-stack/) - Cards that stick as you scroll and stack over one another.
-35. [Table](https://shapekode.com/product/shapeblock/table/) - Tables with styled headers, rows and cells.
-36. [Tabs](https://shapekode.com/product/shapeblock/tabs/) - Tabbed content with icons and a few tab styles to pick from.
-37. [Team Member](https://shapekode.com/product/shapeblock/team-member/) - Team members with photo, role and social links.
-38. [Testimonial](https://shapekode.com/product/shapeblock/testimonial/) - Testimonials in three styles, with ratings, quote icons and logos.
+7. [Contact Info](https://shapekode.com/product/shapeblock/contact-info/) - Phone, email, address and more, each linked to the right app.
+8. [Countdown](https://shapekode.com/product/shapeblock/countdown/) - Counts down to a date and time.
+9. [Counter](https://shapekode.com/product/shapeblock/counter/) - Animated number counters.
+10. [Divider](https://shapekode.com/product/shapeblock/divider/) - Lines between sections, with text or an icon in them.
+11. [Drop Caps](https://shapekode.com/product/shapeblock/drop-caps/) - A paragraph that opens with a large first letter, in four styles, with optional columns.
+12. [Features List](https://shapekode.com/product/shapeblock/feature-list/) - Feature lists with icons.
+13. [Filterable List](https://shapekode.com/product/shapeblock/filterable-list/) - A list of links with icons, filter buttons, badges and a search box.
+14. [Google Map](https://shapekode.com/product/shapeblock/google-map/) - A Google map of one place or several, with a list of the places, directions links and a gray, dark or warm look.
+15. [Heading](https://shapekode.com/product/shapeblock/heading/) - Headings with typography, gradient and highlight options.
+16. [Hover Box](https://shapekode.com/product/shapeblock/hover-box/) - An image or icon in a circle or square that shows a title and description on hover.
+17. [Icon Box](https://shapekode.com/product/shapeblock/icon-box/) - Icon, heading and text together, in several layouts, with an optional button (text, icon or icon only).
+18. [Icon List](https://shapekode.com/product/shapeblock/icon-list/) - A list where each item gets its own icon.
+19. [Icon](https://shapekode.com/product/shapeblock/icon/) - A single icon with colour, size and link.
+20. [Image Carousel](https://shapekode.com/product/shapeblock/image-carousel/) - Several images at once, with centred slides and continuous scrolling.
+21. [Image Comparison](https://shapekode.com/product/shapeblock/image-comparison/) - Before / after images with a draggable handle, labels and several handle styles.
+22. [Isotope Filter](https://shapekode.com/product/shapeblock/isotope-filter/) - A filterable grid with category buttons and an optional search box.
+23. [Menu](https://shapekode.com/product/shapeblock/menu/) - Shows a WordPress navigation menu with layout, alignment and colour options.
+24. [Offcanvas](https://shapekode.com/product/shapeblock/offcanvas/) - Slide-in panels for menus, sidebars or extra content.
+25. Paragraph - Text with its own colour, typography per device, alignment and highlighted words.
+26. [Post Grid](https://shapekode.com/product/shapeblock/post-grid/) - Posts in grid layouts, with pagination.
+27. [Pricing Table](https://shapekode.com/product/shapeblock/pricing-table/) - Pricing plans with features, badges and a button.
+28. [Progress Bar](https://shapekode.com/product/shapeblock/progress-bar/) - Animated progress and skill bars.
+29. Row - A responsive row that holds Column blocks, boxed, full width or a custom width.
+30. [Scroll Top](https://shapekode.com/product/shapeblock/scroll-to-top/) - A back-to-top button.
+31. [Search](https://shapekode.com/product/shapeblock/search/) - A search field you can put anywhere.
+32. [Simple Gallery](https://shapekode.com/product/shapeblock/simple-gallery/) - An image gallery with spacing and column controls, and a popup with a choice of animations.
+33. [Slider](https://shapekode.com/product/shapeblock/slider/) - A full-width image slider with arrows, dots and autoplay.
+34. [Social Icon](https://shapekode.com/product/shapeblock/social-icon/) - Linked social icons, coloured all together or one by one.
+35. [Social Share](https://shapekode.com/product/shapeblock/social-share/) - Share buttons for the current page.
+36. [Sticky Stack](https://shapekode.com/product/shapeblock/sticky-stack/) - Cards that stick as you scroll and stack over one another.
+37. [Table](https://shapekode.com/product/shapeblock/table/) - Tables with styled headers, rows and cells.
+38. [Tabs](https://shapekode.com/product/shapeblock/tabs/) - Tabbed content with icons and a few tab styles to pick from.
+39. [Team Member](https://shapekode.com/product/shapeblock/team-member/) - Team members with photo, role and social links.
+40. [Testimonial](https://shapekode.com/product/shapeblock/testimonial/) - Testimonials in three styles, with ratings, quote icons and logos.
 
 = Header & Footer Builder =
 
@@ -259,6 +261,10 @@ Not by default. See External services above.
 Deleting the plugin removes the options and cached data it created. Your Custom Templates, Theme Builder items and the blocks in your posts are your content, so they stay.
 
 == Changelog ==
+
+= 1.1.1 =
+* **New:** [Divider](https://shapekode.com/product/shapeblock/divider/) block - a line between sections in seven styles (solid, double, dashed, dotted, wave, zigzag and slashes), painted with a colour or a gradient. Put text or an icon in the line, at the start, the middle or the end, and type the text right on the block. Width, alignment, weight, pattern size and spacing for each device; the icon can be plain, stacked or framed; the text gets its own colour, typography, background and rounded corners.
+* **New:** [Contact Info](https://shapekode.com/product/shapeblock/contact-info/) block - phone, email, address, WhatsApp, website or plain text rows, each with its own icon and a link that opens the right app (call, mail, Google Maps, a WhatsApp chat or the website), or a link of your own. As a list (with an optional line between rows), a grid with columns per device, or in one row; the icon left or on top, plain, stacked or framed. Labels and values are typed right on the block; card background, border, shadow, hover colours and a lift on hover, plus typography and spacing per device.
 
 = 1.1.0 =
 * Added: Social Share - an Alignment option (left, center or right, per device) for the row of buttons.

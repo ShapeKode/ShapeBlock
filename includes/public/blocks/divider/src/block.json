@@ -1,0 +1,384 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "shapeblock/divider",
+	"version": "1.0.0",
+	"title": "Divider",
+	"category": "shapeblock",
+	"description": "A line between sections: solid, dashed, dotted, double, wave, zigzag or slashes, with text or an icon in it.",
+	"keywords": [
+		"divider",
+		"separator",
+		"line",
+		"spacer",
+		"hr",
+		"wave",
+		"zigzag"
+	],
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "shapeblock",
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php",
+	"attributes": {
+		"advPadding": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advPaddingTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advPaddingMobile": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMargin": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMarginTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advMarginMobile": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"advBgColor": {
+			"type": "string",
+			"default": ""
+		},
+		"advBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"advPosition": {
+			"type": "string",
+			"default": ""
+		},
+		"advHAlign": {
+			"type": "string",
+			"default": ""
+		},
+		"advVAlign": {
+			"type": "string",
+			"default": ""
+		},
+		"advTop": {
+			"type": "string",
+			"default": ""
+		},
+		"advTopTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advTopMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advRight": {
+			"type": "string",
+			"default": ""
+		},
+		"advRightTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advRightMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottom": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottomTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advBottomMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeft": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeftTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advLeftMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidth": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidthTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"advWidthMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"advZIndex": {
+			"type": "string",
+			"default": ""
+		},
+		"hideDesktop": {
+			"type": "boolean",
+			"default": false
+		},
+		"hideTablet": {
+			"type": "boolean",
+			"default": false
+		},
+		"hideMobile": {
+			"type": "boolean",
+			"default": false
+		},
+		"blockId": {
+			"type": "string",
+			"default": ""
+		},
+		"dividerStyle": {
+			"type": "string",
+			"default": "solid"
+		},
+		"elementType": {
+			"type": "string",
+			"default": "none"
+		},
+		"text": {
+			"type": "string",
+			"default": "Or"
+		},
+		"textTag": {
+			"type": "string",
+			"default": "span"
+		},
+		"icon": {
+			"type": "string",
+			"default": "shapeblock-bi-star-fill"
+		},
+		"elementPosition": {
+			"type": "string",
+			"default": "center"
+		},
+		"width": {
+			"type": "string",
+			"default": ""
+		},
+		"widthTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"widthMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"align": {
+			"type": "string",
+			"default": ""
+		},
+		"alignTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"alignMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"weight": {
+			"type": "string",
+			"default": ""
+		},
+		"weightTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"weightMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"patternSize": {
+			"type": "string",
+			"default": ""
+		},
+		"patternSizeTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"patternSizeMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"gap": {
+			"type": "string",
+			"default": ""
+		},
+		"gapTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"gapMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"elementGap": {
+			"type": "string",
+			"default": ""
+		},
+		"elementGapTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"elementGapMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"lineColor": {
+			"type": "string",
+			"default": ""
+		},
+		"lineGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"textColor": {
+			"type": "string",
+			"default": ""
+		},
+		"textTypography": {
+			"type": "object",
+			"default": {}
+		},
+		"textTypographyTablet": {
+			"type": "object",
+			"default": {}
+		},
+		"textTypographyMobile": {
+			"type": "object",
+			"default": {}
+		},
+		"textBg": {
+			"type": "string",
+			"default": ""
+		},
+		"textBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"textPadding": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"textPaddingTablet": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"textPaddingMobile": {
+			"type": "object",
+			"default": {
+				"top": "",
+				"right": "",
+				"bottom": "",
+				"left": ""
+			}
+		},
+		"textRadius": {
+			"type": "string",
+			"default": ""
+		},
+		"iconColor": {
+			"type": "string",
+			"default": ""
+		},
+		"iconSize": {
+			"type": "string",
+			"default": ""
+		},
+		"iconSizeTablet": {
+			"type": "string",
+			"default": ""
+		},
+		"iconSizeMobile": {
+			"type": "string",
+			"default": ""
+		},
+		"iconView": {
+			"type": "string",
+			"default": "default"
+		},
+		"iconBg": {
+			"type": "string",
+			"default": ""
+		},
+		"iconBgGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"iconBorderColor": {
+			"type": "string",
+			"default": ""
+		},
+		"iconBorderWidth": {
+			"type": "string",
+			"default": ""
+		},
+		"iconPadding": {
+			"type": "string",
+			"default": ""
+		},
+		"iconRadius": {
+			"type": "string",
+			"default": ""
+		}
+	}
+}
